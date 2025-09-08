@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './VlqBase128Le'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./VlqBase128Le'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './VlqBase128Le'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./VlqBase128Le'));
   } else {
-    root.GoogleProtobuf = factory(root.KaitaiStream, root.VlqBase128Le);
+    factory(root.GoogleProtobuf || (root.GoogleProtobuf = {}), root.KaitaiStream, root.VlqBase128Le || (root.VlqBase128Le = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, VlqBase128Le) {
+})(typeof self !== 'undefined' ? self : this, function (GoogleProtobuf_, KaitaiStream, VlqBase128Le_) {
 /**
  * Google Protocol Buffers (AKA protobuf) is a popular data
  * serialization scheme used for communication protocols, data storage,
@@ -57,6 +57,22 @@ var GoogleProtobuf = (function() {
     }
   }
 
+  var DelimitedBytes = GoogleProtobuf.DelimitedBytes = (function() {
+    function DelimitedBytes(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DelimitedBytes.prototype._read = function() {
+      this.len = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.body = this._io.readBytes(this.len.value);
+    }
+
+    return DelimitedBytes;
+  })();
+
   /**
    * Key-value pair
    */
@@ -81,27 +97,40 @@ var GoogleProtobuf = (function() {
     function Pair(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Pair.prototype._read = function() {
-      this.key = new VlqBase128Le(this._io, this, null);
+      this.key = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
       switch (this.wireType) {
-      case GoogleProtobuf.Pair.WireTypes.VARINT:
-        this.value = new VlqBase128Le(this._io, this, null);
-        break;
-      case GoogleProtobuf.Pair.WireTypes.LEN_DELIMITED:
-        this.value = new DelimitedBytes(this._io, this, this._root);
+      case GoogleProtobuf.Pair.WireTypes.BIT_32:
+        this.value = this._io.readU4le();
         break;
       case GoogleProtobuf.Pair.WireTypes.BIT_64:
         this.value = this._io.readU8le();
         break;
-      case GoogleProtobuf.Pair.WireTypes.BIT_32:
-        this.value = this._io.readU4le();
+      case GoogleProtobuf.Pair.WireTypes.LEN_DELIMITED:
+        this.value = new DelimitedBytes(this._io, this, this._root);
+        break;
+      case GoogleProtobuf.Pair.WireTypes.VARINT:
+        this.value = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
         break;
       }
     }
+
+    /**
+     * Identifies a field of protocol. One can look up symbolic
+     * field name in a `.proto` file by this field tag.
+     */
+    Object.defineProperty(Pair.prototype, 'fieldTag', {
+      get: function() {
+        if (this._m_fieldTag !== undefined)
+          return this._m_fieldTag;
+        this._m_fieldTag = this.key.value >>> 3;
+        return this._m_fieldTag;
+      }
+    });
 
     /**
      * "Wire type" is a part of the "key" that carries enough
@@ -116,21 +145,8 @@ var GoogleProtobuf = (function() {
       get: function() {
         if (this._m_wireType !== undefined)
           return this._m_wireType;
-        this._m_wireType = (this.key.value & 7);
+        this._m_wireType = this.key.value & 7;
         return this._m_wireType;
-      }
-    });
-
-    /**
-     * Identifies a field of protocol. One can look up symbolic
-     * field name in a `.proto` file by this field tag.
-     */
-    Object.defineProperty(Pair.prototype, 'fieldTag', {
-      get: function() {
-        if (this._m_fieldTag !== undefined)
-          return this._m_fieldTag;
-        this._m_fieldTag = (this.key.value >>> 3);
-        return this._m_fieldTag;
       }
     });
 
@@ -151,27 +167,11 @@ var GoogleProtobuf = (function() {
     return Pair;
   })();
 
-  var DelimitedBytes = GoogleProtobuf.DelimitedBytes = (function() {
-    function DelimitedBytes(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DelimitedBytes.prototype._read = function() {
-      this.len = new VlqBase128Le(this._io, this, null);
-      this.body = this._io.readBytes(this.len.value);
-    }
-
-    return DelimitedBytes;
-  })();
-
   /**
    * Key-value pairs which constitute a message
    */
 
   return GoogleProtobuf;
 })();
-return GoogleProtobuf;
-}));
+GoogleProtobuf_.GoogleProtobuf = GoogleProtobuf;
+});

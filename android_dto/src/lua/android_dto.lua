@@ -33,50 +33,12 @@ function AndroidDto:_read()
 end
 
 
-AndroidDto.DtTableHeader = class.class(KaitaiStruct)
-
-function AndroidDto.DtTableHeader:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function AndroidDto.DtTableHeader:_read()
-  self.magic = self._io:read_bytes(4)
-  if not(self.magic == "\215\183\171\030") then
-    error("not equal, expected " ..  "\215\183\171\030" .. ", but got " .. self.magic)
-  end
-  self.total_size = self._io:read_u4be()
-  self.header_size = self._io:read_u4be()
-  self.dt_entry_size = self._io:read_u4be()
-  self.dt_entry_count = self._io:read_u4be()
-  self.dt_entries_offset = self._io:read_u4be()
-  self.page_size = self._io:read_u4be()
-  self.version = self._io:read_u4be()
-end
-
--- 
--- includes dt_table_header + all dt_table_entry and all dtb/dtbo.
--- 
--- sizeof(dt_table_header).
--- 
--- sizeof(dt_table_entry).
--- 
--- number of dt_table_entry.
--- 
--- offset to the first dt_table_entry from head of dt_table_header.
--- 
--- flash page size.
--- 
--- DTBO image version.
-
 AndroidDto.DtTableEntry = class.class(KaitaiStruct)
 
 function AndroidDto.DtTableEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -117,4 +79,42 @@ end
 -- optional, must be zero if unused.
 -- 
 -- optional, must be zero if unused.
+
+AndroidDto.DtTableHeader = class.class(KaitaiStruct)
+
+function AndroidDto.DtTableHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function AndroidDto.DtTableHeader:_read()
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\215\183\171\030") then
+    error("not equal, expected " .. "\215\183\171\030" .. ", but got " .. self.magic)
+  end
+  self.total_size = self._io:read_u4be()
+  self.header_size = self._io:read_u4be()
+  self.dt_entry_size = self._io:read_u4be()
+  self.dt_entry_count = self._io:read_u4be()
+  self.dt_entries_offset = self._io:read_u4be()
+  self.page_size = self._io:read_u4be()
+  self.version = self._io:read_u4be()
+end
+
+-- 
+-- includes dt_table_header + all dt_table_entry and all dtb/dtbo.
+-- 
+-- sizeof(dt_table_header).
+-- 
+-- sizeof(dt_table_entry).
+-- 
+-- number of dt_table_entry.
+-- 
+-- offset to the first dt_table_entry from head of dt_table_header.
+-- 
+-- flash page size.
+-- 
+-- DTBO image version.
 

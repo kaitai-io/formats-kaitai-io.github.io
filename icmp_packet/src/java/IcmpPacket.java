@@ -58,6 +58,18 @@ public class IcmpPacket extends KaitaiStruct {
             this.echo = new EchoMsg(this._io, this, _root);
         }
     }
+
+    public void _fetchInstances() {
+        if (icmpType() == IcmpTypeEnum.DESTINATION_UNREACHABLE) {
+            this.destinationUnreachable._fetchInstances();
+        }
+        if (icmpType() == IcmpTypeEnum.TIME_EXCEEDED) {
+            this.timeExceeded._fetchInstances();
+        }
+        if ( ((icmpType() == IcmpTypeEnum.ECHO) || (icmpType() == IcmpTypeEnum.ECHO_REPLY)) ) {
+            this.echo._fetchInstances();
+        }
+    }
     public static class DestinationUnreachableMsg extends KaitaiStruct {
         public static DestinationUnreachableMsg fromFile(String fileName) throws IOException {
             return new DestinationUnreachableMsg(new ByteBufferKaitaiStream(fileName));
@@ -110,12 +122,62 @@ public class IcmpPacket extends KaitaiStruct {
             this.code = DestinationUnreachableCode.byId(this._io.readU1());
             this.checksum = this._io.readU2be();
         }
+
+        public void _fetchInstances() {
+        }
         private DestinationUnreachableCode code;
         private int checksum;
         private IcmpPacket _root;
         private IcmpPacket _parent;
         public DestinationUnreachableCode code() { return code; }
         public int checksum() { return checksum; }
+        public IcmpPacket _root() { return _root; }
+        public IcmpPacket _parent() { return _parent; }
+    }
+    public static class EchoMsg extends KaitaiStruct {
+        public static EchoMsg fromFile(String fileName) throws IOException {
+            return new EchoMsg(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public EchoMsg(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public EchoMsg(KaitaiStream _io, IcmpPacket _parent) {
+            this(_io, _parent, null);
+        }
+
+        public EchoMsg(KaitaiStream _io, IcmpPacket _parent, IcmpPacket _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.code = this._io.readBytes(1);
+            if (!(Arrays.equals(this.code, new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, this.code, this._io, "/types/echo_msg/seq/0");
+            }
+            this.checksum = this._io.readU2be();
+            this.identifier = this._io.readU2be();
+            this.seqNum = this._io.readU2be();
+            this.data = this._io.readBytesFull();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] code;
+        private int checksum;
+        private int identifier;
+        private int seqNum;
+        private byte[] data;
+        private IcmpPacket _root;
+        private IcmpPacket _parent;
+        public byte[] code() { return code; }
+        public int checksum() { return checksum; }
+        public int identifier() { return identifier; }
+        public int seqNum() { return seqNum; }
+        public byte[] data() { return data; }
         public IcmpPacket _root() { return _root; }
         public IcmpPacket _parent() { return _parent; }
     }
@@ -157,56 +219,15 @@ public class IcmpPacket extends KaitaiStruct {
             this.code = TimeExceededCode.byId(this._io.readU1());
             this.checksum = this._io.readU2be();
         }
+
+        public void _fetchInstances() {
+        }
         private TimeExceededCode code;
         private int checksum;
         private IcmpPacket _root;
         private IcmpPacket _parent;
         public TimeExceededCode code() { return code; }
         public int checksum() { return checksum; }
-        public IcmpPacket _root() { return _root; }
-        public IcmpPacket _parent() { return _parent; }
-    }
-    public static class EchoMsg extends KaitaiStruct {
-        public static EchoMsg fromFile(String fileName) throws IOException {
-            return new EchoMsg(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public EchoMsg(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public EchoMsg(KaitaiStream _io, IcmpPacket _parent) {
-            this(_io, _parent, null);
-        }
-
-        public EchoMsg(KaitaiStream _io, IcmpPacket _parent, IcmpPacket _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.code = this._io.readBytes(1);
-            if (!(Arrays.equals(code(), new byte[] { 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, code(), _io(), "/types/echo_msg/seq/0");
-            }
-            this.checksum = this._io.readU2be();
-            this.identifier = this._io.readU2be();
-            this.seqNum = this._io.readU2be();
-            this.data = this._io.readBytesFull();
-        }
-        private byte[] code;
-        private int checksum;
-        private int identifier;
-        private int seqNum;
-        private byte[] data;
-        private IcmpPacket _root;
-        private IcmpPacket _parent;
-        public byte[] code() { return code; }
-        public int checksum() { return checksum; }
-        public int identifier() { return identifier; }
-        public int seqNum() { return seqNum; }
-        public byte[] data() { return data; }
         public IcmpPacket _root() { return _root; }
         public IcmpPacket _parent() { return _parent; }
     }

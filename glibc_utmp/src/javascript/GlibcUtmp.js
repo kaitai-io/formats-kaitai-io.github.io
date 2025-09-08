@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.GlibcUtmp = factory(root.KaitaiStream);
+    factory(root.GlibcUtmp || (root.GlibcUtmp = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (GlibcUtmp_, KaitaiStream) {
 var GlibcUtmp = (function() {
   GlibcUtmp.EntryType = Object.freeze({
     EMPTY: 0,
@@ -57,7 +57,7 @@ var GlibcUtmp = (function() {
     function Record(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -122,7 +122,7 @@ var GlibcUtmp = (function() {
     function Timeval(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -144,5 +144,5 @@ var GlibcUtmp = (function() {
 
   return GlibcUtmp;
 })();
-return GlibcUtmp;
-}));
+GlibcUtmp_.GlibcUtmp = GlibcUtmp;
+});

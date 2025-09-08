@@ -1,13 +1,14 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-
-
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
-
 import rtp_packet
+
+
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
+
 class Rtpdump(KaitaiStruct):
     """rtpdump is a format used by rtptools to record and replay
     rtp data from network capture.
@@ -16,9 +17,9 @@ class Rtpdump(KaitaiStruct):
        Source - https://chromium.googlesource.com/external/webrtc/stable/talk/+/master/media/base/rtpdump.h
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Rtpdump, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -30,11 +31,20 @@ class Rtpdump(KaitaiStruct):
             i += 1
 
 
+
+    def _fetch_instances(self):
+        pass
+        self.file_header._fetch_instances()
+        for i in range(len(self.packets)):
+            pass
+            self.packets[i]._fetch_instances()
+
+
     class HeaderT(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Rtpdump.HeaderT, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -44,8 +54,8 @@ class Rtpdump(KaitaiStruct):
             self.space = self._io.read_bytes(1)
             if not self.space == b"\x20":
                 raise kaitaistruct.ValidationNotEqualError(b"\x20", self.space, self._io, u"/types/header_t/seq/1")
-            self.ip = (self._io.read_bytes_term(47, False, True, True)).decode(u"ascii")
-            self.port = (self._io.read_bytes_term(10, False, True, True)).decode(u"ascii")
+            self.ip = (self._io.read_bytes_term(47, False, True, True)).decode(u"ASCII")
+            self.port = (self._io.read_bytes_term(10, False, True, True)).decode(u"ASCII")
             self.start_sec = self._io.read_u4be()
             self.start_usec = self._io.read_u4be()
             self.ip2 = self._io.read_u4be()
@@ -53,11 +63,15 @@ class Rtpdump(KaitaiStruct):
             self.padding = self._io.read_u2be()
 
 
+        def _fetch_instances(self):
+            pass
+
+
     class PacketT(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Rtpdump.PacketT, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -67,6 +81,11 @@ class Rtpdump(KaitaiStruct):
             self._raw_body = self._io.read_bytes(self.len_body)
             _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
             self.body = rtp_packet.RtpPacket(_io__raw_body)
+
+
+        def _fetch_instances(self):
+            pass
+            self.body._fetch_instances()
 
 
 

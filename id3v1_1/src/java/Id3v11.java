@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -39,6 +39,13 @@ public class Id3v11 extends KaitaiStruct {
         _read();
     }
     private void _read() {
+    }
+
+    public void _fetchInstances() {
+        id3v1Tag();
+        if (this.id3v1Tag != null) {
+            this.id3v1Tag._fetchInstances();
+        }
     }
 
     /**
@@ -212,15 +219,18 @@ public class Id3v11 extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(3);
-            if (!(Arrays.equals(magic(), new byte[] { 84, 65, 71 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 84, 65, 71 }, magic(), _io(), "/types/id3_v1_1_tag/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 84, 65, 71 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 84, 65, 71 }, this.magic, this._io, "/types/id3_v1_1_tag/seq/0");
             }
             this.title = this._io.readBytes(30);
             this.artist = this._io.readBytes(30);
             this.album = this._io.readBytes(30);
-            this.year = new String(this._io.readBytes(4), Charset.forName("ASCII"));
+            this.year = new String(this._io.readBytes(4), StandardCharsets.US_ASCII);
             this.comment = this._io.readBytes(30);
             this.genre = GenreEnum.byId(this._io.readU1());
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
         private byte[] title;
@@ -266,7 +276,7 @@ public class Id3v11 extends KaitaiStruct {
         if (this.id3v1Tag != null)
             return this.id3v1Tag;
         long _pos = this._io.pos();
-        this._io.seek((_io().size() - 128));
+        this._io.seek(_io().size() - 128);
         this.id3v1Tag = new Id3V11Tag(this._io, this, _root);
         this._io.seek(_pos);
         return this.id3v1Tag;

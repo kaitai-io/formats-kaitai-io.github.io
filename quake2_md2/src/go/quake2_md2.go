@@ -81,6 +81,11 @@ const (
 	Quake2Md2_GlPrimitive__TriangleStrip Quake2Md2_GlPrimitive = 0
 	Quake2Md2_GlPrimitive__TriangleFan Quake2Md2_GlPrimitive = 1
 )
+var values_Quake2Md2_GlPrimitive = map[Quake2Md2_GlPrimitive]struct{}{0: {}, 1: {}}
+func (v Quake2Md2_GlPrimitive) isDefined() bool {
+	_, ok := values_Quake2Md2_GlPrimitive[v]
+	return ok
+}
 type Quake2Md2 struct {
 	Magic []byte
 	Version uint32
@@ -101,34 +106,38 @@ type Quake2Md2 struct {
 	OfsEof uint32
 	_io *kaitai.Stream
 	_root *Quake2Md2
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_frames [][]byte
 	_raw_glCmds []byte
-	_f_animNumFrames bool
-	animNumFrames []byte
-	_f_anormsTable bool
-	anormsTable [][]float64
-	_f_texCoords bool
-	texCoords []*Quake2Md2_TexPoint
-	_f_triangles bool
-	triangles []*Quake2Md2_Triangle
-	_f_frames bool
-	frames []*Quake2Md2_Frame
 	_f_animNames bool
 	animNames []string
+	_f_animNumFrames bool
+	animNumFrames []byte
+	_f_animStartIndices bool
+	animStartIndices []byte
+	_f_anormsTable bool
+	anormsTable [][]float64
+	_f_frames bool
+	frames []*Quake2Md2_Frame
 	_f_glCmds bool
 	glCmds *Quake2Md2_GlCmdsList
 	_f_skins bool
 	skins []string
-	_f_animStartIndices bool
-	animStartIndices []byte
+	_f_texCoords bool
+	texCoords []*Quake2Md2_TexPoint
+	_f_triangles bool
+	triangles []*Quake2Md2_Triangle
 }
 func NewQuake2Md2() *Quake2Md2 {
 	return &Quake2Md2{
 	}
 }
 
-func (this *Quake2Md2) Read(io *kaitai.Stream, parent interface{}, root *Quake2Md2) (err error) {
+func (this Quake2Md2) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Quake2Md2) Read(io *kaitai.Stream, parent kaitai.Struct, root *Quake2Md2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -227,13 +236,29 @@ func (this *Quake2Md2) Read(io *kaitai.Stream, parent interface{}, root *Quake2M
 	this.OfsEof = uint32(tmp17)
 	return err
 }
+func (this *Quake2Md2) AnimNames() (v []string, err error) {
+	if (this._f_animNames) {
+		return this.animNames, nil
+	}
+	this._f_animNames = true
+	this.animNames = []string([]string{"stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"})
+	return this.animNames, nil
+}
 func (this *Quake2Md2) AnimNumFrames() (v []byte, err error) {
 	if (this._f_animNumFrames) {
 		return this.animNumFrames, nil
 	}
-	this.animNumFrames = []byte([]uint8{40, 6, 8, 4, 4, 4, 6, 12, 11, 17, 11, 12, 19, 6, 9, 4, 5, 6, 6, 8})
 	this._f_animNumFrames = true
+	this.animNumFrames = []byte([]uint8{40, 6, 8, 4, 4, 4, 6, 12, 11, 17, 11, 12, 19, 6, 9, 4, 5, 6, 6, 8})
 	return this.animNumFrames, nil
+}
+func (this *Quake2Md2) AnimStartIndices() (v []byte, err error) {
+	if (this._f_animStartIndices) {
+		return this.animStartIndices, nil
+	}
+	this._f_animStartIndices = true
+	this.animStartIndices = []byte([]uint8{0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, 135, 154, 160, 169, 173, 178, 184, 190})
+	return this.animStartIndices, nil
 }
 
 /**
@@ -244,72 +269,15 @@ func (this *Quake2Md2) AnormsTable() (v [][]float64, err error) {
 	if (this._f_anormsTable) {
 		return this.anormsTable, nil
 	}
-	this.anormsTable = [][]float64([][]float64{[]float64{-0.525731, 0.000000, 0.850651}, []float64{-0.442863, 0.238856, 0.864188}, []float64{-0.295242, 0.000000, 0.955423}, []float64{-0.309017, 0.500000, 0.809017}, []float64{-0.162460, 0.262866, 0.951056}, []float64{0.000000, 0.000000, 1.000000}, []float64{0.000000, 0.850651, 0.525731}, []float64{-0.147621, 0.716567, 0.681718}, []float64{0.147621, 0.716567, 0.681718}, []float64{0.000000, 0.525731, 0.850651}, []float64{0.309017, 0.500000, 0.809017}, []float64{0.525731, 0.000000, 0.850651}, []float64{0.295242, 0.000000, 0.955423}, []float64{0.442863, 0.238856, 0.864188}, []float64{0.162460, 0.262866, 0.951056}, []float64{-0.681718, 0.147621, 0.716567}, []float64{-0.809017, 0.309017, 0.500000}, []float64{-0.587785, 0.425325, 0.688191}, []float64{-0.850651, 0.525731, 0.000000}, []float64{-0.864188, 0.442863, 0.238856}, []float64{-0.716567, 0.681718, 0.147621}, []float64{-0.688191, 0.587785, 0.425325}, []float64{-0.500000, 0.809017, 0.309017}, []float64{-0.238856, 0.864188, 0.442863}, []float64{-0.425325, 0.688191, 0.587785}, []float64{-0.716567, 0.681718, -0.147621}, []float64{-0.500000, 0.809017, -0.309017}, []float64{-0.525731, 0.850651, 0.000000}, []float64{0.000000, 0.850651, -0.525731}, []float64{-0.238856, 0.864188, -0.442863}, []float64{0.000000, 0.955423, -0.295242}, []float64{-0.262866, 0.951056, -0.162460}, []float64{0.000000, 1.000000, 0.000000}, []float64{0.000000, 0.955423, 0.295242}, []float64{-0.262866, 0.951056, 0.162460}, []float64{0.238856, 0.864188, 0.442863}, []float64{0.262866, 0.951056, 0.162460}, []float64{0.500000, 0.809017, 0.309017}, []float64{0.238856, 0.864188, -0.442863}, []float64{0.262866, 0.951056, -0.162460}, []float64{0.500000, 0.809017, -0.309017}, []float64{0.850651, 0.525731, 0.000000}, []float64{0.716567, 0.681718, 0.147621}, []float64{0.716567, 0.681718, -0.147621}, []float64{0.525731, 0.850651, 0.000000}, []float64{0.425325, 0.688191, 0.587785}, []float64{0.864188, 0.442863, 0.238856}, []float64{0.688191, 0.587785, 0.425325}, []float64{0.809017, 0.309017, 0.500000}, []float64{0.681718, 0.147621, 0.716567}, []float64{0.587785, 0.425325, 0.688191}, []float64{0.955423, 0.295242, 0.000000}, []float64{1.000000, 0.000000, 0.000000}, []float64{0.951056, 0.162460, 0.262866}, []float64{0.850651, -0.525731, 0.000000}, []float64{0.955423, -0.295242, 0.000000}, []float64{0.864188, -0.442863, 0.238856}, []float64{0.951056, -0.162460, 0.262866}, []float64{0.809017, -0.309017, 0.500000}, []float64{0.681718, -0.147621, 0.716567}, []float64{0.850651, 0.000000, 0.525731}, []float64{0.864188, 0.442863, -0.238856}, []float64{0.809017, 0.309017, -0.500000}, []float64{0.951056, 0.162460, -0.262866}, []float64{0.525731, 0.000000, -0.850651}, []float64{0.681718, 0.147621, -0.716567}, []float64{0.681718, -0.147621, -0.716567}, []float64{0.850651, 0.000000, -0.525731}, []float64{0.809017, -0.309017, -0.500000}, []float64{0.864188, -0.442863, -0.238856}, []float64{0.951056, -0.162460, -0.262866}, []float64{0.147621, 0.716567, -0.681718}, []float64{0.309017, 0.500000, -0.809017}, []float64{0.425325, 0.688191, -0.587785}, []float64{0.442863, 0.238856, -0.864188}, []float64{0.587785, 0.425325, -0.688191}, []float64{0.688191, 0.587785, -0.425325}, []float64{-0.147621, 0.716567, -0.681718}, []float64{-0.309017, 0.500000, -0.809017}, []float64{0.000000, 0.525731, -0.850651}, []float64{-0.525731, 0.000000, -0.850651}, []float64{-0.442863, 0.238856, -0.864188}, []float64{-0.295242, 0.000000, -0.955423}, []float64{-0.162460, 0.262866, -0.951056}, []float64{0.000000, 0.000000, -1.000000}, []float64{0.295242, 0.000000, -0.955423}, []float64{0.162460, 0.262866, -0.951056}, []float64{-0.442863, -0.238856, -0.864188}, []float64{-0.309017, -0.500000, -0.809017}, []float64{-0.162460, -0.262866, -0.951056}, []float64{0.000000, -0.850651, -0.525731}, []float64{-0.147621, -0.716567, -0.681718}, []float64{0.147621, -0.716567, -0.681718}, []float64{0.000000, -0.525731, -0.850651}, []float64{0.309017, -0.500000, -0.809017}, []float64{0.442863, -0.238856, -0.864188}, []float64{0.162460, -0.262866, -0.951056}, []float64{0.238856, -0.864188, -0.442863}, []float64{0.500000, -0.809017, -0.309017}, []float64{0.425325, -0.688191, -0.587785}, []float64{0.716567, -0.681718, -0.147621}, []float64{0.688191, -0.587785, -0.425325}, []float64{0.587785, -0.425325, -0.688191}, []float64{0.000000, -0.955423, -0.295242}, []float64{0.000000, -1.000000, 0.000000}, []float64{0.262866, -0.951056, -0.162460}, []float64{0.000000, -0.850651, 0.525731}, []float64{0.000000, -0.955423, 0.295242}, []float64{0.238856, -0.864188, 0.442863}, []float64{0.262866, -0.951056, 0.162460}, []float64{0.500000, -0.809017, 0.309017}, []float64{0.716567, -0.681718, 0.147621}, []float64{0.525731, -0.850651, 0.000000}, []float64{-0.238856, -0.864188, -0.442863}, []float64{-0.500000, -0.809017, -0.309017}, []float64{-0.262866, -0.951056, -0.162460}, []float64{-0.850651, -0.525731, 0.000000}, []float64{-0.716567, -0.681718, -0.147621}, []float64{-0.716567, -0.681718, 0.147621}, []float64{-0.525731, -0.850651, 0.000000}, []float64{-0.500000, -0.809017, 0.309017}, []float64{-0.238856, -0.864188, 0.442863}, []float64{-0.262866, -0.951056, 0.162460}, []float64{-0.864188, -0.442863, 0.238856}, []float64{-0.809017, -0.309017, 0.500000}, []float64{-0.688191, -0.587785, 0.425325}, []float64{-0.681718, -0.147621, 0.716567}, []float64{-0.442863, -0.238856, 0.864188}, []float64{-0.587785, -0.425325, 0.688191}, []float64{-0.309017, -0.500000, 0.809017}, []float64{-0.147621, -0.716567, 0.681718}, []float64{-0.425325, -0.688191, 0.587785}, []float64{-0.162460, -0.262866, 0.951056}, []float64{0.442863, -0.238856, 0.864188}, []float64{0.162460, -0.262866, 0.951056}, []float64{0.309017, -0.500000, 0.809017}, []float64{0.147621, -0.716567, 0.681718}, []float64{0.000000, -0.525731, 0.850651}, []float64{0.425325, -0.688191, 0.587785}, []float64{0.587785, -0.425325, 0.688191}, []float64{0.688191, -0.587785, 0.425325}, []float64{-0.955423, 0.295242, 0.000000}, []float64{-0.951056, 0.162460, 0.262866}, []float64{-1.000000, 0.000000, 0.000000}, []float64{-0.850651, 0.000000, 0.525731}, []float64{-0.955423, -0.295242, 0.000000}, []float64{-0.951056, -0.162460, 0.262866}, []float64{-0.864188, 0.442863, -0.238856}, []float64{-0.951056, 0.162460, -0.262866}, []float64{-0.809017, 0.309017, -0.500000}, []float64{-0.864188, -0.442863, -0.238856}, []float64{-0.951056, -0.162460, -0.262866}, []float64{-0.809017, -0.309017, -0.500000}, []float64{-0.681718, 0.147621, -0.716567}, []float64{-0.681718, -0.147621, -0.716567}, []float64{-0.850651, 0.000000, -0.525731}, []float64{-0.688191, 0.587785, -0.425325}, []float64{-0.587785, 0.425325, -0.688191}, []float64{-0.425325, 0.688191, -0.587785}, []float64{-0.425325, -0.688191, -0.587785}, []float64{-0.587785, -0.425325, -0.688191}, []float64{-0.688191, -0.587785, -0.425325}})
 	this._f_anormsTable = true
+	this.anormsTable = [][]float64([][]float64{[]float64{-0.525731, 0.000000, 0.850651}, []float64{-0.442863, 0.238856, 0.864188}, []float64{-0.295242, 0.000000, 0.955423}, []float64{-0.309017, 0.500000, 0.809017}, []float64{-0.162460, 0.262866, 0.951056}, []float64{0.000000, 0.000000, 1.000000}, []float64{0.000000, 0.850651, 0.525731}, []float64{-0.147621, 0.716567, 0.681718}, []float64{0.147621, 0.716567, 0.681718}, []float64{0.000000, 0.525731, 0.850651}, []float64{0.309017, 0.500000, 0.809017}, []float64{0.525731, 0.000000, 0.850651}, []float64{0.295242, 0.000000, 0.955423}, []float64{0.442863, 0.238856, 0.864188}, []float64{0.162460, 0.262866, 0.951056}, []float64{-0.681718, 0.147621, 0.716567}, []float64{-0.809017, 0.309017, 0.500000}, []float64{-0.587785, 0.425325, 0.688191}, []float64{-0.850651, 0.525731, 0.000000}, []float64{-0.864188, 0.442863, 0.238856}, []float64{-0.716567, 0.681718, 0.147621}, []float64{-0.688191, 0.587785, 0.425325}, []float64{-0.500000, 0.809017, 0.309017}, []float64{-0.238856, 0.864188, 0.442863}, []float64{-0.425325, 0.688191, 0.587785}, []float64{-0.716567, 0.681718, -0.147621}, []float64{-0.500000, 0.809017, -0.309017}, []float64{-0.525731, 0.850651, 0.000000}, []float64{0.000000, 0.850651, -0.525731}, []float64{-0.238856, 0.864188, -0.442863}, []float64{0.000000, 0.955423, -0.295242}, []float64{-0.262866, 0.951056, -0.162460}, []float64{0.000000, 1.000000, 0.000000}, []float64{0.000000, 0.955423, 0.295242}, []float64{-0.262866, 0.951056, 0.162460}, []float64{0.238856, 0.864188, 0.442863}, []float64{0.262866, 0.951056, 0.162460}, []float64{0.500000, 0.809017, 0.309017}, []float64{0.238856, 0.864188, -0.442863}, []float64{0.262866, 0.951056, -0.162460}, []float64{0.500000, 0.809017, -0.309017}, []float64{0.850651, 0.525731, 0.000000}, []float64{0.716567, 0.681718, 0.147621}, []float64{0.716567, 0.681718, -0.147621}, []float64{0.525731, 0.850651, 0.000000}, []float64{0.425325, 0.688191, 0.587785}, []float64{0.864188, 0.442863, 0.238856}, []float64{0.688191, 0.587785, 0.425325}, []float64{0.809017, 0.309017, 0.500000}, []float64{0.681718, 0.147621, 0.716567}, []float64{0.587785, 0.425325, 0.688191}, []float64{0.955423, 0.295242, 0.000000}, []float64{1.000000, 0.000000, 0.000000}, []float64{0.951056, 0.162460, 0.262866}, []float64{0.850651, -0.525731, 0.000000}, []float64{0.955423, -0.295242, 0.000000}, []float64{0.864188, -0.442863, 0.238856}, []float64{0.951056, -0.162460, 0.262866}, []float64{0.809017, -0.309017, 0.500000}, []float64{0.681718, -0.147621, 0.716567}, []float64{0.850651, 0.000000, 0.525731}, []float64{0.864188, 0.442863, -0.238856}, []float64{0.809017, 0.309017, -0.500000}, []float64{0.951056, 0.162460, -0.262866}, []float64{0.525731, 0.000000, -0.850651}, []float64{0.681718, 0.147621, -0.716567}, []float64{0.681718, -0.147621, -0.716567}, []float64{0.850651, 0.000000, -0.525731}, []float64{0.809017, -0.309017, -0.500000}, []float64{0.864188, -0.442863, -0.238856}, []float64{0.951056, -0.162460, -0.262866}, []float64{0.147621, 0.716567, -0.681718}, []float64{0.309017, 0.500000, -0.809017}, []float64{0.425325, 0.688191, -0.587785}, []float64{0.442863, 0.238856, -0.864188}, []float64{0.587785, 0.425325, -0.688191}, []float64{0.688191, 0.587785, -0.425325}, []float64{-0.147621, 0.716567, -0.681718}, []float64{-0.309017, 0.500000, -0.809017}, []float64{0.000000, 0.525731, -0.850651}, []float64{-0.525731, 0.000000, -0.850651}, []float64{-0.442863, 0.238856, -0.864188}, []float64{-0.295242, 0.000000, -0.955423}, []float64{-0.162460, 0.262866, -0.951056}, []float64{0.000000, 0.000000, -1.000000}, []float64{0.295242, 0.000000, -0.955423}, []float64{0.162460, 0.262866, -0.951056}, []float64{-0.442863, -0.238856, -0.864188}, []float64{-0.309017, -0.500000, -0.809017}, []float64{-0.162460, -0.262866, -0.951056}, []float64{0.000000, -0.850651, -0.525731}, []float64{-0.147621, -0.716567, -0.681718}, []float64{0.147621, -0.716567, -0.681718}, []float64{0.000000, -0.525731, -0.850651}, []float64{0.309017, -0.500000, -0.809017}, []float64{0.442863, -0.238856, -0.864188}, []float64{0.162460, -0.262866, -0.951056}, []float64{0.238856, -0.864188, -0.442863}, []float64{0.500000, -0.809017, -0.309017}, []float64{0.425325, -0.688191, -0.587785}, []float64{0.716567, -0.681718, -0.147621}, []float64{0.688191, -0.587785, -0.425325}, []float64{0.587785, -0.425325, -0.688191}, []float64{0.000000, -0.955423, -0.295242}, []float64{0.000000, -1.000000, 0.000000}, []float64{0.262866, -0.951056, -0.162460}, []float64{0.000000, -0.850651, 0.525731}, []float64{0.000000, -0.955423, 0.295242}, []float64{0.238856, -0.864188, 0.442863}, []float64{0.262866, -0.951056, 0.162460}, []float64{0.500000, -0.809017, 0.309017}, []float64{0.716567, -0.681718, 0.147621}, []float64{0.525731, -0.850651, 0.000000}, []float64{-0.238856, -0.864188, -0.442863}, []float64{-0.500000, -0.809017, -0.309017}, []float64{-0.262866, -0.951056, -0.162460}, []float64{-0.850651, -0.525731, 0.000000}, []float64{-0.716567, -0.681718, -0.147621}, []float64{-0.716567, -0.681718, 0.147621}, []float64{-0.525731, -0.850651, 0.000000}, []float64{-0.500000, -0.809017, 0.309017}, []float64{-0.238856, -0.864188, 0.442863}, []float64{-0.262866, -0.951056, 0.162460}, []float64{-0.864188, -0.442863, 0.238856}, []float64{-0.809017, -0.309017, 0.500000}, []float64{-0.688191, -0.587785, 0.425325}, []float64{-0.681718, -0.147621, 0.716567}, []float64{-0.442863, -0.238856, 0.864188}, []float64{-0.587785, -0.425325, 0.688191}, []float64{-0.309017, -0.500000, 0.809017}, []float64{-0.147621, -0.716567, 0.681718}, []float64{-0.425325, -0.688191, 0.587785}, []float64{-0.162460, -0.262866, 0.951056}, []float64{0.442863, -0.238856, 0.864188}, []float64{0.162460, -0.262866, 0.951056}, []float64{0.309017, -0.500000, 0.809017}, []float64{0.147621, -0.716567, 0.681718}, []float64{0.000000, -0.525731, 0.850651}, []float64{0.425325, -0.688191, 0.587785}, []float64{0.587785, -0.425325, 0.688191}, []float64{0.688191, -0.587785, 0.425325}, []float64{-0.955423, 0.295242, 0.000000}, []float64{-0.951056, 0.162460, 0.262866}, []float64{-1.000000, 0.000000, 0.000000}, []float64{-0.850651, 0.000000, 0.525731}, []float64{-0.955423, -0.295242, 0.000000}, []float64{-0.951056, -0.162460, 0.262866}, []float64{-0.864188, 0.442863, -0.238856}, []float64{-0.951056, 0.162460, -0.262866}, []float64{-0.809017, 0.309017, -0.500000}, []float64{-0.864188, -0.442863, -0.238856}, []float64{-0.951056, -0.162460, -0.262866}, []float64{-0.809017, -0.309017, -0.500000}, []float64{-0.681718, 0.147621, -0.716567}, []float64{-0.681718, -0.147621, -0.716567}, []float64{-0.850651, 0.000000, -0.525731}, []float64{-0.688191, 0.587785, -0.425325}, []float64{-0.587785, 0.425325, -0.688191}, []float64{-0.425325, 0.688191, -0.587785}, []float64{-0.425325, -0.688191, -0.587785}, []float64{-0.587785, -0.425325, -0.688191}, []float64{-0.688191, -0.587785, -0.425325}})
 	return this.anormsTable, nil
-}
-func (this *Quake2Md2) TexCoords() (v []*Quake2Md2_TexPoint, err error) {
-	if (this._f_texCoords) {
-		return this.texCoords, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.OfsTexCoords), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	for i := 0; i < int(this.NumTexCoords); i++ {
-		_ = i
-		tmp18 := NewQuake2Md2_TexPoint()
-		err = tmp18.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.texCoords = append(this.texCoords, tmp18)
-	}
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_texCoords = true
-	this._f_texCoords = true
-	return this.texCoords, nil
-}
-func (this *Quake2Md2) Triangles() (v []*Quake2Md2_Triangle, err error) {
-	if (this._f_triangles) {
-		return this.triangles, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.OfsTriangles), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	for i := 0; i < int(this.NumTriangles); i++ {
-		_ = i
-		tmp19 := NewQuake2Md2_Triangle()
-		err = tmp19.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.triangles = append(this.triangles, tmp19)
-	}
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_triangles = true
-	this._f_triangles = true
-	return this.triangles, nil
 }
 func (this *Quake2Md2) Frames() (v []*Quake2Md2_Frame, err error) {
 	if (this._f_frames) {
 		return this.frames, nil
 	}
+	this._f_frames = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -320,40 +288,31 @@ func (this *Quake2Md2) Frames() (v []*Quake2Md2_Frame, err error) {
 	}
 	for i := 0; i < int(this.NumFrames); i++ {
 		_ = i
-		tmp20, err := this._io.ReadBytes(int(this.BytesPerFrame))
+		tmp18, err := this._io.ReadBytes(int(this.BytesPerFrame))
 		if err != nil {
 			return nil, err
 		}
-		tmp20 = tmp20
-		this._raw_frames = append(this._raw_frames, tmp20)
+		tmp18 = tmp18
+		this._raw_frames = append(this._raw_frames, tmp18)
 		_io__raw_frames := kaitai.NewStream(bytes.NewReader(this._raw_frames[i]))
-		tmp21 := NewQuake2Md2_Frame()
-		err = tmp21.Read(_io__raw_frames, this, this._root)
+		tmp19 := NewQuake2Md2_Frame()
+		err = tmp19.Read(_io__raw_frames, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.frames = append(this.frames, tmp21)
+		this.frames = append(this.frames, tmp19)
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_frames = true
-	this._f_frames = true
 	return this.frames, nil
-}
-func (this *Quake2Md2) AnimNames() (v []string, err error) {
-	if (this._f_animNames) {
-		return this.animNames, nil
-	}
-	this.animNames = []string([]string{"stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"})
-	this._f_animNames = true
-	return this.animNames, nil
 }
 func (this *Quake2Md2) GlCmds() (v *Quake2Md2_GlCmdsList, err error) {
 	if (this._f_glCmds) {
 		return this.glCmds, nil
 	}
+	this._f_glCmds = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -362,31 +321,30 @@ func (this *Quake2Md2) GlCmds() (v *Quake2Md2_GlCmdsList, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp22, err := this._io.ReadBytes(int((4 * this.NumGlCmds)))
+	tmp20, err := this._io.ReadBytes(int(4 * this.NumGlCmds))
 	if err != nil {
 		return nil, err
 	}
-	tmp22 = tmp22
-	this._raw_glCmds = tmp22
+	tmp20 = tmp20
+	this._raw_glCmds = tmp20
 	_io__raw_glCmds := kaitai.NewStream(bytes.NewReader(this._raw_glCmds))
-	tmp23 := NewQuake2Md2_GlCmdsList()
-	err = tmp23.Read(_io__raw_glCmds, this, this._root)
+	tmp21 := NewQuake2Md2_GlCmdsList()
+	err = tmp21.Read(_io__raw_glCmds, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.glCmds = tmp23
+	this.glCmds = tmp21
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_glCmds = true
-	this._f_glCmds = true
 	return this.glCmds, nil
 }
 func (this *Quake2Md2) Skins() (v []string, err error) {
 	if (this._f_skins) {
 		return this.skins, nil
 	}
+	this._f_skins = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -397,72 +355,74 @@ func (this *Quake2Md2) Skins() (v []string, err error) {
 	}
 	for i := 0; i < int(this.NumSkins); i++ {
 		_ = i
-		tmp24, err := this._io.ReadBytes(int(64))
+		tmp22, err := this._io.ReadBytes(int(64))
 		if err != nil {
 			return nil, err
 		}
-		tmp24 = kaitai.BytesTerminate(tmp24, 0, false)
-		this.skins = append(this.skins, string(tmp24))
+		tmp22 = kaitai.BytesTerminate(tmp22, 0, false)
+		this.skins = append(this.skins, string(tmp22))
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_skins = true
-	this._f_skins = true
 	return this.skins, nil
 }
-func (this *Quake2Md2) AnimStartIndices() (v []byte, err error) {
-	if (this._f_animStartIndices) {
-		return this.animStartIndices, nil
+func (this *Quake2Md2) TexCoords() (v []*Quake2Md2_TexPoint, err error) {
+	if (this._f_texCoords) {
+		return this.texCoords, nil
 	}
-	this.animStartIndices = []byte([]uint8{0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, 135, 154, 160, 169, 173, 178, 184, 190})
-	this._f_animStartIndices = true
-	return this.animStartIndices, nil
-}
-type Quake2Md2_Vertex struct {
-	Position *Quake2Md2_CompressedVec
-	NormalIndex uint8
-	_io *kaitai.Stream
-	_root *Quake2Md2
-	_parent *Quake2Md2_Frame
-	_f_normal bool
-	normal []float64
-}
-func NewQuake2Md2_Vertex() *Quake2Md2_Vertex {
-	return &Quake2Md2_Vertex{
-	}
-}
-
-func (this *Quake2Md2_Vertex) Read(io *kaitai.Stream, parent *Quake2Md2_Frame, root *Quake2Md2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp25 := NewQuake2Md2_CompressedVec()
-	err = tmp25.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Position = tmp25
-	tmp26, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.NormalIndex = tmp26
-	return err
-}
-func (this *Quake2Md2_Vertex) Normal() (v []float64, err error) {
-	if (this._f_normal) {
-		return this.normal, nil
-	}
-	tmp27, err := this._root.AnormsTable()
+	this._f_texCoords = true
+	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	this.normal = []float64(tmp27[this.NormalIndex])
-	this._f_normal = true
-	return this.normal, nil
+	_, err = this._io.Seek(int64(this.OfsTexCoords), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	for i := 0; i < int(this.NumTexCoords); i++ {
+		_ = i
+		tmp23 := NewQuake2Md2_TexPoint()
+		err = tmp23.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.texCoords = append(this.texCoords, tmp23)
+	}
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.texCoords, nil
+}
+func (this *Quake2Md2) Triangles() (v []*Quake2Md2_Triangle, err error) {
+	if (this._f_triangles) {
+		return this.triangles, nil
+	}
+	this._f_triangles = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.OfsTriangles), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	for i := 0; i < int(this.NumTriangles); i++ {
+		_ = i
+		tmp24 := NewQuake2Md2_Triangle()
+		err = tmp24.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.triangles = append(this.triangles, tmp24)
+	}
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.triangles, nil
 }
 type Quake2Md2_CompressedVec struct {
 	XCompressed uint8
@@ -483,95 +443,56 @@ func NewQuake2Md2_CompressedVec() *Quake2Md2_CompressedVec {
 	}
 }
 
+func (this Quake2Md2_CompressedVec) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Quake2Md2_CompressedVec) Read(io *kaitai.Stream, parent *Quake2Md2_Vertex, root *Quake2Md2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp28, err := this._io.ReadU1()
+	tmp25, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.XCompressed = tmp28
-	tmp29, err := this._io.ReadU1()
+	this.XCompressed = tmp25
+	tmp26, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.YCompressed = tmp29
-	tmp30, err := this._io.ReadU1()
+	this.YCompressed = tmp26
+	tmp27, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ZCompressed = tmp30
+	this.ZCompressed = tmp27
 	return err
 }
 func (this *Quake2Md2_CompressedVec) X() (v float64, err error) {
 	if (this._f_x) {
 		return this.x, nil
 	}
-	this.x = float64(((this.XCompressed * this._parent._parent.Scale.X) + this._parent._parent.Translate.X))
 	this._f_x = true
+	this.x = float64(this.XCompressed * this._parent._parent.Scale.X + this._parent._parent.Translate.X)
 	return this.x, nil
 }
 func (this *Quake2Md2_CompressedVec) Y() (v float64, err error) {
 	if (this._f_y) {
 		return this.y, nil
 	}
-	this.y = float64(((this.YCompressed * this._parent._parent.Scale.Y) + this._parent._parent.Translate.Y))
 	this._f_y = true
+	this.y = float64(this.YCompressed * this._parent._parent.Scale.Y + this._parent._parent.Translate.Y)
 	return this.y, nil
 }
 func (this *Quake2Md2_CompressedVec) Z() (v float64, err error) {
 	if (this._f_z) {
 		return this.z, nil
 	}
-	this.z = float64(((this.ZCompressed * this._parent._parent.Scale.Z) + this._parent._parent.Translate.Z))
 	this._f_z = true
+	this.z = float64(this.ZCompressed * this._parent._parent.Scale.Z + this._parent._parent.Translate.Z)
 	return this.z, nil
 }
-type Quake2Md2_Triangle struct {
-	VertexIndices []uint16
-	TexPointIndices []uint16
-	_io *kaitai.Stream
-	_root *Quake2Md2
-	_parent *Quake2Md2
-}
-func NewQuake2Md2_Triangle() *Quake2Md2_Triangle {
-	return &Quake2Md2_Triangle{
-	}
-}
-
-func (this *Quake2Md2_Triangle) Read(io *kaitai.Stream, parent *Quake2Md2, root *Quake2Md2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(3); i++ {
-		_ = i
-		tmp31, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.VertexIndices = append(this.VertexIndices, tmp31)
-	}
-	for i := 0; i < int(3); i++ {
-		_ = i
-		tmp32, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.TexPointIndices = append(this.TexPointIndices, tmp32)
-	}
-	return err
-}
-
-/**
- * indices to `_root.frames[i].vertices` (for each frame with index `i`)
- */
-
-/**
- * indices to `_root.tex_coords`
- */
 type Quake2Md2_Frame struct {
 	Scale *Quake2Md2_Vec3f
 	Translate *Quake2Md2_Vec3f
@@ -586,39 +507,116 @@ func NewQuake2Md2_Frame() *Quake2Md2_Frame {
 	}
 }
 
+func (this Quake2Md2_Frame) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Quake2Md2_Frame) Read(io *kaitai.Stream, parent *Quake2Md2, root *Quake2Md2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp33 := NewQuake2Md2_Vec3f()
-	err = tmp33.Read(this._io, this, this._root)
+	tmp28 := NewQuake2Md2_Vec3f()
+	err = tmp28.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Scale = tmp33
-	tmp34 := NewQuake2Md2_Vec3f()
-	err = tmp34.Read(this._io, this, this._root)
+	this.Scale = tmp28
+	tmp29 := NewQuake2Md2_Vec3f()
+	err = tmp29.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Translate = tmp34
-	tmp35, err := this._io.ReadBytes(int(16))
+	this.Translate = tmp29
+	tmp30, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp35 = kaitai.BytesTerminate(tmp35, 0, false)
-	this.Name = string(tmp35)
+	tmp30 = kaitai.BytesTerminate(tmp30, 0, false)
+	this.Name = string(tmp30)
 	for i := 0; i < int(this._root.VerticesPerFrame); i++ {
 		_ = i
-		tmp36 := NewQuake2Md2_Vertex()
-		err = tmp36.Read(this._io, this, this._root)
+		tmp31 := NewQuake2Md2_Vertex()
+		err = tmp31.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Vertices = append(this.Vertices, tmp36)
+		this.Vertices = append(this.Vertices, tmp31)
 	}
 	return err
+}
+type Quake2Md2_GlCmd struct {
+	CmdNumVertices int32
+	Vertices []*Quake2Md2_GlVertex
+	_io *kaitai.Stream
+	_root *Quake2Md2
+	_parent *Quake2Md2_GlCmdsList
+	_f_numVertices bool
+	numVertices int
+	_f_primitive bool
+	primitive Quake2Md2_GlPrimitive
+}
+func NewQuake2Md2_GlCmd() *Quake2Md2_GlCmd {
+	return &Quake2Md2_GlCmd{
+	}
+}
+
+func (this Quake2Md2_GlCmd) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Quake2Md2_GlCmd) Read(io *kaitai.Stream, parent *Quake2Md2_GlCmdsList, root *Quake2Md2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp32, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.CmdNumVertices = int32(tmp32)
+	tmp33, err := this.NumVertices()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp33); i++ {
+		_ = i
+		tmp34 := NewQuake2Md2_GlVertex()
+		err = tmp34.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Vertices = append(this.Vertices, tmp34)
+	}
+	return err
+}
+func (this *Quake2Md2_GlCmd) NumVertices() (v int, err error) {
+	if (this._f_numVertices) {
+		return this.numVertices, nil
+	}
+	this._f_numVertices = true
+	var tmp35 int;
+	if (this.CmdNumVertices < 0) {
+		tmp35 = -(this.CmdNumVertices)
+	} else {
+		tmp35 = this.CmdNumVertices
+	}
+	this.numVertices = int(tmp35)
+	return this.numVertices, nil
+}
+func (this *Quake2Md2_GlCmd) Primitive() (v Quake2Md2_GlPrimitive, err error) {
+	if (this._f_primitive) {
+		return this.primitive, nil
+	}
+	this._f_primitive = true
+	var tmp36 Quake2Md2_GlPrimitive;
+	if (this.CmdNumVertices < 0) {
+		tmp36 = Quake2Md2_GlPrimitive__TriangleFan
+	} else {
+		tmp36 = Quake2Md2_GlPrimitive__TriangleStrip
+	}
+	this.primitive = Quake2Md2_GlPrimitive(tmp36)
+	return this.primitive, nil
 }
 type Quake2Md2_GlCmdsList struct {
 	Items []*Quake2Md2_GlCmd
@@ -629,6 +627,10 @@ type Quake2Md2_GlCmdsList struct {
 func NewQuake2Md2_GlCmdsList() *Quake2Md2_GlCmdsList {
 	return &Quake2Md2_GlCmdsList{
 	}
+}
+
+func (this Quake2Md2_GlCmdsList) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Quake2Md2_GlCmdsList) Read(io *kaitai.Stream, parent *Quake2Md2, root *Quake2Md2) (err error) {
@@ -656,6 +658,46 @@ func (this *Quake2Md2_GlCmdsList) Read(io *kaitai.Stream, parent *Quake2Md2, roo
 	}
 	return err
 }
+type Quake2Md2_GlVertex struct {
+	TexCoordsNormalized []float32
+	VertexIndex uint32
+	_io *kaitai.Stream
+	_root *Quake2Md2
+	_parent *Quake2Md2_GlCmd
+}
+func NewQuake2Md2_GlVertex() *Quake2Md2_GlVertex {
+	return &Quake2Md2_GlVertex{
+	}
+}
+
+func (this Quake2Md2_GlVertex) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Quake2Md2_GlVertex) Read(io *kaitai.Stream, parent *Quake2Md2_GlCmd, root *Quake2Md2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(2); i++ {
+		_ = i
+		tmp39, err := this._io.ReadF4le()
+		if err != nil {
+			return err
+		}
+		this.TexCoordsNormalized = append(this.TexCoordsNormalized, tmp39)
+	}
+	tmp40, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.VertexIndex = uint32(tmp40)
+	return err
+}
+
+/**
+ * index to `_root.frames[i].vertices` (for each frame with index `i`)
+ */
 type Quake2Md2_TexPoint struct {
 	SPx uint16
 	TPx uint16
@@ -672,39 +714,90 @@ func NewQuake2Md2_TexPoint() *Quake2Md2_TexPoint {
 	}
 }
 
+func (this Quake2Md2_TexPoint) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Quake2Md2_TexPoint) Read(io *kaitai.Stream, parent *Quake2Md2, root *Quake2Md2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp39, err := this._io.ReadU2le()
+	tmp41, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.SPx = uint16(tmp39)
-	tmp40, err := this._io.ReadU2le()
+	this.SPx = uint16(tmp41)
+	tmp42, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.TPx = uint16(tmp40)
+	this.TPx = uint16(tmp42)
 	return err
 }
 func (this *Quake2Md2_TexPoint) SNormalized() (v float64, err error) {
 	if (this._f_sNormalized) {
 		return this.sNormalized, nil
 	}
-	this.sNormalized = float64(((this.SPx + 0.0) / this._root.SkinWidthPx))
 	this._f_sNormalized = true
+	this.sNormalized = float64((this.SPx + 0.0) / this._root.SkinWidthPx)
 	return this.sNormalized, nil
 }
 func (this *Quake2Md2_TexPoint) TNormalized() (v float64, err error) {
 	if (this._f_tNormalized) {
 		return this.tNormalized, nil
 	}
-	this.tNormalized = float64(((this.TPx + 0.0) / this._root.SkinHeightPx))
 	this._f_tNormalized = true
+	this.tNormalized = float64((this.TPx + 0.0) / this._root.SkinHeightPx)
 	return this.tNormalized, nil
 }
+type Quake2Md2_Triangle struct {
+	VertexIndices []uint16
+	TexPointIndices []uint16
+	_io *kaitai.Stream
+	_root *Quake2Md2
+	_parent *Quake2Md2
+}
+func NewQuake2Md2_Triangle() *Quake2Md2_Triangle {
+	return &Quake2Md2_Triangle{
+	}
+}
+
+func (this Quake2Md2_Triangle) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Quake2Md2_Triangle) Read(io *kaitai.Stream, parent *Quake2Md2, root *Quake2Md2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(3); i++ {
+		_ = i
+		tmp43, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.VertexIndices = append(this.VertexIndices, tmp43)
+	}
+	for i := 0; i < int(3); i++ {
+		_ = i
+		tmp44, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.TexPointIndices = append(this.TexPointIndices, tmp44)
+	}
+	return err
+}
+
+/**
+ * indices to `_root.frames[i].vertices` (for each frame with index `i`)
+ */
+
+/**
+ * indices to `_root.tex_coords`
+ */
 type Quake2Md2_Vec3f struct {
 	X float32
 	Y float32
@@ -718,130 +811,77 @@ func NewQuake2Md2_Vec3f() *Quake2Md2_Vec3f {
 	}
 }
 
+func (this Quake2Md2_Vec3f) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Quake2Md2_Vec3f) Read(io *kaitai.Stream, parent *Quake2Md2_Frame, root *Quake2Md2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp41, err := this._io.ReadF4le()
+	tmp45, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.X = float32(tmp41)
-	tmp42, err := this._io.ReadF4le()
+	this.X = float32(tmp45)
+	tmp46, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Y = float32(tmp42)
-	tmp43, err := this._io.ReadF4le()
+	this.Y = float32(tmp46)
+	tmp47, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.Z = float32(tmp43)
+	this.Z = float32(tmp47)
 	return err
 }
-type Quake2Md2_GlVertex struct {
-	TexCoordsNormalized []float32
-	VertexIndex uint32
+type Quake2Md2_Vertex struct {
+	Position *Quake2Md2_CompressedVec
+	NormalIndex uint8
 	_io *kaitai.Stream
 	_root *Quake2Md2
-	_parent *Quake2Md2_GlCmd
+	_parent *Quake2Md2_Frame
+	_f_normal bool
+	normal []float64
 }
-func NewQuake2Md2_GlVertex() *Quake2Md2_GlVertex {
-	return &Quake2Md2_GlVertex{
+func NewQuake2Md2_Vertex() *Quake2Md2_Vertex {
+	return &Quake2Md2_Vertex{
 	}
 }
 
-func (this *Quake2Md2_GlVertex) Read(io *kaitai.Stream, parent *Quake2Md2_GlCmd, root *Quake2Md2) (err error) {
+func (this Quake2Md2_Vertex) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Quake2Md2_Vertex) Read(io *kaitai.Stream, parent *Quake2Md2_Frame, root *Quake2Md2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 0; i < int(2); i++ {
-		_ = i
-		tmp44, err := this._io.ReadF4le()
-		if err != nil {
-			return err
-		}
-		this.TexCoordsNormalized = append(this.TexCoordsNormalized, tmp44)
-	}
-	tmp45, err := this._io.ReadU4le()
+	tmp48 := NewQuake2Md2_CompressedVec()
+	err = tmp48.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.VertexIndex = uint32(tmp45)
+	this.Position = tmp48
+	tmp49, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.NormalIndex = tmp49
 	return err
 }
-
-/**
- * index to `_root.frames[i].vertices` (for each frame with index `i`)
- */
-type Quake2Md2_GlCmd struct {
-	CmdNumVertices int32
-	Vertices []*Quake2Md2_GlVertex
-	_io *kaitai.Stream
-	_root *Quake2Md2
-	_parent *Quake2Md2_GlCmdsList
-	_f_numVertices bool
-	numVertices int
-	_f_primitive bool
-	primitive Quake2Md2_GlPrimitive
-}
-func NewQuake2Md2_GlCmd() *Quake2Md2_GlCmd {
-	return &Quake2Md2_GlCmd{
+func (this *Quake2Md2_Vertex) Normal() (v []float64, err error) {
+	if (this._f_normal) {
+		return this.normal, nil
 	}
-}
-
-func (this *Quake2Md2_GlCmd) Read(io *kaitai.Stream, parent *Quake2Md2_GlCmdsList, root *Quake2Md2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp46, err := this._io.ReadS4le()
+	this._f_normal = true
+	tmp50, err := this._root.AnormsTable()
 	if err != nil {
-		return err
+		return nil, err
 	}
-	this.CmdNumVertices = int32(tmp46)
-	tmp47, err := this.NumVertices()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp47); i++ {
-		_ = i
-		tmp48 := NewQuake2Md2_GlVertex()
-		err = tmp48.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Vertices = append(this.Vertices, tmp48)
-	}
-	return err
-}
-func (this *Quake2Md2_GlCmd) NumVertices() (v int, err error) {
-	if (this._f_numVertices) {
-		return this.numVertices, nil
-	}
-	var tmp49 int;
-	if (this.CmdNumVertices < 0) {
-		tmp49 = -(this.CmdNumVertices)
-	} else {
-		tmp49 = this.CmdNumVertices
-	}
-	this.numVertices = int(tmp49)
-	this._f_numVertices = true
-	return this.numVertices, nil
-}
-func (this *Quake2Md2_GlCmd) Primitive() (v Quake2Md2_GlPrimitive, err error) {
-	if (this._f_primitive) {
-		return this.primitive, nil
-	}
-	var tmp50 Quake2Md2_GlPrimitive;
-	if (this.CmdNumVertices < 0) {
-		tmp50 = Quake2Md2_GlPrimitive__TriangleFan
-	} else {
-		tmp50 = Quake2Md2_GlPrimitive__TriangleStrip
-	}
-	this.primitive = Quake2Md2_GlPrimitive(tmp50)
-	this._f_primitive = true
-	return this.primitive, nil
+	this.normal = []float64(tmp50[this.NormalIndex])
+	return this.normal, nil
 }

@@ -1,9 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'windows_systemtime'
+require_relative 'ethernet_frame'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -126,14 +128,14 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
     264 => :linktype_iso_14443,
   }
   I__LINKTYPE = LINKTYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @signature = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([71, 77, 66, 85].pack('C*'), signature, _io, "/seq/0") if not signature == [71, 77, 66, 85].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([71, 77, 66, 85].pack('C*'), @signature, @_io, "/seq/0") if not @signature == [71, 77, 66, 85].pack('C*')
     @version_minor = @_io.read_u1
     @version_major = @_io.read_u1
     @mac_type = Kaitai::Struct::Stream::resolve_enum(LINKTYPE, @_io.read_u2le)
@@ -152,8 +154,51 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
     @conversation_stats_len = @_io.read_u4le
     self
   end
+
+  ##
+  # A container for actually captured network data. Allow to
+  # timestamp individual frames and designates how much data from
+  # the original packet was actually written into the file.
+  # @see https://learn.microsoft.com/en-us/windows/win32/netmon2/frame Source
+  class Frame < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @ts_delta = @_io.read_u8le
+      @orig_len = @_io.read_u4le
+      @inc_len = @_io.read_u4le
+      case _root.mac_type
+      when :linktype_ethernet
+        _io_body = @_io.substream(inc_len)
+        @body = EthernetFrame.new(_io_body)
+      else
+        @body = @_io.read_bytes(inc_len)
+      end
+      self
+    end
+
+    ##
+    # Time stamp - usecs since start of capture
+    attr_reader :ts_delta
+
+    ##
+    # Actual length of packet
+    attr_reader :orig_len
+
+    ##
+    # Number of octets captured in file
+    attr_reader :inc_len
+
+    ##
+    # Actual packet captured from the network
+    attr_reader :body
+    attr_reader :_raw_body
+  end
   class FrameIndex < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -174,7 +219,7 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
   # Each index entry is just a pointer to where the frame data is
   # stored in the file.
   class FrameIndexEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -202,58 +247,13 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
   end
 
   ##
-  # A container for actually captured network data. Allow to
-  # timestamp individual frames and designates how much data from
-  # the original packet was actually written into the file.
-  # @see https://learn.microsoft.com/en-us/windows/win32/netmon2/frame Source
-  class Frame < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @ts_delta = @_io.read_u8le
-      @orig_len = @_io.read_u4le
-      @inc_len = @_io.read_u4le
-      case _root.mac_type
-      when :linktype_ethernet
-        @_raw_body = @_io.read_bytes(inc_len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EthernetFrame.new(_io__raw_body)
-      else
-        @body = @_io.read_bytes(inc_len)
-      end
-      self
-    end
-
-    ##
-    # Time stamp - usecs since start of capture
-    attr_reader :ts_delta
-
-    ##
-    # Actual length of packet
-    attr_reader :orig_len
-
-    ##
-    # Number of octets captured in file
-    attr_reader :inc_len
-
-    ##
-    # Actual packet captured from the network
-    attr_reader :body
-    attr_reader :_raw_body
-  end
-
-  ##
   # Index that is used to access individual captured frames
   def frame_table
     return @frame_table unless @frame_table.nil?
     _pos = @_io.pos
     @_io.seek(frame_table_ofs)
-    @_raw_frame_table = @_io.read_bytes(frame_table_len)
-    _io__raw_frame_table = Kaitai::Struct::Stream.new(@_raw_frame_table)
-    @frame_table = FrameIndex.new(_io__raw_frame_table, self, @_root)
+    _io_frame_table = @_io.substream(frame_table_len)
+    @frame_table = FrameIndex.new(_io_frame_table, self, @_root)
     @_io.seek(_pos)
     @frame_table
   end

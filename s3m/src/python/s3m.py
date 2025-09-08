@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class S3m(KaitaiStruct):
     """Scream Tracker 3 module is a tracker music file format that, as all
@@ -29,9 +30,9 @@ class S3m(KaitaiStruct):
        Source - http://hackipedia.org/browse.cgi/File%20formats/Music%20tracker/S3M%2c%20ScreamTracker%203/Scream%20Tracker%203.20%20by%20Future%20Crew.txt
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(S3m, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -55,7 +56,6 @@ class S3m(KaitaiStruct):
         self.initial_tempo = self._io.read_u1()
         self.is_stereo = self._io.read_bits_int_be(1) != 0
         self.master_volume = self._io.read_bits_int_be(7)
-        self._io.align_to_byte()
         self.ultra_click_removal = self._io.read_u1()
         self.has_custom_pan = self._io.read_u1()
         self.reserved2 = self._io.read_bytes(8)
@@ -74,17 +74,57 @@ class S3m(KaitaiStruct):
             self.patterns.append(S3m.PatternPtr(self._io, self, self._root))
 
         if self.has_custom_pan == 252:
+            pass
             self.channel_pans = []
             for i in range(32):
                 self.channel_pans.append(S3m.ChannelPan(self._io, self, self._root))
 
 
 
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.channels)):
+            pass
+            self.channels[i]._fetch_instances()
+
+        for i in range(len(self.instruments)):
+            pass
+            self.instruments[i]._fetch_instances()
+
+        for i in range(len(self.patterns)):
+            pass
+            self.patterns[i]._fetch_instances()
+
+        if self.has_custom_pan == 252:
+            pass
+            for i in range(len(self.channel_pans)):
+                pass
+                self.channel_pans[i]._fetch_instances()
+
+
+
+    class Channel(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(S3m.Channel, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.is_disabled = self._io.read_bits_int_be(1) != 0
+            self.ch_type = self._io.read_bits_int_be(7)
+
+
+        def _fetch_instances(self):
+            pass
+
+
     class ChannelPan(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(S3m.ChannelPan, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -94,146 +134,13 @@ class S3m(KaitaiStruct):
             self.pan = self._io.read_bits_int_be(4)
 
 
-    class PatternCell(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.has_fx = self._io.read_bits_int_be(1) != 0
-            self.has_volume = self._io.read_bits_int_be(1) != 0
-            self.has_note_and_instrument = self._io.read_bits_int_be(1) != 0
-            self.channel_num = self._io.read_bits_int_be(5)
-            self._io.align_to_byte()
-            if self.has_note_and_instrument:
-                self.note = self._io.read_u1()
-
-            if self.has_note_and_instrument:
-                self.instrument = self._io.read_u1()
-
-            if self.has_volume:
-                self.volume = self._io.read_u1()
-
-            if self.has_fx:
-                self.fx_type = self._io.read_u1()
-
-            if self.has_fx:
-                self.fx_value = self._io.read_u1()
-
-
-
-    class PatternCells(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.cells = []
-            i = 0
-            while not self._io.is_eof():
-                self.cells.append(S3m.PatternCell(self._io, self, self._root))
-                i += 1
-
-
-
-    class Channel(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.is_disabled = self._io.read_bits_int_be(1) != 0
-            self.ch_type = self._io.read_bits_int_be(7)
-
-
-    class SwappedU3(KaitaiStruct):
-        """Custom 3-byte integer, stored in mixed endian manner."""
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.hi = self._io.read_u1()
-            self.lo = self._io.read_u2le()
-
-        @property
-        def value(self):
-            if hasattr(self, '_m_value'):
-                return self._m_value
-
-            self._m_value = (self.lo | (self.hi << 16))
-            return getattr(self, '_m_value', None)
-
-
-    class Pattern(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.size = self._io.read_u2le()
-            self._raw_body = self._io.read_bytes((self.size - 2))
-            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-            self.body = S3m.PatternCells(_io__raw_body, self, self._root)
-
-
-    class PatternPtr(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.paraptr = self._io.read_u2le()
-
-        @property
-        def body(self):
-            if hasattr(self, '_m_body'):
-                return self._m_body
-
-            _pos = self._io.pos()
-            self._io.seek((self.paraptr * 16))
-            self._m_body = S3m.Pattern(self._io, self, self._root)
-            self._io.seek(_pos)
-            return getattr(self, '_m_body', None)
-
-
-    class InstrumentPtr(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.paraptr = self._io.read_u2le()
-
-        @property
-        def body(self):
-            if hasattr(self, '_m_body'):
-                return self._m_body
-
-            _pos = self._io.pos()
-            self._io.seek((self.paraptr * 16))
-            self._m_body = S3m.Instrument(self._io, self, self._root)
-            self._io.seek(_pos)
-            return getattr(self, '_m_body', None)
+        def _fetch_instances(self):
+            pass
 
 
     class Instrument(KaitaiStruct):
 
-        class InstTypes(Enum):
+        class InstTypes(IntEnum):
             sample = 1
             melodic = 2
             bass_drum = 3
@@ -242,9 +149,9 @@ class S3m(KaitaiStruct):
             cymbal = 6
             hihat = 7
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(S3m.Instrument, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -252,8 +159,10 @@ class S3m(KaitaiStruct):
             self.filename = KaitaiStream.bytes_terminate(self._io.read_bytes(12), 0, False)
             _on = self.type
             if _on == S3m.Instrument.InstTypes.sample:
+                pass
                 self.body = S3m.Instrument.Sampled(self._io, self, self._root)
             else:
+                pass
                 self.body = S3m.Instrument.Adlib(self._io, self, self._root)
             self.tuning_hz = self._io.read_u4le()
             self.reserved2 = self._io.read_bytes(12)
@@ -262,11 +171,40 @@ class S3m(KaitaiStruct):
             if not self.magic == b"\x53\x43\x52\x53":
                 raise kaitaistruct.ValidationNotEqualError(b"\x53\x43\x52\x53", self.magic, self._io, u"/types/instrument/seq/6")
 
+
+        def _fetch_instances(self):
+            pass
+            _on = self.type
+            if _on == S3m.Instrument.InstTypes.sample:
+                pass
+                self.body._fetch_instances()
+            else:
+                pass
+                self.body._fetch_instances()
+
+        class Adlib(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                super(S3m.Instrument.Adlib, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self.reserved1 = self._io.read_bytes(3)
+                if not self.reserved1 == b"\x00\x00\x00":
+                    raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00", self.reserved1, self._io, u"/types/instrument/types/adlib/seq/0")
+                self._unnamed1 = self._io.read_bytes(16)
+
+
+            def _fetch_instances(self):
+                pass
+
+
         class Sampled(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(S3m.Instrument.Sampled, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
@@ -279,31 +217,209 @@ class S3m(KaitaiStruct):
                 self.is_packed = self._io.read_u1()
                 self.flags = self._io.read_u1()
 
+
+            def _fetch_instances(self):
+                pass
+                self.paraptr_sample._fetch_instances()
+                _ = self.sample
+                if hasattr(self, '_m_sample'):
+                    pass
+
+
             @property
             def sample(self):
                 if hasattr(self, '_m_sample'):
                     return self._m_sample
 
                 _pos = self._io.pos()
-                self._io.seek((self.paraptr_sample.value * 16))
+                self._io.seek(self.paraptr_sample.value * 16)
                 self._m_sample = self._io.read_bytes(self.len_sample)
                 self._io.seek(_pos)
                 return getattr(self, '_m_sample', None)
 
 
-        class Adlib(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
 
-            def _read(self):
-                self.reserved1 = self._io.read_bytes(3)
-                if not self.reserved1 == b"\x00\x00\x00":
-                    raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00", self.reserved1, self._io, u"/types/instrument/types/adlib/seq/0")
-                self._unnamed1 = self._io.read_bytes(16)
+    class InstrumentPtr(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(S3m.InstrumentPtr, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
 
+        def _read(self):
+            self.paraptr = self._io.read_u2le()
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.body
+            if hasattr(self, '_m_body'):
+                pass
+                self._m_body._fetch_instances()
+
+
+        @property
+        def body(self):
+            if hasattr(self, '_m_body'):
+                return self._m_body
+
+            _pos = self._io.pos()
+            self._io.seek(self.paraptr * 16)
+            self._m_body = S3m.Instrument(self._io, self, self._root)
+            self._io.seek(_pos)
+            return getattr(self, '_m_body', None)
+
+
+    class Pattern(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(S3m.Pattern, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.size = self._io.read_u2le()
+            self._raw_body = self._io.read_bytes(self.size - 2)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = S3m.PatternCells(_io__raw_body, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            self.body._fetch_instances()
+
+
+    class PatternCell(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(S3m.PatternCell, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.has_fx = self._io.read_bits_int_be(1) != 0
+            self.has_volume = self._io.read_bits_int_be(1) != 0
+            self.has_note_and_instrument = self._io.read_bits_int_be(1) != 0
+            self.channel_num = self._io.read_bits_int_be(5)
+            if self.has_note_and_instrument:
+                pass
+                self.note = self._io.read_u1()
+
+            if self.has_note_and_instrument:
+                pass
+                self.instrument = self._io.read_u1()
+
+            if self.has_volume:
+                pass
+                self.volume = self._io.read_u1()
+
+            if self.has_fx:
+                pass
+                self.fx_type = self._io.read_u1()
+
+            if self.has_fx:
+                pass
+                self.fx_value = self._io.read_u1()
+
+
+
+        def _fetch_instances(self):
+            pass
+            if self.has_note_and_instrument:
+                pass
+
+            if self.has_note_and_instrument:
+                pass
+
+            if self.has_volume:
+                pass
+
+            if self.has_fx:
+                pass
+
+            if self.has_fx:
+                pass
+
+
+
+    class PatternCells(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(S3m.PatternCells, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.cells = []
+            i = 0
+            while not self._io.is_eof():
+                self.cells.append(S3m.PatternCell(self._io, self, self._root))
+                i += 1
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.cells)):
+                pass
+                self.cells[i]._fetch_instances()
+
+
+
+    class PatternPtr(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(S3m.PatternPtr, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.paraptr = self._io.read_u2le()
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.body
+            if hasattr(self, '_m_body'):
+                pass
+                self._m_body._fetch_instances()
+
+
+        @property
+        def body(self):
+            if hasattr(self, '_m_body'):
+                return self._m_body
+
+            _pos = self._io.pos()
+            self._io.seek(self.paraptr * 16)
+            self._m_body = S3m.Pattern(self._io, self, self._root)
+            self._io.seek(_pos)
+            return getattr(self, '_m_body', None)
+
+
+    class SwappedU3(KaitaiStruct):
+        """Custom 3-byte integer, stored in mixed endian manner."""
+        def __init__(self, _io, _parent=None, _root=None):
+            super(S3m.SwappedU3, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.hi = self._io.read_u1()
+            self.lo = self._io.read_u2le()
+
+
+        def _fetch_instances(self):
+            pass
+
+        @property
+        def value(self):
+            if hasattr(self, '_m_value'):
+                return self._m_value
+
+            self._m_value = self.lo | self.hi << 16
+            return getattr(self, '_m_value', None)
 
 
 

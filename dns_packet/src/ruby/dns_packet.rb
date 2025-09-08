@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -40,8 +40,8 @@ class DnsPacket < Kaitai::Struct::Struct
     33 => :type_type_srv,
   }
   I__TYPE_TYPE = TYPE_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -86,175 +86,8 @@ class DnsPacket < Kaitai::Struct::Struct
     end
     self
   end
-  class MxInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @preference = @_io.read_u2be
-      @mx = DomainName.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :preference
-    attr_reader :mx
-  end
-  class PointerStruct < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @value = @_io.read_u1
-      self
-    end
-    def contents
-      return @contents unless @contents.nil?
-      io = _root._io
-      _pos = io.pos
-      io.seek((value + ((_parent.length - 192) << 8)))
-      @contents = DomainName.new(io, self, @_root)
-      io.seek(_pos)
-      @contents
-    end
-
-    ##
-    # Read one byte, then offset to that position, read one domain-name and return
-    attr_reader :value
-  end
-  class Label < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @length = @_io.read_u1
-      if is_pointer
-        @pointer = PointerStruct.new(@_io, self, @_root)
-      end
-      if !(is_pointer)
-        @name = (@_io.read_bytes(length)).force_encoding("utf-8")
-      end
-      self
-    end
-    def is_pointer
-      return @is_pointer unless @is_pointer.nil?
-      @is_pointer = length >= 192
-      @is_pointer
-    end
-
-    ##
-    # RFC1035 4.1.4: If the first two bits are raised it's a pointer-offset to a previously defined name
-    attr_reader :length
-    attr_reader :pointer
-
-    ##
-    # Otherwise its a string the length of the length value
-    attr_reader :name
-  end
-  class Query < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @name = DomainName.new(@_io, self, @_root)
-      @type = Kaitai::Struct::Stream::resolve_enum(DnsPacket::TYPE_TYPE, @_io.read_u2be)
-      @query_class = Kaitai::Struct::Stream::resolve_enum(DnsPacket::CLASS_TYPE, @_io.read_u2be)
-      self
-    end
-    attr_reader :name
-    attr_reader :type
-    attr_reader :query_class
-  end
-  class DomainName < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @name = []
-      i = 0
-      begin
-        _ = Label.new(@_io, self, @_root)
-        @name << _
-        i += 1
-      end until  ((_.length == 0) || (_.length >= 192)) 
-      self
-    end
-
-    ##
-    # Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)
-    attr_reader :name
-  end
-  class AddressV6 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @ip_v6 = @_io.read_bytes(16)
-      self
-    end
-    attr_reader :ip_v6
-  end
-  class Service < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @priority = @_io.read_u2be
-      @weight = @_io.read_u2be
-      @port = @_io.read_u2be
-      @target = DomainName.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :priority
-    attr_reader :weight
-    attr_reader :port
-    attr_reader :target
-  end
-  class Txt < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @length = @_io.read_u1
-      @text = (@_io.read_bytes(length)).force_encoding("utf-8")
-      self
-    end
-    attr_reader :length
-    attr_reader :text
-  end
-  class TxtBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @data = []
-      i = 0
-      while not @_io.eof?
-        @data << Txt.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :data
-  end
   class Address < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -265,8 +98,20 @@ class DnsPacket < Kaitai::Struct::Struct
     end
     attr_reader :ip
   end
+  class AddressV6 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @ip_v6 = @_io.read_bytes(16)
+      self
+    end
+    attr_reader :ip_v6
+  end
   class Answer < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -278,42 +123,33 @@ class DnsPacket < Kaitai::Struct::Struct
       @ttl = @_io.read_s4be
       @rdlength = @_io.read_u2be
       case type
-      when :type_type_srv
-        @_raw_payload = @_io.read_bytes(rdlength)
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = Service.new(_io__raw_payload, self, @_root)
       when :type_type_a
-        @_raw_payload = @_io.read_bytes(rdlength)
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = Address.new(_io__raw_payload, self, @_root)
-      when :type_type_cname
-        @_raw_payload = @_io.read_bytes(rdlength)
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = DomainName.new(_io__raw_payload, self, @_root)
-      when :type_type_ns
-        @_raw_payload = @_io.read_bytes(rdlength)
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = DomainName.new(_io__raw_payload, self, @_root)
-      when :type_type_soa
-        @_raw_payload = @_io.read_bytes(rdlength)
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = AuthorityInfo.new(_io__raw_payload, self, @_root)
-      when :type_type_mx
-        @_raw_payload = @_io.read_bytes(rdlength)
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = MxInfo.new(_io__raw_payload, self, @_root)
-      when :type_type_txt
-        @_raw_payload = @_io.read_bytes(rdlength)
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = TxtBody.new(_io__raw_payload, self, @_root)
-      when :type_type_ptr
-        @_raw_payload = @_io.read_bytes(rdlength)
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = DomainName.new(_io__raw_payload, self, @_root)
+        _io_payload = @_io.substream(rdlength)
+        @payload = Address.new(_io_payload, self, @_root)
       when :type_type_aaaa
-        @_raw_payload = @_io.read_bytes(rdlength)
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = AddressV6.new(_io__raw_payload, self, @_root)
+        _io_payload = @_io.substream(rdlength)
+        @payload = AddressV6.new(_io_payload, self, @_root)
+      when :type_type_cname
+        _io_payload = @_io.substream(rdlength)
+        @payload = DomainName.new(_io_payload, self, @_root)
+      when :type_type_mx
+        _io_payload = @_io.substream(rdlength)
+        @payload = MxInfo.new(_io_payload, self, @_root)
+      when :type_type_ns
+        _io_payload = @_io.substream(rdlength)
+        @payload = DomainName.new(_io_payload, self, @_root)
+      when :type_type_ptr
+        _io_payload = @_io.substream(rdlength)
+        @payload = DomainName.new(_io_payload, self, @_root)
+      when :type_type_soa
+        _io_payload = @_io.substream(rdlength)
+        @payload = AuthorityInfo.new(_io_payload, self, @_root)
+      when :type_type_srv
+        _io_payload = @_io.substream(rdlength)
+        @payload = Service.new(_io_payload, self, @_root)
+      when :type_type_txt
+        _io_payload = @_io.substream(rdlength)
+        @payload = TxtBody.new(_io_payload, self, @_root)
       else
         @payload = @_io.read_bytes(rdlength)
       end
@@ -333,75 +169,8 @@ class DnsPacket < Kaitai::Struct::Struct
     attr_reader :payload
     attr_reader :_raw_payload
   end
-  class PacketFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @flag = @_io.read_u2be
-      self
-    end
-    def qr
-      return @qr unless @qr.nil?
-      @qr = ((flag & 32768) >> 15)
-      @qr
-    end
-    def ra
-      return @ra unless @ra.nil?
-      @ra = ((flag & 128) >> 7)
-      @ra
-    end
-    def tc
-      return @tc unless @tc.nil?
-      @tc = ((flag & 512) >> 9)
-      @tc
-    end
-    def is_opcode_valid
-      return @is_opcode_valid unless @is_opcode_valid.nil?
-      @is_opcode_valid =  ((opcode == 0) || (opcode == 1) || (opcode == 2)) 
-      @is_opcode_valid
-    end
-    def rcode
-      return @rcode unless @rcode.nil?
-      @rcode = ((flag & 15) >> 0)
-      @rcode
-    end
-    def opcode
-      return @opcode unless @opcode.nil?
-      @opcode = ((flag & 30720) >> 11)
-      @opcode
-    end
-    def aa
-      return @aa unless @aa.nil?
-      @aa = ((flag & 1024) >> 10)
-      @aa
-    end
-    def z
-      return @z unless @z.nil?
-      @z = ((flag & 64) >> 6)
-      @z
-    end
-    def rd
-      return @rd unless @rd.nil?
-      @rd = ((flag & 256) >> 8)
-      @rd
-    end
-    def cd
-      return @cd unless @cd.nil?
-      @cd = ((flag & 16) >> 4)
-      @cd
-    end
-    def ad
-      return @ad unless @ad.nil?
-      @ad = ((flag & 32) >> 5)
-      @ad
-    end
-    attr_reader :flag
-  end
   class AuthorityInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -423,6 +192,228 @@ class DnsPacket < Kaitai::Struct::Struct
     attr_reader :retry_interval
     attr_reader :expire_limit
     attr_reader :min_ttl
+  end
+  class DomainName < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name = []
+      i = 0
+      begin
+        _ = Label.new(@_io, self, @_root)
+        @name << _
+        i += 1
+      end until  ((_.length == 0) || (_.length >= 192)) 
+      self
+    end
+
+    ##
+    # Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)
+    attr_reader :name
+  end
+  class Label < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @length = @_io.read_u1
+      if is_pointer
+        @pointer = PointerStruct.new(@_io, self, @_root)
+      end
+      if !(is_pointer)
+        @name = (@_io.read_bytes(length)).force_encoding("UTF-8")
+      end
+      self
+    end
+    def is_pointer
+      return @is_pointer unless @is_pointer.nil?
+      @is_pointer = length >= 192
+      @is_pointer
+    end
+
+    ##
+    # RFC1035 4.1.4: If the first two bits are raised it's a pointer-offset to a previously defined name
+    attr_reader :length
+    attr_reader :pointer
+
+    ##
+    # Otherwise its a string the length of the length value
+    attr_reader :name
+  end
+  class MxInfo < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @preference = @_io.read_u2be
+      @mx = DomainName.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :preference
+    attr_reader :mx
+  end
+  class PacketFlags < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @flag = @_io.read_u2be
+      self
+    end
+    def aa
+      return @aa unless @aa.nil?
+      @aa = (flag & 1024) >> 10
+      @aa
+    end
+    def ad
+      return @ad unless @ad.nil?
+      @ad = (flag & 32) >> 5
+      @ad
+    end
+    def cd
+      return @cd unless @cd.nil?
+      @cd = (flag & 16) >> 4
+      @cd
+    end
+    def is_opcode_valid
+      return @is_opcode_valid unless @is_opcode_valid.nil?
+      @is_opcode_valid =  ((opcode == 0) || (opcode == 1) || (opcode == 2)) 
+      @is_opcode_valid
+    end
+    def opcode
+      return @opcode unless @opcode.nil?
+      @opcode = (flag & 30720) >> 11
+      @opcode
+    end
+    def qr
+      return @qr unless @qr.nil?
+      @qr = (flag & 32768) >> 15
+      @qr
+    end
+    def ra
+      return @ra unless @ra.nil?
+      @ra = (flag & 128) >> 7
+      @ra
+    end
+    def rcode
+      return @rcode unless @rcode.nil?
+      @rcode = (flag & 15) >> 0
+      @rcode
+    end
+    def rd
+      return @rd unless @rd.nil?
+      @rd = (flag & 256) >> 8
+      @rd
+    end
+    def tc
+      return @tc unless @tc.nil?
+      @tc = (flag & 512) >> 9
+      @tc
+    end
+    def z
+      return @z unless @z.nil?
+      @z = (flag & 64) >> 6
+      @z
+    end
+    attr_reader :flag
+  end
+  class PointerStruct < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @value = @_io.read_u1
+      self
+    end
+    def contents
+      return @contents unless @contents.nil?
+      io = _root._io
+      _pos = io.pos
+      io.seek(value + (_parent.length - 192 << 8))
+      @contents = DomainName.new(io, self, @_root)
+      io.seek(_pos)
+      @contents
+    end
+
+    ##
+    # Read one byte, then offset to that position, read one domain-name and return
+    attr_reader :value
+  end
+  class Query < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name = DomainName.new(@_io, self, @_root)
+      @type = Kaitai::Struct::Stream::resolve_enum(DnsPacket::TYPE_TYPE, @_io.read_u2be)
+      @query_class = Kaitai::Struct::Stream::resolve_enum(DnsPacket::CLASS_TYPE, @_io.read_u2be)
+      self
+    end
+    attr_reader :name
+    attr_reader :type
+    attr_reader :query_class
+  end
+  class Service < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @priority = @_io.read_u2be
+      @weight = @_io.read_u2be
+      @port = @_io.read_u2be
+      @target = DomainName.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :priority
+    attr_reader :weight
+    attr_reader :port
+    attr_reader :target
+  end
+  class Txt < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @length = @_io.read_u1
+      @text = (@_io.read_bytes(length)).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :length
+    attr_reader :text
+  end
+  class TxtBody < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @data = []
+      i = 0
+      while not @_io.eof?
+        @data << Txt.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :data
   end
 
   ##

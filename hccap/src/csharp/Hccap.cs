@@ -38,6 +38,27 @@ namespace Kaitai
                 }
             }
         }
+        public partial class EapolDummy : KaitaiStruct
+        {
+            public static EapolDummy FromFile(string fileName)
+            {
+                return new EapolDummy(new KaitaiStream(fileName));
+            }
+
+            public EapolDummy(KaitaiStream p__io, Hccap.HccapRecord p__parent = null, Hccap p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private Hccap m_root;
+            private Hccap.HccapRecord m_parent;
+            public Hccap M_Root { get { return m_root; } }
+            public Hccap.HccapRecord M_Parent { get { return m_parent; } }
+        }
         public partial class HccapRecord : KaitaiStruct
         {
             public static HccapRecord FromFile(string fileName)
@@ -74,12 +95,12 @@ namespace Kaitai
                 {
                     if (f_eapol)
                         return _eapol;
+                    f_eapol = true;
                     KaitaiStream io = EapolBuffer.M_Io;
                     long _pos = io.Pos;
                     io.Seek(0);
                     _eapol = io.ReadBytes(LenEapol);
                     io.Seek(_pos);
-                    f_eapol = true;
                     return _eapol;
                 }
             }
@@ -141,27 +162,6 @@ namespace Kaitai
             public Hccap M_Root { get { return m_root; } }
             public Hccap M_Parent { get { return m_parent; } }
             public byte[] M_RawEapolBuffer { get { return __raw_eapolBuffer; } }
-        }
-        public partial class EapolDummy : KaitaiStruct
-        {
-            public static EapolDummy FromFile(string fileName)
-            {
-                return new EapolDummy(new KaitaiStream(fileName));
-            }
-
-            public EapolDummy(KaitaiStream p__io, Hccap.HccapRecord p__parent = null, Hccap p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-            }
-            private Hccap m_root;
-            private Hccap.HccapRecord m_parent;
-            public Hccap M_Root { get { return m_root; } }
-            public Hccap.HccapRecord M_Parent { get { return m_parent; } }
         }
         private List<HccapRecord> _records;
         private Hccap m_root;

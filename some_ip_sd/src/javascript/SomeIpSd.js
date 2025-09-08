@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './SomeIpSdEntries', './SomeIpSdOptions'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./SomeIpSdEntries'), require('./SomeIpSdOptions'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './SomeIpSdOptions', './SomeIpSdEntries'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./SomeIpSdOptions'), require('./SomeIpSdEntries'));
   } else {
-    root.SomeIpSd = factory(root.KaitaiStream, root.SomeIpSdEntries, root.SomeIpSdOptions);
+    factory(root.SomeIpSd || (root.SomeIpSd = {}), root.KaitaiStream, root.SomeIpSdOptions || (root.SomeIpSdOptions = {}), root.SomeIpSdEntries || (root.SomeIpSdEntries = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, SomeIpSdEntries, SomeIpSdOptions) {
+})(typeof self !== 'undefined' ? self : this, function (SomeIpSd_, KaitaiStream, SomeIpSdOptions_, SomeIpSdEntries_) {
 /**
  * The main tasks of the Service Discovery Protocol are communicating the
  * availability of functional entities called services in the in-vehicle
@@ -33,11 +33,11 @@ var SomeIpSd = (function() {
     this.lenEntries = this._io.readU4be();
     this._raw_entries = this._io.readBytes(this.lenEntries);
     var _io__raw_entries = new KaitaiStream(this._raw_entries);
-    this.entries = new SomeIpSdEntries(_io__raw_entries, this, null);
+    this.entries = new SomeIpSdEntries_.SomeIpSdEntries(_io__raw_entries, null, null);
     this.lenOptions = this._io.readU4be();
     this._raw_options = this._io.readBytes(this.lenOptions);
     var _io__raw_options = new KaitaiStream(this._raw_options);
-    this.options = new SomeIpSdOptions(_io__raw_options, this, null);
+    this.options = new SomeIpSdOptions_.SomeIpSdOptions(_io__raw_options, null, null);
   }
 
   /**
@@ -48,7 +48,7 @@ var SomeIpSd = (function() {
     function SdFlags(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -68,5 +68,5 @@ var SomeIpSd = (function() {
 
   return SomeIpSd;
 })();
-return SomeIpSd;
-}));
+SomeIpSd_.SomeIpSd = SomeIpSd;
+});

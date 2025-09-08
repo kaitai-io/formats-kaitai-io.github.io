@@ -24,9 +24,9 @@ namespace Kaitai
         private void _read()
         {
             _signature = m_io.ReadBytes(26);
-            if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_signature, new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }, Signature, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }, _signature, m_io, "/seq/0");
             }
             _count = m_io.ReadU4be();
             _meta = new List<Meta>();
@@ -40,6 +40,77 @@ namespace Kaitai
             {
                 _tables.Add(new ColTable(i, m_io, this, m_root));
             }
+        }
+        public partial class ColTable : KaitaiStruct
+        {
+            public ColTable(ushort p_index, KaitaiStream p__io, NtMdtPal p__parent = null, NtMdtPal p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _index = p_index;
+                _read();
+            }
+            private void _read()
+            {
+                _size1 = m_io.ReadU1();
+                _unkn = m_io.ReadU1();
+                _title = System.Text.Encoding.GetEncoding("UTF-16LE").GetString(m_io.ReadBytes(M_Root.Meta[Index].NameSize));
+                _unkn1 = m_io.ReadU2be();
+                _colors = new List<Color>();
+                for (var i = 0; i < M_Root.Meta[Index].ColorsCount - 1; i++)
+                {
+                    _colors.Add(new Color(m_io, this, m_root));
+                }
+            }
+            private byte _size1;
+            private byte _unkn;
+            private string _title;
+            private ushort _unkn1;
+            private List<Color> _colors;
+            private ushort _index;
+            private NtMdtPal m_root;
+            private NtMdtPal m_parent;
+            public byte Size1 { get { return _size1; } }
+            public byte Unkn { get { return _unkn; } }
+            public string Title { get { return _title; } }
+            public ushort Unkn1 { get { return _unkn1; } }
+            public List<Color> Colors { get { return _colors; } }
+            public ushort Index { get { return _index; } }
+            public NtMdtPal M_Root { get { return m_root; } }
+            public NtMdtPal M_Parent { get { return m_parent; } }
+        }
+        public partial class Color : KaitaiStruct
+        {
+            public static Color FromFile(string fileName)
+            {
+                return new Color(new KaitaiStream(fileName));
+            }
+
+            public Color(KaitaiStream p__io, NtMdtPal.ColTable p__parent = null, NtMdtPal p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _red = m_io.ReadU1();
+                _unkn = m_io.ReadU1();
+                _blue = m_io.ReadU1();
+                _green = m_io.ReadU1();
+            }
+            private byte _red;
+            private byte _unkn;
+            private byte _blue;
+            private byte _green;
+            private NtMdtPal m_root;
+            private NtMdtPal.ColTable m_parent;
+            public byte Red { get { return _red; } }
+            public byte Unkn { get { return _unkn; } }
+            public byte Blue { get { return _blue; } }
+            public byte Green { get { return _green; } }
+            public NtMdtPal M_Root { get { return m_root; } }
+            public NtMdtPal.ColTable M_Parent { get { return m_parent; } }
         }
         public partial class Meta : KaitaiStruct
         {
@@ -106,77 +177,6 @@ namespace Kaitai
             /// </summary>
             public byte[] Unkn12 { get { return _unkn12; } }
             public ushort NameSize { get { return _nameSize; } }
-            public NtMdtPal M_Root { get { return m_root; } }
-            public NtMdtPal M_Parent { get { return m_parent; } }
-        }
-        public partial class Color : KaitaiStruct
-        {
-            public static Color FromFile(string fileName)
-            {
-                return new Color(new KaitaiStream(fileName));
-            }
-
-            public Color(KaitaiStream p__io, NtMdtPal.ColTable p__parent = null, NtMdtPal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _red = m_io.ReadU1();
-                _unkn = m_io.ReadU1();
-                _blue = m_io.ReadU1();
-                _green = m_io.ReadU1();
-            }
-            private byte _red;
-            private byte _unkn;
-            private byte _blue;
-            private byte _green;
-            private NtMdtPal m_root;
-            private NtMdtPal.ColTable m_parent;
-            public byte Red { get { return _red; } }
-            public byte Unkn { get { return _unkn; } }
-            public byte Blue { get { return _blue; } }
-            public byte Green { get { return _green; } }
-            public NtMdtPal M_Root { get { return m_root; } }
-            public NtMdtPal.ColTable M_Parent { get { return m_parent; } }
-        }
-        public partial class ColTable : KaitaiStruct
-        {
-            public ColTable(ushort p_index, KaitaiStream p__io, NtMdtPal p__parent = null, NtMdtPal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _index = p_index;
-                _read();
-            }
-            private void _read()
-            {
-                _size1 = m_io.ReadU1();
-                _unkn = m_io.ReadU1();
-                _title = System.Text.Encoding.GetEncoding("UTF-16LE").GetString(m_io.ReadBytes(M_Root.Meta[Index].NameSize));
-                _unkn1 = m_io.ReadU2be();
-                _colors = new List<Color>();
-                for (var i = 0; i < (M_Root.Meta[Index].ColorsCount - 1); i++)
-                {
-                    _colors.Add(new Color(m_io, this, m_root));
-                }
-            }
-            private byte _size1;
-            private byte _unkn;
-            private string _title;
-            private ushort _unkn1;
-            private List<Color> _colors;
-            private ushort _index;
-            private NtMdtPal m_root;
-            private NtMdtPal m_parent;
-            public byte Size1 { get { return _size1; } }
-            public byte Unkn { get { return _unkn; } }
-            public string Title { get { return _title; } }
-            public ushort Unkn1 { get { return _unkn1; } }
-            public List<Color> Colors { get { return _colors; } }
-            public ushort Index { get { return _index; } }
             public NtMdtPal M_Root { get { return m_root; } }
             public NtMdtPal M_Parent { get { return m_parent; } }
         }

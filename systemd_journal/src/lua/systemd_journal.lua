@@ -42,22 +42,6 @@ function SystemdJournal:_read()
   end
 end
 
--- 
--- Header length is used to set substream size, as it thus required
--- prior to declaration of header.
-SystemdJournal.property.len_header = {}
-function SystemdJournal.property.len_header:get()
-  if self._m_len_header ~= nil then
-    return self._m_len_header
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(88)
-  self._m_len_header = self._io:read_u8le()
-  self._io:seek(_pos)
-  return self._m_len_header
-end
-
 SystemdJournal.property.data_hash_table = {}
 function SystemdJournal.property.data_hash_table:get()
   if self._m_data_hash_table ~= nil then
@@ -84,20 +68,124 @@ function SystemdJournal.property.field_hash_table:get()
   return self._m_field_hash_table
 end
 
+-- 
+-- Header length is used to set substream size, as it thus required
+-- prior to declaration of header.
+SystemdJournal.property.len_header = {}
+function SystemdJournal.property.len_header:get()
+  if self._m_len_header ~= nil then
+    return self._m_len_header
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(88)
+  self._m_len_header = self._io:read_u8le()
+  self._io:seek(_pos)
+  return self._m_len_header
+end
+
+
+-- 
+-- Data objects are designed to carry log payload, typically in
+-- form of a "key=value" string in `payload` attribute.
+-- See also: Source (https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects)
+SystemdJournal.DataObject = class.class(KaitaiStruct)
+
+function SystemdJournal.DataObject:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SystemdJournal.DataObject:_read()
+  self.hash = self._io:read_u8le()
+  self.ofs_next_hash = self._io:read_u8le()
+  self.ofs_head_field = self._io:read_u8le()
+  self.ofs_entry = self._io:read_u8le()
+  self.ofs_entry_array = self._io:read_u8le()
+  self.num_entries = self._io:read_u8le()
+  self.payload = self._io:read_bytes_full()
+end
+
+SystemdJournal.DataObject.property.entry = {}
+function SystemdJournal.DataObject.property.entry:get()
+  if self._m_entry ~= nil then
+    return self._m_entry
+  end
+
+  if self.ofs_entry ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.ofs_entry)
+    self._m_entry = SystemdJournal.JournalObject(_io, self, self._root)
+    _io:seek(_pos)
+  end
+  return self._m_entry
+end
+
+SystemdJournal.DataObject.property.entry_array = {}
+function SystemdJournal.DataObject.property.entry_array:get()
+  if self._m_entry_array ~= nil then
+    return self._m_entry_array
+  end
+
+  if self.ofs_entry_array ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.ofs_entry_array)
+    self._m_entry_array = SystemdJournal.JournalObject(_io, self, self._root)
+    _io:seek(_pos)
+  end
+  return self._m_entry_array
+end
+
+SystemdJournal.DataObject.property.head_field = {}
+function SystemdJournal.DataObject.property.head_field:get()
+  if self._m_head_field ~= nil then
+    return self._m_head_field
+  end
+
+  if self.ofs_head_field ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.ofs_head_field)
+    self._m_head_field = SystemdJournal.JournalObject(_io, self, self._root)
+    _io:seek(_pos)
+  end
+  return self._m_head_field
+end
+
+SystemdJournal.DataObject.property.next_hash = {}
+function SystemdJournal.DataObject.property.next_hash:get()
+  if self._m_next_hash ~= nil then
+    return self._m_next_hash
+  end
+
+  if self.ofs_next_hash ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.ofs_next_hash)
+    self._m_next_hash = SystemdJournal.JournalObject(_io, self, self._root)
+    _io:seek(_pos)
+  end
+  return self._m_next_hash
+end
+
 
 SystemdJournal.Header = class.class(KaitaiStruct)
 
 function SystemdJournal.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function SystemdJournal.Header:_read()
   self.signature = self._io:read_bytes(8)
   if not(self.signature == "\076\080\075\083\072\072\082\072") then
-    error("not equal, expected " ..  "\076\080\075\083\072\072\082\072" .. ", but got " .. self.signature)
+    error("not equal, expected " .. "\076\080\075\083\072\072\082\072" .. ", but got " .. self.signature)
   end
   self.compatible_flags = self._io:read_u4le()
   self.incompatible_flags = self._io:read_u4le()
@@ -155,112 +243,24 @@ SystemdJournal.JournalObject.ObjectTypes = enum.Enum {
 function SystemdJournal.JournalObject:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function SystemdJournal.JournalObject:_read()
-  self.padding = self._io:read_bytes(((8 - self._io:pos()) % 8))
+  self.padding = self._io:read_bytes((8 - self._io:pos()) % 8)
   self.object_type = SystemdJournal.JournalObject.ObjectTypes(self._io:read_u1())
   self.flags = self._io:read_u1()
   self.reserved = self._io:read_bytes(6)
   self.len_object = self._io:read_u8le()
   local _on = self.object_type
   if _on == SystemdJournal.JournalObject.ObjectTypes.data then
-    self._raw_payload = self._io:read_bytes((self.len_object - 16))
+    self._raw_payload = self._io:read_bytes(self.len_object - 16)
     local _io = KaitaiStream(stringstream(self._raw_payload))
     self.payload = SystemdJournal.DataObject(_io, self, self._root)
   else
-    self.payload = self._io:read_bytes((self.len_object - 16))
+    self.payload = self._io:read_bytes(self.len_object - 16)
   end
-end
-
-
--- 
--- Data objects are designed to carry log payload, typically in
--- form of a "key=value" string in `payload` attribute.
--- See also: Source (https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects)
-SystemdJournal.DataObject = class.class(KaitaiStruct)
-
-function SystemdJournal.DataObject:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SystemdJournal.DataObject:_read()
-  self.hash = self._io:read_u8le()
-  self.ofs_next_hash = self._io:read_u8le()
-  self.ofs_head_field = self._io:read_u8le()
-  self.ofs_entry = self._io:read_u8le()
-  self.ofs_entry_array = self._io:read_u8le()
-  self.num_entries = self._io:read_u8le()
-  self.payload = self._io:read_bytes_full()
-end
-
-SystemdJournal.DataObject.property.next_hash = {}
-function SystemdJournal.DataObject.property.next_hash:get()
-  if self._m_next_hash ~= nil then
-    return self._m_next_hash
-  end
-
-  if self.ofs_next_hash ~= 0 then
-    local _io = self._root._io
-    local _pos = _io:pos()
-    _io:seek(self.ofs_next_hash)
-    self._m_next_hash = SystemdJournal.JournalObject(_io, self, self._root)
-    _io:seek(_pos)
-  end
-  return self._m_next_hash
-end
-
-SystemdJournal.DataObject.property.head_field = {}
-function SystemdJournal.DataObject.property.head_field:get()
-  if self._m_head_field ~= nil then
-    return self._m_head_field
-  end
-
-  if self.ofs_head_field ~= 0 then
-    local _io = self._root._io
-    local _pos = _io:pos()
-    _io:seek(self.ofs_head_field)
-    self._m_head_field = SystemdJournal.JournalObject(_io, self, self._root)
-    _io:seek(_pos)
-  end
-  return self._m_head_field
-end
-
-SystemdJournal.DataObject.property.entry = {}
-function SystemdJournal.DataObject.property.entry:get()
-  if self._m_entry ~= nil then
-    return self._m_entry
-  end
-
-  if self.ofs_entry ~= 0 then
-    local _io = self._root._io
-    local _pos = _io:pos()
-    _io:seek(self.ofs_entry)
-    self._m_entry = SystemdJournal.JournalObject(_io, self, self._root)
-    _io:seek(_pos)
-  end
-  return self._m_entry
-end
-
-SystemdJournal.DataObject.property.entry_array = {}
-function SystemdJournal.DataObject.property.entry_array:get()
-  if self._m_entry_array ~= nil then
-    return self._m_entry_array
-  end
-
-  if self.ofs_entry_array ~= 0 then
-    local _io = self._root._io
-    local _pos = _io:pos()
-    _io:seek(self.ofs_entry_array)
-    self._m_entry_array = SystemdJournal.JournalObject(_io, self, self._root)
-    _io:seek(_pos)
-  end
-  return self._m_entry_array
 end
 
 

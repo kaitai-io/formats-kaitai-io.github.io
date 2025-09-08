@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class magicavoxel_vox_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -20,13 +23,13 @@ class magicavoxel_vox_t : public kaitai::kstruct {
 
 public:
     class chunk_t;
-    class size_t;
-    class rgba_t;
-    class pack_t;
-    class matt_t;
-    class xyzi_t;
     class color_t;
+    class matt_t;
+    class pack_t;
+    class rgba_t;
+    class size_t;
     class voxel_t;
+    class xyzi_t;
 
     enum chunk_type_t {
         CHUNK_TYPE_MAIN = 1296124238,
@@ -36,6 +39,13 @@ public:
         CHUNK_TYPE_SIZE = 1397316165,
         CHUNK_TYPE_XYZI = 1482250825
     };
+    static bool _is_defined_chunk_type_t(chunk_type_t v);
+
+private:
+    static const std::set<chunk_type_t> _values_chunk_type_t;
+    static std::set<chunk_type_t> _build_values_chunk_type_t();
+
+public:
 
     enum material_type_t {
         MATERIAL_TYPE_DIFFUSE = 0,
@@ -43,6 +53,13 @@ public:
         MATERIAL_TYPE_GLASS = 2,
         MATERIAL_TYPE_EMISSIVE = 3
     };
+    static bool _is_defined_material_type_t(material_type_t v);
+
+private:
+    static const std::set<material_type_t> _values_material_type_t;
+    static std::set<material_type_t> _build_values_material_type_t();
+
+public:
 
     enum property_bits_type_t {
         PROPERTY_BITS_TYPE_PLASTIC = 1,
@@ -54,6 +71,13 @@ public:
         PROPERTY_BITS_TYPE_GLOW = 64,
         PROPERTY_BITS_TYPE_IS_TOTAL_POWER = 128
     };
+    static bool _is_defined_property_bits_type_t(property_bits_type_t v);
+
+private:
+    static const std::set<property_bits_type_t> _values_property_bits_type_t;
+    static std::set<property_bits_type_t> _build_values_property_bits_type_t();
+
+public:
 
     magicavoxel_vox_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, magicavoxel_vox_t* p__root = 0);
 
@@ -118,80 +142,34 @@ public:
         kaitai::kstream* _io__raw_chunk_content() const { return m__io__raw_chunk_content; }
     };
 
-    class size_t : public kaitai::kstruct {
+    class color_t : public kaitai::kstruct {
 
     public:
 
-        size_t(kaitai::kstream* p__io, magicavoxel_vox_t::chunk_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
+        color_t(kaitai::kstream* p__io, magicavoxel_vox_t::rgba_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~size_t();
+        ~color_t();
 
     private:
-        uint32_t m_size_x;
-        uint32_t m_size_y;
-        uint32_t m_size_z;
+        uint8_t m_r;
+        uint8_t m_g;
+        uint8_t m_b;
+        uint8_t m_a;
         magicavoxel_vox_t* m__root;
-        magicavoxel_vox_t::chunk_t* m__parent;
+        magicavoxel_vox_t::rgba_t* m__parent;
 
     public:
-        uint32_t size_x() const { return m_size_x; }
-        uint32_t size_y() const { return m_size_y; }
-        uint32_t size_z() const { return m_size_z; }
+        uint8_t r() const { return m_r; }
+        uint8_t g() const { return m_g; }
+        uint8_t b() const { return m_b; }
+        uint8_t a() const { return m_a; }
         magicavoxel_vox_t* _root() const { return m__root; }
-        magicavoxel_vox_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    class rgba_t : public kaitai::kstruct {
-
-    public:
-
-        rgba_t(kaitai::kstream* p__io, magicavoxel_vox_t::chunk_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~rgba_t();
-
-    private:
-        std::vector<color_t*>* m_colors;
-        magicavoxel_vox_t* m__root;
-        magicavoxel_vox_t::chunk_t* m__parent;
-
-    public:
-        std::vector<color_t*>* colors() const { return m_colors; }
-        magicavoxel_vox_t* _root() const { return m__root; }
-        magicavoxel_vox_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    class pack_t : public kaitai::kstruct {
-
-    public:
-
-        pack_t(kaitai::kstream* p__io, magicavoxel_vox_t::chunk_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~pack_t();
-
-    private:
-        uint32_t m_num_models;
-        magicavoxel_vox_t* m__root;
-        magicavoxel_vox_t::chunk_t* m__parent;
-
-    public:
-        uint32_t num_models() const { return m_num_models; }
-        magicavoxel_vox_t* _root() const { return m__root; }
-        magicavoxel_vox_t::chunk_t* _parent() const { return m__parent; }
+        magicavoxel_vox_t::rgba_t* _parent() const { return m__parent; }
     };
 
     class matt_t : public kaitai::kstruct {
@@ -208,6 +186,27 @@ public:
         ~matt_t();
 
     private:
+        bool f_has_attenuation;
+        bool m_has_attenuation;
+
+    public:
+        bool has_attenuation();
+
+    private:
+        bool f_has_glow;
+        bool m_has_glow;
+
+    public:
+        bool has_glow();
+
+    private:
+        bool f_has_ior;
+        bool m_has_ior;
+
+    public:
+        bool has_ior();
+
+    private:
         bool f_has_is_total_power;
         bool m_has_is_total_power;
 
@@ -220,13 +219,6 @@ public:
 
     public:
         bool has_plastic();
-
-    private:
-        bool f_has_attenuation;
-        bool m_has_attenuation;
-
-    public:
-        bool has_attenuation();
 
     private:
         bool f_has_power;
@@ -248,20 +240,6 @@ public:
 
     public:
         bool has_specular();
-
-    private:
-        bool f_has_ior;
-        bool m_has_ior;
-
-    public:
-        bool has_ior();
-
-    private:
-        bool f_has_glow;
-        bool m_has_glow;
-
-    public:
-        bool has_glow();
 
     private:
         uint32_t m_id;
@@ -344,60 +322,80 @@ public:
         magicavoxel_vox_t::chunk_t* _parent() const { return m__parent; }
     };
 
-    class xyzi_t : public kaitai::kstruct {
+    class pack_t : public kaitai::kstruct {
 
     public:
 
-        xyzi_t(kaitai::kstream* p__io, magicavoxel_vox_t::chunk_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
+        pack_t(kaitai::kstream* p__io, magicavoxel_vox_t::chunk_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~xyzi_t();
+        ~pack_t();
 
     private:
-        uint32_t m_num_voxels;
-        std::vector<voxel_t*>* m_voxels;
+        uint32_t m_num_models;
         magicavoxel_vox_t* m__root;
         magicavoxel_vox_t::chunk_t* m__parent;
 
     public:
-        uint32_t num_voxels() const { return m_num_voxels; }
-        std::vector<voxel_t*>* voxels() const { return m_voxels; }
+        uint32_t num_models() const { return m_num_models; }
         magicavoxel_vox_t* _root() const { return m__root; }
         magicavoxel_vox_t::chunk_t* _parent() const { return m__parent; }
     };
 
-    class color_t : public kaitai::kstruct {
+    class rgba_t : public kaitai::kstruct {
 
     public:
 
-        color_t(kaitai::kstream* p__io, magicavoxel_vox_t::rgba_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
+        rgba_t(kaitai::kstream* p__io, magicavoxel_vox_t::chunk_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~color_t();
+        ~rgba_t();
 
     private:
-        uint8_t m_r;
-        uint8_t m_g;
-        uint8_t m_b;
-        uint8_t m_a;
+        std::vector<color_t*>* m_colors;
         magicavoxel_vox_t* m__root;
-        magicavoxel_vox_t::rgba_t* m__parent;
+        magicavoxel_vox_t::chunk_t* m__parent;
 
     public:
-        uint8_t r() const { return m_r; }
-        uint8_t g() const { return m_g; }
-        uint8_t b() const { return m_b; }
-        uint8_t a() const { return m_a; }
+        std::vector<color_t*>* colors() const { return m_colors; }
         magicavoxel_vox_t* _root() const { return m__root; }
-        magicavoxel_vox_t::rgba_t* _parent() const { return m__parent; }
+        magicavoxel_vox_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    class size_t : public kaitai::kstruct {
+
+    public:
+
+        size_t(kaitai::kstream* p__io, magicavoxel_vox_t::chunk_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~size_t();
+
+    private:
+        uint32_t m_size_x;
+        uint32_t m_size_y;
+        uint32_t m_size_z;
+        magicavoxel_vox_t* m__root;
+        magicavoxel_vox_t::chunk_t* m__parent;
+
+    public:
+        uint32_t size_x() const { return m_size_x; }
+        uint32_t size_y() const { return m_size_y; }
+        uint32_t size_z() const { return m_size_z; }
+        magicavoxel_vox_t* _root() const { return m__root; }
+        magicavoxel_vox_t::chunk_t* _parent() const { return m__parent; }
     };
 
     class voxel_t : public kaitai::kstruct {
@@ -428,6 +426,32 @@ public:
         uint8_t color_index() const { return m_color_index; }
         magicavoxel_vox_t* _root() const { return m__root; }
         magicavoxel_vox_t::xyzi_t* _parent() const { return m__parent; }
+    };
+
+    class xyzi_t : public kaitai::kstruct {
+
+    public:
+
+        xyzi_t(kaitai::kstream* p__io, magicavoxel_vox_t::chunk_t* p__parent = 0, magicavoxel_vox_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~xyzi_t();
+
+    private:
+        uint32_t m_num_voxels;
+        std::vector<voxel_t*>* m_voxels;
+        magicavoxel_vox_t* m__root;
+        magicavoxel_vox_t::chunk_t* m__parent;
+
+    public:
+        uint32_t num_voxels() const { return m_num_voxels; }
+        std::vector<voxel_t*>* voxels() const { return m_voxels; }
+        magicavoxel_vox_t* _root() const { return m__root; }
+        magicavoxel_vox_t::chunk_t* _parent() const { return m__parent; }
     };
 
 private:

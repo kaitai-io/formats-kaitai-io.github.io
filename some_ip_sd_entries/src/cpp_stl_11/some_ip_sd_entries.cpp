@@ -4,7 +4,7 @@
 
 some_ip_sd_entries_t::some_ip_sd_entries_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, some_ip_sd_entries_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_entries = nullptr;
     _read();
 }
@@ -25,6 +25,15 @@ some_ip_sd_entries_t::~some_ip_sd_entries_t() {
 }
 
 void some_ip_sd_entries_t::_clean_up() {
+}
+const std::set<some_ip_sd_entries_t::sd_entry_t::entry_types_t> some_ip_sd_entries_t::sd_entry_t::_values_entry_types_t{
+    some_ip_sd_entries_t::sd_entry_t::ENTRY_TYPES_FIND,
+    some_ip_sd_entries_t::sd_entry_t::ENTRY_TYPES_OFFER,
+    some_ip_sd_entries_t::sd_entry_t::ENTRY_TYPES_SUBSCRIBE,
+    some_ip_sd_entries_t::sd_entry_t::ENTRY_TYPES_SUBSCRIBE_ACK,
+};
+bool some_ip_sd_entries_t::sd_entry_t::_is_defined_entry_types_t(some_ip_sd_entries_t::sd_entry_t::entry_types_t v) {
+    return some_ip_sd_entries_t::sd_entry_t::_values_entry_types_t.find(v) != some_ip_sd_entries_t::sd_entry_t::_values_entry_types_t.end();
 }
 
 some_ip_sd_entries_t::sd_entry_t::sd_entry_t(kaitai::kstream* p__io, some_ip_sd_entries_t* p__parent, some_ip_sd_entries_t* p__root) : kaitai::kstruct(p__io) {
@@ -96,23 +105,6 @@ some_ip_sd_entries_t::sd_entry_t::sd_entry_header_t::~sd_entry_header_t() {
 void some_ip_sd_entries_t::sd_entry_t::sd_entry_header_t::_clean_up() {
 }
 
-some_ip_sd_entries_t::sd_entry_t::sd_service_entry_t::sd_service_entry_t(kaitai::kstream* p__io, some_ip_sd_entries_t::sd_entry_t* p__parent, some_ip_sd_entries_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
-
-void some_ip_sd_entries_t::sd_entry_t::sd_service_entry_t::_read() {
-    m_minor_version = m__io->read_u4be();
-}
-
-some_ip_sd_entries_t::sd_entry_t::sd_service_entry_t::~sd_service_entry_t() {
-    _clean_up();
-}
-
-void some_ip_sd_entries_t::sd_entry_t::sd_service_entry_t::_clean_up() {
-}
-
 some_ip_sd_entries_t::sd_entry_t::sd_eventgroup_entry_t::sd_eventgroup_entry_t(kaitai::kstream* p__io, some_ip_sd_entries_t::sd_entry_t* p__parent, some_ip_sd_entries_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -133,4 +125,21 @@ some_ip_sd_entries_t::sd_entry_t::sd_eventgroup_entry_t::~sd_eventgroup_entry_t(
 }
 
 void some_ip_sd_entries_t::sd_entry_t::sd_eventgroup_entry_t::_clean_up() {
+}
+
+some_ip_sd_entries_t::sd_entry_t::sd_service_entry_t::sd_service_entry_t(kaitai::kstream* p__io, some_ip_sd_entries_t::sd_entry_t* p__parent, some_ip_sd_entries_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void some_ip_sd_entries_t::sd_entry_t::sd_service_entry_t::_read() {
+    m_minor_version = m__io->read_u4be();
+}
+
+some_ip_sd_entries_t::sd_entry_t::sd_service_entry_t::~sd_service_entry_t() {
+    _clean_up();
+}
+
+void some_ip_sd_entries_t::sd_entry_t::sd_service_entry_t::_clean_up() {
 }

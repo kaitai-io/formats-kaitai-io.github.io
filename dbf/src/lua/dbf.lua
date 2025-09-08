@@ -31,12 +31,12 @@ end
 
 function Dbf:_read()
   self.header1 = Dbf.Header1(self._io, self, self._root)
-  self._raw_header2 = self._io:read_bytes(((self.header1.len_header - 12) - 1))
+  self._raw_header2 = self._io:read_bytes((self.header1.len_header - 12) - 1)
   local _io = KaitaiStream(stringstream(self._raw_header2))
   self.header2 = Dbf.Header2(_io, self, self._root)
   self.header_terminator = self._io:read_bytes(1)
   if not(self.header_terminator == "\013") then
-    error("not equal, expected " ..  "\013" .. ", but got " .. self.header_terminator)
+    error("not equal, expected " .. "\013" .. ", but got " .. self.header_terminator)
   end
   self._raw_records = {}
   self.records = {}
@@ -48,37 +48,12 @@ function Dbf:_read()
 end
 
 
-Dbf.Header2 = class.class(KaitaiStruct)
-
-function Dbf.Header2:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Dbf.Header2:_read()
-  if self._root.header1.dbase_level == 3 then
-    self.header_dbase_3 = Dbf.HeaderDbase3(self._io, self, self._root)
-  end
-  if self._root.header1.dbase_level == 7 then
-    self.header_dbase_7 = Dbf.HeaderDbase7(self._io, self, self._root)
-  end
-  self.fields = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.fields[i + 1] = Dbf.Field(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
 Dbf.Field = class.class(KaitaiStruct)
 
 function Dbf.Field:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -103,7 +78,7 @@ Dbf.Header1 = class.class(KaitaiStruct)
 function Dbf.Header1:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -123,8 +98,33 @@ function Dbf.Header1.property.dbase_level:get()
     return self._m_dbase_level
   end
 
-  self._m_dbase_level = (self.version & 7)
+  self._m_dbase_level = self.version & 7
   return self._m_dbase_level
+end
+
+
+Dbf.Header2 = class.class(KaitaiStruct)
+
+function Dbf.Header2:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Dbf.Header2:_read()
+  if self._root.header1.dbase_level == 3 then
+    self.header_dbase_3 = Dbf.HeaderDbase3(self._io, self, self._root)
+  end
+  if self._root.header1.dbase_level == 7 then
+    self.header_dbase_7 = Dbf.HeaderDbase7(self._io, self, self._root)
+  end
+  self.fields = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.fields[i + 1] = Dbf.Field(self._io, self, self._root)
+    i = i + 1
+  end
 end
 
 
@@ -133,7 +133,7 @@ Dbf.HeaderDbase3 = class.class(KaitaiStruct)
 function Dbf.HeaderDbase3:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -149,14 +149,14 @@ Dbf.HeaderDbase7 = class.class(KaitaiStruct)
 function Dbf.HeaderDbase7:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Dbf.HeaderDbase7:_read()
   self.reserved1 = self._io:read_bytes(2)
   if not(self.reserved1 == "\000\000") then
-    error("not equal, expected " ..  "\000\000" .. ", but got " .. self.reserved1)
+    error("not equal, expected " .. "\000\000" .. ", but got " .. self.reserved1)
   end
   self.has_incomplete_transaction = self._io:read_u1()
   self.dbase_iv_encryption = self._io:read_u1()
@@ -165,7 +165,7 @@ function Dbf.HeaderDbase7:_read()
   self.language_driver_id = self._io:read_u1()
   self.reserved3 = self._io:read_bytes(2)
   if not(self.reserved3 == "\000\000") then
-    error("not equal, expected " ..  "\000\000" .. ", but got " .. self.reserved3)
+    error("not equal, expected " .. "\000\000" .. ", but got " .. self.reserved3)
   end
   self.language_driver_name = self._io:read_bytes(32)
   self.reserved4 = self._io:read_bytes(4)
@@ -177,7 +177,7 @@ Dbf.Record = class.class(KaitaiStruct)
 function Dbf.Record:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

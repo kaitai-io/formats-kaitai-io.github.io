@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -41,7 +41,7 @@ sub id3v1_tag {
     my ($self) = @_;
     return $self->{id3v1_tag} if ($self->{id3v1_tag});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->_io()->size() - 128));
+    $self->{_io}->seek($self->_io()->size() - 128);
     $self->{id3v1_tag} = Id3v11::Id3V11Tag->new($self->{_io}, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{id3v1_tag};
@@ -194,7 +194,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

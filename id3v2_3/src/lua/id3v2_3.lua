@@ -22,103 +22,6 @@ function Id3v23:_read()
 end
 
 
-Id3v23.U1beSynchsafe = class.class(KaitaiStruct)
-
-function Id3v23.U1beSynchsafe:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Id3v23.U1beSynchsafe:_read()
-  self.padding = self._io:read_bits_int_be(1) ~= 0
-  self.value = self._io:read_bits_int_be(7)
-end
-
-
-Id3v23.U2beSynchsafe = class.class(KaitaiStruct)
-
-function Id3v23.U2beSynchsafe:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Id3v23.U2beSynchsafe:_read()
-  self.byte0 = Id3v23.U1beSynchsafe(self._io, self, self._root)
-  self.byte1 = Id3v23.U1beSynchsafe(self._io, self, self._root)
-end
-
-Id3v23.U2beSynchsafe.property.value = {}
-function Id3v23.U2beSynchsafe.property.value:get()
-  if self._m_value ~= nil then
-    return self._m_value
-  end
-
-  self._m_value = ((self.byte0.value << 7) | self.byte1.value)
-  return self._m_value
-end
-
-
--- 
--- See also: Section 3. ID3v2 overview
-Id3v23.Tag = class.class(KaitaiStruct)
-
-function Id3v23.Tag:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Id3v23.Tag:_read()
-  self.header = Id3v23.Header(self._io, self, self._root)
-  if self.header.flags.flag_headerex then
-    self.header_ex = Id3v23.HeaderEx(self._io, self, self._root)
-  end
-  self.frames = {}
-  local i = 0
-  while true do
-    local _ = Id3v23.Frame(self._io, self, self._root)
-    self.frames[i + 1] = _
-    if  (((self._io:pos() + _.size) > self.header.size.value) or (_.is_invalid))  then
-      break
-    end
-    i = i + 1
-  end
-  if self.header.flags.flag_headerex then
-    self.padding = self._io:read_bytes((self.header_ex.padding_size - self._io:pos()))
-  end
-end
-
-
-Id3v23.U4beSynchsafe = class.class(KaitaiStruct)
-
-function Id3v23.U4beSynchsafe:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Id3v23.U4beSynchsafe:_read()
-  self.short0 = Id3v23.U2beSynchsafe(self._io, self, self._root)
-  self.short1 = Id3v23.U2beSynchsafe(self._io, self, self._root)
-end
-
-Id3v23.U4beSynchsafe.property.value = {}
-function Id3v23.U4beSynchsafe.property.value:get()
-  if self._m_value ~= nil then
-    return self._m_value
-  end
-
-  self._m_value = ((self.short0.value << 14) | self.short1.value)
-  return self._m_value
-end
-
-
 -- 
 -- See also: Section 3.3. ID3v2 frame overview
 Id3v23.Frame = class.class(KaitaiStruct)
@@ -126,7 +29,7 @@ Id3v23.Frame = class.class(KaitaiStruct)
 function Id3v23.Frame:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -153,7 +56,7 @@ Id3v23.Frame.Flags = class.class(KaitaiStruct)
 function Id3v23.Frame.Flags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -170,6 +73,47 @@ end
 
 
 -- 
+-- ID3v2 fixed header.
+-- See also: Section 3.1. ID3v2 header
+Id3v23.Header = class.class(KaitaiStruct)
+
+function Id3v23.Header:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Id3v23.Header:_read()
+  self.magic = self._io:read_bytes(3)
+  if not(self.magic == "\073\068\051") then
+    error("not equal, expected " .. "\073\068\051" .. ", but got " .. self.magic)
+  end
+  self.version_major = self._io:read_u1()
+  self.version_revision = self._io:read_u1()
+  self.flags = Id3v23.Header.Flags(self._io, self, self._root)
+  self.size = Id3v23.U4beSynchsafe(self._io, self, self._root)
+end
+
+
+Id3v23.Header.Flags = class.class(KaitaiStruct)
+
+function Id3v23.Header.Flags:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Id3v23.Header.Flags:_read()
+  self.flag_unsynchronization = self._io:read_bits_int_be(1) ~= 0
+  self.flag_headerex = self._io:read_bits_int_be(1) ~= 0
+  self.flag_experimental = self._io:read_bits_int_be(1) ~= 0
+  self.reserved = self._io:read_bits_int_be(5)
+end
+
+
+-- 
 -- ID3v2 extended header.
 -- See also: Section 3.2. ID3v2 extended header
 Id3v23.HeaderEx = class.class(KaitaiStruct)
@@ -177,7 +121,7 @@ Id3v23.HeaderEx = class.class(KaitaiStruct)
 function Id3v23.HeaderEx:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -196,7 +140,7 @@ Id3v23.HeaderEx.FlagsEx = class.class(KaitaiStruct)
 function Id3v23.HeaderEx.FlagsEx:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -207,43 +151,99 @@ end
 
 
 -- 
--- ID3v2 fixed header.
--- See also: Section 3.1. ID3v2 header
-Id3v23.Header = class.class(KaitaiStruct)
+-- See also: Section 3. ID3v2 overview
+Id3v23.Tag = class.class(KaitaiStruct)
 
-function Id3v23.Header:_init(io, parent, root)
+function Id3v23.Tag:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Id3v23.Header:_read()
-  self.magic = self._io:read_bytes(3)
-  if not(self.magic == "\073\068\051") then
-    error("not equal, expected " ..  "\073\068\051" .. ", but got " .. self.magic)
+function Id3v23.Tag:_read()
+  self.header = Id3v23.Header(self._io, self, self._root)
+  if self.header.flags.flag_headerex then
+    self.header_ex = Id3v23.HeaderEx(self._io, self, self._root)
   end
-  self.version_major = self._io:read_u1()
-  self.version_revision = self._io:read_u1()
-  self.flags = Id3v23.Header.Flags(self._io, self, self._root)
-  self.size = Id3v23.U4beSynchsafe(self._io, self, self._root)
+  self.frames = {}
+  local i = 0
+  while true do
+    local _ = Id3v23.Frame(self._io, self, self._root)
+    self.frames[i + 1] = _
+    if  ((self._io:pos() + _.size > self.header.size.value) or (_.is_invalid))  then
+      break
+    end
+    i = i + 1
+  end
+  if self.header.flags.flag_headerex then
+    self.padding = self._io:read_bytes(self.header_ex.padding_size - self._io:pos())
+  end
 end
 
 
-Id3v23.Header.Flags = class.class(KaitaiStruct)
+Id3v23.U1beSynchsafe = class.class(KaitaiStruct)
 
-function Id3v23.Header.Flags:_init(io, parent, root)
+function Id3v23.U1beSynchsafe:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Id3v23.Header.Flags:_read()
-  self.flag_unsynchronization = self._io:read_bits_int_be(1) ~= 0
-  self.flag_headerex = self._io:read_bits_int_be(1) ~= 0
-  self.flag_experimental = self._io:read_bits_int_be(1) ~= 0
-  self.reserved = self._io:read_bits_int_be(5)
+function Id3v23.U1beSynchsafe:_read()
+  self.padding = self._io:read_bits_int_be(1) ~= 0
+  self.value = self._io:read_bits_int_be(7)
+end
+
+
+Id3v23.U2beSynchsafe = class.class(KaitaiStruct)
+
+function Id3v23.U2beSynchsafe:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Id3v23.U2beSynchsafe:_read()
+  self.byte0 = Id3v23.U1beSynchsafe(self._io, self, self._root)
+  self.byte1 = Id3v23.U1beSynchsafe(self._io, self, self._root)
+end
+
+Id3v23.U2beSynchsafe.property.value = {}
+function Id3v23.U2beSynchsafe.property.value:get()
+  if self._m_value ~= nil then
+    return self._m_value
+  end
+
+  self._m_value = self.byte0.value << 7 | self.byte1.value
+  return self._m_value
+end
+
+
+Id3v23.U4beSynchsafe = class.class(KaitaiStruct)
+
+function Id3v23.U4beSynchsafe:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Id3v23.U4beSynchsafe:_read()
+  self.short0 = Id3v23.U2beSynchsafe(self._io, self, self._root)
+  self.short1 = Id3v23.U2beSynchsafe(self._io, self, self._root)
+end
+
+Id3v23.U4beSynchsafe.property.value = {}
+function Id3v23.U4beSynchsafe.property.value:get()
+  if self._m_value ~= nil then
+    return self._m_value
+  end
+
+  self._m_value = self.short0.value << 14 | self.short1.value
+  return self._m_value
 end
 
 

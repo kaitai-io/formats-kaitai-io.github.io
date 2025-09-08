@@ -5,8 +5,9 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -44,21 +45,27 @@ public class AmlogicEmmcPartitions extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 77, 80, 84, 0 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 80, 84, 0 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 77, 80, 84, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 80, 84, 0 }, this.magic, this._io, "/seq/0");
         }
-        this.version = new String(KaitaiStream.bytesTerminate(this._io.readBytes(12), (byte) 0, false), Charset.forName("UTF-8"));
+        this.version = new String(KaitaiStream.bytesTerminate(this._io.readBytes(12), (byte) 0, false), StandardCharsets.UTF_8);
         this.numPartitions = this._io.readS4le();
-        if (!(numPartitions() >= 1)) {
-            throw new KaitaiStream.ValidationLessThanError(1, numPartitions(), _io(), "/seq/2");
+        if (!(this.numPartitions >= 1)) {
+            throw new KaitaiStream.ValidationLessThanError(1, this.numPartitions, this._io, "/seq/2");
         }
-        if (!(numPartitions() <= 32)) {
-            throw new KaitaiStream.ValidationGreaterThanError(32, numPartitions(), _io(), "/seq/2");
+        if (!(this.numPartitions <= 32)) {
+            throw new KaitaiStream.ValidationGreaterThanError(32, this.numPartitions, this._io, "/seq/2");
         }
         this.checksum = this._io.readU4le();
         this.partitions = new ArrayList<Partition>();
         for (int i = 0; i < numPartitions(); i++) {
             this.partitions.add(new Partition(this._io, this, _root));
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.partitions.size(); i++) {
+            this.partitions.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
     public static class Partition extends KaitaiStruct {
@@ -81,13 +88,16 @@ public class AmlogicEmmcPartitions extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(16), (byte) 0, false), Charset.forName("UTF-8"));
+            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(16), (byte) 0, false), StandardCharsets.UTF_8);
             this.size = this._io.readU8le();
             this.offset = this._io.readU8le();
-            this._raw_flags = this._io.readBytes(4);
-            KaitaiStream _io__raw_flags = new ByteBufferKaitaiStream(_raw_flags);
-            this.flags = new PartFlags(_io__raw_flags, this, _root);
+            KaitaiStream _io_flags = this._io.substream(4);
+            this.flags = new PartFlags(_io_flags, this, _root);
             this.padding = this._io.readBytes(4);
+        }
+
+        public void _fetchInstances() {
+            this.flags._fetchInstances();
         }
         public static class PartFlags extends KaitaiStruct {
             public static PartFlags fromFile(String fileName) throws IOException {
@@ -113,6 +123,9 @@ public class AmlogicEmmcPartitions extends KaitaiStruct {
                 this.isCache = this._io.readBitsIntLe(1) != 0;
                 this.isData = this._io.readBitsIntLe(1) != 0;
             }
+
+            public void _fetchInstances() {
+            }
             private boolean isCode;
             private boolean isCache;
             private boolean isData;
@@ -131,7 +144,6 @@ public class AmlogicEmmcPartitions extends KaitaiStruct {
         private byte[] padding;
         private AmlogicEmmcPartitions _root;
         private AmlogicEmmcPartitions _parent;
-        private byte[] _raw_flags;
         public String name() { return name; }
         public long size() { return size; }
 
@@ -143,13 +155,12 @@ public class AmlogicEmmcPartitions extends KaitaiStruct {
         public byte[] padding() { return padding; }
         public AmlogicEmmcPartitions _root() { return _root; }
         public AmlogicEmmcPartitions _parent() { return _parent; }
-        public byte[] _raw_flags() { return _raw_flags; }
     }
     private byte[] magic;
     private String version;
     private int numPartitions;
     private long checksum;
-    private ArrayList<Partition> partitions;
+    private List<Partition> partitions;
     private AmlogicEmmcPartitions _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
@@ -166,7 +177,7 @@ public class AmlogicEmmcPartitions extends KaitaiStruct {
      * one, once for each partition in the table.
      */
     public long checksum() { return checksum; }
-    public ArrayList<Partition> partitions() { return partitions; }
+    public List<Partition> partitions() { return partitions; }
     public AmlogicEmmcPartitions _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

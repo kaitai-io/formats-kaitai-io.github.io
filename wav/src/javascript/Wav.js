@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './Riff'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./Riff'));
   } else {
-    root.Wav = factory(root.KaitaiStream);
+    factory(root.Wav || (root.Wav = {}), root.KaitaiStream, root.Riff || (root.Riff = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Wav_, KaitaiStream, Riff_) {
 /**
  * The WAVE file format is a subset of Microsoft's RIFF specification for the
  * storage of multimedia files. A RIFF file starts out with a file header
@@ -30,6 +30,48 @@
  */
 
 var Wav = (function() {
+  Wav.Fourcc = Object.freeze({
+    ID3: 540238953,
+    CUE: 543520099,
+    FMT: 544501094,
+    WAVE: 1163280727,
+    RIFF: 1179011410,
+    PEAK: 1262568784,
+    IXML: 1280137321,
+    INFO: 1330007625,
+    LIST: 1414744396,
+    PMX: 1481461855,
+    CHNA: 1634625635,
+    DATA: 1635017060,
+    UMID: 1684630901,
+    MINF: 1718511981,
+    AXML: 1819113569,
+    REGN: 1852269938,
+    AFSP: 1886611041,
+    FACT: 1952670054,
+    BEXT: 1954047330,
+
+    540238953: "ID3",
+    543520099: "CUE",
+    544501094: "FMT",
+    1163280727: "WAVE",
+    1179011410: "RIFF",
+    1262568784: "PEAK",
+    1280137321: "IXML",
+    1330007625: "INFO",
+    1414744396: "LIST",
+    1481461855: "PMX",
+    1634625635: "CHNA",
+    1635017060: "DATA",
+    1684630901: "UMID",
+    1718511981: "MINF",
+    1819113569: "AXML",
+    1852269938: "REGN",
+    1886611041: "AFSP",
+    1952670054: "FACT",
+    1954047330: "BEXT",
+  });
+
   Wav.WFormatTagType = Object.freeze({
     UNKNOWN: 0,
     PCM: 1,
@@ -564,48 +606,6 @@ var Wav = (function() {
     65535: "DEVELOPMENT",
   });
 
-  Wav.Fourcc = Object.freeze({
-    ID3: 540238953,
-    CUE: 543520099,
-    FMT: 544501094,
-    WAVE: 1163280727,
-    RIFF: 1179011410,
-    PEAK: 1262568784,
-    IXML: 1280137321,
-    INFO: 1330007625,
-    LIST: 1414744396,
-    PMX: 1481461855,
-    CHNA: 1634625635,
-    DATA: 1635017060,
-    UMID: 1684630901,
-    MINF: 1718511981,
-    AXML: 1819113569,
-    REGN: 1852269938,
-    AFSP: 1886611041,
-    FACT: 1952670054,
-    BEXT: 1954047330,
-
-    540238953: "ID3",
-    543520099: "CUE",
-    544501094: "FMT",
-    1163280727: "WAVE",
-    1179011410: "RIFF",
-    1262568784: "PEAK",
-    1280137321: "IXML",
-    1330007625: "INFO",
-    1414744396: "LIST",
-    1481461855: "PMX",
-    1634625635: "CHNA",
-    1635017060: "DATA",
-    1684630901: "UMID",
-    1718511981: "MINF",
-    1819113569: "AXML",
-    1852269938: "REGN",
-    1886611041: "AFSP",
-    1952670054: "FACT",
-    1954047330: "BEXT",
-  });
-
   function Wav(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -614,29 +614,292 @@ var Wav = (function() {
     this._read();
   }
   Wav.prototype._read = function() {
-    this.chunk = new Riff.Chunk(this._io, this, this._root);
+    this.chunk = new Riff_.Riff.Chunk(this._io, null, null);
   }
 
-  var SampleType = Wav.SampleType = (function() {
-    function SampleType(_io, _parent, _root) {
+  /**
+   * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/|Source}
+   */
+
+  var AfspChunkType = Wav.AfspChunkType = (function() {
+    function AfspChunkType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    SampleType.prototype._read = function() {
-      this.sample = this._io.readU2le();
+    AfspChunkType.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([65, 70, 115, 112])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([65, 70, 115, 112]), this.magic, this._io, "/types/afsp_chunk_type/seq/0");
+      }
+      this.infoRecords = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.infoRecords.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII"));
+        i++;
+      }
     }
 
-    return SampleType;
+    /**
+     * An array of AFsp information records, in the `<field_name>: <value>`
+     * format (e.g. "`program: CopyAudio`"). The list of existing information
+     * record types are available in the `doc-ref` links.
+     * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html|Source}
+     * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html|Source}
+     */
+
+    return AfspChunkType;
+  })();
+
+  /**
+   * @see {@link https://tech.ebu.ch/docs/tech/tech3285s5.pdf|Source}
+   */
+
+  var AxmlChunkType = Wav.AxmlChunkType = (function() {
+    function AxmlChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    AxmlChunkType.prototype._read = function() {
+      this.data = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+    }
+
+    return AxmlChunkType;
+  })();
+
+  /**
+   * @see {@link https://en.wikipedia.org/wiki/Broadcast_Wave_Format|Source}
+   */
+
+  var BextChunkType = Wav.BextChunkType = (function() {
+    function BextChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BextChunkType.prototype._read = function() {
+      this.description = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(256), 0, false), "ASCII");
+      this.originator = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "ASCII");
+      this.originatorReference = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "ASCII");
+      this.originationDate = KaitaiStream.bytesToStr(this._io.readBytes(10), "ASCII");
+      this.originationTime = KaitaiStream.bytesToStr(this._io.readBytes(8), "ASCII");
+      this.timeReferenceLow = this._io.readU4le();
+      this.timeReferenceHigh = this._io.readU4le();
+      this.version = this._io.readU2le();
+      this.umid = this._io.readBytes(64);
+      this.loudnessValue = this._io.readU2le();
+      this.loudnessRange = this._io.readU2le();
+      this.maxTruePeakLevel = this._io.readU2le();
+      this.maxMomentaryLoudness = this._io.readU2le();
+      this.maxShortTermLoudness = this._io.readU2le();
+    }
+
+    return BextChunkType;
+  })();
+
+  var ChannelMaskAndSubformatType = Wav.ChannelMaskAndSubformatType = (function() {
+    function ChannelMaskAndSubformatType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ChannelMaskAndSubformatType.prototype._read = function() {
+      this.dwChannelMask = new ChannelMaskType(this._io, this, this._root);
+      this.subformat = new GuidType(this._io, this, this._root);
+    }
+
+    return ChannelMaskAndSubformatType;
+  })();
+
+  var ChannelMaskType = Wav.ChannelMaskType = (function() {
+    function ChannelMaskType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ChannelMaskType.prototype._read = function() {
+      this.frontRightOfCenter = this._io.readBitsIntBe(1) != 0;
+      this.frontLeftOfCenter = this._io.readBitsIntBe(1) != 0;
+      this.backRight = this._io.readBitsIntBe(1) != 0;
+      this.backLeft = this._io.readBitsIntBe(1) != 0;
+      this.lowFrequency = this._io.readBitsIntBe(1) != 0;
+      this.frontCenter = this._io.readBitsIntBe(1) != 0;
+      this.frontRight = this._io.readBitsIntBe(1) != 0;
+      this.frontLeft = this._io.readBitsIntBe(1) != 0;
+      this.topCenter = this._io.readBitsIntBe(1) != 0;
+      this.sideRight = this._io.readBitsIntBe(1) != 0;
+      this.sideLeft = this._io.readBitsIntBe(1) != 0;
+      this.backCenter = this._io.readBitsIntBe(1) != 0;
+      this.topBackLeft = this._io.readBitsIntBe(1) != 0;
+      this.topFrontRight = this._io.readBitsIntBe(1) != 0;
+      this.topFrontCenter = this._io.readBitsIntBe(1) != 0;
+      this.topFrontLeft = this._io.readBitsIntBe(1) != 0;
+      this.unused1 = this._io.readBitsIntBe(6);
+      this.topBackRight = this._io.readBitsIntBe(1) != 0;
+      this.topBackCenter = this._io.readBitsIntBe(1) != 0;
+      this.unused2 = this._io.readBitsIntBe(8);
+    }
+
+    return ChannelMaskType;
+  })();
+
+  var ChunkType = Wav.ChunkType = (function() {
+    function ChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ChunkType.prototype._read = function() {
+      this.chunk = new Riff_.Riff.Chunk(this._io, null, null);
+    }
+    Object.defineProperty(ChunkType.prototype, 'chunkData', {
+      get: function() {
+        if (this._m_chunkData !== undefined)
+          return this._m_chunkData;
+        var io = this.chunk.dataSlot._io;
+        var _pos = io.pos;
+        io.seek(0);
+        switch (this.chunkId) {
+        case Wav.Fourcc.AFSP:
+          this._m_chunkData = new AfspChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.AXML:
+          this._m_chunkData = new AxmlChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.BEXT:
+          this._m_chunkData = new BextChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.CUE:
+          this._m_chunkData = new CueChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.DATA:
+          this._m_chunkData = new DataChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.FACT:
+          this._m_chunkData = new FactChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.FMT:
+          this._m_chunkData = new FormatChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.IXML:
+          this._m_chunkData = new IxmlChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.LIST:
+          this._m_chunkData = new ListChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.PMX:
+          this._m_chunkData = new PmxChunkType(io, this, this._root);
+          break;
+        }
+        io.seek(_pos);
+        return this._m_chunkData;
+      }
+    });
+    Object.defineProperty(ChunkType.prototype, 'chunkId', {
+      get: function() {
+        if (this._m_chunkId !== undefined)
+          return this._m_chunkId;
+        this._m_chunkId = this.chunk.id;
+        return this._m_chunkId;
+      }
+    });
+
+    return ChunkType;
+  })();
+
+  var CueChunkType = Wav.CueChunkType = (function() {
+    function CueChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CueChunkType.prototype._read = function() {
+      this.dwCuePoints = this._io.readU4le();
+      this.cuePoints = [];
+      for (var i = 0; i < this.dwCuePoints; i++) {
+        this.cuePoints.push(new CuePointType(this._io, this, this._root));
+      }
+    }
+
+    return CueChunkType;
+  })();
+
+  var CuePointType = Wav.CuePointType = (function() {
+    function CuePointType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CuePointType.prototype._read = function() {
+      this.dwName = this._io.readU4le();
+      this.dwPosition = this._io.readU4le();
+      this.fccChunk = this._io.readU4le();
+      this.dwChunkStart = this._io.readU4le();
+      this.dwBlockStart = this._io.readU4le();
+      this.dwSampleOffset = this._io.readU4le();
+    }
+
+    return CuePointType;
+  })();
+
+  var DataChunkType = Wav.DataChunkType = (function() {
+    function DataChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DataChunkType.prototype._read = function() {
+      this.data = this._io.readBytesFull();
+    }
+
+    return DataChunkType;
+  })();
+
+  /**
+   * required for all non-PCM formats
+   * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+   * `format_chunk_type` context)
+   */
+
+  var FactChunkType = Wav.FactChunkType = (function() {
+    function FactChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    FactChunkType.prototype._read = function() {
+      this.numSamplesPerChannel = this._io.readU4le();
+    }
+
+    return FactChunkType;
   })();
 
   var FormatChunkType = Wav.FormatChunkType = (function() {
     function FormatChunkType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -657,12 +920,12 @@ var Wav = (function() {
         this.channelMaskAndSubformat = new ChannelMaskAndSubformatType(this._io, this, this._root);
       }
     }
-    Object.defineProperty(FormatChunkType.prototype, 'isExtensible', {
+    Object.defineProperty(FormatChunkType.prototype, 'isBasicFloat', {
       get: function() {
-        if (this._m_isExtensible !== undefined)
-          return this._m_isExtensible;
-        this._m_isExtensible = this.wFormatTag == Wav.WFormatTagType.EXTENSIBLE;
-        return this._m_isExtensible;
+        if (this._m_isBasicFloat !== undefined)
+          return this._m_isBasicFloat;
+        this._m_isBasicFloat = this.wFormatTag == Wav.WFormatTagType.IEEE_FLOAT;
+        return this._m_isBasicFloat;
       }
     });
     Object.defineProperty(FormatChunkType.prototype, 'isBasicPcm', {
@@ -673,14 +936,6 @@ var Wav = (function() {
         return this._m_isBasicPcm;
       }
     });
-    Object.defineProperty(FormatChunkType.prototype, 'isBasicFloat', {
-      get: function() {
-        if (this._m_isBasicFloat !== undefined)
-          return this._m_isBasicFloat;
-        this._m_isBasicFloat = this.wFormatTag == Wav.WFormatTagType.IEEE_FLOAT;
-        return this._m_isBasicFloat;
-      }
-    });
     Object.defineProperty(FormatChunkType.prototype, 'isCbSizeMeaningful', {
       get: function() {
         if (this._m_isCbSizeMeaningful !== undefined)
@@ -689,56 +944,23 @@ var Wav = (function() {
         return this._m_isCbSizeMeaningful;
       }
     });
+    Object.defineProperty(FormatChunkType.prototype, 'isExtensible', {
+      get: function() {
+        if (this._m_isExtensible !== undefined)
+          return this._m_isExtensible;
+        this._m_isExtensible = this.wFormatTag == Wav.WFormatTagType.EXTENSIBLE;
+        return this._m_isExtensible;
+      }
+    });
 
     return FormatChunkType;
-  })();
-
-  var PmxChunkType = Wav.PmxChunkType = (function() {
-    function PmxChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PmxChunkType.prototype._read = function() {
-      this.data = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
-    }
-
-    /**
-     * XMP data
-     * @see {@link https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf|Source}
-     */
-
-    return PmxChunkType;
-  })();
-
-  /**
-   * required for all non-PCM formats
-   * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
-   * `format_chunk_type` context)
-   */
-
-  var FactChunkType = Wav.FactChunkType = (function() {
-    function FactChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    FactChunkType.prototype._read = function() {
-      this.numSamplesPerChannel = this._io.readU4le();
-    }
-
-    return FactChunkType;
   })();
 
   var GuidType = Wav.GuidType = (function() {
     function GuidType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -753,35 +975,16 @@ var Wav = (function() {
     return GuidType;
   })();
 
-  /**
-   * @see {@link https://en.wikipedia.org/wiki/IXML|Source}
-   */
-
-  var IxmlChunkType = Wav.IxmlChunkType = (function() {
-    function IxmlChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    IxmlChunkType.prototype._read = function() {
-      this.data = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
-    }
-
-    return IxmlChunkType;
-  })();
-
   var InfoChunkType = Wav.InfoChunkType = (function() {
     function InfoChunkType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     InfoChunkType.prototype._read = function() {
-      this.chunk = new Riff.Chunk(this._io, this, this._root);
+      this.chunk = new Riff_.Riff.Chunk(this._io, null, null);
     }
     Object.defineProperty(InfoChunkType.prototype, 'chunkData', {
       get: function() {
@@ -799,101 +1002,35 @@ var Wav = (function() {
     return InfoChunkType;
   })();
 
-  var CuePointType = Wav.CuePointType = (function() {
-    function CuePointType(_io, _parent, _root) {
+  /**
+   * @see {@link https://en.wikipedia.org/wiki/IXML|Source}
+   */
+
+  var IxmlChunkType = Wav.IxmlChunkType = (function() {
+    function IxmlChunkType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    CuePointType.prototype._read = function() {
-      this.dwName = this._io.readU4le();
-      this.dwPosition = this._io.readU4le();
-      this.fccChunk = this._io.readU4le();
-      this.dwChunkStart = this._io.readU4le();
-      this.dwBlockStart = this._io.readU4le();
-      this.dwSampleOffset = this._io.readU4le();
+    IxmlChunkType.prototype._read = function() {
+      this.data = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
     }
 
-    return CuePointType;
-  })();
-
-  var DataChunkType = Wav.DataChunkType = (function() {
-    function DataChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DataChunkType.prototype._read = function() {
-      this.data = this._io.readBytesFull();
-    }
-
-    return DataChunkType;
-  })();
-
-  var SamplesType = Wav.SamplesType = (function() {
-    function SamplesType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SamplesType.prototype._read = function() {
-      this.samples = this._io.readU4le();
-    }
-
-    return SamplesType;
-  })();
-
-  var ChannelMaskAndSubformatType = Wav.ChannelMaskAndSubformatType = (function() {
-    function ChannelMaskAndSubformatType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ChannelMaskAndSubformatType.prototype._read = function() {
-      this.dwChannelMask = new ChannelMaskType(this._io, this, this._root);
-      this.subformat = new GuidType(this._io, this, this._root);
-    }
-
-    return ChannelMaskAndSubformatType;
-  })();
-
-  var CueChunkType = Wav.CueChunkType = (function() {
-    function CueChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CueChunkType.prototype._read = function() {
-      this.dwCuePoints = this._io.readU4le();
-      this.cuePoints = [];
-      for (var i = 0; i < this.dwCuePoints; i++) {
-        this.cuePoints.push(new CuePointType(this._io, this, this._root));
-      }
-    }
-
-    return CueChunkType;
+    return IxmlChunkType;
   })();
 
   var ListChunkType = Wav.ListChunkType = (function() {
     function ListChunkType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     ListChunkType.prototype._read = function() {
-      this.parentChunkData = new Riff.ParentChunkData(this._io, this, this._root);
+      this.parentChunkData = new Riff_.Riff.ParentChunkData(this._io, null, null);
     }
     Object.defineProperty(ListChunkType.prototype, 'formType', {
       get: function() {
@@ -928,192 +1065,101 @@ var Wav = (function() {
     return ListChunkType;
   })();
 
-  var ChannelMaskType = Wav.ChannelMaskType = (function() {
-    function ChannelMaskType(_io, _parent, _root) {
+  var PmxChunkType = Wav.PmxChunkType = (function() {
+    function PmxChunkType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ChannelMaskType.prototype._read = function() {
-      this.frontRightOfCenter = this._io.readBitsIntBe(1) != 0;
-      this.frontLeftOfCenter = this._io.readBitsIntBe(1) != 0;
-      this.backRight = this._io.readBitsIntBe(1) != 0;
-      this.backLeft = this._io.readBitsIntBe(1) != 0;
-      this.lowFrequency = this._io.readBitsIntBe(1) != 0;
-      this.frontCenter = this._io.readBitsIntBe(1) != 0;
-      this.frontRight = this._io.readBitsIntBe(1) != 0;
-      this.frontLeft = this._io.readBitsIntBe(1) != 0;
-      this.topCenter = this._io.readBitsIntBe(1) != 0;
-      this.sideRight = this._io.readBitsIntBe(1) != 0;
-      this.sideLeft = this._io.readBitsIntBe(1) != 0;
-      this.backCenter = this._io.readBitsIntBe(1) != 0;
-      this.topBackLeft = this._io.readBitsIntBe(1) != 0;
-      this.topFrontRight = this._io.readBitsIntBe(1) != 0;
-      this.topFrontCenter = this._io.readBitsIntBe(1) != 0;
-      this.topFrontLeft = this._io.readBitsIntBe(1) != 0;
-      this.unused1 = this._io.readBitsIntBe(6);
-      this.topBackRight = this._io.readBitsIntBe(1) != 0;
-      this.topBackCenter = this._io.readBitsIntBe(1) != 0;
-      this.unused2 = this._io.readBitsIntBe(8);
-    }
-
-    return ChannelMaskType;
-  })();
-
-  /**
-   * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/|Source}
-   */
-
-  var AfspChunkType = Wav.AfspChunkType = (function() {
-    function AfspChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    AfspChunkType.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [65, 70, 115, 112]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([65, 70, 115, 112], this.magic, this._io, "/types/afsp_chunk_type/seq/0");
-      }
-      this.infoRecords = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.infoRecords.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII"));
-        i++;
-      }
-    }
-
-    /**
-     * An array of AFsp information records, in the `<field_name>: <value>`
-     * format (e.g. "`program: CopyAudio`"). The list of existing information
-     * record types are available in the `doc-ref` links.
-     * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html|Source}
-     * @see {@link https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html|Source}
-     */
-
-    return AfspChunkType;
-  })();
-
-  /**
-   * @see {@link https://tech.ebu.ch/docs/tech/tech3285s5.pdf|Source}
-   */
-
-  var AxmlChunkType = Wav.AxmlChunkType = (function() {
-    function AxmlChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    AxmlChunkType.prototype._read = function() {
+    PmxChunkType.prototype._read = function() {
       this.data = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
     }
 
-    return AxmlChunkType;
+    /**
+     * XMP data
+     * @see {@link https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf|Source}
+     */
+
+    return PmxChunkType;
   })();
 
-  var ChunkType = Wav.ChunkType = (function() {
-    function ChunkType(_io, _parent, _root) {
+  var SampleType = Wav.SampleType = (function() {
+    function SampleType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ChunkType.prototype._read = function() {
-      this.chunk = new Riff.Chunk(this._io, this, this._root);
+    SampleType.prototype._read = function() {
+      this.sample = this._io.readU2le();
     }
-    Object.defineProperty(ChunkType.prototype, 'chunkId', {
-      get: function() {
-        if (this._m_chunkId !== undefined)
-          return this._m_chunkId;
-        this._m_chunkId = this.chunk.id;
+
+    return SampleType;
+  })();
+
+  var SamplesType = Wav.SamplesType = (function() {
+    function SamplesType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SamplesType.prototype._read = function() {
+      this.samples = this._io.readU4le();
+    }
+
+    return SamplesType;
+  })();
+  Object.defineProperty(Wav.prototype, 'chunkId', {
+    get: function() {
+      if (this._m_chunkId !== undefined)
         return this._m_chunkId;
-      }
-    });
-    Object.defineProperty(ChunkType.prototype, 'chunkData', {
-      get: function() {
-        if (this._m_chunkData !== undefined)
-          return this._m_chunkData;
+      this._m_chunkId = this.chunk.id;
+      return this._m_chunkId;
+    }
+  });
+  Object.defineProperty(Wav.prototype, 'formType', {
+    get: function() {
+      if (this._m_formType !== undefined)
+        return this._m_formType;
+      this._m_formType = this.parentChunkData.formType;
+      return this._m_formType;
+    }
+  });
+  Object.defineProperty(Wav.prototype, 'isFormTypeWave', {
+    get: function() {
+      if (this._m_isFormTypeWave !== undefined)
+        return this._m_isFormTypeWave;
+      this._m_isFormTypeWave =  ((this.isRiffChunk) && (this.formType == Wav.Fourcc.WAVE)) ;
+      return this._m_isFormTypeWave;
+    }
+  });
+  Object.defineProperty(Wav.prototype, 'isRiffChunk', {
+    get: function() {
+      if (this._m_isRiffChunk !== undefined)
+        return this._m_isRiffChunk;
+      this._m_isRiffChunk = this.chunkId == Wav.Fourcc.RIFF;
+      return this._m_isRiffChunk;
+    }
+  });
+  Object.defineProperty(Wav.prototype, 'parentChunkData', {
+    get: function() {
+      if (this._m_parentChunkData !== undefined)
+        return this._m_parentChunkData;
+      if (this.isRiffChunk) {
         var io = this.chunk.dataSlot._io;
         var _pos = io.pos;
         io.seek(0);
-        switch (this.chunkId) {
-        case Wav.Fourcc.FACT:
-          this._m_chunkData = new FactChunkType(io, this, this._root);
-          break;
-        case Wav.Fourcc.LIST:
-          this._m_chunkData = new ListChunkType(io, this, this._root);
-          break;
-        case Wav.Fourcc.FMT:
-          this._m_chunkData = new FormatChunkType(io, this, this._root);
-          break;
-        case Wav.Fourcc.AFSP:
-          this._m_chunkData = new AfspChunkType(io, this, this._root);
-          break;
-        case Wav.Fourcc.BEXT:
-          this._m_chunkData = new BextChunkType(io, this, this._root);
-          break;
-        case Wav.Fourcc.CUE:
-          this._m_chunkData = new CueChunkType(io, this, this._root);
-          break;
-        case Wav.Fourcc.IXML:
-          this._m_chunkData = new IxmlChunkType(io, this, this._root);
-          break;
-        case Wav.Fourcc.PMX:
-          this._m_chunkData = new PmxChunkType(io, this, this._root);
-          break;
-        case Wav.Fourcc.AXML:
-          this._m_chunkData = new AxmlChunkType(io, this, this._root);
-          break;
-        case Wav.Fourcc.DATA:
-          this._m_chunkData = new DataChunkType(io, this, this._root);
-          break;
-        }
+        this._m_parentChunkData = new Riff_.Riff.ParentChunkData(io, null, null);
         io.seek(_pos);
-        return this._m_chunkData;
       }
-    });
-
-    return ChunkType;
-  })();
-
-  /**
-   * @see {@link https://en.wikipedia.org/wiki/Broadcast_Wave_Format|Source}
-   */
-
-  var BextChunkType = Wav.BextChunkType = (function() {
-    function BextChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
+      return this._m_parentChunkData;
     }
-    BextChunkType.prototype._read = function() {
-      this.description = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(256), 0, false), "ASCII");
-      this.originator = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "ASCII");
-      this.originatorReference = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "ASCII");
-      this.originationDate = KaitaiStream.bytesToStr(this._io.readBytes(10), "ASCII");
-      this.originationTime = KaitaiStream.bytesToStr(this._io.readBytes(8), "ASCII");
-      this.timeReferenceLow = this._io.readU4le();
-      this.timeReferenceHigh = this._io.readU4le();
-      this.version = this._io.readU2le();
-      this.umid = this._io.readBytes(64);
-      this.loudnessValue = this._io.readU2le();
-      this.loudnessRange = this._io.readU2le();
-      this.maxTruePeakLevel = this._io.readU2le();
-      this.maxMomentaryLoudness = this._io.readU2le();
-      this.maxShortTermLoudness = this._io.readU2le();
-    }
-
-    return BextChunkType;
-  })();
+  });
   Object.defineProperty(Wav.prototype, 'subchunks', {
     get: function() {
       if (this._m_subchunks !== undefined)
@@ -1133,54 +1179,8 @@ var Wav = (function() {
       return this._m_subchunks;
     }
   });
-  Object.defineProperty(Wav.prototype, 'parentChunkData', {
-    get: function() {
-      if (this._m_parentChunkData !== undefined)
-        return this._m_parentChunkData;
-      if (this.isRiffChunk) {
-        var io = this.chunk.dataSlot._io;
-        var _pos = io.pos;
-        io.seek(0);
-        this._m_parentChunkData = new Riff.ParentChunkData(io, this, this._root);
-        io.seek(_pos);
-      }
-      return this._m_parentChunkData;
-    }
-  });
-  Object.defineProperty(Wav.prototype, 'isFormTypeWave', {
-    get: function() {
-      if (this._m_isFormTypeWave !== undefined)
-        return this._m_isFormTypeWave;
-      this._m_isFormTypeWave =  ((this.isRiffChunk) && (this.formType == Wav.Fourcc.WAVE)) ;
-      return this._m_isFormTypeWave;
-    }
-  });
-  Object.defineProperty(Wav.prototype, 'isRiffChunk', {
-    get: function() {
-      if (this._m_isRiffChunk !== undefined)
-        return this._m_isRiffChunk;
-      this._m_isRiffChunk = this.chunkId == Wav.Fourcc.RIFF;
-      return this._m_isRiffChunk;
-    }
-  });
-  Object.defineProperty(Wav.prototype, 'chunkId', {
-    get: function() {
-      if (this._m_chunkId !== undefined)
-        return this._m_chunkId;
-      this._m_chunkId = this.chunk.id;
-      return this._m_chunkId;
-    }
-  });
-  Object.defineProperty(Wav.prototype, 'formType', {
-    get: function() {
-      if (this._m_formType !== undefined)
-        return this._m_formType;
-      this._m_formType = this.parentChunkData.formType;
-      return this._m_formType;
-    }
-  });
 
   return Wav;
 })();
-return Wav;
-}));
+Wav_.Wav = Wav;
+});

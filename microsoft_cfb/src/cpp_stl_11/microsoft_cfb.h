@@ -2,21 +2,24 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class microsoft_cfb_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 class microsoft_cfb_t : public kaitai::kstruct {
 
 public:
     class cfb_header_t;
-    class fat_entries_t;
     class dir_entry_t;
+    class fat_entries_t;
 
     microsoft_cfb_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, microsoft_cfb_t* p__root = nullptr);
 
@@ -133,30 +136,6 @@ public:
         microsoft_cfb_t* _parent() const { return m__parent; }
     };
 
-    class fat_entries_t : public kaitai::kstruct {
-
-    public:
-
-        fat_entries_t(kaitai::kstream* p__io, microsoft_cfb_t* p__parent = nullptr, microsoft_cfb_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fat_entries_t();
-
-    private:
-        std::unique_ptr<std::vector<int32_t>> m_entries;
-        microsoft_cfb_t* m__root;
-        microsoft_cfb_t* m__parent;
-
-    public:
-        std::vector<int32_t>* entries() const { return m_entries.get(); }
-        microsoft_cfb_t* _root() const { return m__root; }
-        microsoft_cfb_t* _parent() const { return m__parent; }
-    };
-
     class dir_entry_t : public kaitai::kstruct {
 
     public:
@@ -167,11 +146,23 @@ public:
             OBJ_TYPE_STREAM = 2,
             OBJ_TYPE_ROOT_STORAGE = 5
         };
+        static bool _is_defined_obj_type_t(obj_type_t v);
+
+    private:
+        static const std::set<obj_type_t> _values_obj_type_t;
+
+    public:
 
         enum rb_color_t {
             RB_COLOR_RED = 0,
             RB_COLOR_BLACK = 1
         };
+        static bool _is_defined_rb_color_t(rb_color_t v);
+
+    private:
+        static const std::set<rb_color_t> _values_rb_color_t;
+
+    public:
 
         dir_entry_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, microsoft_cfb_t* p__root = nullptr);
 
@@ -181,19 +172,6 @@ public:
 
     public:
         ~dir_entry_t();
-
-    private:
-        bool f_mini_stream;
-        std::string m_mini_stream;
-        bool n_mini_stream;
-
-    public:
-        bool _is_null_mini_stream() { mini_stream(); return n_mini_stream; };
-
-    private:
-
-    public:
-        std::string mini_stream();
 
     private:
         bool f_child;
@@ -220,6 +198,19 @@ public:
 
     public:
         dir_entry_t* left_sibling();
+
+    private:
+        bool f_mini_stream;
+        std::string m_mini_stream;
+        bool n_mini_stream;
+
+    public:
+        bool _is_null_mini_stream() { mini_stream(); return n_mini_stream; };
+
+    private:
+
+    public:
+        std::string mini_stream();
 
     private:
         bool f_right_sibling;
@@ -289,12 +280,36 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
+    class fat_entries_t : public kaitai::kstruct {
+
+    public:
+
+        fat_entries_t(kaitai::kstream* p__io, microsoft_cfb_t* p__parent = nullptr, microsoft_cfb_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fat_entries_t();
+
+    private:
+        std::unique_ptr<std::vector<int32_t>> m_entries;
+        microsoft_cfb_t* m__root;
+        microsoft_cfb_t* m__parent;
+
+    public:
+        std::vector<int32_t>* entries() const { return m_entries.get(); }
+        microsoft_cfb_t* _root() const { return m__root; }
+        microsoft_cfb_t* _parent() const { return m__parent; }
+    };
+
 private:
-    bool f_sector_size;
-    int32_t m_sector_size;
+    bool f_dir;
+    std::unique_ptr<dir_entry_t> m_dir;
 
 public:
-    int32_t sector_size();
+    dir_entry_t* dir();
 
 private:
     bool f_fat;
@@ -304,11 +319,11 @@ public:
     fat_entries_t* fat();
 
 private:
-    bool f_dir;
-    std::unique_ptr<dir_entry_t> m_dir;
+    bool f_sector_size;
+    int32_t m_sector_size;
 
 public:
-    dir_entry_t* dir();
+    int32_t sector_size();
 
 private:
     std::unique_ptr<cfb_header_t> m_header;

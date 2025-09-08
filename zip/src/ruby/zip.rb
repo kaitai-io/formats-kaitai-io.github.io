@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'dos_datetime'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -76,8 +77,8 @@ class Zip < Kaitai::Struct::Struct
     64842 => :extra_codes_sms_qdos,
   }
   I__EXTRA_CODES = EXTRA_CODES.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -90,22 +91,69 @@ class Zip < Kaitai::Struct::Struct
     end
     self
   end
-  class LocalFile < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+
+  ##
+  # @see https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.3.12
+  class CentralDirEntry < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @header = LocalFileHeader.new(@_io, self, @_root)
-      @body = @_io.read_bytes(header.len_body_compressed)
+      @version_made_by = @_io.read_u2le
+      @version_needed_to_extract = @_io.read_u2le
+      @flags = @_io.read_u2le
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(Zip::COMPRESSION, @_io.read_u2le)
+      _io_file_mod_time = @_io.substream(4)
+      @file_mod_time = DosDatetime.new(_io_file_mod_time)
+      @crc32 = @_io.read_u4le
+      @len_body_compressed = @_io.read_u4le
+      @len_body_uncompressed = @_io.read_u4le
+      @len_file_name = @_io.read_u2le
+      @len_extra = @_io.read_u2le
+      @len_comment = @_io.read_u2le
+      @disk_number_start = @_io.read_u2le
+      @int_file_attr = @_io.read_u2le
+      @ext_file_attr = @_io.read_u4le
+      @ofs_local_header = @_io.read_s4le
+      @file_name = (@_io.read_bytes(len_file_name)).force_encoding("UTF-8")
+      _io_extra = @_io.substream(len_extra)
+      @extra = Extras.new(_io_extra, self, @_root)
+      @comment = (@_io.read_bytes(len_comment)).force_encoding("UTF-8")
       self
     end
-    attr_reader :header
-    attr_reader :body
+    def local_header
+      return @local_header unless @local_header.nil?
+      _pos = @_io.pos
+      @_io.seek(ofs_local_header)
+      @local_header = PkSection.new(@_io, self, @_root)
+      @_io.seek(_pos)
+      @local_header
+    end
+    attr_reader :version_made_by
+    attr_reader :version_needed_to_extract
+    attr_reader :flags
+    attr_reader :compression_method
+    attr_reader :file_mod_time
+    attr_reader :crc32
+    attr_reader :len_body_compressed
+    attr_reader :len_body_uncompressed
+    attr_reader :len_file_name
+    attr_reader :len_extra
+    attr_reader :len_comment
+    attr_reader :disk_number_start
+    attr_reader :int_file_attr
+    attr_reader :ext_file_attr
+    attr_reader :ofs_local_header
+    attr_reader :file_name
+    attr_reader :extra
+    attr_reader :comment
+    attr_reader :_raw_file_mod_time
+    attr_reader :_raw_extra
   end
   class DataDescriptor < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -120,8 +168,34 @@ class Zip < Kaitai::Struct::Struct
     attr_reader :len_body_compressed
     attr_reader :len_body_uncompressed
   end
+  class EndOfCentralDir < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @disk_of_end_of_central_dir = @_io.read_u2le
+      @disk_of_central_dir = @_io.read_u2le
+      @num_central_dir_entries_on_disk = @_io.read_u2le
+      @num_central_dir_entries_total = @_io.read_u2le
+      @len_central_dir = @_io.read_u4le
+      @ofs_central_dir = @_io.read_u4le
+      @len_comment = @_io.read_u2le
+      @comment = (@_io.read_bytes(len_comment)).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :disk_of_end_of_central_dir
+    attr_reader :disk_of_central_dir
+    attr_reader :num_central_dir_entries_on_disk
+    attr_reader :num_central_dir_entries_total
+    attr_reader :len_central_dir
+    attr_reader :ofs_central_dir
+    attr_reader :len_comment
+    attr_reader :comment
+  end
   class ExtraField < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -130,18 +204,15 @@ class Zip < Kaitai::Struct::Struct
       @code = Kaitai::Struct::Stream::resolve_enum(Zip::EXTRA_CODES, @_io.read_u2le)
       @len_body = @_io.read_u2le
       case code
-      when :extra_codes_ntfs
-        @_raw_body = @_io.read_bytes(len_body)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Ntfs.new(_io__raw_body, self, @_root)
       when :extra_codes_extended_timestamp
-        @_raw_body = @_io.read_bytes(len_body)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = ExtendedTimestamp.new(_io__raw_body, self, @_root)
+        _io_body = @_io.substream(len_body)
+        @body = ExtendedTimestamp.new(_io_body, self, @_root)
       when :extra_codes_infozip_unix_var_size
-        @_raw_body = @_io.read_bytes(len_body)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = InfozipUnixVarSize.new(_io__raw_body, self, @_root)
+        _io_body = @_io.substream(len_body)
+        @body = InfozipUnixVarSize.new(_io_body, self, @_root)
+      when :extra_codes_ntfs
+        _io_body = @_io.substream(len_body)
+        @body = Ntfs.new(_io_body, self, @_root)
       else
         @body = @_io.read_bytes(len_body)
       end
@@ -149,79 +220,16 @@ class Zip < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191 Source
-    class Ntfs < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @reserved = @_io.read_u4le
-        @attributes = []
-        i = 0
-        while not @_io.eof?
-          @attributes << Attribute.new(@_io, self, @_root)
-          i += 1
-        end
-        self
-      end
-      class Attribute < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @tag = @_io.read_u2le
-          @len_body = @_io.read_u2le
-          case tag
-          when 1
-            @_raw_body = @_io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = Attribute1.new(_io__raw_body, self, @_root)
-          else
-            @body = @_io.read_bytes(len_body)
-          end
-          self
-        end
-        attr_reader :tag
-        attr_reader :len_body
-        attr_reader :body
-        attr_reader :_raw_body
-      end
-      class Attribute1 < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @last_mod_time = @_io.read_u8le
-          @last_access_time = @_io.read_u8le
-          @creation_time = @_io.read_u8le
-          self
-        end
-        attr_reader :last_mod_time
-        attr_reader :last_access_time
-        attr_reader :creation_time
-      end
-      attr_reader :reserved
-      attr_reader :attributes
-    end
-
-    ##
     # @see https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817 Source
     class ExtendedTimestamp < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
 
       def _read
-        @_raw_flags = @_io.read_bytes(1)
-        _io__raw_flags = Kaitai::Struct::Stream.new(@_raw_flags)
-        @flags = InfoFlags.new(_io__raw_flags, self, @_root)
+        _io_flags = @_io.substream(1)
+        @flags = InfoFlags.new(_io_flags, self, @_root)
         if flags.has_mod_time
           @mod_time = @_io.read_u4le
         end
@@ -234,7 +242,7 @@ class Zip < Kaitai::Struct::Struct
         self
       end
       class InfoFlags < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
@@ -270,7 +278,7 @@ class Zip < Kaitai::Struct::Struct
     ##
     # @see https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339 Source
     class InfozipUnixVarSize < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -304,102 +312,74 @@ class Zip < Kaitai::Struct::Struct
       # GID (Group ID) for a file
       attr_reader :gid
     end
+
+    ##
+    # @see https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191 Source
+    class Ntfs < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @reserved = @_io.read_u4le
+        @attributes = []
+        i = 0
+        while not @_io.eof?
+          @attributes << Attribute.new(@_io, self, @_root)
+          i += 1
+        end
+        self
+      end
+      class Attribute < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @tag = @_io.read_u2le
+          @len_body = @_io.read_u2le
+          case tag
+          when 1
+            _io_body = @_io.substream(len_body)
+            @body = Attribute1.new(_io_body, self, @_root)
+          else
+            @body = @_io.read_bytes(len_body)
+          end
+          self
+        end
+        attr_reader :tag
+        attr_reader :len_body
+        attr_reader :body
+        attr_reader :_raw_body
+      end
+      class Attribute1 < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @last_mod_time = @_io.read_u8le
+          @last_access_time = @_io.read_u8le
+          @creation_time = @_io.read_u8le
+          self
+        end
+        attr_reader :last_mod_time
+        attr_reader :last_access_time
+        attr_reader :creation_time
+      end
+      attr_reader :reserved
+      attr_reader :attributes
+    end
     attr_reader :code
     attr_reader :len_body
     attr_reader :body
     attr_reader :_raw_body
   end
-
-  ##
-  # @see https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.3.12
-  class CentralDirEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @version_made_by = @_io.read_u2le
-      @version_needed_to_extract = @_io.read_u2le
-      @flags = @_io.read_u2le
-      @compression_method = Kaitai::Struct::Stream::resolve_enum(Zip::COMPRESSION, @_io.read_u2le)
-      @_raw_file_mod_time = @_io.read_bytes(4)
-      _io__raw_file_mod_time = Kaitai::Struct::Stream.new(@_raw_file_mod_time)
-      @file_mod_time = DosDatetime.new(_io__raw_file_mod_time)
-      @crc32 = @_io.read_u4le
-      @len_body_compressed = @_io.read_u4le
-      @len_body_uncompressed = @_io.read_u4le
-      @len_file_name = @_io.read_u2le
-      @len_extra = @_io.read_u2le
-      @len_comment = @_io.read_u2le
-      @disk_number_start = @_io.read_u2le
-      @int_file_attr = @_io.read_u2le
-      @ext_file_attr = @_io.read_u4le
-      @ofs_local_header = @_io.read_s4le
-      @file_name = (@_io.read_bytes(len_file_name)).force_encoding("UTF-8")
-      @_raw_extra = @_io.read_bytes(len_extra)
-      _io__raw_extra = Kaitai::Struct::Stream.new(@_raw_extra)
-      @extra = Extras.new(_io__raw_extra, self, @_root)
-      @comment = (@_io.read_bytes(len_comment)).force_encoding("UTF-8")
-      self
-    end
-    def local_header
-      return @local_header unless @local_header.nil?
-      _pos = @_io.pos
-      @_io.seek(ofs_local_header)
-      @local_header = PkSection.new(@_io, self, @_root)
-      @_io.seek(_pos)
-      @local_header
-    end
-    attr_reader :version_made_by
-    attr_reader :version_needed_to_extract
-    attr_reader :flags
-    attr_reader :compression_method
-    attr_reader :file_mod_time
-    attr_reader :crc32
-    attr_reader :len_body_compressed
-    attr_reader :len_body_uncompressed
-    attr_reader :len_file_name
-    attr_reader :len_extra
-    attr_reader :len_comment
-    attr_reader :disk_number_start
-    attr_reader :int_file_attr
-    attr_reader :ext_file_attr
-    attr_reader :ofs_local_header
-    attr_reader :file_name
-    attr_reader :extra
-    attr_reader :comment
-    attr_reader :_raw_file_mod_time
-    attr_reader :_raw_extra
-  end
-  class PkSection < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @magic = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([80, 75].pack('C*'), magic, _io, "/types/pk_section/seq/0") if not magic == [80, 75].pack('C*')
-      @section_type = @_io.read_u2le
-      case section_type
-      when 513
-        @body = CentralDirEntry.new(@_io, self, @_root)
-      when 1027
-        @body = LocalFile.new(@_io, self, @_root)
-      when 1541
-        @body = EndOfCentralDir.new(@_io, self, @_root)
-      when 2055
-        @body = DataDescriptor.new(@_io, self, @_root)
-      end
-      self
-    end
-    attr_reader :magic
-    attr_reader :section_type
-    attr_reader :body
-  end
   class Extras < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -415,30 +395,41 @@ class Zip < Kaitai::Struct::Struct
     end
     attr_reader :entries
   end
+  class LocalFile < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @header = LocalFileHeader.new(@_io, self, @_root)
+      @body = @_io.read_bytes(header.len_body_compressed)
+      self
+    end
+    attr_reader :header
+    attr_reader :body
+  end
   class LocalFileHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @version = @_io.read_u2le
-      @_raw_flags = @_io.read_bytes(2)
-      _io__raw_flags = Kaitai::Struct::Stream.new(@_raw_flags)
-      @flags = GpFlags.new(_io__raw_flags, self, @_root)
+      _io_flags = @_io.substream(2)
+      @flags = GpFlags.new(_io_flags, self, @_root)
       @compression_method = Kaitai::Struct::Stream::resolve_enum(Zip::COMPRESSION, @_io.read_u2le)
-      @_raw_file_mod_time = @_io.read_bytes(4)
-      _io__raw_file_mod_time = Kaitai::Struct::Stream.new(@_raw_file_mod_time)
-      @file_mod_time = DosDatetime.new(_io__raw_file_mod_time)
+      _io_file_mod_time = @_io.substream(4)
+      @file_mod_time = DosDatetime.new(_io_file_mod_time)
       @crc32 = @_io.read_u4le
       @len_body_compressed = @_io.read_u4le
       @len_body_uncompressed = @_io.read_u4le
       @len_file_name = @_io.read_u2le
       @len_extra = @_io.read_u2le
       @file_name = (@_io.read_bytes(len_file_name)).force_encoding("UTF-8")
-      @_raw_extra = @_io.read_bytes(len_extra)
-      _io__raw_extra = Kaitai::Struct::Stream.new(@_raw_extra)
-      @extra = Extras.new(_io__raw_extra, self, @_root)
+      _io_extra = @_io.substream(len_extra)
+      @extra = Extras.new(_io_extra, self, @_root)
       self
     end
 
@@ -454,7 +445,7 @@ class Zip < Kaitai::Struct::Struct
         3 => :deflate_mode_super_fast,
       }
       I__DEFLATE_MODE = DEFLATE_MODE.invert
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -486,21 +477,21 @@ class Zip < Kaitai::Struct::Struct
       def imploded_dict_byte_size
         return @imploded_dict_byte_size unless @imploded_dict_byte_size.nil?
         if _parent.compression_method == :compression_imploded
-          @imploded_dict_byte_size = (((comp_options_raw & 1) != 0 ? 8 : 4) * 1024)
+          @imploded_dict_byte_size = (comp_options_raw & 1 != 0 ? 8 : 4) * 1024
         end
         @imploded_dict_byte_size
       end
       def imploded_num_sf_trees
         return @imploded_num_sf_trees unless @imploded_num_sf_trees.nil?
         if _parent.compression_method == :compression_imploded
-          @imploded_num_sf_trees = ((comp_options_raw & 2) != 0 ? 3 : 2)
+          @imploded_num_sf_trees = (comp_options_raw & 2 != 0 ? 3 : 2)
         end
         @imploded_num_sf_trees
       end
       def lzma_has_eos_marker
         return @lzma_has_eos_marker unless @lzma_has_eos_marker.nil?
         if _parent.compression_method == :compression_lzma
-          @lzma_has_eos_marker = (comp_options_raw & 1) != 0
+          @lzma_has_eos_marker = comp_options_raw & 1 != 0
         end
         @lzma_has_eos_marker
       end
@@ -534,31 +525,31 @@ class Zip < Kaitai::Struct::Struct
     attr_reader :_raw_file_mod_time
     attr_reader :_raw_extra
   end
-  class EndOfCentralDir < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class PkSection < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @disk_of_end_of_central_dir = @_io.read_u2le
-      @disk_of_central_dir = @_io.read_u2le
-      @num_central_dir_entries_on_disk = @_io.read_u2le
-      @num_central_dir_entries_total = @_io.read_u2le
-      @len_central_dir = @_io.read_u4le
-      @ofs_central_dir = @_io.read_u4le
-      @len_comment = @_io.read_u2le
-      @comment = (@_io.read_bytes(len_comment)).force_encoding("UTF-8")
+      @magic = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([80, 75].pack('C*'), @magic, @_io, "/types/pk_section/seq/0") if not @magic == [80, 75].pack('C*')
+      @section_type = @_io.read_u2le
+      case section_type
+      when 1027
+        @body = LocalFile.new(@_io, self, @_root)
+      when 1541
+        @body = EndOfCentralDir.new(@_io, self, @_root)
+      when 2055
+        @body = DataDescriptor.new(@_io, self, @_root)
+      when 513
+        @body = CentralDirEntry.new(@_io, self, @_root)
+      end
       self
     end
-    attr_reader :disk_of_end_of_central_dir
-    attr_reader :disk_of_central_dir
-    attr_reader :num_central_dir_entries_on_disk
-    attr_reader :num_central_dir_entries_total
-    attr_reader :len_central_dir
-    attr_reader :ofs_central_dir
-    attr_reader :len_comment
-    attr_reader :comment
+    attr_reader :magic
+    attr_reader :section_type
+    attr_reader :body
   end
   attr_reader :sections
 end

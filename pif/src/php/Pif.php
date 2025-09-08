@@ -11,8 +11,8 @@
 
 namespace {
     class Pif extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Pif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Pif $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -47,78 +47,68 @@ namespace {
 }
 
 namespace Pif {
-    class PifHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Pif $_parent = null, \Pif $_root = null) {
+    class ColorTableData extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Pif $_parent = null, ?\Pif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x50\x49\x46\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x49\x46\x00", $this->magic(), $this->_io(), "/types/pif_header/seq/0");
-            }
-            $this->_m_lenFile = $this->_io->readU4le();
-            if (!($this->lenFile() >= $this->ofsImageDataMin())) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError($this->ofsImageDataMin(), $this->lenFile(), $this->_io(), "/types/pif_header/seq/1");
-            }
-            $this->_m_ofsImageData = $this->_io->readU4le();
-            if (!($this->ofsImageData() >= $this->ofsImageDataMin())) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError($this->ofsImageDataMin(), $this->ofsImageData(), $this->_io(), "/types/pif_header/seq/2");
-            }
-            if (!($this->ofsImageData() <= $this->lenFile())) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->lenFile(), $this->ofsImageData(), $this->_io(), "/types/pif_header/seq/2");
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                switch ($this->_root()->infoHeader()->imageType()) {
+                    case \Pif\ImageType::INDEXED_RGB332:
+                        $this->_m_entries[] = $this->_io->readBitsIntLe(8);
+                        break;
+                    case \Pif\ImageType::INDEXED_RGB565:
+                        $this->_m_entries[] = $this->_io->readBitsIntLe(16);
+                        break;
+                    case \Pif\ImageType::INDEXED_RGB888:
+                        $this->_m_entries[] = $this->_io->readBitsIntLe(24);
+                        break;
+                }
+                $i++;
             }
         }
-        protected $_m_ofsImageDataMin;
-        public function ofsImageDataMin() {
-            if ($this->_m_ofsImageDataMin !== null)
-                return $this->_m_ofsImageDataMin;
-            $this->_m_ofsImageDataMin = (12 + 16);
-            return $this->_m_ofsImageDataMin;
-        }
-        protected $_m_magic;
-        protected $_m_lenFile;
-        protected $_m_ofsImageData;
-        public function magic() { return $this->_m_magic; }
-        public function lenFile() { return $this->_m_lenFile; }
-        public function ofsImageData() { return $this->_m_ofsImageData; }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
     }
 }
 
 namespace Pif {
     class InformationHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Pif $_parent = null, \Pif $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Pif $_parent = null, ?\Pif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_imageType = $this->_io->readU2le();
-            if (!( (($this->imageType() == \Pif\ImageType::RGB888) || ($this->imageType() == \Pif\ImageType::RGB565) || ($this->imageType() == \Pif\ImageType::RGB332) || ($this->imageType() == \Pif\ImageType::RGB16C) || ($this->imageType() == \Pif\ImageType::BLACK_WHITE) || ($this->imageType() == \Pif\ImageType::INDEXED_RGB888) || ($this->imageType() == \Pif\ImageType::INDEXED_RGB565) || ($this->imageType() == \Pif\ImageType::INDEXED_RGB332)) )) {
-                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->imageType(), $this->_io(), "/types/information_header/seq/0");
+            if (!( (($this->_m_imageType == \Pif\ImageType::RGB888) || ($this->_m_imageType == \Pif\ImageType::RGB565) || ($this->_m_imageType == \Pif\ImageType::RGB332) || ($this->_m_imageType == \Pif\ImageType::RGB16C) || ($this->_m_imageType == \Pif\ImageType::BLACK_WHITE) || ($this->_m_imageType == \Pif\ImageType::INDEXED_RGB888) || ($this->_m_imageType == \Pif\ImageType::INDEXED_RGB565) || ($this->_m_imageType == \Pif\ImageType::INDEXED_RGB332)) )) {
+                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_imageType, $this->_io, "/types/information_header/seq/0");
             }
             $this->_m_bitsPerPixel = $this->_io->readU2le();
-            $_ = $this->bitsPerPixel();
+            $_ = $this->_m_bitsPerPixel;
             if (!(($this->imageType() == \Pif\ImageType::RGB888 ? $_ == 24 : ($this->imageType() == \Pif\ImageType::RGB565 ? $_ == 16 : ($this->imageType() == \Pif\ImageType::RGB332 ? $_ == 8 : ($this->imageType() == \Pif\ImageType::RGB16C ? $_ == 4 : ($this->imageType() == \Pif\ImageType::BLACK_WHITE ? $_ == 1 : ($this->usesIndexedMode() ? $_ <= 8 : true)))))))) {
-                throw new \Kaitai\Struct\Error\ValidationExprError($this->bitsPerPixel(), $this->_io(), "/types/information_header/seq/1");
+                throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_bitsPerPixel, $this->_io, "/types/information_header/seq/1");
             }
             $this->_m_width = $this->_io->readU2le();
             $this->_m_height = $this->_io->readU2le();
             $this->_m_lenImageData = $this->_io->readU4le();
-            if (!($this->lenImageData() <= ($this->_root()->fileHeader()->lenFile() - $this->_root()->fileHeader()->ofsImageData()))) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(($this->_root()->fileHeader()->lenFile() - $this->_root()->fileHeader()->ofsImageData()), $this->lenImageData(), $this->_io(), "/types/information_header/seq/4");
+            if (!($this->_m_lenImageData <= $this->_root()->fileHeader()->lenFile() - $this->_root()->fileHeader()->ofsImageData())) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->_root()->fileHeader()->lenFile() - $this->_root()->fileHeader()->ofsImageData(), $this->_m_lenImageData, $this->_io, "/types/information_header/seq/4");
             }
             $this->_m_lenColorTable = $this->_io->readU2le();
-            if (!($this->lenColorTable() >= ($this->usesIndexedMode() ? ($this->lenColorTableEntry() * 1) : 0))) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError(($this->usesIndexedMode() ? ($this->lenColorTableEntry() * 1) : 0), $this->lenColorTable(), $this->_io(), "/types/information_header/seq/5");
+            if (!($this->_m_lenColorTable >= ($this->usesIndexedMode() ? $this->lenColorTableEntry() * 1 : 0))) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(($this->usesIndexedMode() ? $this->lenColorTableEntry() * 1 : 0), $this->_m_lenColorTable, $this->_io, "/types/information_header/seq/5");
             }
-            if (!($this->lenColorTable() <= ($this->usesIndexedMode() ? ($this->lenColorTableMax() < $this->lenColorTableFull() ? $this->lenColorTableMax() : $this->lenColorTableFull()) : 0))) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(($this->usesIndexedMode() ? ($this->lenColorTableMax() < $this->lenColorTableFull() ? $this->lenColorTableMax() : $this->lenColorTableFull()) : 0), $this->lenColorTable(), $this->_io(), "/types/information_header/seq/5");
+            if (!($this->_m_lenColorTable <= ($this->usesIndexedMode() ? ($this->lenColorTableMax() < $this->lenColorTableFull() ? $this->lenColorTableMax() : $this->lenColorTableFull()) : 0))) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(($this->usesIndexedMode() ? ($this->lenColorTableMax() < $this->lenColorTableFull() ? $this->lenColorTableMax() : $this->lenColorTableFull()) : 0), $this->_m_lenColorTable, $this->_io, "/types/information_header/seq/5");
             }
             $this->_m_compression = $this->_io->readU2le();
-            if (!( (($this->compression() == \Pif\CompressionType::NONE) || ($this->compression() == \Pif\CompressionType::RLE)) )) {
-                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->compression(), $this->_io(), "/types/information_header/seq/6");
+            if (!( (($this->_m_compression == \Pif\CompressionType::NONE) || ($this->_m_compression == \Pif\CompressionType::RLE)) )) {
+                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_compression, $this->_io, "/types/information_header/seq/6");
             }
         }
         protected $_m_lenColorTableEntry;
@@ -132,14 +122,14 @@ namespace Pif {
         public function lenColorTableFull() {
             if ($this->_m_lenColorTableFull !== null)
                 return $this->_m_lenColorTableFull;
-            $this->_m_lenColorTableFull = ($this->lenColorTableEntry() * (1 << $this->bitsPerPixel()));
+            $this->_m_lenColorTableFull = $this->lenColorTableEntry() * (1 << $this->bitsPerPixel());
             return $this->_m_lenColorTableFull;
         }
         protected $_m_lenColorTableMax;
         public function lenColorTableMax() {
             if ($this->_m_lenColorTableMax !== null)
                 return $this->_m_lenColorTableMax;
-            $this->_m_lenColorTableMax = ($this->_root()->fileHeader()->ofsImageData() - $this->_root()->fileHeader()->ofsImageDataMin());
+            $this->_m_lenColorTableMax = $this->_root()->fileHeader()->ofsImageData() - $this->_root()->fileHeader()->ofsImageDataMin();
             return $this->_m_lenColorTableMax;
         }
         protected $_m_usesIndexedMode;
@@ -188,32 +178,55 @@ namespace Pif {
 }
 
 namespace Pif {
-    class ColorTableData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Pif $_parent = null, \Pif $_root = null) {
+    class PifHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Pif $_parent = null, ?\Pif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                switch ($this->_root()->infoHeader()->imageType()) {
-                    case \Pif\ImageType::INDEXED_RGB888:
-                        $this->_m_entries[] = $this->_io->readBitsIntLe(24);
-                        break;
-                    case \Pif\ImageType::INDEXED_RGB565:
-                        $this->_m_entries[] = $this->_io->readBitsIntLe(16);
-                        break;
-                    case \Pif\ImageType::INDEXED_RGB332:
-                        $this->_m_entries[] = $this->_io->readBitsIntLe(8);
-                        break;
-                }
-                $i++;
+            $this->_m_magic = $this->_io->readBytes(4);
+            if (!($this->_m_magic == "\x50\x49\x46\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x49\x46\x00", $this->_m_magic, $this->_io, "/types/pif_header/seq/0");
+            }
+            $this->_m_lenFile = $this->_io->readU4le();
+            if (!($this->_m_lenFile >= $this->ofsImageDataMin())) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError($this->ofsImageDataMin(), $this->_m_lenFile, $this->_io, "/types/pif_header/seq/1");
+            }
+            $this->_m_ofsImageData = $this->_io->readU4le();
+            if (!($this->_m_ofsImageData >= $this->ofsImageDataMin())) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError($this->ofsImageDataMin(), $this->_m_ofsImageData, $this->_io, "/types/pif_header/seq/2");
+            }
+            if (!($this->_m_ofsImageData <= $this->lenFile())) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->lenFile(), $this->_m_ofsImageData, $this->_io, "/types/pif_header/seq/2");
             }
         }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
+        protected $_m_ofsImageDataMin;
+        public function ofsImageDataMin() {
+            if ($this->_m_ofsImageDataMin !== null)
+                return $this->_m_ofsImageDataMin;
+            $this->_m_ofsImageDataMin = 12 + 16;
+            return $this->_m_ofsImageDataMin;
+        }
+        protected $_m_magic;
+        protected $_m_lenFile;
+        protected $_m_ofsImageData;
+        public function magic() { return $this->_m_magic; }
+        public function lenFile() { return $this->_m_lenFile; }
+        public function ofsImageData() { return $this->_m_ofsImageData; }
+    }
+}
+
+namespace Pif {
+    class CompressionType {
+        const NONE = 0;
+        const RLE = 32222;
+
+        private const _VALUES = [0 => true, 32222 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -244,12 +257,11 @@ namespace Pif {
          */
         const RGB16C = 47253;
         const RGB565 = 58821;
-    }
-}
 
-namespace Pif {
-    class CompressionType {
-        const NONE = 0;
-        const RLE = 32222;
+        private const _VALUES = [7763 => true, 17212 => true, 18754 => true, 18759 => true, 18770 => true, 32170 => true, 47253 => true, 58821 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

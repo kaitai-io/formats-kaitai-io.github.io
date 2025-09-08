@@ -4,7 +4,7 @@
 
 avantes_roh60_t::avantes_roh60_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, avantes_roh60_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_unknown2 = nullptr;
     m_unknown3 = nullptr;
     m_spectrum = nullptr;
@@ -31,7 +31,7 @@ void avantes_roh60_t::_read() {
         m_unknown3->push_back(std::move(m__io->read_f4le()));
     }
     m_spectrum = std::unique_ptr<std::vector<float>>(new std::vector<float>());
-    const int l_spectrum = ((static_cast<int>(ipixlast()) - static_cast<int>(ipixfirst())) - 1);
+    const int l_spectrum = (static_cast<int>(ipixlast()) - static_cast<int>(ipixfirst())) - 1;
     for (int i = 0; i < l_spectrum; i++) {
         m_spectrum->push_back(std::move(m__io->read_f4le()));
     }

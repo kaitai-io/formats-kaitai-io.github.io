@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -47,39 +47,22 @@ class RubyMarshal < Kaitai::Struct::Struct
     123 => :codes_ruby_hash,
   }
   I__CODES = CODES.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @version = @_io.read_bytes(2)
-    raise Kaitai::Struct::ValidationNotEqualError.new([4, 8].pack('C*'), version, _io, "/seq/0") if not version == [4, 8].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([4, 8].pack('C*'), @version, @_io, "/seq/0") if not @version == [4, 8].pack('C*')
     @records = Record.new(@_io, self, @_root)
     self
-  end
-  class RubyArray < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @num_elements = PackedInt.new(@_io, self, @_root)
-      @elements = []
-      (num_elements.value).times { |i|
-        @elements << Record.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :num_elements
-    attr_reader :elements
   end
 
   ##
   # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum Source
   class Bignum < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -87,7 +70,7 @@ class RubyMarshal < Kaitai::Struct::Struct
     def _read
       @sign = @_io.read_u1
       @len_div_2 = PackedInt.new(@_io, self, @_root)
-      @body = @_io.read_bytes((len_div_2.value * 2))
+      @body = @_io.read_bytes(len_div_2.value * 2)
       self
     end
 
@@ -105,48 +88,25 @@ class RubyMarshal < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct Source
-  class RubyStruct < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables Source
+  class InstanceVar < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @name = Record.new(@_io, self, @_root)
-      @num_members = PackedInt.new(@_io, self, @_root)
-      @members = []
-      (num_members.value).times { |i|
-        @members << Pair.new(@_io, self, @_root)
+      @obj = Record.new(@_io, self, @_root)
+      @num_vars = PackedInt.new(@_io, self, @_root)
+      @vars = []
+      (num_vars.value).times { |i|
+        @vars << Pair.new(@_io, self, @_root)
       }
       self
     end
-
-    ##
-    # Symbol containing the name of the struct.
-    attr_reader :name
-
-    ##
-    # Number of members in a struct
-    attr_reader :num_members
-    attr_reader :members
-  end
-
-  ##
-  # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence Source
-  class RubySymbol < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len = PackedInt.new(@_io, self, @_root)
-      @name = (@_io.read_bytes(len.value)).force_encoding("UTF-8")
-      self
-    end
-    attr_reader :len
-    attr_reader :name
+    attr_reader :obj
+    attr_reader :num_vars
+    attr_reader :vars
   end
 
   ##
@@ -177,7 +137,7 @@ class RubyMarshal < Kaitai::Struct::Struct
   # i.e. if they fit into 64 bits on a 64-bit platform).
   # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Fixnum+and+long Source
   class PackedInt < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -185,27 +145,27 @@ class RubyMarshal < Kaitai::Struct::Struct
     def _read
       @code = @_io.read_u1
       case code
-      when 4
-        @encoded = @_io.read_u4le
       when 1
         @encoded = @_io.read_u1
+      when 2
+        @encoded = @_io.read_u2le
       when 252
         @encoded = @_io.read_u4le
       when 253
         @encoded = @_io.read_u2le
-      when 3
-        @encoded = @_io.read_u2le
-      when 2
+      when 254
         @encoded = @_io.read_u2le
       when 255
         @encoded = @_io.read_u1
-      when 254
+      when 3
         @encoded = @_io.read_u2le
+      when 4
+        @encoded = @_io.read_u4le
       end
       case code
-      when 3
-        @encoded2 = @_io.read_u1
       when 253
+        @encoded2 = @_io.read_u1
+      when 3
         @encoded2 = @_io.read_u1
       end
       self
@@ -217,7 +177,7 @@ class RubyMarshal < Kaitai::Struct::Struct
     end
     def value
       return @value unless @value.nil?
-      @value = (is_immediate ? (code < 128 ? (code - 5) : (4 - (~(code) & 127))) : (code == 0 ? 0 : (code == 255 ? (encoded - 256) : (code == 254 ? (encoded - 65536) : (code == 253 ? (((encoded2 << 16) | encoded) - 16777216) : (code == 3 ? ((encoded2 << 16) | encoded) : encoded))))))
+      @value = (is_immediate ? (code < 128 ? code - 5 : 4 - (~(code) & 127)) : (code == 0 ? 0 : (code == 255 ? encoded - 256 : (code == 254 ? encoded - 65536 : (code == 253 ? (encoded2 << 16 | encoded) - 16777216 : (code == 3 ? encoded2 << 16 | encoded : encoded))))))
       @value
     end
     attr_reader :code
@@ -229,7 +189,7 @@ class RubyMarshal < Kaitai::Struct::Struct
     attr_reader :encoded2
   end
   class Pair < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -244,33 +204,11 @@ class RubyMarshal < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables Source
-  class InstanceVar < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @obj = Record.new(@_io, self, @_root)
-      @num_vars = PackedInt.new(@_io, self, @_root)
-      @vars = []
-      (num_vars.value).times { |i|
-        @vars << Pair.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :obj
-    attr_reader :num_vars
-    attr_reader :vars
-  end
-
-  ##
   # Each record starts with a single byte that determines its type
   # (`code`) and contents. If necessary, additional info as parsed
   # as `body`, to be determined by `code`.
   class Record < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -278,25 +216,25 @@ class RubyMarshal < Kaitai::Struct::Struct
     def _read
       @code = Kaitai::Struct::Stream::resolve_enum(RubyMarshal::CODES, @_io.read_u1)
       case code
-      when :codes_packed_int
-        @body = PackedInt.new(@_io, self, @_root)
       when :codes_bignum
         @body = Bignum.new(@_io, self, @_root)
-      when :codes_ruby_array
-        @body = RubyArray.new(@_io, self, @_root)
-      when :codes_ruby_symbol_link
-        @body = PackedInt.new(@_io, self, @_root)
-      when :codes_ruby_struct
-        @body = RubyStruct.new(@_io, self, @_root)
-      when :codes_ruby_string
-        @body = RubyString.new(@_io, self, @_root)
       when :codes_instance_var
         @body = InstanceVar.new(@_io, self, @_root)
+      when :codes_packed_int
+        @body = PackedInt.new(@_io, self, @_root)
+      when :codes_ruby_array
+        @body = RubyArray.new(@_io, self, @_root)
       when :codes_ruby_hash
         @body = RubyHash.new(@_io, self, @_root)
+      when :codes_ruby_object_link
+        @body = PackedInt.new(@_io, self, @_root)
+      when :codes_ruby_string
+        @body = RubyString.new(@_io, self, @_root)
+      when :codes_ruby_struct
+        @body = RubyStruct.new(@_io, self, @_root)
       when :codes_ruby_symbol
         @body = RubySymbol.new(@_io, self, @_root)
-      when :codes_ruby_object_link
+      when :codes_ruby_symbol_link
         @body = PackedInt.new(@_io, self, @_root)
       end
       self
@@ -304,11 +242,28 @@ class RubyMarshal < Kaitai::Struct::Struct
     attr_reader :code
     attr_reader :body
   end
+  class RubyArray < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_elements = PackedInt.new(@_io, self, @_root)
+      @elements = []
+      (num_elements.value).times { |i|
+        @elements << Record.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :num_elements
+    attr_reader :elements
+  end
 
   ##
   # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Hash+and+Hash+with+Default+Value Source
   class RubyHash < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -328,7 +283,7 @@ class RubyMarshal < Kaitai::Struct::Struct
   ##
   # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-String Source
   class RubyString < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -340,6 +295,51 @@ class RubyMarshal < Kaitai::Struct::Struct
     end
     attr_reader :len
     attr_reader :body
+  end
+
+  ##
+  # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct Source
+  class RubyStruct < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name = Record.new(@_io, self, @_root)
+      @num_members = PackedInt.new(@_io, self, @_root)
+      @members = []
+      (num_members.value).times { |i|
+        @members << Pair.new(@_io, self, @_root)
+      }
+      self
+    end
+
+    ##
+    # Symbol containing the name of the struct.
+    attr_reader :name
+
+    ##
+    # Number of members in a struct
+    attr_reader :num_members
+    attr_reader :members
+  end
+
+  ##
+  # @see https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence Source
+  class RubySymbol < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len = PackedInt.new(@_io, self, @_root)
+      @name = (@_io.read_bytes(len.value)).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :len
+    attr_reader :name
   end
   attr_reader :version
   attr_reader :records

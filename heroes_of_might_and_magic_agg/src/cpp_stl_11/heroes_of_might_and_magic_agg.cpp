@@ -4,7 +4,7 @@
 
 heroes_of_might_and_magic_agg_t::heroes_of_might_and_magic_agg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, heroes_of_might_and_magic_agg_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_entries = nullptr;
     m_filenames = nullptr;
     m__raw_filenames = nullptr;
@@ -57,11 +57,11 @@ void heroes_of_might_and_magic_agg_t::entry_t::_clean_up() {
 std::string heroes_of_might_and_magic_agg_t::entry_t::body() {
     if (f_body)
         return m_body;
+    f_body = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(offset());
     m_body = m__io->read_bytes(size());
     m__io->seek(_pos);
-    f_body = true;
     return m_body;
 }
 
@@ -72,7 +72,7 @@ heroes_of_might_and_magic_agg_t::filename_t::filename_t(kaitai::kstream* p__io, 
 }
 
 void heroes_of_might_and_magic_agg_t::filename_t::_read() {
-    m_str = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ASCII"));
+    m_str = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ASCII");
 }
 
 heroes_of_might_and_magic_agg_t::filename_t::~filename_t() {
@@ -85,8 +85,9 @@ void heroes_of_might_and_magic_agg_t::filename_t::_clean_up() {
 std::vector<std::unique_ptr<heroes_of_might_and_magic_agg_t::filename_t>>* heroes_of_might_and_magic_agg_t::filenames() {
     if (f_filenames)
         return m_filenames.get();
+    f_filenames = true;
     std::streampos _pos = m__io->pos();
-    m__io->seek((entries()->back()->offset() + entries()->back()->size()));
+    m__io->seek(entries()->back()->offset() + entries()->back()->size());
     m__raw_filenames = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
     m__io__raw_filenames = std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>>(new std::vector<std::unique_ptr<kaitai::kstream>>());
     m_filenames = std::unique_ptr<std::vector<std::unique_ptr<filename_t>>>(new std::vector<std::unique_ptr<filename_t>>());
@@ -98,6 +99,5 @@ std::vector<std::unique_ptr<heroes_of_might_and_magic_agg_t::filename_t>>* heroe
         m_filenames->push_back(std::move(std::unique_ptr<filename_t>(new filename_t(io__raw_filenames, this, m__root))));
     }
     m__io->seek(_pos);
-    f_filenames = true;
     return m_filenames.get();
 }

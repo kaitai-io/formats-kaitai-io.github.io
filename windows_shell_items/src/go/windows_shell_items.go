@@ -24,14 +24,18 @@ type WindowsShellItems struct {
 	Items []*WindowsShellItems_ShellItem
 	_io *kaitai.Stream
 	_root *WindowsShellItems
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewWindowsShellItems() *WindowsShellItems {
 	return &WindowsShellItems{
 	}
 }
 
-func (this *WindowsShellItems) Read(io *kaitai.Stream, parent interface{}, root *WindowsShellItems) (err error) {
+func (this WindowsShellItems) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsShellItems) Read(io *kaitai.Stream, parent kaitai.Struct, root *WindowsShellItems) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -54,161 +58,6 @@ func (this *WindowsShellItems) Read(io *kaitai.Stream, parent interface{}, root 
 /**
  * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2.1</a>
  */
-type WindowsShellItems_ShellItemData struct {
-	Code uint8
-	Body1 *WindowsShellItems_RootFolderBody
-	Body2 interface{}
-	_io *kaitai.Stream
-	_root *WindowsShellItems
-	_parent *WindowsShellItems_ShellItem
-}
-func NewWindowsShellItems_ShellItemData() *WindowsShellItems_ShellItemData {
-	return &WindowsShellItems_ShellItemData{
-	}
-}
-
-func (this *WindowsShellItems_ShellItemData) Read(io *kaitai.Stream, parent *WindowsShellItems_ShellItem, root *WindowsShellItems) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp2, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Code = tmp2
-	switch (this.Code) {
-	case 31:
-		tmp3 := NewWindowsShellItems_RootFolderBody()
-		err = tmp3.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body1 = tmp3
-	}
-	switch ((this.Code & 112)) {
-	case 32:
-		tmp4 := NewWindowsShellItems_VolumeBody()
-		err = tmp4.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body2 = tmp4
-	case 48:
-		tmp5 := NewWindowsShellItems_FileEntryBody()
-		err = tmp5.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body2 = tmp5
-	}
-	return err
-}
-
-/**
- * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2.2</a>
- */
-type WindowsShellItems_ShellItem struct {
-	LenData uint16
-	Data *WindowsShellItems_ShellItemData
-	_io *kaitai.Stream
-	_root *WindowsShellItems
-	_parent *WindowsShellItems
-	_raw_Data []byte
-}
-func NewWindowsShellItems_ShellItem() *WindowsShellItems_ShellItem {
-	return &WindowsShellItems_ShellItem{
-	}
-}
-
-func (this *WindowsShellItems_ShellItem) Read(io *kaitai.Stream, parent *WindowsShellItems, root *WindowsShellItems) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp6, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.LenData = uint16(tmp6)
-	if (this.LenData >= 2) {
-		tmp7, err := this._io.ReadBytes(int((this.LenData - 2)))
-		if err != nil {
-			return err
-		}
-		tmp7 = tmp7
-		this._raw_Data = tmp7
-		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp8 := NewWindowsShellItems_ShellItemData()
-		err = tmp8.Read(_io__raw_Data, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Data = tmp8
-	}
-	return err
-}
-
-/**
- * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
- */
-type WindowsShellItems_RootFolderBody struct {
-	SortIndex uint8
-	ShellFolderId []byte
-	_io *kaitai.Stream
-	_root *WindowsShellItems
-	_parent *WindowsShellItems_ShellItemData
-}
-func NewWindowsShellItems_RootFolderBody() *WindowsShellItems_RootFolderBody {
-	return &WindowsShellItems_RootFolderBody{
-	}
-}
-
-func (this *WindowsShellItems_RootFolderBody) Read(io *kaitai.Stream, parent *WindowsShellItems_ShellItemData, root *WindowsShellItems) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp9, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.SortIndex = tmp9
-	tmp10, err := this._io.ReadBytes(int(16))
-	if err != nil {
-		return err
-	}
-	tmp10 = tmp10
-	this.ShellFolderId = tmp10
-	return err
-}
-
-/**
- * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
- */
-type WindowsShellItems_VolumeBody struct {
-	Flags uint8
-	_io *kaitai.Stream
-	_root *WindowsShellItems
-	_parent *WindowsShellItems_ShellItemData
-}
-func NewWindowsShellItems_VolumeBody() *WindowsShellItems_VolumeBody {
-	return &WindowsShellItems_VolumeBody{
-	}
-}
-
-func (this *WindowsShellItems_VolumeBody) Read(io *kaitai.Stream, parent *WindowsShellItems_ShellItemData, root *WindowsShellItems) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp11, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Flags = tmp11
-	return err
-}
 
 /**
  * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
@@ -231,46 +80,221 @@ func NewWindowsShellItems_FileEntryBody() *WindowsShellItems_FileEntryBody {
 	}
 }
 
+func (this WindowsShellItems_FileEntryBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *WindowsShellItems_FileEntryBody) Read(io *kaitai.Stream, parent *WindowsShellItems_ShellItemData, root *WindowsShellItems) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp12, err := this._io.ReadU1()
+	tmp2, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this._unnamed0 = tmp12
-	tmp13, err := this._io.ReadU4le()
+	this._unnamed0 = tmp2
+	tmp3, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FileSize = uint32(tmp13)
-	tmp14, err := this._io.ReadU4le()
+	this.FileSize = uint32(tmp3)
+	tmp4, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LastModTime = uint32(tmp14)
-	tmp15, err := this._io.ReadU2le()
+	this.LastModTime = uint32(tmp4)
+	tmp5, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.FileAttrs = uint16(tmp15)
+	this.FileAttrs = uint16(tmp5)
 	return err
 }
 func (this *WindowsShellItems_FileEntryBody) IsDir() (v bool, err error) {
 	if (this._f_isDir) {
 		return this.isDir, nil
 	}
-	this.isDir = bool((this._parent.Code & 1) != 0)
 	this._f_isDir = true
+	this.isDir = bool(this._parent.Code & 1 != 0)
 	return this.isDir, nil
 }
 func (this *WindowsShellItems_FileEntryBody) IsFile() (v bool, err error) {
 	if (this._f_isFile) {
 		return this.isFile, nil
 	}
-	this.isFile = bool((this._parent.Code & 2) != 0)
 	this._f_isFile = true
+	this.isFile = bool(this._parent.Code & 2 != 0)
 	return this.isFile, nil
+}
+
+/**
+ * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
+ */
+type WindowsShellItems_RootFolderBody struct {
+	SortIndex uint8
+	ShellFolderId []byte
+	_io *kaitai.Stream
+	_root *WindowsShellItems
+	_parent *WindowsShellItems_ShellItemData
+}
+func NewWindowsShellItems_RootFolderBody() *WindowsShellItems_RootFolderBody {
+	return &WindowsShellItems_RootFolderBody{
+	}
+}
+
+func (this WindowsShellItems_RootFolderBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsShellItems_RootFolderBody) Read(io *kaitai.Stream, parent *WindowsShellItems_ShellItemData, root *WindowsShellItems) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp6, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.SortIndex = tmp6
+	tmp7, err := this._io.ReadBytes(int(16))
+	if err != nil {
+		return err
+	}
+	tmp7 = tmp7
+	this.ShellFolderId = tmp7
+	return err
+}
+
+/**
+ * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2.2</a>
+ */
+type WindowsShellItems_ShellItem struct {
+	LenData uint16
+	Data *WindowsShellItems_ShellItemData
+	_io *kaitai.Stream
+	_root *WindowsShellItems
+	_parent *WindowsShellItems
+	_raw_Data []byte
+}
+func NewWindowsShellItems_ShellItem() *WindowsShellItems_ShellItem {
+	return &WindowsShellItems_ShellItem{
+	}
+}
+
+func (this WindowsShellItems_ShellItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsShellItems_ShellItem) Read(io *kaitai.Stream, parent *WindowsShellItems, root *WindowsShellItems) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp8, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LenData = uint16(tmp8)
+	if (this.LenData >= 2) {
+		tmp9, err := this._io.ReadBytes(int(this.LenData - 2))
+		if err != nil {
+			return err
+		}
+		tmp9 = tmp9
+		this._raw_Data = tmp9
+		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
+		tmp10 := NewWindowsShellItems_ShellItemData()
+		err = tmp10.Read(_io__raw_Data, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Data = tmp10
+	}
+	return err
+}
+type WindowsShellItems_ShellItemData struct {
+	Code uint8
+	Body1 *WindowsShellItems_RootFolderBody
+	Body2 kaitai.Struct
+	_io *kaitai.Stream
+	_root *WindowsShellItems
+	_parent *WindowsShellItems_ShellItem
+}
+func NewWindowsShellItems_ShellItemData() *WindowsShellItems_ShellItemData {
+	return &WindowsShellItems_ShellItemData{
+	}
+}
+
+func (this WindowsShellItems_ShellItemData) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsShellItems_ShellItemData) Read(io *kaitai.Stream, parent *WindowsShellItems_ShellItem, root *WindowsShellItems) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp11, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Code = tmp11
+	switch (this.Code) {
+	case 31:
+		tmp12 := NewWindowsShellItems_RootFolderBody()
+		err = tmp12.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body1 = tmp12
+	}
+	switch (this.Code & 112) {
+	case 32:
+		tmp13 := NewWindowsShellItems_VolumeBody()
+		err = tmp13.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body2 = tmp13
+	case 48:
+		tmp14 := NewWindowsShellItems_FileEntryBody()
+		err = tmp14.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body2 = tmp14
+	}
+	return err
+}
+
+/**
+ * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
+ */
+type WindowsShellItems_VolumeBody struct {
+	Flags uint8
+	_io *kaitai.Stream
+	_root *WindowsShellItems
+	_parent *WindowsShellItems_ShellItemData
+}
+func NewWindowsShellItems_VolumeBody() *WindowsShellItems_VolumeBody {
+	return &WindowsShellItems_VolumeBody{
+	}
+}
+
+func (this WindowsShellItems_VolumeBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsShellItems_VolumeBody) Read(io *kaitai.Stream, parent *WindowsShellItems_ShellItemData, root *WindowsShellItems) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp15, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Flags = tmp15
+	return err
 }

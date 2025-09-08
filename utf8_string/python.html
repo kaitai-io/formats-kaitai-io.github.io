@@ -215,6 +215,11 @@ for educational / research purposes.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="UTF-8-encoded string parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="UTF-8-encoded string parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -245,7 +250,17 @@ for educational / research purposes.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="UTF-8-encoded string parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="UTF-8-encoded string parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="UTF-8-encoded string parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -320,13 +335,14 @@ for educational / research purposes.</p>
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
 
 
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Utf8String</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;UTF-8 is a popular character encoding scheme that allows to</span>
@@ -349,9 +365,9 @@ for educational / research purposes.</p>
 <span class="sd">    for educational / research purposes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Utf8String</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -362,60 +378,32 @@ for educational / research purposes.</p>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">codepoints</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">codepoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">Utf8Codepoint</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ofs</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Utf8String</span><span class="o">.</span><span class="n">Utf8Codepoint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ofs</span> <span class="o">=</span> <span class="n">ofs</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span><span class="p">)</span>
 
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">raw1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw1&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw1</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw1</span> <span class="o">=</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">byte0</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_byte0&#39;</span><span class="p">):</span>
+                <span class="k">pass</span>
 
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">len_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_bytes&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_bytes</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_bytes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">224</span><span class="p">)</span> <span class="o">==</span> <span class="mi">192</span> <span class="k">else</span> <span class="p">(</span><span class="mi">3</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">==</span> <span class="mi">224</span> <span class="k">else</span> <span class="p">(</span><span class="mi">4</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">248</span><span class="p">)</span> <span class="o">==</span> <span class="mi">240</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">))))</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_bytes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">raw3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw3&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw3</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw3</span> <span class="o">=</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">value_as_int</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value_as_int&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value_as_int</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_value_as_int</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="p">((((</span><span class="bp">self</span><span class="o">.</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw2</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="p">(((((</span><span class="bp">self</span><span class="o">.</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw2</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw3</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">))))</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value_as_int&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">raw0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw0&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw0</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw0</span> <span class="o">=</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">127</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="mi">31</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="p">(</span><span class="mi">15</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="p">(</span><span class="mi">7</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)))))</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">byte0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -429,14 +417,61 @@ for educational / research purposes.</p>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_byte0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">len_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_bytes&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_bytes</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_bytes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">128</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">224</span> <span class="o">==</span> <span class="mi">192</span> <span class="k">else</span> <span class="p">(</span><span class="mi">3</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">240</span> <span class="o">==</span> <span class="mi">224</span> <span class="k">else</span> <span class="p">(</span><span class="mi">4</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">248</span> <span class="o">==</span> <span class="mi">240</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">))))</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_bytes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">raw0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw0&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw0</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw0</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">127</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="mi">31</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="p">(</span><span class="mi">15</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="p">(</span><span class="mi">7</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))))</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw0&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">raw1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw1&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw1</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw1</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span>
+
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">raw2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw2&#39;</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw2</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw2</span> <span class="o">=</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw2</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span>
 
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">raw3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw3&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw3</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_raw3</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span>
+
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_raw3&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">value_as_int</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value_as_int&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value_as_int</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_value_as_int</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw2</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw3</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">4</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">))))</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value_as_int&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
 
         </div>

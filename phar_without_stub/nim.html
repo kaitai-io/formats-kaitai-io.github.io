@@ -242,6 +242,11 @@ standard encoding of the system on which the phar was created.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="PHP phar archive (without stub) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="PHP phar archive (without stub) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -272,7 +277,17 @@ standard encoding of the system on which the phar was created.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="PHP phar archive (without stub) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="PHP phar archive (without stub) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="PHP phar archive (without stub) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -304,9 +319,8 @@ standard encoding of the system on which the phar was created.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
 <span class="kn">import</span><span class="w"> </span><span class="n">options</span>
-<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">serialization</span><span class="o">/</span><span class="n">php_serialized_value</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">php_serialized_value</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="s">&quot;php_serialized_value&quot;</span>
 <span class="k">type</span>
 <span class="w">  </span><span class="n">PharWithoutStub</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">manifest</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_Manifest</span>
@@ -320,38 +334,40 @@ standard encoding of the system on which the phar was created.</p>
 <span class="w">    </span><span class="n">sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
 <span class="w">    </span><span class="n">sha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
 <span class="w">    </span><span class="n">openssl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span>
-<span class="w">  </span><span class="n">PharWithoutStub_SerializedValue</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">raw</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parsedInst</span><span class="p">`:</span><span class="w"> </span><span class="n">PhpSerializedValue</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parsedInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">  </span><span class="n">PharWithoutStub_Signature</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_SignatureType</span>
-<span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub</span>
-<span class="w">  </span><span class="n">PharWithoutStub_FileFlags</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileEntry</span>
-<span class="w">    </span><span class="p">`</span><span class="n">permissionsInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
-<span class="w">    </span><span class="p">`</span><span class="n">permissionsInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">zlibCompressedInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">zlibCompressedInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">bzip2CompressedInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">bzip2CompressedInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">  </span><span class="n">PharWithoutStub_ApiVersion</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">release</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
 <span class="w">    </span><span class="p">`</span><span class="n">major</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
 <span class="w">    </span><span class="p">`</span><span class="n">minor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
 <span class="w">    </span><span class="p">`</span><span class="n">unused</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_Manifest</span>
+<span class="w">  </span><span class="n">PharWithoutStub_FileEntry</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenFilename</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">filename</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenDataUncompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenDataCompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">crc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenMetadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">metadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_SerializedValue</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_Manifest</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawMetadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">  </span><span class="n">PharWithoutStub_FileFlags</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileEntry</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bzip2CompressedInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bzip2CompressedInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">permissionsInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">permissionsInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">zlibCompressedInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">zlibCompressedInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">  </span><span class="n">PharWithoutStub_GlobalFlags</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_Manifest</span>
-<span class="w">    </span><span class="p">`</span><span class="n">anyZlibCompressedInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">anyZlibCompressedInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">anyBzip2CompressedInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">anyBzip2CompressedInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">anyZlibCompressedInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">anyZlibCompressedInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">hasSignatureInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">hasSignatureInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">  </span><span class="n">PharWithoutStub_Manifest</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
@@ -366,35 +382,33 @@ standard encoding of the system on which the phar was created.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">fileEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">PharWithoutStub_FileEntry</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rawMetadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">  </span><span class="n">PharWithoutStub_FileEntry</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lenFilename</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">filename</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lenDataUncompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lenDataCompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">crc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lenMetadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">metadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_SerializedValue</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_Manifest</span>
-<span class="w">    </span><span class="p">`</span><span class="n">rawMetadata</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">  </span><span class="n">PharWithoutStub_SerializedValue</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">raw</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parsedInst</span><span class="p">`:</span><span class="w"> </span><span class="n">PhpSerializedValue</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parsedInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">PharWithoutStub_Signature</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_SignatureType</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PharWithoutStub</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PharWithoutStub_SerializedValue</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Signature], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub): PharWithoutStub_Signature</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_FileEntry): PharWithoutStub_FileFlags</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_ApiVersion], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_ApiVersion</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileEntry], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_FileEntry</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_FileEntry): PharWithoutStub_FileFlags</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_GlobalFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_GlobalFlags</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Manifest], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub): PharWithoutStub_Manifest</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileEntry], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_FileEntry</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PharWithoutStub_SerializedValue</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Signature], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub): PharWithoutStub_Signature</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">parsed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">):</span><span class="w"> </span><span class="n">PhpSerializedValue</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">bzip2Compressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">permissions</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">zlibCompressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">bzip2Compressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">anyZlibCompressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">anyBzip2Compressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">anyZlibCompressed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">hasSignature</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">parsed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">):</span><span class="w"> </span><span class="n">PhpSerializedValue</span>
 
 
 <span class="sd">##[</span>
@@ -490,121 +504,6 @@ standard encoding of the system on which the phar was created.</p>
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub], filename: string): PharWithoutStub =</span>
 <span class="w">  </span><span class="n">PharWithoutStub</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PharWithoutStub_SerializedValue =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The serialized value, as a raw byte array.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">parsed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">):</span><span class="w"> </span><span class="n">PhpSerializedValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The serialized value, parsed as a structure.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">parsedInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parsedInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], filename: string): PharWithoutStub_SerializedValue =</span>
-<span class="w">  </span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Signature], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub): PharWithoutStub_Signature =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_Signature</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The signature data. The size and contents depend on the</span>
-<span class="sd">signature type.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">)))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The signature type.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PharWithoutStub_SignatureType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Signature], filename: string): PharWithoutStub_Signature =</span>
-<span class="w">  </span><span class="n">PharWithoutStub_Signature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_FileEntry): PharWithoutStub_FileFlags =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_FileFlags</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The unparsed flag bits.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">permissions</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The file&#39;s permission bits.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">permissionsInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">511</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">permissionsInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">zlibCompressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Whether this file&#39;s data is stored using zlib compression.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">zlibCompressedInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">4096</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zlibCompressedInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">bzip2Compressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Whether this file&#39;s data is stored using bzip2 compression.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bzip2CompressedInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">8192</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bzip2CompressedInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], filename: string): PharWithoutStub_FileFlags =</span>
-<span class="w">  </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
 
 <span class="sd">##[</span>
 <span class="sd">A phar API version number. This version number is meant to indicate</span>
@@ -661,6 +560,141 @@ standard encoding of the system on which the phar was created.</p>
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_ApiVersion], filename: string): PharWithoutStub_ApiVersion =</span>
 <span class="w">  </span><span class="n">PharWithoutStub_ApiVersion</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileEntry], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_FileEntry =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_FileEntry</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The length of the file name, in bytes.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenFilenameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenFilename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenFilenameExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The name of this file. If the name ends with a slash, this entry</span>
+<span class="sd">represents a directory, otherwise a regular file. Directory entries</span>
+<span class="sd">are supported since phar API version 1.1.1.</span>
+<span class="sd">(Explicit directory entries are only needed for empty directories.</span>
+<span class="sd">Non-empty directories are implied by the files located inside them.)</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">filenameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenFilename</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filenameExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The length of the file&#39;s data when uncompressed, in bytes.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataUncompressedExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataUncompressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataUncompressedExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The time at which the file was added or last updated, as a</span>
+<span class="sd">Unix timestamp.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">timestampExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">timestampExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The length of the file&#39;s data when compressed, in bytes.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataCompressedExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataCompressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataCompressedExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The CRC32 checksum of the file&#39;s uncompressed data.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">crc32Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">crc32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">crc32Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Flags for this file.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">flagsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flagsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The length of the metadata, in bytes, or 0 if there is none.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenMetadataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenMetadataExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Metadata for this file, in the format used by PHP&#39;s</span>
+<span class="sd">`serialize` function. The meaning of the serialized data is not</span>
+<span class="sd">specified further, it may be used to store arbitrary custom data</span>
+<span class="sd">about the file.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">rawMetadataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span><span class="p">))</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">rawMetadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawMetadataExpr</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">rawMetadataIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawMetadataExpr</span><span class="p">)</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">metadataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMetadataIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">metadataExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileEntry], filename: string): PharWithoutStub_FileEntry =</span>
+<span class="w">  </span><span class="n">PharWithoutStub_FileEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_FileEntry): PharWithoutStub_FileFlags =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_FileFlags</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The unparsed flag bits.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">bzip2Compressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Whether this file&#39;s data is stored using bzip2 compression.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bzip2CompressedInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">8192</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bzip2CompressedInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bzip2CompressedInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">permissions</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The file&#39;s permission bits.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">permissionsInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">511</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">permissionsInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">permissionsInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">zlibCompressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Whether this file&#39;s data is stored using zlib compression.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">zlibCompressedInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">4096</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zlibCompressedInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">zlibCompressedInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileFlags], filename: string): PharWithoutStub_FileFlags =</span>
+<span class="w">  </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_GlobalFlags], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_GlobalFlags =</span>
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
 <span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">)</span>
@@ -676,20 +710,6 @@ standard encoding of the system on which the phar was created.</p>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">anyZlibCompressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Whether any of the files in this phar are stored using</span>
-<span class="sd">zlib compression.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">anyZlibCompressedInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">4096</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">anyZlibCompressedInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span>
-
 <span class="k">proc</span><span class="w"> </span><span class="nf">anyBzip2Compressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
 <span class="w">  </span><span class="sd">##[</span>
@@ -703,6 +723,20 @@ standard encoding of the system on which the phar was created.</p>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">anyBzip2CompressedInstExpr</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">anyBzip2CompressedInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">anyZlibCompressed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Whether any of the files in this phar are stored using</span>
+<span class="sd">zlib compression.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">anyZlibCompressedInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">4096</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">anyZlibCompressedInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">anyZlibCompressedInst</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">hasSignature</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_GlobalFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
@@ -799,9 +833,9 @@ standard encoding of the system on which the phar was created.</p>
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Manifest], filename: string): PharWithoutStub_Manifest =</span>
 <span class="w">  </span><span class="n">PharWithoutStub_Manifest</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileEntry], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub_Manifest): PharWithoutStub_FileEntry =</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PharWithoutStub_SerializedValue =</span>
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_FileEntry</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">)</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
@@ -809,76 +843,56 @@ standard encoding of the system on which the phar was created.</p>
 
 
 <span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The length of the file name, in bytes.</span>
+<span class="sd">  The serialized value, as a raw byte array.</span>
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenFilenameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenFilename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenFilenameExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">parsed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">):</span><span class="w"> </span><span class="n">PhpSerializedValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
 <span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The name of this file. If the name ends with a slash, this entry</span>
-<span class="sd">represents a directory, otherwise a regular file. Directory entries</span>
-<span class="sd">are supported since phar API version 1.1.1.</span>
-<span class="sd">(Explicit directory entries are only needed for empty directories.</span>
-<span class="sd">Non-empty directories are implied by the files located inside them.)</span>
-
+<span class="sd">  The serialized value, parsed as a structure.</span>
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">filenameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenFilename</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filenameExpr</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">parsedInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PhpSerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parsedInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">parsedInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_SerializedValue], filename: string): PharWithoutStub_SerializedValue =</span>
+<span class="w">  </span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Signature], io: KaitaiStream, root: KaitaiStruct, parent: PharWithoutStub): PharWithoutStub_Signature =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PharWithoutStub_Signature</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PharWithoutStub</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
 
 <span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The length of the file&#39;s data when uncompressed, in bytes.</span>
+<span class="sd">  The signature data. The size and contents depend on the</span>
+<span class="sd">signature type.</span>
+
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataUncompressedExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataUncompressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataUncompressedExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataExpr</span>
 
 <span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The time at which the file was added or last updated, as a</span>
-<span class="sd">Unix timestamp.</span>
-
+<span class="sd">  The signature type.</span>
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">timestampExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">timestampExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PharWithoutStub_SignatureType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
 
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The length of the file&#39;s data when compressed, in bytes.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataCompressedExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataCompressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataCompressedExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The CRC32 checksum of the file&#39;s uncompressed data.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">crc32Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">crc32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">crc32Expr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Flags for this file.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">flagsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PharWithoutStub_FileFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flagsExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The length of the metadata, in bytes, or 0 if there is none.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenMetadataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenMetadataExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Metadata for this file, in the format used by PHP&#39;s</span>
-<span class="sd">`serialize` function. The meaning of the serialized data is not</span>
-<span class="sd">specified further, it may be used to store arbitrary custom data</span>
-<span class="sd">about the file.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">rawMetadataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenMetadata</span><span class="p">))</span>
-<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">rawMetadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawMetadataExpr</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">rawMetadataIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawMetadataExpr</span><span class="p">)</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">metadataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PharWithoutStub_SerializedValue</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMetadataIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">metadataExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_FileEntry], filename: string): PharWithoutStub_FileEntry =</span>
-<span class="w">  </span><span class="n">PharWithoutStub_FileEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PharWithoutStub_Signature], filename: string): PharWithoutStub_Signature =</span>
+<span class="w">  </span><span class="n">PharWithoutStub_Signature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

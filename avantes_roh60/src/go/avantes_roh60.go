@@ -48,14 +48,18 @@ type AvantesRoh60 struct {
 	PixelSmoothing float32
 	_io *kaitai.Stream
 	_root *AvantesRoh60
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewAvantesRoh60() *AvantesRoh60 {
 	return &AvantesRoh60{
 	}
 }
 
-func (this *AvantesRoh60) Read(io *kaitai.Stream, parent interface{}, root *AvantesRoh60) (err error) {
+func (this AvantesRoh60) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AvantesRoh60) Read(io *kaitai.Stream, parent kaitai.Struct, root *AvantesRoh60) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -116,7 +120,7 @@ func (this *AvantesRoh60) Read(io *kaitai.Stream, parent interface{}, root *Avan
 		}
 		this.Unknown3 = append(this.Unknown3, tmp10)
 	}
-	for i := 0; i < int(((int(this.Ipixlast) - int(this.Ipixfirst)) - 1)); i++ {
+	for i := 0; i < int((int(this.Ipixlast) - int(this.Ipixfirst)) - 1); i++ {
 		_ = i
 		tmp11, err := this._io.ReadF4le()
 		if err != nil {

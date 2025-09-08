@@ -130,9 +130,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(8);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }, _magic, m_io, "/seq/0");
             }
             _numImages = m_io.ReadU4le();
             _ofsImgBodies = m_io.ReadU4le();
@@ -142,6 +142,42 @@ namespace Kaitai
             {
                 _imgHeaders.Add(new ImgHeader(m_io, this, m_root));
             }
+        }
+        public partial class ImgBody : KaitaiStruct
+        {
+            public ImgBody(int p_idx, KaitaiStream p__io, AndroidBootldrQcom p__parent = null, AndroidBootldrQcom p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _idx = p_idx;
+                f_imgHeader = false;
+                _read();
+            }
+            private void _read()
+            {
+                _body = m_io.ReadBytes(ImgHeader.LenBody);
+            }
+            private bool f_imgHeader;
+            private ImgHeader _imgHeader;
+            public ImgHeader ImgHeader
+            {
+                get
+                {
+                    if (f_imgHeader)
+                        return _imgHeader;
+                    f_imgHeader = true;
+                    _imgHeader = (ImgHeader) (M_Root.ImgHeaders[Idx]);
+                    return _imgHeader;
+                }
+            }
+            private byte[] _body;
+            private int _idx;
+            private AndroidBootldrQcom m_root;
+            private AndroidBootldrQcom m_parent;
+            public byte[] Body { get { return _body; } }
+            public int Idx { get { return _idx; } }
+            public AndroidBootldrQcom M_Root { get { return m_root; } }
+            public AndroidBootldrQcom M_Parent { get { return m_parent; } }
         }
         public partial class ImgHeader : KaitaiStruct
         {
@@ -170,42 +206,6 @@ namespace Kaitai
             public AndroidBootldrQcom M_Root { get { return m_root; } }
             public AndroidBootldrQcom M_Parent { get { return m_parent; } }
         }
-        public partial class ImgBody : KaitaiStruct
-        {
-            public ImgBody(int p_idx, KaitaiStream p__io, AndroidBootldrQcom p__parent = null, AndroidBootldrQcom p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _idx = p_idx;
-                f_imgHeader = false;
-                _read();
-            }
-            private void _read()
-            {
-                _body = m_io.ReadBytes(ImgHeader.LenBody);
-            }
-            private bool f_imgHeader;
-            private ImgHeader _imgHeader;
-            public ImgHeader ImgHeader
-            {
-                get
-                {
-                    if (f_imgHeader)
-                        return _imgHeader;
-                    _imgHeader = (ImgHeader) (M_Root.ImgHeaders[Idx]);
-                    f_imgHeader = true;
-                    return _imgHeader;
-                }
-            }
-            private byte[] _body;
-            private int _idx;
-            private AndroidBootldrQcom m_root;
-            private AndroidBootldrQcom m_parent;
-            public byte[] Body { get { return _body; } }
-            public int Idx { get { return _idx; } }
-            public AndroidBootldrQcom M_Root { get { return m_root; } }
-            public AndroidBootldrQcom M_Parent { get { return m_parent; } }
-        }
         private bool f_imgBodies;
         private List<ImgBody> _imgBodies;
         public List<ImgBody> ImgBodies
@@ -214,6 +214,7 @@ namespace Kaitai
             {
                 if (f_imgBodies)
                     return _imgBodies;
+                f_imgBodies = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(OfsImgBodies);
                 _imgBodies = new List<ImgBody>();
@@ -222,7 +223,6 @@ namespace Kaitai
                     _imgBodies.Add(new ImgBody(i, m_io, this, m_root));
                 }
                 m_io.Seek(_pos);
-                f_imgBodies = true;
                 return _imgBodies;
             }
         }

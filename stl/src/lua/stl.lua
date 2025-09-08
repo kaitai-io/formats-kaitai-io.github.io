@@ -50,7 +50,7 @@ Stl.Triangle = class.class(KaitaiStruct)
 function Stl.Triangle:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -78,7 +78,7 @@ Stl.Vec3d = class.class(KaitaiStruct)
 function Stl.Vec3d:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

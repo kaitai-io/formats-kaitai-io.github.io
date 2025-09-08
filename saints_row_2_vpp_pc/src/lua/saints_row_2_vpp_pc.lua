@@ -19,7 +19,7 @@ end
 function SaintsRow2VppPc:_read()
   self.magic = self._io:read_bytes(5)
   if not(self.magic == "\206\010\137\081\004") then
-    error("not equal, expected " ..  "\206\010\137\081\004" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\206\010\137\081\004" .. ", but got " .. self.magic)
   end
   self.pad1 = self._io:read_bytes(335)
   self.num_files = self._io:read_s4le()
@@ -34,53 +34,13 @@ function SaintsRow2VppPc:_read()
   self.smth9 = self._io:read_s4le()
 end
 
-SaintsRow2VppPc.property.filenames = {}
-function SaintsRow2VppPc.property.filenames:get()
-  if self._m_filenames ~= nil then
-    return self._m_filenames
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(self.ofs_filenames)
-  self._raw__m_filenames = self._io:read_bytes(self.len_filenames)
-  local _io = KaitaiStream(stringstream(self._raw__m_filenames))
-  self._m_filenames = SaintsRow2VppPc.Strings(_io, self, self._root)
-  self._io:seek(_pos)
-  return self._m_filenames
-end
-
-SaintsRow2VppPc.property.ofs_extensions = {}
-function SaintsRow2VppPc.property.ofs_extensions:get()
-  if self._m_ofs_extensions ~= nil then
-    return self._m_ofs_extensions
-  end
-
-  self._m_ofs_extensions = (((self.ofs_filenames + self.len_filenames) & 4294965248) + 2048)
-  return self._m_ofs_extensions
-end
-
-SaintsRow2VppPc.property.files = {}
-function SaintsRow2VppPc.property.files:get()
-  if self._m_files ~= nil then
-    return self._m_files
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(2048)
-  self._raw__m_files = self._io:read_bytes(self.len_offsets)
-  local _io = KaitaiStream(stringstream(self._raw__m_files))
-  self._m_files = SaintsRow2VppPc.Offsets(_io, self, self._root)
-  self._io:seek(_pos)
-  return self._m_files
-end
-
 SaintsRow2VppPc.property.data_start = {}
 function SaintsRow2VppPc.property.data_start:get()
   if self._m_data_start ~= nil then
     return self._m_data_start
   end
 
-  self._m_data_start = (((self.ofs_extensions + self.len_extensions) & 4294965248) + 2048)
+  self._m_data_start = (self.ofs_extensions + self.len_extensions & 4294965248) + 2048
   return self._m_data_start
 end
 
@@ -99,13 +59,53 @@ function SaintsRow2VppPc.property.extensions:get()
   return self._m_extensions
 end
 
+SaintsRow2VppPc.property.filenames = {}
+function SaintsRow2VppPc.property.filenames:get()
+  if self._m_filenames ~= nil then
+    return self._m_filenames
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.ofs_filenames)
+  self._raw__m_filenames = self._io:read_bytes(self.len_filenames)
+  local _io = KaitaiStream(stringstream(self._raw__m_filenames))
+  self._m_filenames = SaintsRow2VppPc.Strings(_io, self, self._root)
+  self._io:seek(_pos)
+  return self._m_filenames
+end
+
+SaintsRow2VppPc.property.files = {}
+function SaintsRow2VppPc.property.files:get()
+  if self._m_files ~= nil then
+    return self._m_files
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(2048)
+  self._raw__m_files = self._io:read_bytes(self.len_offsets)
+  local _io = KaitaiStream(stringstream(self._raw__m_files))
+  self._m_files = SaintsRow2VppPc.Offsets(_io, self, self._root)
+  self._io:seek(_pos)
+  return self._m_files
+end
+
+SaintsRow2VppPc.property.ofs_extensions = {}
+function SaintsRow2VppPc.property.ofs_extensions:get()
+  if self._m_ofs_extensions ~= nil then
+    return self._m_ofs_extensions
+  end
+
+  self._m_ofs_extensions = (self.ofs_filenames + self.len_filenames & 4294965248) + 2048
+  return self._m_ofs_extensions
+end
+
 SaintsRow2VppPc.property.ofs_filenames = {}
 function SaintsRow2VppPc.property.ofs_filenames:get()
   if self._m_ofs_filenames ~= nil then
     return self._m_ofs_filenames
   end
 
-  self._m_ofs_filenames = (((2048 + self.len_offsets) & 4294965248) + 2048)
+  self._m_ofs_filenames = (2048 + self.len_offsets & 4294965248) + 2048
   return self._m_ofs_filenames
 end
 
@@ -115,7 +115,7 @@ SaintsRow2VppPc.Offsets = class.class(KaitaiStruct)
 function SaintsRow2VppPc.Offsets:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -134,7 +134,7 @@ SaintsRow2VppPc.Offsets.Offset = class.class(KaitaiStruct)
 function SaintsRow2VppPc.Offsets.Offset:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -148,18 +148,18 @@ function SaintsRow2VppPc.Offsets.Offset:_read()
   self.always_zero = self._io:read_s4le()
 end
 
-SaintsRow2VppPc.Offsets.Offset.property.filename = {}
-function SaintsRow2VppPc.Offsets.Offset.property.filename:get()
-  if self._m_filename ~= nil then
-    return self._m_filename
+SaintsRow2VppPc.Offsets.Offset.property.body = {}
+function SaintsRow2VppPc.Offsets.Offset.property.body:get()
+  if self._m_body ~= nil then
+    return self._m_body
   end
 
-  local _io = self._root.filenames._io
+  local _io = self._root._io
   local _pos = _io:pos()
-  _io:seek(self.name_ofs)
-  self._m_filename = str_decode.decode(_io:read_bytes_term(0, false, true, true), "UTF-8")
+  _io:seek(self._root.data_start + self.ofs_body)
+  self._m_body = _io:read_bytes(self.len_body)
   _io:seek(_pos)
-  return self._m_filename
+  return self._m_body
 end
 
 SaintsRow2VppPc.Offsets.Offset.property.ext = {}
@@ -176,18 +176,18 @@ function SaintsRow2VppPc.Offsets.Offset.property.ext:get()
   return self._m_ext
 end
 
-SaintsRow2VppPc.Offsets.Offset.property.body = {}
-function SaintsRow2VppPc.Offsets.Offset.property.body:get()
-  if self._m_body ~= nil then
-    return self._m_body
+SaintsRow2VppPc.Offsets.Offset.property.filename = {}
+function SaintsRow2VppPc.Offsets.Offset.property.filename:get()
+  if self._m_filename ~= nil then
+    return self._m_filename
   end
 
-  local _io = self._root._io
+  local _io = self._root.filenames._io
   local _pos = _io:pos()
-  _io:seek((self._root.data_start + self.ofs_body))
-  self._m_body = _io:read_bytes(self.len_body)
+  _io:seek(self.name_ofs)
+  self._m_filename = str_decode.decode(_io:read_bytes_term(0, false, true, true), "UTF-8")
   _io:seek(_pos)
-  return self._m_body
+  return self._m_filename
 end
 
 
@@ -196,7 +196,7 @@ SaintsRow2VppPc.Strings = class.class(KaitaiStruct)
 function SaintsRow2VppPc.Strings:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

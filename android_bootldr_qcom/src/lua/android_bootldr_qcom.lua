@@ -123,7 +123,7 @@ end
 function AndroidBootldrQcom:_read()
   self.magic = self._io:read_bytes(8)
   if not(self.magic == "\066\079\079\084\076\068\082\033") then
-    error("not equal, expected " ..  "\066\079\079\084\076\068\082\033" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\066\079\079\084\076\068\082\033" .. ", but got " .. self.magic)
   end
   self.num_images = self._io:read_u4le()
   self.ofs_img_bodies = self._io:read_u4le()
@@ -172,27 +172,12 @@ end
 -- substream. If you want to check if it has a reasonable value, do so in
 -- your application code.
 
-AndroidBootldrQcom.ImgHeader = class.class(KaitaiStruct)
-
-function AndroidBootldrQcom.ImgHeader:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function AndroidBootldrQcom.ImgHeader:_read()
-  self.name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(64), 0, false), "ASCII")
-  self.len_body = self._io:read_u4le()
-end
-
-
 AndroidBootldrQcom.ImgBody = class.class(KaitaiStruct)
 
 function AndroidBootldrQcom.ImgBody:_init(idx, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.idx = idx
   self:_read()
 end
@@ -209,6 +194,21 @@ function AndroidBootldrQcom.ImgBody.property.img_header:get()
 
   self._m_img_header = self._root.img_headers[self.idx + 1]
   return self._m_img_header
+end
+
+
+AndroidBootldrQcom.ImgHeader = class.class(KaitaiStruct)
+
+function AndroidBootldrQcom.ImgHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function AndroidBootldrQcom.ImgHeader:_read()
+  self.name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(64), 0, false), "ASCII")
+  self.len_body = self._io:read_u4le()
 end
 
 

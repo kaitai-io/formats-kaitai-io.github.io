@@ -7,29 +7,96 @@ digraph {
 
 		ds_store__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="alignment_header_pos">0</TD><TD PORT="alignment_header_size">4</TD><TD></TD><TD PORT="alignment_header_type">alignment_header</TD></TR>
+			<TR><TD PORT="alignment_header_pos">0</TD><TD PORT="alignment_header_size">4</TD><TD>00 00 00 01</TD><TD PORT="alignment_header_type">alignment_header</TD></TR>
 			<TR><TD PORT="buddy_allocator_header_pos">4</TD><TD PORT="buddy_allocator_header_size">32</TD><TD>BuddyAllocatorHeader</TD><TD PORT="buddy_allocator_header_type">buddy_allocator_header</TD></TR>
-		</TABLE>>];
-		ds_store__inst__buddy_allocator_body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="buddy_allocator_body_pos">(buddy_allocator_header.ofs_bookkeeping_info_block + 4)</TD><TD PORT="buddy_allocator_body_size">buddy_allocator_header.len_bookkeeping_info_block</TD><TD>BuddyAllocatorBody</TD><TD PORT="buddy_allocator_body_type">buddy_allocator_body</TD></TR>
 		</TABLE>>];
 		ds_store__inst__block_address_mask [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>block_address_mask</TD><TD>31</TD></TR>
 		</TABLE>>];
-		subgraph cluster__buddy_allocator_header {
-			label="DsStore::BuddyAllocatorHeader";
+		ds_store__inst__buddy_allocator_body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="buddy_allocator_body_pos">buddy_allocator_header.ofs_bookkeeping_info_block + 4</TD><TD PORT="buddy_allocator_body_size">buddy_allocator_header.len_bookkeeping_info_block</TD><TD>BuddyAllocatorBody</TD><TD PORT="buddy_allocator_body_type">buddy_allocator_body</TD></TR>
+		</TABLE>>];
+		subgraph cluster__block {
+			label="DsStore::Block";
 			graph[style=dotted];
 
-			buddy_allocator_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
-				<TR><TD PORT="ofs_bookkeeping_info_block_pos">4</TD><TD PORT="ofs_bookkeeping_info_block_size">4</TD><TD>u4be</TD><TD PORT="ofs_bookkeeping_info_block_type">ofs_bookkeeping_info_block</TD></TR>
-				<TR><TD PORT="len_bookkeeping_info_block_pos">8</TD><TD PORT="len_bookkeeping_info_block_size">4</TD><TD>u4be</TD><TD PORT="len_bookkeeping_info_block_type">len_bookkeeping_info_block</TD></TR>
-				<TR><TD PORT="copy_ofs_bookkeeping_info_block_pos">12</TD><TD PORT="copy_ofs_bookkeeping_info_block_size">4</TD><TD>u4be</TD><TD PORT="copy_ofs_bookkeeping_info_block_type">copy_ofs_bookkeeping_info_block</TD></TR>
-				<TR><TD PORT="_unnamed4_pos">16</TD><TD PORT="_unnamed4_size">16</TD><TD></TD><TD PORT="_unnamed4_type">_unnamed4</TD></TR>
+				<TR><TD PORT="mode_pos">0</TD><TD PORT="mode_size">4</TD><TD>u4be</TD><TD PORT="mode_type">mode</TD></TR>
+				<TR><TD PORT="counter_pos">4</TD><TD PORT="counter_size">4</TD><TD>u4be</TD><TD PORT="counter_type">counter</TD></TR>
+				<TR><TD PORT="data_pos">8</TD><TD PORT="data_size">...</TD><TD>BlockData</TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="data__repeat">repeat counter times</TD></TR>
 			</TABLE>>];
+			block__inst__rightmost_block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="rightmost_block_pos">_root.buddy_allocator_body.block_addresses[mode].offset</TD><TD PORT="rightmost_block_size">...</TD><TD>Block</TD><TD PORT="rightmost_block_type">rightmost_block</TD></TR>
+				<TR><TD COLSPAN="4" PORT="rightmost_block__if">if mode &gt; 0</TD></TR>
+			</TABLE>>];
+			subgraph cluster__block_data {
+				label="DsStore::Block::BlockData";
+				graph[style=dotted];
+
+				block_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="block_id_pos">0</TD><TD PORT="block_id_size">4</TD><TD>u4be</TD><TD PORT="block_id_type">block_id</TD></TR>
+					<TR><TD COLSPAN="4" PORT="block_id__if">if mode &gt; 0</TD></TR>
+					<TR><TD PORT="record_pos">4</TD><TD PORT="record_size">...</TD><TD>Record</TD><TD PORT="record_type">record</TD></TR>
+				</TABLE>>];
+				block_data__inst__block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="block_pos">_root.buddy_allocator_body.block_addresses[block_id].offset</TD><TD PORT="block_size">...</TD><TD>Block</TD><TD PORT="block_type">block</TD></TR>
+					<TR><TD COLSPAN="4" PORT="block__if">if mode &gt; 0</TD></TR>
+				</TABLE>>];
+				subgraph cluster__record {
+					label="DsStore::Block::BlockData::Record";
+					graph[style=dotted];
+
+					record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="filename_pos">0</TD><TD PORT="filename_size">...</TD><TD>Ustr</TD><TD PORT="filename_type">filename</TD></TR>
+						<TR><TD PORT="structure_type_pos">...</TD><TD PORT="structure_type_size">4</TD><TD>FourCharCode</TD><TD PORT="structure_type_type">structure_type</TD></TR>
+						<TR><TD PORT="data_type_pos">...</TD><TD PORT="data_type_size">4</TD><TD>str(UTF-8)</TD><TD PORT="data_type_type">data_type</TD></TR>
+						<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">...</TD><TD>switch (data_type)</TD><TD PORT="value_type">value</TD></TR>
+					</TABLE>>];
+record__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;blob&quot;</TD><TD PORT="case0">RecordBlob</TD></TR>
+	<TR><TD>&quot;type&quot;</TD><TD PORT="case1">FourCharCode</TD></TR>
+	<TR><TD>&quot;ustr&quot;</TD><TD PORT="case2">Ustr</TD></TR>
+</TABLE>>];
+					subgraph cluster__four_char_code {
+						label="DsStore::Block::BlockData::Record::FourCharCode";
+						graph[style=dotted];
+
+						four_char_code__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>str(UTF-8)</TD><TD PORT="value_type">value</TD></TR>
+						</TABLE>>];
+					}
+					subgraph cluster__record_blob {
+						label="DsStore::Block::BlockData::Record::RecordBlob";
+						graph[style=dotted];
+
+						record_blob__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
+							<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">length</TD><TD></TD><TD PORT="value_type">value</TD></TR>
+						</TABLE>>];
+					}
+					subgraph cluster__ustr {
+						label="DsStore::Block::BlockData::Record::Ustr";
+						graph[style=dotted];
+
+						ustr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
+							<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">2 * length</TD><TD>str(UTF-16BE)</TD><TD PORT="value_type">value</TD></TR>
+						</TABLE>>];
+					}
+				}
+			}
 		}
 		subgraph cluster__buddy_allocator_body {
 			label="DsStore::BuddyAllocatorBody";
@@ -47,6 +114,11 @@ digraph {
 				<TR><TD PORT="free_lists_pos">...</TD><TD PORT="free_lists_size">...</TD><TD>FreeList</TD><TD PORT="free_lists_type">free_lists</TD></TR>
 				<TR><TD COLSPAN="4" PORT="free_lists__repeat">repeat num_free_lists times</TD></TR>
 			</TABLE>>];
+			buddy_allocator_body__inst__directories [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="directories_pos">...</TD><TD PORT="directories_size">0</TD><TD>MasterBlockRef</TD><TD PORT="directories_type">directories</TD></TR>
+				<TR><TD COLSPAN="4" PORT="directories__repeat">repeat num_directories times</TD></TR>
+			</TABLE>>];
 			buddy_allocator_body__inst__num_block_addresses [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 				<TR><TD>num_block_addresses</TD><TD>256</TD></TR>
@@ -54,11 +126,6 @@ digraph {
 			buddy_allocator_body__inst__num_free_lists [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 				<TR><TD>num_free_lists</TD><TD>32</TD></TR>
-			</TABLE>>];
-			buddy_allocator_body__inst__directories [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="directories_pos">...</TD><TD PORT="directories_size">0</TD><TD>MasterBlockRef</TD><TD PORT="directories_type">directories</TD></TR>
-				<TR><TD COLSPAN="4" PORT="directories__repeat">repeat num_directories times</TD></TR>
 			</TABLE>>];
 			subgraph cluster__block_descriptor {
 				label="DsStore::BuddyAllocatorBody::BlockDescriptor";
@@ -70,11 +137,11 @@ digraph {
 				</TABLE>>];
 				block_descriptor__inst__offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>offset</TD><TD>((address_raw &amp; ~(_root.block_address_mask)) + 4)</TD></TR>
+					<TR><TD>offset</TD><TD>(address_raw &amp; ~(_root.block_address_mask)) + 4</TD></TR>
 				</TABLE>>];
 				block_descriptor__inst__size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>size</TD><TD>(1 &lt;&lt; (address_raw &amp; _root.block_address_mask))</TD></TR>
+					<TR><TD>size</TD><TD>1 &lt;&lt; (address_raw &amp; _root.block_address_mask)</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__directory_entry {
@@ -99,6 +166,19 @@ digraph {
 					<TR><TD COLSPAN="4" PORT="offsets__repeat">repeat counter times</TD></TR>
 				</TABLE>>];
 			}
+		}
+		subgraph cluster__buddy_allocator_header {
+			label="DsStore::BuddyAllocatorHeader";
+			graph[style=dotted];
+
+			buddy_allocator_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>42 75 64 31</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="ofs_bookkeeping_info_block_pos">4</TD><TD PORT="ofs_bookkeeping_info_block_size">4</TD><TD>u4be</TD><TD PORT="ofs_bookkeeping_info_block_type">ofs_bookkeeping_info_block</TD></TR>
+				<TR><TD PORT="len_bookkeeping_info_block_pos">8</TD><TD PORT="len_bookkeeping_info_block_size">4</TD><TD>u4be</TD><TD PORT="len_bookkeeping_info_block_type">len_bookkeeping_info_block</TD></TR>
+				<TR><TD PORT="copy_ofs_bookkeeping_info_block_pos">12</TD><TD PORT="copy_ofs_bookkeeping_info_block_size">4</TD><TD>u4be</TD><TD PORT="copy_ofs_bookkeeping_info_block_type">copy_ofs_bookkeeping_info_block</TD></TR>
+				<TR><TD PORT="_unnamed4_pos">16</TD><TD PORT="_unnamed4_size">16</TD><TD></TD><TD PORT="_unnamed4_type">_unnamed4</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__master_block_ref {
 			label="DsStore::MasterBlockRef";
@@ -129,88 +209,30 @@ digraph {
 				</TABLE>>];
 			}
 		}
-		subgraph cluster__block {
-			label="DsStore::Block";
-			graph[style=dotted];
-
-			block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="mode_pos">0</TD><TD PORT="mode_size">4</TD><TD>u4be</TD><TD PORT="mode_type">mode</TD></TR>
-				<TR><TD PORT="counter_pos">4</TD><TD PORT="counter_size">4</TD><TD>u4be</TD><TD PORT="counter_type">counter</TD></TR>
-				<TR><TD PORT="data_pos">8</TD><TD PORT="data_size">...</TD><TD>BlockData</TD><TD PORT="data_type">data</TD></TR>
-				<TR><TD COLSPAN="4" PORT="data__repeat">repeat counter times</TD></TR>
-			</TABLE>>];
-			block__inst__rightmost_block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="rightmost_block_pos">_root.buddy_allocator_body.block_addresses[mode].offset</TD><TD PORT="rightmost_block_size">...</TD><TD>Block</TD><TD PORT="rightmost_block_type">rightmost_block</TD></TR>
-			</TABLE>>];
-			subgraph cluster__block_data {
-				label="DsStore::Block::BlockData";
-				graph[style=dotted];
-
-				block_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="block_id_pos">0</TD><TD PORT="block_id_size">4</TD><TD>u4be</TD><TD PORT="block_id_type">block_id</TD></TR>
-					<TR><TD PORT="record_pos">4</TD><TD PORT="record_size">...</TD><TD>Record</TD><TD PORT="record_type">record</TD></TR>
-				</TABLE>>];
-				block_data__inst__block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="block_pos">_root.buddy_allocator_body.block_addresses[block_id].offset</TD><TD PORT="block_size">...</TD><TD>Block</TD><TD PORT="block_type">block</TD></TR>
-				</TABLE>>];
-				subgraph cluster__record {
-					label="DsStore::Block::BlockData::Record";
-					graph[style=dotted];
-
-					record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="filename_pos">0</TD><TD PORT="filename_size">...</TD><TD>Ustr</TD><TD PORT="filename_type">filename</TD></TR>
-						<TR><TD PORT="structure_type_pos">...</TD><TD PORT="structure_type_size">4</TD><TD>FourCharCode</TD><TD PORT="structure_type_type">structure_type</TD></TR>
-						<TR><TD PORT="data_type_pos">...</TD><TD PORT="data_type_size">4</TD><TD>str(UTF-8)</TD><TD PORT="data_type_type">data_type</TD></TR>
-						<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">...</TD><TD>switch (data_type)</TD><TD PORT="value_type">value</TD></TR>
-					</TABLE>>];
-record__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>&quot;ustr&quot;</TD><TD PORT="case0">Ustr</TD></TR>
-	<TR><TD>&quot;type&quot;</TD><TD PORT="case1">FourCharCode</TD></TR>
-	<TR><TD>&quot;blob&quot;</TD><TD PORT="case2">RecordBlob</TD></TR>
-</TABLE>>];
-					subgraph cluster__record_blob {
-						label="DsStore::Block::BlockData::Record::RecordBlob";
-						graph[style=dotted];
-
-						record_blob__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-							<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
-							<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">length</TD><TD></TD><TD PORT="value_type">value</TD></TR>
-						</TABLE>>];
-					}
-					subgraph cluster__ustr {
-						label="DsStore::Block::BlockData::Record::Ustr";
-						graph[style=dotted];
-
-						ustr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-							<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">4</TD><TD>u4be</TD><TD PORT="length_type">length</TD></TR>
-							<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">(2 * length)</TD><TD>str(UTF-16BE)</TD><TD PORT="value_type">value</TD></TR>
-						</TABLE>>];
-					}
-					subgraph cluster__four_char_code {
-						label="DsStore::Block::BlockData::Record::FourCharCode";
-						graph[style=dotted];
-
-						four_char_code__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-							<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>str(UTF-8)</TD><TD PORT="value_type">value</TD></TR>
-						</TABLE>>];
-					}
-				}
-			}
-		}
 	}
 	ds_store__seq:buddy_allocator_header_type -> buddy_allocator_header__seq [style=bold];
 	buddy_allocator_header__seq:ofs_bookkeeping_info_block_type -> ds_store__inst__buddy_allocator_body:buddy_allocator_body_pos [color="#404040"];
 	buddy_allocator_header__seq:len_bookkeeping_info_block_type -> ds_store__inst__buddy_allocator_body:buddy_allocator_body_size [color="#404040"];
 	ds_store__inst__buddy_allocator_body:buddy_allocator_body_type -> buddy_allocator_body__seq [style=bold];
+	block__seq:data_type -> block_data__seq [style=bold];
+	block__seq:counter_type -> block__seq:data__repeat [color="#404040"];
+	block_descriptor__inst__offset:offset_type -> block__inst__rightmost_block:rightmost_block_pos [color="#404040"];
+	block__inst__rightmost_block:rightmost_block_type -> block__seq [style=bold];
+	block__seq:mode_type -> block__inst__rightmost_block:rightmost_block__if [color="#404040"];
+	block_data__params:mode_type -> block_data__seq:block_id__if [color="#404040"];
+	block_data__seq:record_type -> record__seq [style=bold];
+	block_descriptor__inst__offset:offset_type -> block_data__inst__block:block_pos [color="#404040"];
+	block_data__inst__block:block_type -> block__seq [style=bold];
+	block_data__params:mode_type -> block_data__inst__block:block__if [color="#404040"];
+	record__seq:filename_type -> ustr__seq [style=bold];
+	record__seq:structure_type_type -> four_char_code__seq [style=bold];
+	record__seq:value_type -> record__seq_value_switch [style=bold];
+	record__seq_value_switch:case0 -> record_blob__seq [style=bold];
+	record__seq_value_switch:case1 -> four_char_code__seq [style=bold];
+	record__seq_value_switch:case2 -> ustr__seq [style=bold];
+	record__seq:data_type_type -> record__seq:value_type [color="#404040"];
+	record_blob__seq:length_type -> record_blob__seq:value_size [color="#404040"];
+	ustr__seq:length_type -> ustr__seq:value_size [color="#404040"];
 	buddy_allocator_body__seq:block_addresses_type -> block_descriptor__seq [style=bold];
 	buddy_allocator_body__inst__num_block_addresses:num_block_addresses_type -> buddy_allocator_body__seq:block_addresses__repeat [color="#404040"];
 	buddy_allocator_body__seq:directory_entries_type -> directory_entry__seq [style=bold];
@@ -230,20 +252,4 @@ record__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 	master_block_ref__inst__master_block:master_block_type -> master_block__seq [style=bold];
 	block_descriptor__inst__offset:offset_type -> master_block__inst__root_block:root_block_pos [color="#404040"];
 	master_block__inst__root_block:root_block_type -> block__seq [style=bold];
-	block__seq:data_type -> block_data__seq [style=bold];
-	block__seq:counter_type -> block__seq:data__repeat [color="#404040"];
-	block_descriptor__inst__offset:offset_type -> block__inst__rightmost_block:rightmost_block_pos [color="#404040"];
-	block__inst__rightmost_block:rightmost_block_type -> block__seq [style=bold];
-	block_data__seq:record_type -> record__seq [style=bold];
-	block_descriptor__inst__offset:offset_type -> block_data__inst__block:block_pos [color="#404040"];
-	block_data__inst__block:block_type -> block__seq [style=bold];
-	record__seq:filename_type -> ustr__seq [style=bold];
-	record__seq:structure_type_type -> four_char_code__seq [style=bold];
-	record__seq:value_type -> record__seq_value_switch [style=bold];
-	record__seq_value_switch:case0 -> ustr__seq [style=bold];
-	record__seq_value_switch:case1 -> four_char_code__seq [style=bold];
-	record__seq_value_switch:case2 -> record_blob__seq [style=bold];
-	record__seq:data_type_type -> record__seq:value_type [color="#404040"];
-	record_blob__seq:length_type -> record_blob__seq:value_size [color="#404040"];
-	ustr__seq:length_type -> ustr__seq:value_size [color="#404040"];
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -80,6 +81,57 @@ public class ZxSpectrumTap extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.blocks.size(); i++) {
+            this.blocks.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class ArrayParams extends KaitaiStruct {
+        public static ArrayParams fromFile(String fileName) throws IOException {
+            return new ArrayParams(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ArrayParams(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ArrayParams(KaitaiStream _io, ZxSpectrumTap.Header _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ArrayParams(KaitaiStream _io, ZxSpectrumTap.Header _parent, ZxSpectrumTap _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.reserved = this._io.readU1();
+            this.varName = this._io.readU1();
+            this.reserved1 = this._io.readBytes(2);
+            if (!(Arrays.equals(this.reserved1, new byte[] { 0, -128 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, -128 }, this.reserved1, this._io, "/types/array_params/seq/2");
+            }
+        }
+
+        public void _fetchInstances() {
+        }
+        private int reserved;
+        private int varName;
+        private byte[] reserved1;
+        private ZxSpectrumTap _root;
+        private ZxSpectrumTap.Header _parent;
+        public int reserved() { return reserved; }
+
+        /**
+         * Variable name (1..26 meaning A$..Z$ +192)
+         */
+        public int varName() { return varName; }
+        public byte[] reserved1() { return reserved1; }
+        public ZxSpectrumTap _root() { return _root; }
+        public ZxSpectrumTap.Header _parent() { return _parent; }
+    }
     public static class Block extends KaitaiStruct {
         public static Block fromFile(String fileName) throws IOException {
             return new Block(new ByteBufferKaitaiStream(fileName));
@@ -106,10 +158,20 @@ public class ZxSpectrumTap extends KaitaiStruct {
                 this.header = new Header(this._io, this, _root);
             }
             if (lenBlock() == 19) {
-                this.data = this._io.readBytes((header().lenData() + 4));
+                this.data = this._io.readBytes(header().lenData() + 4);
             }
             if (flag() == ZxSpectrumTap.FlagEnum.DATA) {
-                this.headerlessData = this._io.readBytes((lenBlock() - 1));
+                this.headerlessData = this._io.readBytes(lenBlock() - 1);
+            }
+        }
+
+        public void _fetchInstances() {
+            if ( ((lenBlock() == 19) && (flag() == ZxSpectrumTap.FlagEnum.HEADER)) ) {
+                this.header._fetchInstances();
+            }
+            if (lenBlock() == 19) {
+            }
+            if (flag() == ZxSpectrumTap.FlagEnum.DATA) {
             }
         }
         private int lenBlock;
@@ -126,38 +188,6 @@ public class ZxSpectrumTap extends KaitaiStruct {
         public byte[] headerlessData() { return headerlessData; }
         public ZxSpectrumTap _root() { return _root; }
         public ZxSpectrumTap _parent() { return _parent; }
-    }
-    public static class ProgramParams extends KaitaiStruct {
-        public static ProgramParams fromFile(String fileName) throws IOException {
-            return new ProgramParams(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ProgramParams(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ProgramParams(KaitaiStream _io, ZxSpectrumTap.Header _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ProgramParams(KaitaiStream _io, ZxSpectrumTap.Header _parent, ZxSpectrumTap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.autostartLine = this._io.readU2le();
-            this.lenProgram = this._io.readU2le();
-        }
-        private int autostartLine;
-        private int lenProgram;
-        private ZxSpectrumTap _root;
-        private ZxSpectrumTap.Header _parent;
-        public int autostartLine() { return autostartLine; }
-        public int lenProgram() { return lenProgram; }
-        public ZxSpectrumTap _root() { return _root; }
-        public ZxSpectrumTap.Header _parent() { return _parent; }
     }
     public static class BytesParams extends KaitaiStruct {
         public static BytesParams fromFile(String fileName) throws IOException {
@@ -181,6 +211,9 @@ public class ZxSpectrumTap extends KaitaiStruct {
         private void _read() {
             this.startAddress = this._io.readU2le();
             this.reserved = this._io.readBytes(2);
+        }
+
+        public void _fetchInstances() {
         }
         private int startAddress;
         private byte[] reserved;
@@ -218,26 +251,52 @@ public class ZxSpectrumTap extends KaitaiStruct {
                 HeaderTypeEnum on = headerType();
                 if (on != null) {
                     switch (headerType()) {
-                    case PROGRAM: {
-                        this.params = new ProgramParams(this._io, this, _root);
-                        break;
-                    }
-                    case NUM_ARRAY: {
-                        this.params = new ArrayParams(this._io, this, _root);
+                    case BYTES: {
+                        this.params = new BytesParams(this._io, this, _root);
                         break;
                     }
                     case CHAR_ARRAY: {
                         this.params = new ArrayParams(this._io, this, _root);
                         break;
                     }
-                    case BYTES: {
-                        this.params = new BytesParams(this._io, this, _root);
+                    case NUM_ARRAY: {
+                        this.params = new ArrayParams(this._io, this, _root);
+                        break;
+                    }
+                    case PROGRAM: {
+                        this.params = new ProgramParams(this._io, this, _root);
                         break;
                     }
                     }
                 }
             }
             this.checksum = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+            {
+                HeaderTypeEnum on = headerType();
+                if (on != null) {
+                    switch (headerType()) {
+                    case BYTES: {
+                        ((BytesParams) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case CHAR_ARRAY: {
+                        ((ArrayParams) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case NUM_ARRAY: {
+                        ((ArrayParams) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case PROGRAM: {
+                        ((ProgramParams) (this.params))._fetchInstances();
+                        break;
+                    }
+                    }
+                }
+            }
         }
         private HeaderTypeEnum headerType;
         private byte[] filename;
@@ -258,52 +317,45 @@ public class ZxSpectrumTap extends KaitaiStruct {
         public ZxSpectrumTap _root() { return _root; }
         public ZxSpectrumTap.Block _parent() { return _parent; }
     }
-    public static class ArrayParams extends KaitaiStruct {
-        public static ArrayParams fromFile(String fileName) throws IOException {
-            return new ArrayParams(new ByteBufferKaitaiStream(fileName));
+    public static class ProgramParams extends KaitaiStruct {
+        public static ProgramParams fromFile(String fileName) throws IOException {
+            return new ProgramParams(new ByteBufferKaitaiStream(fileName));
         }
 
-        public ArrayParams(KaitaiStream _io) {
+        public ProgramParams(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public ArrayParams(KaitaiStream _io, ZxSpectrumTap.Header _parent) {
+        public ProgramParams(KaitaiStream _io, ZxSpectrumTap.Header _parent) {
             this(_io, _parent, null);
         }
 
-        public ArrayParams(KaitaiStream _io, ZxSpectrumTap.Header _parent, ZxSpectrumTap _root) {
+        public ProgramParams(KaitaiStream _io, ZxSpectrumTap.Header _parent, ZxSpectrumTap _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.reserved = this._io.readU1();
-            this.varName = this._io.readU1();
-            this.reserved1 = this._io.readBytes(2);
-            if (!(Arrays.equals(reserved1(), new byte[] { 0, -128 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, -128 }, reserved1(), _io(), "/types/array_params/seq/2");
-            }
+            this.autostartLine = this._io.readU2le();
+            this.lenProgram = this._io.readU2le();
         }
-        private int reserved;
-        private int varName;
-        private byte[] reserved1;
+
+        public void _fetchInstances() {
+        }
+        private int autostartLine;
+        private int lenProgram;
         private ZxSpectrumTap _root;
         private ZxSpectrumTap.Header _parent;
-        public int reserved() { return reserved; }
-
-        /**
-         * Variable name (1..26 meaning A$..Z$ +192)
-         */
-        public int varName() { return varName; }
-        public byte[] reserved1() { return reserved1; }
+        public int autostartLine() { return autostartLine; }
+        public int lenProgram() { return lenProgram; }
         public ZxSpectrumTap _root() { return _root; }
         public ZxSpectrumTap.Header _parent() { return _parent; }
     }
-    private ArrayList<Block> blocks;
+    private List<Block> blocks;
     private ZxSpectrumTap _root;
     private KaitaiStruct _parent;
-    public ArrayList<Block> blocks() { return blocks; }
+    public List<Block> blocks() { return blocks; }
     public ZxSpectrumTap _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

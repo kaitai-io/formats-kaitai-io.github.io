@@ -19,19 +19,23 @@ type Lzh struct {
 	Entries []*Lzh_Record
 	_io *kaitai.Stream
 	_root *Lzh
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewLzh() *Lzh {
 	return &Lzh{
 	}
 }
 
-func (this *Lzh) Read(io *kaitai.Stream, parent interface{}, root *Lzh) (err error) {
+func (this Lzh) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Lzh) Read(io *kaitai.Stream, parent kaitai.Struct, root *Lzh) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -45,38 +49,6 @@ func (this *Lzh) Read(io *kaitai.Stream, parent interface{}, root *Lzh) (err err
 			return err
 		}
 		this.Entries = append(this.Entries, tmp2)
-	}
-	return err
-}
-type Lzh_Record struct {
-	HeaderLen uint8
-	FileRecord *Lzh_FileRecord
-	_io *kaitai.Stream
-	_root *Lzh
-	_parent *Lzh
-}
-func NewLzh_Record() *Lzh_Record {
-	return &Lzh_Record{
-	}
-}
-
-func (this *Lzh_Record) Read(io *kaitai.Stream, parent *Lzh, root *Lzh) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp3, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.HeaderLen = tmp3
-	if (this.HeaderLen > 0) {
-		tmp4 := NewLzh_FileRecord()
-		err = tmp4.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.FileRecord = tmp4
 	}
 	return err
 }
@@ -94,37 +66,41 @@ func NewLzh_FileRecord() *Lzh_FileRecord {
 	}
 }
 
+func (this Lzh_FileRecord) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Lzh_FileRecord) Read(io *kaitai.Stream, parent *Lzh_Record, root *Lzh) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp5, err := this._io.ReadBytes(int((this._parent.HeaderLen - 1)))
+	tmp3, err := this._io.ReadBytes(int(this._parent.HeaderLen - 1))
 	if err != nil {
 		return err
 	}
-	tmp5 = tmp5
-	this._raw_Header = tmp5
+	tmp3 = tmp3
+	this._raw_Header = tmp3
 	_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-	tmp6 := NewLzh_Header()
-	err = tmp6.Read(_io__raw_Header, this, this._root)
+	tmp4 := NewLzh_Header()
+	err = tmp4.Read(_io__raw_Header, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Header = tmp6
+	this.Header = tmp4
 	if (this.Header.Header1.LhaLevel == 0) {
-		tmp7, err := this._io.ReadU2le()
+		tmp5, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
-		this.FileUncomprCrc16 = uint16(tmp7)
+		this.FileUncomprCrc16 = uint16(tmp5)
 	}
-	tmp8, err := this._io.ReadBytes(int(this.Header.Header1.FileSizeCompr))
+	tmp6, err := this._io.ReadBytes(int(this.Header.Header1.FileSizeCompr))
 	if err != nil {
 		return err
 	}
-	tmp8 = tmp8
-	this.Body = tmp8
+	tmp6 = tmp6
+	this.Body = tmp6
 	return err
 }
 type Lzh_Header struct {
@@ -143,52 +119,56 @@ func NewLzh_Header() *Lzh_Header {
 	}
 }
 
+func (this Lzh_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Lzh_Header) Read(io *kaitai.Stream, parent *Lzh_FileRecord, root *Lzh) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp9 := NewLzh_Header1()
-	err = tmp9.Read(this._io, this, this._root)
+	tmp7 := NewLzh_Header1()
+	err = tmp7.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Header1 = tmp9
+	this.Header1 = tmp7
 	if (this.Header1.LhaLevel == 0) {
-		tmp10, err := this._io.ReadU1()
+		tmp8, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
-		this.FilenameLen = tmp10
+		this.FilenameLen = tmp8
 	}
 	if (this.Header1.LhaLevel == 0) {
-		tmp11, err := this._io.ReadBytes(int(this.FilenameLen))
+		tmp9, err := this._io.ReadBytes(int(this.FilenameLen))
 		if err != nil {
 			return err
 		}
-		tmp11 = tmp11
-		this.Filename = string(tmp11)
+		tmp9 = tmp9
+		this.Filename = string(tmp9)
+	}
+	if (this.Header1.LhaLevel == 2) {
+		tmp10, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.FileUncomprCrc16 = uint16(tmp10)
+	}
+	if (this.Header1.LhaLevel == 2) {
+		tmp11, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Os = tmp11
 	}
 	if (this.Header1.LhaLevel == 2) {
 		tmp12, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
-		this.FileUncomprCrc16 = uint16(tmp12)
-	}
-	if (this.Header1.LhaLevel == 2) {
-		tmp13, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Os = tmp13
-	}
-	if (this.Header1.LhaLevel == 2) {
-		tmp14, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.ExtHeaderSize = uint16(tmp14)
+		this.ExtHeaderSize = uint16(tmp12)
 	}
 	return err
 }
@@ -214,55 +194,59 @@ func NewLzh_Header1() *Lzh_Header1 {
 	}
 }
 
+func (this Lzh_Header1) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Lzh_Header1) Read(io *kaitai.Stream, parent *Lzh_Header, root *Lzh) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp15, err := this._io.ReadU1()
+	tmp13, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.HeaderChecksum = tmp15
-	tmp16, err := this._io.ReadBytes(int(5))
+	this.HeaderChecksum = tmp13
+	tmp14, err := this._io.ReadBytes(int(5))
 	if err != nil {
 		return err
 	}
-	tmp16 = tmp16
-	this.MethodId = string(tmp16)
-	tmp17, err := this._io.ReadU4le()
+	tmp14 = tmp14
+	this.MethodId = string(tmp14)
+	tmp15, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FileSizeCompr = uint32(tmp17)
-	tmp18, err := this._io.ReadU4le()
+	this.FileSizeCompr = uint32(tmp15)
+	tmp16, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FileSizeUncompr = uint32(tmp18)
-	tmp19, err := this._io.ReadBytes(int(4))
+	this.FileSizeUncompr = uint32(tmp16)
+	tmp17, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp19 = tmp19
-	this._raw_FileTimestamp = tmp19
+	tmp17 = tmp17
+	this._raw_FileTimestamp = tmp17
 	_io__raw_FileTimestamp := kaitai.NewStream(bytes.NewReader(this._raw_FileTimestamp))
-	tmp20 := NewDosDatetime()
-	err = tmp20.Read(_io__raw_FileTimestamp, this, nil)
+	tmp18 := NewDosDatetime()
+	err = tmp18.Read(_io__raw_FileTimestamp, nil, nil)
 	if err != nil {
 		return err
 	}
-	this.FileTimestamp = tmp20
-	tmp21, err := this._io.ReadU1()
+	this.FileTimestamp = tmp18
+	tmp19, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Attr = tmp21
-	tmp22, err := this._io.ReadU1()
+	this.Attr = tmp19
+	tmp20, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LhaLevel = tmp22
+	this.LhaLevel = tmp20
 	return err
 }
 
@@ -281,3 +265,39 @@ func (this *Lzh_Header1) Read(io *kaitai.Stream, parent *Lzh_Header, root *Lzh) 
 /**
  * File or directory attribute
  */
+type Lzh_Record struct {
+	HeaderLen uint8
+	FileRecord *Lzh_FileRecord
+	_io *kaitai.Stream
+	_root *Lzh
+	_parent *Lzh
+}
+func NewLzh_Record() *Lzh_Record {
+	return &Lzh_Record{
+	}
+}
+
+func (this Lzh_Record) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Lzh_Record) Read(io *kaitai.Stream, parent *Lzh, root *Lzh) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp21, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.HeaderLen = tmp21
+	if (this.HeaderLen > 0) {
+		tmp22 := NewLzh_FileRecord()
+		err = tmp22.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.FileRecord = tmp22
+	}
+	return err
+}

@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
 
 
 /**
@@ -115,12 +116,12 @@ public class Quake2Md2 extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 73, 68, 80, 50 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 68, 80, 50 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 73, 68, 80, 50 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 68, 80, 50 }, this.magic, this._io, "/seq/0");
         }
         this.version = this._io.readU4le();
-        if (!(version() == 8)) {
-            throw new KaitaiStream.ValidationNotEqualError(8, version(), _io(), "/seq/1");
+        if (!(this.version == 8)) {
+            throw new KaitaiStream.ValidationNotEqualError(8, this.version, this._io, "/seq/1");
         }
         this.skinWidthPx = this._io.readU4le();
         this.skinHeightPx = this._io.readU4le();
@@ -138,44 +139,35 @@ public class Quake2Md2 extends KaitaiStruct {
         this.ofsGlCmds = this._io.readU4le();
         this.ofsEof = this._io.readU4le();
     }
-    public static class Vertex extends KaitaiStruct {
-        public static Vertex fromFile(String fileName) throws IOException {
-            return new Vertex(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public Vertex(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        frames();
+        if (this.frames != null) {
+            for (int i = 0; i < this.frames.size(); i++) {
+                this.frames.get(((Number) (i)).intValue())._fetchInstances();
+            }
         }
-
-        public Vertex(KaitaiStream _io, Quake2Md2.Frame _parent) {
-            this(_io, _parent, null);
+        glCmds();
+        if (this.glCmds != null) {
+            this.glCmds._fetchInstances();
         }
-
-        public Vertex(KaitaiStream _io, Quake2Md2.Frame _parent, Quake2Md2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
+        skins();
+        if (this.skins != null) {
+            for (int i = 0; i < this.skins.size(); i++) {
+            }
         }
-        private void _read() {
-            this.position = new CompressedVec(this._io, this, _root);
-            this.normalIndex = this._io.readU1();
+        texCoords();
+        if (this.texCoords != null) {
+            for (int i = 0; i < this.texCoords.size(); i++) {
+                this.texCoords.get(((Number) (i)).intValue())._fetchInstances();
+            }
         }
-        private ArrayList<Double> normal;
-        public ArrayList<Double> normal() {
-            if (this.normal != null)
-                return this.normal;
-            this.normal = _root().anormsTable().get((int) normalIndex());
-            return this.normal;
+        triangles();
+        if (this.triangles != null) {
+            for (int i = 0; i < this.triangles.size(); i++) {
+                this.triangles.get(((Number) (i)).intValue())._fetchInstances();
+            }
         }
-        private CompressedVec position;
-        private int normalIndex;
-        private Quake2Md2 _root;
-        private Quake2Md2.Frame _parent;
-        public CompressedVec position() { return position; }
-        public int normalIndex() { return normalIndex; }
-        public Quake2Md2 _root() { return _root; }
-        public Quake2Md2.Frame _parent() { return _parent; }
     }
     public static class CompressedVec extends KaitaiStruct {
         public static CompressedVec fromFile(String fileName) throws IOException {
@@ -201,28 +193,28 @@ public class Quake2Md2 extends KaitaiStruct {
             this.yCompressed = this._io.readU1();
             this.zCompressed = this._io.readU1();
         }
+
+        public void _fetchInstances() {
+        }
         private Double x;
         public Double x() {
             if (this.x != null)
                 return this.x;
-            double _tmp = (double) (((xCompressed() * _parent()._parent().scale().x()) + _parent()._parent().translate().x()));
-            this.x = _tmp;
+            this.x = ((Number) (xCompressed() * _parent()._parent().scale().x() + _parent()._parent().translate().x())).doubleValue();
             return this.x;
         }
         private Double y;
         public Double y() {
             if (this.y != null)
                 return this.y;
-            double _tmp = (double) (((yCompressed() * _parent()._parent().scale().y()) + _parent()._parent().translate().y()));
-            this.y = _tmp;
+            this.y = ((Number) (yCompressed() * _parent()._parent().scale().y() + _parent()._parent().translate().y())).doubleValue();
             return this.y;
         }
         private Double z;
         public Double z() {
             if (this.z != null)
                 return this.z;
-            double _tmp = (double) (((zCompressed() * _parent()._parent().scale().z()) + _parent()._parent().translate().z()));
-            this.z = _tmp;
+            this.z = ((Number) (zCompressed() * _parent()._parent().scale().z() + _parent()._parent().translate().z())).doubleValue();
             return this.z;
         }
         private int xCompressed;
@@ -235,52 +227,6 @@ public class Quake2Md2 extends KaitaiStruct {
         public int zCompressed() { return zCompressed; }
         public Quake2Md2 _root() { return _root; }
         public Quake2Md2.Vertex _parent() { return _parent; }
-    }
-    public static class Triangle extends KaitaiStruct {
-        public static Triangle fromFile(String fileName) throws IOException {
-            return new Triangle(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Triangle(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Triangle(KaitaiStream _io, Quake2Md2 _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Triangle(KaitaiStream _io, Quake2Md2 _parent, Quake2Md2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.vertexIndices = new ArrayList<Integer>();
-            for (int i = 0; i < 3; i++) {
-                this.vertexIndices.add(this._io.readU2le());
-            }
-            this.texPointIndices = new ArrayList<Integer>();
-            for (int i = 0; i < 3; i++) {
-                this.texPointIndices.add(this._io.readU2le());
-            }
-        }
-        private ArrayList<Integer> vertexIndices;
-        private ArrayList<Integer> texPointIndices;
-        private Quake2Md2 _root;
-        private Quake2Md2 _parent;
-
-        /**
-         * indices to `_root.frames[i].vertices` (for each frame with index `i`)
-         */
-        public ArrayList<Integer> vertexIndices() { return vertexIndices; }
-
-        /**
-         * indices to `_root.tex_coords`
-         */
-        public ArrayList<Integer> texPointIndices() { return texPointIndices; }
-        public Quake2Md2 _root() { return _root; }
-        public Quake2Md2 _parent() { return _parent; }
     }
     public static class Frame extends KaitaiStruct {
         public static Frame fromFile(String fileName) throws IOException {
@@ -304,24 +250,87 @@ public class Quake2Md2 extends KaitaiStruct {
         private void _read() {
             this.scale = new Vec3f(this._io, this, _root);
             this.translate = new Vec3f(this._io, this, _root);
-            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(16), (byte) 0, false), Charset.forName("ascii"));
+            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(16), (byte) 0, false), StandardCharsets.US_ASCII);
             this.vertices = new ArrayList<Vertex>();
             for (int i = 0; i < _root().verticesPerFrame(); i++) {
                 this.vertices.add(new Vertex(this._io, this, _root));
             }
         }
+
+        public void _fetchInstances() {
+            this.scale._fetchInstances();
+            this.translate._fetchInstances();
+            for (int i = 0; i < this.vertices.size(); i++) {
+                this.vertices.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private Vec3f scale;
         private Vec3f translate;
         private String name;
-        private ArrayList<Vertex> vertices;
+        private List<Vertex> vertices;
         private Quake2Md2 _root;
         private Quake2Md2 _parent;
         public Vec3f scale() { return scale; }
         public Vec3f translate() { return translate; }
         public String name() { return name; }
-        public ArrayList<Vertex> vertices() { return vertices; }
+        public List<Vertex> vertices() { return vertices; }
         public Quake2Md2 _root() { return _root; }
         public Quake2Md2 _parent() { return _parent; }
+    }
+    public static class GlCmd extends KaitaiStruct {
+        public static GlCmd fromFile(String fileName) throws IOException {
+            return new GlCmd(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public GlCmd(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public GlCmd(KaitaiStream _io, Quake2Md2.GlCmdsList _parent) {
+            this(_io, _parent, null);
+        }
+
+        public GlCmd(KaitaiStream _io, Quake2Md2.GlCmdsList _parent, Quake2Md2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.cmdNumVertices = this._io.readS4le();
+            this.vertices = new ArrayList<GlVertex>();
+            for (int i = 0; i < numVertices(); i++) {
+                this.vertices.add(new GlVertex(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.vertices.size(); i++) {
+                this.vertices.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private Integer numVertices;
+        public Integer numVertices() {
+            if (this.numVertices != null)
+                return this.numVertices;
+            this.numVertices = ((Number) ((cmdNumVertices() < 0 ? -(cmdNumVertices()) : cmdNumVertices()))).intValue();
+            return this.numVertices;
+        }
+        private GlPrimitive primitive;
+        public GlPrimitive primitive() {
+            if (this.primitive != null)
+                return this.primitive;
+            this.primitive = (cmdNumVertices() < 0 ? Quake2Md2.GlPrimitive.TRIANGLE_FAN : Quake2Md2.GlPrimitive.TRIANGLE_STRIP);
+            return this.primitive;
+        }
+        private int cmdNumVertices;
+        private List<GlVertex> vertices;
+        private Quake2Md2 _root;
+        private Quake2Md2.GlCmdsList _parent;
+        public int cmdNumVertices() { return cmdNumVertices; }
+        public List<GlVertex> vertices() { return vertices; }
+        public Quake2Md2 _root() { return _root; }
+        public Quake2Md2.GlCmdsList _parent() { return _parent; }
     }
     public static class GlCmdsList extends KaitaiStruct {
         public static GlCmdsList fromFile(String fileName) throws IOException {
@@ -356,95 +365,20 @@ public class Quake2Md2 extends KaitaiStruct {
                 }
             }
         }
-        private ArrayList<GlCmd> items;
+
+        public void _fetchInstances() {
+            if (!(_io().isEof())) {
+                for (int i = 0; i < this.items.size(); i++) {
+                    this.items.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+        }
+        private List<GlCmd> items;
         private Quake2Md2 _root;
         private Quake2Md2 _parent;
-        public ArrayList<GlCmd> items() { return items; }
+        public List<GlCmd> items() { return items; }
         public Quake2Md2 _root() { return _root; }
         public Quake2Md2 _parent() { return _parent; }
-    }
-    public static class TexPoint extends KaitaiStruct {
-        public static TexPoint fromFile(String fileName) throws IOException {
-            return new TexPoint(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public TexPoint(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public TexPoint(KaitaiStream _io, Quake2Md2 _parent) {
-            this(_io, _parent, null);
-        }
-
-        public TexPoint(KaitaiStream _io, Quake2Md2 _parent, Quake2Md2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.sPx = this._io.readU2le();
-            this.tPx = this._io.readU2le();
-        }
-        private Double sNormalized;
-        public Double sNormalized() {
-            if (this.sNormalized != null)
-                return this.sNormalized;
-            double _tmp = (double) (((sPx() + 0.0) / _root().skinWidthPx()));
-            this.sNormalized = _tmp;
-            return this.sNormalized;
-        }
-        private Double tNormalized;
-        public Double tNormalized() {
-            if (this.tNormalized != null)
-                return this.tNormalized;
-            double _tmp = (double) (((tPx() + 0.0) / _root().skinHeightPx()));
-            this.tNormalized = _tmp;
-            return this.tNormalized;
-        }
-        private int sPx;
-        private int tPx;
-        private Quake2Md2 _root;
-        private Quake2Md2 _parent;
-        public int sPx() { return sPx; }
-        public int tPx() { return tPx; }
-        public Quake2Md2 _root() { return _root; }
-        public Quake2Md2 _parent() { return _parent; }
-    }
-    public static class Vec3f extends KaitaiStruct {
-        public static Vec3f fromFile(String fileName) throws IOException {
-            return new Vec3f(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Vec3f(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Vec3f(KaitaiStream _io, Quake2Md2.Frame _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Vec3f(KaitaiStream _io, Quake2Md2.Frame _parent, Quake2Md2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.x = this._io.readF4le();
-            this.y = this._io.readF4le();
-            this.z = this._io.readF4le();
-        }
-        private float x;
-        private float y;
-        private float z;
-        private Quake2Md2 _root;
-        private Quake2Md2.Frame _parent;
-        public float x() { return x; }
-        public float y() { return y; }
-        public float z() { return z; }
-        public Quake2Md2 _root() { return _root; }
-        public Quake2Md2.Frame _parent() { return _parent; }
     }
     public static class GlVertex extends KaitaiStruct {
         public static GlVertex fromFile(String fileName) throws IOException {
@@ -472,11 +406,16 @@ public class Quake2Md2 extends KaitaiStruct {
             }
             this.vertexIndex = this._io.readU4le();
         }
-        private ArrayList<Float> texCoordsNormalized;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.texCoordsNormalized.size(); i++) {
+            }
+        }
+        private List<Float> texCoordsNormalized;
         private long vertexIndex;
         private Quake2Md2 _root;
         private Quake2Md2.GlCmd _parent;
-        public ArrayList<Float> texCoordsNormalized() { return texCoordsNormalized; }
+        public List<Float> texCoordsNormalized() { return texCoordsNormalized; }
 
         /**
          * index to `_root.frames[i].vertices` (for each frame with index `i`)
@@ -485,55 +424,195 @@ public class Quake2Md2 extends KaitaiStruct {
         public Quake2Md2 _root() { return _root; }
         public Quake2Md2.GlCmd _parent() { return _parent; }
     }
-    public static class GlCmd extends KaitaiStruct {
-        public static GlCmd fromFile(String fileName) throws IOException {
-            return new GlCmd(new ByteBufferKaitaiStream(fileName));
+    public static class TexPoint extends KaitaiStruct {
+        public static TexPoint fromFile(String fileName) throws IOException {
+            return new TexPoint(new ByteBufferKaitaiStream(fileName));
         }
 
-        public GlCmd(KaitaiStream _io) {
+        public TexPoint(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public GlCmd(KaitaiStream _io, Quake2Md2.GlCmdsList _parent) {
+        public TexPoint(KaitaiStream _io, Quake2Md2 _parent) {
             this(_io, _parent, null);
         }
 
-        public GlCmd(KaitaiStream _io, Quake2Md2.GlCmdsList _parent, Quake2Md2 _root) {
+        public TexPoint(KaitaiStream _io, Quake2Md2 _parent, Quake2Md2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.cmdNumVertices = this._io.readS4le();
-            this.vertices = new ArrayList<GlVertex>();
-            for (int i = 0; i < numVertices(); i++) {
-                this.vertices.add(new GlVertex(this._io, this, _root));
+            this.sPx = this._io.readU2le();
+            this.tPx = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double sNormalized;
+        public Double sNormalized() {
+            if (this.sNormalized != null)
+                return this.sNormalized;
+            this.sNormalized = ((Number) ((sPx() + 0.0) / _root().skinWidthPx())).doubleValue();
+            return this.sNormalized;
+        }
+        private Double tNormalized;
+        public Double tNormalized() {
+            if (this.tNormalized != null)
+                return this.tNormalized;
+            this.tNormalized = ((Number) ((tPx() + 0.0) / _root().skinHeightPx())).doubleValue();
+            return this.tNormalized;
+        }
+        private int sPx;
+        private int tPx;
+        private Quake2Md2 _root;
+        private Quake2Md2 _parent;
+        public int sPx() { return sPx; }
+        public int tPx() { return tPx; }
+        public Quake2Md2 _root() { return _root; }
+        public Quake2Md2 _parent() { return _parent; }
+    }
+    public static class Triangle extends KaitaiStruct {
+        public static Triangle fromFile(String fileName) throws IOException {
+            return new Triangle(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Triangle(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Triangle(KaitaiStream _io, Quake2Md2 _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Triangle(KaitaiStream _io, Quake2Md2 _parent, Quake2Md2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.vertexIndices = new ArrayList<Integer>();
+            for (int i = 0; i < 3; i++) {
+                this.vertexIndices.add(this._io.readU2le());
+            }
+            this.texPointIndices = new ArrayList<Integer>();
+            for (int i = 0; i < 3; i++) {
+                this.texPointIndices.add(this._io.readU2le());
             }
         }
-        private Integer numVertices;
-        public Integer numVertices() {
-            if (this.numVertices != null)
-                return this.numVertices;
-            int _tmp = (int) ((cmdNumVertices() < 0 ? -(cmdNumVertices()) : cmdNumVertices()));
-            this.numVertices = _tmp;
-            return this.numVertices;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.vertexIndices.size(); i++) {
+            }
+            for (int i = 0; i < this.texPointIndices.size(); i++) {
+            }
         }
-        private GlPrimitive primitive;
-        public GlPrimitive primitive() {
-            if (this.primitive != null)
-                return this.primitive;
-            this.primitive = (cmdNumVertices() < 0 ? Quake2Md2.GlPrimitive.TRIANGLE_FAN : Quake2Md2.GlPrimitive.TRIANGLE_STRIP);
-            return this.primitive;
-        }
-        private int cmdNumVertices;
-        private ArrayList<GlVertex> vertices;
+        private List<Integer> vertexIndices;
+        private List<Integer> texPointIndices;
         private Quake2Md2 _root;
-        private Quake2Md2.GlCmdsList _parent;
-        public int cmdNumVertices() { return cmdNumVertices; }
-        public ArrayList<GlVertex> vertices() { return vertices; }
+        private Quake2Md2 _parent;
+
+        /**
+         * indices to `_root.frames[i].vertices` (for each frame with index `i`)
+         */
+        public List<Integer> vertexIndices() { return vertexIndices; }
+
+        /**
+         * indices to `_root.tex_coords`
+         */
+        public List<Integer> texPointIndices() { return texPointIndices; }
         public Quake2Md2 _root() { return _root; }
-        public Quake2Md2.GlCmdsList _parent() { return _parent; }
+        public Quake2Md2 _parent() { return _parent; }
+    }
+    public static class Vec3f extends KaitaiStruct {
+        public static Vec3f fromFile(String fileName) throws IOException {
+            return new Vec3f(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Vec3f(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Vec3f(KaitaiStream _io, Quake2Md2.Frame _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Vec3f(KaitaiStream _io, Quake2Md2.Frame _parent, Quake2Md2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.x = this._io.readF4le();
+            this.y = this._io.readF4le();
+            this.z = this._io.readF4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private float x;
+        private float y;
+        private float z;
+        private Quake2Md2 _root;
+        private Quake2Md2.Frame _parent;
+        public float x() { return x; }
+        public float y() { return y; }
+        public float z() { return z; }
+        public Quake2Md2 _root() { return _root; }
+        public Quake2Md2.Frame _parent() { return _parent; }
+    }
+    public static class Vertex extends KaitaiStruct {
+        public static Vertex fromFile(String fileName) throws IOException {
+            return new Vertex(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Vertex(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Vertex(KaitaiStream _io, Quake2Md2.Frame _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Vertex(KaitaiStream _io, Quake2Md2.Frame _parent, Quake2Md2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.position = new CompressedVec(this._io, this, _root);
+            this.normalIndex = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+            this.position._fetchInstances();
+        }
+        private List<Double> normal;
+        public List<Double> normal() {
+            if (this.normal != null)
+                return this.normal;
+            this.normal = _root().anormsTable().get(((Number) (normalIndex())).intValue());
+            return this.normal;
+        }
+        private CompressedVec position;
+        private int normalIndex;
+        private Quake2Md2 _root;
+        private Quake2Md2.Frame _parent;
+        public CompressedVec position() { return position; }
+        public int normalIndex() { return normalIndex; }
+        public Quake2Md2 _root() { return _root; }
+        public Quake2Md2.Frame _parent() { return _parent; }
+    }
+    private List<String> animNames;
+    public List<String> animNames() {
+        if (this.animNames != null)
+            return this.animNames;
+        this.animNames = new ArrayList<String>(Arrays.asList("stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"));
+        return this.animNames;
     }
     private byte[] animNumFrames;
     public byte[] animNumFrames() {
@@ -542,20 +621,65 @@ public class Quake2Md2 extends KaitaiStruct {
         this.animNumFrames = new byte[] { 40, 6, 8, 4, 4, 4, 6, 12, 11, 17, 11, 12, 19, 6, 9, 4, 5, 6, 6, 8 };
         return this.animNumFrames;
     }
-    private ArrayList<ArrayList<Double>> anormsTable;
+    private byte[] animStartIndices;
+    public byte[] animStartIndices() {
+        if (this.animStartIndices != null)
+            return this.animStartIndices;
+        this.animStartIndices = new byte[] { 0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, -121, -102, -96, -87, -83, -78, -72, -66 };
+        return this.animStartIndices;
+    }
+    private List<List<Double>> anormsTable;
 
     /**
      * @see <a href="https://github.com/skullernet/q2pro/blob/f4faabd/src/common/math.c#L80
      * from">Quake anorms.h</a>
      */
-    public ArrayList<ArrayList<Double>> anormsTable() {
+    public List<List<Double>> anormsTable() {
         if (this.anormsTable != null)
             return this.anormsTable;
-        this.anormsTable = new ArrayList<ArrayList<Double>>(Arrays.asList(new ArrayList<Double>(Arrays.asList(-0.525731, 0.000000, 0.850651)), new ArrayList<Double>(Arrays.asList(-0.442863, 0.238856, 0.864188)), new ArrayList<Double>(Arrays.asList(-0.295242, 0.000000, 0.955423)), new ArrayList<Double>(Arrays.asList(-0.309017, 0.500000, 0.809017)), new ArrayList<Double>(Arrays.asList(-0.162460, 0.262866, 0.951056)), new ArrayList<Double>(Arrays.asList(0.000000, 0.000000, 1.000000)), new ArrayList<Double>(Arrays.asList(0.000000, 0.850651, 0.525731)), new ArrayList<Double>(Arrays.asList(-0.147621, 0.716567, 0.681718)), new ArrayList<Double>(Arrays.asList(0.147621, 0.716567, 0.681718)), new ArrayList<Double>(Arrays.asList(0.000000, 0.525731, 0.850651)), new ArrayList<Double>(Arrays.asList(0.309017, 0.500000, 0.809017)), new ArrayList<Double>(Arrays.asList(0.525731, 0.000000, 0.850651)), new ArrayList<Double>(Arrays.asList(0.295242, 0.000000, 0.955423)), new ArrayList<Double>(Arrays.asList(0.442863, 0.238856, 0.864188)), new ArrayList<Double>(Arrays.asList(0.162460, 0.262866, 0.951056)), new ArrayList<Double>(Arrays.asList(-0.681718, 0.147621, 0.716567)), new ArrayList<Double>(Arrays.asList(-0.809017, 0.309017, 0.500000)), new ArrayList<Double>(Arrays.asList(-0.587785, 0.425325, 0.688191)), new ArrayList<Double>(Arrays.asList(-0.850651, 0.525731, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.864188, 0.442863, 0.238856)), new ArrayList<Double>(Arrays.asList(-0.716567, 0.681718, 0.147621)), new ArrayList<Double>(Arrays.asList(-0.688191, 0.587785, 0.425325)), new ArrayList<Double>(Arrays.asList(-0.500000, 0.809017, 0.309017)), new ArrayList<Double>(Arrays.asList(-0.238856, 0.864188, 0.442863)), new ArrayList<Double>(Arrays.asList(-0.425325, 0.688191, 0.587785)), new ArrayList<Double>(Arrays.asList(-0.716567, 0.681718, -0.147621)), new ArrayList<Double>(Arrays.asList(-0.500000, 0.809017, -0.309017)), new ArrayList<Double>(Arrays.asList(-0.525731, 0.850651, 0.000000)), new ArrayList<Double>(Arrays.asList(0.000000, 0.850651, -0.525731)), new ArrayList<Double>(Arrays.asList(-0.238856, 0.864188, -0.442863)), new ArrayList<Double>(Arrays.asList(0.000000, 0.955423, -0.295242)), new ArrayList<Double>(Arrays.asList(-0.262866, 0.951056, -0.162460)), new ArrayList<Double>(Arrays.asList(0.000000, 1.000000, 0.000000)), new ArrayList<Double>(Arrays.asList(0.000000, 0.955423, 0.295242)), new ArrayList<Double>(Arrays.asList(-0.262866, 0.951056, 0.162460)), new ArrayList<Double>(Arrays.asList(0.238856, 0.864188, 0.442863)), new ArrayList<Double>(Arrays.asList(0.262866, 0.951056, 0.162460)), new ArrayList<Double>(Arrays.asList(0.500000, 0.809017, 0.309017)), new ArrayList<Double>(Arrays.asList(0.238856, 0.864188, -0.442863)), new ArrayList<Double>(Arrays.asList(0.262866, 0.951056, -0.162460)), new ArrayList<Double>(Arrays.asList(0.500000, 0.809017, -0.309017)), new ArrayList<Double>(Arrays.asList(0.850651, 0.525731, 0.000000)), new ArrayList<Double>(Arrays.asList(0.716567, 0.681718, 0.147621)), new ArrayList<Double>(Arrays.asList(0.716567, 0.681718, -0.147621)), new ArrayList<Double>(Arrays.asList(0.525731, 0.850651, 0.000000)), new ArrayList<Double>(Arrays.asList(0.425325, 0.688191, 0.587785)), new ArrayList<Double>(Arrays.asList(0.864188, 0.442863, 0.238856)), new ArrayList<Double>(Arrays.asList(0.688191, 0.587785, 0.425325)), new ArrayList<Double>(Arrays.asList(0.809017, 0.309017, 0.500000)), new ArrayList<Double>(Arrays.asList(0.681718, 0.147621, 0.716567)), new ArrayList<Double>(Arrays.asList(0.587785, 0.425325, 0.688191)), new ArrayList<Double>(Arrays.asList(0.955423, 0.295242, 0.000000)), new ArrayList<Double>(Arrays.asList(1.000000, 0.000000, 0.000000)), new ArrayList<Double>(Arrays.asList(0.951056, 0.162460, 0.262866)), new ArrayList<Double>(Arrays.asList(0.850651, -0.525731, 0.000000)), new ArrayList<Double>(Arrays.asList(0.955423, -0.295242, 0.000000)), new ArrayList<Double>(Arrays.asList(0.864188, -0.442863, 0.238856)), new ArrayList<Double>(Arrays.asList(0.951056, -0.162460, 0.262866)), new ArrayList<Double>(Arrays.asList(0.809017, -0.309017, 0.500000)), new ArrayList<Double>(Arrays.asList(0.681718, -0.147621, 0.716567)), new ArrayList<Double>(Arrays.asList(0.850651, 0.000000, 0.525731)), new ArrayList<Double>(Arrays.asList(0.864188, 0.442863, -0.238856)), new ArrayList<Double>(Arrays.asList(0.809017, 0.309017, -0.500000)), new ArrayList<Double>(Arrays.asList(0.951056, 0.162460, -0.262866)), new ArrayList<Double>(Arrays.asList(0.525731, 0.000000, -0.850651)), new ArrayList<Double>(Arrays.asList(0.681718, 0.147621, -0.716567)), new ArrayList<Double>(Arrays.asList(0.681718, -0.147621, -0.716567)), new ArrayList<Double>(Arrays.asList(0.850651, 0.000000, -0.525731)), new ArrayList<Double>(Arrays.asList(0.809017, -0.309017, -0.500000)), new ArrayList<Double>(Arrays.asList(0.864188, -0.442863, -0.238856)), new ArrayList<Double>(Arrays.asList(0.951056, -0.162460, -0.262866)), new ArrayList<Double>(Arrays.asList(0.147621, 0.716567, -0.681718)), new ArrayList<Double>(Arrays.asList(0.309017, 0.500000, -0.809017)), new ArrayList<Double>(Arrays.asList(0.425325, 0.688191, -0.587785)), new ArrayList<Double>(Arrays.asList(0.442863, 0.238856, -0.864188)), new ArrayList<Double>(Arrays.asList(0.587785, 0.425325, -0.688191)), new ArrayList<Double>(Arrays.asList(0.688191, 0.587785, -0.425325)), new ArrayList<Double>(Arrays.asList(-0.147621, 0.716567, -0.681718)), new ArrayList<Double>(Arrays.asList(-0.309017, 0.500000, -0.809017)), new ArrayList<Double>(Arrays.asList(0.000000, 0.525731, -0.850651)), new ArrayList<Double>(Arrays.asList(-0.525731, 0.000000, -0.850651)), new ArrayList<Double>(Arrays.asList(-0.442863, 0.238856, -0.864188)), new ArrayList<Double>(Arrays.asList(-0.295242, 0.000000, -0.955423)), new ArrayList<Double>(Arrays.asList(-0.162460, 0.262866, -0.951056)), new ArrayList<Double>(Arrays.asList(0.000000, 0.000000, -1.000000)), new ArrayList<Double>(Arrays.asList(0.295242, 0.000000, -0.955423)), new ArrayList<Double>(Arrays.asList(0.162460, 0.262866, -0.951056)), new ArrayList<Double>(Arrays.asList(-0.442863, -0.238856, -0.864188)), new ArrayList<Double>(Arrays.asList(-0.309017, -0.500000, -0.809017)), new ArrayList<Double>(Arrays.asList(-0.162460, -0.262866, -0.951056)), new ArrayList<Double>(Arrays.asList(0.000000, -0.850651, -0.525731)), new ArrayList<Double>(Arrays.asList(-0.147621, -0.716567, -0.681718)), new ArrayList<Double>(Arrays.asList(0.147621, -0.716567, -0.681718)), new ArrayList<Double>(Arrays.asList(0.000000, -0.525731, -0.850651)), new ArrayList<Double>(Arrays.asList(0.309017, -0.500000, -0.809017)), new ArrayList<Double>(Arrays.asList(0.442863, -0.238856, -0.864188)), new ArrayList<Double>(Arrays.asList(0.162460, -0.262866, -0.951056)), new ArrayList<Double>(Arrays.asList(0.238856, -0.864188, -0.442863)), new ArrayList<Double>(Arrays.asList(0.500000, -0.809017, -0.309017)), new ArrayList<Double>(Arrays.asList(0.425325, -0.688191, -0.587785)), new ArrayList<Double>(Arrays.asList(0.716567, -0.681718, -0.147621)), new ArrayList<Double>(Arrays.asList(0.688191, -0.587785, -0.425325)), new ArrayList<Double>(Arrays.asList(0.587785, -0.425325, -0.688191)), new ArrayList<Double>(Arrays.asList(0.000000, -0.955423, -0.295242)), new ArrayList<Double>(Arrays.asList(0.000000, -1.000000, 0.000000)), new ArrayList<Double>(Arrays.asList(0.262866, -0.951056, -0.162460)), new ArrayList<Double>(Arrays.asList(0.000000, -0.850651, 0.525731)), new ArrayList<Double>(Arrays.asList(0.000000, -0.955423, 0.295242)), new ArrayList<Double>(Arrays.asList(0.238856, -0.864188, 0.442863)), new ArrayList<Double>(Arrays.asList(0.262866, -0.951056, 0.162460)), new ArrayList<Double>(Arrays.asList(0.500000, -0.809017, 0.309017)), new ArrayList<Double>(Arrays.asList(0.716567, -0.681718, 0.147621)), new ArrayList<Double>(Arrays.asList(0.525731, -0.850651, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.238856, -0.864188, -0.442863)), new ArrayList<Double>(Arrays.asList(-0.500000, -0.809017, -0.309017)), new ArrayList<Double>(Arrays.asList(-0.262866, -0.951056, -0.162460)), new ArrayList<Double>(Arrays.asList(-0.850651, -0.525731, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.716567, -0.681718, -0.147621)), new ArrayList<Double>(Arrays.asList(-0.716567, -0.681718, 0.147621)), new ArrayList<Double>(Arrays.asList(-0.525731, -0.850651, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.500000, -0.809017, 0.309017)), new ArrayList<Double>(Arrays.asList(-0.238856, -0.864188, 0.442863)), new ArrayList<Double>(Arrays.asList(-0.262866, -0.951056, 0.162460)), new ArrayList<Double>(Arrays.asList(-0.864188, -0.442863, 0.238856)), new ArrayList<Double>(Arrays.asList(-0.809017, -0.309017, 0.500000)), new ArrayList<Double>(Arrays.asList(-0.688191, -0.587785, 0.425325)), new ArrayList<Double>(Arrays.asList(-0.681718, -0.147621, 0.716567)), new ArrayList<Double>(Arrays.asList(-0.442863, -0.238856, 0.864188)), new ArrayList<Double>(Arrays.asList(-0.587785, -0.425325, 0.688191)), new ArrayList<Double>(Arrays.asList(-0.309017, -0.500000, 0.809017)), new ArrayList<Double>(Arrays.asList(-0.147621, -0.716567, 0.681718)), new ArrayList<Double>(Arrays.asList(-0.425325, -0.688191, 0.587785)), new ArrayList<Double>(Arrays.asList(-0.162460, -0.262866, 0.951056)), new ArrayList<Double>(Arrays.asList(0.442863, -0.238856, 0.864188)), new ArrayList<Double>(Arrays.asList(0.162460, -0.262866, 0.951056)), new ArrayList<Double>(Arrays.asList(0.309017, -0.500000, 0.809017)), new ArrayList<Double>(Arrays.asList(0.147621, -0.716567, 0.681718)), new ArrayList<Double>(Arrays.asList(0.000000, -0.525731, 0.850651)), new ArrayList<Double>(Arrays.asList(0.425325, -0.688191, 0.587785)), new ArrayList<Double>(Arrays.asList(0.587785, -0.425325, 0.688191)), new ArrayList<Double>(Arrays.asList(0.688191, -0.587785, 0.425325)), new ArrayList<Double>(Arrays.asList(-0.955423, 0.295242, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.951056, 0.162460, 0.262866)), new ArrayList<Double>(Arrays.asList(-1.000000, 0.000000, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.850651, 0.000000, 0.525731)), new ArrayList<Double>(Arrays.asList(-0.955423, -0.295242, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.951056, -0.162460, 0.262866)), new ArrayList<Double>(Arrays.asList(-0.864188, 0.442863, -0.238856)), new ArrayList<Double>(Arrays.asList(-0.951056, 0.162460, -0.262866)), new ArrayList<Double>(Arrays.asList(-0.809017, 0.309017, -0.500000)), new ArrayList<Double>(Arrays.asList(-0.864188, -0.442863, -0.238856)), new ArrayList<Double>(Arrays.asList(-0.951056, -0.162460, -0.262866)), new ArrayList<Double>(Arrays.asList(-0.809017, -0.309017, -0.500000)), new ArrayList<Double>(Arrays.asList(-0.681718, 0.147621, -0.716567)), new ArrayList<Double>(Arrays.asList(-0.681718, -0.147621, -0.716567)), new ArrayList<Double>(Arrays.asList(-0.850651, 0.000000, -0.525731)), new ArrayList<Double>(Arrays.asList(-0.688191, 0.587785, -0.425325)), new ArrayList<Double>(Arrays.asList(-0.587785, 0.425325, -0.688191)), new ArrayList<Double>(Arrays.asList(-0.425325, 0.688191, -0.587785)), new ArrayList<Double>(Arrays.asList(-0.425325, -0.688191, -0.587785)), new ArrayList<Double>(Arrays.asList(-0.587785, -0.425325, -0.688191)), new ArrayList<Double>(Arrays.asList(-0.688191, -0.587785, -0.425325))));
+        this.anormsTable = new ArrayList<List<Double>>(Arrays.asList(new ArrayList<Double>(Arrays.asList(-0.525731, 0.000000, 0.850651)), new ArrayList<Double>(Arrays.asList(-0.442863, 0.238856, 0.864188)), new ArrayList<Double>(Arrays.asList(-0.295242, 0.000000, 0.955423)), new ArrayList<Double>(Arrays.asList(-0.309017, 0.500000, 0.809017)), new ArrayList<Double>(Arrays.asList(-0.162460, 0.262866, 0.951056)), new ArrayList<Double>(Arrays.asList(0.000000, 0.000000, 1.000000)), new ArrayList<Double>(Arrays.asList(0.000000, 0.850651, 0.525731)), new ArrayList<Double>(Arrays.asList(-0.147621, 0.716567, 0.681718)), new ArrayList<Double>(Arrays.asList(0.147621, 0.716567, 0.681718)), new ArrayList<Double>(Arrays.asList(0.000000, 0.525731, 0.850651)), new ArrayList<Double>(Arrays.asList(0.309017, 0.500000, 0.809017)), new ArrayList<Double>(Arrays.asList(0.525731, 0.000000, 0.850651)), new ArrayList<Double>(Arrays.asList(0.295242, 0.000000, 0.955423)), new ArrayList<Double>(Arrays.asList(0.442863, 0.238856, 0.864188)), new ArrayList<Double>(Arrays.asList(0.162460, 0.262866, 0.951056)), new ArrayList<Double>(Arrays.asList(-0.681718, 0.147621, 0.716567)), new ArrayList<Double>(Arrays.asList(-0.809017, 0.309017, 0.500000)), new ArrayList<Double>(Arrays.asList(-0.587785, 0.425325, 0.688191)), new ArrayList<Double>(Arrays.asList(-0.850651, 0.525731, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.864188, 0.442863, 0.238856)), new ArrayList<Double>(Arrays.asList(-0.716567, 0.681718, 0.147621)), new ArrayList<Double>(Arrays.asList(-0.688191, 0.587785, 0.425325)), new ArrayList<Double>(Arrays.asList(-0.500000, 0.809017, 0.309017)), new ArrayList<Double>(Arrays.asList(-0.238856, 0.864188, 0.442863)), new ArrayList<Double>(Arrays.asList(-0.425325, 0.688191, 0.587785)), new ArrayList<Double>(Arrays.asList(-0.716567, 0.681718, -0.147621)), new ArrayList<Double>(Arrays.asList(-0.500000, 0.809017, -0.309017)), new ArrayList<Double>(Arrays.asList(-0.525731, 0.850651, 0.000000)), new ArrayList<Double>(Arrays.asList(0.000000, 0.850651, -0.525731)), new ArrayList<Double>(Arrays.asList(-0.238856, 0.864188, -0.442863)), new ArrayList<Double>(Arrays.asList(0.000000, 0.955423, -0.295242)), new ArrayList<Double>(Arrays.asList(-0.262866, 0.951056, -0.162460)), new ArrayList<Double>(Arrays.asList(0.000000, 1.000000, 0.000000)), new ArrayList<Double>(Arrays.asList(0.000000, 0.955423, 0.295242)), new ArrayList<Double>(Arrays.asList(-0.262866, 0.951056, 0.162460)), new ArrayList<Double>(Arrays.asList(0.238856, 0.864188, 0.442863)), new ArrayList<Double>(Arrays.asList(0.262866, 0.951056, 0.162460)), new ArrayList<Double>(Arrays.asList(0.500000, 0.809017, 0.309017)), new ArrayList<Double>(Arrays.asList(0.238856, 0.864188, -0.442863)), new ArrayList<Double>(Arrays.asList(0.262866, 0.951056, -0.162460)), new ArrayList<Double>(Arrays.asList(0.500000, 0.809017, -0.309017)), new ArrayList<Double>(Arrays.asList(0.850651, 0.525731, 0.000000)), new ArrayList<Double>(Arrays.asList(0.716567, 0.681718, 0.147621)), new ArrayList<Double>(Arrays.asList(0.716567, 0.681718, -0.147621)), new ArrayList<Double>(Arrays.asList(0.525731, 0.850651, 0.000000)), new ArrayList<Double>(Arrays.asList(0.425325, 0.688191, 0.587785)), new ArrayList<Double>(Arrays.asList(0.864188, 0.442863, 0.238856)), new ArrayList<Double>(Arrays.asList(0.688191, 0.587785, 0.425325)), new ArrayList<Double>(Arrays.asList(0.809017, 0.309017, 0.500000)), new ArrayList<Double>(Arrays.asList(0.681718, 0.147621, 0.716567)), new ArrayList<Double>(Arrays.asList(0.587785, 0.425325, 0.688191)), new ArrayList<Double>(Arrays.asList(0.955423, 0.295242, 0.000000)), new ArrayList<Double>(Arrays.asList(1.000000, 0.000000, 0.000000)), new ArrayList<Double>(Arrays.asList(0.951056, 0.162460, 0.262866)), new ArrayList<Double>(Arrays.asList(0.850651, -0.525731, 0.000000)), new ArrayList<Double>(Arrays.asList(0.955423, -0.295242, 0.000000)), new ArrayList<Double>(Arrays.asList(0.864188, -0.442863, 0.238856)), new ArrayList<Double>(Arrays.asList(0.951056, -0.162460, 0.262866)), new ArrayList<Double>(Arrays.asList(0.809017, -0.309017, 0.500000)), new ArrayList<Double>(Arrays.asList(0.681718, -0.147621, 0.716567)), new ArrayList<Double>(Arrays.asList(0.850651, 0.000000, 0.525731)), new ArrayList<Double>(Arrays.asList(0.864188, 0.442863, -0.238856)), new ArrayList<Double>(Arrays.asList(0.809017, 0.309017, -0.500000)), new ArrayList<Double>(Arrays.asList(0.951056, 0.162460, -0.262866)), new ArrayList<Double>(Arrays.asList(0.525731, 0.000000, -0.850651)), new ArrayList<Double>(Arrays.asList(0.681718, 0.147621, -0.716567)), new ArrayList<Double>(Arrays.asList(0.681718, -0.147621, -0.716567)), new ArrayList<Double>(Arrays.asList(0.850651, 0.000000, -0.525731)), new ArrayList<Double>(Arrays.asList(0.809017, -0.309017, -0.500000)), new ArrayList<Double>(Arrays.asList(0.864188, -0.442863, -0.238856)), new ArrayList<Double>(Arrays.asList(0.951056, -0.162460, -0.262866)), new ArrayList<Double>(Arrays.asList(0.147621, 0.716567, -0.681718)), new ArrayList<Double>(Arrays.asList(0.309017, 0.500000, -0.809017)), new ArrayList<Double>(Arrays.asList(0.425325, 0.688191, -0.587785)), new ArrayList<Double>(Arrays.asList(0.442863, 0.238856, -0.864188)), new ArrayList<Double>(Arrays.asList(0.587785, 0.425325, -0.688191)), new ArrayList<Double>(Arrays.asList(0.688191, 0.587785, -0.425325)), new ArrayList<Double>(Arrays.asList(-0.147621, 0.716567, -0.681718)), new ArrayList<Double>(Arrays.asList(-0.309017, 0.500000, -0.809017)), new ArrayList<Double>(Arrays.asList(0.000000, 0.525731, -0.850651)), new ArrayList<Double>(Arrays.asList(-0.525731, 0.000000, -0.850651)), new ArrayList<Double>(Arrays.asList(-0.442863, 0.238856, -0.864188)), new ArrayList<Double>(Arrays.asList(-0.295242, 0.000000, -0.955423)), new ArrayList<Double>(Arrays.asList(-0.162460, 0.262866, -0.951056)), new ArrayList<Double>(Arrays.asList(0.000000, 0.000000, -1.000000)), new ArrayList<Double>(Arrays.asList(0.295242, 0.000000, -0.955423)), new ArrayList<Double>(Arrays.asList(0.162460, 0.262866, -0.951056)), new ArrayList<Double>(Arrays.asList(-0.442863, -0.238856, -0.864188)), new ArrayList<Double>(Arrays.asList(-0.309017, -0.500000, -0.809017)), new ArrayList<Double>(Arrays.asList(-0.162460, -0.262866, -0.951056)), new ArrayList<Double>(Arrays.asList(0.000000, -0.850651, -0.525731)), new ArrayList<Double>(Arrays.asList(-0.147621, -0.716567, -0.681718)), new ArrayList<Double>(Arrays.asList(0.147621, -0.716567, -0.681718)), new ArrayList<Double>(Arrays.asList(0.000000, -0.525731, -0.850651)), new ArrayList<Double>(Arrays.asList(0.309017, -0.500000, -0.809017)), new ArrayList<Double>(Arrays.asList(0.442863, -0.238856, -0.864188)), new ArrayList<Double>(Arrays.asList(0.162460, -0.262866, -0.951056)), new ArrayList<Double>(Arrays.asList(0.238856, -0.864188, -0.442863)), new ArrayList<Double>(Arrays.asList(0.500000, -0.809017, -0.309017)), new ArrayList<Double>(Arrays.asList(0.425325, -0.688191, -0.587785)), new ArrayList<Double>(Arrays.asList(0.716567, -0.681718, -0.147621)), new ArrayList<Double>(Arrays.asList(0.688191, -0.587785, -0.425325)), new ArrayList<Double>(Arrays.asList(0.587785, -0.425325, -0.688191)), new ArrayList<Double>(Arrays.asList(0.000000, -0.955423, -0.295242)), new ArrayList<Double>(Arrays.asList(0.000000, -1.000000, 0.000000)), new ArrayList<Double>(Arrays.asList(0.262866, -0.951056, -0.162460)), new ArrayList<Double>(Arrays.asList(0.000000, -0.850651, 0.525731)), new ArrayList<Double>(Arrays.asList(0.000000, -0.955423, 0.295242)), new ArrayList<Double>(Arrays.asList(0.238856, -0.864188, 0.442863)), new ArrayList<Double>(Arrays.asList(0.262866, -0.951056, 0.162460)), new ArrayList<Double>(Arrays.asList(0.500000, -0.809017, 0.309017)), new ArrayList<Double>(Arrays.asList(0.716567, -0.681718, 0.147621)), new ArrayList<Double>(Arrays.asList(0.525731, -0.850651, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.238856, -0.864188, -0.442863)), new ArrayList<Double>(Arrays.asList(-0.500000, -0.809017, -0.309017)), new ArrayList<Double>(Arrays.asList(-0.262866, -0.951056, -0.162460)), new ArrayList<Double>(Arrays.asList(-0.850651, -0.525731, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.716567, -0.681718, -0.147621)), new ArrayList<Double>(Arrays.asList(-0.716567, -0.681718, 0.147621)), new ArrayList<Double>(Arrays.asList(-0.525731, -0.850651, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.500000, -0.809017, 0.309017)), new ArrayList<Double>(Arrays.asList(-0.238856, -0.864188, 0.442863)), new ArrayList<Double>(Arrays.asList(-0.262866, -0.951056, 0.162460)), new ArrayList<Double>(Arrays.asList(-0.864188, -0.442863, 0.238856)), new ArrayList<Double>(Arrays.asList(-0.809017, -0.309017, 0.500000)), new ArrayList<Double>(Arrays.asList(-0.688191, -0.587785, 0.425325)), new ArrayList<Double>(Arrays.asList(-0.681718, -0.147621, 0.716567)), new ArrayList<Double>(Arrays.asList(-0.442863, -0.238856, 0.864188)), new ArrayList<Double>(Arrays.asList(-0.587785, -0.425325, 0.688191)), new ArrayList<Double>(Arrays.asList(-0.309017, -0.500000, 0.809017)), new ArrayList<Double>(Arrays.asList(-0.147621, -0.716567, 0.681718)), new ArrayList<Double>(Arrays.asList(-0.425325, -0.688191, 0.587785)), new ArrayList<Double>(Arrays.asList(-0.162460, -0.262866, 0.951056)), new ArrayList<Double>(Arrays.asList(0.442863, -0.238856, 0.864188)), new ArrayList<Double>(Arrays.asList(0.162460, -0.262866, 0.951056)), new ArrayList<Double>(Arrays.asList(0.309017, -0.500000, 0.809017)), new ArrayList<Double>(Arrays.asList(0.147621, -0.716567, 0.681718)), new ArrayList<Double>(Arrays.asList(0.000000, -0.525731, 0.850651)), new ArrayList<Double>(Arrays.asList(0.425325, -0.688191, 0.587785)), new ArrayList<Double>(Arrays.asList(0.587785, -0.425325, 0.688191)), new ArrayList<Double>(Arrays.asList(0.688191, -0.587785, 0.425325)), new ArrayList<Double>(Arrays.asList(-0.955423, 0.295242, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.951056, 0.162460, 0.262866)), new ArrayList<Double>(Arrays.asList(-1.000000, 0.000000, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.850651, 0.000000, 0.525731)), new ArrayList<Double>(Arrays.asList(-0.955423, -0.295242, 0.000000)), new ArrayList<Double>(Arrays.asList(-0.951056, -0.162460, 0.262866)), new ArrayList<Double>(Arrays.asList(-0.864188, 0.442863, -0.238856)), new ArrayList<Double>(Arrays.asList(-0.951056, 0.162460, -0.262866)), new ArrayList<Double>(Arrays.asList(-0.809017, 0.309017, -0.500000)), new ArrayList<Double>(Arrays.asList(-0.864188, -0.442863, -0.238856)), new ArrayList<Double>(Arrays.asList(-0.951056, -0.162460, -0.262866)), new ArrayList<Double>(Arrays.asList(-0.809017, -0.309017, -0.500000)), new ArrayList<Double>(Arrays.asList(-0.681718, 0.147621, -0.716567)), new ArrayList<Double>(Arrays.asList(-0.681718, -0.147621, -0.716567)), new ArrayList<Double>(Arrays.asList(-0.850651, 0.000000, -0.525731)), new ArrayList<Double>(Arrays.asList(-0.688191, 0.587785, -0.425325)), new ArrayList<Double>(Arrays.asList(-0.587785, 0.425325, -0.688191)), new ArrayList<Double>(Arrays.asList(-0.425325, 0.688191, -0.587785)), new ArrayList<Double>(Arrays.asList(-0.425325, -0.688191, -0.587785)), new ArrayList<Double>(Arrays.asList(-0.587785, -0.425325, -0.688191)), new ArrayList<Double>(Arrays.asList(-0.688191, -0.587785, -0.425325))));
         return this.anormsTable;
     }
-    private ArrayList<TexPoint> texCoords;
-    public ArrayList<TexPoint> texCoords() {
+    private List<Frame> frames;
+    public List<Frame> frames() {
+        if (this.frames != null)
+            return this.frames;
+        long _pos = this._io.pos();
+        this._io.seek(ofsFrames());
+        this.frames = new ArrayList<Frame>();
+        for (int i = 0; i < numFrames(); i++) {
+            KaitaiStream _io_frames = this._io.substream(bytesPerFrame());
+            this.frames.add(new Frame(_io_frames, this, _root));
+        }
+        this._io.seek(_pos);
+        return this.frames;
+    }
+    private GlCmdsList glCmds;
+    public GlCmdsList glCmds() {
+        if (this.glCmds != null)
+            return this.glCmds;
+        long _pos = this._io.pos();
+        this._io.seek(ofsGlCmds());
+        KaitaiStream _io_glCmds = this._io.substream(4 * numGlCmds());
+        this.glCmds = new GlCmdsList(_io_glCmds, this, _root);
+        this._io.seek(_pos);
+        return this.glCmds;
+    }
+    private List<String> skins;
+    public List<String> skins() {
+        if (this.skins != null)
+            return this.skins;
+        long _pos = this._io.pos();
+        this._io.seek(ofsSkins());
+        this.skins = new ArrayList<String>();
+        for (int i = 0; i < numSkins(); i++) {
+            this.skins.add(new String(KaitaiStream.bytesTerminate(this._io.readBytes(64), (byte) 0, false), StandardCharsets.US_ASCII));
+        }
+        this._io.seek(_pos);
+        return this.skins;
+    }
+    private List<TexPoint> texCoords;
+    public List<TexPoint> texCoords() {
         if (this.texCoords != null)
             return this.texCoords;
         long _pos = this._io.pos();
@@ -567,8 +691,8 @@ public class Quake2Md2 extends KaitaiStruct {
         this._io.seek(_pos);
         return this.texCoords;
     }
-    private ArrayList<Triangle> triangles;
-    public ArrayList<Triangle> triangles() {
+    private List<Triangle> triangles;
+    public List<Triangle> triangles() {
         if (this.triangles != null)
             return this.triangles;
         long _pos = this._io.pos();
@@ -579,61 +703,6 @@ public class Quake2Md2 extends KaitaiStruct {
         }
         this._io.seek(_pos);
         return this.triangles;
-    }
-    private ArrayList<Frame> frames;
-    public ArrayList<Frame> frames() {
-        if (this.frames != null)
-            return this.frames;
-        long _pos = this._io.pos();
-        this._io.seek(ofsFrames());
-        this._raw_frames = new ArrayList<byte[]>();
-        this.frames = new ArrayList<Frame>();
-        for (int i = 0; i < numFrames(); i++) {
-            this._raw_frames.add(this._io.readBytes(bytesPerFrame()));
-            KaitaiStream _io__raw_frames = new ByteBufferKaitaiStream(_raw_frames.get(_raw_frames.size() - 1));
-            this.frames.add(new Frame(_io__raw_frames, this, _root));
-        }
-        this._io.seek(_pos);
-        return this.frames;
-    }
-    private ArrayList<String> animNames;
-    public ArrayList<String> animNames() {
-        if (this.animNames != null)
-            return this.animNames;
-        this.animNames = new ArrayList<String>(Arrays.asList("stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"));
-        return this.animNames;
-    }
-    private GlCmdsList glCmds;
-    public GlCmdsList glCmds() {
-        if (this.glCmds != null)
-            return this.glCmds;
-        long _pos = this._io.pos();
-        this._io.seek(ofsGlCmds());
-        this._raw_glCmds = this._io.readBytes((4 * numGlCmds()));
-        KaitaiStream _io__raw_glCmds = new ByteBufferKaitaiStream(_raw_glCmds);
-        this.glCmds = new GlCmdsList(_io__raw_glCmds, this, _root);
-        this._io.seek(_pos);
-        return this.glCmds;
-    }
-    private ArrayList<String> skins;
-    public ArrayList<String> skins() {
-        if (this.skins != null)
-            return this.skins;
-        long _pos = this._io.pos();
-        this._io.seek(ofsSkins());
-        this.skins = new ArrayList<String>();
-        for (int i = 0; i < numSkins(); i++) {
-            this.skins.add(new String(KaitaiStream.bytesTerminate(this._io.readBytes(64), (byte) 0, false), Charset.forName("ascii")));
-        }
-        this._io.seek(_pos);
-        return this.skins;
-    }
-    private byte[] animStartIndices;
-    public byte[] animStartIndices() {
-        if (this.animStartIndices != null)
-            return this.animStartIndices;
-        this.animStartIndices = new byte[] { 0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, -121, -102, -96, -87, -83, -78, -72, -66 };
-        return this.animStartIndices;
     }
     private byte[] magic;
     private long version;
@@ -654,8 +723,6 @@ public class Quake2Md2 extends KaitaiStruct {
     private long ofsEof;
     private Quake2Md2 _root;
     private KaitaiStruct _parent;
-    private ArrayList<byte[]> _raw_frames;
-    private byte[] _raw_glCmds;
     public byte[] magic() { return magic; }
     public long version() { return version; }
     public long skinWidthPx() { return skinWidthPx; }
@@ -675,6 +742,4 @@ public class Quake2Md2 extends KaitaiStruct {
     public long ofsEof() { return ofsEof; }
     public Quake2Md2 _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public ArrayList<byte[]> _raw_frames() { return _raw_frames; }
-    public byte[] _raw_glCmds() { return _raw_glCmds; }
 }

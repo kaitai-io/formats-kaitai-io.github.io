@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -21,46 +22,136 @@ public class Elf extends KaitaiStruct {
         return new Elf(new ByteBufferKaitaiStream(fileName));
     }
 
-    public enum SymbolVisibility {
-        DEFAULT(0),
-        INTERNAL(1),
-        HIDDEN(2),
-        PROTECTED(3),
-        EXPORTED(4),
-        SINGLETON(5),
-        ELIMINATE(6);
+    public enum Bits {
+        B32(1),
+        B64(2);
 
         private final long id;
-        SymbolVisibility(long id) { this.id = id; }
+        Bits(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, SymbolVisibility> byId = new HashMap<Long, SymbolVisibility>(7);
+        private static final Map<Long, Bits> byId = new HashMap<Long, Bits>(2);
         static {
-            for (SymbolVisibility e : SymbolVisibility.values())
+            for (Bits e : Bits.values())
                 byId.put(e.id(), e);
         }
-        public static SymbolVisibility byId(long id) { return byId.get(id); }
+        public static Bits byId(long id) { return byId.get(id); }
     }
 
-    public enum SymbolBinding {
-        LOCAL(0),
-        GLOBAL_SYMBOL(1),
-        WEAK(2),
-        OS10(10),
-        OS11(11),
-        OS12(12),
-        PROC13(13),
-        PROC14(14),
-        PROC15(15);
+    public enum DynamicArrayTags {
+        NULL(0),
+        NEEDED(1),
+        PLTRELSZ(2),
+        PLTGOT(3),
+        HASH(4),
+        STRTAB(5),
+        SYMTAB(6),
+        RELA(7),
+        RELASZ(8),
+        RELAENT(9),
+        STRSZ(10),
+        SYMENT(11),
+        INIT(12),
+        FINI(13),
+        SONAME(14),
+        RPATH(15),
+        SYMBOLIC(16),
+        REL(17),
+        RELSZ(18),
+        RELENT(19),
+        PLTREL(20),
+        DEBUG(21),
+        TEXTREL(22),
+        JMPREL(23),
+        BIND_NOW(24),
+        INIT_ARRAY(25),
+        FINI_ARRAY(26),
+        INIT_ARRAYSZ(27),
+        FINI_ARRAYSZ(28),
+        RUNPATH(29),
+        FLAGS(30),
+        PREINIT_ARRAY(32),
+        PREINIT_ARRAYSZ(33),
+        SYMTAB_SHNDX(34),
+        RELRSZ(35),
+        RELR(36),
+        RELRENT(37),
+        DEPRECATED_SPARC_REGISTER(117440513),
+        SUNW_AUXILIARY(1610612749),
+        SUNW_RTLDINF(1610612750),
+        SUNW_FILTER(1610612751),
+        SUNW_CAP(1610612752),
+        SUNW_SYMTAB(1610612753),
+        SUNW_SYMSZ(1610612754),
+        SUNW_SORTENT(1610612755),
+        SUNW_SYMSORT(1610612756),
+        SUNW_SYMSORTSZ(1610612757),
+        SUNW_TLSSORT(1610612758),
+        SUNW_TLSSORTSZ(1610612759),
+        SUNW_CAPINFO(1610612760),
+        SUNW_STRPAD(1610612761),
+        SUNW_CAPCHAIN(1610612762),
+        SUNW_LDMACH(1610612763),
+        SUNW_SYMTAB_SHNDX(1610612764),
+        SUNW_CAPCHAINENT(1610612765),
+        SUNW_DEFERRED(1610612766),
+        SUNW_CAPCHAINSZ(1610612767),
+        SUNW_PHNAME(1610612768),
+        SUNW_PARENT(1610612769),
+        SUNW_SX_ASLR(1610612771),
+        SUNW_RELAX(1610612773),
+        SUNW_KMOD(1610612775),
+        SUNW_SX_NXHEAP(1610612777),
+        SUNW_SX_NXSTACK(1610612779),
+        SUNW_SX_ADIHEAP(1610612781),
+        SUNW_SX_ADISTACK(1610612783),
+        SUNW_SX_SSBD(1610612785),
+        SUNW_SYMNSORT(1610612786),
+        SUNW_SYMNSORTSZ(1610612787),
+        GNU_FLAGS_1(1879047668),
+        GNU_PRELINKED(1879047669),
+        GNU_CONFLICTSZ(1879047670),
+        GNU_LIBLISTSZ(1879047671),
+        CHECKSUM(1879047672),
+        PLTPADSZ(1879047673),
+        MOVEENT(1879047674),
+        MOVESZ(1879047675),
+        FEATURE_1(1879047676),
+        POSFLAG_1(1879047677),
+        SYMINSZ(1879047678),
+        SYMINENT(1879047679),
+        GNU_HASH(1879047925),
+        TLSDESC_PLT(1879047926),
+        TLSDESC_GOT(1879047927),
+        GNU_CONFLICT(1879047928),
+        GNU_LIBLIST(1879047929),
+        CONFIG(1879047930),
+        DEPAUDIT(1879047931),
+        AUDIT(1879047932),
+        PLTPAD(1879047933),
+        MOVETAB(1879047934),
+        SYMINFO(1879047935),
+        VERSYM(1879048176),
+        RELACOUNT(1879048185),
+        RELCOUNT(1879048186),
+        FLAGS_1(1879048187),
+        VERDEF(1879048188),
+        VERDEFNUM(1879048189),
+        VERNEED(1879048190),
+        VERNEEDNUM(1879048191),
+        SPARC_REGISTER(1879048193),
+        AUXILIARY(2147483645),
+        USED(2147483646),
+        FILTER(2147483647);
 
         private final long id;
-        SymbolBinding(long id) { this.id = id; }
+        DynamicArrayTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, SymbolBinding> byId = new HashMap<Long, SymbolBinding>(9);
+        private static final Map<Long, DynamicArrayTags> byId = new HashMap<Long, DynamicArrayTags>(104);
         static {
-            for (SymbolBinding e : SymbolBinding.values())
+            for (DynamicArrayTags e : DynamicArrayTags.values())
                 byId.put(e.id(), e);
         }
-        public static SymbolBinding byId(long id) { return byId.get(id); }
+        public static DynamicArrayTags byId(long id) { return byId.get(id); }
     }
 
     public enum Endian {
@@ -76,93 +167,6 @@ public class Elf extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static Endian byId(long id) { return byId.get(id); }
-    }
-
-    public enum ShType {
-        NULL_TYPE(0),
-        PROGBITS(1),
-        SYMTAB(2),
-        STRTAB(3),
-        RELA(4),
-        HASH(5),
-        DYNAMIC(6),
-        NOTE(7),
-        NOBITS(8),
-        REL(9),
-        SHLIB(10),
-        DYNSYM(11),
-        INIT_ARRAY(14),
-        FINI_ARRAY(15),
-        PREINIT_ARRAY(16),
-        GROUP(17),
-        SYMTAB_SHNDX(18),
-        RELR(19),
-        SUNW_SYMNSORT(1879048172),
-        SUNW_PHNAME(1879048173),
-        SUNW_ANCILLARY(1879048174),
-        SUNW_CAPCHAIN(1879048175),
-        SUNW_CAPINFO(1879048176),
-        SUNW_SYMSORT(1879048177),
-        SUNW_TLSSORT(1879048178),
-        SUNW_LDYNSYM(1879048179),
-        SUNW_DOF(1879048180),
-        SUNW_CAP(1879048181),
-        SUNW_SIGNATURE(1879048182),
-        SUNW_ANNOTATE(1879048183),
-        SUNW_DEBUGSTR(1879048184),
-        SUNW_DEBUG(1879048185),
-        SUNW_MOVE(1879048186),
-        SUNW_COMDAT(1879048187),
-        SUNW_SYMINFO(1879048188),
-        SUNW_VERDEF(1879048189),
-        SUNW_VERNEED(1879048190),
-        SUNW_VERSYM(1879048191),
-        SPARC_GOTDATA(1879048192),
-        AMD64_UNWIND(1879048193),
-        ARM_PREEMPTMAP(1879048194),
-        ARM_ATTRIBUTES(1879048195),
-        ARM_DEBUGOVERLAY(1879048196),
-        ARM_OVERLAYSECTION(1879048197);
-
-        private final long id;
-        ShType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(44);
-        static {
-            for (ShType e : ShType.values())
-                byId.put(e.id(), e);
-        }
-        public static ShType byId(long id) { return byId.get(id); }
-    }
-
-    public enum OsAbi {
-        SYSTEM_V(0),
-        HP_UX(1),
-        NETBSD(2),
-        GNU(3),
-        SOLARIS(6),
-        AIX(7),
-        IRIX(8),
-        FREEBSD(9),
-        TRU64(10),
-        MODESTO(11),
-        OPENBSD(12),
-        OPENVMS(13),
-        NSK(14),
-        AROS(15),
-        FENIXOS(16),
-        CLOUDABI(17),
-        OPENVOS(18);
-
-        private final long id;
-        OsAbi(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, OsAbi> byId = new HashMap<Long, OsAbi>(17);
-        static {
-            for (OsAbi e : OsAbi.values())
-                byId.put(e.id(), e);
-        }
-        public static OsAbi byId(long id) { return byId.get(id); }
     }
 
     public enum Machine {
@@ -407,164 +411,52 @@ public class Elf extends KaitaiStruct {
         public static Machine byId(long id) { return byId.get(id); }
     }
 
-    public enum SymbolType {
-        NO_TYPE(0),
-        OBJECT(1),
-        FUNC(2),
-        SECTION(3),
-        FILE(4),
-        COMMON(5),
-        TLS(6),
-        RELC(8),
-        SRELC(9),
-        GNU_IFUNC(10),
-        OS11(11),
-        OS12(12),
-        PROC13(13),
-        PROC14(14),
-        PROC15(15);
+    public enum ObjType {
+        NO_FILE_TYPE(0),
+        RELOCATABLE(1),
+        EXECUTABLE(2),
+        SHARED(3),
+        CORE(4);
 
         private final long id;
-        SymbolType(long id) { this.id = id; }
+        ObjType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, SymbolType> byId = new HashMap<Long, SymbolType>(15);
+        private static final Map<Long, ObjType> byId = new HashMap<Long, ObjType>(5);
         static {
-            for (SymbolType e : SymbolType.values())
+            for (ObjType e : ObjType.values())
                 byId.put(e.id(), e);
         }
-        public static SymbolType byId(long id) { return byId.get(id); }
+        public static ObjType byId(long id) { return byId.get(id); }
     }
 
-    public enum DynamicArrayTags {
-        NULL(0),
-        NEEDED(1),
-        PLTRELSZ(2),
-        PLTGOT(3),
-        HASH(4),
-        STRTAB(5),
-        SYMTAB(6),
-        RELA(7),
-        RELASZ(8),
-        RELAENT(9),
-        STRSZ(10),
-        SYMENT(11),
-        INIT(12),
-        FINI(13),
-        SONAME(14),
-        RPATH(15),
-        SYMBOLIC(16),
-        REL(17),
-        RELSZ(18),
-        RELENT(19),
-        PLTREL(20),
-        DEBUG(21),
-        TEXTREL(22),
-        JMPREL(23),
-        BIND_NOW(24),
-        INIT_ARRAY(25),
-        FINI_ARRAY(26),
-        INIT_ARRAYSZ(27),
-        FINI_ARRAYSZ(28),
-        RUNPATH(29),
-        FLAGS(30),
-        PREINIT_ARRAY(32),
-        PREINIT_ARRAYSZ(33),
-        SYMTAB_SHNDX(34),
-        RELRSZ(35),
-        RELR(36),
-        RELRENT(37),
-        DEPRECATED_SPARC_REGISTER(117440513),
-        SUNW_AUXILIARY(1610612749),
-        SUNW_RTLDINF(1610612750),
-        SUNW_FILTER(1610612751),
-        SUNW_CAP(1610612752),
-        SUNW_SYMTAB(1610612753),
-        SUNW_SYMSZ(1610612754),
-        SUNW_SORTENT(1610612755),
-        SUNW_SYMSORT(1610612756),
-        SUNW_SYMSORTSZ(1610612757),
-        SUNW_TLSSORT(1610612758),
-        SUNW_TLSSORTSZ(1610612759),
-        SUNW_CAPINFO(1610612760),
-        SUNW_STRPAD(1610612761),
-        SUNW_CAPCHAIN(1610612762),
-        SUNW_LDMACH(1610612763),
-        SUNW_SYMTAB_SHNDX(1610612764),
-        SUNW_CAPCHAINENT(1610612765),
-        SUNW_DEFERRED(1610612766),
-        SUNW_CAPCHAINSZ(1610612767),
-        SUNW_PHNAME(1610612768),
-        SUNW_PARENT(1610612769),
-        SUNW_SX_ASLR(1610612771),
-        SUNW_RELAX(1610612773),
-        SUNW_KMOD(1610612775),
-        SUNW_SX_NXHEAP(1610612777),
-        SUNW_SX_NXSTACK(1610612779),
-        SUNW_SX_ADIHEAP(1610612781),
-        SUNW_SX_ADISTACK(1610612783),
-        SUNW_SX_SSBD(1610612785),
-        SUNW_SYMNSORT(1610612786),
-        SUNW_SYMNSORTSZ(1610612787),
-        GNU_FLAGS_1(1879047668),
-        GNU_PRELINKED(1879047669),
-        GNU_CONFLICTSZ(1879047670),
-        GNU_LIBLISTSZ(1879047671),
-        CHECKSUM(1879047672),
-        PLTPADSZ(1879047673),
-        MOVEENT(1879047674),
-        MOVESZ(1879047675),
-        FEATURE_1(1879047676),
-        POSFLAG_1(1879047677),
-        SYMINSZ(1879047678),
-        SYMINENT(1879047679),
-        GNU_HASH(1879047925),
-        TLSDESC_PLT(1879047926),
-        TLSDESC_GOT(1879047927),
-        GNU_CONFLICT(1879047928),
-        GNU_LIBLIST(1879047929),
-        CONFIG(1879047930),
-        DEPAUDIT(1879047931),
-        AUDIT(1879047932),
-        PLTPAD(1879047933),
-        MOVETAB(1879047934),
-        SYMINFO(1879047935),
-        VERSYM(1879048176),
-        RELACOUNT(1879048185),
-        RELCOUNT(1879048186),
-        FLAGS_1(1879048187),
-        VERDEF(1879048188),
-        VERDEFNUM(1879048189),
-        VERNEED(1879048190),
-        VERNEEDNUM(1879048191),
-        SPARC_REGISTER(1879048193),
-        AUXILIARY(2147483645),
-        USED(2147483646),
-        FILTER(2147483647);
+    public enum OsAbi {
+        SYSTEM_V(0),
+        HP_UX(1),
+        NETBSD(2),
+        GNU(3),
+        SOLARIS(6),
+        AIX(7),
+        IRIX(8),
+        FREEBSD(9),
+        TRU64(10),
+        MODESTO(11),
+        OPENBSD(12),
+        OPENVMS(13),
+        NSK(14),
+        AROS(15),
+        FENIXOS(16),
+        CLOUDABI(17),
+        OPENVOS(18);
 
         private final long id;
-        DynamicArrayTags(long id) { this.id = id; }
+        OsAbi(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, DynamicArrayTags> byId = new HashMap<Long, DynamicArrayTags>(104);
+        private static final Map<Long, OsAbi> byId = new HashMap<Long, OsAbi>(17);
         static {
-            for (DynamicArrayTags e : DynamicArrayTags.values())
+            for (OsAbi e : OsAbi.values())
                 byId.put(e.id(), e);
         }
-        public static DynamicArrayTags byId(long id) { return byId.get(id); }
-    }
-
-    public enum Bits {
-        B32(1),
-        B64(2);
-
-        private final long id;
-        Bits(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, Bits> byId = new HashMap<Long, Bits>(2);
-        static {
-            for (Bits e : Bits.values())
-                byId.put(e.id(), e);
-        }
-        public static Bits byId(long id) { return byId.get(id); }
+        public static OsAbi byId(long id) { return byId.get(id); }
     }
 
     public enum PhType {
@@ -594,24 +486,6 @@ public class Elf extends KaitaiStruct {
         public static PhType byId(long id) { return byId.get(id); }
     }
 
-    public enum ObjType {
-        NO_FILE_TYPE(0),
-        RELOCATABLE(1),
-        EXECUTABLE(2),
-        SHARED(3),
-        CORE(4);
-
-        private final long id;
-        ObjType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, ObjType> byId = new HashMap<Long, ObjType>(5);
-        static {
-            for (ObjType e : ObjType.values())
-                byId.put(e.id(), e);
-        }
-        public static ObjType byId(long id) { return byId.get(id); }
-    }
-
     public enum SectionHeaderIdxSpecial {
         UNDEFINED(0),
         BEFORE(65280),
@@ -633,6 +507,133 @@ public class Elf extends KaitaiStruct {
         public static SectionHeaderIdxSpecial byId(long id) { return byId.get(id); }
     }
 
+    public enum ShType {
+        NULL_TYPE(0),
+        PROGBITS(1),
+        SYMTAB(2),
+        STRTAB(3),
+        RELA(4),
+        HASH(5),
+        DYNAMIC(6),
+        NOTE(7),
+        NOBITS(8),
+        REL(9),
+        SHLIB(10),
+        DYNSYM(11),
+        INIT_ARRAY(14),
+        FINI_ARRAY(15),
+        PREINIT_ARRAY(16),
+        GROUP(17),
+        SYMTAB_SHNDX(18),
+        RELR(19),
+        SUNW_SYMNSORT(1879048172),
+        SUNW_PHNAME(1879048173),
+        SUNW_ANCILLARY(1879048174),
+        SUNW_CAPCHAIN(1879048175),
+        SUNW_CAPINFO(1879048176),
+        SUNW_SYMSORT(1879048177),
+        SUNW_TLSSORT(1879048178),
+        SUNW_LDYNSYM(1879048179),
+        SUNW_DOF(1879048180),
+        SUNW_CAP(1879048181),
+        SUNW_SIGNATURE(1879048182),
+        SUNW_ANNOTATE(1879048183),
+        SUNW_DEBUGSTR(1879048184),
+        SUNW_DEBUG(1879048185),
+        SUNW_MOVE(1879048186),
+        SUNW_COMDAT(1879048187),
+        SUNW_SYMINFO(1879048188),
+        SUNW_VERDEF(1879048189),
+        SUNW_VERNEED(1879048190),
+        SUNW_VERSYM(1879048191),
+        SPARC_GOTDATA(1879048192),
+        AMD64_UNWIND(1879048193),
+        ARM_PREEMPTMAP(1879048194),
+        ARM_ATTRIBUTES(1879048195),
+        ARM_DEBUGOVERLAY(1879048196),
+        ARM_OVERLAYSECTION(1879048197);
+
+        private final long id;
+        ShType(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(44);
+        static {
+            for (ShType e : ShType.values())
+                byId.put(e.id(), e);
+        }
+        public static ShType byId(long id) { return byId.get(id); }
+    }
+
+    public enum SymbolBinding {
+        LOCAL(0),
+        GLOBAL_SYMBOL(1),
+        WEAK(2),
+        OS10(10),
+        OS11(11),
+        OS12(12),
+        PROC13(13),
+        PROC14(14),
+        PROC15(15);
+
+        private final long id;
+        SymbolBinding(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, SymbolBinding> byId = new HashMap<Long, SymbolBinding>(9);
+        static {
+            for (SymbolBinding e : SymbolBinding.values())
+                byId.put(e.id(), e);
+        }
+        public static SymbolBinding byId(long id) { return byId.get(id); }
+    }
+
+    public enum SymbolType {
+        NO_TYPE(0),
+        OBJECT(1),
+        FUNC(2),
+        SECTION(3),
+        FILE(4),
+        COMMON(5),
+        TLS(6),
+        RELC(8),
+        SRELC(9),
+        GNU_IFUNC(10),
+        OS11(11),
+        OS12(12),
+        PROC13(13),
+        PROC14(14),
+        PROC15(15);
+
+        private final long id;
+        SymbolType(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, SymbolType> byId = new HashMap<Long, SymbolType>(15);
+        static {
+            for (SymbolType e : SymbolType.values())
+                byId.put(e.id(), e);
+        }
+        public static SymbolType byId(long id) { return byId.get(id); }
+    }
+
+    public enum SymbolVisibility {
+        DEFAULT(0),
+        INTERNAL(1),
+        HIDDEN(2),
+        PROTECTED(3),
+        EXPORTED(4),
+        SINGLETON(5),
+        ELIMINATE(6);
+
+        private final long id;
+        SymbolVisibility(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, SymbolVisibility> byId = new HashMap<Long, SymbolVisibility>(7);
+        static {
+            for (SymbolVisibility e : SymbolVisibility.values())
+                byId.put(e.id(), e);
+        }
+        public static SymbolVisibility byId(long id) { return byId.get(id); }
+    }
+
     public Elf(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -649,22 +650,426 @@ public class Elf extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 127, 69, 76, 70 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 127, 69, 76, 70 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 127, 69, 76, 70 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 127, 69, 76, 70 }, this.magic, this._io, "/seq/0");
         }
         this.bits = Bits.byId(this._io.readU1());
         this.endian = Endian.byId(this._io.readU1());
         this.eiVersion = this._io.readU1();
-        if (!(eiVersion() == 1)) {
-            throw new KaitaiStream.ValidationNotEqualError(1, eiVersion(), _io(), "/seq/3");
+        if (!(this.eiVersion == 1)) {
+            throw new KaitaiStream.ValidationNotEqualError(1, this.eiVersion, this._io, "/seq/3");
         }
         this.abi = OsAbi.byId(this._io.readU1());
         this.abiVersion = this._io.readU1();
         this.pad = this._io.readBytes(7);
-        if (!(Arrays.equals(pad(), new byte[] { 0, 0, 0, 0, 0, 0, 0 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0 }, pad(), _io(), "/seq/6");
+        if (!(Arrays.equals(this.pad, new byte[] { 0, 0, 0, 0, 0, 0, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0 }, this.pad, this._io, "/seq/6");
         }
         this.header = new EndianElf(this._io, this, _root);
+    }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+    }
+    public static class DtFlag1Values extends KaitaiStruct {
+
+        public DtFlag1Values(KaitaiStream _io, long value) {
+            this(_io, null, null, value);
+        }
+
+        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, long value) {
+            this(_io, _parent, null, value);
+        }
+
+        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, Elf _root, long value) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.value = value;
+            _read();
+        }
+        private void _read() {
+        }
+
+        public void _fetchInstances() {
+        }
+        private Boolean confalt;
+
+        /**
+         * Configuration alternative created.
+         */
+        public Boolean confalt() {
+            if (this.confalt != null)
+                return this.confalt;
+            this.confalt = (value() & 8192) != 0;
+            return this.confalt;
+        }
+        private Boolean direct;
+
+        /**
+         * Direct binding enabled.
+         */
+        public Boolean direct() {
+            if (this.direct != null)
+                return this.direct;
+            this.direct = (value() & 256) != 0;
+            return this.direct;
+        }
+        private Boolean dispreldne;
+
+        /**
+         * Disp reloc applied at build time.
+         */
+        public Boolean dispreldne() {
+            if (this.dispreldne != null)
+                return this.dispreldne;
+            this.dispreldne = (value() & 32768) != 0;
+            return this.dispreldne;
+        }
+        private Boolean disprelpnd;
+
+        /**
+         * Disp reloc applied at run-time.
+         */
+        public Boolean disprelpnd() {
+            if (this.disprelpnd != null)
+                return this.disprelpnd;
+            this.disprelpnd = (value() & 65536) != 0;
+            return this.disprelpnd;
+        }
+        private Boolean edited;
+
+        /**
+         * Object is modified after built.
+         */
+        public Boolean edited() {
+            if (this.edited != null)
+                return this.edited;
+            this.edited = (value() & 2097152) != 0;
+            return this.edited;
+        }
+        private Boolean endfiltee;
+
+        /**
+         * Filtee terminates filters search.
+         */
+        public Boolean endfiltee() {
+            if (this.endfiltee != null)
+                return this.endfiltee;
+            this.endfiltee = (value() & 16384) != 0;
+            return this.endfiltee;
+        }
+        private Boolean globaudit;
+
+        /**
+         * Global auditing required.
+         */
+        public Boolean globaudit() {
+            if (this.globaudit != null)
+                return this.globaudit;
+            this.globaudit = (value() & 16777216) != 0;
+            return this.globaudit;
+        }
+        private Boolean group;
+
+        /**
+         * Set RTLD_GROUP for this object.
+         */
+        public Boolean group() {
+            if (this.group != null)
+                return this.group;
+            this.group = (value() & 4) != 0;
+            return this.group;
+        }
+        private Boolean ignmuldef;
+        public Boolean ignmuldef() {
+            if (this.ignmuldef != null)
+                return this.ignmuldef;
+            this.ignmuldef = (value() & 262144) != 0;
+            return this.ignmuldef;
+        }
+        private Boolean initfirst;
+
+        /**
+         * Set RTLD_INITFIRST for this object
+         */
+        public Boolean initfirst() {
+            if (this.initfirst != null)
+                return this.initfirst;
+            this.initfirst = (value() & 32) != 0;
+            return this.initfirst;
+        }
+        private Boolean interpose;
+
+        /**
+         * Object is used to interpose.
+         */
+        public Boolean interpose() {
+            if (this.interpose != null)
+                return this.interpose;
+            this.interpose = (value() & 1024) != 0;
+            return this.interpose;
+        }
+        private Boolean loadfltr;
+
+        /**
+         * Trigger filtee loading at runtime.
+         */
+        public Boolean loadfltr() {
+            if (this.loadfltr != null)
+                return this.loadfltr;
+            this.loadfltr = (value() & 16) != 0;
+            return this.loadfltr;
+        }
+        private Boolean nodeflib;
+
+        /**
+         * Ignore default lib search path.
+         */
+        public Boolean nodeflib() {
+            if (this.nodeflib != null)
+                return this.nodeflib;
+            this.nodeflib = (value() & 2048) != 0;
+            return this.nodeflib;
+        }
+        private Boolean nodelete;
+
+        /**
+         * Set RTLD_NODELETE for this object.
+         */
+        public Boolean nodelete() {
+            if (this.nodelete != null)
+                return this.nodelete;
+            this.nodelete = (value() & 8) != 0;
+            return this.nodelete;
+        }
+        private Boolean nodirect;
+
+        /**
+         * Object has no-direct binding.
+         */
+        public Boolean nodirect() {
+            if (this.nodirect != null)
+                return this.nodirect;
+            this.nodirect = (value() & 131072) != 0;
+            return this.nodirect;
+        }
+        private Boolean nodump;
+
+        /**
+         * Object can't be dldump'ed.
+         */
+        public Boolean nodump() {
+            if (this.nodump != null)
+                return this.nodump;
+            this.nodump = (value() & 4096) != 0;
+            return this.nodump;
+        }
+        private Boolean nohdr;
+        public Boolean nohdr() {
+            if (this.nohdr != null)
+                return this.nohdr;
+            this.nohdr = (value() & 1048576) != 0;
+            return this.nohdr;
+        }
+        private Boolean noksyms;
+        public Boolean noksyms() {
+            if (this.noksyms != null)
+                return this.noksyms;
+            this.noksyms = (value() & 524288) != 0;
+            return this.noksyms;
+        }
+        private Boolean noopen;
+
+        /**
+         * Set RTLD_NOOPEN for this object.
+         */
+        public Boolean noopen() {
+            if (this.noopen != null)
+                return this.noopen;
+            this.noopen = (value() & 64) != 0;
+            return this.noopen;
+        }
+        private Boolean noreloc;
+        public Boolean noreloc() {
+            if (this.noreloc != null)
+                return this.noreloc;
+            this.noreloc = (value() & 4194304) != 0;
+            return this.noreloc;
+        }
+        private Boolean now;
+
+        /**
+         * Set RTLD_NOW for this object.
+         */
+        public Boolean now() {
+            if (this.now != null)
+                return this.now;
+            this.now = (value() & 1) != 0;
+            return this.now;
+        }
+        private Boolean origin;
+
+        /**
+         * $ORIGIN must be handled.
+         */
+        public Boolean origin() {
+            if (this.origin != null)
+                return this.origin;
+            this.origin = (value() & 128) != 0;
+            return this.origin;
+        }
+        private Boolean pie;
+        public Boolean pie() {
+            if (this.pie != null)
+                return this.pie;
+            this.pie = (value() & 134217728) != 0;
+            return this.pie;
+        }
+        private Boolean rtldGlobal;
+
+        /**
+         * Set RTLD_GLOBAL for this object.
+         */
+        public Boolean rtldGlobal() {
+            if (this.rtldGlobal != null)
+                return this.rtldGlobal;
+            this.rtldGlobal = (value() & 2) != 0;
+            return this.rtldGlobal;
+        }
+        private Boolean singleton;
+
+        /**
+         * Singleton symbols are used.
+         */
+        public Boolean singleton() {
+            if (this.singleton != null)
+                return this.singleton;
+            this.singleton = (value() & 33554432) != 0;
+            return this.singleton;
+        }
+        private Boolean stub;
+        public Boolean stub() {
+            if (this.stub != null)
+                return this.stub;
+            this.stub = (value() & 67108864) != 0;
+            return this.stub;
+        }
+        private Boolean symintpose;
+
+        /**
+         * Object has individual interposers.
+         */
+        public Boolean symintpose() {
+            if (this.symintpose != null)
+                return this.symintpose;
+            this.symintpose = (value() & 8388608) != 0;
+            return this.symintpose;
+        }
+        private Boolean trans;
+        public Boolean trans() {
+            if (this.trans != null)
+                return this.trans;
+            this.trans = (value() & 512) != 0;
+            return this.trans;
+        }
+        private long value;
+        private Elf _root;
+        private Elf.EndianElf.DynamicSectionEntry _parent;
+        public long value() { return value; }
+        public Elf _root() { return _root; }
+        public Elf.EndianElf.DynamicSectionEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html">Figure 5-11: DT_FLAGS values</a>
+     * @see <a href="https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095">Source</a>
+     * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER7-TBL-5">Source</a>
+     */
+    public static class DtFlagValues extends KaitaiStruct {
+
+        public DtFlagValues(KaitaiStream _io, long value) {
+            this(_io, null, null, value);
+        }
+
+        public DtFlagValues(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, long value) {
+            this(_io, _parent, null, value);
+        }
+
+        public DtFlagValues(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, Elf _root, long value) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.value = value;
+            _read();
+        }
+        private void _read() {
+        }
+
+        public void _fetchInstances() {
+        }
+        private Boolean bindNow;
+
+        /**
+         * all relocations for this object must be processed before returning
+         * control to the program
+         */
+        public Boolean bindNow() {
+            if (this.bindNow != null)
+                return this.bindNow;
+            this.bindNow = (value() & 8) != 0;
+            return this.bindNow;
+        }
+        private Boolean origin;
+
+        /**
+         * object may reference the $ORIGIN substitution string
+         */
+        public Boolean origin() {
+            if (this.origin != null)
+                return this.origin;
+            this.origin = (value() & 1) != 0;
+            return this.origin;
+        }
+        private Boolean staticTls;
+
+        /**
+         * object uses static thread-local storage scheme
+         */
+        public Boolean staticTls() {
+            if (this.staticTls != null)
+                return this.staticTls;
+            this.staticTls = (value() & 16) != 0;
+            return this.staticTls;
+        }
+        private Boolean symbolic;
+
+        /**
+         * symbolic linking
+         */
+        public Boolean symbolic() {
+            if (this.symbolic != null)
+                return this.symbolic;
+            this.symbolic = (value() & 2) != 0;
+            return this.symbolic;
+        }
+        private Boolean textrel;
+
+        /**
+         * relocation entries might request modifications to a non-writable segment
+         */
+        public Boolean textrel() {
+            if (this.textrel != null)
+                return this.textrel;
+            this.textrel = (value() & 4) != 0;
+            return this.textrel;
+        }
+        private long value;
+        private Elf _root;
+        private Elf.EndianElf.DynamicSectionEntry _parent;
+        public long value() { return value; }
+        public Elf _root() { return _root; }
+        public Elf.EndianElf.DynamicSectionEntry _parent() { return _parent; }
     }
     public static class EndianElf extends KaitaiStruct {
         public static EndianElf fromFile(String fileName) throws IOException {
@@ -692,13 +1097,11 @@ public class Elf extends KaitaiStruct {
                 if (on != null) {
                     switch (_root().endian()) {
                     case LE: {
-                        boolean _tmp = (boolean) (true);
-                        this._is_le = _tmp;
+                        this._is_le = true;
                         break;
                     }
                     case BE: {
-                        boolean _tmp = (boolean) (false);
-                        this._is_le = _tmp;
+                        this._is_le = false;
                         break;
                     }
                     }
@@ -722,7 +1125,7 @@ public class Elf extends KaitaiStruct {
                 if (on != null) {
                     switch (_root().bits()) {
                     case B32: {
-                        this.entryPoint = (long) (this._io.readU4le());
+                        this.entryPoint = ((Number) (this._io.readU4le())).longValue();
                         break;
                     }
                     case B64: {
@@ -737,7 +1140,7 @@ public class Elf extends KaitaiStruct {
                 if (on != null) {
                     switch (_root().bits()) {
                     case B32: {
-                        this.ofsProgramHeaders = (long) (this._io.readU4le());
+                        this.ofsProgramHeaders = ((Number) (this._io.readU4le())).longValue();
                         break;
                     }
                     case B64: {
@@ -752,7 +1155,7 @@ public class Elf extends KaitaiStruct {
                 if (on != null) {
                     switch (_root().bits()) {
                     case B32: {
-                        this.ofsSectionHeaders = (long) (this._io.readU4le());
+                        this.ofsSectionHeaders = ((Number) (this._io.readU4le())).longValue();
                         break;
                     }
                     case B64: {
@@ -779,7 +1182,7 @@ public class Elf extends KaitaiStruct {
                 if (on != null) {
                     switch (_root().bits()) {
                     case B32: {
-                        this.entryPoint = (long) (this._io.readU4be());
+                        this.entryPoint = ((Number) (this._io.readU4be())).longValue();
                         break;
                     }
                     case B64: {
@@ -794,7 +1197,7 @@ public class Elf extends KaitaiStruct {
                 if (on != null) {
                     switch (_root().bits()) {
                     case B32: {
-                        this.ofsProgramHeaders = (long) (this._io.readU4be());
+                        this.ofsProgramHeaders = ((Number) (this._io.readU4be())).longValue();
                         break;
                     }
                     case B64: {
@@ -809,7 +1212,7 @@ public class Elf extends KaitaiStruct {
                 if (on != null) {
                     switch (_root().bits()) {
                     case B32: {
-                        this.ofsSectionHeaders = (long) (this._io.readU4be());
+                        this.ofsSectionHeaders = ((Number) (this._io.readU4be())).longValue();
                         break;
                     }
                     case B64: {
@@ -826,6 +1229,553 @@ public class Elf extends KaitaiStruct {
             this.sectionHeaderSize = this._io.readU2be();
             this.numSectionHeaders = this._io.readU2be();
             this.sectionNamesIdx = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            {
+                Bits on = _root().bits();
+                if (on != null) {
+                    switch (_root().bits()) {
+                    case B32: {
+                        break;
+                    }
+                    case B64: {
+                        break;
+                    }
+                    }
+                }
+            }
+            {
+                Bits on = _root().bits();
+                if (on != null) {
+                    switch (_root().bits()) {
+                    case B32: {
+                        break;
+                    }
+                    case B64: {
+                        break;
+                    }
+                    }
+                }
+            }
+            {
+                Bits on = _root().bits();
+                if (on != null) {
+                    switch (_root().bits()) {
+                    case B32: {
+                        break;
+                    }
+                    case B64: {
+                        break;
+                    }
+                    }
+                }
+            }
+            programHeaders();
+            if (this.programHeaders != null) {
+                for (int i = 0; i < this.programHeaders.size(); i++) {
+                    this.programHeaders.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            sectionHeaders();
+            if (this.sectionHeaders != null) {
+                for (int i = 0; i < this.sectionHeaders.size(); i++) {
+                    this.sectionHeaders.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            sectionNames();
+            if (this.sectionNames != null) {
+                this.sectionNames._fetchInstances();
+            }
+        }
+        public static class DynamicSection extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public DynamicSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.entries = new ArrayList<DynamicSectionEntry>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new DynamicSectionEntry(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+            private void _readBE() {
+                this.entries = new ArrayList<DynamicSectionEntry>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new DynamicSectionEntry(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.entries.size(); i++) {
+                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private Boolean isStringTableLinked;
+            public Boolean isStringTableLinked() {
+                if (this.isStringTableLinked != null)
+                    return this.isStringTableLinked;
+                this.isStringTableLinked = _parent().linkedSection().type() == Elf.ShType.STRTAB;
+                return this.isStringTableLinked;
+            }
+            private List<DynamicSectionEntry> entries;
+            private Elf _root;
+            private Elf.EndianElf.SectionHeader _parent;
+            public List<DynamicSectionEntry> entries() { return entries; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html">Source</a>
+         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section">Source</a>
+         */
+        public static class DynamicSectionEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public DynamicSectionEntry(KaitaiStream _io, Elf.EndianElf.DynamicSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.tag = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.tag = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.valueOrPtr = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.valueOrPtr = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
+            private void _readBE() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.tag = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.tag = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.valueOrPtr = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.valueOrPtr = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                flag1Values();
+                if (this.flag1Values != null) {
+                    this.flag1Values._fetchInstances();
+                }
+                flagValues();
+                if (this.flagValues != null) {
+                    this.flagValues._fetchInstances();
+                }
+                valueStr();
+                if (this.valueStr != null) {
+                }
+            }
+            private DtFlag1Values flag1Values;
+            public DtFlag1Values flag1Values() {
+                if (this.flag1Values != null)
+                    return this.flag1Values;
+                if (tagEnum() == Elf.DynamicArrayTags.FLAGS_1) {
+                    if (_is_le) {
+                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
+                    } else {
+                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
+                    }
+                }
+                return this.flag1Values;
+            }
+            private DtFlagValues flagValues;
+            public DtFlagValues flagValues() {
+                if (this.flagValues != null)
+                    return this.flagValues;
+                if (tagEnum() == Elf.DynamicArrayTags.FLAGS) {
+                    if (_is_le) {
+                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
+                    } else {
+                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
+                    }
+                }
+                return this.flagValues;
+            }
+            private Boolean isValueStr;
+            public Boolean isValueStr() {
+                if (this.isValueStr != null)
+                    return this.isValueStr;
+                this.isValueStr =  ((valueOrPtr() != 0) && ( ((tagEnum() == Elf.DynamicArrayTags.NEEDED) || (tagEnum() == Elf.DynamicArrayTags.SONAME) || (tagEnum() == Elf.DynamicArrayTags.RPATH) || (tagEnum() == Elf.DynamicArrayTags.RUNPATH) || (tagEnum() == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.SUNW_FILTER) || (tagEnum() == Elf.DynamicArrayTags.AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.FILTER) || (tagEnum() == Elf.DynamicArrayTags.CONFIG) || (tagEnum() == Elf.DynamicArrayTags.DEPAUDIT) || (tagEnum() == Elf.DynamicArrayTags.AUDIT)) )) ;
+                return this.isValueStr;
+            }
+            private DynamicArrayTags tagEnum;
+            public DynamicArrayTags tagEnum() {
+                if (this.tagEnum != null)
+                    return this.tagEnum;
+                this.tagEnum = Elf.DynamicArrayTags.byId(tag());
+                return this.tagEnum;
+            }
+            private String valueStr;
+            public String valueStr() {
+                if (this.valueStr != null)
+                    return this.valueStr;
+                if ( ((isValueStr()) && (_parent().isStringTableLinked())) ) {
+                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
+                    long _pos = io.pos();
+                    io.seek(valueOrPtr());
+                    if (_is_le) {
+                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+                    } else {
+                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+                    }
+                    io.seek(_pos);
+                }
+                return this.valueStr;
+            }
+            private Long tag;
+            private Long valueOrPtr;
+            private Elf _root;
+            private Elf.EndianElf.DynamicSection _parent;
+            public Long tag() { return tag; }
+            public Long valueOrPtr() { return valueOrPtr; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.DynamicSection _parent() { return _parent; }
+        }
+        public static class DynsymSection extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public DynsymSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.entries = new ArrayList<DynsymSectionEntry>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new DynsymSectionEntry(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+            private void _readBE() {
+                this.entries = new ArrayList<DynsymSectionEntry>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new DynsymSectionEntry(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.entries.size(); i++) {
+                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private Boolean isStringTableLinked;
+            public Boolean isStringTableLinked() {
+                if (this.isStringTableLinked != null)
+                    return this.isStringTableLinked;
+                this.isStringTableLinked = _parent().linkedSection().type() == Elf.ShType.STRTAB;
+                return this.isStringTableLinked;
+            }
+            private List<DynsymSectionEntry> entries;
+            private Elf _root;
+            private Elf.EndianElf.SectionHeader _parent;
+            public List<DynsymSectionEntry> entries() { return entries; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html">Source</a>
+         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html">Source</a>
+         */
+        public static class DynsymSectionEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public DynsymSectionEntry(KaitaiStream _io, Elf.EndianElf.DynsymSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.ofsName = this._io.readU4le();
+                if (_root().bits() == Elf.Bits.B32) {
+                    this.valueB32 = this._io.readU4le();
+                }
+                if (_root().bits() == Elf.Bits.B32) {
+                    this.sizeB32 = this._io.readU4le();
+                }
+                this.bind = Elf.SymbolBinding.byId(this._io.readBitsIntBe(4));
+                this.type = Elf.SymbolType.byId(this._io.readBitsIntBe(4));
+                this.other = this._io.readU1();
+                this.shIdx = this._io.readU2le();
+                if (_root().bits() == Elf.Bits.B64) {
+                    this.valueB64 = this._io.readU8le();
+                }
+                if (_root().bits() == Elf.Bits.B64) {
+                    this.sizeB64 = this._io.readU8le();
+                }
+            }
+            private void _readBE() {
+                this.ofsName = this._io.readU4be();
+                if (_root().bits() == Elf.Bits.B32) {
+                    this.valueB32 = this._io.readU4be();
+                }
+                if (_root().bits() == Elf.Bits.B32) {
+                    this.sizeB32 = this._io.readU4be();
+                }
+                this.bind = Elf.SymbolBinding.byId(this._io.readBitsIntBe(4));
+                this.type = Elf.SymbolType.byId(this._io.readBitsIntBe(4));
+                this.other = this._io.readU1();
+                this.shIdx = this._io.readU2be();
+                if (_root().bits() == Elf.Bits.B64) {
+                    this.valueB64 = this._io.readU8be();
+                }
+                if (_root().bits() == Elf.Bits.B64) {
+                    this.sizeB64 = this._io.readU8be();
+                }
+            }
+
+            public void _fetchInstances() {
+                if (_root().bits() == Elf.Bits.B32) {
+                }
+                if (_root().bits() == Elf.Bits.B32) {
+                }
+                if (_root().bits() == Elf.Bits.B64) {
+                }
+                if (_root().bits() == Elf.Bits.B64) {
+                }
+                name();
+                if (this.name != null) {
+                }
+            }
+            private Boolean isShIdxOs;
+            public Boolean isShIdxOs() {
+                if (this.isShIdxOs != null)
+                    return this.isShIdxOs;
+                this.isShIdxOs =  ((shIdx() >= _root().shIdxLoOs()) && (shIdx() <= _root().shIdxHiOs())) ;
+                return this.isShIdxOs;
+            }
+            private Boolean isShIdxProc;
+            public Boolean isShIdxProc() {
+                if (this.isShIdxProc != null)
+                    return this.isShIdxProc;
+                this.isShIdxProc =  ((shIdx() >= _root().shIdxLoProc()) && (shIdx() <= _root().shIdxHiProc())) ;
+                return this.isShIdxProc;
+            }
+            private Boolean isShIdxReserved;
+            public Boolean isShIdxReserved() {
+                if (this.isShIdxReserved != null)
+                    return this.isShIdxReserved;
+                this.isShIdxReserved =  ((shIdx() >= _root().shIdxLoReserved()) && (shIdx() <= _root().shIdxHiReserved())) ;
+                return this.isShIdxReserved;
+            }
+            private String name;
+            public String name() {
+                if (this.name != null)
+                    return this.name;
+                if ( ((ofsName() != 0) && (_parent().isStringTableLinked())) ) {
+                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
+                    long _pos = io.pos();
+                    io.seek(ofsName());
+                    if (_is_le) {
+                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+                    } else {
+                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+                    }
+                    io.seek(_pos);
+                }
+                return this.name;
+            }
+            private SectionHeaderIdxSpecial shIdxSpecial;
+            public SectionHeaderIdxSpecial shIdxSpecial() {
+                if (this.shIdxSpecial != null)
+                    return this.shIdxSpecial;
+                this.shIdxSpecial = Elf.SectionHeaderIdxSpecial.byId(shIdx());
+                return this.shIdxSpecial;
+            }
+            private Long size;
+            public Long size() {
+                if (this.size != null)
+                    return this.size;
+                this.size = ((Number) ((_root().bits() == Elf.Bits.B32 ? sizeB32() : (_root().bits() == Elf.Bits.B64 ? sizeB64() : 0)))).longValue();
+                return this.size;
+            }
+            private Long value;
+            public Long value() {
+                if (this.value != null)
+                    return this.value;
+                this.value = ((Number) ((_root().bits() == Elf.Bits.B32 ? valueB32() : (_root().bits() == Elf.Bits.B64 ? valueB64() : 0)))).longValue();
+                return this.value;
+            }
+            private SymbolVisibility visibility;
+            public SymbolVisibility visibility() {
+                if (this.visibility != null)
+                    return this.visibility;
+                this.visibility = Elf.SymbolVisibility.byId(other() & 3);
+                return this.visibility;
+            }
+            private long ofsName;
+            private Long valueB32;
+            private Long sizeB32;
+            private SymbolBinding bind;
+            private SymbolType type;
+            private int other;
+            private int shIdx;
+            private Long valueB64;
+            private Long sizeB64;
+            private Elf _root;
+            private Elf.EndianElf.DynsymSection _parent;
+            public long ofsName() { return ofsName; }
+            public Long valueB32() { return valueB32; }
+            public Long sizeB32() { return sizeB32; }
+            public SymbolBinding bind() { return bind; }
+            public SymbolType type() { return type; }
+
+            /**
+             * don't read this field, access `visibility` instead
+             */
+            public int other() { return other; }
+
+            /**
+             * section header index
+             */
+            public int shIdx() { return shIdx; }
+            public Long valueB64() { return valueB64; }
+            public Long sizeB64() { return sizeB64; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.DynsymSection _parent() { return _parent; }
         }
         public static class NoteSection extends KaitaiStruct {
             private Boolean _is_le;
@@ -867,12 +1817,90 @@ public class Elf extends KaitaiStruct {
                     }
                 }
             }
-            private ArrayList<NoteSectionEntry> entries;
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.entries.size(); i++) {
+                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private List<NoteSectionEntry> entries;
             private Elf _root;
             private Elf.EndianElf.SectionHeader _parent;
-            public ArrayList<NoteSectionEntry> entries() { return entries; }
+            public List<NoteSectionEntry> entries() { return entries; }
             public Elf _root() { return _root; }
             public Elf.EndianElf.SectionHeader _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/note-section.html">Source</a>
+         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section">Source</a>
+         */
+        public static class NoteSectionEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public NoteSectionEntry(KaitaiStream _io, Elf.EndianElf.NoteSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.lenName = this._io.readU4le();
+                this.lenDescriptor = this._io.readU4le();
+                this.type = this._io.readU4le();
+                this.name = KaitaiStream.bytesTerminate(this._io.readBytes(lenName()), (byte) 0, false);
+                this.namePadding = this._io.readBytes(KaitaiStream.mod(-(lenName()), 4));
+                this.descriptor = this._io.readBytes(lenDescriptor());
+                this.descriptorPadding = this._io.readBytes(KaitaiStream.mod(-(lenDescriptor()), 4));
+            }
+            private void _readBE() {
+                this.lenName = this._io.readU4be();
+                this.lenDescriptor = this._io.readU4be();
+                this.type = this._io.readU4be();
+                this.name = KaitaiStream.bytesTerminate(this._io.readBytes(lenName()), (byte) 0, false);
+                this.namePadding = this._io.readBytes(KaitaiStream.mod(-(lenName()), 4));
+                this.descriptor = this._io.readBytes(lenDescriptor());
+                this.descriptorPadding = this._io.readBytes(KaitaiStream.mod(-(lenDescriptor()), 4));
+            }
+
+            public void _fetchInstances() {
+            }
+            private long lenName;
+            private long lenDescriptor;
+            private long type;
+            private byte[] name;
+            private byte[] namePadding;
+            private byte[] descriptor;
+            private byte[] descriptorPadding;
+            private Elf _root;
+            private Elf.EndianElf.NoteSection _parent;
+            public long lenName() { return lenName; }
+            public long lenDescriptor() { return lenDescriptor; }
+            public long type() { return type; }
+
+            /**
+             * Although the ELF specification seems to hint that the `note_name` field
+             * is ASCII this isn't the case for Linux binaries that have a
+             * `.gnu.build.attributes` section.
+             * @see <a href="https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes">Source</a>
+             */
+            public byte[] name() { return name; }
+            public byte[] namePadding() { return namePadding; }
+            public byte[] descriptor() { return descriptor; }
+            public byte[] descriptorPadding() { return descriptorPadding; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.NoteSection _parent() { return _parent; }
         }
         public static class ProgramHeader extends KaitaiStruct {
             private Boolean _is_le;
@@ -904,7 +1932,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.offset = (long) (this._io.readU4le());
+                            this.offset = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
@@ -919,7 +1947,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.vaddr = (long) (this._io.readU4le());
+                            this.vaddr = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
@@ -934,7 +1962,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.paddr = (long) (this._io.readU4le());
+                            this.paddr = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
@@ -949,7 +1977,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.filesz = (long) (this._io.readU4le());
+                            this.filesz = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
@@ -964,7 +1992,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.memsz = (long) (this._io.readU4le());
+                            this.memsz = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
@@ -982,7 +2010,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.align = (long) (this._io.readU4le());
+                            this.align = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
@@ -1003,7 +2031,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.offset = (long) (this._io.readU4be());
+                            this.offset = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
@@ -1018,7 +2046,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.vaddr = (long) (this._io.readU4be());
+                            this.vaddr = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
@@ -1033,7 +2061,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.paddr = (long) (this._io.readU4be());
+                            this.paddr = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
@@ -1048,7 +2076,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.filesz = (long) (this._io.readU4be());
+                            this.filesz = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
@@ -1063,7 +2091,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.memsz = (long) (this._io.readU4be());
+                            this.memsz = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
@@ -1081,13 +2109,116 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.align = (long) (this._io.readU4be());
+                            this.align = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
                             this.align = this._io.readU8be();
                             break;
                         }
+                        }
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                if (_root().bits() == Elf.Bits.B64) {
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                if (_root().bits() == Elf.Bits.B32) {
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                flagsObj();
+                if (this.flagsObj != null) {
+                    {
+                        Bits on = _root().bits();
+                        if (on != null) {
+                            switch (_root().bits()) {
+                            case B32: {
+                                this.flagsObj._fetchInstances();
+                                break;
+                            }
+                            case B64: {
+                                ((PhdrTypeFlags) (this.flagsObj))._fetchInstances();
+                                break;
+                            }
+                            }
                         }
                     }
                 }
@@ -1156,566 +2287,6 @@ public class Elf extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html">Source</a>
-         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section">Source</a>
-         */
-        public static class DynamicSectionEntry extends KaitaiStruct {
-            private Boolean _is_le;
-
-            public DynamicSectionEntry(KaitaiStream _io, Elf.EndianElf.DynamicSection _parent, Elf _root, boolean _is_le) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this._is_le = _is_le;
-                _read();
-            }
-            private void _read() {
-
-                if (_is_le == null) {
-                    throw new KaitaiStream.UndecidedEndiannessError();
-                } else if (_is_le) {
-                    _readLE();
-                } else {
-                    _readBE();
-                }
-            }
-            private void _readLE() {
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.tag = (long) (this._io.readU4le());
-                            break;
-                        }
-                        case B64: {
-                            this.tag = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.valueOrPtr = (long) (this._io.readU4le());
-                            break;
-                        }
-                        case B64: {
-                            this.valueOrPtr = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-            }
-            private void _readBE() {
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.tag = (long) (this._io.readU4be());
-                            break;
-                        }
-                        case B64: {
-                            this.tag = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.valueOrPtr = (long) (this._io.readU4be());
-                            break;
-                        }
-                        case B64: {
-                            this.valueOrPtr = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-            }
-            private DtFlag1Values flag1Values;
-            public DtFlag1Values flag1Values() {
-                if (this.flag1Values != null)
-                    return this.flag1Values;
-                if (tagEnum() == Elf.DynamicArrayTags.FLAGS_1) {
-                    if (_is_le) {
-                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
-                    } else {
-                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
-                    }
-                }
-                return this.flag1Values;
-            }
-            private String valueStr;
-            public String valueStr() {
-                if (this.valueStr != null)
-                    return this.valueStr;
-                if ( ((isValueStr()) && (_parent().isStringTableLinked())) ) {
-                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
-                    long _pos = io.pos();
-                    io.seek(valueOrPtr());
-                    if (_is_le) {
-                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
-                    } else {
-                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
-                    }
-                    io.seek(_pos);
-                }
-                return this.valueStr;
-            }
-            private DynamicArrayTags tagEnum;
-            public DynamicArrayTags tagEnum() {
-                if (this.tagEnum != null)
-                    return this.tagEnum;
-                this.tagEnum = Elf.DynamicArrayTags.byId(tag());
-                return this.tagEnum;
-            }
-            private DtFlagValues flagValues;
-            public DtFlagValues flagValues() {
-                if (this.flagValues != null)
-                    return this.flagValues;
-                if (tagEnum() == Elf.DynamicArrayTags.FLAGS) {
-                    if (_is_le) {
-                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
-                    } else {
-                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
-                    }
-                }
-                return this.flagValues;
-            }
-            private Boolean isValueStr;
-            public Boolean isValueStr() {
-                if (this.isValueStr != null)
-                    return this.isValueStr;
-                boolean _tmp = (boolean) ( ((valueOrPtr() != 0) && ( ((tagEnum() == Elf.DynamicArrayTags.NEEDED) || (tagEnum() == Elf.DynamicArrayTags.SONAME) || (tagEnum() == Elf.DynamicArrayTags.RPATH) || (tagEnum() == Elf.DynamicArrayTags.RUNPATH) || (tagEnum() == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.SUNW_FILTER) || (tagEnum() == Elf.DynamicArrayTags.AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.FILTER) || (tagEnum() == Elf.DynamicArrayTags.CONFIG) || (tagEnum() == Elf.DynamicArrayTags.DEPAUDIT) || (tagEnum() == Elf.DynamicArrayTags.AUDIT)) )) );
-                this.isValueStr = _tmp;
-                return this.isValueStr;
-            }
-            private Long tag;
-            private Long valueOrPtr;
-            private Elf _root;
-            private Elf.EndianElf.DynamicSection _parent;
-            public Long tag() { return tag; }
-            public Long valueOrPtr() { return valueOrPtr; }
-            public Elf _root() { return _root; }
-            public Elf.EndianElf.DynamicSection _parent() { return _parent; }
-        }
-        public static class SectionHeader extends KaitaiStruct {
-            private Boolean _is_le;
-
-            public SectionHeader(KaitaiStream _io, Elf.EndianElf _parent, Elf _root, boolean _is_le) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this._is_le = _is_le;
-                _read();
-            }
-            private void _read() {
-
-                if (_is_le == null) {
-                    throw new KaitaiStream.UndecidedEndiannessError();
-                } else if (_is_le) {
-                    _readLE();
-                } else {
-                    _readBE();
-                }
-            }
-            private void _readLE() {
-                this.ofsName = this._io.readU4le();
-                this.type = Elf.ShType.byId(this._io.readU4le());
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.flags = (long) (this._io.readU4le());
-                            break;
-                        }
-                        case B64: {
-                            this.flags = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.addr = (long) (this._io.readU4le());
-                            break;
-                        }
-                        case B64: {
-                            this.addr = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.ofsBody = (long) (this._io.readU4le());
-                            break;
-                        }
-                        case B64: {
-                            this.ofsBody = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.lenBody = (long) (this._io.readU4le());
-                            break;
-                        }
-                        case B64: {
-                            this.lenBody = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-                this.linkedSectionIdx = this._io.readU4le();
-                this.info = this._io.readBytes(4);
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.align = (long) (this._io.readU4le());
-                            break;
-                        }
-                        case B64: {
-                            this.align = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.entrySize = (long) (this._io.readU4le());
-                            break;
-                        }
-                        case B64: {
-                            this.entrySize = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-            }
-            private void _readBE() {
-                this.ofsName = this._io.readU4be();
-                this.type = Elf.ShType.byId(this._io.readU4be());
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.flags = (long) (this._io.readU4be());
-                            break;
-                        }
-                        case B64: {
-                            this.flags = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.addr = (long) (this._io.readU4be());
-                            break;
-                        }
-                        case B64: {
-                            this.addr = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.ofsBody = (long) (this._io.readU4be());
-                            break;
-                        }
-                        case B64: {
-                            this.ofsBody = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.lenBody = (long) (this._io.readU4be());
-                            break;
-                        }
-                        case B64: {
-                            this.lenBody = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-                this.linkedSectionIdx = this._io.readU4be();
-                this.info = this._io.readBytes(4);
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.align = (long) (this._io.readU4be());
-                            break;
-                        }
-                        case B64: {
-                            this.align = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.entrySize = (long) (this._io.readU4be());
-                            break;
-                        }
-                        case B64: {
-                            this.entrySize = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-            }
-            private Object body;
-            public Object body() {
-                if (this.body != null)
-                    return this.body;
-                if (type() != Elf.ShType.NOBITS) {
-                    KaitaiStream io = _root()._io();
-                    long _pos = io.pos();
-                    io.seek(ofsBody());
-                    if (_is_le) {
-                        {
-                            ShType on = type();
-                            if (on != null) {
-                                switch (type()) {
-                                case REL: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, false);
-                                    break;
-                                }
-                                case NOTE: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new NoteSection(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case SYMTAB: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case STRTAB: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case DYNAMIC: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case DYNSYM: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case RELA: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, true);
-                                    break;
-                                }
-                                default: {
-                                    this.body = io.readBytes(lenBody());
-                                    break;
-                                }
-                                }
-                            } else {
-                                this.body = io.readBytes(lenBody());
-                            }
-                        }
-                    } else {
-                        {
-                            ShType on = type();
-                            if (on != null) {
-                                switch (type()) {
-                                case REL: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, false);
-                                    break;
-                                }
-                                case NOTE: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new NoteSection(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case SYMTAB: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case STRTAB: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case DYNAMIC: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case DYNSYM: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                                    break;
-                                }
-                                case RELA: {
-                                    this._raw_body = io.readBytes(lenBody());
-                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                    this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, true);
-                                    break;
-                                }
-                                default: {
-                                    this.body = io.readBytes(lenBody());
-                                    break;
-                                }
-                                }
-                            } else {
-                                this.body = io.readBytes(lenBody());
-                            }
-                        }
-                    }
-                    io.seek(_pos);
-                }
-                return this.body;
-            }
-            private SectionHeader linkedSection;
-
-            /**
-             * may reference a later section header, so don't try to access too early (use only lazy `instances`)
-             * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link">Source</a>
-             */
-            public SectionHeader linkedSection() {
-                if (this.linkedSection != null)
-                    return this.linkedSection;
-                if ( ((linkedSectionIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (linkedSectionIdx() < _root().header().numSectionHeaders())) ) {
-                    this.linkedSection = _root().header().sectionHeaders().get((int) linkedSectionIdx());
-                }
-                return this.linkedSection;
-            }
-            private String name;
-            public String name() {
-                if (this.name != null)
-                    return this.name;
-                KaitaiStream io = _root().header().sectionNames()._io();
-                long _pos = io.pos();
-                io.seek(ofsName());
-                if (_is_le) {
-                    this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
-                } else {
-                    this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
-                }
-                io.seek(_pos);
-                return this.name;
-            }
-            private SectionHeaderFlags flagsObj;
-            public SectionHeaderFlags flagsObj() {
-                if (this.flagsObj != null)
-                    return this.flagsObj;
-                if (_is_le) {
-                    this.flagsObj = new SectionHeaderFlags(this._io, this, _root, flags());
-                } else {
-                    this.flagsObj = new SectionHeaderFlags(this._io, this, _root, flags());
-                }
-                return this.flagsObj;
-            }
-            private long ofsName;
-            private ShType type;
-            private Long flags;
-            private Long addr;
-            private Long ofsBody;
-            private Long lenBody;
-            private long linkedSectionIdx;
-            private byte[] info;
-            private Long align;
-            private Long entrySize;
-            private Elf _root;
-            private Elf.EndianElf _parent;
-            private byte[] _raw_body;
-            public long ofsName() { return ofsName; }
-            public ShType type() { return type; }
-            public Long flags() { return flags; }
-            public Long addr() { return addr; }
-            public Long ofsBody() { return ofsBody; }
-            public Long lenBody() { return lenBody; }
-            public long linkedSectionIdx() { return linkedSectionIdx; }
-            public byte[] info() { return info; }
-            public Long align() { return align; }
-            public Long entrySize() { return entrySize; }
-            public Elf _root() { return _root; }
-            public Elf.EndianElf _parent() { return _parent; }
-            public byte[] _raw_body() { return _raw_body; }
-        }
-
-        /**
          * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/relocation-sections.html">Source</a>
          * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html">Source</a>
          */
@@ -1760,122 +2331,18 @@ public class Elf extends KaitaiStruct {
                     }
                 }
             }
-            private ArrayList<RelocationSectionEntry> entries;
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.entries.size(); i++) {
+                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private List<RelocationSectionEntry> entries;
             private boolean hasAddend;
             private Elf _root;
             private Elf.EndianElf.SectionHeader _parent;
-            public ArrayList<RelocationSectionEntry> entries() { return entries; }
+            public List<RelocationSectionEntry> entries() { return entries; }
             public boolean hasAddend() { return hasAddend; }
-            public Elf _root() { return _root; }
-            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
-        }
-        public static class DynamicSection extends KaitaiStruct {
-            private Boolean _is_le;
-
-            public DynamicSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this._is_le = _is_le;
-                _read();
-            }
-            private void _read() {
-
-                if (_is_le == null) {
-                    throw new KaitaiStream.UndecidedEndiannessError();
-                } else if (_is_le) {
-                    _readLE();
-                } else {
-                    _readBE();
-                }
-            }
-            private void _readLE() {
-                this.entries = new ArrayList<DynamicSectionEntry>();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this.entries.add(new DynamicSectionEntry(this._io, this, _root, _is_le));
-                        i++;
-                    }
-                }
-            }
-            private void _readBE() {
-                this.entries = new ArrayList<DynamicSectionEntry>();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this.entries.add(new DynamicSectionEntry(this._io, this, _root, _is_le));
-                        i++;
-                    }
-                }
-            }
-            private Boolean isStringTableLinked;
-            public Boolean isStringTableLinked() {
-                if (this.isStringTableLinked != null)
-                    return this.isStringTableLinked;
-                boolean _tmp = (boolean) (_parent().linkedSection().type() == Elf.ShType.STRTAB);
-                this.isStringTableLinked = _tmp;
-                return this.isStringTableLinked;
-            }
-            private ArrayList<DynamicSectionEntry> entries;
-            private Elf _root;
-            private Elf.EndianElf.SectionHeader _parent;
-            public ArrayList<DynamicSectionEntry> entries() { return entries; }
-            public Elf _root() { return _root; }
-            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
-        }
-        public static class DynsymSection extends KaitaiStruct {
-            private Boolean _is_le;
-
-            public DynsymSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this._is_le = _is_le;
-                _read();
-            }
-            private void _read() {
-
-                if (_is_le == null) {
-                    throw new KaitaiStream.UndecidedEndiannessError();
-                } else if (_is_le) {
-                    _readLE();
-                } else {
-                    _readBE();
-                }
-            }
-            private void _readLE() {
-                this.entries = new ArrayList<DynsymSectionEntry>();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this.entries.add(new DynsymSectionEntry(this._io, this, _root, _is_le));
-                        i++;
-                    }
-                }
-            }
-            private void _readBE() {
-                this.entries = new ArrayList<DynsymSectionEntry>();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this.entries.add(new DynsymSectionEntry(this._io, this, _root, _is_le));
-                        i++;
-                    }
-                }
-            }
-            private Boolean isStringTableLinked;
-            public Boolean isStringTableLinked() {
-                if (this.isStringTableLinked != null)
-                    return this.isStringTableLinked;
-                boolean _tmp = (boolean) (_parent().linkedSection().type() == Elf.ShType.STRTAB);
-                this.isStringTableLinked = _tmp;
-                return this.isStringTableLinked;
-            }
-            private ArrayList<DynsymSectionEntry> entries;
-            private Elf _root;
-            private Elf.EndianElf.SectionHeader _parent;
-            public ArrayList<DynsymSectionEntry> entries() { return entries; }
             public Elf _root() { return _root; }
             public Elf.EndianElf.SectionHeader _parent() { return _parent; }
         }
@@ -1905,7 +2372,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.offset = (long) (this._io.readU4le());
+                            this.offset = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
@@ -1920,7 +2387,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.info = (long) (this._io.readU4le());
+                            this.info = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
@@ -1936,7 +2403,7 @@ public class Elf extends KaitaiStruct {
                         if (on != null) {
                             switch (_root().bits()) {
                             case B32: {
-                                this.addend = (long) (this._io.readS4le());
+                                this.addend = ((Number) (this._io.readS4le())).longValue();
                                 break;
                             }
                             case B64: {
@@ -1954,7 +2421,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.offset = (long) (this._io.readU4be());
+                            this.offset = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
@@ -1969,7 +2436,7 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.info = (long) (this._io.readU4be());
+                            this.info = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
@@ -1985,11 +2452,55 @@ public class Elf extends KaitaiStruct {
                         if (on != null) {
                             switch (_root().bits()) {
                             case B32: {
-                                this.addend = (long) (this._io.readS4be());
+                                this.addend = ((Number) (this._io.readS4be())).longValue();
                                 break;
                             }
                             case B64: {
                                 this.addend = this._io.readS8be();
+                                break;
+                            }
+                            }
+                        }
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                if (_parent().hasAddend()) {
+                    {
+                        Bits on = _root().bits();
+                        if (on != null) {
+                            switch (_root().bits()) {
+                            case B32: {
+                                break;
+                            }
+                            case B64: {
                                 break;
                             }
                             }
@@ -2008,15 +2519,10 @@ public class Elf extends KaitaiStruct {
             public Elf _root() { return _root; }
             public Elf.EndianElf.RelocationSection _parent() { return _parent; }
         }
-
-        /**
-         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html">Source</a>
-         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html">Source</a>
-         */
-        public static class DynsymSectionEntry extends KaitaiStruct {
+        public static class SectionHeader extends KaitaiStruct {
             private Boolean _is_le;
 
-            public DynsymSectionEntry(KaitaiStream _io, Elf.EndianElf.DynsymSection _parent, Elf _root, boolean _is_le) {
+            public SectionHeader(KaitaiStream _io, Elf.EndianElf _parent, Elf _root, boolean _is_le) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
@@ -2035,214 +2541,501 @@ public class Elf extends KaitaiStruct {
             }
             private void _readLE() {
                 this.ofsName = this._io.readU4le();
-                if (_root().bits() == Elf.Bits.B32) {
-                    this.valueB32 = this._io.readU4le();
+                this.type = Elf.ShType.byId(this._io.readU4le());
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.flags = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.flags = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                if (_root().bits() == Elf.Bits.B32) {
-                    this.sizeB32 = this._io.readU4le();
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.addr = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.addr = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                this.bind = Elf.SymbolBinding.byId(this._io.readBitsIntBe(4));
-                this.type = Elf.SymbolType.byId(this._io.readBitsIntBe(4));
-                this._io.alignToByte();
-                this.other = this._io.readU1();
-                this.shIdx = this._io.readU2le();
-                if (_root().bits() == Elf.Bits.B64) {
-                    this.valueB64 = this._io.readU8le();
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.ofsBody = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.ofsBody = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
-                if (_root().bits() == Elf.Bits.B64) {
-                    this.sizeB64 = this._io.readU8le();
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.lenBody = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.lenBody = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+                this.linkedSectionIdx = this._io.readU4le();
+                this.info = this._io.readBytes(4);
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.align = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.align = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.entrySize = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.entrySize = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
                 }
             }
             private void _readBE() {
                 this.ofsName = this._io.readU4be();
-                if (_root().bits() == Elf.Bits.B32) {
-                    this.valueB32 = this._io.readU4be();
+                this.type = Elf.ShType.byId(this._io.readU4be());
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.flags = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.flags = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                if (_root().bits() == Elf.Bits.B32) {
-                    this.sizeB32 = this._io.readU4be();
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.addr = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.addr = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                this.bind = Elf.SymbolBinding.byId(this._io.readBitsIntBe(4));
-                this.type = Elf.SymbolType.byId(this._io.readBitsIntBe(4));
-                this._io.alignToByte();
-                this.other = this._io.readU1();
-                this.shIdx = this._io.readU2be();
-                if (_root().bits() == Elf.Bits.B64) {
-                    this.valueB64 = this._io.readU8be();
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.ofsBody = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.ofsBody = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
-                if (_root().bits() == Elf.Bits.B64) {
-                    this.sizeB64 = this._io.readU8be();
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.lenBody = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.lenBody = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+                this.linkedSectionIdx = this._io.readU4be();
+                this.info = this._io.readBytes(4);
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.align = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.align = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.entrySize = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.entrySize = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
                 }
             }
-            private Boolean isShIdxReserved;
-            public Boolean isShIdxReserved() {
-                if (this.isShIdxReserved != null)
-                    return this.isShIdxReserved;
-                boolean _tmp = (boolean) ( ((shIdx() >= _root().shIdxLoReserved()) && (shIdx() <= _root().shIdxHiReserved())) );
-                this.isShIdxReserved = _tmp;
-                return this.isShIdxReserved;
+
+            public void _fetchInstances() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                body();
+                if (this.body != null) {
+                    {
+                        ShType on = type();
+                        if (on != null) {
+                            switch (type()) {
+                            case DYNAMIC: {
+                                ((DynamicSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case DYNSYM: {
+                                ((DynsymSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case NOTE: {
+                                ((NoteSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case REL: {
+                                ((RelocationSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case RELA: {
+                                ((RelocationSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case STRTAB: {
+                                ((StringsStruct) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case SYMTAB: {
+                                ((DynsymSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            default: {
+                                break;
+                            }
+                            }
+                        } else {
+                        }
+                    }
+                }
+                flagsObj();
+                if (this.flagsObj != null) {
+                    this.flagsObj._fetchInstances();
+                }
+                name();
+                if (this.name != null) {
+                }
             }
-            private Boolean isShIdxOs;
-            public Boolean isShIdxOs() {
-                if (this.isShIdxOs != null)
-                    return this.isShIdxOs;
-                boolean _tmp = (boolean) ( ((shIdx() >= _root().shIdxLoOs()) && (shIdx() <= _root().shIdxHiOs())) );
-                this.isShIdxOs = _tmp;
-                return this.isShIdxOs;
+            private Object body;
+            public Object body() {
+                if (this.body != null)
+                    return this.body;
+                if (type() != Elf.ShType.NOBITS) {
+                    KaitaiStream io = _root()._io();
+                    long _pos = io.pos();
+                    io.seek(ofsBody());
+                    if (_is_le) {
+                        {
+                            ShType on = type();
+                            if (on != null) {
+                                switch (type()) {
+                                case DYNAMIC: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new DynamicSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case DYNSYM: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new DynsymSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case NOTE: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new NoteSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case REL: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new RelocationSection(_io_body, this, _root, _is_le, false);
+                                    break;
+                                }
+                                case RELA: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new RelocationSection(_io_body, this, _root, _is_le, true);
+                                    break;
+                                }
+                                case STRTAB: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new StringsStruct(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case SYMTAB: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new DynsymSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                default: {
+                                    this.body = io.readBytes(lenBody());
+                                    break;
+                                }
+                                }
+                            } else {
+                                this.body = io.readBytes(lenBody());
+                            }
+                        }
+                    } else {
+                        {
+                            ShType on = type();
+                            if (on != null) {
+                                switch (type()) {
+                                case DYNAMIC: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new DynamicSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case DYNSYM: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new DynsymSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case NOTE: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new NoteSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case REL: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new RelocationSection(_io_body, this, _root, _is_le, false);
+                                    break;
+                                }
+                                case RELA: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new RelocationSection(_io_body, this, _root, _is_le, true);
+                                    break;
+                                }
+                                case STRTAB: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new StringsStruct(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case SYMTAB: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new DynsymSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                default: {
+                                    this.body = io.readBytes(lenBody());
+                                    break;
+                                }
+                                }
+                            } else {
+                                this.body = io.readBytes(lenBody());
+                            }
+                        }
+                    }
+                    io.seek(_pos);
+                }
+                return this.body;
             }
-            private Boolean isShIdxProc;
-            public Boolean isShIdxProc() {
-                if (this.isShIdxProc != null)
-                    return this.isShIdxProc;
-                boolean _tmp = (boolean) ( ((shIdx() >= _root().shIdxLoProc()) && (shIdx() <= _root().shIdxHiProc())) );
-                this.isShIdxProc = _tmp;
-                return this.isShIdxProc;
+            private SectionHeaderFlags flagsObj;
+            public SectionHeaderFlags flagsObj() {
+                if (this.flagsObj != null)
+                    return this.flagsObj;
+                if (_is_le) {
+                    this.flagsObj = new SectionHeaderFlags(this._io, this, _root, flags());
+                } else {
+                    this.flagsObj = new SectionHeaderFlags(this._io, this, _root, flags());
+                }
+                return this.flagsObj;
             }
-            private Long size;
-            public Long size() {
-                if (this.size != null)
-                    return this.size;
-                long _tmp = (long) ((_root().bits() == Elf.Bits.B32 ? sizeB32() : (_root().bits() == Elf.Bits.B64 ? sizeB64() : 0)));
-                this.size = _tmp;
-                return this.size;
-            }
-            private SymbolVisibility visibility;
-            public SymbolVisibility visibility() {
-                if (this.visibility != null)
-                    return this.visibility;
-                this.visibility = Elf.SymbolVisibility.byId((other() & 3));
-                return this.visibility;
-            }
-            private Long value;
-            public Long value() {
-                if (this.value != null)
-                    return this.value;
-                long _tmp = (long) ((_root().bits() == Elf.Bits.B32 ? valueB32() : (_root().bits() == Elf.Bits.B64 ? valueB64() : 0)));
-                this.value = _tmp;
-                return this.value;
+            private SectionHeader linkedSection;
+
+            /**
+             * may reference a later section header, so don't try to access too early (use only lazy `instances`)
+             * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link">Source</a>
+             */
+            public SectionHeader linkedSection() {
+                if (this.linkedSection != null)
+                    return this.linkedSection;
+                if ( ((linkedSectionIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (linkedSectionIdx() < _root().header().numSectionHeaders())) ) {
+                    this.linkedSection = _root().header().sectionHeaders().get(((Number) (linkedSectionIdx())).intValue());
+                }
+                return this.linkedSection;
             }
             private String name;
             public String name() {
                 if (this.name != null)
                     return this.name;
-                if ( ((ofsName() != 0) && (_parent().isStringTableLinked())) ) {
-                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
-                    long _pos = io.pos();
-                    io.seek(ofsName());
-                    if (_is_le) {
-                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
-                    } else {
-                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
-                    }
-                    io.seek(_pos);
+                KaitaiStream io = _root().header().sectionNames()._io();
+                long _pos = io.pos();
+                io.seek(ofsName());
+                if (_is_le) {
+                    this.name = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+                } else {
+                    this.name = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
                 }
+                io.seek(_pos);
                 return this.name;
             }
-            private SectionHeaderIdxSpecial shIdxSpecial;
-            public SectionHeaderIdxSpecial shIdxSpecial() {
-                if (this.shIdxSpecial != null)
-                    return this.shIdxSpecial;
-                this.shIdxSpecial = Elf.SectionHeaderIdxSpecial.byId(shIdx());
-                return this.shIdxSpecial;
-            }
             private long ofsName;
-            private Long valueB32;
-            private Long sizeB32;
-            private SymbolBinding bind;
-            private SymbolType type;
-            private int other;
-            private int shIdx;
-            private Long valueB64;
-            private Long sizeB64;
+            private ShType type;
+            private Long flags;
+            private Long addr;
+            private Long ofsBody;
+            private Long lenBody;
+            private long linkedSectionIdx;
+            private byte[] info;
+            private Long align;
+            private Long entrySize;
             private Elf _root;
-            private Elf.EndianElf.DynsymSection _parent;
+            private Elf.EndianElf _parent;
             public long ofsName() { return ofsName; }
-            public Long valueB32() { return valueB32; }
-            public Long sizeB32() { return sizeB32; }
-            public SymbolBinding bind() { return bind; }
-            public SymbolType type() { return type; }
-
-            /**
-             * don't read this field, access `visibility` instead
-             */
-            public int other() { return other; }
-
-            /**
-             * section header index
-             */
-            public int shIdx() { return shIdx; }
-            public Long valueB64() { return valueB64; }
-            public Long sizeB64() { return sizeB64; }
+            public ShType type() { return type; }
+            public Long flags() { return flags; }
+            public Long addr() { return addr; }
+            public Long ofsBody() { return ofsBody; }
+            public Long lenBody() { return lenBody; }
+            public long linkedSectionIdx() { return linkedSectionIdx; }
+            public byte[] info() { return info; }
+            public Long align() { return align; }
+            public Long entrySize() { return entrySize; }
             public Elf _root() { return _root; }
-            public Elf.EndianElf.DynsymSection _parent() { return _parent; }
-        }
-
-        /**
-         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/note-section.html">Source</a>
-         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section">Source</a>
-         */
-        public static class NoteSectionEntry extends KaitaiStruct {
-            private Boolean _is_le;
-
-            public NoteSectionEntry(KaitaiStream _io, Elf.EndianElf.NoteSection _parent, Elf _root, boolean _is_le) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this._is_le = _is_le;
-                _read();
-            }
-            private void _read() {
-
-                if (_is_le == null) {
-                    throw new KaitaiStream.UndecidedEndiannessError();
-                } else if (_is_le) {
-                    _readLE();
-                } else {
-                    _readBE();
-                }
-            }
-            private void _readLE() {
-                this.lenName = this._io.readU4le();
-                this.lenDescriptor = this._io.readU4le();
-                this.type = this._io.readU4le();
-                this.name = KaitaiStream.bytesTerminate(this._io.readBytes(lenName()), (byte) 0, false);
-                this.namePadding = this._io.readBytes(KaitaiStream.mod(-(lenName()), 4));
-                this.descriptor = this._io.readBytes(lenDescriptor());
-                this.descriptorPadding = this._io.readBytes(KaitaiStream.mod(-(lenDescriptor()), 4));
-            }
-            private void _readBE() {
-                this.lenName = this._io.readU4be();
-                this.lenDescriptor = this._io.readU4be();
-                this.type = this._io.readU4be();
-                this.name = KaitaiStream.bytesTerminate(this._io.readBytes(lenName()), (byte) 0, false);
-                this.namePadding = this._io.readBytes(KaitaiStream.mod(-(lenName()), 4));
-                this.descriptor = this._io.readBytes(lenDescriptor());
-                this.descriptorPadding = this._io.readBytes(KaitaiStream.mod(-(lenDescriptor()), 4));
-            }
-            private long lenName;
-            private long lenDescriptor;
-            private long type;
-            private byte[] name;
-            private byte[] namePadding;
-            private byte[] descriptor;
-            private byte[] descriptorPadding;
-            private Elf _root;
-            private Elf.EndianElf.NoteSection _parent;
-            public long lenName() { return lenName; }
-            public long lenDescriptor() { return lenDescriptor; }
-            public long type() { return type; }
-
-            /**
-             * Although the ELF specification seems to hint that the `note_name` field
-             * is ASCII this isn't the case for Linux binaries that have a
-             * `.gnu.build.attributes` section.
-             * @see <a href="https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes">Source</a>
-             */
-            public byte[] name() { return name; }
-            public byte[] namePadding() { return namePadding; }
-            public byte[] descriptor() { return descriptor; }
-            public byte[] descriptorPadding() { return descriptorPadding; }
-            public Elf _root() { return _root; }
-            public Elf.EndianElf.NoteSection _parent() { return _parent; }
+            public Elf.EndianElf _parent() { return _parent; }
         }
         public static class StringsStruct extends KaitaiStruct {
             private Boolean _is_le;
@@ -2269,7 +3062,7 @@ public class Elf extends KaitaiStruct {
                 {
                     int i = 0;
                     while (!this._io.isEof()) {
-                        this.entries.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8")));
+                        this.entries.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8));
                         i++;
                     }
                 }
@@ -2279,65 +3072,62 @@ public class Elf extends KaitaiStruct {
                 {
                     int i = 0;
                     while (!this._io.isEof()) {
-                        this.entries.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8")));
+                        this.entries.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8));
                         i++;
                     }
                 }
             }
-            private ArrayList<String> entries;
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.entries.size(); i++) {
+                }
+            }
+            private List<String> entries;
             private Elf _root;
             private KaitaiStruct _parent;
-            public ArrayList<String> entries() { return entries; }
+            public List<String> entries() { return entries; }
             public Elf _root() { return _root; }
             public KaitaiStruct _parent() { return _parent; }
         }
-        private ArrayList<ProgramHeader> programHeaders;
-        public ArrayList<ProgramHeader> programHeaders() {
+        private List<ProgramHeader> programHeaders;
+        public List<ProgramHeader> programHeaders() {
             if (this.programHeaders != null)
                 return this.programHeaders;
             long _pos = this._io.pos();
             this._io.seek(ofsProgramHeaders());
             if (_is_le) {
-                this._raw_programHeaders = new ArrayList<byte[]>();
                 this.programHeaders = new ArrayList<ProgramHeader>();
                 for (int i = 0; i < numProgramHeaders(); i++) {
-                    this._raw_programHeaders.add(this._io.readBytes(programHeaderSize()));
-                    KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
-                    this.programHeaders.add(new ProgramHeader(_io__raw_programHeaders, this, _root, _is_le));
+                    KaitaiStream _io_programHeaders = this._io.substream(programHeaderSize());
+                    this.programHeaders.add(new ProgramHeader(_io_programHeaders, this, _root, _is_le));
                 }
             } else {
-                this._raw_programHeaders = new ArrayList<byte[]>();
                 this.programHeaders = new ArrayList<ProgramHeader>();
                 for (int i = 0; i < numProgramHeaders(); i++) {
-                    this._raw_programHeaders.add(this._io.readBytes(programHeaderSize()));
-                    KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
-                    this.programHeaders.add(new ProgramHeader(_io__raw_programHeaders, this, _root, _is_le));
+                    KaitaiStream _io_programHeaders = this._io.substream(programHeaderSize());
+                    this.programHeaders.add(new ProgramHeader(_io_programHeaders, this, _root, _is_le));
                 }
             }
             this._io.seek(_pos);
             return this.programHeaders;
         }
-        private ArrayList<SectionHeader> sectionHeaders;
-        public ArrayList<SectionHeader> sectionHeaders() {
+        private List<SectionHeader> sectionHeaders;
+        public List<SectionHeader> sectionHeaders() {
             if (this.sectionHeaders != null)
                 return this.sectionHeaders;
             long _pos = this._io.pos();
             this._io.seek(ofsSectionHeaders());
             if (_is_le) {
-                this._raw_sectionHeaders = new ArrayList<byte[]>();
                 this.sectionHeaders = new ArrayList<SectionHeader>();
                 for (int i = 0; i < numSectionHeaders(); i++) {
-                    this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderSize()));
-                    KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
-                    this.sectionHeaders.add(new SectionHeader(_io__raw_sectionHeaders, this, _root, _is_le));
+                    KaitaiStream _io_sectionHeaders = this._io.substream(sectionHeaderSize());
+                    this.sectionHeaders.add(new SectionHeader(_io_sectionHeaders, this, _root, _is_le));
                 }
             } else {
-                this._raw_sectionHeaders = new ArrayList<byte[]>();
                 this.sectionHeaders = new ArrayList<SectionHeader>();
                 for (int i = 0; i < numSectionHeaders(); i++) {
-                    this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderSize()));
-                    KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
-                    this.sectionHeaders.add(new SectionHeader(_io__raw_sectionHeaders, this, _root, _is_le));
+                    KaitaiStream _io_sectionHeaders = this._io.substream(sectionHeaderSize());
+                    this.sectionHeaders.add(new SectionHeader(_io_sectionHeaders, this, _root, _is_le));
                 }
             }
             this._io.seek(_pos);
@@ -2349,15 +3139,13 @@ public class Elf extends KaitaiStruct {
                 return this.sectionNames;
             if ( ((sectionNamesIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (sectionNamesIdx() < _root().header().numSectionHeaders())) ) {
                 long _pos = this._io.pos();
-                this._io.seek(sectionHeaders().get((int) sectionNamesIdx()).ofsBody());
+                this._io.seek(sectionHeaders().get(((Number) (sectionNamesIdx())).intValue()).ofsBody());
                 if (_is_le) {
-                    this._raw_sectionNames = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).lenBody());
-                    KaitaiStream _io__raw_sectionNames = new ByteBufferKaitaiStream(_raw_sectionNames);
-                    this.sectionNames = new StringsStruct(_io__raw_sectionNames, this, _root, _is_le);
+                    KaitaiStream _io_sectionNames = this._io.substream(sectionHeaders().get(((Number) (sectionNamesIdx())).intValue()).lenBody());
+                    this.sectionNames = new StringsStruct(_io_sectionNames, this, _root, _is_le);
                 } else {
-                    this._raw_sectionNames = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).lenBody());
-                    KaitaiStream _io__raw_sectionNames = new ByteBufferKaitaiStream(_raw_sectionNames);
-                    this.sectionNames = new StringsStruct(_io__raw_sectionNames, this, _root, _is_le);
+                    KaitaiStream _io_sectionNames = this._io.substream(sectionHeaders().get(((Number) (sectionNamesIdx())).intValue()).lenBody());
+                    this.sectionNames = new StringsStruct(_io_sectionNames, this, _root, _is_le);
                 }
                 this._io.seek(_pos);
             }
@@ -2378,9 +3166,6 @@ public class Elf extends KaitaiStruct {
         private int sectionNamesIdx;
         private Elf _root;
         private Elf _parent;
-        private ArrayList<byte[]> _raw_programHeaders;
-        private ArrayList<byte[]> _raw_sectionHeaders;
-        private byte[] _raw_sectionNames;
         public ObjType eType() { return eType; }
         public Machine machine() { return machine; }
         public long eVersion() { return eVersion; }
@@ -2396,537 +3181,6 @@ public class Elf extends KaitaiStruct {
         public int sectionNamesIdx() { return sectionNamesIdx; }
         public Elf _root() { return _root; }
         public Elf _parent() { return _parent; }
-        public ArrayList<byte[]> _raw_programHeaders() { return _raw_programHeaders; }
-        public ArrayList<byte[]> _raw_sectionHeaders() { return _raw_sectionHeaders; }
-        public byte[] _raw_sectionNames() { return _raw_sectionNames; }
-    }
-    public static class DtFlag1Values extends KaitaiStruct {
-
-        public DtFlag1Values(KaitaiStream _io, long value) {
-            this(_io, null, null, value);
-        }
-
-        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, long value) {
-            this(_io, _parent, null, value);
-        }
-
-        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, Elf _root, long value) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.value = value;
-            _read();
-        }
-        private void _read() {
-        }
-        private Boolean singleton;
-
-        /**
-         * Singleton symbols are used.
-         */
-        public Boolean singleton() {
-            if (this.singleton != null)
-                return this.singleton;
-            boolean _tmp = (boolean) ((value() & 33554432) != 0);
-            this.singleton = _tmp;
-            return this.singleton;
-        }
-        private Boolean ignmuldef;
-        public Boolean ignmuldef() {
-            if (this.ignmuldef != null)
-                return this.ignmuldef;
-            boolean _tmp = (boolean) ((value() & 262144) != 0);
-            this.ignmuldef = _tmp;
-            return this.ignmuldef;
-        }
-        private Boolean loadfltr;
-
-        /**
-         * Trigger filtee loading at runtime.
-         */
-        public Boolean loadfltr() {
-            if (this.loadfltr != null)
-                return this.loadfltr;
-            boolean _tmp = (boolean) ((value() & 16) != 0);
-            this.loadfltr = _tmp;
-            return this.loadfltr;
-        }
-        private Boolean initfirst;
-
-        /**
-         * Set RTLD_INITFIRST for this object
-         */
-        public Boolean initfirst() {
-            if (this.initfirst != null)
-                return this.initfirst;
-            boolean _tmp = (boolean) ((value() & 32) != 0);
-            this.initfirst = _tmp;
-            return this.initfirst;
-        }
-        private Boolean symintpose;
-
-        /**
-         * Object has individual interposers.
-         */
-        public Boolean symintpose() {
-            if (this.symintpose != null)
-                return this.symintpose;
-            boolean _tmp = (boolean) ((value() & 8388608) != 0);
-            this.symintpose = _tmp;
-            return this.symintpose;
-        }
-        private Boolean noreloc;
-        public Boolean noreloc() {
-            if (this.noreloc != null)
-                return this.noreloc;
-            boolean _tmp = (boolean) ((value() & 4194304) != 0);
-            this.noreloc = _tmp;
-            return this.noreloc;
-        }
-        private Boolean confalt;
-
-        /**
-         * Configuration alternative created.
-         */
-        public Boolean confalt() {
-            if (this.confalt != null)
-                return this.confalt;
-            boolean _tmp = (boolean) ((value() & 8192) != 0);
-            this.confalt = _tmp;
-            return this.confalt;
-        }
-        private Boolean dispreldne;
-
-        /**
-         * Disp reloc applied at build time.
-         */
-        public Boolean dispreldne() {
-            if (this.dispreldne != null)
-                return this.dispreldne;
-            boolean _tmp = (boolean) ((value() & 32768) != 0);
-            this.dispreldne = _tmp;
-            return this.dispreldne;
-        }
-        private Boolean rtldGlobal;
-
-        /**
-         * Set RTLD_GLOBAL for this object.
-         */
-        public Boolean rtldGlobal() {
-            if (this.rtldGlobal != null)
-                return this.rtldGlobal;
-            boolean _tmp = (boolean) ((value() & 2) != 0);
-            this.rtldGlobal = _tmp;
-            return this.rtldGlobal;
-        }
-        private Boolean nodelete;
-
-        /**
-         * Set RTLD_NODELETE for this object.
-         */
-        public Boolean nodelete() {
-            if (this.nodelete != null)
-                return this.nodelete;
-            boolean _tmp = (boolean) ((value() & 8) != 0);
-            this.nodelete = _tmp;
-            return this.nodelete;
-        }
-        private Boolean trans;
-        public Boolean trans() {
-            if (this.trans != null)
-                return this.trans;
-            boolean _tmp = (boolean) ((value() & 512) != 0);
-            this.trans = _tmp;
-            return this.trans;
-        }
-        private Boolean origin;
-
-        /**
-         * $ORIGIN must be handled.
-         */
-        public Boolean origin() {
-            if (this.origin != null)
-                return this.origin;
-            boolean _tmp = (boolean) ((value() & 128) != 0);
-            this.origin = _tmp;
-            return this.origin;
-        }
-        private Boolean now;
-
-        /**
-         * Set RTLD_NOW for this object.
-         */
-        public Boolean now() {
-            if (this.now != null)
-                return this.now;
-            boolean _tmp = (boolean) ((value() & 1) != 0);
-            this.now = _tmp;
-            return this.now;
-        }
-        private Boolean nohdr;
-        public Boolean nohdr() {
-            if (this.nohdr != null)
-                return this.nohdr;
-            boolean _tmp = (boolean) ((value() & 1048576) != 0);
-            this.nohdr = _tmp;
-            return this.nohdr;
-        }
-        private Boolean endfiltee;
-
-        /**
-         * Filtee terminates filters search.
-         */
-        public Boolean endfiltee() {
-            if (this.endfiltee != null)
-                return this.endfiltee;
-            boolean _tmp = (boolean) ((value() & 16384) != 0);
-            this.endfiltee = _tmp;
-            return this.endfiltee;
-        }
-        private Boolean nodirect;
-
-        /**
-         * Object has no-direct binding.
-         */
-        public Boolean nodirect() {
-            if (this.nodirect != null)
-                return this.nodirect;
-            boolean _tmp = (boolean) ((value() & 131072) != 0);
-            this.nodirect = _tmp;
-            return this.nodirect;
-        }
-        private Boolean globaudit;
-
-        /**
-         * Global auditing required.
-         */
-        public Boolean globaudit() {
-            if (this.globaudit != null)
-                return this.globaudit;
-            boolean _tmp = (boolean) ((value() & 16777216) != 0);
-            this.globaudit = _tmp;
-            return this.globaudit;
-        }
-        private Boolean noksyms;
-        public Boolean noksyms() {
-            if (this.noksyms != null)
-                return this.noksyms;
-            boolean _tmp = (boolean) ((value() & 524288) != 0);
-            this.noksyms = _tmp;
-            return this.noksyms;
-        }
-        private Boolean interpose;
-
-        /**
-         * Object is used to interpose.
-         */
-        public Boolean interpose() {
-            if (this.interpose != null)
-                return this.interpose;
-            boolean _tmp = (boolean) ((value() & 1024) != 0);
-            this.interpose = _tmp;
-            return this.interpose;
-        }
-        private Boolean nodump;
-
-        /**
-         * Object can't be dldump'ed.
-         */
-        public Boolean nodump() {
-            if (this.nodump != null)
-                return this.nodump;
-            boolean _tmp = (boolean) ((value() & 4096) != 0);
-            this.nodump = _tmp;
-            return this.nodump;
-        }
-        private Boolean disprelpnd;
-
-        /**
-         * Disp reloc applied at run-time.
-         */
-        public Boolean disprelpnd() {
-            if (this.disprelpnd != null)
-                return this.disprelpnd;
-            boolean _tmp = (boolean) ((value() & 65536) != 0);
-            this.disprelpnd = _tmp;
-            return this.disprelpnd;
-        }
-        private Boolean noopen;
-
-        /**
-         * Set RTLD_NOOPEN for this object.
-         */
-        public Boolean noopen() {
-            if (this.noopen != null)
-                return this.noopen;
-            boolean _tmp = (boolean) ((value() & 64) != 0);
-            this.noopen = _tmp;
-            return this.noopen;
-        }
-        private Boolean stub;
-        public Boolean stub() {
-            if (this.stub != null)
-                return this.stub;
-            boolean _tmp = (boolean) ((value() & 67108864) != 0);
-            this.stub = _tmp;
-            return this.stub;
-        }
-        private Boolean direct;
-
-        /**
-         * Direct binding enabled.
-         */
-        public Boolean direct() {
-            if (this.direct != null)
-                return this.direct;
-            boolean _tmp = (boolean) ((value() & 256) != 0);
-            this.direct = _tmp;
-            return this.direct;
-        }
-        private Boolean edited;
-
-        /**
-         * Object is modified after built.
-         */
-        public Boolean edited() {
-            if (this.edited != null)
-                return this.edited;
-            boolean _tmp = (boolean) ((value() & 2097152) != 0);
-            this.edited = _tmp;
-            return this.edited;
-        }
-        private Boolean group;
-
-        /**
-         * Set RTLD_GROUP for this object.
-         */
-        public Boolean group() {
-            if (this.group != null)
-                return this.group;
-            boolean _tmp = (boolean) ((value() & 4) != 0);
-            this.group = _tmp;
-            return this.group;
-        }
-        private Boolean pie;
-        public Boolean pie() {
-            if (this.pie != null)
-                return this.pie;
-            boolean _tmp = (boolean) ((value() & 134217728) != 0);
-            this.pie = _tmp;
-            return this.pie;
-        }
-        private Boolean nodeflib;
-
-        /**
-         * Ignore default lib search path.
-         */
-        public Boolean nodeflib() {
-            if (this.nodeflib != null)
-                return this.nodeflib;
-            boolean _tmp = (boolean) ((value() & 2048) != 0);
-            this.nodeflib = _tmp;
-            return this.nodeflib;
-        }
-        private long value;
-        private Elf _root;
-        private Elf.EndianElf.DynamicSectionEntry _parent;
-        public long value() { return value; }
-        public Elf _root() { return _root; }
-        public Elf.EndianElf.DynamicSectionEntry _parent() { return _parent; }
-    }
-    public static class SectionHeaderFlags extends KaitaiStruct {
-
-        public SectionHeaderFlags(KaitaiStream _io, long value) {
-            this(_io, null, null, value);
-        }
-
-        public SectionHeaderFlags(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, long value) {
-            this(_io, _parent, null, value);
-        }
-
-        public SectionHeaderFlags(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, long value) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.value = value;
-            _read();
-        }
-        private void _read() {
-        }
-        private Boolean merge;
-
-        /**
-         * might be merged
-         */
-        public Boolean merge() {
-            if (this.merge != null)
-                return this.merge;
-            boolean _tmp = (boolean) ((value() & 16) != 0);
-            this.merge = _tmp;
-            return this.merge;
-        }
-        private Boolean maskOs;
-
-        /**
-         * OS-specific
-         */
-        public Boolean maskOs() {
-            if (this.maskOs != null)
-                return this.maskOs;
-            boolean _tmp = (boolean) ((value() & 267386880) != 0);
-            this.maskOs = _tmp;
-            return this.maskOs;
-        }
-        private Boolean exclude;
-
-        /**
-         * section is excluded unless referenced or allocated (Solaris)
-         */
-        public Boolean exclude() {
-            if (this.exclude != null)
-                return this.exclude;
-            boolean _tmp = (boolean) ((value() & 134217728) != 0);
-            this.exclude = _tmp;
-            return this.exclude;
-        }
-        private Boolean maskProc;
-
-        /**
-         * Processor-specific
-         */
-        public Boolean maskProc() {
-            if (this.maskProc != null)
-                return this.maskProc;
-            boolean _tmp = (boolean) ((value() & 4026531840L) != 0);
-            this.maskProc = _tmp;
-            return this.maskProc;
-        }
-        private Boolean strings;
-
-        /**
-         * contains nul-terminated strings
-         */
-        public Boolean strings() {
-            if (this.strings != null)
-                return this.strings;
-            boolean _tmp = (boolean) ((value() & 32) != 0);
-            this.strings = _tmp;
-            return this.strings;
-        }
-        private Boolean osNonConforming;
-
-        /**
-         * non-standard OS specific handling required
-         */
-        public Boolean osNonConforming() {
-            if (this.osNonConforming != null)
-                return this.osNonConforming;
-            boolean _tmp = (boolean) ((value() & 256) != 0);
-            this.osNonConforming = _tmp;
-            return this.osNonConforming;
-        }
-        private Boolean alloc;
-
-        /**
-         * occupies memory during execution
-         */
-        public Boolean alloc() {
-            if (this.alloc != null)
-                return this.alloc;
-            boolean _tmp = (boolean) ((value() & 2) != 0);
-            this.alloc = _tmp;
-            return this.alloc;
-        }
-        private Boolean execInstr;
-
-        /**
-         * executable
-         */
-        public Boolean execInstr() {
-            if (this.execInstr != null)
-                return this.execInstr;
-            boolean _tmp = (boolean) ((value() & 4) != 0);
-            this.execInstr = _tmp;
-            return this.execInstr;
-        }
-        private Boolean infoLink;
-
-        /**
-         * 'sh_info' contains SHT index
-         */
-        public Boolean infoLink() {
-            if (this.infoLink != null)
-                return this.infoLink;
-            boolean _tmp = (boolean) ((value() & 64) != 0);
-            this.infoLink = _tmp;
-            return this.infoLink;
-        }
-        private Boolean write;
-
-        /**
-         * writable
-         */
-        public Boolean write() {
-            if (this.write != null)
-                return this.write;
-            boolean _tmp = (boolean) ((value() & 1) != 0);
-            this.write = _tmp;
-            return this.write;
-        }
-        private Boolean linkOrder;
-
-        /**
-         * preserve order after combining
-         */
-        public Boolean linkOrder() {
-            if (this.linkOrder != null)
-                return this.linkOrder;
-            boolean _tmp = (boolean) ((value() & 128) != 0);
-            this.linkOrder = _tmp;
-            return this.linkOrder;
-        }
-        private Boolean ordered;
-
-        /**
-         * special ordering requirement (Solaris)
-         */
-        public Boolean ordered() {
-            if (this.ordered != null)
-                return this.ordered;
-            boolean _tmp = (boolean) ((value() & 67108864) != 0);
-            this.ordered = _tmp;
-            return this.ordered;
-        }
-        private Boolean tls;
-
-        /**
-         * section hold thread-local data
-         */
-        public Boolean tls() {
-            if (this.tls != null)
-                return this.tls;
-            boolean _tmp = (boolean) ((value() & 1024) != 0);
-            this.tls = _tmp;
-            return this.tls;
-        }
-        private Boolean group;
-
-        /**
-         * section is member of a group
-         */
-        public Boolean group() {
-            if (this.group != null)
-                return this.group;
-            boolean _tmp = (boolean) ((value() & 512) != 0);
-            this.group = _tmp;
-            return this.group;
-        }
-        private long value;
-        private Elf _root;
-        private Elf.EndianElf.SectionHeader _parent;
-        public long value() { return value; }
-        public Elf _root() { return _root; }
-        public Elf.EndianElf.SectionHeader _parent() { return _parent; }
     }
     public static class PhdrTypeFlags extends KaitaiStruct {
 
@@ -2947,37 +3201,36 @@ public class Elf extends KaitaiStruct {
         }
         private void _read() {
         }
-        private Boolean read;
-        public Boolean read() {
-            if (this.read != null)
-                return this.read;
-            boolean _tmp = (boolean) ((value() & 4) != 0);
-            this.read = _tmp;
-            return this.read;
-        }
-        private Boolean write;
-        public Boolean write() {
-            if (this.write != null)
-                return this.write;
-            boolean _tmp = (boolean) ((value() & 2) != 0);
-            this.write = _tmp;
-            return this.write;
+
+        public void _fetchInstances() {
         }
         private Boolean execute;
         public Boolean execute() {
             if (this.execute != null)
                 return this.execute;
-            boolean _tmp = (boolean) ((value() & 1) != 0);
-            this.execute = _tmp;
+            this.execute = (value() & 1) != 0;
             return this.execute;
         }
         private Boolean maskProc;
         public Boolean maskProc() {
             if (this.maskProc != null)
                 return this.maskProc;
-            boolean _tmp = (boolean) ((value() & 4026531840L) != 0);
-            this.maskProc = _tmp;
+            this.maskProc = (value() & 4026531840L) != 0;
             return this.maskProc;
+        }
+        private Boolean read;
+        public Boolean read() {
+            if (this.read != null)
+                return this.read;
+            this.read = (value() & 4) != 0;
+            return this.read;
+        }
+        private Boolean write;
+        public Boolean write() {
+            if (this.write != null)
+                return this.write;
+            this.write = (value() & 2) != 0;
+            return this.write;
         }
         private long value;
         private Elf _root;
@@ -2986,23 +3239,17 @@ public class Elf extends KaitaiStruct {
         public Elf _root() { return _root; }
         public Elf.EndianElf.ProgramHeader _parent() { return _parent; }
     }
+    public static class SectionHeaderFlags extends KaitaiStruct {
 
-    /**
-     * @see <a href="https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html">Figure 5-11: DT_FLAGS values</a>
-     * @see <a href="https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095">Source</a>
-     * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER7-TBL-5">Source</a>
-     */
-    public static class DtFlagValues extends KaitaiStruct {
-
-        public DtFlagValues(KaitaiStream _io, long value) {
+        public SectionHeaderFlags(KaitaiStream _io, long value) {
             this(_io, null, null, value);
         }
 
-        public DtFlagValues(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, long value) {
+        public SectionHeaderFlags(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, long value) {
             this(_io, _parent, null, value);
         }
 
-        public DtFlagValues(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, Elf _root, long value) {
+        public SectionHeaderFlags(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, long value) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -3011,121 +3258,211 @@ public class Elf extends KaitaiStruct {
         }
         private void _read() {
         }
-        private Boolean bindNow;
 
-        /**
-         * all relocations for this object must be processed before returning
-         * control to the program
-         */
-        public Boolean bindNow() {
-            if (this.bindNow != null)
-                return this.bindNow;
-            boolean _tmp = (boolean) ((value() & 8) != 0);
-            this.bindNow = _tmp;
-            return this.bindNow;
+        public void _fetchInstances() {
         }
-        private Boolean origin;
+        private Boolean alloc;
 
         /**
-         * object may reference the $ORIGIN substitution string
+         * occupies memory during execution
          */
-        public Boolean origin() {
-            if (this.origin != null)
-                return this.origin;
-            boolean _tmp = (boolean) ((value() & 1) != 0);
-            this.origin = _tmp;
-            return this.origin;
+        public Boolean alloc() {
+            if (this.alloc != null)
+                return this.alloc;
+            this.alloc = (value() & 2) != 0;
+            return this.alloc;
         }
-        private Boolean textrel;
+        private Boolean exclude;
 
         /**
-         * relocation entries might request modifications to a non-writable segment
+         * section is excluded unless referenced or allocated (Solaris)
          */
-        public Boolean textrel() {
-            if (this.textrel != null)
-                return this.textrel;
-            boolean _tmp = (boolean) ((value() & 4) != 0);
-            this.textrel = _tmp;
-            return this.textrel;
+        public Boolean exclude() {
+            if (this.exclude != null)
+                return this.exclude;
+            this.exclude = (value() & 134217728) != 0;
+            return this.exclude;
         }
-        private Boolean staticTls;
+        private Boolean execInstr;
 
         /**
-         * object uses static thread-local storage scheme
+         * executable
          */
-        public Boolean staticTls() {
-            if (this.staticTls != null)
-                return this.staticTls;
-            boolean _tmp = (boolean) ((value() & 16) != 0);
-            this.staticTls = _tmp;
-            return this.staticTls;
+        public Boolean execInstr() {
+            if (this.execInstr != null)
+                return this.execInstr;
+            this.execInstr = (value() & 4) != 0;
+            return this.execInstr;
         }
-        private Boolean symbolic;
+        private Boolean group;
 
         /**
-         * symbolic linking
+         * section is member of a group
          */
-        public Boolean symbolic() {
-            if (this.symbolic != null)
-                return this.symbolic;
-            boolean _tmp = (boolean) ((value() & 2) != 0);
-            this.symbolic = _tmp;
-            return this.symbolic;
+        public Boolean group() {
+            if (this.group != null)
+                return this.group;
+            this.group = (value() & 512) != 0;
+            return this.group;
+        }
+        private Boolean infoLink;
+
+        /**
+         * 'sh_info' contains SHT index
+         */
+        public Boolean infoLink() {
+            if (this.infoLink != null)
+                return this.infoLink;
+            this.infoLink = (value() & 64) != 0;
+            return this.infoLink;
+        }
+        private Boolean linkOrder;
+
+        /**
+         * preserve order after combining
+         */
+        public Boolean linkOrder() {
+            if (this.linkOrder != null)
+                return this.linkOrder;
+            this.linkOrder = (value() & 128) != 0;
+            return this.linkOrder;
+        }
+        private Boolean maskOs;
+
+        /**
+         * OS-specific
+         */
+        public Boolean maskOs() {
+            if (this.maskOs != null)
+                return this.maskOs;
+            this.maskOs = (value() & 267386880) != 0;
+            return this.maskOs;
+        }
+        private Boolean maskProc;
+
+        /**
+         * Processor-specific
+         */
+        public Boolean maskProc() {
+            if (this.maskProc != null)
+                return this.maskProc;
+            this.maskProc = (value() & 4026531840L) != 0;
+            return this.maskProc;
+        }
+        private Boolean merge;
+
+        /**
+         * might be merged
+         */
+        public Boolean merge() {
+            if (this.merge != null)
+                return this.merge;
+            this.merge = (value() & 16) != 0;
+            return this.merge;
+        }
+        private Boolean ordered;
+
+        /**
+         * special ordering requirement (Solaris)
+         */
+        public Boolean ordered() {
+            if (this.ordered != null)
+                return this.ordered;
+            this.ordered = (value() & 67108864) != 0;
+            return this.ordered;
+        }
+        private Boolean osNonConforming;
+
+        /**
+         * non-standard OS specific handling required
+         */
+        public Boolean osNonConforming() {
+            if (this.osNonConforming != null)
+                return this.osNonConforming;
+            this.osNonConforming = (value() & 256) != 0;
+            return this.osNonConforming;
+        }
+        private Boolean strings;
+
+        /**
+         * contains nul-terminated strings
+         */
+        public Boolean strings() {
+            if (this.strings != null)
+                return this.strings;
+            this.strings = (value() & 32) != 0;
+            return this.strings;
+        }
+        private Boolean tls;
+
+        /**
+         * section hold thread-local data
+         */
+        public Boolean tls() {
+            if (this.tls != null)
+                return this.tls;
+            this.tls = (value() & 1024) != 0;
+            return this.tls;
+        }
+        private Boolean write;
+
+        /**
+         * writable
+         */
+        public Boolean write() {
+            if (this.write != null)
+                return this.write;
+            this.write = (value() & 1) != 0;
+            return this.write;
         }
         private long value;
         private Elf _root;
-        private Elf.EndianElf.DynamicSectionEntry _parent;
+        private Elf.EndianElf.SectionHeader _parent;
         public long value() { return value; }
         public Elf _root() { return _root; }
-        public Elf.EndianElf.DynamicSectionEntry _parent() { return _parent; }
-    }
-    private Integer shIdxLoOs;
-    public Integer shIdxLoOs() {
-        if (this.shIdxLoOs != null)
-            return this.shIdxLoOs;
-        int _tmp = (int) (65312);
-        this.shIdxLoOs = _tmp;
-        return this.shIdxLoOs;
-    }
-    private Integer shIdxLoReserved;
-    public Integer shIdxLoReserved() {
-        if (this.shIdxLoReserved != null)
-            return this.shIdxLoReserved;
-        int _tmp = (int) (65280);
-        this.shIdxLoReserved = _tmp;
-        return this.shIdxLoReserved;
-    }
-    private Integer shIdxHiProc;
-    public Integer shIdxHiProc() {
-        if (this.shIdxHiProc != null)
-            return this.shIdxHiProc;
-        int _tmp = (int) (65311);
-        this.shIdxHiProc = _tmp;
-        return this.shIdxHiProc;
-    }
-    private Integer shIdxLoProc;
-    public Integer shIdxLoProc() {
-        if (this.shIdxLoProc != null)
-            return this.shIdxLoProc;
-        int _tmp = (int) (65280);
-        this.shIdxLoProc = _tmp;
-        return this.shIdxLoProc;
+        public Elf.EndianElf.SectionHeader _parent() { return _parent; }
     }
     private Integer shIdxHiOs;
     public Integer shIdxHiOs() {
         if (this.shIdxHiOs != null)
             return this.shIdxHiOs;
-        int _tmp = (int) (65343);
-        this.shIdxHiOs = _tmp;
+        this.shIdxHiOs = ((int) 65343);
         return this.shIdxHiOs;
+    }
+    private Integer shIdxHiProc;
+    public Integer shIdxHiProc() {
+        if (this.shIdxHiProc != null)
+            return this.shIdxHiProc;
+        this.shIdxHiProc = ((int) 65311);
+        return this.shIdxHiProc;
     }
     private Integer shIdxHiReserved;
     public Integer shIdxHiReserved() {
         if (this.shIdxHiReserved != null)
             return this.shIdxHiReserved;
-        int _tmp = (int) (65535);
-        this.shIdxHiReserved = _tmp;
+        this.shIdxHiReserved = ((int) 65535);
         return this.shIdxHiReserved;
+    }
+    private Integer shIdxLoOs;
+    public Integer shIdxLoOs() {
+        if (this.shIdxLoOs != null)
+            return this.shIdxLoOs;
+        this.shIdxLoOs = ((int) 65312);
+        return this.shIdxLoOs;
+    }
+    private Integer shIdxLoProc;
+    public Integer shIdxLoProc() {
+        if (this.shIdxLoProc != null)
+            return this.shIdxLoProc;
+        this.shIdxLoProc = ((int) 65280);
+        return this.shIdxLoProc;
+    }
+    private Integer shIdxLoReserved;
+    public Integer shIdxLoReserved() {
+        if (this.shIdxLoReserved != null)
+            return this.shIdxLoReserved;
+        this.shIdxLoReserved = ((int) 65280);
+        return this.shIdxLoReserved;
     }
     private byte[] magic;
     private Bits bits;

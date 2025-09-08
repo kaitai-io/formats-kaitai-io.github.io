@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -39,11 +39,25 @@ sub _read {
     $self->{num_files} = $self->{_io}->read_u2le();
     $self->{num_entries} = $self->{_io}->read_u2le();
     $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{offsets} = ();
+    $self->{offsets} = [];
     my $n_offsets = $self->num_files();
     for (my $i = 0; $i < $n_offsets; $i++) {
         push @{$self->{offsets}}, $self->{_io}->read_u4le();
     }
+}
+
+sub files {
+    my ($self) = @_;
+    return $self->{files} if ($self->{files});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->ofs_dir() & 4294965248);
+    $self->{files} = [];
+    my $n_files = $self->_root()->num_entries();
+    for (my $i = 0; $i < $n_files; $i++) {
+        push @{$self->{files}}, GranTurismoVol::FileInfo->new($self->{_io}, $self, $self->{_root});
+    }
+    $self->{_io}->seek($_pos);
+    return $self->{files};
 }
 
 sub ofs_dir {
@@ -51,20 +65,6 @@ sub ofs_dir {
     return $self->{ofs_dir} if ($self->{ofs_dir});
     $self->{ofs_dir} = @{$self->offsets()}[1];
     return $self->{ofs_dir};
-}
-
-sub files {
-    my ($self) = @_;
-    return $self->{files} if ($self->{files});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->ofs_dir() & 4294965248));
-    $self->{files} = ();
-    my $n_files = $self->_root()->num_entries();
-    for (my $i = 0; $i < $n_files; $i++) {
-        push @{$self->{files}}, GranTurismoVol::FileInfo->new($self->{_io}, $self, $self->{_root});
-    }
-    $self->{_io}->seek($_pos);
-    return $self->{files};
 }
 
 sub magic {
@@ -112,7 +112,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -128,19 +128,12 @@ sub _read {
     $self->{name} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate(IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(25), 0), 0, 0));
 }
 
-sub size {
-    my ($self) = @_;
-    return $self->{size} if ($self->{size});
-    $self->{size} = ((@{$self->_root()->offsets()}[($self->offset_idx() + 1)] & 4294965248) - @{$self->_root()->offsets()}[$self->offset_idx()]);
-    return $self->{size};
-}
-
 sub body {
     my ($self) = @_;
     return $self->{body} if ($self->{body});
     if (!($self->is_dir())) {
         my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek((@{$self->_root()->offsets()}[$self->offset_idx()] & 4294965248));
+        $self->{_io}->seek(@{$self->_root()->offsets()}[$self->offset_idx()] & 4294965248);
         $self->{body} = $self->{_io}->read_bytes($self->size());
         $self->{_io}->seek($_pos);
     }
@@ -159,6 +152,13 @@ sub is_last_entry {
     return $self->{is_last_entry} if ($self->{is_last_entry});
     $self->{is_last_entry} = ($self->flags() & 128) != 0;
     return $self->{is_last_entry};
+}
+
+sub size {
+    my ($self) = @_;
+    return $self->{size} if ($self->{size});
+    $self->{size} = (@{$self->_root()->offsets()}[$self->offset_idx() + 1] & 4294965248) - @{$self->_root()->offsets()}[$self->offset_idx()];
+    return $self->{size};
 }
 
 sub timestamp {

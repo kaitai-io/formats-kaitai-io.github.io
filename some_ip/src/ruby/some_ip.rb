@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'some_ip_sd'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -13,8 +14,8 @@ end
 # and the underlying serialization/wire format.
 # @see https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf Source
 class SomeIp < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -22,11 +23,10 @@ class SomeIp < Kaitai::Struct::Struct
     @header = Header.new(@_io, self, @_root)
     case header.message_id.value
     when 4294934784
-      @_raw_payload = @_io.read_bytes((header.length - 8))
-      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = SomeIpSd.new(_io__raw_payload)
+      _io_payload = @_io.substream(header.length - 8)
+      @payload = SomeIpSd.new(_io_payload)
     else
-      @payload = @_io.read_bytes((header.length - 8))
+      @payload = @_io.read_bytes(header.length - 8)
     end
     self
   end
@@ -60,19 +60,17 @@ class SomeIp < Kaitai::Struct::Struct
       10 => :return_code_enum_wrong_message_type,
     }
     I__RETURN_CODE_ENUM = RETURN_CODE_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @_raw_message_id = @_io.read_bytes(4)
-      _io__raw_message_id = Kaitai::Struct::Stream.new(@_raw_message_id)
-      @message_id = MessageId.new(_io__raw_message_id, self, @_root)
+      _io_message_id = @_io.substream(4)
+      @message_id = MessageId.new(_io_message_id, self, @_root)
       @length = @_io.read_u4be
-      @_raw_request_id = @_io.read_bytes(4)
-      _io__raw_request_id = Kaitai::Struct::Stream.new(@_raw_request_id)
-      @request_id = RequestId.new(_io__raw_request_id, self, @_root)
+      _io_request_id = @_io.substream(4)
+      @request_id = RequestId.new(_io_request_id, self, @_root)
       @protocol_version = @_io.read_u1
       @interface_version = @_io.read_u1
       @message_type = Kaitai::Struct::Stream::resolve_enum(MESSAGE_TYPE_ENUM, @_io.read_u1)
@@ -89,7 +87,7 @@ class SomeIp < Kaitai::Struct::Struct
     # the ID with 2^16 services with 2^15 methods.
     # @see '' AUTOSAR_PRS_SOMEIPProtocol.pdf 4.1.1.1  Message ID
     class MessageId < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -141,7 +139,7 @@ class SomeIp < Kaitai::Struct::Struct
     # multiple parallel usesof the same method, event, getter or setter.
     # @see '' AUTOSAR_PRS_SOMEIPProtocol.pdf - section 4.1.1.3  Request ID
     class RequestId < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end

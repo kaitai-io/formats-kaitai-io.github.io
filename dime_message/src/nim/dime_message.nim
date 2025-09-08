@@ -11,17 +11,17 @@ type
     absolute_uri = 2
     unknown = 3
     none = 4
-  DimeMessage_Padding* = ref object of KaitaiStruct
-    `boundaryPadding`*: seq[byte]
-    `parent`*: DimeMessage_Record
-  DimeMessage_OptionField* = ref object of KaitaiStruct
-    `optionElements`*: seq[DimeMessage_OptionElement]
-    `parent`*: DimeMessage_Record
   DimeMessage_OptionElement* = ref object of KaitaiStruct
     `elementFormat`*: uint16
     `lenElement`*: uint16
     `elementData`*: seq[byte]
     `parent`*: DimeMessage_OptionField
+  DimeMessage_OptionField* = ref object of KaitaiStruct
+    `optionElements`*: seq[DimeMessage_OptionElement]
+    `parent`*: DimeMessage_Record
+  DimeMessage_Padding* = ref object of KaitaiStruct
+    `boundaryPadding`*: seq[byte]
+    `parent`*: DimeMessage_Record
   DimeMessage_Record* = ref object of KaitaiStruct
     `version`*: uint64
     `isFirstRecord`*: bool
@@ -45,9 +45,9 @@ type
     `rawOptions`*: seq[byte]
 
 proc read*(_: typedesc[DimeMessage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DimeMessage
-proc read*(_: typedesc[DimeMessage_Padding], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_Padding
-proc read*(_: typedesc[DimeMessage_OptionField], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_OptionField
 proc read*(_: typedesc[DimeMessage_OptionElement], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_OptionField): DimeMessage_OptionElement
+proc read*(_: typedesc[DimeMessage_OptionField], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_OptionField
+proc read*(_: typedesc[DimeMessage_Padding], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_Padding
 proc read*(_: typedesc[DimeMessage_Record], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage): DimeMessage_Record
 
 
@@ -87,21 +87,25 @@ proc fromFile*(_: typedesc[DimeMessage], filename: string): DimeMessage =
 
 
 ##[
-padding to the next 4-byte boundary
+one element of the option field
 ]##
-proc read*(_: typedesc[DimeMessage_Padding], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_Padding =
+proc read*(_: typedesc[DimeMessage_OptionElement], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_OptionField): DimeMessage_OptionElement =
   template this: untyped = result
-  this = new(DimeMessage_Padding)
+  this = new(DimeMessage_OptionElement)
   let root = if root == nil: cast[DimeMessage](this) else: cast[DimeMessage](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let boundaryPaddingExpr = this.io.readBytes(int((-(this.io.pos) %%% 4)))
-  this.boundaryPadding = boundaryPaddingExpr
+  let elementFormatExpr = this.io.readU2be()
+  this.elementFormat = elementFormatExpr
+  let lenElementExpr = this.io.readU2be()
+  this.lenElement = lenElementExpr
+  let elementDataExpr = this.io.readBytes(int(this.lenElement))
+  this.elementData = elementDataExpr
 
-proc fromFile*(_: typedesc[DimeMessage_Padding], filename: string): DimeMessage_Padding =
-  DimeMessage_Padding.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[DimeMessage_OptionElement], filename: string): DimeMessage_OptionElement =
+  DimeMessage_OptionElement.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -127,25 +131,21 @@ proc fromFile*(_: typedesc[DimeMessage_OptionField], filename: string): DimeMess
 
 
 ##[
-one element of the option field
+padding to the next 4-byte boundary
 ]##
-proc read*(_: typedesc[DimeMessage_OptionElement], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_OptionField): DimeMessage_OptionElement =
+proc read*(_: typedesc[DimeMessage_Padding], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_Padding =
   template this: untyped = result
-  this = new(DimeMessage_OptionElement)
+  this = new(DimeMessage_Padding)
   let root = if root == nil: cast[DimeMessage](this) else: cast[DimeMessage](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let elementFormatExpr = this.io.readU2be()
-  this.elementFormat = elementFormatExpr
-  let lenElementExpr = this.io.readU2be()
-  this.lenElement = lenElementExpr
-  let elementDataExpr = this.io.readBytes(int(this.lenElement))
-  this.elementData = elementDataExpr
+  let boundaryPaddingExpr = this.io.readBytes(int(-(this.io.pos) %%% 4))
+  this.boundaryPadding = boundaryPaddingExpr
 
-proc fromFile*(_: typedesc[DimeMessage_OptionElement], filename: string): DimeMessage_OptionElement =
-  DimeMessage_OptionElement.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[DimeMessage_Padding], filename: string): DimeMessage_Padding =
+  DimeMessage_Padding.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[

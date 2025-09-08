@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class saints_row_2_vpp_pc_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 class saints_row_2_vpp_pc_t : public kaitai::kstruct {
@@ -54,11 +56,11 @@ public:
             ~offset_t();
 
         private:
-            bool f_filename;
-            std::string m_filename;
+            bool f_body;
+            std::string m_body;
 
         public:
-            std::string filename();
+            std::string body();
 
         private:
             bool f_ext;
@@ -68,11 +70,11 @@ public:
             std::string ext();
 
         private:
-            bool f_body;
-            std::string m_body;
+            bool f_filename;
+            std::string m_filename;
 
         public:
-            std::string body();
+            std::string filename();
 
         private:
             uint32_t m_name_ofs;
@@ -133,27 +135,6 @@ public:
     };
 
 private:
-    bool f_filenames;
-    std::unique_ptr<strings_t> m_filenames;
-
-public:
-    strings_t* filenames();
-
-private:
-    bool f_ofs_extensions;
-    int32_t m_ofs_extensions;
-
-public:
-    int32_t ofs_extensions();
-
-private:
-    bool f_files;
-    std::unique_ptr<offsets_t> m_files;
-
-public:
-    offsets_t* files();
-
-private:
     bool f_data_start;
     int32_t m_data_start;
 
@@ -166,6 +147,27 @@ private:
 
 public:
     strings_t* extensions();
+
+private:
+    bool f_filenames;
+    std::unique_ptr<strings_t> m_filenames;
+
+public:
+    strings_t* filenames();
+
+private:
+    bool f_files;
+    std::unique_ptr<offsets_t> m_files;
+
+public:
+    offsets_t* files();
+
+private:
+    bool f_ofs_extensions;
+    int32_t m_ofs_extensions;
+
+public:
+    int32_t ofs_extensions();
 
 private:
     bool f_ofs_filenames;
@@ -189,12 +191,12 @@ private:
     int32_t m_smth9;
     saints_row_2_vpp_pc_t* m__root;
     kaitai::kstruct* m__parent;
+    std::string m__raw_extensions;
+    std::unique_ptr<kaitai::kstream> m__io__raw_extensions;
     std::string m__raw_filenames;
     std::unique_ptr<kaitai::kstream> m__io__raw_filenames;
     std::string m__raw_files;
     std::unique_ptr<kaitai::kstream> m__io__raw_files;
-    std::string m__raw_extensions;
-    std::unique_ptr<kaitai::kstream> m__io__raw_extensions;
 
 public:
     std::string magic() const { return m_magic; }
@@ -211,10 +213,10 @@ public:
     int32_t smth9() const { return m_smth9; }
     saints_row_2_vpp_pc_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
+    std::string _raw_extensions() const { return m__raw_extensions; }
+    kaitai::kstream* _io__raw_extensions() const { return m__io__raw_extensions.get(); }
     std::string _raw_filenames() const { return m__raw_filenames; }
     kaitai::kstream* _io__raw_filenames() const { return m__io__raw_filenames.get(); }
     std::string _raw_files() const { return m__raw_files; }
     kaitai::kstream* _io__raw_files() const { return m__io__raw_files.get(); }
-    std::string _raw_extensions() const { return m__raw_extensions; }
-    kaitai::kstream* _io__raw_extensions() const { return m__io__raw_extensions.get(); }
 };

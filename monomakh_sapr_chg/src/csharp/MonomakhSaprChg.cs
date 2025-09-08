@@ -31,7 +31,7 @@ namespace Kaitai
         }
         private void _read()
         {
-            _title = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(10));
+            _title = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(10));
             _ent = new List<Block>();
             {
                 var i = 0;
@@ -56,7 +56,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _header = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(13));
+                _header = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(13));
                 _fileSize = m_io.ReadU8le();
                 _file = m_io.ReadBytes(FileSize);
             }

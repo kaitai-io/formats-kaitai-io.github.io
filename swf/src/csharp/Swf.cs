@@ -67,9 +67,9 @@ namespace Kaitai
         {
             _compression = ((Compressions) m_io.ReadU1());
             _signature = m_io.ReadBytes(2);
-            if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 87, 83 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_signature, new byte[] { 87, 83 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 87, 83 }, Signature, M_Io, "/seq/1");
+                throw new ValidationNotEqualError(new byte[] { 87, 83 }, _signature, m_io, "/seq/1");
             }
             _version = m_io.ReadU1();
             _lenFile = m_io.ReadU4le();
@@ -84,6 +84,226 @@ namespace Kaitai
                 var io___raw_zlibBody = new KaitaiStream(__raw_zlibBody);
                 _zlibBody = new SwfBody(io___raw_zlibBody, this, m_root);
             }
+        }
+        public partial class DefineSoundBody : KaitaiStruct
+        {
+            public static DefineSoundBody FromFile(string fileName)
+            {
+                return new DefineSoundBody(new KaitaiStream(fileName));
+            }
+
+
+            public enum Bps
+            {
+                Sound8Bit = 0,
+                Sound16Bit = 1,
+            }
+
+            public enum Channels
+            {
+                Mono = 0,
+                Stereo = 1,
+            }
+
+            public enum SamplingRates
+            {
+                Rate55Khz = 0,
+                Rate11Khz = 1,
+                Rate22Khz = 2,
+                Rate44Khz = 3,
+            }
+            public DefineSoundBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _id = m_io.ReadU2le();
+                _format = m_io.ReadBitsIntBe(4);
+                _samplingRate = ((SamplingRates) m_io.ReadBitsIntBe(2));
+                _bitsPerSample = ((Bps) m_io.ReadBitsIntBe(1));
+                _numChannels = ((Channels) m_io.ReadBitsIntBe(1));
+                m_io.AlignToByte();
+                _numSamples = m_io.ReadU4le();
+            }
+            private ushort _id;
+            private ulong _format;
+            private SamplingRates _samplingRate;
+            private Bps _bitsPerSample;
+            private Channels _numChannels;
+            private uint _numSamples;
+            private Swf m_root;
+            private Swf.Tag m_parent;
+            public ushort Id { get { return _id; } }
+            public ulong Format { get { return _format; } }
+
+            /// <summary>
+            /// Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
+            /// </summary>
+            public SamplingRates SamplingRate { get { return _samplingRate; } }
+            public Bps BitsPerSample { get { return _bitsPerSample; } }
+            public Channels NumChannels { get { return _numChannels; } }
+            public uint NumSamples { get { return _numSamples; } }
+            public Swf M_Root { get { return m_root; } }
+            public Swf.Tag M_Parent { get { return m_parent; } }
+        }
+        public partial class DoAbcBody : KaitaiStruct
+        {
+            public static DoAbcBody FromFile(string fileName)
+            {
+                return new DoAbcBody(new KaitaiStream(fileName));
+            }
+
+            public DoAbcBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _flags = m_io.ReadU4le();
+                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                _abcdata = m_io.ReadBytesFull();
+            }
+            private uint _flags;
+            private string _name;
+            private byte[] _abcdata;
+            private Swf m_root;
+            private Swf.Tag m_parent;
+            public uint Flags { get { return _flags; } }
+            public string Name { get { return _name; } }
+            public byte[] Abcdata { get { return _abcdata; } }
+            public Swf M_Root { get { return m_root; } }
+            public Swf.Tag M_Parent { get { return m_parent; } }
+        }
+        public partial class RecordHeader : KaitaiStruct
+        {
+            public static RecordHeader FromFile(string fileName)
+            {
+                return new RecordHeader(new KaitaiStream(fileName));
+            }
+
+            public RecordHeader(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_len = false;
+                f_smallLen = false;
+                f_tagType = false;
+                _read();
+            }
+            private void _read()
+            {
+                _tagCodeAndLength = m_io.ReadU2le();
+                if (SmallLen == 63) {
+                    _bigLen = m_io.ReadS4le();
+                }
+            }
+            private bool f_len;
+            private int _len;
+            public int Len
+            {
+                get
+                {
+                    if (f_len)
+                        return _len;
+                    f_len = true;
+                    _len = (int) ((SmallLen == 63 ? BigLen : SmallLen));
+                    return _len;
+                }
+            }
+            private bool f_smallLen;
+            private int _smallLen;
+            public int SmallLen
+            {
+                get
+                {
+                    if (f_smallLen)
+                        return _smallLen;
+                    f_smallLen = true;
+                    _smallLen = (int) (TagCodeAndLength & 63);
+                    return _smallLen;
+                }
+            }
+            private bool f_tagType;
+            private TagType _tagType;
+            public TagType TagType
+            {
+                get
+                {
+                    if (f_tagType)
+                        return _tagType;
+                    f_tagType = true;
+                    _tagType = (TagType) (((Swf.TagType) TagCodeAndLength >> 6));
+                    return _tagType;
+                }
+            }
+            private ushort _tagCodeAndLength;
+            private int? _bigLen;
+            private Swf m_root;
+            private Swf.Tag m_parent;
+            public ushort TagCodeAndLength { get { return _tagCodeAndLength; } }
+            public int? BigLen { get { return _bigLen; } }
+            public Swf M_Root { get { return m_root; } }
+            public Swf.Tag M_Parent { get { return m_parent; } }
+        }
+        public partial class Rect : KaitaiStruct
+        {
+            public static Rect FromFile(string fileName)
+            {
+                return new Rect(new KaitaiStream(fileName));
+            }
+
+            public Rect(KaitaiStream p__io, Swf.SwfBody p__parent = null, Swf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_numBits = false;
+                f_numBytes = false;
+                _read();
+            }
+            private void _read()
+            {
+                _b1 = m_io.ReadU1();
+                _skip = m_io.ReadBytes(NumBytes);
+            }
+            private bool f_numBits;
+            private int _numBits;
+            public int NumBits
+            {
+                get
+                {
+                    if (f_numBits)
+                        return _numBits;
+                    f_numBits = true;
+                    _numBits = (int) (B1 >> 3);
+                    return _numBits;
+                }
+            }
+            private bool f_numBytes;
+            private int _numBytes;
+            public int NumBytes
+            {
+                get
+                {
+                    if (f_numBytes)
+                        return _numBytes;
+                    f_numBytes = true;
+                    _numBytes = (int) (((NumBits * 4 - 3) + 7) / 8);
+                    return _numBytes;
+                }
+            }
+            private byte _b1;
+            private byte[] _skip;
+            private Swf m_root;
+            private Swf.SwfBody m_parent;
+            public byte B1 { get { return _b1; } }
+            public byte[] Skip { get { return _skip; } }
+            public Swf M_Root { get { return m_root; } }
+            public Swf.SwfBody M_Parent { get { return m_parent; } }
         }
         public partial class Rgb : KaitaiStruct
         {
@@ -115,14 +335,14 @@ namespace Kaitai
             public Swf M_Root { get { return m_root; } }
             public Swf.Tag M_Parent { get { return m_parent; } }
         }
-        public partial class DoAbcBody : KaitaiStruct
+        public partial class ScriptLimitsBody : KaitaiStruct
         {
-            public static DoAbcBody FromFile(string fileName)
+            public static ScriptLimitsBody FromFile(string fileName)
             {
-                return new DoAbcBody(new KaitaiStream(fileName));
+                return new ScriptLimitsBody(new KaitaiStream(fileName));
             }
 
-            public DoAbcBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
+            public ScriptLimitsBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -130,18 +350,15 @@ namespace Kaitai
             }
             private void _read()
             {
-                _flags = m_io.ReadU4le();
-                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
-                _abcdata = m_io.ReadBytesFull();
+                _maxRecursionDepth = m_io.ReadU2le();
+                _scriptTimeoutSeconds = m_io.ReadU2le();
             }
-            private uint _flags;
-            private string _name;
-            private byte[] _abcdata;
+            private ushort _maxRecursionDepth;
+            private ushort _scriptTimeoutSeconds;
             private Swf m_root;
             private Swf.Tag m_parent;
-            public uint Flags { get { return _flags; } }
-            public string Name { get { return _name; } }
-            public byte[] Abcdata { get { return _abcdata; } }
+            public ushort MaxRecursionDepth { get { return _maxRecursionDepth; } }
+            public ushort ScriptTimeoutSeconds { get { return _scriptTimeoutSeconds; } }
             public Swf M_Root { get { return m_root; } }
             public Swf.Tag M_Parent { get { return m_parent; } }
         }
@@ -189,131 +406,6 @@ namespace Kaitai
             public List<Tag> Tags { get { return _tags; } }
             public Swf M_Root { get { return m_root; } }
             public Swf M_Parent { get { return m_parent; } }
-        }
-        public partial class Rect : KaitaiStruct
-        {
-            public static Rect FromFile(string fileName)
-            {
-                return new Rect(new KaitaiStream(fileName));
-            }
-
-            public Rect(KaitaiStream p__io, Swf.SwfBody p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_numBits = false;
-                f_numBytes = false;
-                _read();
-            }
-            private void _read()
-            {
-                _b1 = m_io.ReadU1();
-                _skip = m_io.ReadBytes(NumBytes);
-            }
-            private bool f_numBits;
-            private int _numBits;
-            public int NumBits
-            {
-                get
-                {
-                    if (f_numBits)
-                        return _numBits;
-                    _numBits = (int) ((B1 >> 3));
-                    f_numBits = true;
-                    return _numBits;
-                }
-            }
-            private bool f_numBytes;
-            private int _numBytes;
-            public int NumBytes
-            {
-                get
-                {
-                    if (f_numBytes)
-                        return _numBytes;
-                    _numBytes = (int) (((((NumBits * 4) - 3) + 7) / 8));
-                    f_numBytes = true;
-                    return _numBytes;
-                }
-            }
-            private byte _b1;
-            private byte[] _skip;
-            private Swf m_root;
-            private Swf.SwfBody m_parent;
-            public byte B1 { get { return _b1; } }
-            public byte[] Skip { get { return _skip; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.SwfBody M_Parent { get { return m_parent; } }
-        }
-        public partial class Tag : KaitaiStruct
-        {
-            public static Tag FromFile(string fileName)
-            {
-                return new Tag(new KaitaiStream(fileName));
-            }
-
-            public Tag(KaitaiStream p__io, Swf.SwfBody p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _recordHeader = new RecordHeader(m_io, this, m_root);
-                switch (RecordHeader.TagType) {
-                case Swf.TagType.DefineSound: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new DefineSoundBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.SetBackgroundColor: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new Rgb(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.ScriptLimits: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new ScriptLimitsBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.DoAbc: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new DoAbcBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.ExportAssets: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new SymbolClassBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.SymbolClass: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new SymbolClassBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                default: {
-                    _tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    break;
-                }
-                }
-            }
-            private RecordHeader _recordHeader;
-            private object _tagBody;
-            private Swf m_root;
-            private Swf.SwfBody m_parent;
-            private byte[] __raw_tagBody;
-            public RecordHeader RecordHeader { get { return _recordHeader; } }
-            public object TagBody { get { return _tagBody; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.SwfBody M_Parent { get { return m_parent; } }
-            public byte[] M_RawTagBody { get { return __raw_tagBody; } }
         }
         public partial class SymbolClassBody : KaitaiStruct
         {
@@ -373,34 +465,14 @@ namespace Kaitai
             public Swf M_Root { get { return m_root; } }
             public Swf.Tag M_Parent { get { return m_parent; } }
         }
-        public partial class DefineSoundBody : KaitaiStruct
+        public partial class Tag : KaitaiStruct
         {
-            public static DefineSoundBody FromFile(string fileName)
+            public static Tag FromFile(string fileName)
             {
-                return new DefineSoundBody(new KaitaiStream(fileName));
+                return new Tag(new KaitaiStream(fileName));
             }
 
-
-            public enum SamplingRates
-            {
-                Rate55Khz = 0,
-                Rate11Khz = 1,
-                Rate22Khz = 2,
-                Rate44Khz = 3,
-            }
-
-            public enum Bps
-            {
-                Sound8Bit = 0,
-                Sound16Bit = 1,
-            }
-
-            public enum Channels
-            {
-                Mono = 0,
-                Stereo = 1,
-            }
-            public DefineSoundBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
+            public Tag(KaitaiStream p__io, Swf.SwfBody p__parent = null, Swf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -408,132 +480,60 @@ namespace Kaitai
             }
             private void _read()
             {
-                _id = m_io.ReadU2le();
-                _format = m_io.ReadBitsIntBe(4);
-                _samplingRate = ((SamplingRates) m_io.ReadBitsIntBe(2));
-                _bitsPerSample = ((Bps) m_io.ReadBitsIntBe(1));
-                _numChannels = ((Channels) m_io.ReadBitsIntBe(1));
-                m_io.AlignToByte();
-                _numSamples = m_io.ReadU4le();
+                _recordHeader = new RecordHeader(m_io, this, m_root);
+                switch (RecordHeader.TagType) {
+                case Swf.TagType.DefineSound: {
+                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
+                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
+                    _tagBody = new DefineSoundBody(io___raw_tagBody, this, m_root);
+                    break;
+                }
+                case Swf.TagType.DoAbc: {
+                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
+                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
+                    _tagBody = new DoAbcBody(io___raw_tagBody, this, m_root);
+                    break;
+                }
+                case Swf.TagType.ExportAssets: {
+                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
+                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
+                    _tagBody = new SymbolClassBody(io___raw_tagBody, this, m_root);
+                    break;
+                }
+                case Swf.TagType.ScriptLimits: {
+                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
+                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
+                    _tagBody = new ScriptLimitsBody(io___raw_tagBody, this, m_root);
+                    break;
+                }
+                case Swf.TagType.SetBackgroundColor: {
+                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
+                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
+                    _tagBody = new Rgb(io___raw_tagBody, this, m_root);
+                    break;
+                }
+                case Swf.TagType.SymbolClass: {
+                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
+                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
+                    _tagBody = new SymbolClassBody(io___raw_tagBody, this, m_root);
+                    break;
+                }
+                default: {
+                    _tagBody = m_io.ReadBytes(RecordHeader.Len);
+                    break;
+                }
+                }
             }
-            private ushort _id;
-            private ulong _format;
-            private SamplingRates _samplingRate;
-            private Bps _bitsPerSample;
-            private Channels _numChannels;
-            private uint _numSamples;
+            private RecordHeader _recordHeader;
+            private object _tagBody;
             private Swf m_root;
-            private Swf.Tag m_parent;
-            public ushort Id { get { return _id; } }
-            public ulong Format { get { return _format; } }
-
-            /// <summary>
-            /// Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
-            /// </summary>
-            public SamplingRates SamplingRate { get { return _samplingRate; } }
-            public Bps BitsPerSample { get { return _bitsPerSample; } }
-            public Channels NumChannels { get { return _numChannels; } }
-            public uint NumSamples { get { return _numSamples; } }
+            private Swf.SwfBody m_parent;
+            private byte[] __raw_tagBody;
+            public RecordHeader RecordHeader { get { return _recordHeader; } }
+            public object TagBody { get { return _tagBody; } }
             public Swf M_Root { get { return m_root; } }
-            public Swf.Tag M_Parent { get { return m_parent; } }
-        }
-        public partial class RecordHeader : KaitaiStruct
-        {
-            public static RecordHeader FromFile(string fileName)
-            {
-                return new RecordHeader(new KaitaiStream(fileName));
-            }
-
-            public RecordHeader(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_tagType = false;
-                f_smallLen = false;
-                f_len = false;
-                _read();
-            }
-            private void _read()
-            {
-                _tagCodeAndLength = m_io.ReadU2le();
-                if (SmallLen == 63) {
-                    _bigLen = m_io.ReadS4le();
-                }
-            }
-            private bool f_tagType;
-            private TagType _tagType;
-            public TagType TagType
-            {
-                get
-                {
-                    if (f_tagType)
-                        return _tagType;
-                    _tagType = (TagType) (((Swf.TagType) (TagCodeAndLength >> 6)));
-                    f_tagType = true;
-                    return _tagType;
-                }
-            }
-            private bool f_smallLen;
-            private int _smallLen;
-            public int SmallLen
-            {
-                get
-                {
-                    if (f_smallLen)
-                        return _smallLen;
-                    _smallLen = (int) ((TagCodeAndLength & 63));
-                    f_smallLen = true;
-                    return _smallLen;
-                }
-            }
-            private bool f_len;
-            private int _len;
-            public int Len
-            {
-                get
-                {
-                    if (f_len)
-                        return _len;
-                    _len = (int) ((SmallLen == 63 ? BigLen : SmallLen));
-                    f_len = true;
-                    return _len;
-                }
-            }
-            private ushort _tagCodeAndLength;
-            private int? _bigLen;
-            private Swf m_root;
-            private Swf.Tag m_parent;
-            public ushort TagCodeAndLength { get { return _tagCodeAndLength; } }
-            public int? BigLen { get { return _bigLen; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.Tag M_Parent { get { return m_parent; } }
-        }
-        public partial class ScriptLimitsBody : KaitaiStruct
-        {
-            public static ScriptLimitsBody FromFile(string fileName)
-            {
-                return new ScriptLimitsBody(new KaitaiStream(fileName));
-            }
-
-            public ScriptLimitsBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _maxRecursionDepth = m_io.ReadU2le();
-                _scriptTimeoutSeconds = m_io.ReadU2le();
-            }
-            private ushort _maxRecursionDepth;
-            private ushort _scriptTimeoutSeconds;
-            private Swf m_root;
-            private Swf.Tag m_parent;
-            public ushort MaxRecursionDepth { get { return _maxRecursionDepth; } }
-            public ushort ScriptTimeoutSeconds { get { return _scriptTimeoutSeconds; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.Tag M_Parent { get { return m_parent; } }
+            public Swf.SwfBody M_Parent { get { return m_parent; } }
+            public byte[] M_RawTagBody { get { return __raw_tagBody; } }
         }
         private Compressions _compression;
         private byte[] _signature;

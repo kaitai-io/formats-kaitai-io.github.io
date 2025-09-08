@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Arrays;
 
 
@@ -71,6 +72,12 @@ public class Dcmp0 extends KaitaiStruct {
         }
     }
 
+    public void _fetchInstances() {
+        for (int i = 0; i < this.chunks.size(); i++) {
+            this.chunks.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+
     /**
      * A single chunk of compressed data.
      * Each chunk in the compressed data expands to a sequence of bytes in the uncompressed data,
@@ -127,6 +134,14 @@ public class Dcmp0 extends KaitaiStruct {
                 TagKind on = ( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 74))  ? TagKind.BACKREFERENCE : ( ((tag() >= 75) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))));
                 if (on != null) {
                     switch (( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 74))  ? TagKind.BACKREFERENCE : ( ((tag() >= 75) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))))) {
+                    case BACKREFERENCE: {
+                        this.body = new BackreferenceBody(this._io, this, _root, tag());
+                        break;
+                    }
+                    case END: {
+                        this.body = new EndBody(this._io, this, _root);
+                        break;
+                    }
                     case EXTENDED: {
                         this.body = new ExtendedBody(this._io, this, _root);
                         break;
@@ -135,16 +150,8 @@ public class Dcmp0 extends KaitaiStruct {
                         this.body = new LiteralBody(this._io, this, _root, tag());
                         break;
                     }
-                    case END: {
-                        this.body = new EndBody(this._io, this, _root);
-                        break;
-                    }
                     case TABLE_LOOKUP: {
                         this.body = new TableLookupBody(this._io, this, _root, tag());
-                        break;
-                    }
-                    case BACKREFERENCE: {
-                        this.body = new BackreferenceBody(this._io, this, _root, tag());
                         break;
                     }
                     }
@@ -152,138 +159,34 @@ public class Dcmp0 extends KaitaiStruct {
             }
         }
 
-        /**
-         * The body of a literal data chunk.
-         * 
-         * The data that this chunk expands to is stored literally in the body (`literal`).
-         * Optionally,
-         * the literal data may also be stored for use by future backreference chunks (`do_store`).
-         * 
-         * The length of the literal data is stored as a number of two-byte units.
-         * This means that the literal data always has an even length in bytes.
-         */
-        public static class LiteralBody extends KaitaiStruct {
-
-            public LiteralBody(KaitaiStream _io, int tag) {
-                this(_io, null, null, tag);
-            }
-
-            public LiteralBody(KaitaiStream _io, Dcmp0.Chunk _parent, int tag) {
-                this(_io, _parent, null, tag);
-            }
-
-            public LiteralBody(KaitaiStream _io, Dcmp0.Chunk _parent, Dcmp0 _root, int tag) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this.tag = tag;
-                _read();
-            }
-            private void _read() {
-                if (isLenLiteralDiv2Separate()) {
-                    this.lenLiteralDiv2Separate = this._io.readU1();
+        public void _fetchInstances() {
+            {
+                TagKind on = ( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 74))  ? TagKind.BACKREFERENCE : ( ((tag() >= 75) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))));
+                if (on != null) {
+                    switch (( ((tag() >= 0) && (tag() <= 31))  ? TagKind.LITERAL : ( ((tag() >= 32) && (tag() <= 74))  ? TagKind.BACKREFERENCE : ( ((tag() >= 75) && (tag() <= 253))  ? TagKind.TABLE_LOOKUP : (tag() == 254 ? TagKind.EXTENDED : (tag() == 255 ? TagKind.END : TagKind.INVALID)))))) {
+                    case BACKREFERENCE: {
+                        ((BackreferenceBody) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case END: {
+                        ((EndBody) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case EXTENDED: {
+                        ((ExtendedBody) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case LITERAL: {
+                        ((LiteralBody) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case TABLE_LOOKUP: {
+                        ((TableLookupBody) (this.body))._fetchInstances();
+                        break;
+                    }
+                    }
                 }
-                this.literal = this._io.readBytes(lenLiteral());
             }
-            private Boolean doStore;
-
-            /**
-             * Whether this literal should be stored for use by future backreference chunks.
-             * 
-             * See the documentation of the `backreference_body` type for details about backreference chunks.
-             */
-            public Boolean doStore() {
-                if (this.doStore != null)
-                    return this.doStore;
-                boolean _tmp = (boolean) ((tag() & 16) != 0);
-                this.doStore = _tmp;
-                return this.doStore;
-            }
-            private Integer lenLiteralDiv2;
-
-            /**
-             * The length of the literal data,
-             * in two-byte units.
-             * 
-             * In practice,
-             * this value is always greater than zero,
-             * as there is no use in storing a zero-length literal.
-             */
-            public Integer lenLiteralDiv2() {
-                if (this.lenLiteralDiv2 != null)
-                    return this.lenLiteralDiv2;
-                int _tmp = (int) ((isLenLiteralDiv2Separate() ? lenLiteralDiv2Separate() : lenLiteralDiv2InTag()));
-                this.lenLiteralDiv2 = _tmp;
-                return this.lenLiteralDiv2;
-            }
-            private Integer lenLiteral;
-
-            /**
-             * The length of the literal data,
-             * in bytes.
-             */
-            public Integer lenLiteral() {
-                if (this.lenLiteral != null)
-                    return this.lenLiteral;
-                int _tmp = (int) ((lenLiteralDiv2() * 2));
-                this.lenLiteral = _tmp;
-                return this.lenLiteral;
-            }
-            private Integer lenLiteralDiv2InTag;
-
-            /**
-             * The part of the tag byte that indicates the length of the literal data,
-             * in two-byte units.
-             * If this value is 0,
-             * the length is stored in a separate byte after the tag byte and before the literal data.
-             */
-            public Integer lenLiteralDiv2InTag() {
-                if (this.lenLiteralDiv2InTag != null)
-                    return this.lenLiteralDiv2InTag;
-                int _tmp = (int) ((tag() & 15));
-                this.lenLiteralDiv2InTag = _tmp;
-                return this.lenLiteralDiv2InTag;
-            }
-            private Boolean isLenLiteralDiv2Separate;
-
-            /**
-             * Whether the length of the literal is stored separately from the tag.
-             */
-            public Boolean isLenLiteralDiv2Separate() {
-                if (this.isLenLiteralDiv2Separate != null)
-                    return this.isLenLiteralDiv2Separate;
-                boolean _tmp = (boolean) (lenLiteralDiv2InTag() == 0);
-                this.isLenLiteralDiv2Separate = _tmp;
-                return this.isLenLiteralDiv2Separate;
-            }
-            private Integer lenLiteralDiv2Separate;
-            private byte[] literal;
-            private int tag;
-            private Dcmp0 _root;
-            private Dcmp0.Chunk _parent;
-
-            /**
-             * The length of the literal data,
-             * in two-byte units.
-             * 
-             * This field is only present if the tag byte's low nibble is zero.
-             * In practice,
-             * this only happens if the length is 0x10 or greater,
-             * because smaller lengths can be encoded into the tag byte.
-             */
-            public Integer lenLiteralDiv2Separate() { return lenLiteralDiv2Separate; }
-
-            /**
-             * The literal data.
-             */
-            public byte[] literal() { return literal; }
-
-            /**
-             * The tag byte preceding this chunk body.
-             */
-            public int tag() { return tag; }
-            public Dcmp0 _root() { return _root; }
-            public Dcmp0.Chunk _parent() { return _parent; }
         }
 
         /**
@@ -313,11 +216,11 @@ public class Dcmp0 extends KaitaiStruct {
                 if (isIndexSeparate()) {
                     switch (tag()) {
                     case 32: {
-                        this.indexSeparateMinus = (int) (this._io.readU1());
+                        this.indexSeparateMinus = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case 33: {
-                        this.indexSeparateMinus = (int) (this._io.readU1());
+                        this.indexSeparateMinus = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case 34: {
@@ -327,46 +230,21 @@ public class Dcmp0 extends KaitaiStruct {
                     }
                 }
             }
-            private Boolean isIndexSeparate;
 
-            /**
-             * Whether the index is stored separately from the tag.
-             */
-            public Boolean isIndexSeparate() {
-                if (this.isIndexSeparate != null)
-                    return this.isIndexSeparate;
-                boolean _tmp = (boolean) ( ((tag() >= 32) && (tag() <= 34)) );
-                this.isIndexSeparate = _tmp;
-                return this.isIndexSeparate;
-            }
-            private Integer indexInTag;
-
-            /**
-             * The index of the referenced literal chunk,
-             * as stored in the tag byte.
-             */
-            public Integer indexInTag() {
-                if (this.indexInTag != null)
-                    return this.indexInTag;
-                int _tmp = (int) ((tag() - 35));
-                this.indexInTag = _tmp;
-                return this.indexInTag;
-            }
-            private Integer indexSeparate;
-
-            /**
-             * The index of the referenced literal chunk,
-             * as stored separately from the tag byte,
-             * with the implicit offset corrected for.
-             */
-            public Integer indexSeparate() {
-                if (this.indexSeparate != null)
-                    return this.indexSeparate;
+            public void _fetchInstances() {
                 if (isIndexSeparate()) {
-                    int _tmp = (int) (((indexSeparateMinus() + 40) + (tag() == 33 ? 256 : 0)));
-                    this.indexSeparate = _tmp;
+                    switch (tag()) {
+                    case 32: {
+                        break;
+                    }
+                    case 33: {
+                        break;
+                    }
+                    case 34: {
+                        break;
+                    }
+                    }
                 }
-                return this.indexSeparate;
             }
             private Integer index;
 
@@ -386,9 +264,46 @@ public class Dcmp0 extends KaitaiStruct {
             public Integer index() {
                 if (this.index != null)
                     return this.index;
-                int _tmp = (int) ((isIndexSeparate() ? indexSeparate() : indexInTag()));
-                this.index = _tmp;
+                this.index = ((Number) ((isIndexSeparate() ? indexSeparate() : indexInTag()))).intValue();
                 return this.index;
+            }
+            private Integer indexInTag;
+
+            /**
+             * The index of the referenced literal chunk,
+             * as stored in the tag byte.
+             */
+            public Integer indexInTag() {
+                if (this.indexInTag != null)
+                    return this.indexInTag;
+                this.indexInTag = ((Number) (tag() - 35)).intValue();
+                return this.indexInTag;
+            }
+            private Integer indexSeparate;
+
+            /**
+             * The index of the referenced literal chunk,
+             * as stored separately from the tag byte,
+             * with the implicit offset corrected for.
+             */
+            public Integer indexSeparate() {
+                if (this.indexSeparate != null)
+                    return this.indexSeparate;
+                if (isIndexSeparate()) {
+                    this.indexSeparate = ((Number) ((indexSeparateMinus() + 40) + (tag() == 33 ? 256 : 0))).intValue();
+                }
+                return this.indexSeparate;
+            }
+            private Boolean isIndexSeparate;
+
+            /**
+             * Whether the index is stored separately from the tag.
+             */
+            public Boolean isIndexSeparate() {
+                if (this.isIndexSeparate != null)
+                    return this.isIndexSeparate;
+                this.isIndexSeparate =  ((tag() >= 32) && (tag() <= 34)) ;
+                return this.isIndexSeparate;
             }
             private Integer indexSeparateMinus;
             private int tag;
@@ -426,71 +341,6 @@ public class Dcmp0 extends KaitaiStruct {
         }
 
         /**
-         * The body of a table lookup chunk.
-         * This body is always empty.
-         * 
-         * This chunk always expands to two bytes (`value`),
-         * determined from the tag byte using a fixed lookup table (`lookup_table`).
-         * This lookup table is hardcoded in the decompressor and always the same for all compressed data.
-         */
-        public static class TableLookupBody extends KaitaiStruct {
-
-            public TableLookupBody(KaitaiStream _io, int tag) {
-                this(_io, null, null, tag);
-            }
-
-            public TableLookupBody(KaitaiStream _io, Dcmp0.Chunk _parent, int tag) {
-                this(_io, _parent, null, tag);
-            }
-
-            public TableLookupBody(KaitaiStream _io, Dcmp0.Chunk _parent, Dcmp0 _root, int tag) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this.tag = tag;
-                _read();
-            }
-            private void _read() {
-            }
-            private ArrayList<byte[]> lookupTable;
-
-            /**
-             * Fixed lookup table that maps tag byte numbers to two bytes each.
-             * 
-             * The entries in the lookup table are offset -
-             * index 0 stands for tag 0x4b, 1 for 0x4c, etc.
-             */
-            public ArrayList<byte[]> lookupTable() {
-                if (this.lookupTable != null)
-                    return this.lookupTable;
-                this.lookupTable = new ArrayList<byte[]>(Arrays.asList(new byte[] { 0, 0 }, new byte[] { 78, -70 }, new byte[] { 0, 8 }, new byte[] { 78, 117 }, new byte[] { 0, 12 }, new byte[] { 78, -83 }, new byte[] { 32, 83 }, new byte[] { 47, 11 }, new byte[] { 97, 0 }, new byte[] { 0, 16 }, new byte[] { 112, 0 }, new byte[] { 47, 0 }, new byte[] { 72, 110 }, new byte[] { 32, 80 }, new byte[] { 32, 110 }, new byte[] { 47, 46 }, new byte[] { -1, -4 }, new byte[] { 72, -25 }, new byte[] { 63, 60 }, new byte[] { 0, 4 }, new byte[] { -1, -8 }, new byte[] { 47, 12 }, new byte[] { 32, 6 }, new byte[] { 78, -19 }, new byte[] { 78, 86 }, new byte[] { 32, 104 }, new byte[] { 78, 94 }, new byte[] { 0, 1 }, new byte[] { 88, -113 }, new byte[] { 79, -17 }, new byte[] { 0, 2 }, new byte[] { 0, 24 }, new byte[] { 96, 0 }, new byte[] { -1, -1 }, new byte[] { 80, -113 }, new byte[] { 78, -112 }, new byte[] { 0, 6 }, new byte[] { 38, 110 }, new byte[] { 0, 20 }, new byte[] { -1, -12 }, new byte[] { 76, -18 }, new byte[] { 0, 10 }, new byte[] { 0, 14 }, new byte[] { 65, -18 }, new byte[] { 76, -33 }, new byte[] { 72, -64 }, new byte[] { -1, -16 }, new byte[] { 45, 64 }, new byte[] { 0, 18 }, new byte[] { 48, 46 }, new byte[] { 112, 1 }, new byte[] { 47, 40 }, new byte[] { 32, 84 }, new byte[] { 103, 0 }, new byte[] { 0, 32 }, new byte[] { 0, 28 }, new byte[] { 32, 95 }, new byte[] { 24, 0 }, new byte[] { 38, 111 }, new byte[] { 72, 120 }, new byte[] { 0, 22 }, new byte[] { 65, -6 }, new byte[] { 48, 60 }, new byte[] { 40, 64 }, new byte[] { 114, 0 }, new byte[] { 40, 110 }, new byte[] { 32, 12 }, new byte[] { 102, 0 }, new byte[] { 32, 107 }, new byte[] { 47, 7 }, new byte[] { 85, -113 }, new byte[] { 0, 40 }, new byte[] { -1, -2 }, new byte[] { -1, -20 }, new byte[] { 34, -40 }, new byte[] { 32, 11 }, new byte[] { 0, 15 }, new byte[] { 89, -113 }, new byte[] { 47, 60 }, new byte[] { -1, 0 }, new byte[] { 1, 24 }, new byte[] { -127, -31 }, new byte[] { 74, 0 }, new byte[] { 78, -80 }, new byte[] { -1, -24 }, new byte[] { 72, -57 }, new byte[] { 0, 3 }, new byte[] { 0, 34 }, new byte[] { 0, 7 }, new byte[] { 0, 26 }, new byte[] { 103, 6 }, new byte[] { 103, 8 }, new byte[] { 78, -7 }, new byte[] { 0, 36 }, new byte[] { 32, 120 }, new byte[] { 8, 0 }, new byte[] { 102, 4 }, new byte[] { 0, 42 }, new byte[] { 78, -48 }, new byte[] { 48, 40 }, new byte[] { 38, 95 }, new byte[] { 103, 4 }, new byte[] { 0, 48 }, new byte[] { 67, -18 }, new byte[] { 63, 0 }, new byte[] { 32, 31 }, new byte[] { 0, 30 }, new byte[] { -1, -10 }, new byte[] { 32, 46 }, new byte[] { 66, -89 }, new byte[] { 32, 7 }, new byte[] { -1, -6 }, new byte[] { 96, 2 }, new byte[] { 61, 64 }, new byte[] { 12, 64 }, new byte[] { 102, 6 }, new byte[] { 0, 38 }, new byte[] { 45, 72 }, new byte[] { 47, 1 }, new byte[] { 112, -1 }, new byte[] { 96, 4 }, new byte[] { 24, -128 }, new byte[] { 74, 64 }, new byte[] { 0, 64 }, new byte[] { 0, 44 }, new byte[] { 47, 8 }, new byte[] { 0, 17 }, new byte[] { -1, -28 }, new byte[] { 33, 64 }, new byte[] { 38, 64 }, new byte[] { -1, -14 }, new byte[] { 66, 110 }, new byte[] { 78, -71 }, new byte[] { 61, 124 }, new byte[] { 0, 56 }, new byte[] { 0, 13 }, new byte[] { 96, 6 }, new byte[] { 66, 46 }, new byte[] { 32, 60 }, new byte[] { 103, 12 }, new byte[] { 45, 104 }, new byte[] { 102, 8 }, new byte[] { 74, 46 }, new byte[] { 74, -82 }, new byte[] { 0, 46 }, new byte[] { 72, 64 }, new byte[] { 34, 95 }, new byte[] { 34, 0 }, new byte[] { 103, 10 }, new byte[] { 48, 7 }, new byte[] { 66, 103 }, new byte[] { 0, 50 }, new byte[] { 32, 40 }, new byte[] { 0, 9 }, new byte[] { 72, 122 }, new byte[] { 2, 0 }, new byte[] { 47, 43 }, new byte[] { 0, 5 }, new byte[] { 34, 110 }, new byte[] { 102, 2 }, new byte[] { -27, -128 }, new byte[] { 103, 14 }, new byte[] { 102, 10 }, new byte[] { 0, 80 }, new byte[] { 62, 0 }, new byte[] { 102, 12 }, new byte[] { 46, 0 }, new byte[] { -1, -18 }, new byte[] { 32, 109 }, new byte[] { 32, 64 }, new byte[] { -1, -32 }, new byte[] { 83, 64 }, new byte[] { 96, 8 }, new byte[] { 4, -128 }, new byte[] { 0, 104 }, new byte[] { 11, 124 }, new byte[] { 68, 0 }, new byte[] { 65, -24 }, new byte[] { 72, 65 }));
-                return this.lookupTable;
-            }
-            private byte[] value;
-
-            /**
-             * The two bytes that the tag byte expands to,
-             * based on the fixed lookup table.
-             */
-            public byte[] value() {
-                if (this.value != null)
-                    return this.value;
-                this.value = lookupTable().get((int) (tag() - 75));
-                return this.value;
-            }
-            private int tag;
-            private Dcmp0 _root;
-            private Dcmp0.Chunk _parent;
-
-            /**
-             * The tag byte preceding this chunk body.
-             */
-            public int tag() { return tag; }
-            public Dcmp0 _root() { return _root; }
-            public Dcmp0.Chunk _parent() { return _parent; }
-        }
-
-        /**
          * The body of an end chunk.
          * This body is always empty.
          * 
@@ -517,6 +367,9 @@ public class Dcmp0 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
+            }
+
+            public void _fetchInstances() {
             }
             private Dcmp0 _root;
             private Dcmp0.Chunk _parent;
@@ -554,6 +407,14 @@ public class Dcmp0 extends KaitaiStruct {
                     this.body = new JumpTableBody(this._io, this, _root);
                     break;
                 }
+                case 2: {
+                    this.body = new RepeatBody(this._io, this, _root, tag());
+                    break;
+                }
+                case 3: {
+                    this.body = new RepeatBody(this._io, this, _root, tag());
+                    break;
+                }
                 case 4: {
                     this.body = new DeltaEncoding16BitBody(this._io, this, _root);
                     break;
@@ -562,15 +423,226 @@ public class Dcmp0 extends KaitaiStruct {
                     this.body = new DeltaEncoding32BitBody(this._io, this, _root);
                     break;
                 }
-                case 3: {
-                    this.body = new RepeatBody(this._io, this, _root, tag());
+                }
+            }
+
+            public void _fetchInstances() {
+                switch (tag()) {
+                case 0: {
+                    ((JumpTableBody) (this.body))._fetchInstances();
                     break;
                 }
                 case 2: {
-                    this.body = new RepeatBody(this._io, this, _root, tag());
+                    ((RepeatBody) (this.body))._fetchInstances();
+                    break;
+                }
+                case 3: {
+                    ((RepeatBody) (this.body))._fetchInstances();
+                    break;
+                }
+                case 4: {
+                    ((DeltaEncoding16BitBody) (this.body))._fetchInstances();
+                    break;
+                }
+                case 6: {
+                    ((DeltaEncoding32BitBody) (this.body))._fetchInstances();
                     break;
                 }
                 }
+            }
+
+            /**
+             * The body of a 16-bit delta encoding chunk.
+             * 
+             * This chunk expands to a sequence of 16-bit big-endian integer values.
+             * The first value is stored literally.
+             * All following values are stored as deltas relative to the previous value.
+             */
+            public static class DeltaEncoding16BitBody extends KaitaiStruct {
+                public static DeltaEncoding16BitBody fromFile(String fileName) throws IOException {
+                    return new DeltaEncoding16BitBody(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public DeltaEncoding16BitBody(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public DeltaEncoding16BitBody(KaitaiStream _io, Dcmp0.Chunk.ExtendedBody _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public DeltaEncoding16BitBody(KaitaiStream _io, Dcmp0.Chunk.ExtendedBody _parent, Dcmp0 _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.firstValueRaw = new DcmpVariableLengthInteger(this._io);
+                    this.numDeltasRaw = new DcmpVariableLengthInteger(this._io);
+                    this.deltas = new ArrayList<Byte>();
+                    for (int i = 0; i < numDeltas(); i++) {
+                        this.deltas.add(this._io.readS1());
+                    }
+                }
+
+                public void _fetchInstances() {
+                    this.firstValueRaw._fetchInstances();
+                    this.numDeltasRaw._fetchInstances();
+                    for (int i = 0; i < this.deltas.size(); i++) {
+                    }
+                }
+                private Integer firstValue;
+
+                /**
+                 * The first value in the sequence.
+                 * 
+                 * Although it is stored as a variable-length integer,
+                 * this value must be in the range `-0x8000 <= x <= 0x7fff`,
+                 * i. e. a signed 16-bit integer.
+                 */
+                public Integer firstValue() {
+                    if (this.firstValue != null)
+                        return this.firstValue;
+                    this.firstValue = ((Number) (firstValueRaw().value())).intValue();
+                    return this.firstValue;
+                }
+                private Integer numDeltas;
+
+                /**
+                 * The number of deltas stored in this chunk.
+                 * 
+                 * This number must not be negative.
+                 */
+                public Integer numDeltas() {
+                    if (this.numDeltas != null)
+                        return this.numDeltas;
+                    this.numDeltas = ((Number) (numDeltasRaw().value())).intValue();
+                    return this.numDeltas;
+                }
+                private DcmpVariableLengthInteger firstValueRaw;
+                private DcmpVariableLengthInteger numDeltasRaw;
+                private List<Byte> deltas;
+                private Dcmp0 _root;
+                private Dcmp0.Chunk.ExtendedBody _parent;
+
+                /**
+                 * Raw variable-length integer representation of `first_value`.
+                 */
+                public DcmpVariableLengthInteger firstValueRaw() { return firstValueRaw; }
+
+                /**
+                 * Raw variable-length integer representation of `num_deltas`.
+                 */
+                public DcmpVariableLengthInteger numDeltasRaw() { return numDeltasRaw; }
+
+                /**
+                 * The deltas for each value relative to the previous value.
+                 * 
+                 * Each of these deltas is a signed 8-bit value.
+                 * When adding the delta to the previous value,
+                 * 16-bit integer wraparound is performed if necessary,
+                 * so that the resulting value always fits into a 16-bit signed integer.
+                 */
+                public List<Byte> deltas() { return deltas; }
+                public Dcmp0 _root() { return _root; }
+                public Dcmp0.Chunk.ExtendedBody _parent() { return _parent; }
+            }
+
+            /**
+             * The body of a 32-bit delta encoding chunk.
+             * 
+             * This chunk expands to a sequence of 32-bit big-endian integer values.
+             * The first value is stored literally.
+             * All following values are stored as deltas relative to the previous value.
+             */
+            public static class DeltaEncoding32BitBody extends KaitaiStruct {
+                public static DeltaEncoding32BitBody fromFile(String fileName) throws IOException {
+                    return new DeltaEncoding32BitBody(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public DeltaEncoding32BitBody(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public DeltaEncoding32BitBody(KaitaiStream _io, Dcmp0.Chunk.ExtendedBody _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public DeltaEncoding32BitBody(KaitaiStream _io, Dcmp0.Chunk.ExtendedBody _parent, Dcmp0 _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.firstValueRaw = new DcmpVariableLengthInteger(this._io);
+                    this.numDeltasRaw = new DcmpVariableLengthInteger(this._io);
+                    this.deltasRaw = new ArrayList<DcmpVariableLengthInteger>();
+                    for (int i = 0; i < numDeltas(); i++) {
+                        this.deltasRaw.add(new DcmpVariableLengthInteger(this._io));
+                    }
+                }
+
+                public void _fetchInstances() {
+                    this.firstValueRaw._fetchInstances();
+                    this.numDeltasRaw._fetchInstances();
+                    for (int i = 0; i < this.deltasRaw.size(); i++) {
+                        this.deltasRaw.get(((Number) (i)).intValue())._fetchInstances();
+                    }
+                }
+                private Integer firstValue;
+
+                /**
+                 * The first value in the sequence.
+                 */
+                public Integer firstValue() {
+                    if (this.firstValue != null)
+                        return this.firstValue;
+                    this.firstValue = ((Number) (firstValueRaw().value())).intValue();
+                    return this.firstValue;
+                }
+                private Integer numDeltas;
+
+                /**
+                 * The number of deltas stored in this chunk.
+                 * 
+                 * This number must not be negative.
+                 */
+                public Integer numDeltas() {
+                    if (this.numDeltas != null)
+                        return this.numDeltas;
+                    this.numDeltas = ((Number) (numDeltasRaw().value())).intValue();
+                    return this.numDeltas;
+                }
+                private DcmpVariableLengthInteger firstValueRaw;
+                private DcmpVariableLengthInteger numDeltasRaw;
+                private List<DcmpVariableLengthInteger> deltasRaw;
+                private Dcmp0 _root;
+                private Dcmp0.Chunk.ExtendedBody _parent;
+
+                /**
+                 * Raw variable-length integer representation of `first_value`.
+                 */
+                public DcmpVariableLengthInteger firstValueRaw() { return firstValueRaw; }
+
+                /**
+                 * Raw variable-length integer representation of `num_deltas`.
+                 */
+                public DcmpVariableLengthInteger numDeltasRaw() { return numDeltasRaw; }
+
+                /**
+                 * The deltas for each value relative to the previous value,
+                 * stored as variable-length integers.
+                 * 
+                 * Each of these deltas is a signed value.
+                 * When adding the delta to the previous value,
+                 * 32-bit integer wraparound is performed if necessary,
+                 * so that the resulting value always fits into a 32-bit signed integer.
+                 */
+                public List<DcmpVariableLengthInteger> deltasRaw() { return deltasRaw; }
+                public Dcmp0 _root() { return _root; }
+                public Dcmp0.Chunk.ExtendedBody _parent() { return _parent; }
             }
 
             /**
@@ -621,6 +693,27 @@ public class Dcmp0 extends KaitaiStruct {
                         this.addressesRaw.add(new DcmpVariableLengthInteger(this._io));
                     }
                 }
+
+                public void _fetchInstances() {
+                    this.segmentNumberRaw._fetchInstances();
+                    this.numAddressesRaw._fetchInstances();
+                    for (int i = 0; i < this.addressesRaw.size(); i++) {
+                        this.addressesRaw.get(((Number) (i)).intValue())._fetchInstances();
+                    }
+                }
+                private Integer numAddresses;
+
+                /**
+                 * The number of addresses stored in this chunk.
+                 * 
+                 * This number must be greater than 0.
+                 */
+                public Integer numAddresses() {
+                    if (this.numAddresses != null)
+                        return this.numAddresses;
+                    this.numAddresses = ((Number) (numAddressesRaw().value())).intValue();
+                    return this.numAddresses;
+                }
                 private Integer segmentNumber;
 
                 /**
@@ -633,27 +726,12 @@ public class Dcmp0 extends KaitaiStruct {
                 public Integer segmentNumber() {
                     if (this.segmentNumber != null)
                         return this.segmentNumber;
-                    int _tmp = (int) (segmentNumberRaw().value());
-                    this.segmentNumber = _tmp;
+                    this.segmentNumber = ((Number) (segmentNumberRaw().value())).intValue();
                     return this.segmentNumber;
-                }
-                private Integer numAddresses;
-
-                /**
-                 * The number of addresses stored in this chunk.
-                 * 
-                 * This number must be greater than 0.
-                 */
-                public Integer numAddresses() {
-                    if (this.numAddresses != null)
-                        return this.numAddresses;
-                    int _tmp = (int) (numAddressesRaw().value());
-                    this.numAddresses = _tmp;
-                    return this.numAddresses;
                 }
                 private DcmpVariableLengthInteger segmentNumberRaw;
                 private DcmpVariableLengthInteger numAddressesRaw;
-                private ArrayList<DcmpVariableLengthInteger> addressesRaw;
+                private List<DcmpVariableLengthInteger> addressesRaw;
                 private Dcmp0 _root;
                 private Dcmp0.Chunk.ExtendedBody _parent;
 
@@ -684,7 +762,7 @@ public class Dcmp0 extends KaitaiStruct {
                  * These conditions are always met in all known jump table chunks,
                  * so it is not known how the original decompressor behaves otherwise.
                  */
-                public ArrayList<DcmpVariableLengthInteger> addressesRaw() { return addressesRaw; }
+                public List<DcmpVariableLengthInteger> addressesRaw() { return addressesRaw; }
                 public Dcmp0 _root() { return _root; }
                 public Dcmp0.Chunk.ExtendedBody _parent() { return _parent; }
             }
@@ -716,6 +794,11 @@ public class Dcmp0 extends KaitaiStruct {
                     this.toRepeatRaw = new DcmpVariableLengthInteger(this._io);
                     this.repeatCountM1Raw = new DcmpVariableLengthInteger(this._io);
                 }
+
+                public void _fetchInstances() {
+                    this.toRepeatRaw._fetchInstances();
+                    this.repeatCountM1Raw._fetchInstances();
+                }
                 private Integer byteCount;
 
                 /**
@@ -726,9 +809,35 @@ public class Dcmp0 extends KaitaiStruct {
                 public Integer byteCount() {
                     if (this.byteCount != null)
                         return this.byteCount;
-                    int _tmp = (int) ((tag() == 2 ? 1 : (tag() == 3 ? 2 : -1)));
-                    this.byteCount = _tmp;
+                    this.byteCount = ((Number) ((tag() == 2 ? 1 : (tag() == 3 ? 2 : -1)))).intValue();
                     return this.byteCount;
+                }
+                private Integer repeatCount;
+
+                /**
+                 * The number of times to repeat the value.
+                 * 
+                 * This value must be positive.
+                 */
+                public Integer repeatCount() {
+                    if (this.repeatCount != null)
+                        return this.repeatCount;
+                    this.repeatCount = ((Number) (repeatCountM1() + 1)).intValue();
+                    return this.repeatCount;
+                }
+                private Integer repeatCountM1;
+
+                /**
+                 * The number of times to repeat the value,
+                 * minus one.
+                 * 
+                 * This value must not be negative.
+                 */
+                public Integer repeatCountM1() {
+                    if (this.repeatCountM1 != null)
+                        return this.repeatCountM1;
+                    this.repeatCountM1 = ((Number) (repeatCountM1Raw().value())).intValue();
+                    return this.repeatCountM1;
                 }
                 private Integer toRepeat;
 
@@ -742,38 +851,8 @@ public class Dcmp0 extends KaitaiStruct {
                 public Integer toRepeat() {
                     if (this.toRepeat != null)
                         return this.toRepeat;
-                    int _tmp = (int) (toRepeatRaw().value());
-                    this.toRepeat = _tmp;
+                    this.toRepeat = ((Number) (toRepeatRaw().value())).intValue();
                     return this.toRepeat;
-                }
-                private Integer repeatCountM1;
-
-                /**
-                 * The number of times to repeat the value,
-                 * minus one.
-                 * 
-                 * This value must not be negative.
-                 */
-                public Integer repeatCountM1() {
-                    if (this.repeatCountM1 != null)
-                        return this.repeatCountM1;
-                    int _tmp = (int) (repeatCountM1Raw().value());
-                    this.repeatCountM1 = _tmp;
-                    return this.repeatCountM1;
-                }
-                private Integer repeatCount;
-
-                /**
-                 * The number of times to repeat the value.
-                 * 
-                 * This value must be positive.
-                 */
-                public Integer repeatCount() {
-                    if (this.repeatCount != null)
-                        return this.repeatCount;
-                    int _tmp = (int) ((repeatCountM1() + 1));
-                    this.repeatCount = _tmp;
-                    return this.repeatCount;
                 }
                 private DcmpVariableLengthInteger toRepeatRaw;
                 private DcmpVariableLengthInteger repeatCountM1Raw;
@@ -798,189 +877,6 @@ public class Dcmp0 extends KaitaiStruct {
                 public Dcmp0 _root() { return _root; }
                 public Dcmp0.Chunk.ExtendedBody _parent() { return _parent; }
             }
-
-            /**
-             * The body of a 16-bit delta encoding chunk.
-             * 
-             * This chunk expands to a sequence of 16-bit big-endian integer values.
-             * The first value is stored literally.
-             * All following values are stored as deltas relative to the previous value.
-             */
-            public static class DeltaEncoding16BitBody extends KaitaiStruct {
-                public static DeltaEncoding16BitBody fromFile(String fileName) throws IOException {
-                    return new DeltaEncoding16BitBody(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public DeltaEncoding16BitBody(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public DeltaEncoding16BitBody(KaitaiStream _io, Dcmp0.Chunk.ExtendedBody _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public DeltaEncoding16BitBody(KaitaiStream _io, Dcmp0.Chunk.ExtendedBody _parent, Dcmp0 _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.firstValueRaw = new DcmpVariableLengthInteger(this._io);
-                    this.numDeltasRaw = new DcmpVariableLengthInteger(this._io);
-                    this.deltas = new ArrayList<Byte>();
-                    for (int i = 0; i < numDeltas(); i++) {
-                        this.deltas.add(this._io.readS1());
-                    }
-                }
-                private Integer firstValue;
-
-                /**
-                 * The first value in the sequence.
-                 * 
-                 * Although it is stored as a variable-length integer,
-                 * this value must be in the range `-0x8000 <= x <= 0x7fff`,
-                 * i. e. a signed 16-bit integer.
-                 */
-                public Integer firstValue() {
-                    if (this.firstValue != null)
-                        return this.firstValue;
-                    int _tmp = (int) (firstValueRaw().value());
-                    this.firstValue = _tmp;
-                    return this.firstValue;
-                }
-                private Integer numDeltas;
-
-                /**
-                 * The number of deltas stored in this chunk.
-                 * 
-                 * This number must not be negative.
-                 */
-                public Integer numDeltas() {
-                    if (this.numDeltas != null)
-                        return this.numDeltas;
-                    int _tmp = (int) (numDeltasRaw().value());
-                    this.numDeltas = _tmp;
-                    return this.numDeltas;
-                }
-                private DcmpVariableLengthInteger firstValueRaw;
-                private DcmpVariableLengthInteger numDeltasRaw;
-                private ArrayList<Byte> deltas;
-                private Dcmp0 _root;
-                private Dcmp0.Chunk.ExtendedBody _parent;
-
-                /**
-                 * Raw variable-length integer representation of `first_value`.
-                 */
-                public DcmpVariableLengthInteger firstValueRaw() { return firstValueRaw; }
-
-                /**
-                 * Raw variable-length integer representation of `num_deltas`.
-                 */
-                public DcmpVariableLengthInteger numDeltasRaw() { return numDeltasRaw; }
-
-                /**
-                 * The deltas for each value relative to the previous value.
-                 * 
-                 * Each of these deltas is a signed 8-bit value.
-                 * When adding the delta to the previous value,
-                 * 16-bit integer wraparound is performed if necessary,
-                 * so that the resulting value always fits into a 16-bit signed integer.
-                 */
-                public ArrayList<Byte> deltas() { return deltas; }
-                public Dcmp0 _root() { return _root; }
-                public Dcmp0.Chunk.ExtendedBody _parent() { return _parent; }
-            }
-
-            /**
-             * The body of a 32-bit delta encoding chunk.
-             * 
-             * This chunk expands to a sequence of 32-bit big-endian integer values.
-             * The first value is stored literally.
-             * All following values are stored as deltas relative to the previous value.
-             */
-            public static class DeltaEncoding32BitBody extends KaitaiStruct {
-                public static DeltaEncoding32BitBody fromFile(String fileName) throws IOException {
-                    return new DeltaEncoding32BitBody(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public DeltaEncoding32BitBody(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public DeltaEncoding32BitBody(KaitaiStream _io, Dcmp0.Chunk.ExtendedBody _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public DeltaEncoding32BitBody(KaitaiStream _io, Dcmp0.Chunk.ExtendedBody _parent, Dcmp0 _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.firstValueRaw = new DcmpVariableLengthInteger(this._io);
-                    this.numDeltasRaw = new DcmpVariableLengthInteger(this._io);
-                    this.deltasRaw = new ArrayList<DcmpVariableLengthInteger>();
-                    for (int i = 0; i < numDeltas(); i++) {
-                        this.deltasRaw.add(new DcmpVariableLengthInteger(this._io));
-                    }
-                }
-                private Integer firstValue;
-
-                /**
-                 * The first value in the sequence.
-                 */
-                public Integer firstValue() {
-                    if (this.firstValue != null)
-                        return this.firstValue;
-                    int _tmp = (int) (firstValueRaw().value());
-                    this.firstValue = _tmp;
-                    return this.firstValue;
-                }
-                private Integer numDeltas;
-
-                /**
-                 * The number of deltas stored in this chunk.
-                 * 
-                 * This number must not be negative.
-                 */
-                public Integer numDeltas() {
-                    if (this.numDeltas != null)
-                        return this.numDeltas;
-                    int _tmp = (int) (numDeltasRaw().value());
-                    this.numDeltas = _tmp;
-                    return this.numDeltas;
-                }
-                private DcmpVariableLengthInteger firstValueRaw;
-                private DcmpVariableLengthInteger numDeltasRaw;
-                private ArrayList<DcmpVariableLengthInteger> deltasRaw;
-                private Dcmp0 _root;
-                private Dcmp0.Chunk.ExtendedBody _parent;
-
-                /**
-                 * Raw variable-length integer representation of `first_value`.
-                 */
-                public DcmpVariableLengthInteger firstValueRaw() { return firstValueRaw; }
-
-                /**
-                 * Raw variable-length integer representation of `num_deltas`.
-                 */
-                public DcmpVariableLengthInteger numDeltasRaw() { return numDeltasRaw; }
-
-                /**
-                 * The deltas for each value relative to the previous value,
-                 * stored as variable-length integers.
-                 * 
-                 * Each of these deltas is a signed value.
-                 * When adding the delta to the previous value,
-                 * 32-bit integer wraparound is performed if necessary,
-                 * so that the resulting value always fits into a 32-bit signed integer.
-                 */
-                public ArrayList<DcmpVariableLengthInteger> deltasRaw() { return deltasRaw; }
-                public Dcmp0 _root() { return _root; }
-                public Dcmp0.Chunk.ExtendedBody _parent() { return _parent; }
-            }
             private int tag;
             private KaitaiStruct body;
             private Dcmp0 _root;
@@ -996,6 +892,208 @@ public class Dcmp0 extends KaitaiStruct {
              * The chunk's body.
              */
             public KaitaiStruct body() { return body; }
+            public Dcmp0 _root() { return _root; }
+            public Dcmp0.Chunk _parent() { return _parent; }
+        }
+
+        /**
+         * The body of a literal data chunk.
+         * 
+         * The data that this chunk expands to is stored literally in the body (`literal`).
+         * Optionally,
+         * the literal data may also be stored for use by future backreference chunks (`do_store`).
+         * 
+         * The length of the literal data is stored as a number of two-byte units.
+         * This means that the literal data always has an even length in bytes.
+         */
+        public static class LiteralBody extends KaitaiStruct {
+
+            public LiteralBody(KaitaiStream _io, int tag) {
+                this(_io, null, null, tag);
+            }
+
+            public LiteralBody(KaitaiStream _io, Dcmp0.Chunk _parent, int tag) {
+                this(_io, _parent, null, tag);
+            }
+
+            public LiteralBody(KaitaiStream _io, Dcmp0.Chunk _parent, Dcmp0 _root, int tag) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this.tag = tag;
+                _read();
+            }
+            private void _read() {
+                if (isLenLiteralDiv2Separate()) {
+                    this.lenLiteralDiv2Separate = this._io.readU1();
+                }
+                this.literal = this._io.readBytes(lenLiteral());
+            }
+
+            public void _fetchInstances() {
+                if (isLenLiteralDiv2Separate()) {
+                }
+            }
+            private Boolean doStore;
+
+            /**
+             * Whether this literal should be stored for use by future backreference chunks.
+             * 
+             * See the documentation of the `backreference_body` type for details about backreference chunks.
+             */
+            public Boolean doStore() {
+                if (this.doStore != null)
+                    return this.doStore;
+                this.doStore = (tag() & 16) != 0;
+                return this.doStore;
+            }
+            private Boolean isLenLiteralDiv2Separate;
+
+            /**
+             * Whether the length of the literal is stored separately from the tag.
+             */
+            public Boolean isLenLiteralDiv2Separate() {
+                if (this.isLenLiteralDiv2Separate != null)
+                    return this.isLenLiteralDiv2Separate;
+                this.isLenLiteralDiv2Separate = lenLiteralDiv2InTag() == 0;
+                return this.isLenLiteralDiv2Separate;
+            }
+            private Integer lenLiteral;
+
+            /**
+             * The length of the literal data,
+             * in bytes.
+             */
+            public Integer lenLiteral() {
+                if (this.lenLiteral != null)
+                    return this.lenLiteral;
+                this.lenLiteral = ((Number) (lenLiteralDiv2() * 2)).intValue();
+                return this.lenLiteral;
+            }
+            private Integer lenLiteralDiv2;
+
+            /**
+             * The length of the literal data,
+             * in two-byte units.
+             * 
+             * In practice,
+             * this value is always greater than zero,
+             * as there is no use in storing a zero-length literal.
+             */
+            public Integer lenLiteralDiv2() {
+                if (this.lenLiteralDiv2 != null)
+                    return this.lenLiteralDiv2;
+                this.lenLiteralDiv2 = ((Number) ((isLenLiteralDiv2Separate() ? lenLiteralDiv2Separate() : lenLiteralDiv2InTag()))).intValue();
+                return this.lenLiteralDiv2;
+            }
+            private Integer lenLiteralDiv2InTag;
+
+            /**
+             * The part of the tag byte that indicates the length of the literal data,
+             * in two-byte units.
+             * If this value is 0,
+             * the length is stored in a separate byte after the tag byte and before the literal data.
+             */
+            public Integer lenLiteralDiv2InTag() {
+                if (this.lenLiteralDiv2InTag != null)
+                    return this.lenLiteralDiv2InTag;
+                this.lenLiteralDiv2InTag = ((Number) (tag() & 15)).intValue();
+                return this.lenLiteralDiv2InTag;
+            }
+            private Integer lenLiteralDiv2Separate;
+            private byte[] literal;
+            private int tag;
+            private Dcmp0 _root;
+            private Dcmp0.Chunk _parent;
+
+            /**
+             * The length of the literal data,
+             * in two-byte units.
+             * 
+             * This field is only present if the tag byte's low nibble is zero.
+             * In practice,
+             * this only happens if the length is 0x10 or greater,
+             * because smaller lengths can be encoded into the tag byte.
+             */
+            public Integer lenLiteralDiv2Separate() { return lenLiteralDiv2Separate; }
+
+            /**
+             * The literal data.
+             */
+            public byte[] literal() { return literal; }
+
+            /**
+             * The tag byte preceding this chunk body.
+             */
+            public int tag() { return tag; }
+            public Dcmp0 _root() { return _root; }
+            public Dcmp0.Chunk _parent() { return _parent; }
+        }
+
+        /**
+         * The body of a table lookup chunk.
+         * This body is always empty.
+         * 
+         * This chunk always expands to two bytes (`value`),
+         * determined from the tag byte using a fixed lookup table (`lookup_table`).
+         * This lookup table is hardcoded in the decompressor and always the same for all compressed data.
+         */
+        public static class TableLookupBody extends KaitaiStruct {
+
+            public TableLookupBody(KaitaiStream _io, int tag) {
+                this(_io, null, null, tag);
+            }
+
+            public TableLookupBody(KaitaiStream _io, Dcmp0.Chunk _parent, int tag) {
+                this(_io, _parent, null, tag);
+            }
+
+            public TableLookupBody(KaitaiStream _io, Dcmp0.Chunk _parent, Dcmp0 _root, int tag) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this.tag = tag;
+                _read();
+            }
+            private void _read() {
+            }
+
+            public void _fetchInstances() {
+            }
+            private List<byte[]> lookupTable;
+
+            /**
+             * Fixed lookup table that maps tag byte numbers to two bytes each.
+             * 
+             * The entries in the lookup table are offset -
+             * index 0 stands for tag 0x4b, 1 for 0x4c, etc.
+             */
+            public List<byte[]> lookupTable() {
+                if (this.lookupTable != null)
+                    return this.lookupTable;
+                this.lookupTable = new ArrayList<byte[]>(Arrays.asList(new byte[] { 0, 0 }, new byte[] { 78, -70 }, new byte[] { 0, 8 }, new byte[] { 78, 117 }, new byte[] { 0, 12 }, new byte[] { 78, -83 }, new byte[] { 32, 83 }, new byte[] { 47, 11 }, new byte[] { 97, 0 }, new byte[] { 0, 16 }, new byte[] { 112, 0 }, new byte[] { 47, 0 }, new byte[] { 72, 110 }, new byte[] { 32, 80 }, new byte[] { 32, 110 }, new byte[] { 47, 46 }, new byte[] { -1, -4 }, new byte[] { 72, -25 }, new byte[] { 63, 60 }, new byte[] { 0, 4 }, new byte[] { -1, -8 }, new byte[] { 47, 12 }, new byte[] { 32, 6 }, new byte[] { 78, -19 }, new byte[] { 78, 86 }, new byte[] { 32, 104 }, new byte[] { 78, 94 }, new byte[] { 0, 1 }, new byte[] { 88, -113 }, new byte[] { 79, -17 }, new byte[] { 0, 2 }, new byte[] { 0, 24 }, new byte[] { 96, 0 }, new byte[] { -1, -1 }, new byte[] { 80, -113 }, new byte[] { 78, -112 }, new byte[] { 0, 6 }, new byte[] { 38, 110 }, new byte[] { 0, 20 }, new byte[] { -1, -12 }, new byte[] { 76, -18 }, new byte[] { 0, 10 }, new byte[] { 0, 14 }, new byte[] { 65, -18 }, new byte[] { 76, -33 }, new byte[] { 72, -64 }, new byte[] { -1, -16 }, new byte[] { 45, 64 }, new byte[] { 0, 18 }, new byte[] { 48, 46 }, new byte[] { 112, 1 }, new byte[] { 47, 40 }, new byte[] { 32, 84 }, new byte[] { 103, 0 }, new byte[] { 0, 32 }, new byte[] { 0, 28 }, new byte[] { 32, 95 }, new byte[] { 24, 0 }, new byte[] { 38, 111 }, new byte[] { 72, 120 }, new byte[] { 0, 22 }, new byte[] { 65, -6 }, new byte[] { 48, 60 }, new byte[] { 40, 64 }, new byte[] { 114, 0 }, new byte[] { 40, 110 }, new byte[] { 32, 12 }, new byte[] { 102, 0 }, new byte[] { 32, 107 }, new byte[] { 47, 7 }, new byte[] { 85, -113 }, new byte[] { 0, 40 }, new byte[] { -1, -2 }, new byte[] { -1, -20 }, new byte[] { 34, -40 }, new byte[] { 32, 11 }, new byte[] { 0, 15 }, new byte[] { 89, -113 }, new byte[] { 47, 60 }, new byte[] { -1, 0 }, new byte[] { 1, 24 }, new byte[] { -127, -31 }, new byte[] { 74, 0 }, new byte[] { 78, -80 }, new byte[] { -1, -24 }, new byte[] { 72, -57 }, new byte[] { 0, 3 }, new byte[] { 0, 34 }, new byte[] { 0, 7 }, new byte[] { 0, 26 }, new byte[] { 103, 6 }, new byte[] { 103, 8 }, new byte[] { 78, -7 }, new byte[] { 0, 36 }, new byte[] { 32, 120 }, new byte[] { 8, 0 }, new byte[] { 102, 4 }, new byte[] { 0, 42 }, new byte[] { 78, -48 }, new byte[] { 48, 40 }, new byte[] { 38, 95 }, new byte[] { 103, 4 }, new byte[] { 0, 48 }, new byte[] { 67, -18 }, new byte[] { 63, 0 }, new byte[] { 32, 31 }, new byte[] { 0, 30 }, new byte[] { -1, -10 }, new byte[] { 32, 46 }, new byte[] { 66, -89 }, new byte[] { 32, 7 }, new byte[] { -1, -6 }, new byte[] { 96, 2 }, new byte[] { 61, 64 }, new byte[] { 12, 64 }, new byte[] { 102, 6 }, new byte[] { 0, 38 }, new byte[] { 45, 72 }, new byte[] { 47, 1 }, new byte[] { 112, -1 }, new byte[] { 96, 4 }, new byte[] { 24, -128 }, new byte[] { 74, 64 }, new byte[] { 0, 64 }, new byte[] { 0, 44 }, new byte[] { 47, 8 }, new byte[] { 0, 17 }, new byte[] { -1, -28 }, new byte[] { 33, 64 }, new byte[] { 38, 64 }, new byte[] { -1, -14 }, new byte[] { 66, 110 }, new byte[] { 78, -71 }, new byte[] { 61, 124 }, new byte[] { 0, 56 }, new byte[] { 0, 13 }, new byte[] { 96, 6 }, new byte[] { 66, 46 }, new byte[] { 32, 60 }, new byte[] { 103, 12 }, new byte[] { 45, 104 }, new byte[] { 102, 8 }, new byte[] { 74, 46 }, new byte[] { 74, -82 }, new byte[] { 0, 46 }, new byte[] { 72, 64 }, new byte[] { 34, 95 }, new byte[] { 34, 0 }, new byte[] { 103, 10 }, new byte[] { 48, 7 }, new byte[] { 66, 103 }, new byte[] { 0, 50 }, new byte[] { 32, 40 }, new byte[] { 0, 9 }, new byte[] { 72, 122 }, new byte[] { 2, 0 }, new byte[] { 47, 43 }, new byte[] { 0, 5 }, new byte[] { 34, 110 }, new byte[] { 102, 2 }, new byte[] { -27, -128 }, new byte[] { 103, 14 }, new byte[] { 102, 10 }, new byte[] { 0, 80 }, new byte[] { 62, 0 }, new byte[] { 102, 12 }, new byte[] { 46, 0 }, new byte[] { -1, -18 }, new byte[] { 32, 109 }, new byte[] { 32, 64 }, new byte[] { -1, -32 }, new byte[] { 83, 64 }, new byte[] { 96, 8 }, new byte[] { 4, -128 }, new byte[] { 0, 104 }, new byte[] { 11, 124 }, new byte[] { 68, 0 }, new byte[] { 65, -24 }, new byte[] { 72, 65 }));
+                return this.lookupTable;
+            }
+            private byte[] value;
+
+            /**
+             * The two bytes that the tag byte expands to,
+             * based on the fixed lookup table.
+             */
+            public byte[] value() {
+                if (this.value != null)
+                    return this.value;
+                this.value = lookupTable().get(((Number) (tag() - 75)).intValue());
+                return this.value;
+            }
+            private int tag;
+            private Dcmp0 _root;
+            private Dcmp0.Chunk _parent;
+
+            /**
+             * The tag byte preceding this chunk body.
+             */
+            public int tag() { return tag; }
             public Dcmp0 _root() { return _root; }
             public Dcmp0.Chunk _parent() { return _parent; }
         }
@@ -1021,14 +1119,14 @@ public class Dcmp0 extends KaitaiStruct {
         public Dcmp0 _root() { return _root; }
         public Dcmp0 _parent() { return _parent; }
     }
-    private ArrayList<Chunk> chunks;
+    private List<Chunk> chunks;
     private Dcmp0 _root;
     private KaitaiStruct _parent;
 
     /**
      * The sequence of chunks that make up the compressed data.
      */
-    public ArrayList<Chunk> chunks() { return chunks; }
+    public List<Chunk> chunks() { return chunks; }
     public Dcmp0 _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

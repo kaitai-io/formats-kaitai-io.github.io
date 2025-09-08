@@ -14,75 +14,71 @@ import (
 type GptPartitionTable struct {
 	_io *kaitai.Stream
 	_root *GptPartitionTable
-	_parent interface{}
-	_f_sectorSize bool
-	sectorSize int
-	_f_primary bool
-	primary *GptPartitionTable_PartitionHeader
+	_parent kaitai.Struct
 	_f_backup bool
 	backup *GptPartitionTable_PartitionHeader
+	_f_primary bool
+	primary *GptPartitionTable_PartitionHeader
+	_f_sectorSize bool
+	sectorSize int
 }
 func NewGptPartitionTable() *GptPartitionTable {
 	return &GptPartitionTable{
 	}
 }
 
-func (this *GptPartitionTable) Read(io *kaitai.Stream, parent interface{}, root *GptPartitionTable) (err error) {
+func (this GptPartitionTable) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GptPartitionTable) Read(io *kaitai.Stream, parent kaitai.Struct, root *GptPartitionTable) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
 	return err
 }
-func (this *GptPartitionTable) SectorSize() (v int, err error) {
-	if (this._f_sectorSize) {
-		return this.sectorSize, nil
+func (this *GptPartitionTable) Backup() (v *GptPartitionTable_PartitionHeader, err error) {
+	if (this._f_backup) {
+		return this.backup, nil
 	}
-	this.sectorSize = int(512)
-	this._f_sectorSize = true
-	return this.sectorSize, nil
+	this._f_backup = true
+	thisIo := this._root._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return nil, err
+	}
+	tmp1, err := this._io.Size()
+	if err != nil {
+		return nil, err
+	}
+	tmp2, err := this._root.SectorSize()
+	if err != nil {
+		return nil, err
+	}
+	_, err = thisIo.Seek(int64(tmp1 - tmp2), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp3 := NewGptPartitionTable_PartitionHeader()
+	err = tmp3.Read(thisIo, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.backup = tmp3
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.backup, nil
 }
 func (this *GptPartitionTable) Primary() (v *GptPartitionTable_PartitionHeader, err error) {
 	if (this._f_primary) {
 		return this.primary, nil
 	}
+	this._f_primary = true
 	thisIo := this._root._io
 	_pos, err := thisIo.Pos()
-	if err != nil {
-		return nil, err
-	}
-	tmp1, err := this._root.SectorSize()
-	if err != nil {
-		return nil, err
-	}
-	_, err = thisIo.Seek(int64(tmp1), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp2 := NewGptPartitionTable_PartitionHeader()
-	err = tmp2.Read(thisIo, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.primary = tmp2
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_primary = true
-	this._f_primary = true
-	return this.primary, nil
-}
-func (this *GptPartitionTable) Backup() (v *GptPartitionTable_PartitionHeader, err error) {
-	if (this._f_backup) {
-		return this.backup, nil
-	}
-	thisIo := this._root._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return nil, err
-	}
-	tmp3, err := this._io.Size()
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +86,7 @@ func (this *GptPartitionTable) Backup() (v *GptPartitionTable_PartitionHeader, e
 	if err != nil {
 		return nil, err
 	}
-	_, err = thisIo.Seek(int64((tmp3 - tmp4)), io.SeekStart)
+	_, err = thisIo.Seek(int64(tmp4), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -99,14 +95,20 @@ func (this *GptPartitionTable) Backup() (v *GptPartitionTable_PartitionHeader, e
 	if err != nil {
 		return nil, err
 	}
-	this.backup = tmp5
+	this.primary = tmp5
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_backup = true
-	this._f_backup = true
-	return this.backup, nil
+	return this.primary, nil
+}
+func (this *GptPartitionTable) SectorSize() (v int, err error) {
+	if (this._f_sectorSize) {
+		return this.sectorSize, nil
+	}
+	this._f_sectorSize = true
+	this.sectorSize = int(512)
+	return this.sectorSize, nil
 }
 type GptPartitionTable_PartitionEntry struct {
 	TypeGuid []byte
@@ -122,6 +124,10 @@ type GptPartitionTable_PartitionEntry struct {
 func NewGptPartitionTable_PartitionEntry() *GptPartitionTable_PartitionEntry {
 	return &GptPartitionTable_PartitionEntry{
 	}
+}
+
+func (this GptPartitionTable_PartitionEntry) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *GptPartitionTable_PartitionEntry) Read(io *kaitai.Stream, parent *GptPartitionTable_PartitionHeader, root *GptPartitionTable) (err error) {
@@ -193,6 +199,10 @@ type GptPartitionTable_PartitionHeader struct {
 func NewGptPartitionTable_PartitionHeader() *GptPartitionTable_PartitionHeader {
 	return &GptPartitionTable_PartitionHeader{
 	}
+}
+
+func (this GptPartitionTable_PartitionHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *GptPartitionTable_PartitionHeader) Read(io *kaitai.Stream, parent *GptPartitionTable, root *GptPartitionTable) (err error) {
@@ -281,6 +291,7 @@ func (this *GptPartitionTable_PartitionHeader) Entries() (v []*GptPartitionTable
 	if (this._f_entries) {
 		return this.entries, nil
 	}
+	this._f_entries = true
 	thisIo := this._root._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -290,7 +301,7 @@ func (this *GptPartitionTable_PartitionHeader) Entries() (v []*GptPartitionTable
 	if err != nil {
 		return nil, err
 	}
-	_, err = thisIo.Seek(int64((this.EntriesStart * tmp27)), io.SeekStart)
+	_, err = thisIo.Seek(int64(this.EntriesStart * tmp27), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -314,7 +325,5 @@ func (this *GptPartitionTable_PartitionHeader) Entries() (v []*GptPartitionTable
 	if err != nil {
 		return nil, err
 	}
-	this._f_entries = true
-	this._f_entries = true
 	return this.entries, nil
 }

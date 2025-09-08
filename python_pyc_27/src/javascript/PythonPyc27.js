@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.PythonPyc27 = factory(root.KaitaiStream);
+    factory(root.PythonPyc27 || (root.PythonPyc27 = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (PythonPyc27_, KaitaiStream) {
 /**
  * Python interpreter runs .py files in 2 step process: first, it
  * produces bytecode, which it then executes. Translation of .py source
@@ -88,6 +88,28 @@ var PythonPyc27 = (function() {
     this.body = new PyObject(this._io, this, this._root);
   }
 
+  var Assembly = PythonPyc27.Assembly = (function() {
+    function Assembly(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Assembly.prototype._read = function() {
+      this.stringMagic = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.stringMagic, new Uint8Array([115])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([115]), this.stringMagic, this._io, "/types/assembly/seq/0");
+      }
+      this.length = this._io.readU4le();
+      this._raw_items = this._io.readBytes(this.length);
+      var _io__raw_items = new KaitaiStream(this._raw_items);
+      this.items = new OpArgs(_io__raw_items, this, this._root);
+    }
+
+    return Assembly;
+  })();
+
   var CodeObject = PythonPyc27.CodeObject = (function() {
     CodeObject.FlagsEnum = Object.freeze({
       HAS_ARGS: 4,
@@ -102,7 +124,7 @@ var PythonPyc27 = (function() {
     function CodeObject(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -124,28 +146,6 @@ var PythonPyc27 = (function() {
     }
 
     return CodeObject;
-  })();
-
-  var Assembly = PythonPyc27.Assembly = (function() {
-    function Assembly(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Assembly.prototype._read = function() {
-      this.stringMagic = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.stringMagic, [115]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([115], this.stringMagic, this._io, "/types/assembly/seq/0");
-      }
-      this.length = this._io.readU4le();
-      this._raw_items = this._io.readBytes(this.length);
-      var _io__raw_items = new KaitaiStream(this._raw_items);
-      this.items = new OpArgs(_io__raw_items, this, this._root);
-    }
-
-    return Assembly;
   })();
 
   var OpArg = PythonPyc27.OpArg = (function() {
@@ -394,7 +394,7 @@ var PythonPyc27 = (function() {
     function OpArg(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -406,6 +406,26 @@ var PythonPyc27 = (function() {
     }
 
     return OpArg;
+  })();
+
+  var OpArgs = PythonPyc27.OpArgs = (function() {
+    function OpArgs(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    OpArgs.prototype._read = function() {
+      this.items = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.items.push(new OpArg(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return OpArgs;
   })();
 
   var PyObject = PythonPyc27.PyObject = (function() {
@@ -436,62 +456,64 @@ var PythonPyc27 = (function() {
     function PyObject(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     PyObject.prototype._read = function() {
       this.type = this._io.readU1();
       switch (this.type) {
-      case PythonPyc27.PyObject.ObjectType.STRING:
-        this.value = new PyString(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.TUPLE:
-        this.value = new Tuple(this._io, this, this._root);
+      case PythonPyc27.PyObject.ObjectType.CODE_OBJECT:
+        this.value = new CodeObject(this._io, this, this._root);
         break;
       case PythonPyc27.PyObject.ObjectType.INT:
         this.value = this._io.readU4le();
         break;
-      case PythonPyc27.PyObject.ObjectType.PY_TRUE:
-        this.value = new PyTrue(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.PY_FALSE:
-        this.value = new PyFalse(this._io, this, this._root);
+      case PythonPyc27.PyObject.ObjectType.INTERNED:
+        this.value = new InternedString(this._io, this, this._root);
         break;
       case PythonPyc27.PyObject.ObjectType.NONE:
         this.value = new PyNone(this._io, this, this._root);
         break;
+      case PythonPyc27.PyObject.ObjectType.PY_FALSE:
+        this.value = new PyFalse(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.PY_TRUE:
+        this.value = new PyTrue(this._io, this, this._root);
+        break;
+      case PythonPyc27.PyObject.ObjectType.STRING:
+        this.value = new PyString(this._io, this, this._root);
+        break;
       case PythonPyc27.PyObject.ObjectType.STRING_REF:
         this.value = new StringRef(this._io, this, this._root);
         break;
-      case PythonPyc27.PyObject.ObjectType.CODE_OBJECT:
-        this.value = new CodeObject(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.INTERNED:
-        this.value = new InternedString(this._io, this, this._root);
+      case PythonPyc27.PyObject.ObjectType.TUPLE:
+        this.value = new Tuple(this._io, this, this._root);
         break;
       }
     }
 
-    var PyNone = PyObject.PyNone = (function() {
-      function PyNone(_io, _parent, _root) {
+    var InternedString = PyObject.InternedString = (function() {
+      function InternedString(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
-      PyNone.prototype._read = function() {
+      InternedString.prototype._read = function() {
+        this.length = this._io.readU4le();
+        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.length), "UTF-8");
       }
 
-      return PyNone;
+      return InternedString;
     })();
 
     var PyFalse = PyObject.PyFalse = (function() {
       function PyFalse(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -501,11 +523,55 @@ var PythonPyc27 = (function() {
       return PyFalse;
     })();
 
+    var PyNone = PyObject.PyNone = (function() {
+      function PyNone(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      PyNone.prototype._read = function() {
+      }
+
+      return PyNone;
+    })();
+
+    var PyString = PyObject.PyString = (function() {
+      function PyString(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      PyString.prototype._read = function() {
+        this.length = this._io.readU4le();
+        this.data = this._io.readBytes(this.length);
+      }
+
+      return PyString;
+    })();
+
+    var PyTrue = PyObject.PyTrue = (function() {
+      function PyTrue(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      PyTrue.prototype._read = function() {
+      }
+
+      return PyTrue;
+    })();
+
     var StringRef = PyObject.StringRef = (function() {
       function StringRef(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -516,25 +582,11 @@ var PythonPyc27 = (function() {
       return StringRef;
     })();
 
-    var PyTrue = PyObject.PyTrue = (function() {
-      function PyTrue(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      PyTrue.prototype._read = function() {
-      }
-
-      return PyTrue;
-    })();
-
     var Tuple = PyObject.Tuple = (function() {
       function Tuple(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -553,74 +605,22 @@ var PythonPyc27 = (function() {
       function UnicodeString(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
       UnicodeString.prototype._read = function() {
         this.length = this._io.readU4le();
-        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.length), "utf-8");
+        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.length), "UTF-8");
       }
 
       return UnicodeString;
     })();
 
-    var InternedString = PyObject.InternedString = (function() {
-      function InternedString(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      InternedString.prototype._read = function() {
-        this.length = this._io.readU4le();
-        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.length), "utf-8");
-      }
-
-      return InternedString;
-    })();
-
-    var PyString = PyObject.PyString = (function() {
-      function PyString(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      PyString.prototype._read = function() {
-        this.length = this._io.readU4le();
-        this.data = this._io.readBytes(this.length);
-      }
-
-      return PyString;
-    })();
-
     return PyObject;
-  })();
-
-  var OpArgs = PythonPyc27.OpArgs = (function() {
-    function OpArgs(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    OpArgs.prototype._read = function() {
-      this.items = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.items.push(new OpArg(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return OpArgs;
   })();
 
   return PythonPyc27;
 })();
-return PythonPyc27;
-}));
+PythonPyc27_.PythonPyc27 = PythonPyc27;
+});

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -35,7 +35,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{resources} = ();
+    $self->{resources} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{resources}}, WindowsResourceFile::Resource->new($self->{_io}, $self, $self->{_root});
     }
@@ -88,7 +88,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -102,14 +102,14 @@ sub _read {
     $self->{header_size} = $self->{_io}->read_u4le();
     $self->{type} = WindowsResourceFile::UnicodeOrId->new($self->{_io}, $self, $self->{_root});
     $self->{name} = WindowsResourceFile::UnicodeOrId->new($self->{_io}, $self, $self->{_root});
-    $self->{padding1} = $self->{_io}->read_bytes(((4 - $self->_io()->pos()) % 4));
+    $self->{padding1} = $self->{_io}->read_bytes((4 - $self->_io()->pos()) % 4);
     $self->{format_version} = $self->{_io}->read_u4le();
     $self->{flags} = $self->{_io}->read_u2le();
     $self->{language} = $self->{_io}->read_u2le();
     $self->{value_version} = $self->{_io}->read_u4le();
     $self->{characteristics} = $self->{_io}->read_u4le();
     $self->{value} = $self->{_io}->read_bytes($self->value_size());
-    $self->{padding2} = $self->{_io}->read_bytes(((4 - $self->_io()->pos()) % 4));
+    $self->{padding2} = $self->{_io}->read_bytes((4 - $self->_io()->pos()) % 4);
 }
 
 sub type_as_predef {
@@ -201,7 +201,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -218,15 +218,37 @@ sub _read {
         $self->{as_numeric} = $self->{_io}->read_u2le();
     }
     if ($self->is_string()) {
-        $self->{rest} = ();
-        do {
-            $_ = $self->{_io}->read_u2le();
-            push @{$self->{rest}}, $_;
-        } until ($_ == 0);
+        $self->{rest} = [];
+        {
+            my $_it;
+            do {
+                $_it = $self->{_io}->read_u2le();
+                push @{$self->{rest}}, $_it;
+            } until ($_it == 0);
+        }
     }
     if ( (($self->is_string()) && ($self->save_pos2() >= 0)) ) {
         $self->{noop} = $self->{_io}->read_bytes(0);
     }
+}
+
+sub as_string {
+    my ($self) = @_;
+    return $self->{as_string} if ($self->{as_string});
+    if ($self->is_string()) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek($self->save_pos1());
+        $self->{as_string} = Encode::decode("UTF-16LE", $self->{_io}->read_bytes(($self->save_pos2() - $self->save_pos1()) - 2));
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{as_string};
+}
+
+sub is_string {
+    my ($self) = @_;
+    return $self->{is_string} if ($self->{is_string});
+    $self->{is_string} = $self->first() != 65535;
+    return $self->{is_string};
 }
 
 sub save_pos1 {
@@ -241,25 +263,6 @@ sub save_pos2 {
     return $self->{save_pos2} if ($self->{save_pos2});
     $self->{save_pos2} = $self->_io()->pos();
     return $self->{save_pos2};
-}
-
-sub is_string {
-    my ($self) = @_;
-    return $self->{is_string} if ($self->{is_string});
-    $self->{is_string} = $self->first() != 65535;
-    return $self->{is_string};
-}
-
-sub as_string {
-    my ($self) = @_;
-    return $self->{as_string} if ($self->{as_string});
-    if ($self->is_string()) {
-        my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek($self->save_pos1());
-        $self->{as_string} = Encode::decode("UTF-16LE", $self->{_io}->read_bytes((($self->save_pos2() - $self->save_pos1()) - 2)));
-        $self->{_io}->seek($_pos);
-    }
-    return $self->{as_string};
 }
 
 sub first {

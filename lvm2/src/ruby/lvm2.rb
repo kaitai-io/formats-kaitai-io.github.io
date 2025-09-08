@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -20,8 +20,8 @@ end
 # ```
 # @see https://github.com/libyal/libvslvm/blob/main/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc Source
 class Lvm2 < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -30,7 +30,7 @@ class Lvm2 < Kaitai::Struct::Struct
     self
   end
   class PhysicalVolume < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -41,7 +41,7 @@ class Lvm2 < Kaitai::Struct::Struct
       self
     end
     class Label < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -52,21 +52,21 @@ class Lvm2 < Kaitai::Struct::Struct
         self
       end
       class LabelHeader < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
 
         def _read
           @signature = @_io.read_bytes(8)
-          raise Kaitai::Struct::ValidationNotEqualError.new([76, 65, 66, 69, 76, 79, 78, 69].pack('C*'), signature, _io, "/types/physical_volume/types/label/types/label_header/seq/0") if not signature == [76, 65, 66, 69, 76, 79, 78, 69].pack('C*')
+          raise Kaitai::Struct::ValidationNotEqualError.new([76, 65, 66, 69, 76, 79, 78, 69].pack('C*'), @signature, @_io, "/types/physical_volume/types/label/types/label_header/seq/0") if not @signature == [76, 65, 66, 69, 76, 79, 78, 69].pack('C*')
           @sector_number = @_io.read_u8le
           @checksum = @_io.read_u4le
           @label_header_ = LabelHeader.new(@_io, self, @_root)
           self
         end
         class LabelHeader < Kaitai::Struct::Struct
-          def initialize(_io, _parent = nil, _root = self)
+          def initialize(_io, _parent = nil, _root = nil)
             super(_io, _parent, _root)
             _read
           end
@@ -74,7 +74,7 @@ class Lvm2 < Kaitai::Struct::Struct
           def _read
             @data_offset = @_io.read_u4le
             @type_indicator = @_io.read_bytes(8)
-            raise Kaitai::Struct::ValidationNotEqualError.new([76, 86, 77, 50, 32, 48, 48, 49].pack('C*'), type_indicator, _io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1") if not type_indicator == [76, 86, 77, 50, 32, 48, 48, 49].pack('C*')
+            raise Kaitai::Struct::ValidationNotEqualError.new([76, 86, 77, 50, 32, 48, 48, 49].pack('C*'), @type_indicator, @_io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1") if not @type_indicator == [76, 86, 77, 50, 32, 48, 48, 49].pack('C*')
             self
           end
 
@@ -95,13 +95,13 @@ class Lvm2 < Kaitai::Struct::Struct
         attr_reader :label_header_
       end
       class VolumeHeader < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
 
         def _read
-          @id = (@_io.read_bytes(32)).force_encoding("ascii")
+          @id = (@_io.read_bytes(32)).force_encoding("ASCII").encode('UTF-8')
           @size = @_io.read_u8le
           @data_area_descriptors = []
           i = 0
@@ -120,7 +120,7 @@ class Lvm2 < Kaitai::Struct::Struct
           self
         end
         class DataAreaDescriptor < Kaitai::Struct::Struct
-          def initialize(_io, _parent = nil, _root = self)
+          def initialize(_io, _parent = nil, _root = nil)
             super(_io, _parent, _root)
             _read
           end
@@ -135,7 +135,7 @@ class Lvm2 < Kaitai::Struct::Struct
             if size != 0
               _pos = @_io.pos
               @_io.seek(offset)
-              @data = (@_io.read_bytes(size)).force_encoding("ascii")
+              @data = (@_io.read_bytes(size)).force_encoding("ASCII").encode('UTF-8')
               @_io.seek(_pos)
             end
             @data
@@ -149,44 +149,11 @@ class Lvm2 < Kaitai::Struct::Struct
           # Value in bytes. Can be 0. [yellow-background]*Does this represent all remaining available space?*
           attr_reader :size
         end
-        class MetadataAreaDescriptor < Kaitai::Struct::Struct
-          def initialize(_io, _parent = nil, _root = self)
-            super(_io, _parent, _root)
-            _read
-          end
-
-          def _read
-            @offset = @_io.read_u8le
-            @size = @_io.read_u8le
-            self
-          end
-          def data
-            return @data unless @data.nil?
-            if size != 0
-              _pos = @_io.pos
-              @_io.seek(offset)
-              @_raw_data = @_io.read_bytes(size)
-              _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-              @data = MetadataArea.new(_io__raw_data, self, @_root)
-              @_io.seek(_pos)
-            end
-            @data
-          end
-
-          ##
-          # The offset, in bytes, relative from the start of the physical volume
-          attr_reader :offset
-
-          ##
-          # Value in bytes
-          attr_reader :size
-          attr_reader :_raw_data
-        end
 
         ##
         # According to `[REDHAT]` the metadata area is a circular buffer. New metadata is appended to the old metadata and then the pointer to the start of it is updated. The metadata area, therefore, can contain copies of older versions of the metadata.
         class MetadataArea < Kaitai::Struct::Struct
-          def initialize(_io, _parent = nil, _root = self)
+          def initialize(_io, _parent = nil, _root = nil)
             super(_io, _parent, _root)
             _read
           end
@@ -196,7 +163,7 @@ class Lvm2 < Kaitai::Struct::Struct
             self
           end
           class MetadataAreaHeader < Kaitai::Struct::Struct
-            def initialize(_io, _parent = nil, _root = self)
+            def initialize(_io, _parent = nil, _root = nil)
               super(_io, _parent, _root)
               _read
             end
@@ -204,7 +171,7 @@ class Lvm2 < Kaitai::Struct::Struct
             def _read
               @checksum = MetadataAreaHeader.new(@_io, self, @_root)
               @signature = @_io.read_bytes(16)
-              raise Kaitai::Struct::ValidationNotEqualError.new([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62].pack('C*'), signature, _io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1") if not signature == [32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62].pack('C*')
+              raise Kaitai::Struct::ValidationNotEqualError.new([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62].pack('C*'), @signature, @_io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1") if not @signature == [32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62].pack('C*')
               @version = @_io.read_u4le
               @metadata_area_offset = @_io.read_u8le
               @metadata_area_size = @_io.read_u8le
@@ -226,7 +193,7 @@ class Lvm2 < Kaitai::Struct::Struct
                 1 => :raw_location_descriptor_flags_raw_location_ignored,
               }
               I__RAW_LOCATION_DESCRIPTOR_FLAGS = RAW_LOCATION_DESCRIPTOR_FLAGS.invert
-              def initialize(_io, _parent = nil, _root = self)
+              def initialize(_io, _parent = nil, _root = nil)
                 super(_io, _parent, _root)
                 _read
               end
@@ -277,6 +244,38 @@ class Lvm2 < Kaitai::Struct::Struct
             attr_reader :raw_location_descriptors
           end
           attr_reader :header
+        end
+        class MetadataAreaDescriptor < Kaitai::Struct::Struct
+          def initialize(_io, _parent = nil, _root = nil)
+            super(_io, _parent, _root)
+            _read
+          end
+
+          def _read
+            @offset = @_io.read_u8le
+            @size = @_io.read_u8le
+            self
+          end
+          def data
+            return @data unless @data.nil?
+            if size != 0
+              _pos = @_io.pos
+              @_io.seek(offset)
+              _io_data = @_io.substream(size)
+              @data = MetadataArea.new(_io_data, self, @_root)
+              @_io.seek(_pos)
+            end
+            @data
+          end
+
+          ##
+          # The offset, in bytes, relative from the start of the physical volume
+          attr_reader :offset
+
+          ##
+          # Value in bytes
+          attr_reader :size
+          attr_reader :_raw_data
         end
 
         ##

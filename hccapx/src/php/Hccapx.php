@@ -7,8 +7,8 @@
 
 namespace {
     class Hccapx extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Hccapx $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Hccapx $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -27,15 +27,15 @@ namespace {
 
 namespace Hccapx {
     class HccapxRecord extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Hccapx $_parent = null, \Hccapx $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Hccapx $_parent = null, ?\Hccapx $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x48\x43\x50\x58")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x48\x43\x50\x58", $this->magic(), $this->_io(), "/types/hccapx_record/seq/0");
+            if (!($this->_m_magic == "\x48\x43\x50\x58")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x48\x43\x50\x58", $this->_m_magic, $this->_io, "/types/hccapx_record/seq/0");
             }
             $this->_m_version = $this->_io->readU4le();
             $this->_m_ignoreReplayCounter = $this->_io->readBitsIntBe(1) != 0;
@@ -43,7 +43,7 @@ namespace Hccapx {
             $this->_io->alignToByte();
             $this->_m_lenEssid = $this->_io->readU1();
             $this->_m_essid = $this->_io->readBytes($this->lenEssid());
-            $this->_m_padding1 = $this->_io->readBytes((32 - $this->lenEssid()));
+            $this->_m_padding1 = $this->_io->readBytes(32 - $this->lenEssid());
             $this->_m_keyver = $this->_io->readU1();
             $this->_m_keymic = $this->_io->readBytes(16);
             $this->_m_macAp = $this->_io->readBytes(6);
@@ -52,7 +52,7 @@ namespace Hccapx {
             $this->_m_nonceStation = $this->_io->readBytes(32);
             $this->_m_lenEapol = $this->_io->readU2le();
             $this->_m_eapol = $this->_io->readBytes($this->lenEapol());
-            $this->_m_padding2 = $this->_io->readBytes((256 - $this->lenEapol()));
+            $this->_m_padding2 = $this->_io->readBytes(256 - $this->lenEapol());
         }
         protected $_m_magic;
         protected $_m_version;

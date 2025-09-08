@@ -37,46 +37,10 @@ end
 
 function AndroidBootldrHuawei:_read()
   self.meta_header = AndroidBootldrHuawei.MetaHdr(self._io, self, self._root)
-  self.header_ext = self._io:read_bytes((self.meta_header.len_meta_header - 76))
+  self.header_ext = self._io:read_bytes(self.meta_header.len_meta_header - 76)
   self._raw_image_header = self._io:read_bytes(self.meta_header.len_image_header)
   local _io = KaitaiStream(stringstream(self._raw_image_header))
   self.image_header = AndroidBootldrHuawei.ImageHdr(_io, self, self._root)
-end
-
-
-AndroidBootldrHuawei.MetaHdr = class.class(KaitaiStruct)
-
-function AndroidBootldrHuawei.MetaHdr:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function AndroidBootldrHuawei.MetaHdr:_read()
-  self.magic = self._io:read_bytes(4)
-  if not(self.magic == "\060\214\026\206") then
-    error("not equal, expected " ..  "\060\214\026\206" .. ", but got " .. self.magic)
-  end
-  self.version = AndroidBootldrHuawei.Version(self._io, self, self._root)
-  self.image_version = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(64), 0, false), "ASCII")
-  self.len_meta_header = self._io:read_u2le()
-  self.len_image_header = self._io:read_u2le()
-end
-
-
-AndroidBootldrHuawei.Version = class.class(KaitaiStruct)
-
-function AndroidBootldrHuawei.Version:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function AndroidBootldrHuawei.Version:_read()
-  self.major = self._io:read_u2le()
-  self.minor = self._io:read_u2le()
 end
 
 
@@ -85,7 +49,7 @@ AndroidBootldrHuawei.ImageHdr = class.class(KaitaiStruct)
 function AndroidBootldrHuawei.ImageHdr:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -115,7 +79,7 @@ AndroidBootldrHuawei.ImageHdrEntry = class.class(KaitaiStruct)
 function AndroidBootldrHuawei.ImageHdrEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -123,18 +87,6 @@ function AndroidBootldrHuawei.ImageHdrEntry:_read()
   self.name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(72), 0, false), "ASCII")
   self.ofs_body = self._io:read_u4le()
   self.len_body = self._io:read_u4le()
-end
-
--- 
--- See also: Source (https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119)
-AndroidBootldrHuawei.ImageHdrEntry.property.is_used = {}
-function AndroidBootldrHuawei.ImageHdrEntry.property.is_used:get()
-  if self._m_is_used ~= nil then
-    return self._m_is_used
-  end
-
-  self._m_is_used =  ((self.ofs_body ~= 0) and (self.len_body ~= 0)) 
-  return self._m_is_used
 end
 
 AndroidBootldrHuawei.ImageHdrEntry.property.body = {}
@@ -154,5 +106,53 @@ function AndroidBootldrHuawei.ImageHdrEntry.property.body:get()
 end
 
 -- 
+-- See also: Source (https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119)
+AndroidBootldrHuawei.ImageHdrEntry.property.is_used = {}
+function AndroidBootldrHuawei.ImageHdrEntry.property.is_used:get()
+  if self._m_is_used ~= nil then
+    return self._m_is_used
+  end
+
+  self._m_is_used =  ((self.ofs_body ~= 0) and (self.len_body ~= 0)) 
+  return self._m_is_used
+end
+
+-- 
 -- partition name.
+
+AndroidBootldrHuawei.MetaHdr = class.class(KaitaiStruct)
+
+function AndroidBootldrHuawei.MetaHdr:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function AndroidBootldrHuawei.MetaHdr:_read()
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\060\214\026\206") then
+    error("not equal, expected " .. "\060\214\026\206" .. ", but got " .. self.magic)
+  end
+  self.version = AndroidBootldrHuawei.Version(self._io, self, self._root)
+  self.image_version = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(64), 0, false), "ASCII")
+  self.len_meta_header = self._io:read_u2le()
+  self.len_image_header = self._io:read_u2le()
+end
+
+
+AndroidBootldrHuawei.Version = class.class(KaitaiStruct)
+
+function AndroidBootldrHuawei.Version:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function AndroidBootldrHuawei.Version:_read()
+  self.major = self._io:read_u2le()
+  self.minor = self._io:read_u2le()
+end
+
 

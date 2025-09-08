@@ -27,14 +27,18 @@ type Stl struct {
 	Triangles []*Stl_Triangle
 	_io *kaitai.Stream
 	_root *Stl
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewStl() *Stl {
 	return &Stl{
 	}
 }
 
-func (this *Stl) Read(io *kaitai.Stream, parent interface{}, root *Stl) (err error) {
+func (this Stl) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Stl) Read(io *kaitai.Stream, parent kaitai.Struct, root *Stl) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -78,6 +82,10 @@ type Stl_Triangle struct {
 func NewStl_Triangle() *Stl_Triangle {
 	return &Stl_Triangle{
 	}
+}
+
+func (this Stl_Triangle) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Stl_Triangle) Read(io *kaitai.Stream, parent *Stl, root *Stl) (err error) {
@@ -129,6 +137,10 @@ type Stl_Vec3d struct {
 func NewStl_Vec3d() *Stl_Vec3d {
 	return &Stl_Vec3d{
 	}
+}
+
+func (this Stl_Vec3d) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Stl_Vec3d) Read(io *kaitai.Stream, parent *Stl_Triangle, root *Stl) (err error) {

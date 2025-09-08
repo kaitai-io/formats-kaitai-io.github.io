@@ -45,75 +45,12 @@ end
 -- 
 -- the size of this section of the file in bytes must equal (header.file_length * 2) - 100.
 
-ShapefileIndex.FileHeader = class.class(KaitaiStruct)
-
-function ShapefileIndex.FileHeader:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function ShapefileIndex.FileHeader:_read()
-  self.file_code = self._io:read_bytes(4)
-  if not(self.file_code == "\000\000\039\010") then
-    error("not equal, expected " ..  "\000\000\039\010" .. ", but got " .. self.file_code)
-  end
-  self.unused_field_1 = self._io:read_bytes(4)
-  if not(self.unused_field_1 == "\000\000\000\000") then
-    error("not equal, expected " ..  "\000\000\000\000" .. ", but got " .. self.unused_field_1)
-  end
-  self.unused_field_2 = self._io:read_bytes(4)
-  if not(self.unused_field_2 == "\000\000\000\000") then
-    error("not equal, expected " ..  "\000\000\000\000" .. ", but got " .. self.unused_field_2)
-  end
-  self.unused_field_3 = self._io:read_bytes(4)
-  if not(self.unused_field_3 == "\000\000\000\000") then
-    error("not equal, expected " ..  "\000\000\000\000" .. ", but got " .. self.unused_field_3)
-  end
-  self.unused_field_4 = self._io:read_bytes(4)
-  if not(self.unused_field_4 == "\000\000\000\000") then
-    error("not equal, expected " ..  "\000\000\000\000" .. ", but got " .. self.unused_field_4)
-  end
-  self.unused_field_5 = self._io:read_bytes(4)
-  if not(self.unused_field_5 == "\000\000\000\000") then
-    error("not equal, expected " ..  "\000\000\000\000" .. ", but got " .. self.unused_field_5)
-  end
-  self.file_length = self._io:read_s4be()
-  self.version = self._io:read_bytes(4)
-  if not(self.version == "\232\003\000\000") then
-    error("not equal, expected " ..  "\232\003\000\000" .. ", but got " .. self.version)
-  end
-  self.shape_type = ShapefileIndex.ShapeType(self._io:read_s4le())
-  self.bounding_box = ShapefileIndex.BoundingBoxXYZM(self._io, self, self._root)
-end
-
--- 
--- corresponds to s4be value of 9994.
--- 
--- corresponds to s4le value of 1000.
-
-ShapefileIndex.Record = class.class(KaitaiStruct)
-
-function ShapefileIndex.Record:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function ShapefileIndex.Record:_read()
-  self.offset = self._io:read_s4be()
-  self.content_length = self._io:read_s4be()
-end
-
-
 ShapefileIndex.BoundingBoxXYZM = class.class(KaitaiStruct)
 
 function ShapefileIndex.BoundingBoxXYZM:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -130,13 +67,76 @@ ShapefileIndex.BoundsMinMax = class.class(KaitaiStruct)
 function ShapefileIndex.BoundsMinMax:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function ShapefileIndex.BoundsMinMax:_read()
   self.min = self._io:read_f8be()
   self.max = self._io:read_f8be()
+end
+
+
+ShapefileIndex.FileHeader = class.class(KaitaiStruct)
+
+function ShapefileIndex.FileHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function ShapefileIndex.FileHeader:_read()
+  self.file_code = self._io:read_bytes(4)
+  if not(self.file_code == "\000\000\039\010") then
+    error("not equal, expected " .. "\000\000\039\010" .. ", but got " .. self.file_code)
+  end
+  self.unused_field_1 = self._io:read_bytes(4)
+  if not(self.unused_field_1 == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.unused_field_1)
+  end
+  self.unused_field_2 = self._io:read_bytes(4)
+  if not(self.unused_field_2 == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.unused_field_2)
+  end
+  self.unused_field_3 = self._io:read_bytes(4)
+  if not(self.unused_field_3 == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.unused_field_3)
+  end
+  self.unused_field_4 = self._io:read_bytes(4)
+  if not(self.unused_field_4 == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.unused_field_4)
+  end
+  self.unused_field_5 = self._io:read_bytes(4)
+  if not(self.unused_field_5 == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.unused_field_5)
+  end
+  self.file_length = self._io:read_s4be()
+  self.version = self._io:read_bytes(4)
+  if not(self.version == "\232\003\000\000") then
+    error("not equal, expected " .. "\232\003\000\000" .. ", but got " .. self.version)
+  end
+  self.shape_type = ShapefileIndex.ShapeType(self._io:read_s4le())
+  self.bounding_box = ShapefileIndex.BoundingBoxXYZM(self._io, self, self._root)
+end
+
+-- 
+-- corresponds to s4be value of 9994.
+-- 
+-- corresponds to s4le value of 1000.
+
+ShapefileIndex.Record = class.class(KaitaiStruct)
+
+function ShapefileIndex.Record:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function ShapefileIndex.Record:_read()
+  self.offset = self._io:read_s4be()
+  self.content_length = self._io:read_s4be()
 end
 
 

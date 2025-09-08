@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class MacOsResourceSnd(KaitaiStruct):
     """Sound resources were introduced in Classic MacOS with the Sound Manager program.
@@ -17,7 +18,7 @@ class MacOsResourceSnd(KaitaiStruct):
        Source - https://developer.apple.com/library/archive/documentation/mac/pdf/Sound/Sound_Manager.pdf
     """
 
-    class CmdType(Enum):
+    class CmdType(IntEnum):
         null_cmd = 0
         quiet_cmd = 3
         flush_cmd = 4
@@ -47,23 +48,21 @@ class MacOsResourceSnd(KaitaiStruct):
         rate_cmd = 82
         get_rate_cmd = 85
 
-    class SoundHeaderType(Enum):
-        standard = 0
-        compressed = 254
-        extended = 255
+    class CompressionTypeEnum(IntEnum):
+        variable_compression = -2
+        fixed_compression = -1
+        not_compressed = 0
+        two_to_one = 1
+        eight_to_three = 2
+        three_to_one = 3
+        six_to_one = 4
 
-    class DataType(Enum):
+    class DataType(IntEnum):
         square_wave_synth = 1
         wave_table_synth = 3
         sampled_synth = 5
 
-    class WaveInitOption(Enum):
-        channel0 = 4
-        channel1 = 5
-        channel2 = 6
-        channel3 = 7
-
-    class InitOption(Enum):
+    class InitOption(IntEnum):
         chan_left = 2
         chan_right = 3
         no_interp = 4
@@ -73,32 +72,37 @@ class MacOsResourceSnd(KaitaiStruct):
         mace3 = 768
         mace6 = 1024
 
-    class CompressionTypeEnum(Enum):
-        variable_compression = -2
-        fixed_compression = -1
-        not_compressed = 0
-        two_to_one = 1
-        eight_to_three = 2
-        three_to_one = 3
-        six_to_one = 4
+    class SoundHeaderType(IntEnum):
+        standard = 0
+        compressed = 254
+        extended = 255
+
+    class WaveInitOption(IntEnum):
+        channel0 = 4
+        channel1 = 5
+        channel2 = 6
+        channel3 = 7
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(MacOsResourceSnd, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.format = self._io.read_u2be()
         if self.format == 1:
+            pass
             self.num_data_formats = self._io.read_u2be()
 
         if self.format == 1:
+            pass
             self.data_formats = []
             for i in range(self.num_data_formats):
                 self.data_formats.append(MacOsResourceSnd.DataFormat(self._io, self, self._root))
 
 
         if self.format == 2:
+            pass
             self.reference_count = self._io.read_u2be()
 
         self.num_sound_commands = self._io.read_u2be()
@@ -107,11 +111,148 @@ class MacOsResourceSnd(KaitaiStruct):
             self.sound_commands.append(MacOsResourceSnd.SoundCommand(self._io, self, self._root))
 
 
+
+    def _fetch_instances(self):
+        pass
+        if self.format == 1:
+            pass
+
+        if self.format == 1:
+            pass
+            for i in range(len(self.data_formats)):
+                pass
+                self.data_formats[i]._fetch_instances()
+
+
+        if self.format == 2:
+            pass
+
+        for i in range(len(self.sound_commands)):
+            pass
+            self.sound_commands[i]._fetch_instances()
+
+
+    class Compressed(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(MacOsResourceSnd.Compressed, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.format = (self._io.read_bytes(4)).decode(u"ASCII")
+            self.reserved = self._io.read_bytes(4)
+            self.state_vars_ptr = self._io.read_u4be()
+            self.left_over_samples_ptr = self._io.read_u4be()
+            self.compression_id = self._io.read_s2be()
+            self.packet_size = self._io.read_u2be()
+            self.synthesizer_id = self._io.read_u2be()
+
+
+        def _fetch_instances(self):
+            pass
+
+        @property
+        def compression_type(self):
+            if hasattr(self, '_m_compression_type'):
+                return self._m_compression_type
+
+            self._m_compression_type = KaitaiStream.resolve_enum(MacOsResourceSnd.CompressionTypeEnum, self.compression_id)
+            return getattr(self, '_m_compression_type', None)
+
+
+    class DataFormat(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(MacOsResourceSnd.DataFormat, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.id = KaitaiStream.resolve_enum(MacOsResourceSnd.DataType, self._io.read_u2be())
+            self.options = self._io.read_u4be()
+
+
+        def _fetch_instances(self):
+            pass
+
+        @property
+        def comp_init(self):
+            if hasattr(self, '_m_comp_init'):
+                return self._m_comp_init
+
+            self._m_comp_init = KaitaiStream.resolve_enum(MacOsResourceSnd.InitOption, self.options & self.init_comp_mask)
+            return getattr(self, '_m_comp_init', None)
+
+        @property
+        def init_comp_mask(self):
+            """mask for compression IDs."""
+            if hasattr(self, '_m_init_comp_mask'):
+                return self._m_init_comp_mask
+
+            self._m_init_comp_mask = 65280
+            return getattr(self, '_m_init_comp_mask', None)
+
+        @property
+        def init_pan_mask(self):
+            """mask for right/left pan values."""
+            if hasattr(self, '_m_init_pan_mask'):
+                return self._m_init_pan_mask
+
+            self._m_init_pan_mask = 3
+            return getattr(self, '_m_init_pan_mask', None)
+
+        @property
+        def init_stereo_mask(self):
+            """mask for mono/stereo values."""
+            if hasattr(self, '_m_init_stereo_mask'):
+                return self._m_init_stereo_mask
+
+            self._m_init_stereo_mask = 192
+            return getattr(self, '_m_init_stereo_mask', None)
+
+        @property
+        def pan_init(self):
+            if hasattr(self, '_m_pan_init'):
+                return self._m_pan_init
+
+            self._m_pan_init = KaitaiStream.resolve_enum(MacOsResourceSnd.InitOption, self.options & self.init_pan_mask)
+            return getattr(self, '_m_pan_init', None)
+
+        @property
+        def stereo_init(self):
+            if hasattr(self, '_m_stereo_init'):
+                return self._m_stereo_init
+
+            self._m_stereo_init = KaitaiStream.resolve_enum(MacOsResourceSnd.InitOption, self.options & self.init_stereo_mask)
+            return getattr(self, '_m_stereo_init', None)
+
+        @property
+        def wave_init(self):
+            if hasattr(self, '_m_wave_init'):
+                return self._m_wave_init
+
+            if self.id == MacOsResourceSnd.DataType.wave_table_synth:
+                pass
+                self._m_wave_init = KaitaiStream.resolve_enum(MacOsResourceSnd.WaveInitOption, self.options & self.wave_init_channel_mask)
+
+            return getattr(self, '_m_wave_init', None)
+
+        @property
+        def wave_init_channel_mask(self):
+            """wave table only, Sound Manager 2.0 and earlier."""
+            if hasattr(self, '_m_wave_init_channel_mask'):
+                return self._m_wave_init_channel_mask
+
+            self._m_wave_init_channel_mask = 7
+            return getattr(self, '_m_wave_init_channel_mask', None)
+
+
     class Extended(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(MacOsResourceSnd.Extended, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -119,22 +260,107 @@ class MacOsResourceSnd(KaitaiStruct):
             self.aes_recording_ptr = self._io.read_u4be()
 
 
+        def _fetch_instances(self):
+            pass
+
+
+    class ExtendedOrCompressed(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(MacOsResourceSnd.ExtendedOrCompressed, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.num_frames = self._io.read_u4be()
+            self.aiff_sample_rate = self._io.read_bytes(10)
+            self.marker_chunk = self._io.read_u4be()
+            if self._parent.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended:
+                pass
+                self.extended = MacOsResourceSnd.Extended(self._io, self, self._root)
+
+            if self._parent.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed:
+                pass
+                self.compressed = MacOsResourceSnd.Compressed(self._io, self, self._root)
+
+            self.bits_per_sample = self._io.read_u2be()
+            if self._parent.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended:
+                pass
+                self.reserved = self._io.read_bytes(14)
+
+
+
+        def _fetch_instances(self):
+            pass
+            if self._parent.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended:
+                pass
+                self.extended._fetch_instances()
+
+            if self._parent.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed:
+                pass
+                self.compressed._fetch_instances()
+
+            if self._parent.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended:
+                pass
+
+
+
+    class SoundCommand(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(MacOsResourceSnd.SoundCommand, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.is_data_offset = self._io.read_bits_int_be(1) != 0
+            self.cmd = KaitaiStream.resolve_enum(MacOsResourceSnd.CmdType, self._io.read_bits_int_be(15))
+            self.param1 = self._io.read_u2be()
+            self.param2 = self._io.read_u4be()
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.sound_header
+            if hasattr(self, '_m_sound_header'):
+                pass
+                self._m_sound_header._fetch_instances()
+
+
+        @property
+        def sound_header(self):
+            if hasattr(self, '_m_sound_header'):
+                return self._m_sound_header
+
+            if  ((self.is_data_offset) and (self.cmd == MacOsResourceSnd.CmdType.buffer_cmd)) :
+                pass
+                _pos = self._io.pos()
+                self._io.seek(self.param2)
+                self._m_sound_header = MacOsResourceSnd.SoundHeader(self._io, self, self._root)
+                self._io.seek(_pos)
+
+            return getattr(self, '_m_sound_header', None)
+
+
     class SoundHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(MacOsResourceSnd.SoundHeader, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             if self.start_ofs < 0:
+                pass
                 self._unnamed0 = self._io.read_bytes(0)
 
             self.sample_ptr = self._io.read_u4be()
             if self.sound_header_type == MacOsResourceSnd.SoundHeaderType.standard:
+                pass
                 self.num_samples = self._io.read_u4be()
 
             if  ((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) or (self.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed)) :
+                pass
                 self.num_channels = self._io.read_u4be()
 
             self.sample_rate = MacOsResourceSnd.UnsignedFixedPoint(self._io, self, self._root)
@@ -143,19 +369,38 @@ class MacOsResourceSnd(KaitaiStruct):
             self.encode = KaitaiStream.resolve_enum(MacOsResourceSnd.SoundHeaderType, self._io.read_u1())
             self.midi_note = self._io.read_u1()
             if  ((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) or (self.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed)) :
+                pass
                 self.extended_or_compressed = MacOsResourceSnd.ExtendedOrCompressed(self._io, self, self._root)
 
             if self.sample_ptr == 0:
-                self.sample_area = self._io.read_bytes((self.num_samples if self.sound_header_type == MacOsResourceSnd.SoundHeaderType.standard else (((self.extended_or_compressed.num_frames * self.num_channels) * self.extended_or_compressed.bits_per_sample) // 8 if self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended else (self._io.size() - self._io.pos()))))
+                pass
+                self.sample_area = self._io.read_bytes((self.num_samples if self.sound_header_type == MacOsResourceSnd.SoundHeaderType.standard else (((self.extended_or_compressed.num_frames * self.num_channels) * self.extended_or_compressed.bits_per_sample) // 8 if self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended else self._io.size() - self._io.pos())))
 
 
-        @property
-        def start_ofs(self):
-            if hasattr(self, '_m_start_ofs'):
-                return self._m_start_ofs
 
-            self._m_start_ofs = self._io.pos()
-            return getattr(self, '_m_start_ofs', None)
+        def _fetch_instances(self):
+            pass
+            if self.start_ofs < 0:
+                pass
+
+            if self.sound_header_type == MacOsResourceSnd.SoundHeaderType.standard:
+                pass
+
+            if  ((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) or (self.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed)) :
+                pass
+
+            self.sample_rate._fetch_instances()
+            if  ((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) or (self.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed)) :
+                pass
+                self.extended_or_compressed._fetch_instances()
+
+            if self.sample_ptr == 0:
+                pass
+
+            _ = self.sound_header_type
+            if hasattr(self, '_m_sound_header_type'):
+                pass
+
 
         @property
         def base_freqeuncy(self):
@@ -169,6 +414,7 @@ class MacOsResourceSnd(KaitaiStruct):
                 return self._m_base_freqeuncy
 
             if  ((self.midi_note >= 0) and (self.midi_note < 128)) :
+                pass
                 self._m_base_freqeuncy = self._root.midi_note_to_frequency[self.midi_note]
 
             return getattr(self, '_m_base_freqeuncy', None)
@@ -179,188 +425,42 @@ class MacOsResourceSnd(KaitaiStruct):
                 return self._m_sound_header_type
 
             _pos = self._io.pos()
-            self._io.seek((self.start_ofs + 20))
+            self._io.seek(self.start_ofs + 20)
             self._m_sound_header_type = KaitaiStream.resolve_enum(MacOsResourceSnd.SoundHeaderType, self._io.read_u1())
             self._io.seek(_pos)
             return getattr(self, '_m_sound_header_type', None)
 
+        @property
+        def start_ofs(self):
+            if hasattr(self, '_m_start_ofs'):
+                return self._m_start_ofs
+
+            self._m_start_ofs = self._io.pos()
+            return getattr(self, '_m_start_ofs', None)
+
 
     class UnsignedFixedPoint(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(MacOsResourceSnd.UnsignedFixedPoint, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.integer_part = self._io.read_u2be()
             self.fraction_part = self._io.read_u2be()
 
+
+        def _fetch_instances(self):
+            pass
+
         @property
         def value(self):
             if hasattr(self, '_m_value'):
                 return self._m_value
 
-            self._m_value = (self.integer_part + (self.fraction_part / 65535.0))
+            self._m_value = self.integer_part + self.fraction_part / 65535.0
             return getattr(self, '_m_value', None)
-
-
-    class SoundCommand(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.is_data_offset = self._io.read_bits_int_be(1) != 0
-            self.cmd = KaitaiStream.resolve_enum(MacOsResourceSnd.CmdType, self._io.read_bits_int_be(15))
-            self._io.align_to_byte()
-            self.param1 = self._io.read_u2be()
-            self.param2 = self._io.read_u4be()
-
-        @property
-        def sound_header(self):
-            if hasattr(self, '_m_sound_header'):
-                return self._m_sound_header
-
-            if  ((self.is_data_offset) and (self.cmd == MacOsResourceSnd.CmdType.buffer_cmd)) :
-                _pos = self._io.pos()
-                self._io.seek(self.param2)
-                self._m_sound_header = MacOsResourceSnd.SoundHeader(self._io, self, self._root)
-                self._io.seek(_pos)
-
-            return getattr(self, '_m_sound_header', None)
-
-
-    class Compressed(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.format = (self._io.read_bytes(4)).decode(u"ASCII")
-            self.reserved = self._io.read_bytes(4)
-            self.state_vars_ptr = self._io.read_u4be()
-            self.left_over_samples_ptr = self._io.read_u4be()
-            self.compression_id = self._io.read_s2be()
-            self.packet_size = self._io.read_u2be()
-            self.synthesizer_id = self._io.read_u2be()
-
-        @property
-        def compression_type(self):
-            if hasattr(self, '_m_compression_type'):
-                return self._m_compression_type
-
-            self._m_compression_type = KaitaiStream.resolve_enum(MacOsResourceSnd.CompressionTypeEnum, self.compression_id)
-            return getattr(self, '_m_compression_type', None)
-
-
-    class ExtendedOrCompressed(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.num_frames = self._io.read_u4be()
-            self.aiff_sample_rate = self._io.read_bytes(10)
-            self.marker_chunk = self._io.read_u4be()
-            if self._parent.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended:
-                self.extended = MacOsResourceSnd.Extended(self._io, self, self._root)
-
-            if self._parent.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed:
-                self.compressed = MacOsResourceSnd.Compressed(self._io, self, self._root)
-
-            self.bits_per_sample = self._io.read_u2be()
-            if self._parent.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended:
-                self.reserved = self._io.read_bytes(14)
-
-
-
-    class DataFormat(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.id = KaitaiStream.resolve_enum(MacOsResourceSnd.DataType, self._io.read_u2be())
-            self.options = self._io.read_u4be()
-
-        @property
-        def init_pan_mask(self):
-            """mask for right/left pan values."""
-            if hasattr(self, '_m_init_pan_mask'):
-                return self._m_init_pan_mask
-
-            self._m_init_pan_mask = 3
-            return getattr(self, '_m_init_pan_mask', None)
-
-        @property
-        def wave_init_channel_mask(self):
-            """wave table only, Sound Manager 2.0 and earlier."""
-            if hasattr(self, '_m_wave_init_channel_mask'):
-                return self._m_wave_init_channel_mask
-
-            self._m_wave_init_channel_mask = 7
-            return getattr(self, '_m_wave_init_channel_mask', None)
-
-        @property
-        def init_stereo_mask(self):
-            """mask for mono/stereo values."""
-            if hasattr(self, '_m_init_stereo_mask'):
-                return self._m_init_stereo_mask
-
-            self._m_init_stereo_mask = 192
-            return getattr(self, '_m_init_stereo_mask', None)
-
-        @property
-        def wave_init(self):
-            if hasattr(self, '_m_wave_init'):
-                return self._m_wave_init
-
-            if self.id == MacOsResourceSnd.DataType.wave_table_synth:
-                self._m_wave_init = KaitaiStream.resolve_enum(MacOsResourceSnd.WaveInitOption, (self.options & self.wave_init_channel_mask))
-
-            return getattr(self, '_m_wave_init', None)
-
-        @property
-        def pan_init(self):
-            if hasattr(self, '_m_pan_init'):
-                return self._m_pan_init
-
-            self._m_pan_init = KaitaiStream.resolve_enum(MacOsResourceSnd.InitOption, (self.options & self.init_pan_mask))
-            return getattr(self, '_m_pan_init', None)
-
-        @property
-        def init_comp_mask(self):
-            """mask for compression IDs."""
-            if hasattr(self, '_m_init_comp_mask'):
-                return self._m_init_comp_mask
-
-            self._m_init_comp_mask = 65280
-            return getattr(self, '_m_init_comp_mask', None)
-
-        @property
-        def stereo_init(self):
-            if hasattr(self, '_m_stereo_init'):
-                return self._m_stereo_init
-
-            self._m_stereo_init = KaitaiStream.resolve_enum(MacOsResourceSnd.InitOption, (self.options & self.init_stereo_mask))
-            return getattr(self, '_m_stereo_init', None)
-
-        @property
-        def comp_init(self):
-            if hasattr(self, '_m_comp_init'):
-                return self._m_comp_init
-
-            self._m_comp_init = KaitaiStream.resolve_enum(MacOsResourceSnd.InitOption, (self.options & self.init_comp_mask))
-            return getattr(self, '_m_comp_init', None)
 
 
     @property

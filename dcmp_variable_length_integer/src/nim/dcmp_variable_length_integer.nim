@@ -93,7 +93,7 @@ proc value(this: DcmpVariableLengthInteger): int =
   ]##
   if this.valueInstFlag:
     return this.valueInst
-  let valueInstExpr = int((if this.first == 255: this.more else: (if this.first >= 128: (((this.first shl 8) or this.more) - 49152) else: this.first)))
+  let valueInstExpr = int((if this.first == 255: this.more else: (if this.first >= 128: (this.first shl 8 or this.more) - 49152 else: this.first)))
   this.valueInst = valueInstExpr
   this.valueInstFlag = true
   return this.valueInst

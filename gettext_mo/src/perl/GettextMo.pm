@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -69,7 +69,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -79,6 +79,23 @@ sub new {
 sub _read {
     my ($self) = @_;
 
+}
+
+sub next {
+    my ($self) = @_;
+    return $self->{next} if ($self->{next});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(0);
+    $self->{next} = GettextMo::HashLookupIteration->new($self->{_io}, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{next};
+}
+
+sub next_idx {
+    my ($self) = @_;
+    return $self->{next_idx} if ($self->{next_idx});
+    $self->{next_idx} = ($self->idx() + $self->collision_step()) - ($self->idx() >= $self->_root()->mo()->num_hashtable_items() - $self->collision_step() ? $self->_root()->mo()->num_hashtable_items() : 0);
+    return $self->{next_idx};
 }
 
 sub original {
@@ -95,23 +112,6 @@ sub translation {
     return $self->{translation};
 }
 
-sub next_idx {
-    my ($self) = @_;
-    return $self->{next_idx} if ($self->{next_idx});
-    $self->{next_idx} = (($self->idx() + $self->collision_step()) - ($self->idx() >= ($self->_root()->mo()->num_hashtable_items() - $self->collision_step()) ? $self->_root()->mo()->num_hashtable_items() : 0));
-    return $self->{next_idx};
-}
-
-sub next {
-    my ($self) = @_;
-    return $self->{next} if ($self->{next});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(0);
-    $self->{next} = GettextMo::HashLookupIteration->new($self->{_io}, $self, $self->{_root});
-    $self->{_io}->seek($_pos);
-    return $self->{next};
-}
-
 sub idx {
     my ($self) = @_;
     return $self->{idx};
@@ -120,6 +120,82 @@ sub idx {
 sub collision_step {
     my ($self) = @_;
     return $self->{collision_step};
+}
+
+########################################################################
+package GettextMo::HashtableLookup;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+sub collision_step {
+    my ($self) = @_;
+    return $self->{collision_step} if ($self->{collision_step});
+    $self->{collision_step} = $self->hash() % ($self->_root()->mo()->num_hashtable_items() - 2) + 1;
+    return $self->{collision_step};
+}
+
+sub entry {
+    my ($self) = @_;
+    return $self->{entry} if ($self->{entry});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(0);
+    $self->{entry} = GettextMo::LookupIteration->new($self->{_io}, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{entry};
+}
+
+sub hash_lookup_iteration {
+    my ($self) = @_;
+    return $self->{hash_lookup_iteration} if ($self->{hash_lookup_iteration});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(0);
+    $self->{hash_lookup_iteration} = GettextMo::HashLookupIteration->new($self->{_io}, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{hash_lookup_iteration};
+}
+
+sub idx {
+    my ($self) = @_;
+    return $self->{idx} if ($self->{idx});
+    $self->{idx} = $self->hash() % $self->_root()->mo()->num_hashtable_items();
+    return $self->{idx};
+}
+
+sub query {
+    my ($self) = @_;
+    return $self->{query};
+}
+
+sub hash {
+    my ($self) = @_;
+    return $self->{hash};
 }
 
 ########################################################################
@@ -142,7 +218,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -184,82 +260,6 @@ sub query {
 }
 
 ########################################################################
-package GettextMo::HashtableLookup;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-}
-
-sub collision_step {
-    my ($self) = @_;
-    return $self->{collision_step} if ($self->{collision_step});
-    $self->{collision_step} = (($self->hash() % ($self->_root()->mo()->num_hashtable_items() - 2)) + 1);
-    return $self->{collision_step};
-}
-
-sub idx {
-    my ($self) = @_;
-    return $self->{idx} if ($self->{idx});
-    $self->{idx} = ($self->hash() % $self->_root()->mo()->num_hashtable_items());
-    return $self->{idx};
-}
-
-sub hash_lookup_iteration {
-    my ($self) = @_;
-    return $self->{hash_lookup_iteration} if ($self->{hash_lookup_iteration});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(0);
-    $self->{hash_lookup_iteration} = GettextMo::HashLookupIteration->new($self->{_io}, $self, $self->{_root});
-    $self->{_io}->seek($_pos);
-    return $self->{hash_lookup_iteration};
-}
-
-sub entry {
-    my ($self) = @_;
-    return $self->{entry} if ($self->{entry});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(0);
-    $self->{entry} = GettextMo::LookupIteration->new($self->{_io}, $self, $self->{_root});
-    $self->{_io}->seek($_pos);
-    return $self->{entry};
-}
-
-sub query {
-    my ($self) = @_;
-    return $self->{query};
-}
-
-sub hash {
-    my ($self) = @_;
-    return $self->{hash};
-}
-
-########################################################################
 package GettextMo::Mo;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -279,7 +279,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -327,6 +327,31 @@ sub _read_be {
     $self->{ofs_hashtable_items} = $self->{_io}->read_u4be();
 }
 
+sub hashtable_items {
+    my ($self) = @_;
+    return $self->{hashtable_items} if ($self->{hashtable_items});
+    if ($self->ofs_hashtable_items() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_hashtable_items());
+        if ($self->{_is_le}) {
+            $self->{hashtable_items} = [];
+            my $n_hashtable_items = $self->num_hashtable_items();
+            for (my $i = 0; $i < $n_hashtable_items; $i++) {
+                push @{$self->{hashtable_items}}, GettextMo::Mo::HashtableItem->new($io, $self, $self->{_root}, $self->{_is_le});
+            }
+        } else {
+            $self->{hashtable_items} = [];
+            my $n_hashtable_items = $self->num_hashtable_items();
+            for (my $i = 0; $i < $n_hashtable_items; $i++) {
+                push @{$self->{hashtable_items}}, GettextMo::Mo::HashtableItem->new($io, $self, $self->{_root}, $self->{_is_le});
+            }
+        }
+        $io->seek($_pos);
+    }
+    return $self->{hashtable_items};
+}
+
 sub originals {
     my ($self) = @_;
     return $self->{originals} if ($self->{originals});
@@ -334,13 +359,13 @@ sub originals {
     my $_pos = $io->pos();
     $io->seek($self->ofs_originals());
     if ($self->{_is_le}) {
-        $self->{originals} = ();
+        $self->{originals} = [];
         my $n_originals = $self->num_translations();
         for (my $i = 0; $i < $n_originals; $i++) {
             push @{$self->{originals}}, GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
         }
     } else {
-        $self->{originals} = ();
+        $self->{originals} = [];
         my $n_originals = $self->num_translations();
         for (my $i = 0; $i < $n_originals; $i++) {
             push @{$self->{originals}}, GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
@@ -357,13 +382,13 @@ sub translations {
     my $_pos = $io->pos();
     $io->seek($self->ofs_translations());
     if ($self->{_is_le}) {
-        $self->{translations} = ();
+        $self->{translations} = [];
         my $n_translations = $self->num_translations();
         for (my $i = 0; $i < $n_translations; $i++) {
             push @{$self->{translations}}, GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
         }
     } else {
-        $self->{translations} = ();
+        $self->{translations} = [];
         my $n_translations = $self->num_translations();
         for (my $i = 0; $i < $n_translations; $i++) {
             push @{$self->{translations}}, GettextMo::Mo::Descriptor->new($io, $self, $self->{_root}, $self->{_is_le});
@@ -371,31 +396,6 @@ sub translations {
     }
     $io->seek($_pos);
     return $self->{translations};
-}
-
-sub hashtable_items {
-    my ($self) = @_;
-    return $self->{hashtable_items} if ($self->{hashtable_items});
-    if ($self->ofs_hashtable_items() != 0) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->ofs_hashtable_items());
-        if ($self->{_is_le}) {
-            $self->{hashtable_items} = ();
-            my $n_hashtable_items = $self->num_hashtable_items();
-            for (my $i = 0; $i < $n_hashtable_items; $i++) {
-                push @{$self->{hashtable_items}}, GettextMo::Mo::HashtableItem->new($io, $self, $self->{_root}, $self->{_is_le});
-            }
-        } else {
-            $self->{hashtable_items} = ();
-            my $n_hashtable_items = $self->num_hashtable_items();
-            for (my $i = 0; $i < $n_hashtable_items; $i++) {
-                push @{$self->{hashtable_items}}, GettextMo::Mo::HashtableItem->new($io, $self, $self->{_root}, $self->{_is_le});
-            }
-        }
-        $io->seek($_pos);
-    }
-    return $self->{hashtable_items};
 }
 
 sub version {
@@ -429,168 +429,6 @@ sub ofs_hashtable_items {
 }
 
 ########################################################################
-package GettextMo::Mo::Version;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-    $self->{_is_le} = $_is_le;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    if (!(defined $self->{_is_le})) {
-        die "Unable to decide on endianness";
-    } elsif ($self->{_is_le}) {
-        $self->_read_le();
-    } else {
-        $self->_read_be();
-    }
-}
-
-sub _read_le {
-    my ($self) = @_;
-
-    $self->{version_raw} = $self->{_io}->read_u4le();
-}
-
-sub _read_be {
-    my ($self) = @_;
-
-    $self->{version_raw} = $self->{_io}->read_u4be();
-}
-
-sub major {
-    my ($self) = @_;
-    return $self->{major} if ($self->{major});
-    $self->{major} = ($self->version_raw() >> 16);
-    return $self->{major};
-}
-
-sub minor {
-    my ($self) = @_;
-    return $self->{minor} if ($self->{minor});
-    $self->{minor} = ($self->version_raw() & 65535);
-    return $self->{minor};
-}
-
-sub version_raw {
-    my ($self) = @_;
-    return $self->{version_raw};
-}
-
-########################################################################
-package GettextMo::Mo::HashtableItem;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-    $self->{_is_le} = $_is_le;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    if (!(defined $self->{_is_le})) {
-        die "Unable to decide on endianness";
-    } elsif ($self->{_is_le}) {
-        $self->_read_le();
-    } else {
-        $self->_read_be();
-    }
-}
-
-sub _read_le {
-    my ($self) = @_;
-
-    $self->{raw_val} = $self->{_io}->read_u4le();
-}
-
-sub _read_be {
-    my ($self) = @_;
-
-    $self->{raw_val} = $self->{_io}->read_u4be();
-}
-
-sub mask {
-    my ($self) = @_;
-    return $self->{mask} if ($self->{mask});
-    $self->{mask} = 2147483648;
-    return $self->{mask};
-}
-
-sub val_1 {
-    my ($self) = @_;
-    return $self->{val_1} if ($self->{val_1});
-    if ($self->raw_val() != 0) {
-        $self->{val_1} = ($self->raw_val() - 1);
-    }
-    return $self->{val_1};
-}
-
-sub is_system_dependent {
-    my ($self) = @_;
-    return $self->{is_system_dependent} if ($self->{is_system_dependent});
-    if ($self->raw_val() != 0) {
-        $self->{is_system_dependent} = ($self->val_1() & $self->mask()) == 1;
-    }
-    return $self->{is_system_dependent};
-}
-
-sub val {
-    my ($self) = @_;
-    return $self->{val} if ($self->{val});
-    if ($self->raw_val() != 0) {
-        $self->{val} = ($self->val_1() & ~($self->mask()));
-    }
-    return $self->{val};
-}
-
-sub raw_val {
-    my ($self) = @_;
-    return $self->{raw_val};
-}
-
-########################################################################
 package GettextMo::Mo::Descriptor;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -610,7 +448,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
     $self->{_is_le} = $_is_le;
 
     $self->_read();
@@ -667,6 +505,168 @@ sub len_str {
 sub ofs_str {
     my ($self) = @_;
     return $self->{ofs_str};
+}
+
+########################################################################
+package GettextMo::Mo::HashtableItem;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{raw_val} = $self->{_io}->read_u4le();
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{raw_val} = $self->{_io}->read_u4be();
+}
+
+sub is_system_dependent {
+    my ($self) = @_;
+    return $self->{is_system_dependent} if ($self->{is_system_dependent});
+    if ($self->raw_val() != 0) {
+        $self->{is_system_dependent} = ($self->val_1() & $self->mask()) == 1;
+    }
+    return $self->{is_system_dependent};
+}
+
+sub mask {
+    my ($self) = @_;
+    return $self->{mask} if ($self->{mask});
+    $self->{mask} = 2147483648;
+    return $self->{mask};
+}
+
+sub val {
+    my ($self) = @_;
+    return $self->{val} if ($self->{val});
+    if ($self->raw_val() != 0) {
+        $self->{val} = $self->val_1() & ~($self->mask());
+    }
+    return $self->{val};
+}
+
+sub val_1 {
+    my ($self) = @_;
+    return $self->{val_1} if ($self->{val_1});
+    if ($self->raw_val() != 0) {
+        $self->{val_1} = $self->raw_val() - 1;
+    }
+    return $self->{val_1};
+}
+
+sub raw_val {
+    my ($self) = @_;
+    return $self->{raw_val};
+}
+
+########################################################################
+package GettextMo::Mo::Version;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{version_raw} = $self->{_io}->read_u4le();
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{version_raw} = $self->{_io}->read_u4be();
+}
+
+sub major {
+    my ($self) = @_;
+    return $self->{major} if ($self->{major});
+    $self->{major} = $self->version_raw() >> 16;
+    return $self->{major};
+}
+
+sub minor {
+    my ($self) = @_;
+    return $self->{minor} if ($self->{minor});
+    $self->{minor} = $self->version_raw() & 65535;
+    return $self->{minor};
+}
+
+sub version_raw {
+    my ($self) = @_;
+    return $self->{version_raw};
 }
 
 1;

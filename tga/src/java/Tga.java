@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Arrays;
-import java.nio.charset.Charset;
 
 
 /**
@@ -86,72 +87,20 @@ public class Tga extends KaitaiStruct {
         if (colorMapType() == ColorMapEnum.HAS_COLOR_MAP) {
             this.colorMap = new ArrayList<byte[]>();
             for (int i = 0; i < numColorMap(); i++) {
-                this.colorMap.add(this._io.readBytes(((colorMapDepth() + 7) / 8)));
+                this.colorMap.add(this._io.readBytes((colorMapDepth() + 7) / 8));
             }
         }
     }
-    public static class TgaFooter extends KaitaiStruct {
-        public static TgaFooter fromFile(String fileName) throws IOException {
-            return new TgaFooter(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public TgaFooter(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public TgaFooter(KaitaiStream _io, Tga _parent) {
-            this(_io, _parent, null);
-        }
-
-        public TgaFooter(KaitaiStream _io, Tga _parent, Tga _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.extAreaOfs = this._io.readU4le();
-            this.devDirOfs = this._io.readU4le();
-            this.versionMagic = this._io.readBytes(18);
-        }
-        private Boolean isValid;
-        public Boolean isValid() {
-            if (this.isValid != null)
-                return this.isValid;
-            boolean _tmp = (boolean) (Arrays.equals(versionMagic(), new byte[] { 84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0 }));
-            this.isValid = _tmp;
-            return this.isValid;
-        }
-        private TgaExtArea extArea;
-        public TgaExtArea extArea() {
-            if (this.extArea != null)
-                return this.extArea;
-            if (isValid()) {
-                long _pos = this._io.pos();
-                this._io.seek(extAreaOfs());
-                this.extArea = new TgaExtArea(this._io, this, _root);
-                this._io.seek(_pos);
+    public void _fetchInstances() {
+        if (colorMapType() == ColorMapEnum.HAS_COLOR_MAP) {
+            for (int i = 0; i < this.colorMap.size(); i++) {
             }
-            return this.extArea;
         }
-        private long extAreaOfs;
-        private long devDirOfs;
-        private byte[] versionMagic;
-        private Tga _root;
-        private Tga _parent;
-
-        /**
-         * Offset to extension area
-         */
-        public long extAreaOfs() { return extAreaOfs; }
-
-        /**
-         * Offset to developer directory
-         */
-        public long devDirOfs() { return devDirOfs; }
-        public byte[] versionMagic() { return versionMagic; }
-        public Tga _root() { return _root; }
-        public Tga _parent() { return _parent; }
+        footer();
+        if (this.footer != null) {
+            this.footer._fetchInstances();
+        }
     }
     public static class TgaExtArea extends KaitaiStruct {
         public static TgaExtArea fromFile(String fileName) throws IOException {
@@ -174,15 +123,15 @@ public class Tga extends KaitaiStruct {
         }
         private void _read() {
             this.extAreaSize = this._io.readU2le();
-            this.authorName = new String(this._io.readBytes(41), Charset.forName("ASCII"));
+            this.authorName = new String(this._io.readBytes(41), StandardCharsets.US_ASCII);
             this.comments = new ArrayList<String>();
             for (int i = 0; i < 4; i++) {
-                this.comments.add(new String(this._io.readBytes(81), Charset.forName("ASCII")));
+                this.comments.add(new String(this._io.readBytes(81), StandardCharsets.US_ASCII));
             }
             this.timestamp = this._io.readBytes(12);
-            this.jobId = new String(this._io.readBytes(41), Charset.forName("ASCII"));
-            this.jobTime = new String(this._io.readBytes(6), Charset.forName("ASCII"));
-            this.softwareId = new String(this._io.readBytes(41), Charset.forName("ASCII"));
+            this.jobId = new String(this._io.readBytes(41), StandardCharsets.US_ASCII);
+            this.jobTime = new String(this._io.readBytes(6), StandardCharsets.US_ASCII);
+            this.softwareId = new String(this._io.readBytes(41), StandardCharsets.US_ASCII);
             this.softwareVersion = this._io.readBytes(3);
             this.keyColor = this._io.readU4le();
             this.pixelAspectRatio = this._io.readU4le();
@@ -192,9 +141,14 @@ public class Tga extends KaitaiStruct {
             this.scanLineOfs = this._io.readU4le();
             this.attributes = this._io.readU1();
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.comments.size(); i++) {
+            }
+        }
         private int extAreaSize;
         private String authorName;
-        private ArrayList<String> comments;
+        private List<String> comments;
         private byte[] timestamp;
         private String jobId;
         private String jobTime;
@@ -219,7 +173,7 @@ public class Tga extends KaitaiStruct {
         /**
          * Comments, organized as four lines, each consisting of 80 characters plus a NULL
          */
-        public ArrayList<String> comments() { return comments; }
+        public List<String> comments() { return comments; }
 
         /**
          * Image creation date / time
@@ -267,12 +221,81 @@ public class Tga extends KaitaiStruct {
         public Tga _root() { return _root; }
         public Tga.TgaFooter _parent() { return _parent; }
     }
+    public static class TgaFooter extends KaitaiStruct {
+        public static TgaFooter fromFile(String fileName) throws IOException {
+            return new TgaFooter(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TgaFooter(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TgaFooter(KaitaiStream _io, Tga _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TgaFooter(KaitaiStream _io, Tga _parent, Tga _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.extAreaOfs = this._io.readU4le();
+            this.devDirOfs = this._io.readU4le();
+            this.versionMagic = this._io.readBytes(18);
+        }
+
+        public void _fetchInstances() {
+            extArea();
+            if (this.extArea != null) {
+                this.extArea._fetchInstances();
+            }
+        }
+        private TgaExtArea extArea;
+        public TgaExtArea extArea() {
+            if (this.extArea != null)
+                return this.extArea;
+            if (isValid()) {
+                long _pos = this._io.pos();
+                this._io.seek(extAreaOfs());
+                this.extArea = new TgaExtArea(this._io, this, _root);
+                this._io.seek(_pos);
+            }
+            return this.extArea;
+        }
+        private Boolean isValid;
+        public Boolean isValid() {
+            if (this.isValid != null)
+                return this.isValid;
+            this.isValid = Arrays.equals(versionMagic(), new byte[] { 84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0 });
+            return this.isValid;
+        }
+        private long extAreaOfs;
+        private long devDirOfs;
+        private byte[] versionMagic;
+        private Tga _root;
+        private Tga _parent;
+
+        /**
+         * Offset to extension area
+         */
+        public long extAreaOfs() { return extAreaOfs; }
+
+        /**
+         * Offset to developer directory
+         */
+        public long devDirOfs() { return devDirOfs; }
+        public byte[] versionMagic() { return versionMagic; }
+        public Tga _root() { return _root; }
+        public Tga _parent() { return _parent; }
+    }
     private TgaFooter footer;
     public TgaFooter footer() {
         if (this.footer != null)
             return this.footer;
         long _pos = this._io.pos();
-        this._io.seek((_io().size() - 26));
+        this._io.seek(_io().size() - 26);
         this.footer = new TgaFooter(this._io, this, _root);
         this._io.seek(_pos);
         return this.footer;
@@ -290,7 +313,7 @@ public class Tga extends KaitaiStruct {
     private int imageDepth;
     private int imgDescriptor;
     private byte[] imageId;
-    private ArrayList<byte[]> colorMap;
+    private List<byte[]> colorMap;
     private Tga _root;
     private KaitaiStruct _parent;
     public int imageIdLen() { return imageIdLen; }
@@ -331,7 +354,7 @@ public class Tga extends KaitaiStruct {
     /**
      * Color map
      */
-    public ArrayList<byte[]> colorMap() { return colorMap; }
+    public List<byte[]> colorMap() { return colorMap; }
     public Tga _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

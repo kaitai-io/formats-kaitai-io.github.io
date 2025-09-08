@@ -36,9 +36,9 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_lenHeader = false;
             f_dataHashTable = false;
             f_fieldHashTable = false;
+            f_lenHeader = false;
             _read();
         }
         private void _read()
@@ -51,6 +51,136 @@ namespace Kaitai
             {
                 _objects.Add(new JournalObject(m_io, this, m_root));
             }
+        }
+
+        /// <summary>
+        /// Data objects are designed to carry log payload, typically in
+        /// form of a &quot;key=value&quot; string in `payload` attribute.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects">Source</a>
+        /// </remarks>
+        public partial class DataObject : KaitaiStruct
+        {
+            public static DataObject FromFile(string fileName)
+            {
+                return new DataObject(new KaitaiStream(fileName));
+            }
+
+            public DataObject(KaitaiStream p__io, SystemdJournal.JournalObject p__parent = null, SystemdJournal p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_entry = false;
+                f_entryArray = false;
+                f_headField = false;
+                f_nextHash = false;
+                _read();
+            }
+            private void _read()
+            {
+                _hash = m_io.ReadU8le();
+                _ofsNextHash = m_io.ReadU8le();
+                _ofsHeadField = m_io.ReadU8le();
+                _ofsEntry = m_io.ReadU8le();
+                _ofsEntryArray = m_io.ReadU8le();
+                _numEntries = m_io.ReadU8le();
+                _payload = m_io.ReadBytesFull();
+            }
+            private bool f_entry;
+            private JournalObject _entry;
+            public JournalObject Entry
+            {
+                get
+                {
+                    if (f_entry)
+                        return _entry;
+                    f_entry = true;
+                    if (OfsEntry != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(OfsEntry);
+                        _entry = new JournalObject(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    return _entry;
+                }
+            }
+            private bool f_entryArray;
+            private JournalObject _entryArray;
+            public JournalObject EntryArray
+            {
+                get
+                {
+                    if (f_entryArray)
+                        return _entryArray;
+                    f_entryArray = true;
+                    if (OfsEntryArray != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(OfsEntryArray);
+                        _entryArray = new JournalObject(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    return _entryArray;
+                }
+            }
+            private bool f_headField;
+            private JournalObject _headField;
+            public JournalObject HeadField
+            {
+                get
+                {
+                    if (f_headField)
+                        return _headField;
+                    f_headField = true;
+                    if (OfsHeadField != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(OfsHeadField);
+                        _headField = new JournalObject(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    return _headField;
+                }
+            }
+            private bool f_nextHash;
+            private JournalObject _nextHash;
+            public JournalObject NextHash
+            {
+                get
+                {
+                    if (f_nextHash)
+                        return _nextHash;
+                    f_nextHash = true;
+                    if (OfsNextHash != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(OfsNextHash);
+                        _nextHash = new JournalObject(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    return _nextHash;
+                }
+            }
+            private ulong _hash;
+            private ulong _ofsNextHash;
+            private ulong _ofsHeadField;
+            private ulong _ofsEntry;
+            private ulong _ofsEntryArray;
+            private ulong _numEntries;
+            private byte[] _payload;
+            private SystemdJournal m_root;
+            private SystemdJournal.JournalObject m_parent;
+            public ulong Hash { get { return _hash; } }
+            public ulong OfsNextHash { get { return _ofsNextHash; } }
+            public ulong OfsHeadField { get { return _ofsHeadField; } }
+            public ulong OfsEntry { get { return _ofsEntry; } }
+            public ulong OfsEntryArray { get { return _ofsEntryArray; } }
+            public ulong NumEntries { get { return _numEntries; } }
+            public byte[] Payload { get { return _payload; } }
+            public SystemdJournal M_Root { get { return m_root; } }
+            public SystemdJournal.JournalObject M_Parent { get { return m_parent; } }
         }
         public partial class Header : KaitaiStruct
         {
@@ -68,9 +198,9 @@ namespace Kaitai
             private void _read()
             {
                 _signature = m_io.ReadBytes(8);
-                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_signature, new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }, Signature, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }, _signature, m_io, "/types/header/seq/0");
                 }
                 _compatibleFlags = m_io.ReadU4le();
                 _incompatibleFlags = m_io.ReadU4le();
@@ -200,20 +330,20 @@ namespace Kaitai
             }
             private void _read()
             {
-                _padding = m_io.ReadBytes(KaitaiStream.Mod((8 - M_Io.Pos), 8));
+                _padding = m_io.ReadBytes(KaitaiStream.Mod(8 - M_Io.Pos, 8));
                 _objectType = ((ObjectTypes) m_io.ReadU1());
                 _flags = m_io.ReadU1();
                 _reserved = m_io.ReadBytes(6);
                 _lenObject = m_io.ReadU8le();
                 switch (ObjectType) {
                 case ObjectTypes.Data: {
-                    __raw_payload = m_io.ReadBytes((LenObject - 16));
+                    __raw_payload = m_io.ReadBytes(LenObject - 16);
                     var io___raw_payload = new KaitaiStream(__raw_payload);
                     _payload = new DataObject(io___raw_payload, this, m_root);
                     break;
                 }
                 default: {
-                    _payload = m_io.ReadBytes((LenObject - 16));
+                    _payload = m_io.ReadBytes(LenObject - 16);
                     break;
                 }
                 }
@@ -237,135 +367,37 @@ namespace Kaitai
             public KaitaiStruct M_Parent { get { return m_parent; } }
             public byte[] M_RawPayload { get { return __raw_payload; } }
         }
-
-        /// <summary>
-        /// Data objects are designed to carry log payload, typically in
-        /// form of a &quot;key=value&quot; string in `payload` attribute.
-        /// </summary>
-        /// <remarks>
-        /// Reference: <a href="https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects">Source</a>
-        /// </remarks>
-        public partial class DataObject : KaitaiStruct
+        private bool f_dataHashTable;
+        private byte[] _dataHashTable;
+        public byte[] DataHashTable
         {
-            public static DataObject FromFile(string fileName)
+            get
             {
-                return new DataObject(new KaitaiStream(fileName));
+                if (f_dataHashTable)
+                    return _dataHashTable;
+                f_dataHashTable = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(Header.OfsDataHashTable);
+                _dataHashTable = m_io.ReadBytes(Header.LenDataHashTable);
+                m_io.Seek(_pos);
+                return _dataHashTable;
             }
-
-            public DataObject(KaitaiStream p__io, SystemdJournal.JournalObject p__parent = null, SystemdJournal p__root = null) : base(p__io)
+        }
+        private bool f_fieldHashTable;
+        private byte[] _fieldHashTable;
+        public byte[] FieldHashTable
+        {
+            get
             {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_nextHash = false;
-                f_headField = false;
-                f_entry = false;
-                f_entryArray = false;
-                _read();
+                if (f_fieldHashTable)
+                    return _fieldHashTable;
+                f_fieldHashTable = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(Header.OfsFieldHashTable);
+                _fieldHashTable = m_io.ReadBytes(Header.LenFieldHashTable);
+                m_io.Seek(_pos);
+                return _fieldHashTable;
             }
-            private void _read()
-            {
-                _hash = m_io.ReadU8le();
-                _ofsNextHash = m_io.ReadU8le();
-                _ofsHeadField = m_io.ReadU8le();
-                _ofsEntry = m_io.ReadU8le();
-                _ofsEntryArray = m_io.ReadU8le();
-                _numEntries = m_io.ReadU8le();
-                _payload = m_io.ReadBytesFull();
-            }
-            private bool f_nextHash;
-            private JournalObject _nextHash;
-            public JournalObject NextHash
-            {
-                get
-                {
-                    if (f_nextHash)
-                        return _nextHash;
-                    if (OfsNextHash != 0) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(OfsNextHash);
-                        _nextHash = new JournalObject(io, this, m_root);
-                        io.Seek(_pos);
-                        f_nextHash = true;
-                    }
-                    return _nextHash;
-                }
-            }
-            private bool f_headField;
-            private JournalObject _headField;
-            public JournalObject HeadField
-            {
-                get
-                {
-                    if (f_headField)
-                        return _headField;
-                    if (OfsHeadField != 0) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(OfsHeadField);
-                        _headField = new JournalObject(io, this, m_root);
-                        io.Seek(_pos);
-                        f_headField = true;
-                    }
-                    return _headField;
-                }
-            }
-            private bool f_entry;
-            private JournalObject _entry;
-            public JournalObject Entry
-            {
-                get
-                {
-                    if (f_entry)
-                        return _entry;
-                    if (OfsEntry != 0) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(OfsEntry);
-                        _entry = new JournalObject(io, this, m_root);
-                        io.Seek(_pos);
-                        f_entry = true;
-                    }
-                    return _entry;
-                }
-            }
-            private bool f_entryArray;
-            private JournalObject _entryArray;
-            public JournalObject EntryArray
-            {
-                get
-                {
-                    if (f_entryArray)
-                        return _entryArray;
-                    if (OfsEntryArray != 0) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(OfsEntryArray);
-                        _entryArray = new JournalObject(io, this, m_root);
-                        io.Seek(_pos);
-                        f_entryArray = true;
-                    }
-                    return _entryArray;
-                }
-            }
-            private ulong _hash;
-            private ulong _ofsNextHash;
-            private ulong _ofsHeadField;
-            private ulong _ofsEntry;
-            private ulong _ofsEntryArray;
-            private ulong _numEntries;
-            private byte[] _payload;
-            private SystemdJournal m_root;
-            private SystemdJournal.JournalObject m_parent;
-            public ulong Hash { get { return _hash; } }
-            public ulong OfsNextHash { get { return _ofsNextHash; } }
-            public ulong OfsHeadField { get { return _ofsHeadField; } }
-            public ulong OfsEntry { get { return _ofsEntry; } }
-            public ulong OfsEntryArray { get { return _ofsEntryArray; } }
-            public ulong NumEntries { get { return _numEntries; } }
-            public byte[] Payload { get { return _payload; } }
-            public SystemdJournal M_Root { get { return m_root; } }
-            public SystemdJournal.JournalObject M_Parent { get { return m_parent; } }
         }
         private bool f_lenHeader;
         private ulong _lenHeader;
@@ -380,44 +412,12 @@ namespace Kaitai
             {
                 if (f_lenHeader)
                     return _lenHeader;
+                f_lenHeader = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(88);
                 _lenHeader = m_io.ReadU8le();
                 m_io.Seek(_pos);
-                f_lenHeader = true;
                 return _lenHeader;
-            }
-        }
-        private bool f_dataHashTable;
-        private byte[] _dataHashTable;
-        public byte[] DataHashTable
-        {
-            get
-            {
-                if (f_dataHashTable)
-                    return _dataHashTable;
-                long _pos = m_io.Pos;
-                m_io.Seek(Header.OfsDataHashTable);
-                _dataHashTable = m_io.ReadBytes(Header.LenDataHashTable);
-                m_io.Seek(_pos);
-                f_dataHashTable = true;
-                return _dataHashTable;
-            }
-        }
-        private bool f_fieldHashTable;
-        private byte[] _fieldHashTable;
-        public byte[] FieldHashTable
-        {
-            get
-            {
-                if (f_fieldHashTable)
-                    return _fieldHashTable;
-                long _pos = m_io.Pos;
-                m_io.Seek(Header.OfsFieldHashTable);
-                _fieldHashTable = m_io.ReadBytes(Header.LenFieldHashTable);
-                m_io.Seek(_pos);
-                f_fieldHashTable = true;
-                return _fieldHashTable;
             }
         }
         private Header _header;

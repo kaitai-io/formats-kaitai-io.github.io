@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -49,41 +49,10 @@ sub _read {
     $self->{smth9} = $self->{_io}->read_s4le();
 }
 
-sub filenames {
-    my ($self) = @_;
-    return $self->{filenames} if ($self->{filenames});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek($self->ofs_filenames());
-    $self->{_raw_filenames} = $self->{_io}->read_bytes($self->len_filenames());
-    my $io__raw_filenames = IO::KaitaiStruct::Stream->new($self->{_raw_filenames});
-    $self->{filenames} = SaintsRow2VppPc::Strings->new($io__raw_filenames, $self, $self->{_root});
-    $self->{_io}->seek($_pos);
-    return $self->{filenames};
-}
-
-sub ofs_extensions {
-    my ($self) = @_;
-    return $self->{ofs_extensions} if ($self->{ofs_extensions});
-    $self->{ofs_extensions} = ((($self->ofs_filenames() + $self->len_filenames()) & 4294965248) + 2048);
-    return $self->{ofs_extensions};
-}
-
-sub files {
-    my ($self) = @_;
-    return $self->{files} if ($self->{files});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(2048);
-    $self->{_raw_files} = $self->{_io}->read_bytes($self->len_offsets());
-    my $io__raw_files = IO::KaitaiStruct::Stream->new($self->{_raw_files});
-    $self->{files} = SaintsRow2VppPc::Offsets->new($io__raw_files, $self, $self->{_root});
-    $self->{_io}->seek($_pos);
-    return $self->{files};
-}
-
 sub data_start {
     my ($self) = @_;
     return $self->{data_start} if ($self->{data_start});
-    $self->{data_start} = ((($self->ofs_extensions() + $self->len_extensions()) & 4294965248) + 2048);
+    $self->{data_start} = ($self->ofs_extensions() + $self->len_extensions() & 4294965248) + 2048;
     return $self->{data_start};
 }
 
@@ -99,10 +68,41 @@ sub extensions {
     return $self->{extensions};
 }
 
+sub filenames {
+    my ($self) = @_;
+    return $self->{filenames} if ($self->{filenames});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->ofs_filenames());
+    $self->{_raw_filenames} = $self->{_io}->read_bytes($self->len_filenames());
+    my $io__raw_filenames = IO::KaitaiStruct::Stream->new($self->{_raw_filenames});
+    $self->{filenames} = SaintsRow2VppPc::Strings->new($io__raw_filenames, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{filenames};
+}
+
+sub files {
+    my ($self) = @_;
+    return $self->{files} if ($self->{files});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(2048);
+    $self->{_raw_files} = $self->{_io}->read_bytes($self->len_offsets());
+    my $io__raw_files = IO::KaitaiStruct::Stream->new($self->{_raw_files});
+    $self->{files} = SaintsRow2VppPc::Offsets->new($io__raw_files, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{files};
+}
+
+sub ofs_extensions {
+    my ($self) = @_;
+    return $self->{ofs_extensions} if ($self->{ofs_extensions});
+    $self->{ofs_extensions} = ($self->ofs_filenames() + $self->len_filenames() & 4294965248) + 2048;
+    return $self->{ofs_extensions};
+}
+
 sub ofs_filenames {
     my ($self) = @_;
     return $self->{ofs_filenames} if ($self->{ofs_filenames});
-    $self->{ofs_filenames} = (((2048 + $self->len_offsets()) & 4294965248) + 2048);
+    $self->{ofs_filenames} = (2048 + $self->len_offsets() & 4294965248) + 2048;
     return $self->{ofs_filenames};
 }
 
@@ -166,6 +166,11 @@ sub smth9 {
     return $self->{smth9};
 }
 
+sub _raw_extensions {
+    my ($self) = @_;
+    return $self->{_raw_extensions};
+}
+
 sub _raw_filenames {
     my ($self) = @_;
     return $self->{_raw_filenames};
@@ -174,11 +179,6 @@ sub _raw_filenames {
 sub _raw_files {
     my ($self) = @_;
     return $self->{_raw_files};
-}
-
-sub _raw_extensions {
-    my ($self) = @_;
-    return $self->{_raw_extensions};
 }
 
 ########################################################################
@@ -201,7 +201,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -211,7 +211,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{entries} = ();
+    $self->{entries} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{entries}}, SaintsRow2VppPc::Offsets::Offset->new($self->{_io}, $self, $self->{_root});
     }
@@ -242,7 +242,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -261,15 +261,15 @@ sub _read {
     $self->{always_zero} = $self->{_io}->read_s4le();
 }
 
-sub filename {
+sub body {
     my ($self) = @_;
-    return $self->{filename} if ($self->{filename});
-    my $io = $self->_root()->filenames()->_io();
+    return $self->{body} if ($self->{body});
+    my $io = $self->_root()->_io();
     my $_pos = $io->pos();
-    $io->seek($self->name_ofs());
-    $self->{filename} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
+    $io->seek($self->_root()->data_start() + $self->ofs_body());
+    $self->{body} = $io->read_bytes($self->len_body());
     $io->seek($_pos);
-    return $self->{filename};
+    return $self->{body};
 }
 
 sub ext {
@@ -283,15 +283,15 @@ sub ext {
     return $self->{ext};
 }
 
-sub body {
+sub filename {
     my ($self) = @_;
-    return $self->{body} if ($self->{body});
-    my $io = $self->_root()->_io();
+    return $self->{filename} if ($self->{filename});
+    my $io = $self->_root()->filenames()->_io();
     my $_pos = $io->pos();
-    $io->seek(($self->_root()->data_start() + $self->ofs_body()));
-    $self->{body} = $io->read_bytes($self->len_body());
+    $io->seek($self->name_ofs());
+    $self->{filename} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
     $io->seek($_pos);
-    return $self->{body};
+    return $self->{filename};
 }
 
 sub name_ofs {
@@ -349,7 +349,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -359,7 +359,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{entries} = ();
+    $self->{entries} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{entries}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }

@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class android_bootldr_qcom_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -121,8 +123,8 @@
 class android_bootldr_qcom_t : public kaitai::kstruct {
 
 public:
-    class img_header_t;
     class img_body_t;
+    class img_header_t;
 
     android_bootldr_qcom_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, android_bootldr_qcom_t* p__root = 0);
 
@@ -132,32 +134,6 @@ private:
 
 public:
     ~android_bootldr_qcom_t();
-
-    class img_header_t : public kaitai::kstruct {
-
-    public:
-
-        img_header_t(kaitai::kstream* p__io, android_bootldr_qcom_t* p__parent = 0, android_bootldr_qcom_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~img_header_t();
-
-    private:
-        std::string m_name;
-        uint32_t m_len_body;
-        android_bootldr_qcom_t* m__root;
-        android_bootldr_qcom_t* m__parent;
-
-    public:
-        std::string name() const { return m_name; }
-        uint32_t len_body() const { return m_len_body; }
-        android_bootldr_qcom_t* _root() const { return m__root; }
-        android_bootldr_qcom_t* _parent() const { return m__parent; }
-    };
 
     class img_body_t : public kaitai::kstruct {
 
@@ -188,6 +164,32 @@ public:
     public:
         std::string body() const { return m_body; }
         int32_t idx() const { return m_idx; }
+        android_bootldr_qcom_t* _root() const { return m__root; }
+        android_bootldr_qcom_t* _parent() const { return m__parent; }
+    };
+
+    class img_header_t : public kaitai::kstruct {
+
+    public:
+
+        img_header_t(kaitai::kstream* p__io, android_bootldr_qcom_t* p__parent = 0, android_bootldr_qcom_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~img_header_t();
+
+    private:
+        std::string m_name;
+        uint32_t m_len_body;
+        android_bootldr_qcom_t* m__root;
+        android_bootldr_qcom_t* m__parent;
+
+    public:
+        std::string name() const { return m_name; }
+        uint32_t len_body() const { return m_len_body; }
         android_bootldr_qcom_t* _root() const { return m__root; }
         android_bootldr_qcom_t* _parent() const { return m__parent; }
     };

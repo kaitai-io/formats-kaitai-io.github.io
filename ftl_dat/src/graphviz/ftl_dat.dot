@@ -22,6 +22,7 @@ digraph {
 			file__inst__meta [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="meta_pos">ofs_meta</TD><TD PORT="meta_size">...</TD><TD>Meta</TD><TD PORT="meta_type">meta</TD></TR>
+				<TR><TD COLSPAN="4" PORT="meta__if">if ofs_meta != 0</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__meta {
@@ -41,6 +42,7 @@ digraph {
 	ftl_dat__seq:num_files_type -> ftl_dat__seq:files__repeat [color="#404040"];
 	file__seq:ofs_meta_type -> file__inst__meta:meta_pos [color="#404040"];
 	file__inst__meta:meta_type -> meta__seq [style=bold];
+	file__seq:ofs_meta_type -> file__inst__meta:meta__if [color="#404040"];
 	meta__seq:len_filename_type -> meta__seq:filename_size [color="#404040"];
 	meta__seq:len_file_type -> meta__seq:body_size [color="#404040"];
 }

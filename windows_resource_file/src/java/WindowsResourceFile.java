@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -63,6 +64,12 @@ public class WindowsResourceFile extends KaitaiStruct {
                 this.resources.add(new Resource(this._io, this, _root));
                 i++;
             }
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.resources.size(); i++) {
+            this.resources.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
 
@@ -130,14 +137,19 @@ public class WindowsResourceFile extends KaitaiStruct {
             this.headerSize = this._io.readU4le();
             this.type = new UnicodeOrId(this._io, this, _root);
             this.name = new UnicodeOrId(this._io, this, _root);
-            this.padding1 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
+            this.padding1 = this._io.readBytes(KaitaiStream.mod(4 - _io().pos(), 4));
             this.formatVersion = this._io.readU4le();
             this.flags = this._io.readU2le();
             this.language = this._io.readU2le();
             this.valueVersion = this._io.readU4le();
             this.characteristics = this._io.readU4le();
             this.value = this._io.readBytes(valueSize());
-            this.padding2 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
+            this.padding2 = this._io.readBytes(KaitaiStream.mod(4 - _io().pos(), 4));
+        }
+
+        public void _fetchInstances() {
+            this.type._fetchInstances();
+            this.name._fetchInstances();
         }
         private PredefTypes typeAsPredef;
 
@@ -251,29 +263,21 @@ public class WindowsResourceFile extends KaitaiStruct {
                 this.noop = this._io.readBytes(0);
             }
         }
-        private Integer savePos1;
-        public Integer savePos1() {
-            if (this.savePos1 != null)
-                return this.savePos1;
-            int _tmp = (int) (_io().pos());
-            this.savePos1 = _tmp;
-            return this.savePos1;
-        }
-        private Integer savePos2;
-        public Integer savePos2() {
-            if (this.savePos2 != null)
-                return this.savePos2;
-            int _tmp = (int) (_io().pos());
-            this.savePos2 = _tmp;
-            return this.savePos2;
-        }
-        private Boolean isString;
-        public Boolean isString() {
-            if (this.isString != null)
-                return this.isString;
-            boolean _tmp = (boolean) (first() != 65535);
-            this.isString = _tmp;
-            return this.isString;
+
+        public void _fetchInstances() {
+            if (savePos1() >= 0) {
+            }
+            if (!(isString())) {
+            }
+            if (isString()) {
+                for (int i = 0; i < this.rest.size(); i++) {
+                }
+            }
+            if ( ((isString()) && (savePos2() >= 0)) ) {
+            }
+            asString();
+            if (this.asString != null) {
+            }
         }
         private String asString;
         public String asString() {
@@ -282,28 +286,49 @@ public class WindowsResourceFile extends KaitaiStruct {
             if (isString()) {
                 long _pos = this._io.pos();
                 this._io.seek(savePos1());
-                this.asString = new String(this._io.readBytes(((savePos2() - savePos1()) - 2)), Charset.forName("UTF-16LE"));
+                this.asString = new String(this._io.readBytes((savePos2() - savePos1()) - 2), StandardCharsets.UTF_16LE);
                 this._io.seek(_pos);
             }
             return this.asString;
         }
+        private Boolean isString;
+        public Boolean isString() {
+            if (this.isString != null)
+                return this.isString;
+            this.isString = first() != 65535;
+            return this.isString;
+        }
+        private Integer savePos1;
+        public Integer savePos1() {
+            if (this.savePos1 != null)
+                return this.savePos1;
+            this.savePos1 = ((Number) (_io().pos())).intValue();
+            return this.savePos1;
+        }
+        private Integer savePos2;
+        public Integer savePos2() {
+            if (this.savePos2 != null)
+                return this.savePos2;
+            this.savePos2 = ((Number) (_io().pos())).intValue();
+            return this.savePos2;
+        }
         private Integer first;
         private Integer asNumeric;
-        private ArrayList<Integer> rest;
+        private List<Integer> rest;
         private byte[] noop;
         private WindowsResourceFile _root;
         private WindowsResourceFile.Resource _parent;
         public Integer first() { return first; }
         public Integer asNumeric() { return asNumeric; }
-        public ArrayList<Integer> rest() { return rest; }
+        public List<Integer> rest() { return rest; }
         public byte[] noop() { return noop; }
         public WindowsResourceFile _root() { return _root; }
         public WindowsResourceFile.Resource _parent() { return _parent; }
     }
-    private ArrayList<Resource> resources;
+    private List<Resource> resources;
     private WindowsResourceFile _root;
     private KaitaiStruct _parent;
-    public ArrayList<Resource> resources() { return resources; }
+    public List<Resource> resources() { return resources; }
     public WindowsResourceFile _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

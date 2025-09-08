@@ -74,7 +74,7 @@ proc index(this: Tsm): Tsm_Index =
   if this.indexInstFlag:
     return this.indexInst
   let pos = this.io.pos()
-  this.io.seek(int((this.io.size - 8)))
+  this.io.seek(int(this.io.size - 8))
   let indexInstExpr = Tsm_Index.read(this.io, this.root, this)
   this.indexInst = indexInstExpr
   this.io.seek(pos)
@@ -121,7 +121,7 @@ proc entries(this: Tsm_Index): seq[Tsm_Index_IndexHeader] =
     while true:
       let it = Tsm_Index_IndexHeader.read(this.io, this.root, this)
       this.entriesInst.add(it)
-      if this.io.pos == (this.io.size - 8):
+      if this.io.pos == this.io.size - 8:
         break
       inc i
   this.io.seek(pos)
@@ -196,7 +196,7 @@ proc read*(_: typedesc[Tsm_Index_IndexHeader_IndexEntry_BlockEntry], io: KaitaiS
 
   let crc32Expr = this.io.readU4be()
   this.crc32 = crc32Expr
-  let dataExpr = this.io.readBytes(int((this.parent.blockSize - 4)))
+  let dataExpr = this.io.readBytes(int(this.parent.blockSize - 4))
   this.data = dataExpr
 
 proc fromFile*(_: typedesc[Tsm_Index_IndexHeader_IndexEntry_BlockEntry], filename: string): Tsm_Index_IndexHeader_IndexEntry_BlockEntry =

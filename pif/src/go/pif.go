@@ -17,6 +17,17 @@ import (
  * @see <a href="https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300">Source</a>
  */
 
+type Pif_CompressionType int
+const (
+	Pif_CompressionType__None Pif_CompressionType = 0
+	Pif_CompressionType__Rle Pif_CompressionType = 32222
+)
+var values_Pif_CompressionType = map[Pif_CompressionType]struct{}{0: {}, 32222: {}}
+func (v Pif_CompressionType) isDefined() bool {
+	_, ok := values_Pif_CompressionType[v]
+	return ok
+}
+
 type Pif_ImageType int
 const (
 	Pif_ImageType__Rgb332 Pif_ImageType = 7763
@@ -28,19 +39,18 @@ const (
 	Pif_ImageType__Rgb16c Pif_ImageType = 47253
 	Pif_ImageType__Rgb565 Pif_ImageType = 58821
 )
-
-type Pif_CompressionType int
-const (
-	Pif_CompressionType__None Pif_CompressionType = 0
-	Pif_CompressionType__Rle Pif_CompressionType = 32222
-)
+var values_Pif_ImageType = map[Pif_ImageType]struct{}{7763: {}, 17212: {}, 18754: {}, 18759: {}, 18770: {}, 32170: {}, 47253: {}, 58821: {}}
+func (v Pif_ImageType) isDefined() bool {
+	_, ok := values_Pif_ImageType[v]
+	return ok
+}
 type Pif struct {
 	FileHeader *Pif_PifHeader
 	InfoHeader *Pif_InformationHeader
 	ColorTable *Pif_ColorTableData
 	_io *kaitai.Stream
 	_root *Pif
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_ColorTable []byte
 	_f_imageData bool
 	imageData []byte
@@ -50,7 +60,11 @@ func NewPif() *Pif {
 	}
 }
 
-func (this *Pif) Read(io *kaitai.Stream, parent interface{}, root *Pif) (err error) {
+func (this Pif) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Pif) Read(io *kaitai.Stream, parent kaitai.Struct, root *Pif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -92,6 +106,7 @@ func (this *Pif) ImageData() (v []byte, err error) {
 	if (this._f_imageData) {
 		return this.imageData, nil
 	}
+	this._f_imageData = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -110,83 +125,58 @@ func (this *Pif) ImageData() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_imageData = true
-	this._f_imageData = true
 	return this.imageData, nil
 }
-type Pif_PifHeader struct {
-	Magic []byte
-	LenFile uint32
-	OfsImageData uint32
+type Pif_ColorTableData struct {
+	Entries []int
 	_io *kaitai.Stream
 	_root *Pif
 	_parent *Pif
-	_f_ofsImageDataMin bool
-	ofsImageDataMin int
 }
-func NewPif_PifHeader() *Pif_PifHeader {
-	return &Pif_PifHeader{
+func NewPif_ColorTableData() *Pif_ColorTableData {
+	return &Pif_ColorTableData{
 	}
 }
 
-func (this *Pif_PifHeader) Read(io *kaitai.Stream, parent *Pif, root *Pif) (err error) {
+func (this Pif_ColorTableData) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Pif_ColorTableData) Read(io *kaitai.Stream, parent *Pif, root *Pif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp7, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp7 = tmp7
-	this.Magic = tmp7
-	if !(bytes.Equal(this.Magic, []uint8{80, 73, 70, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{80, 73, 70, 0}, this.Magic, this._io, "/types/pif_header/seq/0")
-	}
-	tmp8, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenFile = uint32(tmp8)
-	tmp9, err := this.OfsImageDataMin()
-	if err != nil {
-		return err
-	}
-	tmp10, err := this.OfsImageDataMin()
-	if err != nil {
-		return err
-	}
-	if !(this.LenFile >= tmp10) {
-		return kaitai.NewValidationLessThanError(tmp9, this.LenFile, this._io, "/types/pif_header/seq/1")
-	}
-	tmp11, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsImageData = uint32(tmp11)
-	tmp12, err := this.OfsImageDataMin()
-	if err != nil {
-		return err
-	}
-	tmp13, err := this.OfsImageDataMin()
-	if err != nil {
-		return err
-	}
-	if !(this.OfsImageData >= tmp13) {
-		return kaitai.NewValidationLessThanError(tmp12, this.OfsImageData, this._io, "/types/pif_header/seq/2")
-	}
-	if !(this.OfsImageData <= this.LenFile) {
-		return kaitai.NewValidationGreaterThanError(this.LenFile, this.OfsImageData, this._io, "/types/pif_header/seq/2")
+	for i := 0;; i++ {
+		tmp7, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp7 {
+			break
+		}
+		switch (this._root.InfoHeader.ImageType) {
+		case Pif_ImageType__IndexedRgb332:
+			tmp8, err := this._io.ReadBitsIntLe(8)
+			if err != nil {
+				return err
+			}
+			this.Entries = append(this.Entries, tmp8)
+		case Pif_ImageType__IndexedRgb565:
+			tmp9, err := this._io.ReadBitsIntLe(16)
+			if err != nil {
+				return err
+			}
+			this.Entries = append(this.Entries, tmp9)
+		case Pif_ImageType__IndexedRgb888:
+			tmp10, err := this._io.ReadBitsIntLe(24)
+			if err != nil {
+				return err
+			}
+			this.Entries = append(this.Entries, tmp10)
+		}
 	}
 	return err
-}
-func (this *Pif_PifHeader) OfsImageDataMin() (v int, err error) {
-	if (this._f_ofsImageDataMin) {
-		return this.ofsImageDataMin, nil
-	}
-	this.ofsImageDataMin = int((12 + 16))
-	this._f_ofsImageDataMin = true
-	return this.ofsImageDataMin, nil
 }
 type Pif_InformationHeader struct {
 	ImageType Pif_ImageType
@@ -213,93 +203,111 @@ func NewPif_InformationHeader() *Pif_InformationHeader {
 	}
 }
 
+func (this Pif_InformationHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Pif_InformationHeader) Read(io *kaitai.Stream, parent *Pif, root *Pif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp14, err := this._io.ReadU2le()
+	tmp11, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.ImageType = Pif_ImageType(tmp14)
+	this.ImageType = Pif_ImageType(tmp11)
 	if !( ((this.ImageType == Pif_ImageType__Rgb888) || (this.ImageType == Pif_ImageType__Rgb565) || (this.ImageType == Pif_ImageType__Rgb332) || (this.ImageType == Pif_ImageType__Rgb16c) || (this.ImageType == Pif_ImageType__BlackWhite) || (this.ImageType == Pif_ImageType__IndexedRgb888) || (this.ImageType == Pif_ImageType__IndexedRgb565) || (this.ImageType == Pif_ImageType__IndexedRgb332)) ) {
 		return kaitai.NewValidationNotAnyOfError(this.ImageType, this._io, "/types/information_header/seq/0")
 	}
-	tmp15, err := this._io.ReadU2le()
+	tmp12, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.BitsPerPixel = uint16(tmp15)
+	this.BitsPerPixel = uint16(tmp12)
 	{
 		_it := this.BitsPerPixel
-		var tmp16 bool;
+		var tmp13 bool;
 		if (this.ImageType == Pif_ImageType__Rgb888) {
-			tmp16 = _it == 24
+			tmp13 = _it == 24
 		} else {
-			var tmp17 bool;
+			var tmp14 bool;
 			if (this.ImageType == Pif_ImageType__Rgb565) {
-				tmp17 = _it == 16
+				tmp14 = _it == 16
 			} else {
-				var tmp18 bool;
+				var tmp15 bool;
 				if (this.ImageType == Pif_ImageType__Rgb332) {
-					tmp18 = _it == 8
+					tmp15 = _it == 8
 				} else {
-					var tmp19 bool;
+					var tmp16 bool;
 					if (this.ImageType == Pif_ImageType__Rgb16c) {
-						tmp19 = _it == 4
+						tmp16 = _it == 4
 					} else {
-						var tmp20 bool;
+						var tmp17 bool;
 						if (this.ImageType == Pif_ImageType__BlackWhite) {
-							tmp20 = _it == 1
+							tmp17 = _it == 1
 						} else {
-							var tmp21 bool;
-							tmp22, err := this.UsesIndexedMode()
+							var tmp18 bool;
+							tmp19, err := this.UsesIndexedMode()
 							if err != nil {
 								return err
 							}
-							if (tmp22) {
-								tmp21 = _it <= 8
+							if (tmp19) {
+								tmp18 = _it <= 8
 							} else {
-								tmp21 = true
+								tmp18 = true
 							}
-							tmp20 = tmp21
+							tmp17 = tmp18
 						}
-						tmp19 = tmp20
+						tmp16 = tmp17
 					}
-					tmp18 = tmp19
+					tmp15 = tmp16
 				}
-				tmp17 = tmp18
+				tmp14 = tmp15
 			}
-			tmp16 = tmp17
+			tmp13 = tmp14
 		}
-		if !(tmp16) {
+		if !(tmp13) {
 			return kaitai.NewValidationExprError(this.BitsPerPixel, this._io, "/types/information_header/seq/1")
 		}
+	}
+	tmp20, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Width = uint16(tmp20)
+	tmp21, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Height = uint16(tmp21)
+	tmp22, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenImageData = uint32(tmp22)
+	if !(this.LenImageData <= this._root.FileHeader.LenFile - this._root.FileHeader.OfsImageData) {
+		return kaitai.NewValidationGreaterThanError(this._root.FileHeader.LenFile - this._root.FileHeader.OfsImageData, this.LenImageData, this._io, "/types/information_header/seq/4")
 	}
 	tmp23, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Width = uint16(tmp23)
-	tmp24, err := this._io.ReadU2le()
+	this.LenColorTable = uint16(tmp23)
+	var tmp24 int;
+	tmp25, err := this.UsesIndexedMode()
 	if err != nil {
 		return err
 	}
-	this.Height = uint16(tmp24)
-	tmp25, err := this._io.ReadU4le()
-	if err != nil {
-		return err
+	if (tmp25) {
+		tmp26, err := this.LenColorTableEntry()
+		if err != nil {
+			return err
+		}
+		tmp24 = tmp26 * 1
+	} else {
+		tmp24 = 0
 	}
-	this.LenImageData = uint32(tmp25)
-	if !(this.LenImageData <= (this._root.FileHeader.LenFile - this._root.FileHeader.OfsImageData)) {
-		return kaitai.NewValidationGreaterThanError((this._root.FileHeader.LenFile - this._root.FileHeader.OfsImageData), this.LenImageData, this._io, "/types/information_header/seq/4")
-	}
-	tmp26, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.LenColorTable = uint16(tmp26)
 	var tmp27 int;
 	tmp28, err := this.UsesIndexedMode()
 	if err != nil {
@@ -310,9 +318,12 @@ func (this *Pif_InformationHeader) Read(io *kaitai.Stream, parent *Pif, root *Pi
 		if err != nil {
 			return err
 		}
-		tmp27 = (tmp29 * 1)
+		tmp27 = tmp29 * 1
 	} else {
 		tmp27 = 0
+	}
+	if !(this.LenColorTable >= tmp24) {
+		return kaitai.NewValidationLessThanError(tmp27, this.LenColorTable, this._io, "/types/information_header/seq/5")
 	}
 	var tmp30 int;
 	tmp31, err := this.UsesIndexedMode()
@@ -320,89 +331,72 @@ func (this *Pif_InformationHeader) Read(io *kaitai.Stream, parent *Pif, root *Pi
 		return err
 	}
 	if (tmp31) {
-		tmp32, err := this.LenColorTableEntry()
+		var tmp32 int;
+		tmp33, err := this.LenColorTableMax()
 		if err != nil {
 			return err
 		}
-		tmp30 = (tmp32 * 1)
+		tmp34, err := this.LenColorTableFull()
+		if err != nil {
+			return err
+		}
+		if (tmp33 < tmp34) {
+			tmp35, err := this.LenColorTableMax()
+			if err != nil {
+				return err
+			}
+			tmp32 = tmp35
+		} else {
+			tmp36, err := this.LenColorTableFull()
+			if err != nil {
+				return err
+			}
+			tmp32 = tmp36
+		}
+		tmp30 = tmp32
 	} else {
 		tmp30 = 0
 	}
-	if !(this.LenColorTable >= tmp30) {
-		return kaitai.NewValidationLessThanError(tmp27, this.LenColorTable, this._io, "/types/information_header/seq/5")
-	}
-	var tmp33 int;
-	tmp34, err := this.UsesIndexedMode()
+	var tmp37 int;
+	tmp38, err := this.UsesIndexedMode()
 	if err != nil {
 		return err
 	}
-	if (tmp34) {
-		var tmp35 int;
-		tmp36, err := this.LenColorTableMax()
+	if (tmp38) {
+		var tmp39 int;
+		tmp40, err := this.LenColorTableMax()
 		if err != nil {
 			return err
 		}
-		tmp37, err := this.LenColorTableFull()
+		tmp41, err := this.LenColorTableFull()
 		if err != nil {
 			return err
 		}
-		if (tmp36 < tmp37) {
-			tmp38, err := this.LenColorTableMax()
+		if (tmp40 < tmp41) {
+			tmp42, err := this.LenColorTableMax()
 			if err != nil {
 				return err
 			}
-			tmp35 = tmp38
+			tmp39 = tmp42
 		} else {
-			tmp39, err := this.LenColorTableFull()
+			tmp43, err := this.LenColorTableFull()
 			if err != nil {
 				return err
 			}
-			tmp35 = tmp39
+			tmp39 = tmp43
 		}
-		tmp33 = tmp35
+		tmp37 = tmp39
 	} else {
-		tmp33 = 0
+		tmp37 = 0
 	}
-	var tmp40 int;
-	tmp41, err := this.UsesIndexedMode()
+	if !(this.LenColorTable <= tmp30) {
+		return kaitai.NewValidationGreaterThanError(tmp37, this.LenColorTable, this._io, "/types/information_header/seq/5")
+	}
+	tmp44, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	if (tmp41) {
-		var tmp42 int;
-		tmp43, err := this.LenColorTableMax()
-		if err != nil {
-			return err
-		}
-		tmp44, err := this.LenColorTableFull()
-		if err != nil {
-			return err
-		}
-		if (tmp43 < tmp44) {
-			tmp45, err := this.LenColorTableMax()
-			if err != nil {
-				return err
-			}
-			tmp42 = tmp45
-		} else {
-			tmp46, err := this.LenColorTableFull()
-			if err != nil {
-				return err
-			}
-			tmp42 = tmp46
-		}
-		tmp40 = tmp42
-	} else {
-		tmp40 = 0
-	}
-	if !(this.LenColorTable <= tmp40) {
-		return kaitai.NewValidationGreaterThanError(tmp33, this.LenColorTable, this._io, "/types/information_header/seq/5")
-	}
-	tmp47, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Compression = Pif_CompressionType(tmp47)
+	this.Compression = Pif_CompressionType(tmp44)
 	if !( ((this.Compression == Pif_CompressionType__None) || (this.Compression == Pif_CompressionType__Rle)) ) {
 		return kaitai.NewValidationNotAnyOfError(this.Compression, this._io, "/types/information_header/seq/6")
 	}
@@ -412,62 +406,62 @@ func (this *Pif_InformationHeader) LenColorTableEntry() (v int8, err error) {
 	if (this._f_lenColorTableEntry) {
 		return this.lenColorTableEntry, nil
 	}
-	var tmp48 int8;
-	if (this.ImageType == Pif_ImageType__IndexedRgb888) {
-		tmp48 = 3
-	} else {
-		var tmp49 int8;
-		if (this.ImageType == Pif_ImageType__IndexedRgb565) {
-			tmp49 = 2
-		} else {
-			var tmp50 int8;
-			if (this.ImageType == Pif_ImageType__IndexedRgb332) {
-				tmp50 = 1
-			} else {
-				tmp50 = 0
-			}
-			tmp49 = tmp50
-		}
-		tmp48 = tmp49
-	}
-	this.lenColorTableEntry = int8(tmp48)
 	this._f_lenColorTableEntry = true
+	var tmp45 int8;
+	if (this.ImageType == Pif_ImageType__IndexedRgb888) {
+		tmp45 = 3
+	} else {
+		var tmp46 int8;
+		if (this.ImageType == Pif_ImageType__IndexedRgb565) {
+			tmp46 = 2
+		} else {
+			var tmp47 int8;
+			if (this.ImageType == Pif_ImageType__IndexedRgb332) {
+				tmp47 = 1
+			} else {
+				tmp47 = 0
+			}
+			tmp46 = tmp47
+		}
+		tmp45 = tmp46
+	}
+	this.lenColorTableEntry = int8(tmp45)
 	return this.lenColorTableEntry, nil
 }
 func (this *Pif_InformationHeader) LenColorTableFull() (v int, err error) {
 	if (this._f_lenColorTableFull) {
 		return this.lenColorTableFull, nil
 	}
-	tmp51, err := this.LenColorTableEntry()
+	this._f_lenColorTableFull = true
+	tmp48, err := this.LenColorTableEntry()
 	if err != nil {
 		return 0, err
 	}
-	this.lenColorTableFull = int((tmp51 * (1 << this.BitsPerPixel)))
-	this._f_lenColorTableFull = true
+	this.lenColorTableFull = int(tmp48 * (1 << this.BitsPerPixel))
 	return this.lenColorTableFull, nil
 }
 func (this *Pif_InformationHeader) LenColorTableMax() (v int, err error) {
 	if (this._f_lenColorTableMax) {
 		return this.lenColorTableMax, nil
 	}
-	tmp52, err := this._root.FileHeader.OfsImageDataMin()
+	this._f_lenColorTableMax = true
+	tmp49, err := this._root.FileHeader.OfsImageDataMin()
 	if err != nil {
 		return 0, err
 	}
-	this.lenColorTableMax = int((this._root.FileHeader.OfsImageData - tmp52))
-	this._f_lenColorTableMax = true
+	this.lenColorTableMax = int(this._root.FileHeader.OfsImageData - tmp49)
 	return this.lenColorTableMax, nil
 }
 func (this *Pif_InformationHeader) UsesIndexedMode() (v bool, err error) {
 	if (this._f_usesIndexedMode) {
 		return this.usesIndexedMode, nil
 	}
-	tmp53, err := this.LenColorTableEntry()
+	this._f_usesIndexedMode = true
+	tmp50, err := this.LenColorTableEntry()
 	if err != nil {
 		return false, err
 	}
-	this.usesIndexedMode = bool(tmp53 != 0)
-	this._f_usesIndexedMode = true
+	this.usesIndexedMode = bool(tmp50 != 0)
 	return this.usesIndexedMode, nil
 }
 
@@ -491,50 +485,81 @@ func (this *Pif_InformationHeader) UsesIndexedMode() (v bool, err error) {
  * > (...) The amount of Colors has to be same or less than [Bits per
  * > Pixel] allow, otherwise the image is invalid.
  */
-type Pif_ColorTableData struct {
-	Entries []int
+type Pif_PifHeader struct {
+	Magic []byte
+	LenFile uint32
+	OfsImageData uint32
 	_io *kaitai.Stream
 	_root *Pif
 	_parent *Pif
+	_f_ofsImageDataMin bool
+	ofsImageDataMin int
 }
-func NewPif_ColorTableData() *Pif_ColorTableData {
-	return &Pif_ColorTableData{
+func NewPif_PifHeader() *Pif_PifHeader {
+	return &Pif_PifHeader{
 	}
 }
 
-func (this *Pif_ColorTableData) Read(io *kaitai.Stream, parent *Pif, root *Pif) (err error) {
+func (this Pif_PifHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Pif_PifHeader) Read(io *kaitai.Stream, parent *Pif, root *Pif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp54, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp54 {
-			break
-		}
-		switch (this._root.InfoHeader.ImageType) {
-		case Pif_ImageType__IndexedRgb888:
-			tmp55, err := this._io.ReadBitsIntLe(24)
-			if err != nil {
-				return err
-			}
-			this.Entries = append(this.Entries, tmp55)
-		case Pif_ImageType__IndexedRgb565:
-			tmp56, err := this._io.ReadBitsIntLe(16)
-			if err != nil {
-				return err
-			}
-			this.Entries = append(this.Entries, tmp56)
-		case Pif_ImageType__IndexedRgb332:
-			tmp57, err := this._io.ReadBitsIntLe(8)
-			if err != nil {
-				return err
-			}
-			this.Entries = append(this.Entries, tmp57)
-		}
+	tmp51, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp51 = tmp51
+	this.Magic = tmp51
+	if !(bytes.Equal(this.Magic, []uint8{80, 73, 70, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{80, 73, 70, 0}, this.Magic, this._io, "/types/pif_header/seq/0")
+	}
+	tmp52, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenFile = uint32(tmp52)
+	tmp53, err := this.OfsImageDataMin()
+	if err != nil {
+		return err
+	}
+	tmp54, err := this.OfsImageDataMin()
+	if err != nil {
+		return err
+	}
+	if !(this.LenFile >= tmp53) {
+		return kaitai.NewValidationLessThanError(tmp54, this.LenFile, this._io, "/types/pif_header/seq/1")
+	}
+	tmp55, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsImageData = uint32(tmp55)
+	tmp56, err := this.OfsImageDataMin()
+	if err != nil {
+		return err
+	}
+	tmp57, err := this.OfsImageDataMin()
+	if err != nil {
+		return err
+	}
+	if !(this.OfsImageData >= tmp56) {
+		return kaitai.NewValidationLessThanError(tmp57, this.OfsImageData, this._io, "/types/pif_header/seq/2")
+	}
+	if !(this.OfsImageData <= this.LenFile) {
+		return kaitai.NewValidationGreaterThanError(this.LenFile, this.OfsImageData, this._io, "/types/pif_header/seq/2")
 	}
 	return err
+}
+func (this *Pif_PifHeader) OfsImageDataMin() (v int, err error) {
+	if (this._f_ofsImageDataMin) {
+		return this.ofsImageDataMin, nil
+	}
+	this._f_ofsImageDataMin = true
+	this.ofsImageDataMin = int(12 + 16)
+	return this.ofsImageDataMin, nil
 }

@@ -7,7 +7,7 @@ digraph {
 
 		nt_mdt_pal__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">26</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
+			<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">26</TD><TD>4E 54 2D 4D 44 54 20 50 61 6C 65 74 74 65 20 46 69 6C 65 20 20 31 2E 30 30 21</TD><TD PORT="signature_type">signature</TD></TR>
 			<TR><TD PORT="count_pos">26</TD><TD PORT="count_size">4</TD><TD>u4be</TD><TD PORT="count_type">count</TD></TR>
 			<TR><TD PORT="meta_pos">30</TD><TD PORT="meta_size">16</TD><TD>Meta</TD><TD PORT="meta_type">meta</TD></TR>
 			<TR><TD COLSPAN="4" PORT="meta__repeat">repeat count times</TD></TR>
@@ -15,6 +15,32 @@ digraph {
 			<TR><TD PORT="tables_pos">...</TD><TD PORT="tables_size">...</TD><TD>ColTable</TD><TD PORT="tables_type">tables</TD></TR>
 			<TR><TD COLSPAN="4" PORT="tables__repeat">repeat count times</TD></TR>
 		</TABLE>>];
+		subgraph cluster__col_table {
+			label="NtMdtPal::ColTable";
+			graph[style=dotted];
+
+			col_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="size1_pos">0</TD><TD PORT="size1_size">1</TD><TD>u1</TD><TD PORT="size1_type">size1</TD></TR>
+				<TR><TD PORT="unkn_pos">1</TD><TD PORT="unkn_size">1</TD><TD>u1</TD><TD PORT="unkn_type">unkn</TD></TR>
+				<TR><TD PORT="title_pos">2</TD><TD PORT="title_size">_root.meta[index].name_size</TD><TD>str(UTF-16LE)</TD><TD PORT="title_type">title</TD></TR>
+				<TR><TD PORT="unkn1_pos">...</TD><TD PORT="unkn1_size">2</TD><TD>u2be</TD><TD PORT="unkn1_type">unkn1</TD></TR>
+				<TR><TD PORT="colors_pos">...</TD><TD PORT="colors_size">4</TD><TD>Color</TD><TD PORT="colors_type">colors</TD></TR>
+				<TR><TD COLSPAN="4" PORT="colors__repeat">repeat _root.meta[index].colors_count - 1 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__color {
+			label="NtMdtPal::Color";
+			graph[style=dotted];
+
+			color__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="red_pos">0</TD><TD PORT="red_size">1</TD><TD>u1</TD><TD PORT="red_type">red</TD></TR>
+				<TR><TD PORT="unkn_pos">1</TD><TD PORT="unkn_size">1</TD><TD>u1</TD><TD PORT="unkn_type">unkn</TD></TR>
+				<TR><TD PORT="blue_pos">2</TD><TD PORT="blue_size">1</TD><TD>u1</TD><TD PORT="blue_type">blue</TD></TR>
+				<TR><TD PORT="green_pos">3</TD><TD PORT="green_size">1</TD><TD>u1</TD><TD PORT="green_type">green</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__meta {
 			label="NtMdtPal::Meta";
 			graph[style=dotted];
@@ -30,32 +56,6 @@ digraph {
 				<TR><TD PORT="unkn11_pos">11</TD><TD PORT="unkn11_size">1</TD><TD></TD><TD PORT="unkn11_type">unkn11</TD></TR>
 				<TR><TD PORT="unkn12_pos">12</TD><TD PORT="unkn12_size">2</TD><TD></TD><TD PORT="unkn12_type">unkn12</TD></TR>
 				<TR><TD PORT="name_size_pos">14</TD><TD PORT="name_size_size">2</TD><TD>u2be</TD><TD PORT="name_size_type">name_size</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__color {
-			label="NtMdtPal::Color";
-			graph[style=dotted];
-
-			color__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="red_pos">0</TD><TD PORT="red_size">1</TD><TD>u1</TD><TD PORT="red_type">red</TD></TR>
-				<TR><TD PORT="unkn_pos">1</TD><TD PORT="unkn_size">1</TD><TD>u1</TD><TD PORT="unkn_type">unkn</TD></TR>
-				<TR><TD PORT="blue_pos">2</TD><TD PORT="blue_size">1</TD><TD>u1</TD><TD PORT="blue_type">blue</TD></TR>
-				<TR><TD PORT="green_pos">3</TD><TD PORT="green_size">1</TD><TD>u1</TD><TD PORT="green_type">green</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__col_table {
-			label="NtMdtPal::ColTable";
-			graph[style=dotted];
-
-			col_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="size1_pos">0</TD><TD PORT="size1_size">1</TD><TD>u1</TD><TD PORT="size1_type">size1</TD></TR>
-				<TR><TD PORT="unkn_pos">1</TD><TD PORT="unkn_size">1</TD><TD>u1</TD><TD PORT="unkn_type">unkn</TD></TR>
-				<TR><TD PORT="title_pos">2</TD><TD PORT="title_size">_root.meta[index].name_size</TD><TD>str(UTF-16LE)</TD><TD PORT="title_type">title</TD></TR>
-				<TR><TD PORT="unkn1_pos">...</TD><TD PORT="unkn1_size">2</TD><TD>u2be</TD><TD PORT="unkn1_type">unkn1</TD></TR>
-				<TR><TD PORT="colors_pos">...</TD><TD PORT="colors_size">4</TD><TD>Color</TD><TD PORT="colors_type">colors</TD></TR>
-				<TR><TD COLSPAN="4" PORT="colors__repeat">repeat (_root.meta[index].colors_count - 1) times</TD></TR>
 			</TABLE>>];
 		}
 	}

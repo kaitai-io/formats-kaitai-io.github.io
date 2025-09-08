@@ -3,8 +3,8 @@
 
 namespace {
     class FtlDat extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \FtlDat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\FtlDat $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -29,7 +29,7 @@ namespace {
 
 namespace FtlDat {
     class File extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FtlDat $_parent = null, \FtlDat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FtlDat $_parent = null, ?\FtlDat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -56,7 +56,7 @@ namespace FtlDat {
 
 namespace FtlDat {
     class Meta extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FtlDat\File $_parent = null, \FtlDat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FtlDat\File $_parent = null, ?\FtlDat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

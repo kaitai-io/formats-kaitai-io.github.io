@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Bcd;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -34,7 +34,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{digits} = ();
+    $self->{digits} = [];
     my $n_digits = $self->num_digits();
     for (my $i = 0; $i < $n_digits; $i++) {
         my $_on = $self->bits_per_digit();
@@ -54,25 +54,25 @@ sub as_int {
     return $self->{as_int};
 }
 
+sub as_int_be {
+    my ($self) = @_;
+    return $self->{as_int_be} if ($self->{as_int_be});
+    $self->{as_int_be} = @{$self->digits()}[$self->last_idx()] + ($self->num_digits() < 2 ? 0 : @{$self->digits()}[$self->last_idx() - 1] * 10 + ($self->num_digits() < 3 ? 0 : @{$self->digits()}[$self->last_idx() - 2] * 100 + ($self->num_digits() < 4 ? 0 : @{$self->digits()}[$self->last_idx() - 3] * 1000 + ($self->num_digits() < 5 ? 0 : @{$self->digits()}[$self->last_idx() - 4] * 10000 + ($self->num_digits() < 6 ? 0 : @{$self->digits()}[$self->last_idx() - 5] * 100000 + ($self->num_digits() < 7 ? 0 : @{$self->digits()}[$self->last_idx() - 6] * 1000000 + ($self->num_digits() < 8 ? 0 : @{$self->digits()}[$self->last_idx() - 7] * 10000000)))))));
+    return $self->{as_int_be};
+}
+
 sub as_int_le {
     my ($self) = @_;
     return $self->{as_int_le} if ($self->{as_int_le});
-    $self->{as_int_le} = (@{$self->digits()}[0] + ($self->num_digits() < 2 ? 0 : ((@{$self->digits()}[1] * 10) + ($self->num_digits() < 3 ? 0 : ((@{$self->digits()}[2] * 100) + ($self->num_digits() < 4 ? 0 : ((@{$self->digits()}[3] * 1000) + ($self->num_digits() < 5 ? 0 : ((@{$self->digits()}[4] * 10000) + ($self->num_digits() < 6 ? 0 : ((@{$self->digits()}[5] * 100000) + ($self->num_digits() < 7 ? 0 : ((@{$self->digits()}[6] * 1000000) + ($self->num_digits() < 8 ? 0 : (@{$self->digits()}[7] * 10000000)))))))))))))));
+    $self->{as_int_le} = @{$self->digits()}[0] + ($self->num_digits() < 2 ? 0 : @{$self->digits()}[1] * 10 + ($self->num_digits() < 3 ? 0 : @{$self->digits()}[2] * 100 + ($self->num_digits() < 4 ? 0 : @{$self->digits()}[3] * 1000 + ($self->num_digits() < 5 ? 0 : @{$self->digits()}[4] * 10000 + ($self->num_digits() < 6 ? 0 : @{$self->digits()}[5] * 100000 + ($self->num_digits() < 7 ? 0 : @{$self->digits()}[6] * 1000000 + ($self->num_digits() < 8 ? 0 : @{$self->digits()}[7] * 10000000)))))));
     return $self->{as_int_le};
 }
 
 sub last_idx {
     my ($self) = @_;
     return $self->{last_idx} if ($self->{last_idx});
-    $self->{last_idx} = ($self->num_digits() - 1);
+    $self->{last_idx} = $self->num_digits() - 1;
     return $self->{last_idx};
-}
-
-sub as_int_be {
-    my ($self) = @_;
-    return $self->{as_int_be} if ($self->{as_int_be});
-    $self->{as_int_be} = (@{$self->digits()}[$self->last_idx()] + ($self->num_digits() < 2 ? 0 : ((@{$self->digits()}[($self->last_idx() - 1)] * 10) + ($self->num_digits() < 3 ? 0 : ((@{$self->digits()}[($self->last_idx() - 2)] * 100) + ($self->num_digits() < 4 ? 0 : ((@{$self->digits()}[($self->last_idx() - 3)] * 1000) + ($self->num_digits() < 5 ? 0 : ((@{$self->digits()}[($self->last_idx() - 4)] * 10000) + ($self->num_digits() < 6 ? 0 : ((@{$self->digits()}[($self->last_idx() - 5)] * 100000) + ($self->num_digits() < 7 ? 0 : ((@{$self->digits()}[($self->last_idx() - 6)] * 1000000) + ($self->num_digits() < 8 ? 0 : (@{$self->digits()}[($self->last_idx() - 7)] * 10000000)))))))))))))));
-    return $self->{as_int_be};
 }
 
 sub digits {

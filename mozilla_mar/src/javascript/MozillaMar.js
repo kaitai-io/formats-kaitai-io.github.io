@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.MozillaMar = factory(root.KaitaiStream);
+    factory(root.MozillaMar || (root.MozillaMar = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (MozillaMar_, KaitaiStream) {
 /**
  * Mozilla ARchive file is Mozilla's own archive format to distribute software updates.
  * Test files can be found on Mozilla's FTP site, for example:
@@ -18,18 +18,18 @@
  */
 
 var MozillaMar = (function() {
+  MozillaMar.BlockIdentifiers = Object.freeze({
+    PRODUCT_INFORMATION: 1,
+
+    1: "PRODUCT_INFORMATION",
+  });
+
   MozillaMar.SignatureAlgorithms = Object.freeze({
     RSA_PKCS1_SHA1: 1,
     RSA_PKCS1_SHA384: 2,
 
     1: "RSA_PKCS1_SHA1",
     2: "RSA_PKCS1_SHA384",
-  });
-
-  MozillaMar.BlockIdentifiers = Object.freeze({
-    PRODUCT_INFORMATION: 1,
-
-    1: "PRODUCT_INFORMATION",
   });
 
   function MozillaMar(_io, _parent, _root) {
@@ -41,8 +41,8 @@ var MozillaMar = (function() {
   }
   MozillaMar.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [77, 65, 82, 49]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([77, 65, 82, 49], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([77, 65, 82, 49])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([77, 65, 82, 49]), this.magic, this._io, "/seq/0");
     }
     this.ofsIndex = this._io.readU4be();
     this.fileSize = this._io.readU8be();
@@ -58,29 +58,37 @@ var MozillaMar = (function() {
     }
   }
 
-  var MarIndex = MozillaMar.MarIndex = (function() {
-    function MarIndex(_io, _parent, _root) {
+  var AdditionalSection = MozillaMar.AdditionalSection = (function() {
+    function AdditionalSection(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    MarIndex.prototype._read = function() {
-      this.lenIndex = this._io.readU4be();
-      this._raw_indexEntries = this._io.readBytes(this.lenIndex);
-      var _io__raw_indexEntries = new KaitaiStream(this._raw_indexEntries);
-      this.indexEntries = new IndexEntries(_io__raw_indexEntries, this, this._root);
+    AdditionalSection.prototype._read = function() {
+      this.lenBlock = this._io.readU4be();
+      this.blockIdentifier = this._io.readU4be();
+      switch (this.blockIdentifier) {
+      case MozillaMar.BlockIdentifiers.PRODUCT_INFORMATION:
+        this._raw_bytes = this._io.readBytes((this.lenBlock - 4) - 4);
+        var _io__raw_bytes = new KaitaiStream(this._raw_bytes);
+        this.bytes = new ProductInformationBlock(_io__raw_bytes, this, this._root);
+        break;
+      default:
+        this.bytes = this._io.readBytes((this.lenBlock - 4) - 4);
+        break;
+      }
     }
 
-    return MarIndex;
+    return AdditionalSection;
   })();
 
   var IndexEntries = MozillaMar.IndexEntries = (function() {
     function IndexEntries(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -96,44 +104,11 @@ var MozillaMar = (function() {
     return IndexEntries;
   })();
 
-  var Signature = MozillaMar.Signature = (function() {
-    function Signature(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Signature.prototype._read = function() {
-      this.algorithm = this._io.readU4be();
-      this.lenSignature = this._io.readU4be();
-      this.signature = this._io.readBytes(this.lenSignature);
-    }
-
-    return Signature;
-  })();
-
-  var ProductInformationBlock = MozillaMar.ProductInformationBlock = (function() {
-    function ProductInformationBlock(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ProductInformationBlock.prototype._read = function() {
-      this.marChannelName = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(64), 0, false), "UTF-8");
-      this.productVersion = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "UTF-8");
-    }
-
-    return ProductInformationBlock;
-  })();
-
   var IndexEntry = MozillaMar.IndexEntry = (function() {
     function IndexEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -163,30 +138,55 @@ var MozillaMar = (function() {
     return IndexEntry;
   })();
 
-  var AdditionalSection = MozillaMar.AdditionalSection = (function() {
-    function AdditionalSection(_io, _parent, _root) {
+  var MarIndex = MozillaMar.MarIndex = (function() {
+    function MarIndex(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    AdditionalSection.prototype._read = function() {
-      this.lenBlock = this._io.readU4be();
-      this.blockIdentifier = this._io.readU4be();
-      switch (this.blockIdentifier) {
-      case MozillaMar.BlockIdentifiers.PRODUCT_INFORMATION:
-        this._raw_bytes = this._io.readBytes(((this.lenBlock - 4) - 4));
-        var _io__raw_bytes = new KaitaiStream(this._raw_bytes);
-        this.bytes = new ProductInformationBlock(_io__raw_bytes, this, this._root);
-        break;
-      default:
-        this.bytes = this._io.readBytes(((this.lenBlock - 4) - 4));
-        break;
-      }
+    MarIndex.prototype._read = function() {
+      this.lenIndex = this._io.readU4be();
+      this._raw_indexEntries = this._io.readBytes(this.lenIndex);
+      var _io__raw_indexEntries = new KaitaiStream(this._raw_indexEntries);
+      this.indexEntries = new IndexEntries(_io__raw_indexEntries, this, this._root);
     }
 
-    return AdditionalSection;
+    return MarIndex;
+  })();
+
+  var ProductInformationBlock = MozillaMar.ProductInformationBlock = (function() {
+    function ProductInformationBlock(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ProductInformationBlock.prototype._read = function() {
+      this.marChannelName = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(64), 0, false), "UTF-8");
+      this.productVersion = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "UTF-8");
+    }
+
+    return ProductInformationBlock;
+  })();
+
+  var Signature = MozillaMar.Signature = (function() {
+    function Signature(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Signature.prototype._read = function() {
+      this.algorithm = this._io.readU4be();
+      this.lenSignature = this._io.readU4be();
+      this.signature = this._io.readBytes(this.lenSignature);
+    }
+
+    return Signature;
   })();
   Object.defineProperty(MozillaMar.prototype, 'index', {
     get: function() {
@@ -202,5 +202,5 @@ var MozillaMar = (function() {
 
   return MozillaMar;
 })();
-return MozillaMar;
-}));
+MozillaMar_.MozillaMar = MozillaMar;
+});

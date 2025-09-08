@@ -10,19 +10,19 @@
 
 namespace {
     class Bson extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bson $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Bson $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_len = $this->_io->readS4le();
-            $this->_m__raw_fields = $this->_io->readBytes(($this->len() - 5));
+            $this->_m__raw_fields = $this->_io->readBytes($this->len() - 5);
             $_io__raw_fields = new \Kaitai\Struct\Stream($this->_m__raw_fields);
             $this->_m_fields = new \Bson\ElementsList($_io__raw_fields, $this, $this->_root);
             $this->_m_terminator = $this->_io->readBytes(1);
-            if (!($this->terminator() == "\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->terminator(), $this->_io(), "/seq/2");
+            if (!($this->_m_terminator == "\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_terminator, $this->_io, "/seq/2");
             }
         }
         protected $_m_len;
@@ -41,34 +41,12 @@ namespace {
 }
 
 /**
- * Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
- */
-
-namespace Bson {
-    class Timestamp extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_increment = $this->_io->readU4le();
-            $this->_m_timestamp = $this->_io->readU4le();
-        }
-        protected $_m_increment;
-        protected $_m_timestamp;
-        public function increment() { return $this->_m_increment; }
-        public function timestamp() { return $this->_m_timestamp; }
-    }
-}
-
-/**
  * The BSON "binary" or "BinData" datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.
  */
 
 namespace Bson {
     class BinData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson\Element $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -104,7 +82,7 @@ namespace Bson {
 
 namespace Bson\BinData {
     class ByteArrayDeprecated extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson\BinData $_parent = null, \Bson $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson\BinData $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -129,32 +107,43 @@ namespace Bson\BinData {
         const UUID = 4;
         const MD5 = 5;
         const CUSTOM = 128;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 128 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace Bson {
-    class ElementsList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson $_parent = null, \Bson $_root = null) {
+    class CodeWithScope extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson\Element $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_elements = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_elements[] = new \Bson\Element($this->_io, $this, $this->_root);
-                $i++;
-            }
+            $this->_m_id = $this->_io->readS4le();
+            $this->_m_source = new \Bson\String($this->_io, $this, $this->_root);
+            $this->_m_scope = new \Bson($this->_io, $this, $this->_root);
         }
-        protected $_m_elements;
-        public function elements() { return $this->_m_elements; }
+        protected $_m_id;
+        protected $_m_source;
+        protected $_m_scope;
+        public function id() { return $this->_m_id; }
+        public function source() { return $this->_m_source; }
+
+        /**
+         * mapping from identifiers to values, representing the scope in which the string should be evaluated.
+         */
+        public function scope() { return $this->_m_scope; }
     }
 }
 
 namespace Bson {
     class Cstring extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bson $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -172,32 +161,26 @@ namespace Bson {
 }
 
 namespace Bson {
-    class String extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bson $_root = null) {
+    class DbPointer extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson\Element $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_len = $this->_io->readS4le();
-            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(($this->len() - 1)), "UTF-8");
-            $this->_m_terminator = $this->_io->readBytes(1);
-            if (!($this->terminator() == "\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->terminator(), $this->_io(), "/types/string/seq/2");
-            }
+            $this->_m_namespace = new \Bson\String($this->_io, $this, $this->_root);
+            $this->_m_id = new \Bson\ObjectId($this->_io, $this, $this->_root);
         }
-        protected $_m_len;
-        protected $_m_str;
-        protected $_m_terminator;
-        public function len() { return $this->_m_len; }
-        public function str() { return $this->_m_str; }
-        public function terminator() { return $this->_m_terminator; }
+        protected $_m_namespace;
+        protected $_m_id;
+        public function namespace() { return $this->_m_namespace; }
+        public function id() { return $this->_m_id; }
     }
 }
 
 namespace Bson {
     class Element extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson\ElementsList $_parent = null, \Bson $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson\ElementsList $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -206,14 +189,47 @@ namespace Bson {
             $this->_m_typeByte = $this->_io->readU1();
             $this->_m_name = new \Bson\Cstring($this->_io, $this, $this->_root);
             switch ($this->typeByte()) {
+                case \Bson\Element\BsonType::ARRAY:
+                    $this->_m_content = new \Bson($this->_io, $this, $this->_root);
+                    break;
+                case \Bson\Element\BsonType::BIN_DATA:
+                    $this->_m_content = new \Bson\BinData($this->_io, $this, $this->_root);
+                    break;
+                case \Bson\Element\BsonType::BOOLEAN:
+                    $this->_m_content = $this->_io->readU1();
+                    break;
                 case \Bson\Element\BsonType::CODE_WITH_SCOPE:
                     $this->_m_content = new \Bson\CodeWithScope($this->_io, $this, $this->_root);
+                    break;
+                case \Bson\Element\BsonType::DB_POINTER:
+                    $this->_m_content = new \Bson\DbPointer($this->_io, $this, $this->_root);
+                    break;
+                case \Bson\Element\BsonType::DOCUMENT:
+                    $this->_m_content = new \Bson($this->_io, $this, $this->_root);
+                    break;
+                case \Bson\Element\BsonType::JAVASCRIPT:
+                    $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
+                    break;
+                case \Bson\Element\BsonType::NUMBER_DECIMAL:
+                    $this->_m_content = new \Bson\F16($this->_io, $this, $this->_root);
+                    break;
+                case \Bson\Element\BsonType::NUMBER_DOUBLE:
+                    $this->_m_content = $this->_io->readF8le();
+                    break;
+                case \Bson\Element\BsonType::NUMBER_INT:
+                    $this->_m_content = $this->_io->readS4le();
+                    break;
+                case \Bson\Element\BsonType::NUMBER_LONG:
+                    $this->_m_content = $this->_io->readS8le();
+                    break;
+                case \Bson\Element\BsonType::OBJECT_ID:
+                    $this->_m_content = new \Bson\ObjectId($this->_io, $this, $this->_root);
                     break;
                 case \Bson\Element\BsonType::REG_EX:
                     $this->_m_content = new \Bson\RegEx($this->_io, $this, $this->_root);
                     break;
-                case \Bson\Element\BsonType::NUMBER_DOUBLE:
-                    $this->_m_content = $this->_io->readF8le();
+                case \Bson\Element\BsonType::STRING:
+                    $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
                     break;
                 case \Bson\Element\BsonType::SYMBOL:
                     $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
@@ -221,41 +237,8 @@ namespace Bson {
                 case \Bson\Element\BsonType::TIMESTAMP:
                     $this->_m_content = new \Bson\Timestamp($this->_io, $this, $this->_root);
                     break;
-                case \Bson\Element\BsonType::NUMBER_INT:
-                    $this->_m_content = $this->_io->readS4le();
-                    break;
-                case \Bson\Element\BsonType::DOCUMENT:
-                    $this->_m_content = new \Bson($this->_io);
-                    break;
-                case \Bson\Element\BsonType::OBJECT_ID:
-                    $this->_m_content = new \Bson\ObjectId($this->_io, $this, $this->_root);
-                    break;
-                case \Bson\Element\BsonType::JAVASCRIPT:
-                    $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
-                    break;
                 case \Bson\Element\BsonType::UTC_DATETIME:
                     $this->_m_content = $this->_io->readS8le();
-                    break;
-                case \Bson\Element\BsonType::BOOLEAN:
-                    $this->_m_content = $this->_io->readU1();
-                    break;
-                case \Bson\Element\BsonType::NUMBER_LONG:
-                    $this->_m_content = $this->_io->readS8le();
-                    break;
-                case \Bson\Element\BsonType::BIN_DATA:
-                    $this->_m_content = new \Bson\BinData($this->_io, $this, $this->_root);
-                    break;
-                case \Bson\Element\BsonType::STRING:
-                    $this->_m_content = new \Bson\String($this->_io, $this, $this->_root);
-                    break;
-                case \Bson\Element\BsonType::DB_POINTER:
-                    $this->_m_content = new \Bson\DbPointer($this->_io, $this, $this->_root);
-                    break;
-                case \Bson\Element\BsonType::ARRAY:
-                    $this->_m_content = new \Bson($this->_io);
-                    break;
-                case \Bson\Element\BsonType::NUMBER_DECIMAL:
-                    $this->_m_content = new \Bson\F16($this->_io, $this, $this->_root);
                     break;
             }
         }
@@ -292,81 +275,32 @@ namespace Bson\Element {
         const NUMBER_LONG = 18;
         const NUMBER_DECIMAL = 19;
         const MAX_KEY = 127;
+
+        private const _VALUES = [-1 => true, 0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 127 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace Bson {
-    class DbPointer extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+    class ElementsList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_namespace = new \Bson\String($this->_io, $this, $this->_root);
-            $this->_m_id = new \Bson\ObjectId($this->_io, $this, $this->_root);
+            $this->_m_elements = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_elements[] = new \Bson\Element($this->_io, $this, $this->_root);
+                $i++;
+            }
         }
-        protected $_m_namespace;
-        protected $_m_id;
-        public function namespace() { return $this->_m_namespace; }
-        public function id() { return $this->_m_id; }
-    }
-}
-
-/**
- * Implements unsigned 24-bit (3 byte) integer.
- */
-
-namespace Bson {
-    class U3 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson\ObjectId $_parent = null, \Bson $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_b1 = $this->_io->readU1();
-            $this->_m_b2 = $this->_io->readU1();
-            $this->_m_b3 = $this->_io->readU1();
-        }
-        protected $_m_value;
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $this->_m_value = (($this->b1() | ($this->b2() << 8)) | ($this->b3() << 16));
-            return $this->_m_value;
-        }
-        protected $_m_b1;
-        protected $_m_b2;
-        protected $_m_b3;
-        public function b1() { return $this->_m_b1; }
-        public function b2() { return $this->_m_b2; }
-        public function b3() { return $this->_m_b3; }
-    }
-}
-
-namespace Bson {
-    class CodeWithScope extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_id = $this->_io->readS4le();
-            $this->_m_source = new \Bson\String($this->_io, $this, $this->_root);
-            $this->_m_scope = new \Bson($this->_io);
-        }
-        protected $_m_id;
-        protected $_m_source;
-        protected $_m_scope;
-        public function id() { return $this->_m_id; }
-        public function source() { return $this->_m_source; }
-
-        /**
-         * mapping from identifiers to values, representing the scope in which the string should be evaluated.
-         */
-        public function scope() { return $this->_m_scope; }
+        protected $_m_elements;
+        public function elements() { return $this->_m_elements; }
     }
 }
 
@@ -376,7 +310,7 @@ namespace Bson {
 
 namespace Bson {
     class F16 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson\Element $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -401,7 +335,7 @@ namespace Bson {
 
 namespace Bson {
     class ObjectId extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bson $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -433,7 +367,7 @@ namespace Bson {
 
 namespace Bson {
     class RegEx extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bson\Element $_parent = null, \Bson $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson\Element $_parent = null, ?\Bson $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -446,5 +380,83 @@ namespace Bson {
         protected $_m_options;
         public function pattern() { return $this->_m_pattern; }
         public function options() { return $this->_m_options; }
+    }
+}
+
+namespace Bson {
+    class String extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Bson $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = $this->_io->readS4le();
+            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len() - 1), "UTF-8");
+            $this->_m_terminator = $this->_io->readBytes(1);
+            if (!($this->_m_terminator == "\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_terminator, $this->_io, "/types/string/seq/2");
+            }
+        }
+        protected $_m_len;
+        protected $_m_str;
+        protected $_m_terminator;
+        public function len() { return $this->_m_len; }
+        public function str() { return $this->_m_str; }
+        public function terminator() { return $this->_m_terminator; }
+    }
+}
+
+/**
+ * Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
+ */
+
+namespace Bson {
+    class Timestamp extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson\Element $_parent = null, ?\Bson $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_increment = $this->_io->readU4le();
+            $this->_m_timestamp = $this->_io->readU4le();
+        }
+        protected $_m_increment;
+        protected $_m_timestamp;
+        public function increment() { return $this->_m_increment; }
+        public function timestamp() { return $this->_m_timestamp; }
+    }
+}
+
+/**
+ * Implements unsigned 24-bit (3 byte) integer.
+ */
+
+namespace Bson {
+    class U3 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bson\ObjectId $_parent = null, ?\Bson $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_b1 = $this->_io->readU1();
+            $this->_m_b2 = $this->_io->readU1();
+            $this->_m_b3 = $this->_io->readU1();
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = ($this->b1() | $this->b2() << 8) | $this->b3() << 16;
+            return $this->_m_value;
+        }
+        protected $_m_b1;
+        protected $_m_b2;
+        protected $_m_b3;
+        public function b1() { return $this->_m_b1; }
+        public function b2() { return $this->_m_b2; }
+        public function b3() { return $this->_m_b3; }
     }
 }

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -31,7 +31,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -58,23 +58,11 @@ sub memory_reservation_block {
     return $self->{memory_reservation_block} if ($self->{memory_reservation_block});
     my $_pos = $self->{_io}->pos();
     $self->{_io}->seek($self->ofs_memory_reservation_block());
-    $self->{_raw_memory_reservation_block} = $self->{_io}->read_bytes(($self->ofs_structure_block() - $self->ofs_memory_reservation_block()));
+    $self->{_raw_memory_reservation_block} = $self->{_io}->read_bytes($self->ofs_structure_block() - $self->ofs_memory_reservation_block());
     my $io__raw_memory_reservation_block = IO::KaitaiStruct::Stream->new($self->{_raw_memory_reservation_block});
     $self->{memory_reservation_block} = Dtb::MemoryBlock->new($io__raw_memory_reservation_block, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{memory_reservation_block};
-}
-
-sub structure_block {
-    my ($self) = @_;
-    return $self->{structure_block} if ($self->{structure_block});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek($self->ofs_structure_block());
-    $self->{_raw_structure_block} = $self->{_io}->read_bytes($self->len_structure_block());
-    my $io__raw_structure_block = IO::KaitaiStruct::Stream->new($self->{_raw_structure_block});
-    $self->{structure_block} = Dtb::FdtBlock->new($io__raw_structure_block, $self, $self->{_root});
-    $self->{_io}->seek($_pos);
-    return $self->{structure_block};
 }
 
 sub strings_block {
@@ -87,6 +75,18 @@ sub strings_block {
     $self->{strings_block} = Dtb::Strings->new($io__raw_strings_block, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{strings_block};
+}
+
+sub structure_block {
+    my ($self) = @_;
+    return $self->{structure_block} if ($self->{structure_block});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->ofs_structure_block());
+    $self->{_raw_structure_block} = $self->{_io}->read_bytes($self->len_structure_block());
+    my $io__raw_structure_block = IO::KaitaiStruct::Stream->new($self->{_raw_structure_block});
+    $self->{structure_block} = Dtb::FdtBlock->new($io__raw_structure_block, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{structure_block};
 }
 
 sub magic {
@@ -144,18 +144,18 @@ sub _raw_memory_reservation_block {
     return $self->{_raw_memory_reservation_block};
 }
 
-sub _raw_structure_block {
-    my ($self) = @_;
-    return $self->{_raw_structure_block};
-}
-
 sub _raw_strings_block {
     my ($self) = @_;
     return $self->{_raw_strings_block};
 }
 
+sub _raw_structure_block {
+    my ($self) = @_;
+    return $self->{_raw_structure_block};
+}
+
 ########################################################################
-package Dtb::MemoryBlock;
+package Dtb::FdtBeginNode;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -174,7 +174,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -184,15 +184,18 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{entries} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, Dtb::MemoryBlockEntry->new($self->{_io}, $self, $self->{_root});
-    }
+    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{padding} = $self->{_io}->read_bytes(-($self->_io()->pos()) % 4);
 }
 
-sub entries {
+sub name {
     my ($self) = @_;
-    return $self->{entries};
+    return $self->{name};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self->{padding};
 }
 
 ########################################################################
@@ -215,7 +218,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -225,16 +228,177 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{nodes} = ();
-    do {
-        $_ = Dtb::FdtNode->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{nodes}}, $_;
-    } until ($_->type() == $Dtb::FDT_END);
+    $self->{nodes} = [];
+    {
+        my $_it;
+        do {
+            $_it = Dtb::FdtNode->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{nodes}}, $_it;
+        } until ($_it->type() == $Dtb::FDT_END);
+    }
 }
 
 sub nodes {
     my ($self) = @_;
     return $self->{nodes};
+}
+
+########################################################################
+package Dtb::FdtNode;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{type} = $self->{_io}->read_u4be();
+    my $_on = $self->type();
+    if ($_on == $Dtb::FDT_BEGIN_NODE) {
+        $self->{body} = Dtb::FdtBeginNode->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Dtb::FDT_PROP) {
+        $self->{body} = Dtb::FdtProp->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub type {
+    my ($self) = @_;
+    return $self->{type};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body};
+}
+
+########################################################################
+package Dtb::FdtProp;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{len_property} = $self->{_io}->read_u4be();
+    $self->{ofs_name} = $self->{_io}->read_u4be();
+    $self->{property} = $self->{_io}->read_bytes($self->len_property());
+    $self->{padding} = $self->{_io}->read_bytes(-($self->_io()->pos()) % 4);
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name} if ($self->{name});
+    my $io = $self->_root()->strings_block()->_io();
+    my $_pos = $io->pos();
+    $io->seek($self->ofs_name());
+    $self->{name} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
+    $io->seek($_pos);
+    return $self->{name};
+}
+
+sub len_property {
+    my ($self) = @_;
+    return $self->{len_property};
+}
+
+sub ofs_name {
+    my ($self) = @_;
+    return $self->{ofs_name};
+}
+
+sub property {
+    my ($self) = @_;
+    return $self->{property};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self->{padding};
+}
+
+########################################################################
+package Dtb::MemoryBlock;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Dtb::MemoryBlockEntry->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
 }
 
 ########################################################################
@@ -257,7 +421,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -301,7 +465,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -311,7 +475,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{strings} = ();
+    $self->{strings} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{strings}}, Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
@@ -320,167 +484,6 @@ sub _read {
 sub strings {
     my ($self) = @_;
     return $self->{strings};
-}
-
-########################################################################
-package Dtb::FdtProp;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{len_property} = $self->{_io}->read_u4be();
-    $self->{ofs_name} = $self->{_io}->read_u4be();
-    $self->{property} = $self->{_io}->read_bytes($self->len_property());
-    $self->{padding} = $self->{_io}->read_bytes((-($self->_io()->pos()) % 4));
-}
-
-sub name {
-    my ($self) = @_;
-    return $self->{name} if ($self->{name});
-    my $io = $self->_root()->strings_block()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->ofs_name());
-    $self->{name} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
-    $io->seek($_pos);
-    return $self->{name};
-}
-
-sub len_property {
-    my ($self) = @_;
-    return $self->{len_property};
-}
-
-sub ofs_name {
-    my ($self) = @_;
-    return $self->{ofs_name};
-}
-
-sub property {
-    my ($self) = @_;
-    return $self->{property};
-}
-
-sub padding {
-    my ($self) = @_;
-    return $self->{padding};
-}
-
-########################################################################
-package Dtb::FdtNode;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{type} = $self->{_io}->read_u4be();
-    my $_on = $self->type();
-    if ($_on == $Dtb::FDT_BEGIN_NODE) {
-        $self->{body} = Dtb::FdtBeginNode->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Dtb::FDT_PROP) {
-        $self->{body} = Dtb::FdtProp->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub type {
-    my ($self) = @_;
-    return $self->{type};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body};
-}
-
-########################################################################
-package Dtb::FdtBeginNode;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    $self->{padding} = $self->{_io}->read_bytes((-($self->_io()->pos()) % 4));
-}
-
-sub name {
-    my ($self) = @_;
-    return $self->{name};
-}
-
-sub padding {
-    my ($self) = @_;
-    return $self->{padding};
 }
 
 1;

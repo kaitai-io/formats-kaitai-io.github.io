@@ -62,8 +62,8 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_lenPaddingIfExists = false;
             f_lenPadding = false;
+            f_lenPaddingIfExists = false;
             _read();
         }
         private void _read()
@@ -81,7 +81,7 @@ namespace Kaitai
             if (HasExtension) {
                 _headerExtension = new HeaderExtention(m_io, this, m_root);
             }
-            _data = m_io.ReadBytes(((M_Io.Size - M_Io.Pos) - LenPadding));
+            _data = m_io.ReadBytes((M_Io.Size - M_Io.Pos) - LenPadding);
             _padding = m_io.ReadBytes(LenPadding);
         }
         public partial class HeaderExtention : KaitaiStruct
@@ -111,6 +111,23 @@ namespace Kaitai
             public RtpPacket M_Root { get { return m_root; } }
             public RtpPacket M_Parent { get { return m_parent; } }
         }
+        private bool f_lenPadding;
+        private byte _lenPadding;
+
+        /// <summary>
+        /// Always returns number of padding bytes to in the payload.
+        /// </summary>
+        public byte LenPadding
+        {
+            get
+            {
+                if (f_lenPadding)
+                    return _lenPadding;
+                f_lenPadding = true;
+                _lenPadding = (byte) ((HasPadding ? LenPaddingIfExists : 0));
+                return _lenPadding;
+            }
+        }
         private bool f_lenPaddingIfExists;
         private byte? _lenPaddingIfExists;
 
@@ -124,31 +141,14 @@ namespace Kaitai
             {
                 if (f_lenPaddingIfExists)
                     return _lenPaddingIfExists;
+                f_lenPaddingIfExists = true;
                 if (HasPadding) {
                     long _pos = m_io.Pos;
-                    m_io.Seek((M_Io.Size - 1));
+                    m_io.Seek(M_Io.Size - 1);
                     _lenPaddingIfExists = m_io.ReadU1();
                     m_io.Seek(_pos);
-                    f_lenPaddingIfExists = true;
                 }
                 return _lenPaddingIfExists;
-            }
-        }
-        private bool f_lenPadding;
-        private byte _lenPadding;
-
-        /// <summary>
-        /// Always returns number of padding bytes to in the payload.
-        /// </summary>
-        public byte LenPadding
-        {
-            get
-            {
-                if (f_lenPadding)
-                    return _lenPadding;
-                _lenPadding = (byte) ((HasPadding ? LenPaddingIfExists : 0));
-                f_lenPadding = true;
-                return _lenPadding;
             }
         }
         private ulong _version;

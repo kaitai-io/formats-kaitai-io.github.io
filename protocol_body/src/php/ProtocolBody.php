@@ -18,34 +18,34 @@
 
 namespace {
     class ProtocolBody extends \Kaitai\Struct\Struct {
-        public function __construct(int $protocolNum, \Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ProtocolBody $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(int $protocolNum, \Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\ProtocolBody $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_m_protocolNum = $protocolNum;
             $this->_read();
         }
 
         private function _read() {
             switch ($this->protocol()) {
-                case \ProtocolBody\ProtocolEnum::IPV6_NONXT:
-                    $this->_m_body = new \ProtocolBody\NoNextHeader($this->_io, $this, $this->_root);
-                    break;
-                case \ProtocolBody\ProtocolEnum::IPV4:
-                    $this->_m_body = new \Ipv4Packet($this->_io);
-                    break;
-                case \ProtocolBody\ProtocolEnum::UDP:
-                    $this->_m_body = new \UdpDatagram($this->_io);
+                case \ProtocolBody\ProtocolEnum::HOPOPT:
+                    $this->_m_body = new \ProtocolBody\OptionHopByHop($this->_io, $this, $this->_root);
                     break;
                 case \ProtocolBody\ProtocolEnum::ICMP:
                     $this->_m_body = new \IcmpPacket($this->_io);
                     break;
-                case \ProtocolBody\ProtocolEnum::HOPOPT:
-                    $this->_m_body = new \ProtocolBody\OptionHopByHop($this->_io, $this, $this->_root);
+                case \ProtocolBody\ProtocolEnum::IPV4:
+                    $this->_m_body = new \Ipv4Packet($this->_io);
                     break;
                 case \ProtocolBody\ProtocolEnum::IPV6:
                     $this->_m_body = new \Ipv6Packet($this->_io);
                     break;
+                case \ProtocolBody\ProtocolEnum::IPV6_NONXT:
+                    $this->_m_body = new \ProtocolBody\NoNextHeader($this->_io, $this, $this->_root);
+                    break;
                 case \ProtocolBody\ProtocolEnum::TCP:
                     $this->_m_body = new \TcpSegment($this->_io);
+                    break;
+                case \ProtocolBody\ProtocolEnum::UDP:
+                    $this->_m_body = new \UdpDatagram($this->_io);
                     break;
             }
         }
@@ -73,7 +73,7 @@ namespace {
 
 namespace ProtocolBody {
     class NoNextHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ProtocolBody $_parent = null, \ProtocolBody $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ProtocolBody $_parent = null, ?\ProtocolBody $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -85,7 +85,7 @@ namespace ProtocolBody {
 
 namespace ProtocolBody {
     class OptionHopByHop extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ProtocolBody $_parent = null, \ProtocolBody $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ProtocolBody $_parent = null, ?\ProtocolBody $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -93,8 +93,8 @@ namespace ProtocolBody {
         private function _read() {
             $this->_m_nextHeaderType = $this->_io->readU1();
             $this->_m_hdrExtLen = $this->_io->readU1();
-            $this->_m_body = $this->_io->readBytes(($this->hdrExtLen() > 0 ? ($this->hdrExtLen() - 1) : 1));
-            $this->_m_nextHeader = new \ProtocolBody($this->nextHeaderType(), $this->_io);
+            $this->_m_body = $this->_io->readBytes(($this->hdrExtLen() > 0 ? $this->hdrExtLen() - 1 : 1));
+            $this->_m_nextHeader = new \ProtocolBody($this->nextHeaderType(), $this->_io, $this, $this->_root);
         }
         protected $_m_nextHeaderType;
         protected $_m_hdrExtLen;
@@ -253,5 +253,11 @@ namespace ProtocolBody {
         const WESP = 141;
         const ROHC = 142;
         const RESERVED_255 = 255;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 34 => true, 35 => true, 36 => true, 37 => true, 38 => true, 39 => true, 40 => true, 41 => true, 42 => true, 43 => true, 44 => true, 45 => true, 46 => true, 47 => true, 48 => true, 49 => true, 50 => true, 51 => true, 52 => true, 53 => true, 54 => true, 55 => true, 56 => true, 57 => true, 58 => true, 59 => true, 60 => true, 61 => true, 62 => true, 63 => true, 64 => true, 65 => true, 66 => true, 67 => true, 68 => true, 69 => true, 70 => true, 71 => true, 72 => true, 73 => true, 74 => true, 75 => true, 76 => true, 77 => true, 78 => true, 79 => true, 80 => true, 81 => true, 82 => true, 83 => true, 84 => true, 85 => true, 86 => true, 87 => true, 88 => true, 89 => true, 90 => true, 91 => true, 92 => true, 93 => true, 94 => true, 95 => true, 96 => true, 97 => true, 98 => true, 99 => true, 100 => true, 101 => true, 102 => true, 103 => true, 104 => true, 105 => true, 106 => true, 107 => true, 108 => true, 109 => true, 110 => true, 111 => true, 112 => true, 113 => true, 114 => true, 115 => true, 116 => true, 117 => true, 118 => true, 119 => true, 120 => true, 121 => true, 122 => true, 123 => true, 124 => true, 125 => true, 126 => true, 127 => true, 128 => true, 129 => true, 130 => true, 131 => true, 132 => true, 133 => true, 134 => true, 135 => true, 136 => true, 137 => true, 138 => true, 139 => true, 140 => true, 141 => true, 142 => true, 255 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

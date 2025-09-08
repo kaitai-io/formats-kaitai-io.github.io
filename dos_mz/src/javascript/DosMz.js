@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.DosMz = factory(root.KaitaiStream);
+    factory(root.DosMz || (root.DosMz = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (DosMz_, KaitaiStream) {
 /**
  * DOS MZ file format is a traditional format for executables in MS-DOS
  * environment. Many modern formats (i.e. Windows PE) still maintain
@@ -38,19 +38,19 @@ var DosMz = (function() {
     function ExeHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     ExeHeader.prototype._read = function() {
       this.mz = new MzHeader(this._io, this, this._root);
-      this.restOfHeader = this._io.readBytes((this.mz.lenHeader - 28));
+      this.restOfHeader = this._io.readBytes(this.mz.lenHeader - 28);
     }
     Object.defineProperty(ExeHeader.prototype, 'lenBody', {
       get: function() {
         if (this._m_lenBody !== undefined)
           return this._m_lenBody;
-        this._m_lenBody = ((this.mz.lastPageExtraBytes == 0 ? (this.mz.numPages * 512) : (((this.mz.numPages - 1) * 512) + this.mz.lastPageExtraBytes)) - this.mz.lenHeader);
+        this._m_lenBody = (this.mz.lastPageExtraBytes == 0 ? this.mz.numPages * 512 : (this.mz.numPages - 1) * 512 + this.mz.lastPageExtraBytes) - this.mz.lenHeader;
         return this._m_lenBody;
       }
     });
@@ -62,7 +62,7 @@ var DosMz = (function() {
     function MzHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -89,7 +89,7 @@ var DosMz = (function() {
       get: function() {
         if (this._m_lenHeader !== undefined)
           return this._m_lenHeader;
-        this._m_lenHeader = (this.headerSize * 16);
+        this._m_lenHeader = this.headerSize * 16;
         return this._m_lenHeader;
       }
     });
@@ -101,7 +101,7 @@ var DosMz = (function() {
     function Relocation(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -132,5 +132,5 @@ var DosMz = (function() {
 
   return DosMz;
 })();
-return DosMz;
-}));
+DosMz_.DosMz = DosMz;
+});

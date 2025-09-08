@@ -18,14 +18,18 @@ type NtMdtPal struct {
 	Tables []*NtMdtPal_ColTable
 	_io *kaitai.Stream
 	_root *NtMdtPal
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewNtMdtPal() *NtMdtPal {
 	return &NtMdtPal{
 	}
 }
 
-func (this *NtMdtPal) Read(io *kaitai.Stream, parent interface{}, root *NtMdtPal) (err error) {
+func (this NtMdtPal) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *NtMdtPal) Read(io *kaitai.Stream, parent kaitai.Struct, root *NtMdtPal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -70,6 +74,113 @@ func (this *NtMdtPal) Read(io *kaitai.Stream, parent interface{}, root *NtMdtPal
 	}
 	return err
 }
+type NtMdtPal_ColTable struct {
+	Size1 uint8
+	Unkn uint8
+	Title string
+	Unkn1 uint16
+	Colors []*NtMdtPal_Color
+	Index uint16
+	_io *kaitai.Stream
+	_root *NtMdtPal
+	_parent *NtMdtPal
+}
+func NewNtMdtPal_ColTable(index uint16) *NtMdtPal_ColTable {
+	return &NtMdtPal_ColTable{
+		Index: index,
+	}
+}
+
+func (this NtMdtPal_ColTable) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *NtMdtPal_ColTable) Read(io *kaitai.Stream, parent *NtMdtPal, root *NtMdtPal) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp6, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Size1 = tmp6
+	tmp7, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Unkn = tmp7
+	tmp8, err := this._io.ReadBytes(int(this._root.Meta[this.Index].NameSize))
+	if err != nil {
+		return err
+	}
+	tmp8 = tmp8
+	tmp9, err := kaitai.BytesToStr(tmp8, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
+	if err != nil {
+		return err
+	}
+	this.Title = tmp9
+	tmp10, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Unkn1 = uint16(tmp10)
+	for i := 0; i < int(this._root.Meta[this.Index].ColorsCount - 1); i++ {
+		_ = i
+		tmp11 := NewNtMdtPal_Color()
+		err = tmp11.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Colors = append(this.Colors, tmp11)
+	}
+	return err
+}
+type NtMdtPal_Color struct {
+	Red uint8
+	Unkn uint8
+	Blue uint8
+	Green uint8
+	_io *kaitai.Stream
+	_root *NtMdtPal
+	_parent *NtMdtPal_ColTable
+}
+func NewNtMdtPal_Color() *NtMdtPal_Color {
+	return &NtMdtPal_Color{
+	}
+}
+
+func (this NtMdtPal_Color) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *NtMdtPal_Color) Read(io *kaitai.Stream, parent *NtMdtPal_ColTable, root *NtMdtPal) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp12, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Red = tmp12
+	tmp13, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Unkn = tmp13
+	tmp14, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Blue = tmp14
+	tmp15, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Green = tmp15
+	return err
+}
 type NtMdtPal_Meta struct {
 	Unkn00 []byte
 	Unkn01 []byte
@@ -89,63 +200,67 @@ func NewNtMdtPal_Meta() *NtMdtPal_Meta {
 	}
 }
 
+func (this NtMdtPal_Meta) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *NtMdtPal_Meta) Read(io *kaitai.Stream, parent *NtMdtPal, root *NtMdtPal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp6, err := this._io.ReadBytes(int(3))
+	tmp16, err := this._io.ReadBytes(int(3))
 	if err != nil {
 		return err
 	}
-	tmp6 = tmp6
-	this.Unkn00 = tmp6
-	tmp7, err := this._io.ReadBytes(int(2))
+	tmp16 = tmp16
+	this.Unkn00 = tmp16
+	tmp17, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp7 = tmp7
-	this.Unkn01 = tmp7
-	tmp8, err := this._io.ReadBytes(int(1))
+	tmp17 = tmp17
+	this.Unkn01 = tmp17
+	tmp18, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp8 = tmp8
-	this.Unkn02 = tmp8
-	tmp9, err := this._io.ReadBytes(int(1))
+	tmp18 = tmp18
+	this.Unkn02 = tmp18
+	tmp19, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp9 = tmp9
-	this.Unkn03 = tmp9
-	tmp10, err := this._io.ReadU2le()
+	tmp19 = tmp19
+	this.Unkn03 = tmp19
+	tmp20, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.ColorsCount = uint16(tmp10)
-	tmp11, err := this._io.ReadBytes(int(2))
+	this.ColorsCount = uint16(tmp20)
+	tmp21, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp11 = tmp11
-	this.Unkn10 = tmp11
-	tmp12, err := this._io.ReadBytes(int(1))
+	tmp21 = tmp21
+	this.Unkn10 = tmp21
+	tmp22, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp12 = tmp12
-	this.Unkn11 = tmp12
-	tmp13, err := this._io.ReadBytes(int(2))
+	tmp22 = tmp22
+	this.Unkn11 = tmp22
+	tmp23, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp13 = tmp13
-	this.Unkn12 = tmp13
-	tmp14, err := this._io.ReadU2be()
+	tmp23 = tmp23
+	this.Unkn12 = tmp23
+	tmp24, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.NameSize = uint16(tmp14)
+	this.NameSize = uint16(tmp24)
 	return err
 }
 
@@ -168,102 +283,3 @@ func (this *NtMdtPal_Meta) Read(io *kaitai.Stream, parent *NtMdtPal, root *NtMdt
 /**
  * usually 0s
  */
-type NtMdtPal_Color struct {
-	Red uint8
-	Unkn uint8
-	Blue uint8
-	Green uint8
-	_io *kaitai.Stream
-	_root *NtMdtPal
-	_parent *NtMdtPal_ColTable
-}
-func NewNtMdtPal_Color() *NtMdtPal_Color {
-	return &NtMdtPal_Color{
-	}
-}
-
-func (this *NtMdtPal_Color) Read(io *kaitai.Stream, parent *NtMdtPal_ColTable, root *NtMdtPal) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp15, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Red = tmp15
-	tmp16, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Unkn = tmp16
-	tmp17, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Blue = tmp17
-	tmp18, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Green = tmp18
-	return err
-}
-type NtMdtPal_ColTable struct {
-	Size1 uint8
-	Unkn uint8
-	Title string
-	Unkn1 uint16
-	Colors []*NtMdtPal_Color
-	Index uint16
-	_io *kaitai.Stream
-	_root *NtMdtPal
-	_parent *NtMdtPal
-}
-func NewNtMdtPal_ColTable(index uint16) *NtMdtPal_ColTable {
-	return &NtMdtPal_ColTable{
-		Index: index,
-	}
-}
-
-func (this *NtMdtPal_ColTable) Read(io *kaitai.Stream, parent *NtMdtPal, root *NtMdtPal) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp19, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Size1 = tmp19
-	tmp20, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Unkn = tmp20
-	tmp21, err := this._io.ReadBytes(int(this._root.Meta[this.Index].NameSize))
-	if err != nil {
-		return err
-	}
-	tmp21 = tmp21
-	tmp22, err := kaitai.BytesToStr(tmp21, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
-	if err != nil {
-		return err
-	}
-	this.Title = tmp22
-	tmp23, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Unkn1 = uint16(tmp23)
-	for i := 0; i < int((this._root.Meta[this.Index].ColorsCount - 1)); i++ {
-		_ = i
-		tmp24 := NewNtMdtPal_Color()
-		err = tmp24.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Colors = append(this.Colors, tmp24)
-	}
-	return err
-}

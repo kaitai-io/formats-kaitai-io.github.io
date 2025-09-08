@@ -11,7 +11,7 @@ digraph {
 		</TABLE>>];
 		tsm__inst__index [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="index_pos">(_io.size - 8)</TD><TD PORT="index_size">8</TD><TD>Index</TD><TD PORT="index_type">index</TD></TR>
+			<TR><TD PORT="index_pos">_io.size - 8</TD><TD PORT="index_size">8</TD><TD>Index</TD><TD PORT="index_type">index</TD></TR>
 		</TABLE>>];
 		subgraph cluster__header {
 			label="Tsm::Header";
@@ -19,7 +19,7 @@ digraph {
 
 			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>16 D1 16 D1</TD><TD PORT="magic_type">magic</TD></TR>
 				<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
 			</TABLE>>];
 		}
@@ -34,7 +34,7 @@ digraph {
 			index__inst__entries [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="entries_pos">offset</TD><TD PORT="entries_size">...</TD><TD>IndexHeader</TD><TD PORT="entries_type">entries</TD></TR>
-				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat until _io.pos == (_io.size - 8)</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat until _io.pos == _io.size - 8</TD></TR>
 			</TABLE>>];
 			subgraph cluster__index_header {
 				label="Tsm::Index::IndexHeader";
@@ -71,7 +71,7 @@ digraph {
 						block_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 							<TR><TD PORT="crc32_pos">0</TD><TD PORT="crc32_size">4</TD><TD>u4be</TD><TD PORT="crc32_type">crc32</TD></TR>
-							<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">(_parent.block_size - 4)</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+							<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">_parent.block_size - 4</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 						</TABLE>>];
 					}
 				}

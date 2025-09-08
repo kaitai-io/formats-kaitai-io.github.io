@@ -35,21 +35,12 @@ sd_entry__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">1</TD><TD>u1→EntryTypes</TD><TD PORT="type_type">type</TD></TR>
 					<TR><TD PORT="index_first_options_pos">1</TD><TD PORT="index_first_options_size">1</TD><TD>u1</TD><TD PORT="index_first_options_type">index_first_options</TD></TR>
 					<TR><TD PORT="index_second_options_pos">2</TD><TD PORT="index_second_options_size">1</TD><TD>u1</TD><TD PORT="index_second_options_type">index_second_options</TD></TR>
-					<TR><TD PORT="number_first_options_pos">3</TD><TD PORT="number_first_options_size">4b</TD><TD>b4</TD><TD PORT="number_first_options_type">number_first_options</TD></TR>
-					<TR><TD PORT="number_second_options_pos">3:4</TD><TD PORT="number_second_options_size">4b</TD><TD>b4</TD><TD PORT="number_second_options_type">number_second_options</TD></TR>
+					<TR><TD PORT="number_first_options_pos">3</TD><TD PORT="number_first_options_size">4b</TD><TD>b4be</TD><TD PORT="number_first_options_type">number_first_options</TD></TR>
+					<TR><TD PORT="number_second_options_pos">3:4</TD><TD PORT="number_second_options_size">4b</TD><TD>b4be</TD><TD PORT="number_second_options_type">number_second_options</TD></TR>
 					<TR><TD PORT="service_id_pos">4</TD><TD PORT="service_id_size">2</TD><TD>u2be</TD><TD PORT="service_id_type">service_id</TD></TR>
 					<TR><TD PORT="instance_id_pos">6</TD><TD PORT="instance_id_size">2</TD><TD>u2be</TD><TD PORT="instance_id_type">instance_id</TD></TR>
 					<TR><TD PORT="major_version_pos">8</TD><TD PORT="major_version_size">1</TD><TD>u1</TD><TD PORT="major_version_type">major_version</TD></TR>
-					<TR><TD PORT="ttl_pos">9</TD><TD PORT="ttl_size">3</TD><TD>b24</TD><TD PORT="ttl_type">ttl</TD></TR>
-				</TABLE>>];
-			}
-			subgraph cluster__sd_service_entry {
-				label="SomeIpSdEntries::SdEntry::SdServiceEntry";
-				graph[style=dotted];
-
-				sd_service_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="minor_version_pos">0</TD><TD PORT="minor_version_size">4</TD><TD>u4be</TD><TD PORT="minor_version_type">minor_version</TD></TR>
+					<TR><TD PORT="ttl_pos">9</TD><TD PORT="ttl_size">3</TD><TD>b24be</TD><TD PORT="ttl_type">ttl</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__sd_eventgroup_entry {
@@ -59,10 +50,19 @@ sd_entry__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 				sd_eventgroup_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
-					<TR><TD PORT="initial_data_requested_pos">1</TD><TD PORT="initial_data_requested_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="initial_data_requested_type">initial_data_requested</TD></TR>
-					<TR><TD PORT="reserved2_pos">1:1</TD><TD PORT="reserved2_size">3b</TD><TD>b3</TD><TD PORT="reserved2_type">reserved2</TD></TR>
-					<TR><TD PORT="counter_pos">1:4</TD><TD PORT="counter_size">4b</TD><TD>b4</TD><TD PORT="counter_type">counter</TD></TR>
+					<TR><TD PORT="initial_data_requested_pos">1</TD><TD PORT="initial_data_requested_size">1b</TD><TD>b1be→bool</TD><TD PORT="initial_data_requested_type">initial_data_requested</TD></TR>
+					<TR><TD PORT="reserved2_pos">1:1</TD><TD PORT="reserved2_size">3b</TD><TD>b3be</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+					<TR><TD PORT="counter_pos">1:4</TD><TD PORT="counter_size">4b</TD><TD>b4be</TD><TD PORT="counter_type">counter</TD></TR>
 					<TR><TD PORT="event_group_id_pos">2</TD><TD PORT="event_group_id_size">2</TD><TD>u2be</TD><TD PORT="event_group_id_type">event_group_id</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__sd_service_entry {
+				label="SomeIpSdEntries::SdEntry::SdServiceEntry";
+				graph[style=dotted];
+
+				sd_service_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="minor_version_pos">0</TD><TD PORT="minor_version_size">4</TD><TD>u4be</TD><TD PORT="minor_version_type">minor_version</TD></TR>
 				</TABLE>>];
 			}
 		}

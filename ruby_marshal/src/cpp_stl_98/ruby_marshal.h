@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class ruby_marshal_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -38,16 +41,16 @@
 class ruby_marshal_t : public kaitai::kstruct {
 
 public:
-    class ruby_array_t;
     class bignum_t;
-    class ruby_struct_t;
-    class ruby_symbol_t;
+    class instance_var_t;
     class packed_int_t;
     class pair_t;
-    class instance_var_t;
     class record_t;
+    class ruby_array_t;
     class ruby_hash_t;
     class ruby_string_t;
+    class ruby_struct_t;
+    class ruby_symbol_t;
 
     enum codes_t {
         CODES_RUBY_STRING = 34,
@@ -64,6 +67,13 @@ public:
         CODES_BIGNUM = 108,
         CODES_RUBY_HASH = 123
     };
+    static bool _is_defined_codes_t(codes_t v);
+
+private:
+    static const std::set<codes_t> _values_codes_t;
+    static std::set<codes_t> _build_values_codes_t();
+
+public:
 
     ruby_marshal_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ruby_marshal_t* p__root = 0);
 
@@ -73,32 +83,6 @@ private:
 
 public:
     ~ruby_marshal_t();
-
-    class ruby_array_t : public kaitai::kstruct {
-
-    public:
-
-        ruby_array_t(kaitai::kstream* p__io, ruby_marshal_t::record_t* p__parent = 0, ruby_marshal_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~ruby_array_t();
-
-    private:
-        packed_int_t* m_num_elements;
-        std::vector<record_t*>* m_elements;
-        ruby_marshal_t* m__root;
-        ruby_marshal_t::record_t* m__parent;
-
-    public:
-        packed_int_t* num_elements() const { return m_num_elements; }
-        std::vector<record_t*>* elements() const { return m_elements; }
-        ruby_marshal_t* _root() const { return m__root; }
-        ruby_marshal_t::record_t* _parent() const { return m__parent; }
-    };
 
     /**
      * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum Source
@@ -145,71 +129,33 @@ public:
     };
 
     /**
-     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct Source
+     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables Source
      */
 
-    class ruby_struct_t : public kaitai::kstruct {
+    class instance_var_t : public kaitai::kstruct {
 
     public:
 
-        ruby_struct_t(kaitai::kstream* p__io, ruby_marshal_t::record_t* p__parent = 0, ruby_marshal_t* p__root = 0);
+        instance_var_t(kaitai::kstream* p__io, ruby_marshal_t::record_t* p__parent = 0, ruby_marshal_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~ruby_struct_t();
+        ~instance_var_t();
 
     private:
-        record_t* m_name;
-        packed_int_t* m_num_members;
-        std::vector<pair_t*>* m_members;
+        record_t* m_obj;
+        packed_int_t* m_num_vars;
+        std::vector<pair_t*>* m_vars;
         ruby_marshal_t* m__root;
         ruby_marshal_t::record_t* m__parent;
 
     public:
-
-        /**
-         * Symbol containing the name of the struct.
-         */
-        record_t* name() const { return m_name; }
-
-        /**
-         * Number of members in a struct
-         */
-        packed_int_t* num_members() const { return m_num_members; }
-        std::vector<pair_t*>* members() const { return m_members; }
-        ruby_marshal_t* _root() const { return m__root; }
-        ruby_marshal_t::record_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence Source
-     */
-
-    class ruby_symbol_t : public kaitai::kstruct {
-
-    public:
-
-        ruby_symbol_t(kaitai::kstream* p__io, ruby_marshal_t::record_t* p__parent = 0, ruby_marshal_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~ruby_symbol_t();
-
-    private:
-        packed_int_t* m_len;
-        std::string m_name;
-        ruby_marshal_t* m__root;
-        ruby_marshal_t::record_t* m__parent;
-
-    public:
-        packed_int_t* len() const { return m_len; }
-        std::string name() const { return m_name; }
+        record_t* obj() const { return m_obj; }
+        packed_int_t* num_vars() const { return m_num_vars; }
+        std::vector<pair_t*>* vars() const { return m_vars; }
         ruby_marshal_t* _root() const { return m__root; }
         ruby_marshal_t::record_t* _parent() const { return m__parent; }
     };
@@ -329,38 +275,6 @@ public:
     };
 
     /**
-     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables Source
-     */
-
-    class instance_var_t : public kaitai::kstruct {
-
-    public:
-
-        instance_var_t(kaitai::kstream* p__io, ruby_marshal_t::record_t* p__parent = 0, ruby_marshal_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~instance_var_t();
-
-    private:
-        record_t* m_obj;
-        packed_int_t* m_num_vars;
-        std::vector<pair_t*>* m_vars;
-        ruby_marshal_t* m__root;
-        ruby_marshal_t::record_t* m__parent;
-
-    public:
-        record_t* obj() const { return m_obj; }
-        packed_int_t* num_vars() const { return m_num_vars; }
-        std::vector<pair_t*>* vars() const { return m_vars; }
-        ruby_marshal_t* _root() const { return m__root; }
-        ruby_marshal_t::record_t* _parent() const { return m__parent; }
-    };
-
-    /**
      * Each record starts with a single byte that determines its type
      * (`code`) and contents. If necessary, additional info as parsed
      * as `body`, to be determined by `code`.
@@ -396,6 +310,32 @@ public:
         kaitai::kstruct* body() const { return m_body; }
         ruby_marshal_t* _root() const { return m__root; }
         kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class ruby_array_t : public kaitai::kstruct {
+
+    public:
+
+        ruby_array_t(kaitai::kstream* p__io, ruby_marshal_t::record_t* p__parent = 0, ruby_marshal_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~ruby_array_t();
+
+    private:
+        packed_int_t* m_num_elements;
+        std::vector<record_t*>* m_elements;
+        ruby_marshal_t* m__root;
+        ruby_marshal_t::record_t* m__parent;
+
+    public:
+        packed_int_t* num_elements() const { return m_num_elements; }
+        std::vector<record_t*>* elements() const { return m_elements; }
+        ruby_marshal_t* _root() const { return m__root; }
+        ruby_marshal_t::record_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -454,6 +394,76 @@ public:
     public:
         packed_int_t* len() const { return m_len; }
         std::string body() const { return m_body; }
+        ruby_marshal_t* _root() const { return m__root; }
+        ruby_marshal_t::record_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct Source
+     */
+
+    class ruby_struct_t : public kaitai::kstruct {
+
+    public:
+
+        ruby_struct_t(kaitai::kstream* p__io, ruby_marshal_t::record_t* p__parent = 0, ruby_marshal_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~ruby_struct_t();
+
+    private:
+        record_t* m_name;
+        packed_int_t* m_num_members;
+        std::vector<pair_t*>* m_members;
+        ruby_marshal_t* m__root;
+        ruby_marshal_t::record_t* m__parent;
+
+    public:
+
+        /**
+         * Symbol containing the name of the struct.
+         */
+        record_t* name() const { return m_name; }
+
+        /**
+         * Number of members in a struct
+         */
+        packed_int_t* num_members() const { return m_num_members; }
+        std::vector<pair_t*>* members() const { return m_members; }
+        ruby_marshal_t* _root() const { return m__root; }
+        ruby_marshal_t::record_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence Source
+     */
+
+    class ruby_symbol_t : public kaitai::kstruct {
+
+    public:
+
+        ruby_symbol_t(kaitai::kstream* p__io, ruby_marshal_t::record_t* p__parent = 0, ruby_marshal_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~ruby_symbol_t();
+
+    private:
+        packed_int_t* m_len;
+        std::string m_name;
+        ruby_marshal_t* m__root;
+        ruby_marshal_t::record_t* m__parent;
+
+    public:
+        packed_int_t* len() const { return m_len; }
+        std::string name() const { return m_name; }
         ruby_marshal_t* _root() const { return m__root; }
         ruby_marshal_t::record_t* _parent() const { return m__parent; }
     };

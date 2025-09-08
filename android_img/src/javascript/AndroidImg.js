@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AndroidImg = factory(root.KaitaiStream);
+    factory(root.AndroidImg || (root.AndroidImg = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AndroidImg_, KaitaiStream) {
 /**
  * @see {@link https://source.android.com/docs/core/architecture/bootloader/boot-image-header|Source}
  */
@@ -23,8 +23,8 @@ var AndroidImg = (function() {
   }
   AndroidImg.prototype._read = function() {
     this.magic = this._io.readBytes(8);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [65, 78, 68, 82, 79, 73, 68, 33]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([65, 78, 68, 82, 79, 73, 68, 33], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([65, 78, 68, 82, 79, 73, 68, 33])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([65, 78, 68, 82, 79, 73, 68, 33]), this.magic, this._io, "/seq/0");
     }
     this.kernel = new Load(this._io, this, this._root);
     this.ramdisk = new Load(this._io, this, this._root);
@@ -52,7 +52,7 @@ var AndroidImg = (function() {
     function Load(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -68,7 +68,7 @@ var AndroidImg = (function() {
     function LoadLong(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -80,11 +80,66 @@ var AndroidImg = (function() {
     return LoadLong;
   })();
 
+  var OsVersion = AndroidImg.OsVersion = (function() {
+    function OsVersion(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    OsVersion.prototype._read = function() {
+      this.version = this._io.readU4le();
+    }
+    Object.defineProperty(OsVersion.prototype, 'major', {
+      get: function() {
+        if (this._m_major !== undefined)
+          return this._m_major;
+        this._m_major = this.version >>> 25 & 127;
+        return this._m_major;
+      }
+    });
+    Object.defineProperty(OsVersion.prototype, 'minor', {
+      get: function() {
+        if (this._m_minor !== undefined)
+          return this._m_minor;
+        this._m_minor = this.version >>> 18 & 127;
+        return this._m_minor;
+      }
+    });
+    Object.defineProperty(OsVersion.prototype, 'month', {
+      get: function() {
+        if (this._m_month !== undefined)
+          return this._m_month;
+        this._m_month = this.version & 15;
+        return this._m_month;
+      }
+    });
+    Object.defineProperty(OsVersion.prototype, 'patch', {
+      get: function() {
+        if (this._m_patch !== undefined)
+          return this._m_patch;
+        this._m_patch = this.version >>> 11 & 127;
+        return this._m_patch;
+      }
+    });
+    Object.defineProperty(OsVersion.prototype, 'year', {
+      get: function() {
+        if (this._m_year !== undefined)
+          return this._m_year;
+        this._m_year = (this.version >>> 4 & 127) + 2000;
+        return this._m_year;
+      }
+    });
+
+    return OsVersion;
+  })();
+
   var SizeOffset = AndroidImg.SizeOffset = (function() {
     function SizeOffset(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -96,60 +151,44 @@ var AndroidImg = (function() {
     return SizeOffset;
   })();
 
-  var OsVersion = AndroidImg.OsVersion = (function() {
-    function OsVersion(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
+  /**
+   * base loading address
+   */
+  Object.defineProperty(AndroidImg.prototype, 'base', {
+    get: function() {
+      if (this._m_base !== undefined)
+        return this._m_base;
+      this._m_base = this.kernel.addr - 32768;
+      return this._m_base;
     }
-    OsVersion.prototype._read = function() {
-      this.version = this._io.readU4le();
+  });
+  Object.defineProperty(AndroidImg.prototype, 'dtbImg', {
+    get: function() {
+      if (this._m_dtbImg !== undefined)
+        return this._m_dtbImg;
+      if ( ((this.headerVersion > 1) && (this.dtb.size > 0)) ) {
+        var _pos = this._io.pos;
+        this._io.seek(Math.floor(((((((this.pageSize + this.kernel.size) + this.ramdisk.size) + this.second.size) + this.recoveryDtbo.size) + this.pageSize) - 1) / this.pageSize) * this.pageSize);
+        this._m_dtbImg = this._io.readBytes(this.dtb.size);
+        this._io.seek(_pos);
+      }
+      return this._m_dtbImg;
     }
-    Object.defineProperty(OsVersion.prototype, 'month', {
-      get: function() {
-        if (this._m_month !== undefined)
-          return this._m_month;
-        this._m_month = (this.version & 15);
-        return this._m_month;
-      }
-    });
-    Object.defineProperty(OsVersion.prototype, 'patch', {
-      get: function() {
-        if (this._m_patch !== undefined)
-          return this._m_patch;
-        this._m_patch = ((this.version >>> 11) & 127);
-        return this._m_patch;
-      }
-    });
-    Object.defineProperty(OsVersion.prototype, 'year', {
-      get: function() {
-        if (this._m_year !== undefined)
-          return this._m_year;
-        this._m_year = (((this.version >>> 4) & 127) + 2000);
-        return this._m_year;
-      }
-    });
-    Object.defineProperty(OsVersion.prototype, 'major', {
-      get: function() {
-        if (this._m_major !== undefined)
-          return this._m_major;
-        this._m_major = ((this.version >>> 25) & 127);
-        return this._m_major;
-      }
-    });
-    Object.defineProperty(OsVersion.prototype, 'minor', {
-      get: function() {
-        if (this._m_minor !== undefined)
-          return this._m_minor;
-        this._m_minor = ((this.version >>> 18) & 127);
-        return this._m_minor;
-      }
-    });
+  });
 
-    return OsVersion;
-  })();
+  /**
+   * dtb offset from base
+   */
+  Object.defineProperty(AndroidImg.prototype, 'dtbOffset', {
+    get: function() {
+      if (this._m_dtbOffset !== undefined)
+        return this._m_dtbOffset;
+      if (this.headerVersion > 1) {
+        this._m_dtbOffset = (this.dtb.addr > 0 ? this.dtb.addr - this.base : 0);
+      }
+      return this._m_dtbOffset;
+    }
+  });
   Object.defineProperty(AndroidImg.prototype, 'kernelImg', {
     get: function() {
       if (this._m_kernelImg !== undefined)
@@ -163,14 +202,27 @@ var AndroidImg = (function() {
   });
 
   /**
-   * tags offset from base
+   * kernel offset from base
    */
-  Object.defineProperty(AndroidImg.prototype, 'tagsOffset', {
+  Object.defineProperty(AndroidImg.prototype, 'kernelOffset', {
     get: function() {
-      if (this._m_tagsOffset !== undefined)
-        return this._m_tagsOffset;
-      this._m_tagsOffset = (this.tagsLoad - this.base);
-      return this._m_tagsOffset;
+      if (this._m_kernelOffset !== undefined)
+        return this._m_kernelOffset;
+      this._m_kernelOffset = this.kernel.addr - this.base;
+      return this._m_kernelOffset;
+    }
+  });
+  Object.defineProperty(AndroidImg.prototype, 'ramdiskImg', {
+    get: function() {
+      if (this._m_ramdiskImg !== undefined)
+        return this._m_ramdiskImg;
+      if (this.ramdisk.size > 0) {
+        var _pos = this._io.pos;
+        this._io.seek(Math.floor((((this.pageSize + this.kernel.size) + this.pageSize) - 1) / this.pageSize) * this.pageSize);
+        this._m_ramdiskImg = this._io.readBytes(this.ramdisk.size);
+        this._io.seek(_pos);
+      }
+      return this._m_ramdiskImg;
     }
   });
 
@@ -181,72 +233,8 @@ var AndroidImg = (function() {
     get: function() {
       if (this._m_ramdiskOffset !== undefined)
         return this._m_ramdiskOffset;
-      this._m_ramdiskOffset = (this.ramdisk.addr > 0 ? (this.ramdisk.addr - this.base) : 0);
+      this._m_ramdiskOffset = (this.ramdisk.addr > 0 ? this.ramdisk.addr - this.base : 0);
       return this._m_ramdiskOffset;
-    }
-  });
-
-  /**
-   * 2nd bootloader offset from base
-   */
-  Object.defineProperty(AndroidImg.prototype, 'secondOffset', {
-    get: function() {
-      if (this._m_secondOffset !== undefined)
-        return this._m_secondOffset;
-      this._m_secondOffset = (this.second.addr > 0 ? (this.second.addr - this.base) : 0);
-      return this._m_secondOffset;
-    }
-  });
-
-  /**
-   * kernel offset from base
-   */
-  Object.defineProperty(AndroidImg.prototype, 'kernelOffset', {
-    get: function() {
-      if (this._m_kernelOffset !== undefined)
-        return this._m_kernelOffset;
-      this._m_kernelOffset = (this.kernel.addr - this.base);
-      return this._m_kernelOffset;
-    }
-  });
-
-  /**
-   * dtb offset from base
-   */
-  Object.defineProperty(AndroidImg.prototype, 'dtbOffset', {
-    get: function() {
-      if (this._m_dtbOffset !== undefined)
-        return this._m_dtbOffset;
-      if (this.headerVersion > 1) {
-        this._m_dtbOffset = (this.dtb.addr > 0 ? (this.dtb.addr - this.base) : 0);
-      }
-      return this._m_dtbOffset;
-    }
-  });
-  Object.defineProperty(AndroidImg.prototype, 'dtbImg', {
-    get: function() {
-      if (this._m_dtbImg !== undefined)
-        return this._m_dtbImg;
-      if ( ((this.headerVersion > 1) && (this.dtb.size > 0)) ) {
-        var _pos = this._io.pos;
-        this._io.seek((Math.floor(((((((this.pageSize + this.kernel.size) + this.ramdisk.size) + this.second.size) + this.recoveryDtbo.size) + this.pageSize) - 1) / this.pageSize) * this.pageSize));
-        this._m_dtbImg = this._io.readBytes(this.dtb.size);
-        this._io.seek(_pos);
-      }
-      return this._m_dtbImg;
-    }
-  });
-  Object.defineProperty(AndroidImg.prototype, 'ramdiskImg', {
-    get: function() {
-      if (this._m_ramdiskImg !== undefined)
-        return this._m_ramdiskImg;
-      if (this.ramdisk.size > 0) {
-        var _pos = this._io.pos;
-        this._io.seek((Math.floor((((this.pageSize + this.kernel.size) + this.pageSize) - 1) / this.pageSize) * this.pageSize));
-        this._m_ramdiskImg = this._io.readBytes(this.ramdisk.size);
-        this._io.seek(_pos);
-      }
-      return this._m_ramdiskImg;
     }
   });
   Object.defineProperty(AndroidImg.prototype, 'recoveryDtboImg', {
@@ -268,7 +256,7 @@ var AndroidImg = (function() {
         return this._m_secondImg;
       if (this.second.size > 0) {
         var _pos = this._io.pos;
-        this._io.seek((Math.floor(((((this.pageSize + this.kernel.size) + this.ramdisk.size) + this.pageSize) - 1) / this.pageSize) * this.pageSize));
+        this._io.seek(Math.floor(((((this.pageSize + this.kernel.size) + this.ramdisk.size) + this.pageSize) - 1) / this.pageSize) * this.pageSize);
         this._m_secondImg = this._io.readBytes(this.second.size);
         this._io.seek(_pos);
       }
@@ -277,18 +265,30 @@ var AndroidImg = (function() {
   });
 
   /**
-   * base loading address
+   * 2nd bootloader offset from base
    */
-  Object.defineProperty(AndroidImg.prototype, 'base', {
+  Object.defineProperty(AndroidImg.prototype, 'secondOffset', {
     get: function() {
-      if (this._m_base !== undefined)
-        return this._m_base;
-      this._m_base = (this.kernel.addr - 32768);
-      return this._m_base;
+      if (this._m_secondOffset !== undefined)
+        return this._m_secondOffset;
+      this._m_secondOffset = (this.second.addr > 0 ? this.second.addr - this.base : 0);
+      return this._m_secondOffset;
+    }
+  });
+
+  /**
+   * tags offset from base
+   */
+  Object.defineProperty(AndroidImg.prototype, 'tagsOffset', {
+    get: function() {
+      if (this._m_tagsOffset !== undefined)
+        return this._m_tagsOffset;
+      this._m_tagsOffset = this.tagsLoad - this.base;
+      return this._m_tagsOffset;
     }
   });
 
   return AndroidImg;
 })();
-return AndroidImg;
-}));
+AndroidImg_.AndroidImg = AndroidImg;
+});

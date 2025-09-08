@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -32,6 +33,20 @@ public class Pcx extends KaitaiStruct {
         return new Pcx(new ByteBufferKaitaiStream(fileName));
     }
 
+    public enum Encodings {
+        RLE(1);
+
+        private final long id;
+        Encodings(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, Encodings> byId = new HashMap<Long, Encodings>(1);
+        static {
+            for (Encodings e : Encodings.values())
+                byId.put(e.id(), e);
+        }
+        public static Encodings byId(long id) { return byId.get(id); }
+    }
+
     public enum Versions {
         V2_5(0),
         V2_8_WITH_PALETTE(2),
@@ -50,20 +65,6 @@ public class Pcx extends KaitaiStruct {
         public static Versions byId(long id) { return byId.get(id); }
     }
 
-    public enum Encodings {
-        RLE(1);
-
-        private final long id;
-        Encodings(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, Encodings> byId = new HashMap<Long, Encodings>(1);
-        static {
-            for (Encodings e : Encodings.values())
-                byId.put(e.id(), e);
-        }
-        public static Encodings byId(long id) { return byId.get(id); }
-    }
-
     public Pcx(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -79,9 +80,16 @@ public class Pcx extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this._raw_hdr = this._io.readBytes(128);
-        KaitaiStream _io__raw_hdr = new ByteBufferKaitaiStream(_raw_hdr);
-        this.hdr = new Header(_io__raw_hdr, this, _root);
+        KaitaiStream _io_hdr = this._io.substream(128);
+        this.hdr = new Header(_io_hdr, this, _root);
+    }
+
+    public void _fetchInstances() {
+        this.hdr._fetchInstances();
+        palette256();
+        if (this.palette256 != null) {
+            this.palette256._fetchInstances();
+        }
     }
 
     /**
@@ -108,8 +116,8 @@ public class Pcx extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(1);
-            if (!(Arrays.equals(magic(), new byte[] { 10 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 10 }, magic(), _io(), "/types/header/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 10 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 10 }, this.magic, this._io, "/types/header/seq/0");
             }
             this.version = Pcx.Versions.byId(this._io.readU1());
             this.encoding = Pcx.Encodings.byId(this._io.readU1());
@@ -122,14 +130,17 @@ public class Pcx extends KaitaiStruct {
             this.vdpi = this._io.readU2le();
             this.palette16 = this._io.readBytes(48);
             this.reserved = this._io.readBytes(1);
-            if (!(Arrays.equals(reserved(), new byte[] { 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, reserved(), _io(), "/types/header/seq/11");
+            if (!(Arrays.equals(this.reserved, new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, this.reserved, this._io, "/types/header/seq/11");
             }
             this.numPlanes = this._io.readU1();
             this.bytesPerLine = this._io.readU2le();
             this.paletteInfo = this._io.readU2le();
             this.hScreenSize = this._io.readU2le();
             this.vScreenSize = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
         private Versions version;
@@ -178,44 +189,6 @@ public class Pcx extends KaitaiStruct {
         public Pcx _root() { return _root; }
         public Pcx _parent() { return _parent; }
     }
-    public static class TPalette256 extends KaitaiStruct {
-        public static TPalette256 fromFile(String fileName) throws IOException {
-            return new TPalette256(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public TPalette256(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public TPalette256(KaitaiStream _io, Pcx _parent) {
-            this(_io, _parent, null);
-        }
-
-        public TPalette256(KaitaiStream _io, Pcx _parent, Pcx _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic = this._io.readBytes(1);
-            if (!(Arrays.equals(magic(), new byte[] { 12 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 12 }, magic(), _io(), "/types/t_palette_256/seq/0");
-            }
-            this.colors = new ArrayList<Rgb>();
-            for (int i = 0; i < 256; i++) {
-                this.colors.add(new Rgb(this._io, this, _root));
-            }
-        }
-        private byte[] magic;
-        private ArrayList<Rgb> colors;
-        private Pcx _root;
-        private Pcx _parent;
-        public byte[] magic() { return magic; }
-        public ArrayList<Rgb> colors() { return colors; }
-        public Pcx _root() { return _root; }
-        public Pcx _parent() { return _parent; }
-    }
     public static class Rgb extends KaitaiStruct {
         public static Rgb fromFile(String fileName) throws IOException {
             return new Rgb(new ByteBufferKaitaiStream(fileName));
@@ -240,6 +213,9 @@ public class Pcx extends KaitaiStruct {
             this.g = this._io.readU1();
             this.b = this._io.readU1();
         }
+
+        public void _fetchInstances() {
+        }
         private int r;
         private int g;
         private int b;
@@ -251,6 +227,50 @@ public class Pcx extends KaitaiStruct {
         public Pcx _root() { return _root; }
         public Pcx.TPalette256 _parent() { return _parent; }
     }
+    public static class TPalette256 extends KaitaiStruct {
+        public static TPalette256 fromFile(String fileName) throws IOException {
+            return new TPalette256(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TPalette256(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TPalette256(KaitaiStream _io, Pcx _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TPalette256(KaitaiStream _io, Pcx _parent, Pcx _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(1);
+            if (!(Arrays.equals(this.magic, new byte[] { 12 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 12 }, this.magic, this._io, "/types/t_palette_256/seq/0");
+            }
+            this.colors = new ArrayList<Rgb>();
+            for (int i = 0; i < 256; i++) {
+                this.colors.add(new Rgb(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.colors.size(); i++) {
+                this.colors.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private byte[] magic;
+        private List<Rgb> colors;
+        private Pcx _root;
+        private Pcx _parent;
+        public byte[] magic() { return magic; }
+        public List<Rgb> colors() { return colors; }
+        public Pcx _root() { return _root; }
+        public Pcx _parent() { return _parent; }
+    }
     private TPalette256 palette256;
 
     /**
@@ -261,7 +281,7 @@ public class Pcx extends KaitaiStruct {
             return this.palette256;
         if ( ((hdr().version() == Versions.V3_0) && (hdr().bitsPerPixel() == 8) && (hdr().numPlanes() == 1)) ) {
             long _pos = this._io.pos();
-            this._io.seek((_io().size() - 769));
+            this._io.seek(_io().size() - 769);
             this.palette256 = new TPalette256(this._io, this, _root);
             this._io.seek(_pos);
         }
@@ -270,9 +290,7 @@ public class Pcx extends KaitaiStruct {
     private Header hdr;
     private Pcx _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_hdr;
     public Header hdr() { return hdr; }
     public Pcx _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_hdr() { return _raw_hdr; }
 }

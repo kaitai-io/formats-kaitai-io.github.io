@@ -15,23 +15,23 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_ofsDir = false;
             f_files = false;
+            f_ofsDir = false;
             _read();
         }
         private void _read()
         {
             _magic = m_io.ReadBytes(8);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 71, 84, 70, 83, 0, 0, 0, 0 }, _magic, m_io, "/seq/0");
             }
             _numFiles = m_io.ReadU2le();
             _numEntries = m_io.ReadU2le();
             _reserved = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_reserved, new byte[] { 0, 0, 0, 0 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, Reserved, M_Io, "/seq/3");
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, _reserved, m_io, "/seq/3");
             }
             _offsets = new List<uint>();
             for (var i = 0; i < NumFiles; i++)
@@ -50,10 +50,10 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_size = false;
                 f_body = false;
                 f_isDir = false;
                 f_isLastEntry = false;
+                f_size = false;
                 _read();
             }
             private void _read()
@@ -63,19 +63,6 @@ namespace Kaitai
                 _flags = m_io.ReadU1();
                 _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(25), 0), 0, false));
             }
-            private bool f_size;
-            private int _size;
-            public int Size
-            {
-                get
-                {
-                    if (f_size)
-                        return _size;
-                    _size = (int) (((M_Root.Offsets[(OffsetIdx + 1)] & 4294965248) - M_Root.Offsets[OffsetIdx]));
-                    f_size = true;
-                    return _size;
-                }
-            }
             private bool f_body;
             private byte[] _body;
             public byte[] Body
@@ -84,12 +71,12 @@ namespace Kaitai
                 {
                     if (f_body)
                         return _body;
+                    f_body = true;
                     if (!(IsDir)) {
                         long _pos = m_io.Pos;
-                        m_io.Seek((M_Root.Offsets[OffsetIdx] & 4294965248));
+                        m_io.Seek(M_Root.Offsets[OffsetIdx] & 4294965248);
                         _body = m_io.ReadBytes(Size);
                         m_io.Seek(_pos);
-                        f_body = true;
                     }
                     return _body;
                 }
@@ -102,8 +89,8 @@ namespace Kaitai
                 {
                     if (f_isDir)
                         return _isDir;
-                    _isDir = (bool) ((Flags & 1) != 0);
                     f_isDir = true;
+                    _isDir = (bool) ((Flags & 1) != 0);
                     return _isDir;
                 }
             }
@@ -115,9 +102,22 @@ namespace Kaitai
                 {
                     if (f_isLastEntry)
                         return _isLastEntry;
-                    _isLastEntry = (bool) ((Flags & 128) != 0);
                     f_isLastEntry = true;
+                    _isLastEntry = (bool) ((Flags & 128) != 0);
                     return _isLastEntry;
+                }
+            }
+            private bool f_size;
+            private int _size;
+            public int Size
+            {
+                get
+                {
+                    if (f_size)
+                        return _size;
+                    f_size = true;
+                    _size = (int) ((M_Root.Offsets[OffsetIdx + 1] & 4294965248) - M_Root.Offsets[OffsetIdx]);
+                    return _size;
                 }
             }
             private uint _timestamp;
@@ -133,19 +133,6 @@ namespace Kaitai
             public GranTurismoVol M_Root { get { return m_root; } }
             public GranTurismoVol M_Parent { get { return m_parent; } }
         }
-        private bool f_ofsDir;
-        private uint _ofsDir;
-        public uint OfsDir
-        {
-            get
-            {
-                if (f_ofsDir)
-                    return _ofsDir;
-                _ofsDir = (uint) (Offsets[1]);
-                f_ofsDir = true;
-                return _ofsDir;
-            }
-        }
         private bool f_files;
         private List<FileInfo> _files;
         public List<FileInfo> Files
@@ -154,16 +141,29 @@ namespace Kaitai
             {
                 if (f_files)
                     return _files;
+                f_files = true;
                 long _pos = m_io.Pos;
-                m_io.Seek((OfsDir & 4294965248));
+                m_io.Seek(OfsDir & 4294965248);
                 _files = new List<FileInfo>();
                 for (var i = 0; i < M_Root.NumEntries; i++)
                 {
                     _files.Add(new FileInfo(m_io, this, m_root));
                 }
                 m_io.Seek(_pos);
-                f_files = true;
                 return _files;
+            }
+        }
+        private bool f_ofsDir;
+        private uint _ofsDir;
+        public uint OfsDir
+        {
+            get
+            {
+                if (f_ofsDir)
+                    return _ofsDir;
+                f_ofsDir = true;
+                _ofsDir = (uint) (Offsets[1]);
+                return _ofsDir;
             }
         }
         private byte[] _magic;

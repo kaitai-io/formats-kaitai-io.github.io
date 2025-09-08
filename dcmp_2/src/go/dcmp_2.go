@@ -31,20 +31,20 @@ import (
  */
 type Dcmp2 struct {
 	CustomLookupTable [][]byte
-	Data interface{}
+	Data kaitai.Struct
 	LastByte []byte
 	LenDecompressed uint32
 	HeaderParametersWithIo *BytesWithIo
 	_io *kaitai.Stream
 	_root *Dcmp2
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Data []byte
+	_f_defaultLookupTable bool
+	defaultLookupTable [][]byte
 	_f_headerParameters bool
 	headerParameters *Dcmp2_HeaderParameters
 	_f_isLenDecompressedOdd bool
 	isLenDecompressedOdd bool
-	_f_defaultLookupTable bool
-	defaultLookupTable [][]byte
 	_f_lookupTable bool
 	lookupTable [][]byte
 }
@@ -55,7 +55,11 @@ func NewDcmp2(lenDecompressed uint32, headerParametersWithIo *BytesWithIo) *Dcmp
 	}
 }
 
-func (this *Dcmp2) Read(io *kaitai.Stream, parent interface{}, root *Dcmp2) (err error) {
+func (this Dcmp2) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dcmp2) Read(io *kaitai.Stream, parent kaitai.Struct, root *Dcmp2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -107,7 +111,7 @@ func (this *Dcmp2) Read(io *kaitai.Stream, parent interface{}, root *Dcmp2) (err
 		} else {
 			tmp8 = 0
 		}
-		tmp10, err := this._io.ReadBytes(int(((tmp6 - tmp7) - tmp8)))
+		tmp10, err := this._io.ReadBytes(int((tmp6 - tmp7) - tmp8))
 		if err != nil {
 			return err
 		}
@@ -139,7 +143,7 @@ func (this *Dcmp2) Read(io *kaitai.Stream, parent interface{}, root *Dcmp2) (err
 		} else {
 			tmp14 = 0
 		}
-		tmp16, err := this._io.ReadBytes(int(((tmp12 - tmp13) - tmp14)))
+		tmp16, err := this._io.ReadBytes(int((tmp12 - tmp13) - tmp14))
 		if err != nil {
 			return err
 		}
@@ -169,12 +173,26 @@ func (this *Dcmp2) Read(io *kaitai.Stream, parent interface{}, root *Dcmp2) (err
 }
 
 /**
+ * The default lookup table,
+ * which is used if no custom lookup table is included with the compressed data.
+ */
+func (this *Dcmp2) DefaultLookupTable() (v [][]byte, err error) {
+	if (this._f_defaultLookupTable) {
+		return this.defaultLookupTable, nil
+	}
+	this._f_defaultLookupTable = true
+	this.defaultLookupTable = [][]byte([][]byte{[]uint8{0, 0}, []uint8{0, 8}, []uint8{78, 186}, []uint8{32, 110}, []uint8{78, 117}, []uint8{0, 12}, []uint8{0, 4}, []uint8{112, 0}, []uint8{0, 16}, []uint8{0, 2}, []uint8{72, 110}, []uint8{255, 252}, []uint8{96, 0}, []uint8{0, 1}, []uint8{72, 231}, []uint8{47, 46}, []uint8{78, 86}, []uint8{0, 6}, []uint8{78, 94}, []uint8{47, 0}, []uint8{97, 0}, []uint8{255, 248}, []uint8{47, 11}, []uint8{255, 255}, []uint8{0, 20}, []uint8{0, 10}, []uint8{0, 24}, []uint8{32, 95}, []uint8{0, 14}, []uint8{32, 80}, []uint8{63, 60}, []uint8{255, 244}, []uint8{76, 238}, []uint8{48, 46}, []uint8{103, 0}, []uint8{76, 223}, []uint8{38, 110}, []uint8{0, 18}, []uint8{0, 28}, []uint8{66, 103}, []uint8{255, 240}, []uint8{48, 60}, []uint8{47, 12}, []uint8{0, 3}, []uint8{78, 208}, []uint8{0, 32}, []uint8{112, 1}, []uint8{0, 22}, []uint8{45, 64}, []uint8{72, 192}, []uint8{32, 120}, []uint8{114, 0}, []uint8{88, 143}, []uint8{102, 0}, []uint8{79, 239}, []uint8{66, 167}, []uint8{103, 6}, []uint8{255, 250}, []uint8{85, 143}, []uint8{40, 110}, []uint8{63, 0}, []uint8{255, 254}, []uint8{47, 60}, []uint8{103, 4}, []uint8{89, 143}, []uint8{32, 107}, []uint8{0, 36}, []uint8{32, 31}, []uint8{65, 250}, []uint8{129, 225}, []uint8{102, 4}, []uint8{103, 8}, []uint8{0, 26}, []uint8{78, 185}, []uint8{80, 143}, []uint8{32, 46}, []uint8{0, 7}, []uint8{78, 176}, []uint8{255, 242}, []uint8{61, 64}, []uint8{0, 30}, []uint8{32, 104}, []uint8{102, 6}, []uint8{255, 246}, []uint8{78, 249}, []uint8{8, 0}, []uint8{12, 64}, []uint8{61, 124}, []uint8{255, 236}, []uint8{0, 5}, []uint8{32, 60}, []uint8{255, 232}, []uint8{222, 252}, []uint8{74, 46}, []uint8{0, 48}, []uint8{0, 40}, []uint8{47, 8}, []uint8{32, 11}, []uint8{96, 2}, []uint8{66, 110}, []uint8{45, 72}, []uint8{32, 83}, []uint8{32, 64}, []uint8{24, 0}, []uint8{96, 4}, []uint8{65, 238}, []uint8{47, 40}, []uint8{47, 1}, []uint8{103, 10}, []uint8{72, 64}, []uint8{32, 7}, []uint8{102, 8}, []uint8{1, 24}, []uint8{47, 7}, []uint8{48, 40}, []uint8{63, 46}, []uint8{48, 43}, []uint8{34, 110}, []uint8{47, 43}, []uint8{0, 44}, []uint8{103, 12}, []uint8{34, 95}, []uint8{96, 6}, []uint8{0, 255}, []uint8{48, 7}, []uint8{255, 238}, []uint8{83, 64}, []uint8{0, 64}, []uint8{255, 228}, []uint8{74, 64}, []uint8{102, 10}, []uint8{0, 15}, []uint8{78, 173}, []uint8{112, 255}, []uint8{34, 216}, []uint8{72, 107}, []uint8{0, 34}, []uint8{32, 75}, []uint8{103, 14}, []uint8{74, 174}, []uint8{78, 144}, []uint8{255, 224}, []uint8{255, 192}, []uint8{0, 42}, []uint8{39, 64}, []uint8{103, 2}, []uint8{81, 200}, []uint8{2, 182}, []uint8{72, 122}, []uint8{34, 120}, []uint8{176, 110}, []uint8{255, 230}, []uint8{0, 9}, []uint8{50, 46}, []uint8{62, 0}, []uint8{72, 65}, []uint8{255, 234}, []uint8{67, 238}, []uint8{78, 113}, []uint8{116, 0}, []uint8{47, 44}, []uint8{32, 108}, []uint8{0, 60}, []uint8{0, 38}, []uint8{0, 80}, []uint8{24, 128}, []uint8{48, 31}, []uint8{34, 0}, []uint8{102, 12}, []uint8{255, 218}, []uint8{0, 56}, []uint8{102, 2}, []uint8{48, 44}, []uint8{32, 12}, []uint8{45, 110}, []uint8{66, 64}, []uint8{255, 226}, []uint8{169, 240}, []uint8{255, 0}, []uint8{55, 124}, []uint8{229, 128}, []uint8{255, 220}, []uint8{72, 104}, []uint8{89, 79}, []uint8{0, 52}, []uint8{62, 31}, []uint8{96, 8}, []uint8{47, 6}, []uint8{255, 222}, []uint8{96, 10}, []uint8{112, 2}, []uint8{0, 50}, []uint8{255, 204}, []uint8{0, 128}, []uint8{34, 81}, []uint8{16, 31}, []uint8{49, 124}, []uint8{160, 41}, []uint8{255, 216}, []uint8{82, 64}, []uint8{1, 0}, []uint8{103, 16}, []uint8{160, 35}, []uint8{255, 206}, []uint8{255, 212}, []uint8{32, 6}, []uint8{72, 120}, []uint8{0, 46}, []uint8{80, 79}, []uint8{67, 250}, []uint8{103, 18}, []uint8{118, 0}, []uint8{65, 232}, []uint8{74, 110}, []uint8{32, 217}, []uint8{0, 90}, []uint8{127, 255}, []uint8{81, 202}, []uint8{0, 92}, []uint8{46, 0}, []uint8{2, 64}, []uint8{72, 199}, []uint8{103, 20}, []uint8{12, 128}, []uint8{46, 159}, []uint8{255, 214}, []uint8{128, 0}, []uint8{16, 0}, []uint8{72, 66}, []uint8{74, 107}, []uint8{255, 210}, []uint8{0, 72}, []uint8{74, 71}, []uint8{78, 209}, []uint8{32, 111}, []uint8{0, 65}, []uint8{96, 12}, []uint8{42, 120}, []uint8{66, 46}, []uint8{50, 0}, []uint8{101, 116}, []uint8{103, 22}, []uint8{0, 68}, []uint8{72, 109}, []uint8{32, 8}, []uint8{72, 108}, []uint8{11, 124}, []uint8{38, 64}, []uint8{4, 0}, []uint8{0, 104}, []uint8{32, 109}, []uint8{0, 13}, []uint8{42, 64}, []uint8{0, 11}, []uint8{0, 62}, []uint8{2, 32}})
+	return this.defaultLookupTable, nil
+}
+
+/**
  * The parsed decompressor-specific parameters from the compressed resource header.
  */
 func (this *Dcmp2) HeaderParameters() (v *Dcmp2_HeaderParameters, err error) {
 	if (this._f_headerParameters) {
 		return this.headerParameters, nil
 	}
+	this._f_headerParameters = true
 	thisIo := this.HeaderParametersWithIo._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -194,8 +212,6 @@ func (this *Dcmp2) HeaderParameters() (v *Dcmp2_HeaderParameters, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_headerParameters = true
-	this._f_headerParameters = true
 	return this.headerParameters, nil
 }
 
@@ -207,26 +223,13 @@ func (this *Dcmp2) IsLenDecompressedOdd() (v bool, err error) {
 	if (this._f_isLenDecompressedOdd) {
 		return this.isLenDecompressedOdd, nil
 	}
+	this._f_isLenDecompressedOdd = true
 	tmp21 := this.LenDecompressed % 2
 	if tmp21 < 0 {
 		tmp21 += 2
 	}
 	this.isLenDecompressedOdd = bool(tmp21 != 0)
-	this._f_isLenDecompressedOdd = true
 	return this.isLenDecompressedOdd, nil
-}
-
-/**
- * The default lookup table,
- * which is used if no custom lookup table is included with the compressed data.
- */
-func (this *Dcmp2) DefaultLookupTable() (v [][]byte, err error) {
-	if (this._f_defaultLookupTable) {
-		return this.defaultLookupTable, nil
-	}
-	this.defaultLookupTable = [][]byte([][]byte{[]uint8{0, 0}, []uint8{0, 8}, []uint8{78, 186}, []uint8{32, 110}, []uint8{78, 117}, []uint8{0, 12}, []uint8{0, 4}, []uint8{112, 0}, []uint8{0, 16}, []uint8{0, 2}, []uint8{72, 110}, []uint8{255, 252}, []uint8{96, 0}, []uint8{0, 1}, []uint8{72, 231}, []uint8{47, 46}, []uint8{78, 86}, []uint8{0, 6}, []uint8{78, 94}, []uint8{47, 0}, []uint8{97, 0}, []uint8{255, 248}, []uint8{47, 11}, []uint8{255, 255}, []uint8{0, 20}, []uint8{0, 10}, []uint8{0, 24}, []uint8{32, 95}, []uint8{0, 14}, []uint8{32, 80}, []uint8{63, 60}, []uint8{255, 244}, []uint8{76, 238}, []uint8{48, 46}, []uint8{103, 0}, []uint8{76, 223}, []uint8{38, 110}, []uint8{0, 18}, []uint8{0, 28}, []uint8{66, 103}, []uint8{255, 240}, []uint8{48, 60}, []uint8{47, 12}, []uint8{0, 3}, []uint8{78, 208}, []uint8{0, 32}, []uint8{112, 1}, []uint8{0, 22}, []uint8{45, 64}, []uint8{72, 192}, []uint8{32, 120}, []uint8{114, 0}, []uint8{88, 143}, []uint8{102, 0}, []uint8{79, 239}, []uint8{66, 167}, []uint8{103, 6}, []uint8{255, 250}, []uint8{85, 143}, []uint8{40, 110}, []uint8{63, 0}, []uint8{255, 254}, []uint8{47, 60}, []uint8{103, 4}, []uint8{89, 143}, []uint8{32, 107}, []uint8{0, 36}, []uint8{32, 31}, []uint8{65, 250}, []uint8{129, 225}, []uint8{102, 4}, []uint8{103, 8}, []uint8{0, 26}, []uint8{78, 185}, []uint8{80, 143}, []uint8{32, 46}, []uint8{0, 7}, []uint8{78, 176}, []uint8{255, 242}, []uint8{61, 64}, []uint8{0, 30}, []uint8{32, 104}, []uint8{102, 6}, []uint8{255, 246}, []uint8{78, 249}, []uint8{8, 0}, []uint8{12, 64}, []uint8{61, 124}, []uint8{255, 236}, []uint8{0, 5}, []uint8{32, 60}, []uint8{255, 232}, []uint8{222, 252}, []uint8{74, 46}, []uint8{0, 48}, []uint8{0, 40}, []uint8{47, 8}, []uint8{32, 11}, []uint8{96, 2}, []uint8{66, 110}, []uint8{45, 72}, []uint8{32, 83}, []uint8{32, 64}, []uint8{24, 0}, []uint8{96, 4}, []uint8{65, 238}, []uint8{47, 40}, []uint8{47, 1}, []uint8{103, 10}, []uint8{72, 64}, []uint8{32, 7}, []uint8{102, 8}, []uint8{1, 24}, []uint8{47, 7}, []uint8{48, 40}, []uint8{63, 46}, []uint8{48, 43}, []uint8{34, 110}, []uint8{47, 43}, []uint8{0, 44}, []uint8{103, 12}, []uint8{34, 95}, []uint8{96, 6}, []uint8{0, 255}, []uint8{48, 7}, []uint8{255, 238}, []uint8{83, 64}, []uint8{0, 64}, []uint8{255, 228}, []uint8{74, 64}, []uint8{102, 10}, []uint8{0, 15}, []uint8{78, 173}, []uint8{112, 255}, []uint8{34, 216}, []uint8{72, 107}, []uint8{0, 34}, []uint8{32, 75}, []uint8{103, 14}, []uint8{74, 174}, []uint8{78, 144}, []uint8{255, 224}, []uint8{255, 192}, []uint8{0, 42}, []uint8{39, 64}, []uint8{103, 2}, []uint8{81, 200}, []uint8{2, 182}, []uint8{72, 122}, []uint8{34, 120}, []uint8{176, 110}, []uint8{255, 230}, []uint8{0, 9}, []uint8{50, 46}, []uint8{62, 0}, []uint8{72, 65}, []uint8{255, 234}, []uint8{67, 238}, []uint8{78, 113}, []uint8{116, 0}, []uint8{47, 44}, []uint8{32, 108}, []uint8{0, 60}, []uint8{0, 38}, []uint8{0, 80}, []uint8{24, 128}, []uint8{48, 31}, []uint8{34, 0}, []uint8{102, 12}, []uint8{255, 218}, []uint8{0, 56}, []uint8{102, 2}, []uint8{48, 44}, []uint8{32, 12}, []uint8{45, 110}, []uint8{66, 64}, []uint8{255, 226}, []uint8{169, 240}, []uint8{255, 0}, []uint8{55, 124}, []uint8{229, 128}, []uint8{255, 220}, []uint8{72, 104}, []uint8{89, 79}, []uint8{0, 52}, []uint8{62, 31}, []uint8{96, 8}, []uint8{47, 6}, []uint8{255, 222}, []uint8{96, 10}, []uint8{112, 2}, []uint8{0, 50}, []uint8{255, 204}, []uint8{0, 128}, []uint8{34, 81}, []uint8{16, 31}, []uint8{49, 124}, []uint8{160, 41}, []uint8{255, 216}, []uint8{82, 64}, []uint8{1, 0}, []uint8{103, 16}, []uint8{160, 35}, []uint8{255, 206}, []uint8{255, 212}, []uint8{32, 6}, []uint8{72, 120}, []uint8{0, 46}, []uint8{80, 79}, []uint8{67, 250}, []uint8{103, 18}, []uint8{118, 0}, []uint8{65, 232}, []uint8{74, 110}, []uint8{32, 217}, []uint8{0, 90}, []uint8{127, 255}, []uint8{81, 202}, []uint8{0, 92}, []uint8{46, 0}, []uint8{2, 64}, []uint8{72, 199}, []uint8{103, 20}, []uint8{12, 128}, []uint8{46, 159}, []uint8{255, 214}, []uint8{128, 0}, []uint8{16, 0}, []uint8{72, 66}, []uint8{74, 107}, []uint8{255, 210}, []uint8{0, 72}, []uint8{74, 71}, []uint8{78, 209}, []uint8{32, 111}, []uint8{0, 65}, []uint8{96, 12}, []uint8{42, 120}, []uint8{66, 46}, []uint8{50, 0}, []uint8{101, 116}, []uint8{103, 22}, []uint8{0, 68}, []uint8{72, 109}, []uint8{32, 8}, []uint8{72, 108}, []uint8{11, 124}, []uint8{38, 64}, []uint8{4, 0}, []uint8{0, 104}, []uint8{32, 109}, []uint8{0, 13}, []uint8{42, 64}, []uint8{0, 11}, []uint8{0, 62}, []uint8{2, 32}})
-	this._f_defaultLookupTable = true
-	return this.defaultLookupTable, nil
 }
 
 /**
@@ -236,6 +239,7 @@ func (this *Dcmp2) LookupTable() (v [][]byte, err error) {
 	if (this._f_lookupTable) {
 		return this.lookupTable, nil
 	}
+	this._f_lookupTable = true
 	var tmp22 [][]byte;
 	tmp23, err := this.HeaderParameters()
 	if err != nil {
@@ -251,7 +255,6 @@ func (this *Dcmp2) LookupTable() (v [][]byte, err error) {
 		tmp22 = tmp24
 	}
 	this.lookupTable = [][]byte(tmp22)
-	this._f_lookupTable = true
 	return this.lookupTable, nil
 }
 
@@ -293,6 +296,10 @@ func NewDcmp2_HeaderParameters() *Dcmp2_HeaderParameters {
 	}
 }
 
+func (this Dcmp2_HeaderParameters) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dcmp2_HeaderParameters) Read(io *kaitai.Stream, parent *Dcmp2, root *Dcmp2) (err error) {
 	this._io = io
 	this._parent = parent
@@ -325,10 +332,10 @@ func (this *Dcmp2_HeaderParameters) NumCustomLookupTableEntries() (v int, err er
 	if (this._f_numCustomLookupTableEntries) {
 		return this.numCustomLookupTableEntries, nil
 	}
-	if (this.Flags.HasCustomLookupTable) {
-		this.numCustomLookupTableEntries = int((this.NumCustomLookupTableEntriesM1 + 1))
-	}
 	this._f_numCustomLookupTableEntries = true
+	if (this.Flags.HasCustomLookupTable) {
+		this.numCustomLookupTableEntries = int(this.NumCustomLookupTableEntriesM1 + 1)
+	}
 	return this.numCustomLookupTableEntries, nil
 }
 
@@ -373,6 +380,10 @@ func NewDcmp2_HeaderParameters_Flags() *Dcmp2_HeaderParameters_Flags {
 	}
 }
 
+func (this Dcmp2_HeaderParameters_Flags) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dcmp2_HeaderParameters_Flags) Read(io *kaitai.Stream, parent *Dcmp2_HeaderParameters, root *Dcmp2) (err error) {
 	this._io = io
 	this._parent = parent
@@ -404,6 +415,7 @@ func (this *Dcmp2_HeaderParameters_Flags) AsInt() (v uint8, err error) {
 	if (this._f_asInt) {
 		return this.asInt, nil
 	}
+	this._f_asInt = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return 0, err
@@ -421,8 +433,6 @@ func (this *Dcmp2_HeaderParameters_Flags) AsInt() (v uint8, err error) {
 	if err != nil {
 		return 0, err
 	}
-	this._f_asInt = true
-	this._f_asInt = true
 	return this.asInt, nil
 }
 
@@ -441,47 +451,6 @@ func (this *Dcmp2_HeaderParameters_Flags) AsInt() (v uint8, err error) {
  */
 
 /**
- * Compressed data in the "untagged" variant of the format.
- */
-type Dcmp2_UntaggedData struct {
-	TableReferences []uint8
-	_io *kaitai.Stream
-	_root *Dcmp2
-	_parent *Dcmp2
-}
-func NewDcmp2_UntaggedData() *Dcmp2_UntaggedData {
-	return &Dcmp2_UntaggedData{
-	}
-}
-
-func (this *Dcmp2_UntaggedData) Read(io *kaitai.Stream, parent *Dcmp2, root *Dcmp2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp32, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp32 {
-			break
-		}
-		tmp33, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.TableReferences = append(this.TableReferences, tmp33)
-	}
-	return err
-}
-
-/**
- * References into the lookup table.
- * Each reference is an integer that is expanded to two bytes by looking it up in the table.
- */
-
-/**
  * Compressed data in the "tagged" variant of the format.
  */
 type Dcmp2_TaggedData struct {
@@ -495,25 +464,29 @@ func NewDcmp2_TaggedData() *Dcmp2_TaggedData {
 	}
 }
 
+func (this Dcmp2_TaggedData) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dcmp2_TaggedData) Read(io *kaitai.Stream, parent *Dcmp2, root *Dcmp2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp34, err := this._io.EOF()
+	for i := 0;; i++ {
+		tmp32, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp34 {
+		if tmp32 {
 			break
 		}
-		tmp35 := NewDcmp2_TaggedData_Chunk()
-		err = tmp35.Read(this._io, this, this._root)
+		tmp33 := NewDcmp2_TaggedData_Chunk()
+		err = tmp33.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Chunks = append(this.Chunks, tmp35)
+		this.Chunks = append(this.Chunks, tmp33)
 	}
 	return err
 }
@@ -543,6 +516,10 @@ func NewDcmp2_TaggedData_Chunk() *Dcmp2_TaggedData_Chunk {
 	}
 }
 
+func (this Dcmp2_TaggedData_Chunk) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dcmp2_TaggedData_Chunk) Read(io *kaitai.Stream, parent *Dcmp2_TaggedData, root *Dcmp2) (err error) {
 	this._io = io
 	this._parent = parent
@@ -550,42 +527,42 @@ func (this *Dcmp2_TaggedData_Chunk) Read(io *kaitai.Stream, parent *Dcmp2_Tagged
 
 	for i := 0; i < int(8); i++ {
 		_ = i
-		tmp36, err := this._io.ReadBitsIntBe(1)
+		tmp34, err := this._io.ReadBitsIntBe(1)
 		if err != nil {
 			return err
 		}
-		this.Tag = append(this.Tag, tmp36 != 0)
+		this.Tag = append(this.Tag, tmp34 != 0)
 	}
 	this._io.AlignToByte()
 	for i := 1;; i++ {
 		switch (this.Tag[i]) {
 		case true:
-			tmp37, err := this._io.ReadU1()
+			tmp35, err := this._io.ReadU1()
 			if err != nil {
 				return err
 			}
-			_it := tmp37
+			_it := tmp35
 			this.Units = append(this.Units, _it)
 		default:
-			var tmp38 int8;
+			var tmp36 int8;
 			if (this.Tag[i]) {
-				tmp38 = 1
+				tmp36 = 1
 			} else {
-				tmp38 = 2
+				tmp36 = 2
 			}
-			tmp39, err := this._io.ReadBytes(int(tmp38))
+			tmp37, err := this._io.ReadBytes(int(tmp36))
 			if err != nil {
 				return err
 			}
-			tmp39 = tmp39
-			_it := tmp39
+			tmp37 = tmp37
+			_it := tmp37
 			this._raw_Units = append(this._raw_Units, _it)
 		}
-		tmp40, err := this._io.EOF()
+		tmp38, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if  ((i >= 7) || (tmp40))  {
+		if  ((i >= 7) || (tmp38))  {
 			break
 		}
 	}
@@ -606,4 +583,49 @@ func (this *Dcmp2_TaggedData_Chunk) Read(io *kaitai.Stream, parent *Dcmp2_Tagged
  * If the bit is 1 (true),
  * the unit is a reference into the lookup table,
  * an integer which is expanded to two bytes by looking it up in the table.
+ */
+
+/**
+ * Compressed data in the "untagged" variant of the format.
+ */
+type Dcmp2_UntaggedData struct {
+	TableReferences []uint8
+	_io *kaitai.Stream
+	_root *Dcmp2
+	_parent *Dcmp2
+}
+func NewDcmp2_UntaggedData() *Dcmp2_UntaggedData {
+	return &Dcmp2_UntaggedData{
+	}
+}
+
+func (this Dcmp2_UntaggedData) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dcmp2_UntaggedData) Read(io *kaitai.Stream, parent *Dcmp2, root *Dcmp2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp39, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp39 {
+			break
+		}
+		tmp40, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.TableReferences = append(this.TableReferences, tmp40)
+	}
+	return err
+}
+
+/**
+ * References into the lookup table.
+ * Each reference is an integer that is expanded to two bytes by looking it up in the table.
  */

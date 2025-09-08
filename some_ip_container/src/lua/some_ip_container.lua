@@ -4,8 +4,8 @@
 
 local class = require("class")
 require("kaitaistruct")
-
 require("some_ip")
+
 SomeIpContainer = class.class(KaitaiStruct)
 
 function SomeIpContainer:_init(io, parent, root)

@@ -36,17 +36,12 @@ type
     `childrenChunks`*: seq[MagicavoxelVox_Chunk]
     `parent`*: KaitaiStruct
     `rawChunkContent`*: seq[byte]
-  MagicavoxelVox_Size* = ref object of KaitaiStruct
-    `sizeX`*: uint32
-    `sizeY`*: uint32
-    `sizeZ`*: uint32
-    `parent`*: MagicavoxelVox_Chunk
-  MagicavoxelVox_Rgba* = ref object of KaitaiStruct
-    `colors`*: seq[MagicavoxelVox_Color]
-    `parent`*: MagicavoxelVox_Chunk
-  MagicavoxelVox_Pack* = ref object of KaitaiStruct
-    `numModels`*: uint32
-    `parent`*: MagicavoxelVox_Chunk
+  MagicavoxelVox_Color* = ref object of KaitaiStruct
+    `r`*: uint8
+    `g`*: uint8
+    `b`*: uint8
+    `a`*: uint8
+    `parent`*: MagicavoxelVox_Rgba
   MagicavoxelVox_Matt* = ref object of KaitaiStruct
     `id`*: uint32
     `materialType`*: MagicavoxelVox_MaterialType
@@ -61,57 +56,62 @@ type
     `glow`*: float32
     `isTotalPower`*: float32
     `parent`*: MagicavoxelVox_Chunk
+    `hasAttenuationInst`: bool
+    `hasAttenuationInstFlag`: bool
+    `hasGlowInst`: bool
+    `hasGlowInstFlag`: bool
+    `hasIorInst`: bool
+    `hasIorInstFlag`: bool
     `hasIsTotalPowerInst`: bool
     `hasIsTotalPowerInstFlag`: bool
     `hasPlasticInst`: bool
     `hasPlasticInstFlag`: bool
-    `hasAttenuationInst`: bool
-    `hasAttenuationInstFlag`: bool
     `hasPowerInst`: bool
     `hasPowerInstFlag`: bool
     `hasRoughnessInst`: bool
     `hasRoughnessInstFlag`: bool
     `hasSpecularInst`: bool
     `hasSpecularInstFlag`: bool
-    `hasIorInst`: bool
-    `hasIorInstFlag`: bool
-    `hasGlowInst`: bool
-    `hasGlowInstFlag`: bool
-  MagicavoxelVox_Xyzi* = ref object of KaitaiStruct
-    `numVoxels`*: uint32
-    `voxels`*: seq[MagicavoxelVox_Voxel]
+  MagicavoxelVox_Pack* = ref object of KaitaiStruct
+    `numModels`*: uint32
     `parent`*: MagicavoxelVox_Chunk
-  MagicavoxelVox_Color* = ref object of KaitaiStruct
-    `r`*: uint8
-    `g`*: uint8
-    `b`*: uint8
-    `a`*: uint8
-    `parent`*: MagicavoxelVox_Rgba
+  MagicavoxelVox_Rgba* = ref object of KaitaiStruct
+    `colors`*: seq[MagicavoxelVox_Color]
+    `parent`*: MagicavoxelVox_Chunk
+  MagicavoxelVox_Size* = ref object of KaitaiStruct
+    `sizeX`*: uint32
+    `sizeY`*: uint32
+    `sizeZ`*: uint32
+    `parent`*: MagicavoxelVox_Chunk
   MagicavoxelVox_Voxel* = ref object of KaitaiStruct
     `x`*: uint8
     `y`*: uint8
     `z`*: uint8
     `colorIndex`*: uint8
     `parent`*: MagicavoxelVox_Xyzi
+  MagicavoxelVox_Xyzi* = ref object of KaitaiStruct
+    `numVoxels`*: uint32
+    `voxels`*: seq[MagicavoxelVox_Voxel]
+    `parent`*: MagicavoxelVox_Chunk
 
 proc read*(_: typedesc[MagicavoxelVox], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MagicavoxelVox
 proc read*(_: typedesc[MagicavoxelVox_Chunk], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MagicavoxelVox_Chunk
-proc read*(_: typedesc[MagicavoxelVox_Size], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Size
-proc read*(_: typedesc[MagicavoxelVox_Rgba], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Rgba
-proc read*(_: typedesc[MagicavoxelVox_Pack], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Pack
-proc read*(_: typedesc[MagicavoxelVox_Matt], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Matt
-proc read*(_: typedesc[MagicavoxelVox_Xyzi], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Xyzi
 proc read*(_: typedesc[MagicavoxelVox_Color], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Rgba): MagicavoxelVox_Color
+proc read*(_: typedesc[MagicavoxelVox_Matt], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Matt
+proc read*(_: typedesc[MagicavoxelVox_Pack], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Pack
+proc read*(_: typedesc[MagicavoxelVox_Rgba], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Rgba
+proc read*(_: typedesc[MagicavoxelVox_Size], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Size
 proc read*(_: typedesc[MagicavoxelVox_Voxel], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Xyzi): MagicavoxelVox_Voxel
+proc read*(_: typedesc[MagicavoxelVox_Xyzi], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Xyzi
 
+proc hasAttenuation*(this: MagicavoxelVox_Matt): bool
+proc hasGlow*(this: MagicavoxelVox_Matt): bool
+proc hasIor*(this: MagicavoxelVox_Matt): bool
 proc hasIsTotalPower*(this: MagicavoxelVox_Matt): bool
 proc hasPlastic*(this: MagicavoxelVox_Matt): bool
-proc hasAttenuation*(this: MagicavoxelVox_Matt): bool
 proc hasPower*(this: MagicavoxelVox_Matt): bool
 proc hasRoughness*(this: MagicavoxelVox_Matt): bool
 proc hasSpecular*(this: MagicavoxelVox_Matt): bool
-proc hasIor*(this: MagicavoxelVox_Matt): bool
-proc hasGlow*(this: MagicavoxelVox_Matt): bool
 
 
 ##[
@@ -157,17 +157,17 @@ proc read*(_: typedesc[MagicavoxelVox_Chunk], io: KaitaiStream, root: KaitaiStru
   if this.numBytesOfChunkContent != 0:
     block:
       let on = this.chunkId
-      if on == magicavoxel_vox.size:
-        let rawChunkContentExpr = this.io.readBytes(int(this.numBytesOfChunkContent))
-        this.rawChunkContent = rawChunkContentExpr
-        let rawChunkContentIo = newKaitaiStream(rawChunkContentExpr)
-        let chunkContentExpr = MagicavoxelVox_Size.read(rawChunkContentIo, this.root, this)
-        this.chunkContent = chunkContentExpr
-      elif on == magicavoxel_vox.matt:
+      if on == magicavoxel_vox.matt:
         let rawChunkContentExpr = this.io.readBytes(int(this.numBytesOfChunkContent))
         this.rawChunkContent = rawChunkContentExpr
         let rawChunkContentIo = newKaitaiStream(rawChunkContentExpr)
         let chunkContentExpr = MagicavoxelVox_Matt.read(rawChunkContentIo, this.root, this)
+        this.chunkContent = chunkContentExpr
+      elif on == magicavoxel_vox.pack:
+        let rawChunkContentExpr = this.io.readBytes(int(this.numBytesOfChunkContent))
+        this.rawChunkContent = rawChunkContentExpr
+        let rawChunkContentIo = newKaitaiStream(rawChunkContentExpr)
+        let chunkContentExpr = MagicavoxelVox_Pack.read(rawChunkContentIo, this.root, this)
         this.chunkContent = chunkContentExpr
       elif on == magicavoxel_vox.rgba:
         let rawChunkContentExpr = this.io.readBytes(int(this.numBytesOfChunkContent))
@@ -175,17 +175,17 @@ proc read*(_: typedesc[MagicavoxelVox_Chunk], io: KaitaiStream, root: KaitaiStru
         let rawChunkContentIo = newKaitaiStream(rawChunkContentExpr)
         let chunkContentExpr = MagicavoxelVox_Rgba.read(rawChunkContentIo, this.root, this)
         this.chunkContent = chunkContentExpr
+      elif on == magicavoxel_vox.size:
+        let rawChunkContentExpr = this.io.readBytes(int(this.numBytesOfChunkContent))
+        this.rawChunkContent = rawChunkContentExpr
+        let rawChunkContentIo = newKaitaiStream(rawChunkContentExpr)
+        let chunkContentExpr = MagicavoxelVox_Size.read(rawChunkContentIo, this.root, this)
+        this.chunkContent = chunkContentExpr
       elif on == magicavoxel_vox.xyzi:
         let rawChunkContentExpr = this.io.readBytes(int(this.numBytesOfChunkContent))
         this.rawChunkContent = rawChunkContentExpr
         let rawChunkContentIo = newKaitaiStream(rawChunkContentExpr)
         let chunkContentExpr = MagicavoxelVox_Xyzi.read(rawChunkContentIo, this.root, this)
-        this.chunkContent = chunkContentExpr
-      elif on == magicavoxel_vox.pack:
-        let rawChunkContentExpr = this.io.readBytes(int(this.numBytesOfChunkContent))
-        this.rawChunkContent = rawChunkContentExpr
-        let rawChunkContentIo = newKaitaiStream(rawChunkContentExpr)
-        let chunkContentExpr = MagicavoxelVox_Pack.read(rawChunkContentIo, this.root, this)
         this.chunkContent = chunkContentExpr
       else:
         let chunkContentExpr = this.io.readBytes(int(this.numBytesOfChunkContent))
@@ -201,52 +201,25 @@ proc read*(_: typedesc[MagicavoxelVox_Chunk], io: KaitaiStream, root: KaitaiStru
 proc fromFile*(_: typedesc[MagicavoxelVox_Chunk], filename: string): MagicavoxelVox_Chunk =
   MagicavoxelVox_Chunk.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[MagicavoxelVox_Size], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Size =
+proc read*(_: typedesc[MagicavoxelVox_Color], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Rgba): MagicavoxelVox_Color =
   template this: untyped = result
-  this = new(MagicavoxelVox_Size)
+  this = new(MagicavoxelVox_Color)
   let root = if root == nil: cast[MagicavoxelVox](this) else: cast[MagicavoxelVox](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let sizeXExpr = this.io.readU4le()
-  this.sizeX = sizeXExpr
-  let sizeYExpr = this.io.readU4le()
-  this.sizeY = sizeYExpr
-  let sizeZExpr = this.io.readU4le()
-  this.sizeZ = sizeZExpr
+  let rExpr = this.io.readU1()
+  this.r = rExpr
+  let gExpr = this.io.readU1()
+  this.g = gExpr
+  let bExpr = this.io.readU1()
+  this.b = bExpr
+  let aExpr = this.io.readU1()
+  this.a = aExpr
 
-proc fromFile*(_: typedesc[MagicavoxelVox_Size], filename: string): MagicavoxelVox_Size =
-  MagicavoxelVox_Size.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MagicavoxelVox_Rgba], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Rgba =
-  template this: untyped = result
-  this = new(MagicavoxelVox_Rgba)
-  let root = if root == nil: cast[MagicavoxelVox](this) else: cast[MagicavoxelVox](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  for i in 0 ..< int(256):
-    let it = MagicavoxelVox_Color.read(this.io, this.root, this)
-    this.colors.add(it)
-
-proc fromFile*(_: typedesc[MagicavoxelVox_Rgba], filename: string): MagicavoxelVox_Rgba =
-  MagicavoxelVox_Rgba.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MagicavoxelVox_Pack], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Pack =
-  template this: untyped = result
-  this = new(MagicavoxelVox_Pack)
-  let root = if root == nil: cast[MagicavoxelVox](this) else: cast[MagicavoxelVox](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let numModelsExpr = this.io.readU4le()
-  this.numModels = numModelsExpr
-
-proc fromFile*(_: typedesc[MagicavoxelVox_Pack], filename: string): MagicavoxelVox_Pack =
-  MagicavoxelVox_Pack.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[MagicavoxelVox_Color], filename: string): MagicavoxelVox_Color =
+  MagicavoxelVox_Color.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MagicavoxelVox_Matt], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Matt =
   template this: untyped = result
@@ -289,6 +262,30 @@ proc read*(_: typedesc[MagicavoxelVox_Matt], io: KaitaiStream, root: KaitaiStruc
     let isTotalPowerExpr = this.io.readF4le()
     this.isTotalPower = isTotalPowerExpr
 
+proc hasAttenuation(this: MagicavoxelVox_Matt): bool = 
+  if this.hasAttenuationInstFlag:
+    return this.hasAttenuationInst
+  let hasAttenuationInstExpr = bool((this.propertyBits and 16) != 0)
+  this.hasAttenuationInst = hasAttenuationInstExpr
+  this.hasAttenuationInstFlag = true
+  return this.hasAttenuationInst
+
+proc hasGlow(this: MagicavoxelVox_Matt): bool = 
+  if this.hasGlowInstFlag:
+    return this.hasGlowInst
+  let hasGlowInstExpr = bool((this.propertyBits and 64) != 0)
+  this.hasGlowInst = hasGlowInstExpr
+  this.hasGlowInstFlag = true
+  return this.hasGlowInst
+
+proc hasIor(this: MagicavoxelVox_Matt): bool = 
+  if this.hasIorInstFlag:
+    return this.hasIorInst
+  let hasIorInstExpr = bool((this.propertyBits and 8) != 0)
+  this.hasIorInst = hasIorInstExpr
+  this.hasIorInstFlag = true
+  return this.hasIorInst
+
 proc hasIsTotalPower(this: MagicavoxelVox_Matt): bool = 
   if this.hasIsTotalPowerInstFlag:
     return this.hasIsTotalPowerInst
@@ -304,14 +301,6 @@ proc hasPlastic(this: MagicavoxelVox_Matt): bool =
   this.hasPlasticInst = hasPlasticInstExpr
   this.hasPlasticInstFlag = true
   return this.hasPlasticInst
-
-proc hasAttenuation(this: MagicavoxelVox_Matt): bool = 
-  if this.hasAttenuationInstFlag:
-    return this.hasAttenuationInst
-  let hasAttenuationInstExpr = bool((this.propertyBits and 16) != 0)
-  this.hasAttenuationInst = hasAttenuationInstExpr
-  this.hasAttenuationInstFlag = true
-  return this.hasAttenuationInst
 
 proc hasPower(this: MagicavoxelVox_Matt): bool = 
   if this.hasPowerInstFlag:
@@ -337,61 +326,55 @@ proc hasSpecular(this: MagicavoxelVox_Matt): bool =
   this.hasSpecularInstFlag = true
   return this.hasSpecularInst
 
-proc hasIor(this: MagicavoxelVox_Matt): bool = 
-  if this.hasIorInstFlag:
-    return this.hasIorInst
-  let hasIorInstExpr = bool((this.propertyBits and 8) != 0)
-  this.hasIorInst = hasIorInstExpr
-  this.hasIorInstFlag = true
-  return this.hasIorInst
-
-proc hasGlow(this: MagicavoxelVox_Matt): bool = 
-  if this.hasGlowInstFlag:
-    return this.hasGlowInst
-  let hasGlowInstExpr = bool((this.propertyBits and 64) != 0)
-  this.hasGlowInst = hasGlowInstExpr
-  this.hasGlowInstFlag = true
-  return this.hasGlowInst
-
 proc fromFile*(_: typedesc[MagicavoxelVox_Matt], filename: string): MagicavoxelVox_Matt =
   MagicavoxelVox_Matt.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[MagicavoxelVox_Xyzi], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Xyzi =
+proc read*(_: typedesc[MagicavoxelVox_Pack], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Pack =
   template this: untyped = result
-  this = new(MagicavoxelVox_Xyzi)
+  this = new(MagicavoxelVox_Pack)
   let root = if root == nil: cast[MagicavoxelVox](this) else: cast[MagicavoxelVox](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let numVoxelsExpr = this.io.readU4le()
-  this.numVoxels = numVoxelsExpr
-  for i in 0 ..< int(this.numVoxels):
-    let it = MagicavoxelVox_Voxel.read(this.io, this.root, this)
-    this.voxels.add(it)
+  let numModelsExpr = this.io.readU4le()
+  this.numModels = numModelsExpr
 
-proc fromFile*(_: typedesc[MagicavoxelVox_Xyzi], filename: string): MagicavoxelVox_Xyzi =
-  MagicavoxelVox_Xyzi.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[MagicavoxelVox_Pack], filename: string): MagicavoxelVox_Pack =
+  MagicavoxelVox_Pack.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[MagicavoxelVox_Color], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Rgba): MagicavoxelVox_Color =
+proc read*(_: typedesc[MagicavoxelVox_Rgba], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Rgba =
   template this: untyped = result
-  this = new(MagicavoxelVox_Color)
+  this = new(MagicavoxelVox_Rgba)
   let root = if root == nil: cast[MagicavoxelVox](this) else: cast[MagicavoxelVox](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let rExpr = this.io.readU1()
-  this.r = rExpr
-  let gExpr = this.io.readU1()
-  this.g = gExpr
-  let bExpr = this.io.readU1()
-  this.b = bExpr
-  let aExpr = this.io.readU1()
-  this.a = aExpr
+  for i in 0 ..< int(256):
+    let it = MagicavoxelVox_Color.read(this.io, this.root, this)
+    this.colors.add(it)
 
-proc fromFile*(_: typedesc[MagicavoxelVox_Color], filename: string): MagicavoxelVox_Color =
-  MagicavoxelVox_Color.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[MagicavoxelVox_Rgba], filename: string): MagicavoxelVox_Rgba =
+  MagicavoxelVox_Rgba.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MagicavoxelVox_Size], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Size =
+  template this: untyped = result
+  this = new(MagicavoxelVox_Size)
+  let root = if root == nil: cast[MagicavoxelVox](this) else: cast[MagicavoxelVox](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let sizeXExpr = this.io.readU4le()
+  this.sizeX = sizeXExpr
+  let sizeYExpr = this.io.readU4le()
+  this.sizeY = sizeYExpr
+  let sizeZExpr = this.io.readU4le()
+  this.sizeZ = sizeZExpr
+
+proc fromFile*(_: typedesc[MagicavoxelVox_Size], filename: string): MagicavoxelVox_Size =
+  MagicavoxelVox_Size.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MagicavoxelVox_Voxel], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Xyzi): MagicavoxelVox_Voxel =
   template this: untyped = result
@@ -412,4 +395,21 @@ proc read*(_: typedesc[MagicavoxelVox_Voxel], io: KaitaiStream, root: KaitaiStru
 
 proc fromFile*(_: typedesc[MagicavoxelVox_Voxel], filename: string): MagicavoxelVox_Voxel =
   MagicavoxelVox_Voxel.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MagicavoxelVox_Xyzi], io: KaitaiStream, root: KaitaiStruct, parent: MagicavoxelVox_Chunk): MagicavoxelVox_Xyzi =
+  template this: untyped = result
+  this = new(MagicavoxelVox_Xyzi)
+  let root = if root == nil: cast[MagicavoxelVox](this) else: cast[MagicavoxelVox](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let numVoxelsExpr = this.io.readU4le()
+  this.numVoxels = numVoxelsExpr
+  for i in 0 ..< int(this.numVoxels):
+    let it = MagicavoxelVox_Voxel.read(this.io, this.root, this)
+    this.voxels.add(it)
+
+proc fromFile*(_: typedesc[MagicavoxelVox_Xyzi], filename: string): MagicavoxelVox_Xyzi =
+  MagicavoxelVox_Xyzi.read(newKaitaiFileStream(filename), nil, nil)
 

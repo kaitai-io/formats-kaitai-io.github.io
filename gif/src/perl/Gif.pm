@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -33,7 +33,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -46,15 +46,18 @@ sub _read {
     $self->{hdr} = Gif::Header->new($self->{_io}, $self, $self->{_root});
     $self->{logical_screen_descriptor} = Gif::LogicalScreenDescriptorStruct->new($self->{_io}, $self, $self->{_root});
     if ($self->logical_screen_descriptor()->has_color_table()) {
-        $self->{_raw_global_color_table} = $self->{_io}->read_bytes(($self->logical_screen_descriptor()->color_table_size() * 3));
+        $self->{_raw_global_color_table} = $self->{_io}->read_bytes($self->logical_screen_descriptor()->color_table_size() * 3);
         my $io__raw_global_color_table = IO::KaitaiStruct::Stream->new($self->{_raw_global_color_table});
         $self->{global_color_table} = Gif::ColorTable->new($io__raw_global_color_table, $self, $self->{_root});
     }
-    $self->{blocks} = ();
-    do {
-        $_ = Gif::Block->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{blocks}}, $_;
-    } until ( (($self->_io()->is_eof()) || ($_->block_type() == $Gif::BLOCK_TYPE_END_OF_FILE)) );
+    $self->{blocks} = [];
+    {
+        my $_it;
+        do {
+            $_it = Gif::Block->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{blocks}}, $_it;
+        } until ( (($self->_io()->is_eof()) || ($_it->block_type() == $Gif::BLOCK_TYPE_END_OF_FILE)) );
+    }
 }
 
 sub hdr {
@@ -83,7 +86,7 @@ sub _raw_global_color_table {
 }
 
 ########################################################################
-package Gif::ImageData;
+package Gif::ApplicationId;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -102,7 +105,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -112,255 +115,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{lzw_min_code_size} = $self->{_io}->read_u1();
-    $self->{subblocks} = Gif::Subblocks->new($self->{_io}, $self, $self->{_root});
+    $self->{len_bytes} = $self->{_io}->read_u1();
+    $self->{application_identifier} = Encode::decode("ASCII", $self->{_io}->read_bytes(8));
+    $self->{application_auth_code} = $self->{_io}->read_bytes(3);
 }
 
-sub lzw_min_code_size {
+sub len_bytes {
     my ($self) = @_;
-    return $self->{lzw_min_code_size};
+    return $self->{len_bytes};
 }
 
-sub subblocks {
+sub application_identifier {
     my ($self) = @_;
-    return $self->{subblocks};
+    return $self->{application_identifier};
 }
 
-########################################################################
-package Gif::ColorTableEntry;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub application_auth_code {
     my ($self) = @_;
-
-    $self->{red} = $self->{_io}->read_u1();
-    $self->{green} = $self->{_io}->read_u1();
-    $self->{blue} = $self->{_io}->read_u1();
-}
-
-sub red {
-    my ($self) = @_;
-    return $self->{red};
-}
-
-sub green {
-    my ($self) = @_;
-    return $self->{green};
-}
-
-sub blue {
-    my ($self) = @_;
-    return $self->{blue};
-}
-
-########################################################################
-package Gif::LogicalScreenDescriptorStruct;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{screen_width} = $self->{_io}->read_u2le();
-    $self->{screen_height} = $self->{_io}->read_u2le();
-    $self->{flags} = $self->{_io}->read_u1();
-    $self->{bg_color_index} = $self->{_io}->read_u1();
-    $self->{pixel_aspect_ratio} = $self->{_io}->read_u1();
-}
-
-sub has_color_table {
-    my ($self) = @_;
-    return $self->{has_color_table} if ($self->{has_color_table});
-    $self->{has_color_table} = ($self->flags() & 128) != 0;
-    return $self->{has_color_table};
-}
-
-sub color_table_size {
-    my ($self) = @_;
-    return $self->{color_table_size} if ($self->{color_table_size});
-    $self->{color_table_size} = (2 << ($self->flags() & 7));
-    return $self->{color_table_size};
-}
-
-sub screen_width {
-    my ($self) = @_;
-    return $self->{screen_width};
-}
-
-sub screen_height {
-    my ($self) = @_;
-    return $self->{screen_height};
-}
-
-sub flags {
-    my ($self) = @_;
-    return $self->{flags};
-}
-
-sub bg_color_index {
-    my ($self) = @_;
-    return $self->{bg_color_index};
-}
-
-sub pixel_aspect_ratio {
-    my ($self) = @_;
-    return $self->{pixel_aspect_ratio};
-}
-
-########################################################################
-package Gif::LocalImageDescriptor;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{left} = $self->{_io}->read_u2le();
-    $self->{top} = $self->{_io}->read_u2le();
-    $self->{width} = $self->{_io}->read_u2le();
-    $self->{height} = $self->{_io}->read_u2le();
-    $self->{flags} = $self->{_io}->read_u1();
-    if ($self->has_color_table()) {
-        $self->{_raw_local_color_table} = $self->{_io}->read_bytes(($self->color_table_size() * 3));
-        my $io__raw_local_color_table = IO::KaitaiStruct::Stream->new($self->{_raw_local_color_table});
-        $self->{local_color_table} = Gif::ColorTable->new($io__raw_local_color_table, $self, $self->{_root});
-    }
-    $self->{image_data} = Gif::ImageData->new($self->{_io}, $self, $self->{_root});
-}
-
-sub has_color_table {
-    my ($self) = @_;
-    return $self->{has_color_table} if ($self->{has_color_table});
-    $self->{has_color_table} = ($self->flags() & 128) != 0;
-    return $self->{has_color_table};
-}
-
-sub has_interlace {
-    my ($self) = @_;
-    return $self->{has_interlace} if ($self->{has_interlace});
-    $self->{has_interlace} = ($self->flags() & 64) != 0;
-    return $self->{has_interlace};
-}
-
-sub has_sorted_color_table {
-    my ($self) = @_;
-    return $self->{has_sorted_color_table} if ($self->{has_sorted_color_table});
-    $self->{has_sorted_color_table} = ($self->flags() & 32) != 0;
-    return $self->{has_sorted_color_table};
-}
-
-sub color_table_size {
-    my ($self) = @_;
-    return $self->{color_table_size} if ($self->{color_table_size});
-    $self->{color_table_size} = (2 << ($self->flags() & 7));
-    return $self->{color_table_size};
-}
-
-sub left {
-    my ($self) = @_;
-    return $self->{left};
-}
-
-sub top {
-    my ($self) = @_;
-    return $self->{top};
-}
-
-sub width {
-    my ($self) = @_;
-    return $self->{width};
-}
-
-sub height {
-    my ($self) = @_;
-    return $self->{height};
-}
-
-sub flags {
-    my ($self) = @_;
-    return $self->{flags};
-}
-
-sub local_color_table {
-    my ($self) = @_;
-    return $self->{local_color_table};
-}
-
-sub image_data {
-    my ($self) = @_;
-    return $self->{image_data};
-}
-
-sub _raw_local_color_table {
-    my ($self) = @_;
-    return $self->{_raw_local_color_table};
+    return $self->{application_auth_code};
 }
 
 ########################################################################
@@ -383,7 +155,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -433,7 +205,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -443,7 +215,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{entries} = ();
+    $self->{entries} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{entries}}, Gif::ColorTableEntry->new($self->{_io}, $self, $self->{_root});
     }
@@ -455,7 +227,7 @@ sub entries {
 }
 
 ########################################################################
-package Gif::Header;
+package Gif::ColorTableEntry;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -474,7 +246,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -484,18 +256,75 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->read_bytes(3);
-    $self->{version} = Encode::decode("ASCII", $self->{_io}->read_bytes(3));
+    $self->{red} = $self->{_io}->read_u1();
+    $self->{green} = $self->{_io}->read_u1();
+    $self->{blue} = $self->{_io}->read_u1();
 }
 
-sub magic {
+sub red {
     my ($self) = @_;
-    return $self->{magic};
+    return $self->{red};
 }
 
-sub version {
+sub green {
     my ($self) = @_;
-    return $self->{version};
+    return $self->{green};
+}
+
+sub blue {
+    my ($self) = @_;
+    return $self->{blue};
+}
+
+########################################################################
+package Gif::ExtApplication;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{application_id} = Gif::ApplicationId->new($self->{_io}, $self, $self->{_root});
+    $self->{subblocks} = [];
+    {
+        my $_it;
+        do {
+            $_it = Gif::Subblock->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{subblocks}}, $_it;
+        } until ($_it->len_bytes() == 0);
+    }
+}
+
+sub application_id {
+    my ($self) = @_;
+    return $self->{application_id};
+}
+
+sub subblocks {
+    my ($self) = @_;
+    return $self->{subblocks};
 }
 
 ########################################################################
@@ -518,7 +347,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -575,190 +404,6 @@ sub terminator {
 }
 
 ########################################################################
-package Gif::Subblock;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{len_bytes} = $self->{_io}->read_u1();
-    $self->{bytes} = $self->{_io}->read_bytes($self->len_bytes());
-}
-
-sub len_bytes {
-    my ($self) = @_;
-    return $self->{len_bytes};
-}
-
-sub bytes {
-    my ($self) = @_;
-    return $self->{bytes};
-}
-
-########################################################################
-package Gif::ApplicationId;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{len_bytes} = $self->{_io}->read_u1();
-    $self->{application_identifier} = Encode::decode("ASCII", $self->{_io}->read_bytes(8));
-    $self->{application_auth_code} = $self->{_io}->read_bytes(3);
-}
-
-sub len_bytes {
-    my ($self) = @_;
-    return $self->{len_bytes};
-}
-
-sub application_identifier {
-    my ($self) = @_;
-    return $self->{application_identifier};
-}
-
-sub application_auth_code {
-    my ($self) = @_;
-    return $self->{application_auth_code};
-}
-
-########################################################################
-package Gif::ExtApplication;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{application_id} = Gif::ApplicationId->new($self->{_io}, $self, $self->{_root});
-    $self->{subblocks} = ();
-    do {
-        $_ = Gif::Subblock->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{subblocks}}, $_;
-    } until ($_->len_bytes() == 0);
-}
-
-sub application_id {
-    my ($self) = @_;
-    return $self->{application_id};
-}
-
-sub subblocks {
-    my ($self) = @_;
-    return $self->{subblocks};
-}
-
-########################################################################
-package Gif::Subblocks;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{entries} = ();
-    do {
-        $_ = Gif::Subblock->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{entries}}, $_;
-    } until ($_->len_bytes() == 0);
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self->{entries};
-}
-
-########################################################################
 package Gif::Extension;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -778,7 +423,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -812,6 +457,370 @@ sub label {
 sub body {
     my ($self) = @_;
     return $self->{body};
+}
+
+########################################################################
+package Gif::Header;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{magic} = $self->{_io}->read_bytes(3);
+    $self->{version} = Encode::decode("ASCII", $self->{_io}->read_bytes(3));
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self->{magic};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
+}
+
+########################################################################
+package Gif::ImageData;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{lzw_min_code_size} = $self->{_io}->read_u1();
+    $self->{subblocks} = Gif::Subblocks->new($self->{_io}, $self, $self->{_root});
+}
+
+sub lzw_min_code_size {
+    my ($self) = @_;
+    return $self->{lzw_min_code_size};
+}
+
+sub subblocks {
+    my ($self) = @_;
+    return $self->{subblocks};
+}
+
+########################################################################
+package Gif::LocalImageDescriptor;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{left} = $self->{_io}->read_u2le();
+    $self->{top} = $self->{_io}->read_u2le();
+    $self->{width} = $self->{_io}->read_u2le();
+    $self->{height} = $self->{_io}->read_u2le();
+    $self->{flags} = $self->{_io}->read_u1();
+    if ($self->has_color_table()) {
+        $self->{_raw_local_color_table} = $self->{_io}->read_bytes($self->color_table_size() * 3);
+        my $io__raw_local_color_table = IO::KaitaiStruct::Stream->new($self->{_raw_local_color_table});
+        $self->{local_color_table} = Gif::ColorTable->new($io__raw_local_color_table, $self, $self->{_root});
+    }
+    $self->{image_data} = Gif::ImageData->new($self->{_io}, $self, $self->{_root});
+}
+
+sub color_table_size {
+    my ($self) = @_;
+    return $self->{color_table_size} if ($self->{color_table_size});
+    $self->{color_table_size} = 2 << ($self->flags() & 7);
+    return $self->{color_table_size};
+}
+
+sub has_color_table {
+    my ($self) = @_;
+    return $self->{has_color_table} if ($self->{has_color_table});
+    $self->{has_color_table} = ($self->flags() & 128) != 0;
+    return $self->{has_color_table};
+}
+
+sub has_interlace {
+    my ($self) = @_;
+    return $self->{has_interlace} if ($self->{has_interlace});
+    $self->{has_interlace} = ($self->flags() & 64) != 0;
+    return $self->{has_interlace};
+}
+
+sub has_sorted_color_table {
+    my ($self) = @_;
+    return $self->{has_sorted_color_table} if ($self->{has_sorted_color_table});
+    $self->{has_sorted_color_table} = ($self->flags() & 32) != 0;
+    return $self->{has_sorted_color_table};
+}
+
+sub left {
+    my ($self) = @_;
+    return $self->{left};
+}
+
+sub top {
+    my ($self) = @_;
+    return $self->{top};
+}
+
+sub width {
+    my ($self) = @_;
+    return $self->{width};
+}
+
+sub height {
+    my ($self) = @_;
+    return $self->{height};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self->{flags};
+}
+
+sub local_color_table {
+    my ($self) = @_;
+    return $self->{local_color_table};
+}
+
+sub image_data {
+    my ($self) = @_;
+    return $self->{image_data};
+}
+
+sub _raw_local_color_table {
+    my ($self) = @_;
+    return $self->{_raw_local_color_table};
+}
+
+########################################################################
+package Gif::LogicalScreenDescriptorStruct;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{screen_width} = $self->{_io}->read_u2le();
+    $self->{screen_height} = $self->{_io}->read_u2le();
+    $self->{flags} = $self->{_io}->read_u1();
+    $self->{bg_color_index} = $self->{_io}->read_u1();
+    $self->{pixel_aspect_ratio} = $self->{_io}->read_u1();
+}
+
+sub color_table_size {
+    my ($self) = @_;
+    return $self->{color_table_size} if ($self->{color_table_size});
+    $self->{color_table_size} = 2 << ($self->flags() & 7);
+    return $self->{color_table_size};
+}
+
+sub has_color_table {
+    my ($self) = @_;
+    return $self->{has_color_table} if ($self->{has_color_table});
+    $self->{has_color_table} = ($self->flags() & 128) != 0;
+    return $self->{has_color_table};
+}
+
+sub screen_width {
+    my ($self) = @_;
+    return $self->{screen_width};
+}
+
+sub screen_height {
+    my ($self) = @_;
+    return $self->{screen_height};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self->{flags};
+}
+
+sub bg_color_index {
+    my ($self) = @_;
+    return $self->{bg_color_index};
+}
+
+sub pixel_aspect_ratio {
+    my ($self) = @_;
+    return $self->{pixel_aspect_ratio};
+}
+
+########################################################################
+package Gif::Subblock;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{len_bytes} = $self->{_io}->read_u1();
+    $self->{bytes} = $self->{_io}->read_bytes($self->len_bytes());
+}
+
+sub len_bytes {
+    my ($self) = @_;
+    return $self->{len_bytes};
+}
+
+sub bytes {
+    my ($self) = @_;
+    return $self->{bytes};
+}
+
+########################################################################
+package Gif::Subblocks;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    {
+        my $_it;
+        do {
+            $_it = Gif::Subblock->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{entries}}, $_it;
+        } until ($_it->len_bytes() == 0);
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
 }
 
 1;

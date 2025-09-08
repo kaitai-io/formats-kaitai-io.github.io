@@ -4,11 +4,11 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("windows_systemtime")
+require("ethernet_frame")
 local enum = require("enum")
 local stringstream = require("string_stream")
 
-require("windows_systemtime")
-require("ethernet_frame")
 -- 
 -- Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
 -- network packet sniffing and analysis tool. It can save captured
@@ -138,7 +138,7 @@ end
 function MicrosoftNetworkMonitorV2:_read()
   self.signature = self._io:read_bytes(4)
   if not(self.signature == "\071\077\066\085") then
-    error("not equal, expected " ..  "\071\077\066\085" .. ", but got " .. self.signature)
+    error("not equal, expected " .. "\071\077\066\085" .. ", but got " .. self.signature)
   end
   self.version_minor = self._io:read_u1()
   self.version_major = self._io:read_u1()
@@ -184,60 +184,6 @@ end
 -- 
 -- Timestamp of capture start.
 
-MicrosoftNetworkMonitorV2.FrameIndex = class.class(KaitaiStruct)
-
-function MicrosoftNetworkMonitorV2.FrameIndex:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MicrosoftNetworkMonitorV2.FrameIndex:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = MicrosoftNetworkMonitorV2.FrameIndexEntry(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
--- 
--- Each index entry is just a pointer to where the frame data is
--- stored in the file.
-MicrosoftNetworkMonitorV2.FrameIndexEntry = class.class(KaitaiStruct)
-
-function MicrosoftNetworkMonitorV2.FrameIndexEntry:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MicrosoftNetworkMonitorV2.FrameIndexEntry:_read()
-  self.ofs = self._io:read_u4le()
-end
-
--- 
--- Frame body itself.
-MicrosoftNetworkMonitorV2.FrameIndexEntry.property.body = {}
-function MicrosoftNetworkMonitorV2.FrameIndexEntry.property.body:get()
-  if self._m_body ~= nil then
-    return self._m_body
-  end
-
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek(self.ofs)
-  self._m_body = MicrosoftNetworkMonitorV2.Frame(_io, self, self._root)
-  _io:seek(_pos)
-  return self._m_body
-end
-
--- 
--- Absolute pointer to frame data in the file.
-
 -- 
 -- A container for actually captured network data. Allow to
 -- timestamp individual frames and designates how much data from
@@ -248,7 +194,7 @@ MicrosoftNetworkMonitorV2.Frame = class.class(KaitaiStruct)
 function MicrosoftNetworkMonitorV2.Frame:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -274,4 +220,58 @@ end
 -- Number of octets captured in file.
 -- 
 -- Actual packet captured from the network.
+
+MicrosoftNetworkMonitorV2.FrameIndex = class.class(KaitaiStruct)
+
+function MicrosoftNetworkMonitorV2.FrameIndex:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MicrosoftNetworkMonitorV2.FrameIndex:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = MicrosoftNetworkMonitorV2.FrameIndexEntry(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+-- 
+-- Each index entry is just a pointer to where the frame data is
+-- stored in the file.
+MicrosoftNetworkMonitorV2.FrameIndexEntry = class.class(KaitaiStruct)
+
+function MicrosoftNetworkMonitorV2.FrameIndexEntry:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MicrosoftNetworkMonitorV2.FrameIndexEntry:_read()
+  self.ofs = self._io:read_u4le()
+end
+
+-- 
+-- Frame body itself.
+MicrosoftNetworkMonitorV2.FrameIndexEntry.property.body = {}
+function MicrosoftNetworkMonitorV2.FrameIndexEntry.property.body:get()
+  if self._m_body ~= nil then
+    return self._m_body
+  end
+
+  local _io = self._root._io
+  local _pos = _io:pos()
+  _io:seek(self.ofs)
+  self._m_body = MicrosoftNetworkMonitorV2.Frame(_io, self, self._root)
+  _io:seek(_pos)
+  return self._m_body
+end
+
+-- 
+-- Absolute pointer to frame data in the file.
 

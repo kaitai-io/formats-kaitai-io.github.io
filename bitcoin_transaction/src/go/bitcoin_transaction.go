@@ -20,14 +20,18 @@ type BitcoinTransaction struct {
 	Locktime uint32
 	_io *kaitai.Stream
 	_root *BitcoinTransaction
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewBitcoinTransaction() *BitcoinTransaction {
 	return &BitcoinTransaction{
 	}
 }
 
-func (this *BitcoinTransaction) Read(io *kaitai.Stream, parent interface{}, root *BitcoinTransaction) (err error) {
+func (this BitcoinTransaction) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BitcoinTransaction) Read(io *kaitai.Stream, parent kaitai.Struct, root *BitcoinTransaction) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -109,6 +113,10 @@ func NewBitcoinTransaction_Vin() *BitcoinTransaction_Vin {
 	}
 }
 
+func (this BitcoinTransaction_Vin) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *BitcoinTransaction_Vin) Read(io *kaitai.Stream, parent *BitcoinTransaction, root *BitcoinTransaction) (err error) {
 	this._io = io
 	this._parent = parent
@@ -186,6 +194,11 @@ const (
 	BitcoinTransaction_Vin_ScriptSignature_SighashType__SighashSingle BitcoinTransaction_Vin_ScriptSignature_SighashType = 3
 	BitcoinTransaction_Vin_ScriptSignature_SighashType__SighashAnyonecanpay BitcoinTransaction_Vin_ScriptSignature_SighashType = 80
 )
+var values_BitcoinTransaction_Vin_ScriptSignature_SighashType = map[BitcoinTransaction_Vin_ScriptSignature_SighashType]struct{}{1: {}, 2: {}, 3: {}, 80: {}}
+func (v BitcoinTransaction_Vin_ScriptSignature_SighashType) isDefined() bool {
+	_, ok := values_BitcoinTransaction_Vin_ScriptSignature_SighashType[v]
+	return ok
+}
 type BitcoinTransaction_Vin_ScriptSignature struct {
 	LenSigStack uint8
 	DerSig *BitcoinTransaction_Vin_ScriptSignature_DerSignature
@@ -199,6 +212,10 @@ type BitcoinTransaction_Vin_ScriptSignature struct {
 func NewBitcoinTransaction_Vin_ScriptSignature() *BitcoinTransaction_Vin_ScriptSignature {
 	return &BitcoinTransaction_Vin_ScriptSignature{
 	}
+}
+
+func (this BitcoinTransaction_Vin_ScriptSignature) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *BitcoinTransaction_Vin_ScriptSignature) Read(io *kaitai.Stream, parent *BitcoinTransaction_Vin, root *BitcoinTransaction) (err error) {
@@ -266,6 +283,10 @@ type BitcoinTransaction_Vin_ScriptSignature_DerSignature struct {
 func NewBitcoinTransaction_Vin_ScriptSignature_DerSignature() *BitcoinTransaction_Vin_ScriptSignature_DerSignature {
 	return &BitcoinTransaction_Vin_ScriptSignature_DerSignature{
 	}
+}
+
+func (this BitcoinTransaction_Vin_ScriptSignature_DerSignature) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *BitcoinTransaction_Vin_ScriptSignature_DerSignature) Read(io *kaitai.Stream, parent *BitcoinTransaction_Vin_ScriptSignature, root *BitcoinTransaction) (err error) {
@@ -360,6 +381,10 @@ func NewBitcoinTransaction_Vin_ScriptSignature_PublicKey() *BitcoinTransaction_V
 	}
 }
 
+func (this BitcoinTransaction_Vin_ScriptSignature_PublicKey) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *BitcoinTransaction_Vin_ScriptSignature_PublicKey) Read(io *kaitai.Stream, parent *BitcoinTransaction_Vin_ScriptSignature, root *BitcoinTransaction) (err error) {
 	this._io = io
 	this._parent = parent
@@ -403,6 +428,10 @@ type BitcoinTransaction_Vout struct {
 func NewBitcoinTransaction_Vout() *BitcoinTransaction_Vout {
 	return &BitcoinTransaction_Vout{
 	}
+}
+
+func (this BitcoinTransaction_Vout) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *BitcoinTransaction_Vout) Read(io *kaitai.Stream, parent *BitcoinTransaction, root *BitcoinTransaction) (err error) {

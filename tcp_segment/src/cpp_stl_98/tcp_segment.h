@@ -3,11 +3,13 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class tcp_segment_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -103,6 +105,8 @@ public:
         bool fin() const { return m_fin; }
         tcp_segment_t* _root() const { return m__root; }
         tcp_segment_t* _parent() const { return m__parent; }
+        std::string _to_string() const;
+        friend std::ostream& operator<<(std::ostream& os, const tcp_segment_t::flags_t& obj);
     };
 
 private:

@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -35,8 +36,8 @@ public class PcxDcx extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { -79, 104, -34, 58 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -79, 104, -34, 58 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { -79, 104, -34, 58 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -79, 104, -34, 58 }, this.magic, this._io, "/seq/0");
         }
         this.files = new ArrayList<PcxOffset>();
         {
@@ -47,6 +48,12 @@ public class PcxDcx extends KaitaiStruct {
                 this.files.add(_it);
                 i++;
             } while (!(_it.ofsBody() == 0));
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.files.size(); i++) {
+            this.files.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
     public static class PcxOffset extends KaitaiStruct {
@@ -71,6 +78,13 @@ public class PcxDcx extends KaitaiStruct {
         private void _read() {
             this.ofsBody = this._io.readU4le();
         }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+                this.body._fetchInstances();
+            }
+        }
         private Pcx body;
         public Pcx body() {
             if (this.body != null)
@@ -91,11 +105,11 @@ public class PcxDcx extends KaitaiStruct {
         public PcxDcx _parent() { return _parent; }
     }
     private byte[] magic;
-    private ArrayList<PcxOffset> files;
+    private List<PcxOffset> files;
     private PcxDcx _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
-    public ArrayList<PcxOffset> files() { return files; }
+    public List<PcxOffset> files() { return files; }
     public PcxDcx _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

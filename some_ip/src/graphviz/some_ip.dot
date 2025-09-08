@@ -39,9 +39,11 @@ some_ip__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				message_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="service_id_pos">0</TD><TD PORT="service_id_size">2</TD><TD>u2be</TD><TD PORT="service_id_type">service_id</TD></TR>
-					<TR><TD PORT="sub_id_pos">2</TD><TD PORT="sub_id_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="sub_id_type">sub_id</TD></TR>
-					<TR><TD PORT="method_id_pos">2:1</TD><TD PORT="method_id_size">15b</TD><TD>b15</TD><TD PORT="method_id_type">method_id</TD></TR>
-					<TR><TD PORT="event_id_pos">4</TD><TD PORT="event_id_size">15b</TD><TD>b15</TD><TD PORT="event_id_type">event_id</TD></TR>
+					<TR><TD PORT="sub_id_pos">2</TD><TD PORT="sub_id_size">1b</TD><TD>b1be→bool</TD><TD PORT="sub_id_type">sub_id</TD></TR>
+					<TR><TD PORT="method_id_pos">2:1</TD><TD PORT="method_id_size">15b</TD><TD>b15be</TD><TD PORT="method_id_type">method_id</TD></TR>
+					<TR><TD COLSPAN="4" PORT="method_id__if">if sub_id == false</TD></TR>
+					<TR><TD PORT="event_id_pos">4</TD><TD PORT="event_id_size">15b</TD><TD>b15be</TD><TD PORT="event_id_type">event_id</TD></TR>
+					<TR><TD COLSPAN="4" PORT="event_id__if">if sub_id == true</TD></TR>
 				</TABLE>>];
 				message_id__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
@@ -75,4 +77,6 @@ some_ip__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	header__seq:interface_version_type -> header__inst__is_valid_service_discovery [color="#404040"];
 	header__seq:message_type_type -> header__inst__is_valid_service_discovery [color="#404040"];
 	header__seq:return_code_type -> header__inst__is_valid_service_discovery [color="#404040"];
+	message_id__seq:sub_id_type -> message_id__seq:method_id__if [color="#404040"];
+	message_id__seq:sub_id_type -> message_id__seq:event_id__if [color="#404040"];
 }

@@ -4,7 +4,7 @@
 
 some_ip_sd_t::some_ip_sd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, some_ip_sd_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_flags = nullptr;
     m_entries = nullptr;
     m__io__raw_entries = nullptr;

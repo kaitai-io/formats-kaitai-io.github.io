@@ -7,7 +7,7 @@ digraph {
 
 		pcx_dcx__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>B1 68 DE 3A</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="files_pos">4</TD><TD PORT="files_size">4</TD><TD>PcxOffset</TD><TD PORT="files_type">files</TD></TR>
 			<TR><TD COLSPAN="4" PORT="files__repeat">repeat until _.ofs_body == 0</TD></TR>
 		</TABLE>>];
@@ -22,6 +22,7 @@ digraph {
 			pcx_offset__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="body_pos">ofs_body</TD><TD PORT="body_size">128</TD><TD>Pcx</TD><TD PORT="body_type">body</TD></TR>
+				<TR><TD COLSPAN="4" PORT="body__if">if ofs_body != 0</TD></TR>
 			</TABLE>>];
 		}
 	}
@@ -29,4 +30,5 @@ digraph {
 	pcx_offset__seq:ofs_body_type -> pcx_dcx__seq:files__repeat [color="#404040"];
 	pcx_offset__seq:ofs_body_type -> pcx_offset__inst__body:body_pos [color="#404040"];
 	pcx_offset__inst__body:body_type -> pcx__seq [style=bold];
+	pcx_offset__seq:ofs_body_type -> pcx_offset__inst__body:body__if [color="#404040"];
 }

@@ -25,27 +25,31 @@ type Edid struct {
 	StdTimings []*Edid_StdTiming
 	_io *kaitai.Stream
 	_root *Edid
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_StdTimings [][]byte
-	_f_mfgYear bool
-	mfgYear int
-	_f_mfgIdCh1 bool
-	mfgIdCh1 int
-	_f_mfgIdCh3 bool
-	mfgIdCh3 int
 	_f_gamma bool
 	gamma float64
-	_f_mfgStr bool
-	mfgStr string
+	_f_mfgIdCh1 bool
+	mfgIdCh1 int
 	_f_mfgIdCh2 bool
 	mfgIdCh2 int
+	_f_mfgIdCh3 bool
+	mfgIdCh3 int
+	_f_mfgStr bool
+	mfgStr string
+	_f_mfgYear bool
+	mfgYear int
 }
 func NewEdid() *Edid {
 	return &Edid{
 	}
 }
 
-func (this *Edid) Read(io *kaitai.Stream, parent interface{}, root *Edid) (err error) {
+func (this Edid) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Edid) Read(io *kaitai.Stream, parent kaitai.Struct, root *Edid) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -149,44 +153,45 @@ func (this *Edid) Read(io *kaitai.Stream, parent interface{}, root *Edid) (err e
 	}
 	return err
 }
-func (this *Edid) MfgYear() (v int, err error) {
-	if (this._f_mfgYear) {
-		return this.mfgYear, nil
+func (this *Edid) Gamma() (v float64, err error) {
+	if (this._f_gamma) {
+		return this.gamma, nil
 	}
-	this.mfgYear = int((this.MfgYearMod + 1990))
-	this._f_mfgYear = true
-	return this.mfgYear, nil
+	this._f_gamma = true
+	if (this.GammaMod != 255) {
+		this.gamma = float64((this.GammaMod + 100) / 100.0)
+	}
+	return this.gamma, nil
 }
 func (this *Edid) MfgIdCh1() (v int, err error) {
 	if (this._f_mfgIdCh1) {
 		return this.mfgIdCh1, nil
 	}
-	this.mfgIdCh1 = int(((this.MfgBytes & 31744) >> 10))
 	this._f_mfgIdCh1 = true
+	this.mfgIdCh1 = int((this.MfgBytes & 31744) >> 10)
 	return this.mfgIdCh1, nil
+}
+func (this *Edid) MfgIdCh2() (v int, err error) {
+	if (this._f_mfgIdCh2) {
+		return this.mfgIdCh2, nil
+	}
+	this._f_mfgIdCh2 = true
+	this.mfgIdCh2 = int((this.MfgBytes & 992) >> 5)
+	return this.mfgIdCh2, nil
 }
 func (this *Edid) MfgIdCh3() (v int, err error) {
 	if (this._f_mfgIdCh3) {
 		return this.mfgIdCh3, nil
 	}
-	this.mfgIdCh3 = int((this.MfgBytes & 31))
 	this._f_mfgIdCh3 = true
+	this.mfgIdCh3 = int(this.MfgBytes & 31)
 	return this.mfgIdCh3, nil
-}
-func (this *Edid) Gamma() (v float64, err error) {
-	if (this._f_gamma) {
-		return this.gamma, nil
-	}
-	if (this.GammaMod != 255) {
-		this.gamma = float64(((this.GammaMod + 100) / 100.0))
-	}
-	this._f_gamma = true
-	return this.gamma, nil
 }
 func (this *Edid) MfgStr() (v string, err error) {
 	if (this._f_mfgStr) {
 		return this.mfgStr, nil
 	}
+	this._f_mfgStr = true
 	tmp18, err := this.MfgIdCh1()
 	if err != nil {
 		return "", err
@@ -199,17 +204,16 @@ func (this *Edid) MfgStr() (v string, err error) {
 	if err != nil {
 		return "", err
 	}
-	this.mfgStr = string(string([]uint8{(tmp18 + 64), (tmp19 + 64), (tmp20 + 64)}))
-	this._f_mfgStr = true
+	this.mfgStr = string(string([]uint8{tmp18 + 64, tmp19 + 64, tmp20 + 64}))
 	return this.mfgStr, nil
 }
-func (this *Edid) MfgIdCh2() (v int, err error) {
-	if (this._f_mfgIdCh2) {
-		return this.mfgIdCh2, nil
+func (this *Edid) MfgYear() (v int, err error) {
+	if (this._f_mfgYear) {
+		return this.mfgYear, nil
 	}
-	this.mfgIdCh2 = int(((this.MfgBytes & 992) >> 5))
-	this._f_mfgIdCh2 = true
-	return this.mfgIdCh2, nil
+	this._f_mfgYear = true
+	this.mfgYear = int(this.MfgYearMod + 1990)
+	return this.mfgYear, nil
 }
 
 /**
@@ -291,42 +295,46 @@ type Edid_ChromacityInfo struct {
 	_io *kaitai.Stream
 	_root *Edid
 	_parent *Edid
-	_f_greenXInt bool
-	greenXInt int
-	_f_redY bool
-	redY float64
-	_f_greenYInt bool
-	greenYInt int
-	_f_whiteY bool
-	whiteY float64
-	_f_redX bool
-	redX float64
-	_f_whiteX bool
-	whiteX float64
 	_f_blueX bool
 	blueX float64
-	_f_whiteXInt bool
-	whiteXInt int
-	_f_whiteYInt bool
-	whiteYInt int
-	_f_greenX bool
-	greenX float64
-	_f_redXInt bool
-	redXInt int
-	_f_redYInt bool
-	redYInt int
 	_f_blueXInt bool
 	blueXInt int
 	_f_blueY bool
 	blueY float64
-	_f_greenY bool
-	greenY float64
 	_f_blueYInt bool
 	blueYInt int
+	_f_greenX bool
+	greenX float64
+	_f_greenXInt bool
+	greenXInt int
+	_f_greenY bool
+	greenY float64
+	_f_greenYInt bool
+	greenYInt int
+	_f_redX bool
+	redX float64
+	_f_redXInt bool
+	redXInt int
+	_f_redY bool
+	redY float64
+	_f_redYInt bool
+	redYInt int
+	_f_whiteX bool
+	whiteX float64
+	_f_whiteXInt bool
+	whiteXInt int
+	_f_whiteY bool
+	whiteY float64
+	_f_whiteYInt bool
+	whiteYInt int
 }
 func NewEdid_ChromacityInfo() *Edid_ChromacityInfo {
 	return &Edid_ChromacityInfo{
 	}
+}
+
+func (this Edid_ChromacityInfo) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Edid_ChromacityInfo) Read(io *kaitai.Stream, parent *Edid, root *Edid) (err error) {
@@ -417,86 +425,6 @@ func (this *Edid_ChromacityInfo) Read(io *kaitai.Stream, parent *Edid, root *Edi
 	this.WhiteY92 = tmp36
 	return err
 }
-func (this *Edid_ChromacityInfo) GreenXInt() (v int, err error) {
-	if (this._f_greenXInt) {
-		return this.greenXInt, nil
-	}
-	this.greenXInt = int(((this.GreenX92 << 2) | this.GreenX10))
-	this._f_greenXInt = true
-	return this.greenXInt, nil
-}
-
-/**
- * Red Y coordinate
- */
-func (this *Edid_ChromacityInfo) RedY() (v float64, err error) {
-	if (this._f_redY) {
-		return this.redY, nil
-	}
-	tmp37, err := this.RedYInt()
-	if err != nil {
-		return 0, err
-	}
-	this.redY = float64((tmp37 / 1024.0))
-	this._f_redY = true
-	return this.redY, nil
-}
-func (this *Edid_ChromacityInfo) GreenYInt() (v int, err error) {
-	if (this._f_greenYInt) {
-		return this.greenYInt, nil
-	}
-	this.greenYInt = int(((this.GreenY92 << 2) | this.GreenY10))
-	this._f_greenYInt = true
-	return this.greenYInt, nil
-}
-
-/**
- * White Y coordinate
- */
-func (this *Edid_ChromacityInfo) WhiteY() (v float64, err error) {
-	if (this._f_whiteY) {
-		return this.whiteY, nil
-	}
-	tmp38, err := this.WhiteYInt()
-	if err != nil {
-		return 0, err
-	}
-	this.whiteY = float64((tmp38 / 1024.0))
-	this._f_whiteY = true
-	return this.whiteY, nil
-}
-
-/**
- * Red X coordinate
- */
-func (this *Edid_ChromacityInfo) RedX() (v float64, err error) {
-	if (this._f_redX) {
-		return this.redX, nil
-	}
-	tmp39, err := this.RedXInt()
-	if err != nil {
-		return 0, err
-	}
-	this.redX = float64((tmp39 / 1024.0))
-	this._f_redX = true
-	return this.redX, nil
-}
-
-/**
- * White X coordinate
- */
-func (this *Edid_ChromacityInfo) WhiteX() (v float64, err error) {
-	if (this._f_whiteX) {
-		return this.whiteX, nil
-	}
-	tmp40, err := this.WhiteXInt()
-	if err != nil {
-		return 0, err
-	}
-	this.whiteX = float64((tmp40 / 1024.0))
-	this._f_whiteX = true
-	return this.whiteX, nil
-}
 
 /**
  * Blue X coordinate
@@ -505,68 +433,20 @@ func (this *Edid_ChromacityInfo) BlueX() (v float64, err error) {
 	if (this._f_blueX) {
 		return this.blueX, nil
 	}
-	tmp41, err := this.BlueXInt()
-	if err != nil {
-		return 0, err
-	}
-	this.blueX = float64((tmp41 / 1024.0))
 	this._f_blueX = true
-	return this.blueX, nil
-}
-func (this *Edid_ChromacityInfo) WhiteXInt() (v int, err error) {
-	if (this._f_whiteXInt) {
-		return this.whiteXInt, nil
-	}
-	this.whiteXInt = int(((this.WhiteX92 << 2) | this.WhiteX10))
-	this._f_whiteXInt = true
-	return this.whiteXInt, nil
-}
-func (this *Edid_ChromacityInfo) WhiteYInt() (v int, err error) {
-	if (this._f_whiteYInt) {
-		return this.whiteYInt, nil
-	}
-	this.whiteYInt = int(((this.WhiteY92 << 2) | this.WhiteY10))
-	this._f_whiteYInt = true
-	return this.whiteYInt, nil
-}
-
-/**
- * Green X coordinate
- */
-func (this *Edid_ChromacityInfo) GreenX() (v float64, err error) {
-	if (this._f_greenX) {
-		return this.greenX, nil
-	}
-	tmp42, err := this.GreenXInt()
+	tmp37, err := this.BlueXInt()
 	if err != nil {
 		return 0, err
 	}
-	this.greenX = float64((tmp42 / 1024.0))
-	this._f_greenX = true
-	return this.greenX, nil
-}
-func (this *Edid_ChromacityInfo) RedXInt() (v int, err error) {
-	if (this._f_redXInt) {
-		return this.redXInt, nil
-	}
-	this.redXInt = int(((this.RedX92 << 2) | this.RedX10))
-	this._f_redXInt = true
-	return this.redXInt, nil
-}
-func (this *Edid_ChromacityInfo) RedYInt() (v int, err error) {
-	if (this._f_redYInt) {
-		return this.redYInt, nil
-	}
-	this.redYInt = int(((this.RedY92 << 2) | this.RedY10))
-	this._f_redYInt = true
-	return this.redYInt, nil
+	this.blueX = float64(tmp37 / 1024.0)
+	return this.blueX, nil
 }
 func (this *Edid_ChromacityInfo) BlueXInt() (v int, err error) {
 	if (this._f_blueXInt) {
 		return this.blueXInt, nil
 	}
-	this.blueXInt = int(((this.BlueX92 << 2) | this.BlueX10))
 	this._f_blueXInt = true
+	this.blueXInt = int(this.BlueX92 << 2 | this.BlueX10)
 	return this.blueXInt, nil
 }
 
@@ -577,13 +457,45 @@ func (this *Edid_ChromacityInfo) BlueY() (v float64, err error) {
 	if (this._f_blueY) {
 		return this.blueY, nil
 	}
-	tmp43, err := this.BlueYInt()
+	this._f_blueY = true
+	tmp38, err := this.BlueYInt()
 	if err != nil {
 		return 0, err
 	}
-	this.blueY = float64((tmp43 / 1024.0))
-	this._f_blueY = true
+	this.blueY = float64(tmp38 / 1024.0)
 	return this.blueY, nil
+}
+func (this *Edid_ChromacityInfo) BlueYInt() (v int, err error) {
+	if (this._f_blueYInt) {
+		return this.blueYInt, nil
+	}
+	this._f_blueYInt = true
+	this.blueYInt = int(this.BlueY92 << 2 | this.BlueY10)
+	return this.blueYInt, nil
+}
+
+/**
+ * Green X coordinate
+ */
+func (this *Edid_ChromacityInfo) GreenX() (v float64, err error) {
+	if (this._f_greenX) {
+		return this.greenX, nil
+	}
+	this._f_greenX = true
+	tmp39, err := this.GreenXInt()
+	if err != nil {
+		return 0, err
+	}
+	this.greenX = float64(tmp39 / 1024.0)
+	return this.greenX, nil
+}
+func (this *Edid_ChromacityInfo) GreenXInt() (v int, err error) {
+	if (this._f_greenXInt) {
+		return this.greenXInt, nil
+	}
+	this._f_greenXInt = true
+	this.greenXInt = int(this.GreenX92 << 2 | this.GreenX10)
+	return this.greenXInt, nil
 }
 
 /**
@@ -593,21 +505,117 @@ func (this *Edid_ChromacityInfo) GreenY() (v float64, err error) {
 	if (this._f_greenY) {
 		return this.greenY, nil
 	}
-	tmp44, err := this.GreenYInt()
+	this._f_greenY = true
+	tmp40, err := this.GreenYInt()
 	if err != nil {
 		return 0, err
 	}
-	this.greenY = float64((tmp44 / 1024.0))
-	this._f_greenY = true
+	this.greenY = float64(tmp40 / 1024.0)
 	return this.greenY, nil
 }
-func (this *Edid_ChromacityInfo) BlueYInt() (v int, err error) {
-	if (this._f_blueYInt) {
-		return this.blueYInt, nil
+func (this *Edid_ChromacityInfo) GreenYInt() (v int, err error) {
+	if (this._f_greenYInt) {
+		return this.greenYInt, nil
 	}
-	this.blueYInt = int(((this.BlueY92 << 2) | this.BlueY10))
-	this._f_blueYInt = true
-	return this.blueYInt, nil
+	this._f_greenYInt = true
+	this.greenYInt = int(this.GreenY92 << 2 | this.GreenY10)
+	return this.greenYInt, nil
+}
+
+/**
+ * Red X coordinate
+ */
+func (this *Edid_ChromacityInfo) RedX() (v float64, err error) {
+	if (this._f_redX) {
+		return this.redX, nil
+	}
+	this._f_redX = true
+	tmp41, err := this.RedXInt()
+	if err != nil {
+		return 0, err
+	}
+	this.redX = float64(tmp41 / 1024.0)
+	return this.redX, nil
+}
+func (this *Edid_ChromacityInfo) RedXInt() (v int, err error) {
+	if (this._f_redXInt) {
+		return this.redXInt, nil
+	}
+	this._f_redXInt = true
+	this.redXInt = int(this.RedX92 << 2 | this.RedX10)
+	return this.redXInt, nil
+}
+
+/**
+ * Red Y coordinate
+ */
+func (this *Edid_ChromacityInfo) RedY() (v float64, err error) {
+	if (this._f_redY) {
+		return this.redY, nil
+	}
+	this._f_redY = true
+	tmp42, err := this.RedYInt()
+	if err != nil {
+		return 0, err
+	}
+	this.redY = float64(tmp42 / 1024.0)
+	return this.redY, nil
+}
+func (this *Edid_ChromacityInfo) RedYInt() (v int, err error) {
+	if (this._f_redYInt) {
+		return this.redYInt, nil
+	}
+	this._f_redYInt = true
+	this.redYInt = int(this.RedY92 << 2 | this.RedY10)
+	return this.redYInt, nil
+}
+
+/**
+ * White X coordinate
+ */
+func (this *Edid_ChromacityInfo) WhiteX() (v float64, err error) {
+	if (this._f_whiteX) {
+		return this.whiteX, nil
+	}
+	this._f_whiteX = true
+	tmp43, err := this.WhiteXInt()
+	if err != nil {
+		return 0, err
+	}
+	this.whiteX = float64(tmp43 / 1024.0)
+	return this.whiteX, nil
+}
+func (this *Edid_ChromacityInfo) WhiteXInt() (v int, err error) {
+	if (this._f_whiteXInt) {
+		return this.whiteXInt, nil
+	}
+	this._f_whiteXInt = true
+	this.whiteXInt = int(this.WhiteX92 << 2 | this.WhiteX10)
+	return this.whiteXInt, nil
+}
+
+/**
+ * White Y coordinate
+ */
+func (this *Edid_ChromacityInfo) WhiteY() (v float64, err error) {
+	if (this._f_whiteY) {
+		return this.whiteY, nil
+	}
+	this._f_whiteY = true
+	tmp44, err := this.WhiteYInt()
+	if err != nil {
+		return 0, err
+	}
+	this.whiteY = float64(tmp44 / 1024.0)
+	return this.whiteY, nil
+}
+func (this *Edid_ChromacityInfo) WhiteYInt() (v int, err error) {
+	if (this._f_whiteYInt) {
+		return this.whiteYInt, nil
+	}
+	this._f_whiteYInt = true
+	this.whiteYInt = int(this.WhiteY92 << 2 | this.WhiteY10)
+	return this.whiteYInt, nil
 }
 
 /**
@@ -699,6 +707,10 @@ type Edid_EstTimingsInfo struct {
 func NewEdid_EstTimingsInfo() *Edid_EstTimingsInfo {
 	return &Edid_EstTimingsInfo{
 	}
+}
+
+func (this Edid_EstTimingsInfo) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Edid_EstTimingsInfo) Read(io *kaitai.Stream, parent *Edid, root *Edid) (err error) {
@@ -874,6 +886,11 @@ const (
 	Edid_StdTiming_AspectRatios__Ratio54 Edid_StdTiming_AspectRatios = 2
 	Edid_StdTiming_AspectRatios__Ratio169 Edid_StdTiming_AspectRatios = 3
 )
+var values_Edid_StdTiming_AspectRatios = map[Edid_StdTiming_AspectRatios]struct{}{0: {}, 1: {}, 2: {}, 3: {}}
+func (v Edid_StdTiming_AspectRatios) isDefined() bool {
+	_, ok := values_Edid_StdTiming_AspectRatios[v]
+	return ok
+}
 type Edid_StdTiming struct {
 	HorizActivePixelsMod uint8
 	AspectRatio Edid_StdTiming_AspectRatios
@@ -883,16 +900,20 @@ type Edid_StdTiming struct {
 	_parent *Edid
 	_f_bytesLookahead bool
 	bytesLookahead []byte
-	_f_isUsed bool
-	isUsed bool
 	_f_horizActivePixels bool
 	horizActivePixels int
+	_f_isUsed bool
+	isUsed bool
 	_f_refreshRate bool
 	refreshRate int
 }
 func NewEdid_StdTiming() *Edid_StdTiming {
 	return &Edid_StdTiming{
 	}
+}
+
+func (this Edid_StdTiming) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Edid_StdTiming) Read(io *kaitai.Stream, parent *Edid, root *Edid) (err error) {
@@ -921,6 +942,7 @@ func (this *Edid_StdTiming) BytesLookahead() (v []byte, err error) {
 	if (this._f_bytesLookahead) {
 		return this.bytesLookahead, nil
 	}
+	this._f_bytesLookahead = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -939,21 +961,7 @@ func (this *Edid_StdTiming) BytesLookahead() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_bytesLookahead = true
-	this._f_bytesLookahead = true
 	return this.bytesLookahead, nil
-}
-func (this *Edid_StdTiming) IsUsed() (v bool, err error) {
-	if (this._f_isUsed) {
-		return this.isUsed, nil
-	}
-	tmp67, err := this.BytesLookahead()
-	if err != nil {
-		return false, err
-	}
-	this.isUsed = bool((bytes.Compare(tmp67, []uint8{1, 1}) != 0))
-	this._f_isUsed = true
-	return this.isUsed, nil
 }
 
 /**
@@ -963,15 +971,27 @@ func (this *Edid_StdTiming) HorizActivePixels() (v int, err error) {
 	if (this._f_horizActivePixels) {
 		return this.horizActivePixels, nil
 	}
-	tmp68, err := this.IsUsed()
+	this._f_horizActivePixels = true
+	tmp67, err := this.IsUsed()
 	if err != nil {
 		return 0, err
 	}
-	if (tmp68) {
-		this.horizActivePixels = int(((this.HorizActivePixelsMod + 31) * 8))
+	if (tmp67) {
+		this.horizActivePixels = int((this.HorizActivePixelsMod + 31) * 8)
 	}
-	this._f_horizActivePixels = true
 	return this.horizActivePixels, nil
+}
+func (this *Edid_StdTiming) IsUsed() (v bool, err error) {
+	if (this._f_isUsed) {
+		return this.isUsed, nil
+	}
+	this._f_isUsed = true
+	tmp68, err := this.BytesLookahead()
+	if err != nil {
+		return false, err
+	}
+	this.isUsed = bool((bytes.Compare(tmp68, []uint8{1, 1}) != 0))
+	return this.isUsed, nil
 }
 
 /**
@@ -981,14 +1001,14 @@ func (this *Edid_StdTiming) RefreshRate() (v int, err error) {
 	if (this._f_refreshRate) {
 		return this.refreshRate, nil
 	}
+	this._f_refreshRate = true
 	tmp69, err := this.IsUsed()
 	if err != nil {
 		return 0, err
 	}
 	if (tmp69) {
-		this.refreshRate = int((this.RefreshRateMod + 60))
+		this.refreshRate = int(this.RefreshRateMod + 60)
 	}
-	this._f_refreshRate = true
 	return this.refreshRate, nil
 }
 

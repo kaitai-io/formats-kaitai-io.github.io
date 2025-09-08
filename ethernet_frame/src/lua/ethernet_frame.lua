@@ -4,12 +4,12 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("ipv6_packet")
+require("ipv4_packet")
 local enum = require("enum")
 local stringstream = require("string_stream")
 local utils = require("utils")
 
-require("ipv4_packet")
-require("ipv6_packet")
 -- 
 -- Ethernet frame is a OSI data link layer (layer 2) protocol data unit
 -- for Ethernet networks. In practice, many other networks and/or
@@ -90,7 +90,7 @@ EthernetFrame.TagControlInfo = class.class(KaitaiStruct)
 function EthernetFrame.TagControlInfo:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

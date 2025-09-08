@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -35,8 +35,8 @@ class AppleSingleDouble < Kaitai::Struct::Struct
     333319 => :file_type_apple_double,
   }
   I__FILE_TYPE = FILE_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -70,7 +70,7 @@ class AppleSingleDouble < Kaitai::Struct::Struct
       15 => :types_afp_directory_id,
     }
     I__TYPES = TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -87,9 +87,8 @@ class AppleSingleDouble < Kaitai::Struct::Struct
       @_io.seek(ofs_body)
       case type
       when :types_finder_info
-        @_raw_body = @_io.read_bytes(len_body)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = FinderInfo.new(_io__raw_body, self, @_root)
+        _io_body = @_io.substream(len_body)
+        @body = FinderInfo.new(_io_body, self, @_root)
       else
         @body = @_io.read_bytes(len_body)
       end
@@ -106,7 +105,7 @@ class AppleSingleDouble < Kaitai::Struct::Struct
   # Information specific to Finder
   # @see '' older Inside Macintosh, Volume II page 84 or Volume IV page 104.
   class FinderInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -135,7 +134,7 @@ class AppleSingleDouble < Kaitai::Struct::Struct
   ##
   # Specifies 2D coordinate in QuickDraw grid.
   class Point < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

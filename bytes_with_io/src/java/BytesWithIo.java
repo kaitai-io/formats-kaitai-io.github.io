@@ -31,6 +31,9 @@ public class BytesWithIo extends KaitaiStruct {
     private void _read() {
         this.data = this._io.readBytesFull();
     }
+
+    public void _fetchInstances() {
+    }
     private byte[] data;
     private BytesWithIo _root;
     private KaitaiStruct _parent;

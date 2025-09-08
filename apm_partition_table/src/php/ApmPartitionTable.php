@@ -3,24 +3,30 @@
 
 namespace {
     class ApmPartitionTable extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ApmPartitionTable $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\ApmPartitionTable $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
         }
-        protected $_m_sectorSize;
-
-        /**
-         * 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
-         * 0x800 (2048) bytes for CDROM
-         */
-        public function sectorSize() {
-            if ($this->_m_sectorSize !== null)
-                return $this->_m_sectorSize;
-            $this->_m_sectorSize = 512;
-            return $this->_m_sectorSize;
+        protected $_m_partitionEntries;
+        public function partitionEntries() {
+            if ($this->_m_partitionEntries !== null)
+                return $this->_m_partitionEntries;
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->_root()->sectorSize());
+            $this->_m__raw_partitionEntries = [];
+            $this->_m_partitionEntries = [];
+            $n = $this->_root()->partitionLookup()->numberOfPartitions();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m__raw_partitionEntries[] = $io->readBytes($this->sectorSize());
+                $_io__raw_partitionEntries = new \Kaitai\Struct\Stream(end($this->_m__raw_partitionEntries));
+                $this->_m_partitionEntries[] = new \ApmPartitionTable\PartitionEntry($_io__raw_partitionEntries, $this, $this->_root);
+            }
+            $io->seek($_pos);
+            return $this->_m_partitionEntries;
         }
         protected $_m_partitionLookup;
 
@@ -41,49 +47,43 @@ namespace {
             $io->seek($_pos);
             return $this->_m_partitionLookup;
         }
-        protected $_m_partitionEntries;
-        public function partitionEntries() {
-            if ($this->_m_partitionEntries !== null)
-                return $this->_m_partitionEntries;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->_root()->sectorSize());
-            $this->_m__raw_partitionEntries = [];
-            $this->_m_partitionEntries = [];
-            $n = $this->_root()->partitionLookup()->numberOfPartitions();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m__raw_partitionEntries[] = $io->readBytes($this->sectorSize());
-                $_io__raw_partitionEntries = new \Kaitai\Struct\Stream(end($this->_m__raw_partitionEntries));
-                $this->_m_partitionEntries[] = new \ApmPartitionTable\PartitionEntry($_io__raw_partitionEntries, $this, $this->_root);
-            }
-            $io->seek($_pos);
-            return $this->_m_partitionEntries;
+        protected $_m_sectorSize;
+
+        /**
+         * 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
+         * 0x800 (2048) bytes for CDROM
+         */
+        public function sectorSize() {
+            if ($this->_m_sectorSize !== null)
+                return $this->_m_sectorSize;
+            $this->_m_sectorSize = 512;
+            return $this->_m_sectorSize;
         }
-        protected $_m__raw_partitionLookup;
         protected $_m__raw_partitionEntries;
-        public function _raw_partitionLookup() { return $this->_m__raw_partitionLookup; }
+        protected $_m__raw_partitionLookup;
         public function _raw_partitionEntries() { return $this->_m__raw_partitionEntries; }
+        public function _raw_partitionLookup() { return $this->_m__raw_partitionLookup; }
     }
 }
 
 namespace ApmPartitionTable {
     class PartitionEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ApmPartitionTable $_parent = null, \ApmPartitionTable $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ApmPartitionTable $_parent = null, ?\ApmPartitionTable $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(2);
-            if (!($this->magic() == "\x50\x4D")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x4D", $this->magic(), $this->_io(), "/types/partition_entry/seq/0");
+            if (!($this->_m_magic == "\x50\x4D")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x4D", $this->_m_magic, $this->_io, "/types/partition_entry/seq/0");
             }
             $this->_m_reserved1 = $this->_io->readBytes(2);
             $this->_m_numberOfPartitions = $this->_io->readU4be();
             $this->_m_partitionStart = $this->_io->readU4be();
             $this->_m_partitionSize = $this->_io->readU4be();
-            $this->_m_partitionName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "ascii");
-            $this->_m_partitionType = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "ascii");
+            $this->_m_partitionName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "ASCII");
+            $this->_m_partitionType = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "ASCII");
             $this->_m_dataStart = $this->_io->readU4be();
             $this->_m_dataSize = $this->_io->readU4be();
             $this->_m_partitionStatus = $this->_io->readU4be();
@@ -94,7 +94,29 @@ namespace ApmPartitionTable {
             $this->_m_bootCodeEntry = $this->_io->readU4be();
             $this->_m_reserved3 = $this->_io->readBytes(4);
             $this->_m_bootCodeCksum = $this->_io->readU4be();
-            $this->_m_processorType = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(16), 0, false), "ascii");
+            $this->_m_processorType = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(16), 0, false), "ASCII");
+        }
+        protected $_m_bootCode;
+        public function bootCode() {
+            if ($this->_m_bootCode !== null)
+                return $this->_m_bootCode;
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->bootCodeStart() * $this->_root()->sectorSize());
+            $this->_m_bootCode = $io->readBytes($this->bootCodeSize());
+            $io->seek($_pos);
+            return $this->_m_bootCode;
+        }
+        protected $_m_data;
+        public function data() {
+            if ($this->_m_data !== null)
+                return $this->_m_data;
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->dataStart() * $this->_root()->sectorSize());
+            $this->_m_data = $io->readBytes($this->dataSize() * $this->_root()->sectorSize());
+            $io->seek($_pos);
+            return $this->_m_data;
         }
         protected $_m_partition;
         public function partition() {
@@ -103,33 +125,11 @@ namespace ApmPartitionTable {
             if (($this->partitionStatus() & 1) != 0) {
                 $io = $this->_root()->_io();
                 $_pos = $io->pos();
-                $io->seek(($this->partitionStart() * $this->_root()->sectorSize()));
-                $this->_m_partition = $io->readBytes(($this->partitionSize() * $this->_root()->sectorSize()));
+                $io->seek($this->partitionStart() * $this->_root()->sectorSize());
+                $this->_m_partition = $io->readBytes($this->partitionSize() * $this->_root()->sectorSize());
                 $io->seek($_pos);
             }
             return $this->_m_partition;
-        }
-        protected $_m_data;
-        public function data() {
-            if ($this->_m_data !== null)
-                return $this->_m_data;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek(($this->dataStart() * $this->_root()->sectorSize()));
-            $this->_m_data = $io->readBytes(($this->dataSize() * $this->_root()->sectorSize()));
-            $io->seek($_pos);
-            return $this->_m_data;
-        }
-        protected $_m_bootCode;
-        public function bootCode() {
-            if ($this->_m_bootCode !== null)
-                return $this->_m_bootCode;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek(($this->bootCodeStart() * $this->_root()->sectorSize()));
-            $this->_m_bootCode = $io->readBytes($this->bootCodeSize());
-            $io->seek($_pos);
-            return $this->_m_bootCode;
         }
         protected $_m_magic;
         protected $_m_reserved1;

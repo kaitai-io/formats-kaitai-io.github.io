@@ -20,8 +20,8 @@
 
 namespace {
     class Pcx extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Pcx $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Pcx $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -36,7 +36,7 @@ namespace {
                 return $this->_m_palette256;
             if ( (($this->hdr()->version() == \Pcx\Versions::V3_0) && ($this->hdr()->bitsPerPixel() == 8) && ($this->hdr()->numPlanes() == 1)) ) {
                 $_pos = $this->_io->pos();
-                $this->_io->seek(($this->_io()->size() - 769));
+                $this->_io->seek($this->_io()->size() - 769);
                 $this->_m_palette256 = new \Pcx\TPalette256($this->_io, $this, $this->_root);
                 $this->_io->seek($_pos);
             }
@@ -51,15 +51,15 @@ namespace {
 
 namespace Pcx {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Pcx $_parent = null, \Pcx $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Pcx $_parent = null, ?\Pcx $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(1);
-            if (!($this->magic() == "\x0A")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x0A", $this->magic(), $this->_io(), "/types/header/seq/0");
+            if (!($this->_m_magic == "\x0A")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x0A", $this->_m_magic, $this->_io, "/types/header/seq/0");
             }
             $this->_m_version = $this->_io->readU1();
             $this->_m_encoding = $this->_io->readU1();
@@ -72,8 +72,8 @@ namespace Pcx {
             $this->_m_vdpi = $this->_io->readU2le();
             $this->_m_palette16 = $this->_io->readBytes(48);
             $this->_m_reserved = $this->_io->readBytes(1);
-            if (!($this->reserved() == "\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->reserved(), $this->_io(), "/types/header/seq/11");
+            if (!($this->_m_reserved == "\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_reserved, $this->_io, "/types/header/seq/11");
             }
             $this->_m_numPlanes = $this->_io->readU1();
             $this->_m_bytesPerLine = $this->_io->readU2le();
@@ -127,33 +127,8 @@ namespace Pcx {
 }
 
 namespace Pcx {
-    class TPalette256 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Pcx $_parent = null, \Pcx $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_magic = $this->_io->readBytes(1);
-            if (!($this->magic() == "\x0C")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x0C", $this->magic(), $this->_io(), "/types/t_palette_256/seq/0");
-            }
-            $this->_m_colors = [];
-            $n = 256;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_colors[] = new \Pcx\Rgb($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_magic;
-        protected $_m_colors;
-        public function magic() { return $this->_m_magic; }
-        public function colors() { return $this->_m_colors; }
-    }
-}
-
-namespace Pcx {
     class Rgb extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Pcx\TPalette256 $_parent = null, \Pcx $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Pcx\TPalette256 $_parent = null, ?\Pcx $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -173,17 +148,54 @@ namespace Pcx {
 }
 
 namespace Pcx {
-    class Versions {
-        const V2_5 = 0;
-        const V2_8_WITH_PALETTE = 2;
-        const V2_8_WITHOUT_PALETTE = 3;
-        const PAINTBRUSH_FOR_WINDOWS = 4;
-        const V3_0 = 5;
+    class TPalette256 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Pcx $_parent = null, ?\Pcx $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic = $this->_io->readBytes(1);
+            if (!($this->_m_magic == "\x0C")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x0C", $this->_m_magic, $this->_io, "/types/t_palette_256/seq/0");
+            }
+            $this->_m_colors = [];
+            $n = 256;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_colors[] = new \Pcx\Rgb($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_magic;
+        protected $_m_colors;
+        public function magic() { return $this->_m_magic; }
+        public function colors() { return $this->_m_colors; }
     }
 }
 
 namespace Pcx {
     class Encodings {
         const RLE = 1;
+
+        private const _VALUES = [1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Pcx {
+    class Versions {
+        const V2_5 = 0;
+        const V2_8_WITH_PALETTE = 2;
+        const V2_8_WITHOUT_PALETTE = 3;
+        const PAINTBRUSH_FOR_WINDOWS = 4;
+        const V3_0 = 5;
+
+        private const _VALUES = [0 => true, 2 => true, 3 => true, 4 => true, 5 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

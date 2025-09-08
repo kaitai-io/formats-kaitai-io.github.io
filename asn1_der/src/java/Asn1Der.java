@@ -6,8 +6,9 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
 
 
 /**
@@ -94,40 +95,34 @@ public class Asn1Der extends KaitaiStruct {
             TypeTag on = typeTag();
             if (on != null) {
                 switch (typeTag()) {
+                case OBJECT_ID: {
+                    KaitaiStream _io_body = this._io.substream(len().result());
+                    this.body = new BodyObjectId(_io_body, this, _root);
+                    break;
+                }
                 case PRINTABLE_STRING: {
-                    this._raw_body = this._io.readBytes(len().result());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BodyPrintableString(_io__raw_body, this, _root);
+                    KaitaiStream _io_body = this._io.substream(len().result());
+                    this.body = new BodyPrintableString(_io_body, this, _root);
                     break;
                 }
                 case SEQUENCE_10: {
-                    this._raw_body = this._io.readBytes(len().result());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BodySequence(_io__raw_body, this, _root);
-                    break;
-                }
-                case SET: {
-                    this._raw_body = this._io.readBytes(len().result());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BodySequence(_io__raw_body, this, _root);
+                    KaitaiStream _io_body = this._io.substream(len().result());
+                    this.body = new BodySequence(_io_body, this, _root);
                     break;
                 }
                 case SEQUENCE_30: {
-                    this._raw_body = this._io.readBytes(len().result());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BodySequence(_io__raw_body, this, _root);
+                    KaitaiStream _io_body = this._io.substream(len().result());
+                    this.body = new BodySequence(_io_body, this, _root);
+                    break;
+                }
+                case SET: {
+                    KaitaiStream _io_body = this._io.substream(len().result());
+                    this.body = new BodySequence(_io_body, this, _root);
                     break;
                 }
                 case UTF8STRING: {
-                    this._raw_body = this._io.readBytes(len().result());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BodyUtf8string(_io__raw_body, this, _root);
-                    break;
-                }
-                case OBJECT_ID: {
-                    this._raw_body = this._io.readBytes(len().result());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new BodyObjectId(_io__raw_body, this, _root);
+                    KaitaiStream _io_body = this._io.substream(len().result());
+                    this.body = new BodyUtf8string(_io_body, this, _root);
                     break;
                 }
                 default: {
@@ -140,70 +135,44 @@ public class Asn1Der extends KaitaiStruct {
             }
         }
     }
-    public static class BodySequence extends KaitaiStruct {
-        public static BodySequence fromFile(String fileName) throws IOException {
-            return new BodySequence(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public BodySequence(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BodySequence(KaitaiStream _io, Asn1Der _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BodySequence(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<Asn1Der>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new Asn1Der(this._io));
-                    i++;
+    public void _fetchInstances() {
+        this.len._fetchInstances();
+        {
+            TypeTag on = typeTag();
+            if (on != null) {
+                switch (typeTag()) {
+                case OBJECT_ID: {
+                    ((BodyObjectId) (this.body))._fetchInstances();
+                    break;
                 }
+                case PRINTABLE_STRING: {
+                    ((BodyPrintableString) (this.body))._fetchInstances();
+                    break;
+                }
+                case SEQUENCE_10: {
+                    ((BodySequence) (this.body))._fetchInstances();
+                    break;
+                }
+                case SEQUENCE_30: {
+                    ((BodySequence) (this.body))._fetchInstances();
+                    break;
+                }
+                case SET: {
+                    ((BodySequence) (this.body))._fetchInstances();
+                    break;
+                }
+                case UTF8STRING: {
+                    ((BodyUtf8string) (this.body))._fetchInstances();
+                    break;
+                }
+                default: {
+                    break;
+                }
+                }
+            } else {
             }
         }
-        private ArrayList<Asn1Der> entries;
-        private Asn1Der _root;
-        private Asn1Der _parent;
-        public ArrayList<Asn1Der> entries() { return entries; }
-        public Asn1Der _root() { return _root; }
-        public Asn1Der _parent() { return _parent; }
-    }
-    public static class BodyUtf8string extends KaitaiStruct {
-        public static BodyUtf8string fromFile(String fileName) throws IOException {
-            return new BodyUtf8string(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BodyUtf8string(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BodyUtf8string(KaitaiStream _io, Asn1Der _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BodyUtf8string(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.str = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
-        }
-        private String str;
-        private Asn1Der _root;
-        private Asn1Der _parent;
-        public String str() { return str; }
-        public Asn1Der _root() { return _root; }
-        public Asn1Der _parent() { return _parent; }
     }
 
     /**
@@ -232,20 +201,21 @@ public class Asn1Der extends KaitaiStruct {
             this.firstAndSecond = this._io.readU1();
             this.rest = this._io.readBytesFull();
         }
+
+        public void _fetchInstances() {
+        }
         private Integer first;
         public Integer first() {
             if (this.first != null)
                 return this.first;
-            int _tmp = (int) ((firstAndSecond() / 40));
-            this.first = _tmp;
+            this.first = ((Number) (firstAndSecond() / 40)).intValue();
             return this.first;
         }
         private Integer second;
         public Integer second() {
             if (this.second != null)
                 return this.second;
-            int _tmp = (int) (KaitaiStream.mod(firstAndSecond(), 40));
-            this.second = _tmp;
+            this.second = ((Number) (KaitaiStream.mod(firstAndSecond(), 40))).intValue();
             return this.second;
         }
         private int firstAndSecond;
@@ -254,6 +224,112 @@ public class Asn1Der extends KaitaiStruct {
         private Asn1Der _parent;
         public int firstAndSecond() { return firstAndSecond; }
         public byte[] rest() { return rest; }
+        public Asn1Der _root() { return _root; }
+        public Asn1Der _parent() { return _parent; }
+    }
+    public static class BodyPrintableString extends KaitaiStruct {
+        public static BodyPrintableString fromFile(String fileName) throws IOException {
+            return new BodyPrintableString(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BodyPrintableString(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BodyPrintableString(KaitaiStream _io, Asn1Der _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BodyPrintableString(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.str = new String(this._io.readBytesFull(), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
+        }
+        private String str;
+        private Asn1Der _root;
+        private Asn1Der _parent;
+        public String str() { return str; }
+        public Asn1Der _root() { return _root; }
+        public Asn1Der _parent() { return _parent; }
+    }
+    public static class BodySequence extends KaitaiStruct {
+        public static BodySequence fromFile(String fileName) throws IOException {
+            return new BodySequence(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BodySequence(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BodySequence(KaitaiStream _io, Asn1Der _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BodySequence(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<Asn1Der>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Asn1Der(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Asn1Der> entries;
+        private Asn1Der _root;
+        private Asn1Der _parent;
+        public List<Asn1Der> entries() { return entries; }
+        public Asn1Der _root() { return _root; }
+        public Asn1Der _parent() { return _parent; }
+    }
+    public static class BodyUtf8string extends KaitaiStruct {
+        public static BodyUtf8string fromFile(String fileName) throws IOException {
+            return new BodyUtf8string(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BodyUtf8string(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BodyUtf8string(KaitaiStream _io, Asn1Der _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BodyUtf8string(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.str = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
+        }
+        private String str;
+        private Asn1Der _root;
+        private Asn1Der _parent;
+        public String str() { return str; }
         public Asn1Der _root() { return _root; }
         public Asn1Der _parent() { return _parent; }
     }
@@ -285,12 +361,18 @@ public class Asn1Der extends KaitaiStruct {
                 this.int1 = this._io.readU1();
             }
         }
+
+        public void _fetchInstances() {
+            if (b1() == 130) {
+            }
+            if (b1() == 129) {
+            }
+        }
         private Integer result;
         public Integer result() {
             if (this.result != null)
                 return this.result;
-            int _tmp = (int) ((b1() == 129 ? int1() : (b1() == 130 ? int2() : b1())));
-            this.result = _tmp;
+            this.result = ((Number) ((b1() == 129 ? int1() : (b1() == 130 ? int2() : b1())))).intValue();
             return this.result;
         }
         private int b1;
@@ -304,45 +386,14 @@ public class Asn1Der extends KaitaiStruct {
         public Asn1Der _root() { return _root; }
         public Asn1Der _parent() { return _parent; }
     }
-    public static class BodyPrintableString extends KaitaiStruct {
-        public static BodyPrintableString fromFile(String fileName) throws IOException {
-            return new BodyPrintableString(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BodyPrintableString(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BodyPrintableString(KaitaiStream _io, Asn1Der _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BodyPrintableString(KaitaiStream _io, Asn1Der _parent, Asn1Der _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.str = new String(this._io.readBytesFull(), Charset.forName("ASCII"));
-        }
-        private String str;
-        private Asn1Der _root;
-        private Asn1Der _parent;
-        public String str() { return str; }
-        public Asn1Der _root() { return _root; }
-        public Asn1Der _parent() { return _parent; }
-    }
     private TypeTag typeTag;
     private LenEncoded len;
     private Object body;
     private Asn1Der _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_body;
     public TypeTag typeTag() { return typeTag; }
     public LenEncoded len() { return len; }
     public Object body() { return body; }
     public Asn1Der _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_body() { return _raw_body; }
 }

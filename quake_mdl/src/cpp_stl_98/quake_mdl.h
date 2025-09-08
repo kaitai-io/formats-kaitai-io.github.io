@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class quake_mdl_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -52,13 +54,13 @@
 class quake_mdl_t : public kaitai::kstruct {
 
 public:
-    class mdl_vertex_t;
-    class mdl_texcoord_t;
-    class mdl_header_t;
-    class mdl_skin_t;
     class mdl_frame_t;
+    class mdl_header_t;
     class mdl_simple_frame_t;
+    class mdl_skin_t;
+    class mdl_texcoord_t;
     class mdl_triangle_t;
+    class mdl_vertex_t;
     class vec3_t;
 
     quake_mdl_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quake_mdl_t* p__root = 0);
@@ -70,61 +72,59 @@ private:
 public:
     ~quake_mdl_t();
 
-    class mdl_vertex_t : public kaitai::kstruct {
+    class mdl_frame_t : public kaitai::kstruct {
 
     public:
 
-        mdl_vertex_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quake_mdl_t* p__root = 0);
+        mdl_frame_t(kaitai::kstream* p__io, quake_mdl_t* p__parent = 0, quake_mdl_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~mdl_vertex_t();
+        ~mdl_frame_t();
 
     private:
-        std::vector<uint8_t>* m_values;
-        uint8_t m_normal_index;
-        quake_mdl_t* m__root;
-        kaitai::kstruct* m__parent;
+        bool f_num_simple_frames;
+        int32_t m_num_simple_frames;
 
     public:
-        std::vector<uint8_t>* values() const { return m_values; }
-        uint8_t normal_index() const { return m_normal_index; }
-        quake_mdl_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83 Source
-     * \sa https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2 Source
-     */
-
-    class mdl_texcoord_t : public kaitai::kstruct {
-
-    public:
-
-        mdl_texcoord_t(kaitai::kstream* p__io, quake_mdl_t* p__parent = 0, quake_mdl_t* p__root = 0);
+        int32_t num_simple_frames();
 
     private:
-        void _read();
-        void _clean_up();
+        int32_t m_type;
+        mdl_vertex_t* m_min;
+        bool n_min;
 
     public:
-        ~mdl_texcoord_t();
+        bool _is_null_min() { min(); return n_min; };
 
     private:
-        int32_t m_on_seam;
-        int32_t m_s;
-        int32_t m_t;
+        mdl_vertex_t* m_max;
+        bool n_max;
+
+    public:
+        bool _is_null_max() { max(); return n_max; };
+
+    private:
+        std::vector<float>* m_time;
+        bool n_time;
+
+    public:
+        bool _is_null_time() { time(); return n_time; };
+
+    private:
+        std::vector<mdl_simple_frame_t*>* m_frames;
         quake_mdl_t* m__root;
         quake_mdl_t* m__parent;
 
     public:
-        int32_t on_seam() const { return m_on_seam; }
-        int32_t s() const { return m_s; }
-        int32_t t() const { return m_t; }
+        int32_t type() const { return m_type; }
+        mdl_vertex_t* min() const { return m_min; }
+        mdl_vertex_t* max() const { return m_max; }
+        std::vector<float>* time() const { return m_time; }
+        std::vector<mdl_simple_frame_t*>* frames() const { return m_frames; }
         quake_mdl_t* _root() const { return m__root; }
         quake_mdl_t* _parent() const { return m__parent; }
     };
@@ -235,6 +235,36 @@ public:
         quake_mdl_t* _parent() const { return m__parent; }
     };
 
+    class mdl_simple_frame_t : public kaitai::kstruct {
+
+    public:
+
+        mdl_simple_frame_t(kaitai::kstream* p__io, quake_mdl_t::mdl_frame_t* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~mdl_simple_frame_t();
+
+    private:
+        mdl_vertex_t* m_bbox_min;
+        mdl_vertex_t* m_bbox_max;
+        std::string m_name;
+        std::vector<mdl_vertex_t*>* m_vertices;
+        quake_mdl_t* m__root;
+        quake_mdl_t::mdl_frame_t* m__parent;
+
+    public:
+        mdl_vertex_t* bbox_min() const { return m_bbox_min; }
+        mdl_vertex_t* bbox_max() const { return m_bbox_max; }
+        std::string name() const { return m_name; }
+        std::vector<mdl_vertex_t*>* vertices() const { return m_vertices; }
+        quake_mdl_t* _root() const { return m__root; }
+        quake_mdl_t::mdl_frame_t* _parent() const { return m__parent; }
+    };
+
     class mdl_skin_t : public kaitai::kstruct {
 
     public:
@@ -291,91 +321,37 @@ public:
         quake_mdl_t* _parent() const { return m__parent; }
     };
 
-    class mdl_frame_t : public kaitai::kstruct {
+    /**
+     * \sa https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83 Source
+     * \sa https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2 Source
+     */
+
+    class mdl_texcoord_t : public kaitai::kstruct {
 
     public:
 
-        mdl_frame_t(kaitai::kstream* p__io, quake_mdl_t* p__parent = 0, quake_mdl_t* p__root = 0);
+        mdl_texcoord_t(kaitai::kstream* p__io, quake_mdl_t* p__parent = 0, quake_mdl_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~mdl_frame_t();
+        ~mdl_texcoord_t();
 
     private:
-        bool f_num_simple_frames;
-        int32_t m_num_simple_frames;
-
-    public:
-        int32_t num_simple_frames();
-
-    private:
-        int32_t m_type;
-        mdl_vertex_t* m_min;
-        bool n_min;
-
-    public:
-        bool _is_null_min() { min(); return n_min; };
-
-    private:
-        mdl_vertex_t* m_max;
-        bool n_max;
-
-    public:
-        bool _is_null_max() { max(); return n_max; };
-
-    private:
-        std::vector<float>* m_time;
-        bool n_time;
-
-    public:
-        bool _is_null_time() { time(); return n_time; };
-
-    private:
-        std::vector<mdl_simple_frame_t*>* m_frames;
+        int32_t m_on_seam;
+        int32_t m_s;
+        int32_t m_t;
         quake_mdl_t* m__root;
         quake_mdl_t* m__parent;
 
     public:
-        int32_t type() const { return m_type; }
-        mdl_vertex_t* min() const { return m_min; }
-        mdl_vertex_t* max() const { return m_max; }
-        std::vector<float>* time() const { return m_time; }
-        std::vector<mdl_simple_frame_t*>* frames() const { return m_frames; }
+        int32_t on_seam() const { return m_on_seam; }
+        int32_t s() const { return m_s; }
+        int32_t t() const { return m_t; }
         quake_mdl_t* _root() const { return m__root; }
         quake_mdl_t* _parent() const { return m__parent; }
-    };
-
-    class mdl_simple_frame_t : public kaitai::kstruct {
-
-    public:
-
-        mdl_simple_frame_t(kaitai::kstream* p__io, quake_mdl_t::mdl_frame_t* p__parent = 0, quake_mdl_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~mdl_simple_frame_t();
-
-    private:
-        mdl_vertex_t* m_bbox_min;
-        mdl_vertex_t* m_bbox_max;
-        std::string m_name;
-        std::vector<mdl_vertex_t*>* m_vertices;
-        quake_mdl_t* m__root;
-        quake_mdl_t::mdl_frame_t* m__parent;
-
-    public:
-        mdl_vertex_t* bbox_min() const { return m_bbox_min; }
-        mdl_vertex_t* bbox_max() const { return m_bbox_max; }
-        std::string name() const { return m_name; }
-        std::vector<mdl_vertex_t*>* vertices() const { return m_vertices; }
-        quake_mdl_t* _root() const { return m__root; }
-        quake_mdl_t::mdl_frame_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -409,6 +385,32 @@ public:
         std::vector<int32_t>* vertices() const { return m_vertices; }
         quake_mdl_t* _root() const { return m__root; }
         quake_mdl_t* _parent() const { return m__parent; }
+    };
+
+    class mdl_vertex_t : public kaitai::kstruct {
+
+    public:
+
+        mdl_vertex_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quake_mdl_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~mdl_vertex_t();
+
+    private:
+        std::vector<uint8_t>* m_values;
+        uint8_t m_normal_index;
+        quake_mdl_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        std::vector<uint8_t>* values() const { return m_values; }
+        uint8_t normal_index() const { return m_normal_index; }
+        quake_mdl_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
     /**

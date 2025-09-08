@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -72,12 +73,21 @@ public class AvantesRoh60 extends KaitaiStruct {
             this.unknown3.add(this._io.readF4le());
         }
         this.spectrum = new ArrayList<Float>();
-        for (int i = 0; i < (((int) (ipixlast() + 0) - (int) (ipixfirst() + 0)) - 1); i++) {
+        for (int i = 0; i < (((Number) (ipixlast())).intValue() - ((Number) (ipixfirst())).intValue()) - 1; i++) {
             this.spectrum.add(this._io.readF4le());
         }
         this.integrationMs = this._io.readF4le();
         this.averaging = this._io.readF4le();
         this.pixelSmoothing = this._io.readF4le();
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.unknown2.size(); i++) {
+        }
+        for (int i = 0; i < this.unknown3.size(); i++) {
+        }
+        for (int i = 0; i < this.spectrum.size(); i++) {
+        }
     }
     private float unknown1;
     private float wlintercept;
@@ -85,11 +95,11 @@ public class AvantesRoh60 extends KaitaiStruct {
     private float wlx2;
     private float wlx3;
     private float wlx4;
-    private ArrayList<Float> unknown2;
+    private List<Float> unknown2;
     private float ipixfirst;
     private float ipixlast;
-    private ArrayList<Float> unknown3;
-    private ArrayList<Float> spectrum;
+    private List<Float> unknown3;
+    private List<Float> spectrum;
     private float integrationMs;
     private float averaging;
     private float pixelSmoothing;
@@ -101,11 +111,11 @@ public class AvantesRoh60 extends KaitaiStruct {
     public float wlx2() { return wlx2; }
     public float wlx3() { return wlx3; }
     public float wlx4() { return wlx4; }
-    public ArrayList<Float> unknown2() { return unknown2; }
+    public List<Float> unknown2() { return unknown2; }
     public float ipixfirst() { return ipixfirst; }
     public float ipixlast() { return ipixlast; }
-    public ArrayList<Float> unknown3() { return unknown3; }
-    public ArrayList<Float> spectrum() { return spectrum; }
+    public List<Float> unknown3() { return unknown3; }
+    public List<Float> spectrum() { return spectrum; }
     public float integrationMs() { return integrationMs; }
     public float averaging() { return averaging; }
     public float pixelSmoothing() { return pixelSmoothing; }

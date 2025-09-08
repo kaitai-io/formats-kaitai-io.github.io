@@ -11,8 +11,8 @@
 
 namespace {
     class Rpm extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -30,7 +30,7 @@ namespace {
             $this->_m_signatureTagsSteps = [];
             $n = $this->signature()->headerRecord()->numIndexRecords();
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_signatureTagsSteps[] = new \Rpm\SignatureTagsStep($i, ($i < 1 ? -1 : $this->signatureTagsSteps()[($i - 1)]->sizeTagIdx()), $this->_io, $this, $this->_root);
+                $this->_m_signatureTagsSteps[] = new \Rpm\SignatureTagsStep($i, ($i < 1 ? -1 : $this->signatureTagsSteps()[$i - 1]->sizeTagIdx()), $this->_io, $this, $this->_root);
             }
         }
         protected $_m_hasSignatureSizeTag;
@@ -40,42 +40,21 @@ namespace {
             $this->_m_hasSignatureSizeTag = $this->signatureTagsSteps()[count($this->signatureTagsSteps()) - 1]->sizeTagIdx() != -1;
             return $this->_m_hasSignatureSizeTag;
         }
-        protected $_m_signatureSizeTag;
-        public function signatureSizeTag() {
-            if ($this->_m_signatureSizeTag !== null)
-                return $this->_m_signatureSizeTag;
-            if ($this->hasSignatureSizeTag()) {
-                $this->_m_signatureSizeTag = $this->signature()->indexRecords()[$this->signatureTagsSteps()[count($this->signatureTagsSteps()) - 1]->sizeTagIdx()];
-            }
-            return $this->_m_signatureSizeTag;
+        protected $_m_lenHeader;
+        public function lenHeader() {
+            if ($this->_m_lenHeader !== null)
+                return $this->_m_lenHeader;
+            $this->_m_lenHeader = $this->ofsPayload() - $this->ofsHeader();
+            return $this->_m_lenHeader;
         }
         protected $_m_lenPayload;
         public function lenPayload() {
             if ($this->_m_lenPayload !== null)
                 return $this->_m_lenPayload;
             if ($this->hasSignatureSizeTag()) {
-                $this->_m_lenPayload = ($this->signatureSizeTag()->body()->values()[0] - $this->lenHeader());
+                $this->_m_lenPayload = $this->signatureSizeTag()->body()->values()[0] - $this->lenHeader();
             }
             return $this->_m_lenPayload;
-        }
-        protected $_m_payload;
-        public function payload() {
-            if ($this->_m_payload !== null)
-                return $this->_m_payload;
-            if ($this->hasSignatureSizeTag()) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek($this->ofsPayload());
-                $this->_m_payload = $this->_io->readBytes($this->lenPayload());
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_payload;
-        }
-        protected $_m_lenHeader;
-        public function lenHeader() {
-            if ($this->_m_lenHeader !== null)
-                return $this->_m_lenHeader;
-            $this->_m_lenHeader = ($this->ofsPayload() - $this->ofsHeader());
-            return $this->_m_lenHeader;
         }
         protected $_m_ofsHeader;
         public function ofsHeader() {
@@ -90,6 +69,27 @@ namespace {
                 return $this->_m_ofsPayload;
             $this->_m_ofsPayload = $this->_io()->pos();
             return $this->_m_ofsPayload;
+        }
+        protected $_m_payload;
+        public function payload() {
+            if ($this->_m_payload !== null)
+                return $this->_m_payload;
+            if ($this->hasSignatureSizeTag()) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->ofsPayload());
+                $this->_m_payload = $this->_io->readBytes($this->lenPayload());
+                $this->_io->seek($_pos);
+            }
+            return $this->_m_payload;
+        }
+        protected $_m_signatureSizeTag;
+        public function signatureSizeTag() {
+            if ($this->_m_signatureSizeTag !== null)
+                return $this->_m_signatureSizeTag;
+            if ($this->hasSignatureSizeTag()) {
+                $this->_m_signatureSizeTag = $this->signature()->indexRecords()[$this->signatureTagsSteps()[count($this->signatureTagsSteps()) - 1]->sizeTagIdx()];
+            }
+            return $this->_m_signatureSizeTag;
         }
         protected $_m_lead;
         protected $_m_signature;
@@ -109,417 +109,14 @@ namespace {
 }
 
 namespace Rpm {
-    class RecordTypeStringArray extends \Kaitai\Struct\Struct {
-        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, \Rpm\HeaderIndexRecord $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_numValues = $numValues;
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_values = [];
-            $n = $this->numValues();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_values[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
-            }
-        }
-        protected $_m_values;
-        protected $_m_numValues;
-        public function values() { return $this->_m_values; }
-        public function numValues() { return $this->_m_numValues; }
-    }
-}
-
-/**
- * In 2021, Panu Matilainen (a RPM developer) [described this
- * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
- * as follows:
- * 
- * > The lead as a structure is 25 years obsolete, the data there is
- * > meaningless. Seriously. Except to check for the magic to detect that
- * > it's an rpm file in the first place, just ignore everything in it.
- * > Literally everything.
- * 
- * The fields with `valid` constraints are important, because these are the
- * same validations that RPM does (which means that any valid `.rpm` file
- * must pass them), but otherwise you should not make decisions based on the
- * values given here.
- */
-
-namespace Rpm {
-    class Lead extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rpm $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\xED\xAB\xEE\xDB")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xED\xAB\xEE\xDB", $this->magic(), $this->_io(), "/types/lead/seq/0");
-            }
-            $this->_m_version = new \Rpm\RpmVersion($this->_io, $this, $this->_root);
-            $this->_m_type = $this->_io->readU2be();
-            $this->_m_architecture = $this->_io->readU2be();
-            $this->_m_packageName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(66), 0, false), "UTF-8");
-            $this->_m_os = $this->_io->readU2be();
-            $this->_m_signatureType = $this->_io->readU2be();
-            if (!($this->signatureType() == 5)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(5, $this->signatureType(), $this->_io(), "/types/lead/seq/6");
-            }
-            $this->_m_reserved = $this->_io->readBytes(16);
-        }
-        protected $_m_magic;
-        protected $_m_version;
-        protected $_m_type;
-        protected $_m_architecture;
-        protected $_m_packageName;
-        protected $_m_os;
-        protected $_m_signatureType;
-        protected $_m_reserved;
-        public function magic() { return $this->_m_magic; }
-        public function version() { return $this->_m_version; }
-        public function type() { return $this->_m_type; }
-        public function architecture() { return $this->_m_architecture; }
-        public function packageName() { return $this->_m_packageName; }
-        public function os() { return $this->_m_os; }
-        public function signatureType() { return $this->_m_signatureType; }
-        public function reserved() { return $this->_m_reserved; }
-    }
-}
-
-namespace Rpm {
-    class RecordTypeString extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rpm\HeaderIndexRecord $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_values = [];
-            $n = 1;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_values[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
-            }
-        }
-        protected $_m_values;
-        public function values() { return $this->_m_values; }
-    }
-}
-
-namespace Rpm {
-    class SignatureTagsStep extends \Kaitai\Struct\Struct {
-        public function __construct(int $idx, int $prevSizeTagIdx, \Kaitai\Struct\Stream $_io, \Rpm $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_idx = $idx;
-            $this->_m_prevSizeTagIdx = $prevSizeTagIdx;
-            $this->_read();
-        }
-
-        private function _read() {
-        }
-        protected $_m_sizeTagIdx;
-        public function sizeTagIdx() {
-            if ($this->_m_sizeTagIdx !== null)
-                return $this->_m_sizeTagIdx;
-            $this->_m_sizeTagIdx = ($this->prevSizeTagIdx() != -1 ? $this->prevSizeTagIdx() : ( (($this->_parent()->signature()->indexRecords()[$this->idx()]->signatureTag() == \Rpm\SignatureTags::SIZE) && ($this->_parent()->signature()->indexRecords()[$this->idx()]->recordType() == \Rpm\RecordTypes::UINT32) && ($this->_parent()->signature()->indexRecords()[$this->idx()]->numValues() >= 1))  ? $this->idx() : -1));
-            return $this->_m_sizeTagIdx;
-        }
-        protected $_m_idx;
-        protected $_m_prevSizeTagIdx;
-        public function idx() { return $this->_m_idx; }
-        public function prevSizeTagIdx() { return $this->_m_prevSizeTagIdx; }
-    }
-}
-
-namespace Rpm {
-    class RecordTypeUint32 extends \Kaitai\Struct\Struct {
-        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, \Rpm\HeaderIndexRecord $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_numValues = $numValues;
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_values = [];
-            $n = $this->numValues();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_values[] = $this->_io->readU4be();
-            }
-        }
-        protected $_m_values;
-        protected $_m_numValues;
-        public function values() { return $this->_m_values; }
-        public function numValues() { return $this->_m_numValues; }
-    }
-}
-
-namespace Rpm {
-    class RecordTypeUint16 extends \Kaitai\Struct\Struct {
-        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, \Rpm\HeaderIndexRecord $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_numValues = $numValues;
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_values = [];
-            $n = $this->numValues();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_values[] = $this->_io->readU2be();
-            }
-        }
-        protected $_m_values;
-        protected $_m_numValues;
-        public function values() { return $this->_m_values; }
-        public function numValues() { return $this->_m_numValues; }
-    }
-}
-
-namespace Rpm {
-    class HeaderIndexRecord extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rpm\Header $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_tagRaw = $this->_io->readU4be();
-            $this->_m_recordType = $this->_io->readU4be();
-            $this->_m_ofsBody = $this->_io->readU4be();
-            $this->_m_count = $this->_io->readU4be();
-        }
-        protected $_m_numValues;
-        public function numValues() {
-            if ($this->_m_numValues !== null)
-                return $this->_m_numValues;
-            if ($this->recordType() != \Rpm\RecordTypes::BIN) {
-                $this->_m_numValues = $this->count();
-            }
-            return $this->_m_numValues;
-        }
-        protected $_m_body;
-        public function body() {
-            if ($this->_m_body !== null)
-                return $this->_m_body;
-            $io = $this->_parent()->storageSection()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->ofsBody());
-            switch ($this->recordType()) {
-                case \Rpm\RecordTypes::UINT32:
-                    $this->_m_body = new \Rpm\RecordTypeUint32($this->numValues(), $io, $this, $this->_root);
-                    break;
-                case \Rpm\RecordTypes::UINT64:
-                    $this->_m_body = new \Rpm\RecordTypeUint64($this->numValues(), $io, $this, $this->_root);
-                    break;
-                case \Rpm\RecordTypes::BIN:
-                    $this->_m_body = new \Rpm\RecordTypeBin($this->lenValue(), $io, $this, $this->_root);
-                    break;
-                case \Rpm\RecordTypes::STRING:
-                    $this->_m_body = new \Rpm\RecordTypeString($io, $this, $this->_root);
-                    break;
-                case \Rpm\RecordTypes::UINT8:
-                    $this->_m_body = new \Rpm\RecordTypeUint8($this->numValues(), $io, $this, $this->_root);
-                    break;
-                case \Rpm\RecordTypes::I18N_STRING:
-                    $this->_m_body = new \Rpm\RecordTypeStringArray($this->numValues(), $io, $this, $this->_root);
-                    break;
-                case \Rpm\RecordTypes::UINT16:
-                    $this->_m_body = new \Rpm\RecordTypeUint16($this->numValues(), $io, $this, $this->_root);
-                    break;
-                case \Rpm\RecordTypes::CHAR:
-                    $this->_m_body = new \Rpm\RecordTypeUint8($this->numValues(), $io, $this, $this->_root);
-                    break;
-                case \Rpm\RecordTypes::STRING_ARRAY:
-                    $this->_m_body = new \Rpm\RecordTypeStringArray($this->numValues(), $io, $this, $this->_root);
-                    break;
-            }
-            $io->seek($_pos);
-            return $this->_m_body;
-        }
-        protected $_m_signatureTag;
-        public function signatureTag() {
-            if ($this->_m_signatureTag !== null)
-                return $this->_m_signatureTag;
-            if ($this->_parent()->isSignature()) {
-                $this->_m_signatureTag = $this->tagRaw();
-            }
-            return $this->_m_signatureTag;
-        }
-        protected $_m_lenValue;
-        public function lenValue() {
-            if ($this->_m_lenValue !== null)
-                return $this->_m_lenValue;
-            if ($this->recordType() == \Rpm\RecordTypes::BIN) {
-                $this->_m_lenValue = $this->count();
-            }
-            return $this->_m_lenValue;
-        }
-        protected $_m_headerTag;
-        public function headerTag() {
-            if ($this->_m_headerTag !== null)
-                return $this->_m_headerTag;
-            if ($this->_parent()->isHeader()) {
-                $this->_m_headerTag = $this->tagRaw();
-            }
-            return $this->_m_headerTag;
-        }
-        protected $_m_tagRaw;
-        protected $_m_recordType;
-        protected $_m_ofsBody;
-        protected $_m_count;
-
-        /**
-         * prefer to access `signature_tag` and `header_tag` instead
-         */
-        public function tagRaw() { return $this->_m_tagRaw; }
-        public function recordType() { return $this->_m_recordType; }
-        public function ofsBody() { return $this->_m_ofsBody; }
-
-        /**
-         * internal; access `num_values` and `len_value` instead
-         */
-        public function count() { return $this->_m_count; }
-    }
-}
-
-namespace Rpm {
-    class RpmVersion extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rpm\Lead $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_major = $this->_io->readU1();
-            if (!($this->major() >= 3)) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError(3, $this->major(), $this->_io(), "/types/rpm_version/seq/0");
-            }
-            if (!($this->major() <= 4)) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(4, $this->major(), $this->_io(), "/types/rpm_version/seq/0");
-            }
-            $this->_m_minor = $this->_io->readU1();
-        }
-        protected $_m_major;
-        protected $_m_minor;
-        public function major() { return $this->_m_major; }
-        public function minor() { return $this->_m_minor; }
-    }
-}
-
-namespace Rpm {
     class Dummy extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rpm\Header $_parent = null, \Rpm $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rpm\Header $_parent = null, ?\Rpm $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
         }
-    }
-}
-
-namespace Rpm {
-    class RecordTypeUint8 extends \Kaitai\Struct\Struct {
-        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, \Rpm\HeaderIndexRecord $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_numValues = $numValues;
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_values = [];
-            $n = $this->numValues();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_values[] = $this->_io->readU1();
-            }
-        }
-        protected $_m_values;
-        protected $_m_numValues;
-        public function values() { return $this->_m_values; }
-        public function numValues() { return $this->_m_numValues; }
-    }
-}
-
-namespace Rpm {
-    class RecordTypeUint64 extends \Kaitai\Struct\Struct {
-        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, \Rpm\HeaderIndexRecord $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_numValues = $numValues;
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_values = [];
-            $n = $this->numValues();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_values[] = $this->_io->readU8be();
-            }
-        }
-        protected $_m_values;
-        protected $_m_numValues;
-        public function values() { return $this->_m_values; }
-        public function numValues() { return $this->_m_numValues; }
-    }
-}
-
-namespace Rpm {
-    class RecordTypeBin extends \Kaitai\Struct\Struct {
-        public function __construct(int $lenValue, \Kaitai\Struct\Stream $_io, \Rpm\HeaderIndexRecord $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_lenValue = $lenValue;
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_values = [];
-            $n = 1;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_values[] = $this->_io->readBytes($this->lenValue());
-            }
-        }
-        protected $_m_values;
-        protected $_m_lenValue;
-        public function values() { return $this->_m_values; }
-        public function lenValue() { return $this->_m_lenValue; }
-    }
-}
-
-namespace Rpm {
-    class HeaderRecord extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rpm\Header $_parent = null, \Rpm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x8E\xAD\xE8\x01")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x8E\xAD\xE8\x01", $this->magic(), $this->_io(), "/types/header_record/seq/0");
-            }
-            $this->_m_reserved = $this->_io->readBytes(4);
-            if (!($this->reserved() == "\x00\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00", $this->reserved(), $this->_io(), "/types/header_record/seq/1");
-            }
-            $this->_m_numIndexRecords = $this->_io->readU4be();
-            if (!($this->numIndexRecords() >= 1)) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->numIndexRecords(), $this->_io(), "/types/header_record/seq/2");
-            }
-            $this->_m_lenStorageSection = $this->_io->readU4be();
-        }
-        protected $_m_magic;
-        protected $_m_reserved;
-        protected $_m_numIndexRecords;
-        protected $_m_lenStorageSection;
-        public function magic() { return $this->_m_magic; }
-        public function reserved() { return $this->_m_reserved; }
-        public function numIndexRecords() { return $this->_m_numIndexRecords; }
-
-        /**
-         * Size of the storage area for the data
-         * pointed to by the Index Records.
-         */
-        public function lenStorageSection() { return $this->_m_lenStorageSection; }
     }
 }
 
@@ -531,7 +128,7 @@ namespace Rpm {
 
 namespace Rpm {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(bool $isSignature, \Kaitai\Struct\Stream $_io, \Rpm $_parent = null, \Rpm $_root = null) {
+        public function __construct(bool $isSignature, \Kaitai\Struct\Stream $_io, ?\Rpm $_parent = null, ?\Rpm $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_isSignature = $isSignature;
             $this->_read();
@@ -569,99 +166,456 @@ namespace Rpm {
 }
 
 namespace Rpm {
-    class OperatingSystems {
-        const LINUX = 1;
-        const IRIX = 2;
+    class HeaderIndexRecord extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rpm\Header $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_tagRaw = $this->_io->readU4be();
+            $this->_m_recordType = $this->_io->readU4be();
+            $this->_m_ofsBody = $this->_io->readU4be();
+            $this->_m_count = $this->_io->readU4be();
+        }
+        protected $_m_body;
+        public function body() {
+            if ($this->_m_body !== null)
+                return $this->_m_body;
+            $io = $this->_parent()->storageSection()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->ofsBody());
+            switch ($this->recordType()) {
+                case \Rpm\RecordTypes::BIN:
+                    $this->_m_body = new \Rpm\RecordTypeBin($this->lenValue(), $io, $this, $this->_root);
+                    break;
+                case \Rpm\RecordTypes::CHAR:
+                    $this->_m_body = new \Rpm\RecordTypeUint8($this->numValues(), $io, $this, $this->_root);
+                    break;
+                case \Rpm\RecordTypes::I18N_STRING:
+                    $this->_m_body = new \Rpm\RecordTypeStringArray($this->numValues(), $io, $this, $this->_root);
+                    break;
+                case \Rpm\RecordTypes::STRING:
+                    $this->_m_body = new \Rpm\RecordTypeString($io, $this, $this->_root);
+                    break;
+                case \Rpm\RecordTypes::STRING_ARRAY:
+                    $this->_m_body = new \Rpm\RecordTypeStringArray($this->numValues(), $io, $this, $this->_root);
+                    break;
+                case \Rpm\RecordTypes::UINT16:
+                    $this->_m_body = new \Rpm\RecordTypeUint16($this->numValues(), $io, $this, $this->_root);
+                    break;
+                case \Rpm\RecordTypes::UINT32:
+                    $this->_m_body = new \Rpm\RecordTypeUint32($this->numValues(), $io, $this, $this->_root);
+                    break;
+                case \Rpm\RecordTypes::UINT64:
+                    $this->_m_body = new \Rpm\RecordTypeUint64($this->numValues(), $io, $this, $this->_root);
+                    break;
+                case \Rpm\RecordTypes::UINT8:
+                    $this->_m_body = new \Rpm\RecordTypeUint8($this->numValues(), $io, $this, $this->_root);
+                    break;
+            }
+            $io->seek($_pos);
+            return $this->_m_body;
+        }
+        protected $_m_headerTag;
+        public function headerTag() {
+            if ($this->_m_headerTag !== null)
+                return $this->_m_headerTag;
+            if ($this->_parent()->isHeader()) {
+                $this->_m_headerTag = $this->tagRaw();
+            }
+            return $this->_m_headerTag;
+        }
+        protected $_m_lenValue;
+        public function lenValue() {
+            if ($this->_m_lenValue !== null)
+                return $this->_m_lenValue;
+            if ($this->recordType() == \Rpm\RecordTypes::BIN) {
+                $this->_m_lenValue = $this->count();
+            }
+            return $this->_m_lenValue;
+        }
+        protected $_m_numValues;
+        public function numValues() {
+            if ($this->_m_numValues !== null)
+                return $this->_m_numValues;
+            if ($this->recordType() != \Rpm\RecordTypes::BIN) {
+                $this->_m_numValues = $this->count();
+            }
+            return $this->_m_numValues;
+        }
+        protected $_m_signatureTag;
+        public function signatureTag() {
+            if ($this->_m_signatureTag !== null)
+                return $this->_m_signatureTag;
+            if ($this->_parent()->isSignature()) {
+                $this->_m_signatureTag = $this->tagRaw();
+            }
+            return $this->_m_signatureTag;
+        }
+        protected $_m_tagRaw;
+        protected $_m_recordType;
+        protected $_m_ofsBody;
+        protected $_m_count;
 
         /**
-         * This value is pretty much a guess, based on that `archnum` and `osnum`
-         * values are handled by the same function `getMachineInfo()` (see
-         * `doc-ref` link) which uses 255 for an unknown value. Value
-         * `architectures::no_arch` can be verified with the magic file of
-         * `file(1)` and `.rpm` files that have `noarch` in their name, so it seems
-         * reasonable that `no_os` (or "`noos`" originally) follows the same
-         * pattern.
-         * 
-         * Moreover, this value is actually used in practice, see this sample file:
-         * <https://github.com/craigwblake/redline/blob/15afff5/src/test/resources/rpm-3-1.0-1.somearch.rpm>
+         * prefer to access `signature_tag` and `header_tag` instead
          */
-        const NO_OS = 255;
+        public function tagRaw() { return $this->_m_tagRaw; }
+        public function recordType() { return $this->_m_recordType; }
+        public function ofsBody() { return $this->_m_ofsBody; }
+
+        /**
+         * internal; access `num_values` and `len_value` instead
+         */
+        public function count() { return $this->_m_count; }
     }
 }
 
 namespace Rpm {
-    class SignatureTags {
-        const SIGNATURES = 62;
-        const HEADER_IMMUTABLE = 63;
-        const I18N_TABLE = 100;
-        const BAD_SHA1_1_OBSOLETE = 264;
-        const BAD_SHA1_2_OBSOLETE = 265;
-        const DSA = 267;
-        const RSA = 268;
-        const SHA1 = 269;
-        const LONG_SIZE = 270;
-        const LONG_ARCHIVE_SIZE = 271;
-        const SHA256 = 273;
-        const FILE_SIGNATURES = 274;
-        const FILE_SIGNATURE_LENGTH = 275;
-        const VERITY_SIGNATURES = 276;
-        const VERITY_SIGNATURE_ALGO = 277;
+    class HeaderRecord extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rpm\Header $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic = $this->_io->readBytes(4);
+            if (!($this->_m_magic == "\x8E\xAD\xE8\x01")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x8E\xAD\xE8\x01", $this->_m_magic, $this->_io, "/types/header_record/seq/0");
+            }
+            $this->_m_reserved = $this->_io->readBytes(4);
+            if (!($this->_m_reserved == "\x00\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00", $this->_m_reserved, $this->_io, "/types/header_record/seq/1");
+            }
+            $this->_m_numIndexRecords = $this->_io->readU4be();
+            if (!($this->_m_numIndexRecords >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_numIndexRecords, $this->_io, "/types/header_record/seq/2");
+            }
+            $this->_m_lenStorageSection = $this->_io->readU4be();
+        }
+        protected $_m_magic;
+        protected $_m_reserved;
+        protected $_m_numIndexRecords;
+        protected $_m_lenStorageSection;
+        public function magic() { return $this->_m_magic; }
+        public function reserved() { return $this->_m_reserved; }
+        public function numIndexRecords() { return $this->_m_numIndexRecords; }
 
         /**
-         * Header + payload size (32bit) in bytes.
+         * Size of the storage area for the data
+         * pointed to by the Index Records.
          */
-        const SIZE = 1000;
+        public function lenStorageSection() { return $this->_m_lenStorageSection; }
+    }
+}
 
-        /**
-         * MD5 broken on big-endian machines, take 1
-         */
-        const LE_MD5_1_OBSOLETE = 1001;
+/**
+ * In 2021, Panu Matilainen (a RPM developer) [described this
+ * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
+ * as follows:
+ * 
+ * > The lead as a structure is 25 years obsolete, the data there is
+ * > meaningless. Seriously. Except to check for the magic to detect that
+ * > it's an rpm file in the first place, just ignore everything in it.
+ * > Literally everything.
+ * 
+ * The fields with `valid` constraints are important, because these are the
+ * same validations that RPM does (which means that any valid `.rpm` file
+ * must pass them), but otherwise you should not make decisions based on the
+ * values given here.
+ */
 
-        /**
-         * PGP 2.6.3 signature.
-         */
-        const PGP = 1002;
+namespace Rpm {
+    class Lead extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rpm $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
 
-        /**
-         * MD5 broken on big-endian machines, take 2
-         */
-        const LE_MD5_2_OBSOLETE = 1003;
-
-        /**
-         * MD5 signature
-         */
-        const MD5 = 1004;
-
-        /**
-         * GnuPG signature
-         */
-        const GPG = 1005;
-        const PGP5_OBSOLETE = 1006;
-
-        /**
-         * Uncompressed payload size (32bit) in bytes.
-         */
-        const PAYLOAD_SIZE = 1007;
-
-        /**
-         * Space reserved for signatures
-         */
-        const RESERVED_SPACE = 1008;
+        private function _read() {
+            $this->_m_magic = $this->_io->readBytes(4);
+            if (!($this->_m_magic == "\xED\xAB\xEE\xDB")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xED\xAB\xEE\xDB", $this->_m_magic, $this->_io, "/types/lead/seq/0");
+            }
+            $this->_m_version = new \Rpm\RpmVersion($this->_io, $this, $this->_root);
+            $this->_m_type = $this->_io->readU2be();
+            $this->_m_architecture = $this->_io->readU2be();
+            $this->_m_packageName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(66), 0, false), "UTF-8");
+            $this->_m_os = $this->_io->readU2be();
+            $this->_m_signatureType = $this->_io->readU2be();
+            if (!($this->_m_signatureType == 5)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(5, $this->_m_signatureType, $this->_io, "/types/lead/seq/6");
+            }
+            $this->_m_reserved = $this->_io->readBytes(16);
+        }
+        protected $_m_magic;
+        protected $_m_version;
+        protected $_m_type;
+        protected $_m_architecture;
+        protected $_m_packageName;
+        protected $_m_os;
+        protected $_m_signatureType;
+        protected $_m_reserved;
+        public function magic() { return $this->_m_magic; }
+        public function version() { return $this->_m_version; }
+        public function type() { return $this->_m_type; }
+        public function architecture() { return $this->_m_architecture; }
+        public function packageName() { return $this->_m_packageName; }
+        public function os() { return $this->_m_os; }
+        public function signatureType() { return $this->_m_signatureType; }
+        public function reserved() { return $this->_m_reserved; }
     }
 }
 
 namespace Rpm {
-    class RecordTypes {
-        const NOT_IMPLEMENTED = 0;
-        const CHAR = 1;
-        const UINT8 = 2;
-        const UINT16 = 3;
-        const UINT32 = 4;
-        const UINT64 = 5;
-        const STRING = 6;
-        const BIN = 7;
-        const STRING_ARRAY = 8;
-        const I18N_STRING = 9;
+    class RecordTypeBin extends \Kaitai\Struct\Struct {
+        public function __construct(int $lenValue, \Kaitai\Struct\Stream $_io, ?\Rpm\HeaderIndexRecord $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_lenValue = $lenValue;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_values = [];
+            $n = 1;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readBytes($this->lenValue());
+            }
+        }
+        protected $_m_values;
+        protected $_m_lenValue;
+        public function values() { return $this->_m_values; }
+        public function lenValue() { return $this->_m_lenValue; }
+    }
+}
+
+namespace Rpm {
+    class RecordTypeString extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rpm\HeaderIndexRecord $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_values = [];
+            $n = 1;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Rpm {
+    class RecordTypeStringArray extends \Kaitai\Struct\Struct {
+        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, ?\Rpm\HeaderIndexRecord $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_numValues = $numValues;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_values = [];
+            $n = $this->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
+            }
+        }
+        protected $_m_values;
+        protected $_m_numValues;
+        public function values() { return $this->_m_values; }
+        public function numValues() { return $this->_m_numValues; }
+    }
+}
+
+namespace Rpm {
+    class RecordTypeUint16 extends \Kaitai\Struct\Struct {
+        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, ?\Rpm\HeaderIndexRecord $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_numValues = $numValues;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_values = [];
+            $n = $this->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readU2be();
+            }
+        }
+        protected $_m_values;
+        protected $_m_numValues;
+        public function values() { return $this->_m_values; }
+        public function numValues() { return $this->_m_numValues; }
+    }
+}
+
+namespace Rpm {
+    class RecordTypeUint32 extends \Kaitai\Struct\Struct {
+        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, ?\Rpm\HeaderIndexRecord $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_numValues = $numValues;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_values = [];
+            $n = $this->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readU4be();
+            }
+        }
+        protected $_m_values;
+        protected $_m_numValues;
+        public function values() { return $this->_m_values; }
+        public function numValues() { return $this->_m_numValues; }
+    }
+}
+
+namespace Rpm {
+    class RecordTypeUint64 extends \Kaitai\Struct\Struct {
+        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, ?\Rpm\HeaderIndexRecord $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_numValues = $numValues;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_values = [];
+            $n = $this->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readU8be();
+            }
+        }
+        protected $_m_values;
+        protected $_m_numValues;
+        public function values() { return $this->_m_values; }
+        public function numValues() { return $this->_m_numValues; }
+    }
+}
+
+namespace Rpm {
+    class RecordTypeUint8 extends \Kaitai\Struct\Struct {
+        public function __construct(int $numValues, \Kaitai\Struct\Stream $_io, ?\Rpm\HeaderIndexRecord $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_numValues = $numValues;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_values = [];
+            $n = $this->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readU1();
+            }
+        }
+        protected $_m_values;
+        protected $_m_numValues;
+        public function values() { return $this->_m_values; }
+        public function numValues() { return $this->_m_numValues; }
+    }
+}
+
+namespace Rpm {
+    class RpmVersion extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rpm\Lead $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_major = $this->_io->readU1();
+            if (!($this->_m_major >= 3)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(3, $this->_m_major, $this->_io, "/types/rpm_version/seq/0");
+            }
+            if (!($this->_m_major <= 4)) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(4, $this->_m_major, $this->_io, "/types/rpm_version/seq/0");
+            }
+            $this->_m_minor = $this->_io->readU1();
+        }
+        protected $_m_major;
+        protected $_m_minor;
+        public function major() { return $this->_m_major; }
+        public function minor() { return $this->_m_minor; }
+    }
+}
+
+namespace Rpm {
+    class SignatureTagsStep extends \Kaitai\Struct\Struct {
+        public function __construct(int $idx, int $prevSizeTagIdx, \Kaitai\Struct\Stream $_io, ?\Rpm $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_idx = $idx;
+            $this->_m_prevSizeTagIdx = $prevSizeTagIdx;
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+        protected $_m_sizeTagIdx;
+        public function sizeTagIdx() {
+            if ($this->_m_sizeTagIdx !== null)
+                return $this->_m_sizeTagIdx;
+            $this->_m_sizeTagIdx = ($this->prevSizeTagIdx() != -1 ? $this->prevSizeTagIdx() : ( (($this->_parent()->signature()->indexRecords()[$this->idx()]->signatureTag() == \Rpm\SignatureTags::SIZE) && ($this->_parent()->signature()->indexRecords()[$this->idx()]->recordType() == \Rpm\RecordTypes::UINT32) && ($this->_parent()->signature()->indexRecords()[$this->idx()]->numValues() >= 1))  ? $this->idx() : -1));
+            return $this->_m_sizeTagIdx;
+        }
+        protected $_m_idx;
+        protected $_m_prevSizeTagIdx;
+        public function idx() { return $this->_m_idx; }
+        public function prevSizeTagIdx() { return $this->_m_prevSizeTagIdx; }
+    }
+}
+
+namespace Rpm {
+    class Architectures {
+
+        /**
+         * x86 or x86_64
+         */
+        const X86 = 1;
+
+        /**
+         * Alpha or Sparc64
+         */
+        const ALPHA = 2;
+        const SPARC = 3;
+        const MIPS = 4;
+        const PPC = 5;
+        const M68K = 6;
+
+        /**
+         * SGI Inhouse Processors (IP)
+         */
+        const SGI = 7;
+        const RS6000 = 8;
+        const IA64 = 9;
+        const SPARC64 = 10;
+        const MIPS64 = 11;
+        const ARM = 12;
+        const M68K_MINT = 13;
+        const S390 = 14;
+        const S390X = 15;
+        const PPC64 = 16;
+        const SH = 17;
+        const XTENSA = 18;
+        const AARCH64 = 19;
+        const MIPS_R6 = 20;
+        const MIPS64_R6 = 21;
+        const RISCV = 22;
+        const LOONGARCH64 = 23;
+
+        /**
+         * can be installed on any architecture
+         */
+        const NO_ARCH = 255;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 255 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -1224,6 +1178,60 @@ namespace Rpm {
         const PRE_UNTRANS_FLAGS = 5107;
         const POST_UNTRANS_FLAGS = 5108;
         const SYS_USERS = 5109;
+
+        private const _VALUES = [62 => true, 63 => true, 100 => true, 1000 => true, 1001 => true, 1002 => true, 1003 => true, 1004 => true, 1005 => true, 1006 => true, 1007 => true, 1008 => true, 1009 => true, 1010 => true, 1011 => true, 1012 => true, 1013 => true, 1014 => true, 1015 => true, 1016 => true, 1017 => true, 1018 => true, 1019 => true, 1020 => true, 1021 => true, 1022 => true, 1023 => true, 1024 => true, 1025 => true, 1026 => true, 1027 => true, 1028 => true, 1029 => true, 1030 => true, 1031 => true, 1032 => true, 1033 => true, 1034 => true, 1035 => true, 1036 => true, 1037 => true, 1038 => true, 1039 => true, 1040 => true, 1041 => true, 1042 => true, 1043 => true, 1044 => true, 1045 => true, 1046 => true, 1047 => true, 1048 => true, 1049 => true, 1050 => true, 1051 => true, 1052 => true, 1053 => true, 1054 => true, 1055 => true, 1056 => true, 1057 => true, 1058 => true, 1059 => true, 1060 => true, 1061 => true, 1062 => true, 1063 => true, 1064 => true, 1065 => true, 1066 => true, 1067 => true, 1068 => true, 1069 => true, 1079 => true, 1080 => true, 1081 => true, 1082 => true, 1083 => true, 1084 => true, 1085 => true, 1086 => true, 1087 => true, 1088 => true, 1089 => true, 1090 => true, 1091 => true, 1092 => true, 1093 => true, 1094 => true, 1095 => true, 1096 => true, 1097 => true, 1098 => true, 1099 => true, 1100 => true, 1101 => true, 1102 => true, 1103 => true, 1104 => true, 1105 => true, 1106 => true, 1107 => true, 1108 => true, 1109 => true, 1110 => true, 1111 => true, 1112 => true, 1113 => true, 1114 => true, 1115 => true, 1116 => true, 1117 => true, 1118 => true, 1119 => true, 1120 => true, 1121 => true, 1122 => true, 1123 => true, 1124 => true, 1125 => true, 1126 => true, 1127 => true, 1128 => true, 1129 => true, 1130 => true, 1131 => true, 1132 => true, 1133 => true, 1134 => true, 1135 => true, 1136 => true, 1137 => true, 1138 => true, 1139 => true, 1140 => true, 1141 => true, 1142 => true, 1143 => true, 1144 => true, 1145 => true, 1146 => true, 1147 => true, 1148 => true, 1149 => true, 1150 => true, 1151 => true, 1152 => true, 1153 => true, 1154 => true, 1155 => true, 1156 => true, 1157 => true, 1158 => true, 1159 => true, 1160 => true, 1161 => true, 1162 => true, 1163 => true, 1164 => true, 1165 => true, 1166 => true, 1167 => true, 1168 => true, 1169 => true, 1170 => true, 1171 => true, 1172 => true, 1173 => true, 1174 => true, 1175 => true, 1176 => true, 1177 => true, 1178 => true, 1179 => true, 1180 => true, 1181 => true, 1182 => true, 1183 => true, 1184 => true, 1185 => true, 1186 => true, 1187 => true, 1188 => true, 1189 => true, 1190 => true, 1191 => true, 1192 => true, 1193 => true, 1194 => true, 1195 => true, 1196 => true, 5000 => true, 5001 => true, 5002 => true, 5003 => true, 5004 => true, 5005 => true, 5006 => true, 5007 => true, 5008 => true, 5009 => true, 5010 => true, 5011 => true, 5012 => true, 5013 => true, 5014 => true, 5015 => true, 5016 => true, 5017 => true, 5018 => true, 5019 => true, 5020 => true, 5021 => true, 5022 => true, 5023 => true, 5024 => true, 5025 => true, 5026 => true, 5027 => true, 5029 => true, 5030 => true, 5031 => true, 5032 => true, 5033 => true, 5034 => true, 5035 => true, 5036 => true, 5037 => true, 5038 => true, 5039 => true, 5040 => true, 5041 => true, 5042 => true, 5043 => true, 5044 => true, 5045 => true, 5046 => true, 5047 => true, 5048 => true, 5049 => true, 5050 => true, 5051 => true, 5052 => true, 5053 => true, 5054 => true, 5055 => true, 5056 => true, 5057 => true, 5058 => true, 5059 => true, 5060 => true, 5061 => true, 5062 => true, 5063 => true, 5064 => true, 5065 => true, 5066 => true, 5067 => true, 5068 => true, 5069 => true, 5070 => true, 5071 => true, 5072 => true, 5073 => true, 5074 => true, 5075 => true, 5076 => true, 5077 => true, 5078 => true, 5079 => true, 5080 => true, 5081 => true, 5082 => true, 5083 => true, 5084 => true, 5085 => true, 5086 => true, 5087 => true, 5088 => true, 5089 => true, 5090 => true, 5091 => true, 5092 => true, 5093 => true, 5094 => true, 5095 => true, 5096 => true, 5097 => true, 5098 => true, 5099 => true, 5100 => true, 5101 => true, 5102 => true, 5103 => true, 5104 => true, 5105 => true, 5106 => true, 5107 => true, 5108 => true, 5109 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Rpm {
+    class OperatingSystems {
+        const LINUX = 1;
+        const IRIX = 2;
+
+        /**
+         * This value is pretty much a guess, based on that `archnum` and `osnum`
+         * values are handled by the same function `getMachineInfo()` (see
+         * `doc-ref` link) which uses 255 for an unknown value. Value
+         * `architectures::no_arch` can be verified with the magic file of
+         * `file(1)` and `.rpm` files that have `noarch` in their name, so it seems
+         * reasonable that `no_os` (or "`noos`" originally) follows the same
+         * pattern.
+         * 
+         * Moreover, this value is actually used in practice, see this sample file:
+         * <https://github.com/craigwblake/redline/blob/15afff5/src/test/resources/rpm-3-1.0-1.somearch.rpm>
+         */
+        const NO_OS = 255;
+
+        private const _VALUES = [1 => true, 2 => true, 255 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Rpm {
+    class RecordTypes {
+        const NOT_IMPLEMENTED = 0;
+        const CHAR = 1;
+        const UINT8 = 2;
+        const UINT16 = 3;
+        const UINT32 = 4;
+        const UINT64 = 5;
+        const STRING = 6;
+        const BIN = 7;
+        const STRING_ARRAY = 8;
+        const I18N_STRING = 9;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -1231,50 +1239,78 @@ namespace Rpm {
     class RpmTypes {
         const BINARY = 0;
         const SOURCE = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace Rpm {
-    class Architectures {
+    class SignatureTags {
+        const SIGNATURES = 62;
+        const HEADER_IMMUTABLE = 63;
+        const I18N_TABLE = 100;
+        const BAD_SHA1_1_OBSOLETE = 264;
+        const BAD_SHA1_2_OBSOLETE = 265;
+        const DSA = 267;
+        const RSA = 268;
+        const SHA1 = 269;
+        const LONG_SIZE = 270;
+        const LONG_ARCHIVE_SIZE = 271;
+        const SHA256 = 273;
+        const FILE_SIGNATURES = 274;
+        const FILE_SIGNATURE_LENGTH = 275;
+        const VERITY_SIGNATURES = 276;
+        const VERITY_SIGNATURE_ALGO = 277;
 
         /**
-         * x86 or x86_64
+         * Header + payload size (32bit) in bytes.
          */
-        const X86 = 1;
+        const SIZE = 1000;
 
         /**
-         * Alpha or Sparc64
+         * MD5 broken on big-endian machines, take 1
          */
-        const ALPHA = 2;
-        const SPARC = 3;
-        const MIPS = 4;
-        const PPC = 5;
-        const M68K = 6;
+        const LE_MD5_1_OBSOLETE = 1001;
 
         /**
-         * SGI Inhouse Processors (IP)
+         * PGP 2.6.3 signature.
          */
-        const SGI = 7;
-        const RS6000 = 8;
-        const IA64 = 9;
-        const SPARC64 = 10;
-        const MIPS64 = 11;
-        const ARM = 12;
-        const M68K_MINT = 13;
-        const S390 = 14;
-        const S390X = 15;
-        const PPC64 = 16;
-        const SH = 17;
-        const XTENSA = 18;
-        const AARCH64 = 19;
-        const MIPS_R6 = 20;
-        const MIPS64_R6 = 21;
-        const RISCV = 22;
-        const LOONGARCH64 = 23;
+        const PGP = 1002;
 
         /**
-         * can be installed on any architecture
+         * MD5 broken on big-endian machines, take 2
          */
-        const NO_ARCH = 255;
+        const LE_MD5_2_OBSOLETE = 1003;
+
+        /**
+         * MD5 signature
+         */
+        const MD5 = 1004;
+
+        /**
+         * GnuPG signature
+         */
+        const GPG = 1005;
+        const PGP5_OBSOLETE = 1006;
+
+        /**
+         * Uncompressed payload size (32bit) in bytes.
+         */
+        const PAYLOAD_SIZE = 1007;
+
+        /**
+         * Space reserved for signatures
+         */
+        const RESERVED_SPACE = 1008;
+
+        private const _VALUES = [62 => true, 63 => true, 100 => true, 264 => true, 265 => true, 267 => true, 268 => true, 269 => true, 270 => true, 271 => true, 273 => true, 274 => true, 275 => true, 276 => true, 277 => true, 1000 => true, 1001 => true, 1002 => true, 1003 => true, 1004 => true, 1005 => true, 1006 => true, 1007 => true, 1008 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

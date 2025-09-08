@@ -3,16 +3,17 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class ethernet_frame_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
-#include "ipv4_packet.h"
 #include "ipv6_packet.h"
+#include "ipv4_packet.h"
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class ipv4_packet_t;
-class ipv6_packet_t;
 
 /**
  * Ethernet frame is a OSI data link layer (layer 2) protocol data unit
@@ -37,6 +38,13 @@ public:
         ETHER_TYPE_ENUM_IEEE_802_1Q_TPID = 33024,
         ETHER_TYPE_ENUM_IPV6 = 34525
     };
+    static bool _is_defined_ether_type_enum_t(ether_type_enum_t v);
+
+private:
+    static const std::set<ether_type_enum_t> _values_ether_type_enum_t;
+    static std::set<ether_type_enum_t> _build_values_ether_type_enum_t();
+
+public:
 
     ethernet_frame_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ethernet_frame_t* p__root = 0);
 

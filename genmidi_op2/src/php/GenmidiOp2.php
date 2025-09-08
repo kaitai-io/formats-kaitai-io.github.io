@@ -15,15 +15,15 @@
 
 namespace {
     class GenmidiOp2 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \GenmidiOp2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\GenmidiOp2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(8);
-            if (!($this->magic() == "\x23\x4F\x50\x4C\x5F\x49\x49\x23")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x23\x4F\x50\x4C\x5F\x49\x49\x23", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x23\x4F\x50\x4C\x5F\x49\x49\x23")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x23\x4F\x50\x4C\x5F\x49\x49\x23", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_instruments = [];
             $n = 175;
@@ -46,40 +46,8 @@ namespace {
 }
 
 namespace GenmidiOp2 {
-    class InstrumentEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GenmidiOp2 $_parent = null, \GenmidiOp2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_flags = $this->_io->readU2le();
-            $this->_m_finetune = $this->_io->readU1();
-            $this->_m_note = $this->_io->readU1();
-            $this->_m_instruments = [];
-            $n = 2;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_instruments[] = new \GenmidiOp2\Instrument($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_flags;
-        protected $_m_finetune;
-        protected $_m_note;
-        protected $_m_instruments;
-        public function flags() { return $this->_m_flags; }
-        public function finetune() { return $this->_m_finetune; }
-
-        /**
-         * MIDI note for fixed instruments, 0 otherwise
-         */
-        public function note() { return $this->_m_note; }
-        public function instruments() { return $this->_m_instruments; }
-    }
-}
-
-namespace GenmidiOp2 {
     class Instrument extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GenmidiOp2\InstrumentEntry $_parent = null, \GenmidiOp2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GenmidiOp2\InstrumentEntry $_parent = null, ?\GenmidiOp2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -112,13 +80,45 @@ namespace GenmidiOp2 {
     }
 }
 
+namespace GenmidiOp2 {
+    class InstrumentEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GenmidiOp2 $_parent = null, ?\GenmidiOp2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_flags = $this->_io->readU2le();
+            $this->_m_finetune = $this->_io->readU1();
+            $this->_m_note = $this->_io->readU1();
+            $this->_m_instruments = [];
+            $n = 2;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_instruments[] = new \GenmidiOp2\Instrument($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_flags;
+        protected $_m_finetune;
+        protected $_m_note;
+        protected $_m_instruments;
+        public function flags() { return $this->_m_flags; }
+        public function finetune() { return $this->_m_finetune; }
+
+        /**
+         * MIDI note for fixed instruments, 0 otherwise
+         */
+        public function note() { return $this->_m_note; }
+        public function instruments() { return $this->_m_instruments; }
+    }
+}
+
 /**
  * OPL2 settings for one operator (carrier or modulator)
  */
 
 namespace GenmidiOp2 {
     class OpSettings extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GenmidiOp2\Instrument $_parent = null, \GenmidiOp2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GenmidiOp2\Instrument $_parent = null, ?\GenmidiOp2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

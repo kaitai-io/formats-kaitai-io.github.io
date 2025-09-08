@@ -6,7 +6,8 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -33,8 +34,8 @@ public class NtMdtPal extends KaitaiStruct {
     }
     private void _read() {
         this.signature = this._io.readBytes(26);
-        if (!(Arrays.equals(signature(), new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }, signature(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.signature, new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33 }, this.signature, this._io, "/seq/0");
         }
         this.count = this._io.readU4be();
         this.meta = new ArrayList<Meta>();
@@ -46,6 +47,106 @@ public class NtMdtPal extends KaitaiStruct {
         for (int i = 0; i < count(); i++) {
             this.tables.add(new ColTable(this._io, this, _root, i));
         }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.meta.size(); i++) {
+            this.meta.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        for (int i = 0; i < this.tables.size(); i++) {
+            this.tables.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class ColTable extends KaitaiStruct {
+
+        public ColTable(KaitaiStream _io, int index) {
+            this(_io, null, null, index);
+        }
+
+        public ColTable(KaitaiStream _io, NtMdtPal _parent, int index) {
+            this(_io, _parent, null, index);
+        }
+
+        public ColTable(KaitaiStream _io, NtMdtPal _parent, NtMdtPal _root, int index) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.index = index;
+            _read();
+        }
+        private void _read() {
+            this.size1 = this._io.readU1();
+            this.unkn = this._io.readU1();
+            this.title = new String(this._io.readBytes(_root().meta().get(((Number) (index())).intValue()).nameSize()), StandardCharsets.UTF_16LE);
+            this.unkn1 = this._io.readU2be();
+            this.colors = new ArrayList<Color>();
+            for (int i = 0; i < _root().meta().get(((Number) (index())).intValue()).colorsCount() - 1; i++) {
+                this.colors.add(new Color(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.colors.size(); i++) {
+                this.colors.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private int size1;
+        private int unkn;
+        private String title;
+        private int unkn1;
+        private List<Color> colors;
+        private int index;
+        private NtMdtPal _root;
+        private NtMdtPal _parent;
+        public int size1() { return size1; }
+        public int unkn() { return unkn; }
+        public String title() { return title; }
+        public int unkn1() { return unkn1; }
+        public List<Color> colors() { return colors; }
+        public int index() { return index; }
+        public NtMdtPal _root() { return _root; }
+        public NtMdtPal _parent() { return _parent; }
+    }
+    public static class Color extends KaitaiStruct {
+        public static Color fromFile(String fileName) throws IOException {
+            return new Color(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Color(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Color(KaitaiStream _io, NtMdtPal.ColTable _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Color(KaitaiStream _io, NtMdtPal.ColTable _parent, NtMdtPal _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.red = this._io.readU1();
+            this.unkn = this._io.readU1();
+            this.blue = this._io.readU1();
+            this.green = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int red;
+        private int unkn;
+        private int blue;
+        private int green;
+        private NtMdtPal _root;
+        private NtMdtPal.ColTable _parent;
+        public int red() { return red; }
+        public int unkn() { return unkn; }
+        public int blue() { return blue; }
+        public int green() { return green; }
+        public NtMdtPal _root() { return _root; }
+        public NtMdtPal.ColTable _parent() { return _parent; }
     }
     public static class Meta extends KaitaiStruct {
         public static Meta fromFile(String fileName) throws IOException {
@@ -76,6 +177,9 @@ public class NtMdtPal extends KaitaiStruct {
             this.unkn11 = this._io.readBytes(1);
             this.unkn12 = this._io.readBytes(2);
             this.nameSize = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] unkn00;
         private byte[] unkn01;
@@ -120,100 +224,18 @@ public class NtMdtPal extends KaitaiStruct {
         public NtMdtPal _root() { return _root; }
         public NtMdtPal _parent() { return _parent; }
     }
-    public static class Color extends KaitaiStruct {
-        public static Color fromFile(String fileName) throws IOException {
-            return new Color(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Color(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Color(KaitaiStream _io, NtMdtPal.ColTable _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Color(KaitaiStream _io, NtMdtPal.ColTable _parent, NtMdtPal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.red = this._io.readU1();
-            this.unkn = this._io.readU1();
-            this.blue = this._io.readU1();
-            this.green = this._io.readU1();
-        }
-        private int red;
-        private int unkn;
-        private int blue;
-        private int green;
-        private NtMdtPal _root;
-        private NtMdtPal.ColTable _parent;
-        public int red() { return red; }
-        public int unkn() { return unkn; }
-        public int blue() { return blue; }
-        public int green() { return green; }
-        public NtMdtPal _root() { return _root; }
-        public NtMdtPal.ColTable _parent() { return _parent; }
-    }
-    public static class ColTable extends KaitaiStruct {
-
-        public ColTable(KaitaiStream _io, int index) {
-            this(_io, null, null, index);
-        }
-
-        public ColTable(KaitaiStream _io, NtMdtPal _parent, int index) {
-            this(_io, _parent, null, index);
-        }
-
-        public ColTable(KaitaiStream _io, NtMdtPal _parent, NtMdtPal _root, int index) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.index = index;
-            _read();
-        }
-        private void _read() {
-            this.size1 = this._io.readU1();
-            this.unkn = this._io.readU1();
-            this.title = new String(this._io.readBytes(_root().meta().get((int) index()).nameSize()), Charset.forName("UTF-16LE"));
-            this.unkn1 = this._io.readU2be();
-            this.colors = new ArrayList<Color>();
-            for (int i = 0; i < (_root().meta().get((int) index()).colorsCount() - 1); i++) {
-                this.colors.add(new Color(this._io, this, _root));
-            }
-        }
-        private int size1;
-        private int unkn;
-        private String title;
-        private int unkn1;
-        private ArrayList<Color> colors;
-        private int index;
-        private NtMdtPal _root;
-        private NtMdtPal _parent;
-        public int size1() { return size1; }
-        public int unkn() { return unkn; }
-        public String title() { return title; }
-        public int unkn1() { return unkn1; }
-        public ArrayList<Color> colors() { return colors; }
-        public int index() { return index; }
-        public NtMdtPal _root() { return _root; }
-        public NtMdtPal _parent() { return _parent; }
-    }
     private byte[] signature;
     private long count;
-    private ArrayList<Meta> meta;
+    private List<Meta> meta;
     private byte[] something2;
-    private ArrayList<ColTable> tables;
+    private List<ColTable> tables;
     private NtMdtPal _root;
     private KaitaiStruct _parent;
     public byte[] signature() { return signature; }
     public long count() { return count; }
-    public ArrayList<Meta> meta() { return meta; }
+    public List<Meta> meta() { return meta; }
     public byte[] something2() { return something2; }
-    public ArrayList<ColTable> tables() { return tables; }
+    public List<ColTable> tables() { return tables; }
     public NtMdtPal _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

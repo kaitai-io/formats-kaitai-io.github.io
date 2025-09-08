@@ -2,12 +2,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class dos_datetime_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -48,8 +50,8 @@
 class dos_datetime_t : public kaitai::kstruct {
 
 public:
-    class time_t;
     class date_t;
+    class time_t;
 
     dos_datetime_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, dos_datetime_t* p__root = nullptr);
 
@@ -59,62 +61,6 @@ private:
 
 public:
     ~dos_datetime_t();
-
-    class time_t : public kaitai::kstruct {
-
-    public:
-
-        time_t(kaitai::kstream* p__io, dos_datetime_t* p__parent = nullptr, dos_datetime_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~time_t();
-
-    private:
-        bool f_second;
-        int32_t m_second;
-
-    public:
-        int32_t second();
-
-    private:
-        bool f_padded_second;
-        std::string m_padded_second;
-
-    public:
-        std::string padded_second();
-
-    private:
-        bool f_padded_minute;
-        std::string m_padded_minute;
-
-    public:
-        std::string padded_minute();
-
-    private:
-        bool f_padded_hour;
-        std::string m_padded_hour;
-
-    public:
-        std::string padded_hour();
-
-    private:
-        uint64_t m_second_div_2;
-        uint64_t m_minute;
-        uint64_t m_hour;
-        dos_datetime_t* m__root;
-        dos_datetime_t* m__parent;
-
-    public:
-        uint64_t second_div_2() const { return m_second_div_2; }
-        uint64_t minute() const { return m_minute; }
-        uint64_t hour() const { return m_hour; }
-        dos_datetime_t* _root() const { return m__root; }
-        dos_datetime_t* _parent() const { return m__parent; }
-    };
 
     class date_t : public kaitai::kstruct {
 
@@ -128,17 +74,6 @@ public:
 
     public:
         ~date_t();
-
-    private:
-        bool f_year;
-        int32_t m_year;
-
-    public:
-
-        /**
-         * only years from 1980 to 2107 (1980 + 127) can be represented
-         */
-        int32_t year();
 
     private:
         bool f_padded_day;
@@ -162,6 +97,17 @@ public:
         std::string padded_year();
 
     private:
+        bool f_year;
+        int32_t m_year;
+
+    public:
+
+        /**
+         * only years from 1980 to 2107 (1980 + 127) can be represented
+         */
+        int32_t year();
+
+    private:
         uint64_t m_day;
         uint64_t m_month;
         uint64_t m_year_minus_1980;
@@ -172,6 +118,62 @@ public:
         uint64_t day() const { return m_day; }
         uint64_t month() const { return m_month; }
         uint64_t year_minus_1980() const { return m_year_minus_1980; }
+        dos_datetime_t* _root() const { return m__root; }
+        dos_datetime_t* _parent() const { return m__parent; }
+    };
+
+    class time_t : public kaitai::kstruct {
+
+    public:
+
+        time_t(kaitai::kstream* p__io, dos_datetime_t* p__parent = nullptr, dos_datetime_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~time_t();
+
+    private:
+        bool f_padded_hour;
+        std::string m_padded_hour;
+
+    public:
+        std::string padded_hour();
+
+    private:
+        bool f_padded_minute;
+        std::string m_padded_minute;
+
+    public:
+        std::string padded_minute();
+
+    private:
+        bool f_padded_second;
+        std::string m_padded_second;
+
+    public:
+        std::string padded_second();
+
+    private:
+        bool f_second;
+        int32_t m_second;
+
+    public:
+        int32_t second();
+
+    private:
+        uint64_t m_second_div_2;
+        uint64_t m_minute;
+        uint64_t m_hour;
+        dos_datetime_t* m__root;
+        dos_datetime_t* m__parent;
+
+    public:
+        uint64_t second_div_2() const { return m_second_div_2; }
+        uint64_t minute() const { return m_minute; }
+        uint64_t hour() const { return m_hour; }
         dos_datetime_t* _root() const { return m__root; }
         dos_datetime_t* _parent() const { return m__parent; }
     };

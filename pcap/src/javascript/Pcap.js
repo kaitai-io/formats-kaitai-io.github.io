@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './PacketPpi', './EthernetFrame'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./PacketPpi'), require('./EthernetFrame'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './EthernetFrame', './PacketPpi'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./EthernetFrame'), require('./PacketPpi'));
   } else {
-    root.Pcap = factory(root.KaitaiStream, root.PacketPpi, root.EthernetFrame);
+    factory(root.Pcap || (root.Pcap = {}), root.KaitaiStream, root.EthernetFrame || (root.EthernetFrame = {}), root.PacketPpi || (root.PacketPpi = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, PacketPpi, EthernetFrame) {
+})(typeof self !== 'undefined' ? self : this, function (Pcap_, KaitaiStream, EthernetFrame_, PacketPpi_) {
 /**
  * PCAP (named after libpcap / winpcap) is a popular format for saving
  * network traffic grabbed by network sniffers. It is typically
@@ -465,14 +465,14 @@ var Pcap = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.magicNumber = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magicNumber, [212, 195, 178, 161]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([212, 195, 178, 161], this.magicNumber, this._io, "/types/header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magicNumber, new Uint8Array([212, 195, 178, 161])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([212, 195, 178, 161]), this.magicNumber, this._io, "/types/header/seq/0");
       }
       this.versionMajor = this._io.readU2le();
       if (!(this.versionMajor == 2)) {
@@ -517,7 +517,7 @@ var Pcap = (function() {
     function Packet(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -527,15 +527,15 @@ var Pcap = (function() {
       this.inclLen = this._io.readU4le();
       this.origLen = this._io.readU4le();
       switch (this._root.hdr.network) {
-      case Pcap.Linktype.PPI:
-        this._raw_body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new PacketPpi(_io__raw_body, this, null);
-        break;
       case Pcap.Linktype.ETHERNET:
         this._raw_body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
         var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new EthernetFrame(_io__raw_body, this, null);
+        this.body = new EthernetFrame_.EthernetFrame(_io__raw_body, null, null);
+        break;
+      case Pcap.Linktype.PPI:
+        this._raw_body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new PacketPpi_.PacketPpi(_io__raw_body, null, null);
         break;
       default:
         this.body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
@@ -560,5 +560,5 @@ var Pcap = (function() {
 
   return Pcap;
 })();
-return Pcap;
-}));
+Pcap_.Pcap = Pcap;
+});

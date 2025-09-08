@@ -38,13 +38,17 @@ public class SomeIpSd extends KaitaiStruct {
         this.flags = new SdFlags(this._io, this, _root);
         this.reserved = this._io.readBytes(3);
         this.lenEntries = this._io.readU4be();
-        this._raw_entries = this._io.readBytes(lenEntries());
-        KaitaiStream _io__raw_entries = new ByteBufferKaitaiStream(_raw_entries);
-        this.entries = new SomeIpSdEntries(_io__raw_entries);
+        KaitaiStream _io_entries = this._io.substream(lenEntries());
+        this.entries = new SomeIpSdEntries(_io_entries);
         this.lenOptions = this._io.readU4be();
-        this._raw_options = this._io.readBytes(lenOptions());
-        KaitaiStream _io__raw_options = new ByteBufferKaitaiStream(_raw_options);
-        this.options = new SomeIpSdOptions(_io__raw_options);
+        KaitaiStream _io_options = this._io.substream(lenOptions());
+        this.options = new SomeIpSdOptions(_io_options);
+    }
+
+    public void _fetchInstances() {
+        this.flags._fetchInstances();
+        this.entries._fetchInstances();
+        this.options._fetchInstances();
     }
 
     /**
@@ -75,6 +79,9 @@ public class SomeIpSd extends KaitaiStruct {
             this.initialData = this._io.readBitsIntBe(1) != 0;
             this.reserved = this._io.readBitsIntBe(5);
         }
+
+        public void _fetchInstances() {
+        }
         private boolean reboot;
         private boolean unicast;
         private boolean initialData;
@@ -96,8 +103,6 @@ public class SomeIpSd extends KaitaiStruct {
     private SomeIpSdOptions options;
     private SomeIpSd _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_entries;
-    private byte[] _raw_options;
 
     /**
      * The SOME/IP-SD Header shall start with an 8 Bit field called flags.
@@ -110,6 +115,4 @@ public class SomeIpSd extends KaitaiStruct {
     public SomeIpSdOptions options() { return options; }
     public SomeIpSd _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_entries() { return _raw_entries; }
-    public byte[] _raw_options() { return _raw_options; }
 }

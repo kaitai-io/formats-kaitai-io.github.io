@@ -40,8 +40,8 @@
 
 namespace {
     class ResourceFork extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ResourceFork $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\ResourceFork $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -49,23 +49,6 @@ namespace {
             $this->_m_header = new \ResourceFork\FileHeader($this->_io, $this, $this->_root);
             $this->_m_systemData = $this->_io->readBytes(112);
             $this->_m_applicationData = $this->_io->readBytes(128);
-        }
-        protected $_m_dataBlocksWithIo;
-
-        /**
-         * Use `data_blocks` instead,
-         * unless you need access to this instance's `_io`.
-         */
-        public function dataBlocksWithIo() {
-            if ($this->_m_dataBlocksWithIo !== null)
-                return $this->_m_dataBlocksWithIo;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->header()->ofsDataBlocks());
-            $this->_m__raw_dataBlocksWithIo = $this->_io->readBytes($this->header()->lenDataBlocks());
-            $_io__raw_dataBlocksWithIo = new \Kaitai\Struct\Stream($this->_m__raw_dataBlocksWithIo);
-            $this->_m_dataBlocksWithIo = new \BytesWithIo($_io__raw_dataBlocksWithIo);
-            $this->_io->seek($_pos);
-            return $this->_m_dataBlocksWithIo;
         }
         protected $_m_dataBlocks;
 
@@ -89,6 +72,23 @@ namespace {
                 return $this->_m_dataBlocks;
             $this->_m_dataBlocks = $this->dataBlocksWithIo()->data();
             return $this->_m_dataBlocks;
+        }
+        protected $_m_dataBlocksWithIo;
+
+        /**
+         * Use `data_blocks` instead,
+         * unless you need access to this instance's `_io`.
+         */
+        public function dataBlocksWithIo() {
+            if ($this->_m_dataBlocksWithIo !== null)
+                return $this->_m_dataBlocksWithIo;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->header()->ofsDataBlocks());
+            $this->_m__raw_dataBlocksWithIo = $this->_io->readBytes($this->header()->lenDataBlocks());
+            $_io__raw_dataBlocksWithIo = new \Kaitai\Struct\Stream($this->_m__raw_dataBlocksWithIo);
+            $this->_m_dataBlocksWithIo = new \BytesWithIo($_io__raw_dataBlocksWithIo);
+            $this->_io->seek($_pos);
+            return $this->_m_dataBlocksWithIo;
         }
         protected $_m_resourceMap;
 
@@ -149,13 +149,47 @@ namespace {
 }
 
 /**
+ * A resource data block,
+ * as stored in the resource data area.
+ * 
+ * Each data block stores the data contained in a resource,
+ * along with its length.
+ */
+
+namespace ResourceFork {
+    class DataBlock extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference $_parent = null, ?\ResourceFork $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenData = $this->_io->readU4be();
+            $this->_m_data = $this->_io->readBytes($this->lenData());
+        }
+        protected $_m_lenData;
+        protected $_m_data;
+
+        /**
+         * The length of the resource data stored in this block.
+         */
+        public function lenData() { return $this->_m_lenData; }
+
+        /**
+         * The data stored in this block.
+         */
+        public function data() { return $this->_m_data; }
+    }
+}
+
+/**
  * Resource file header,
  * containing the offsets and lengths of the resource data area and resource map.
  */
 
 namespace ResourceFork {
     class FileHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ResourceFork $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\ResourceFork $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -208,47 +242,13 @@ namespace ResourceFork {
 }
 
 /**
- * A resource data block,
- * as stored in the resource data area.
- * 
- * Each data block stores the data contained in a resource,
- * along with its length.
- */
-
-namespace ResourceFork {
-    class DataBlock extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference $_parent = null, \ResourceFork $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenData = $this->_io->readU4be();
-            $this->_m_data = $this->_io->readBytes($this->lenData());
-        }
-        protected $_m_lenData;
-        protected $_m_data;
-
-        /**
-         * The length of the resource data stored in this block.
-         */
-        public function lenData() { return $this->_m_lenData; }
-
-        /**
-         * The data stored in this block.
-         */
-        public function data() { return $this->_m_data; }
-    }
-}
-
-/**
  * Resource map,
  * containing information about the resources in the file and where they are located in the data area.
  */
 
 namespace ResourceFork {
     class ResourceMap extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ResourceFork $_parent = null, \ResourceFork $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ResourceFork $_parent = null, ?\ResourceFork $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -263,21 +263,16 @@ namespace ResourceFork {
             $this->_m_ofsTypeList = $this->_io->readU2be();
             $this->_m_ofsNames = $this->_io->readU2be();
         }
-        protected $_m_typeListAndReferenceLists;
+        protected $_m_names;
 
         /**
-         * The resource map's resource type list, followed by the resource reference list area.
+         * Storage area for the names of all resources.
          */
-        public function typeListAndReferenceLists() {
-            if ($this->_m_typeListAndReferenceLists !== null)
-                return $this->_m_typeListAndReferenceLists;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->ofsTypeList());
-            $this->_m__raw_typeListAndReferenceLists = $this->_io->readBytes(($this->ofsNames() - $this->ofsTypeList()));
-            $_io__raw_typeListAndReferenceLists = new \Kaitai\Struct\Stream($this->_m__raw_typeListAndReferenceLists);
-            $this->_m_typeListAndReferenceLists = new \ResourceFork\ResourceMap\TypeListAndReferenceLists($_io__raw_typeListAndReferenceLists, $this, $this->_root);
-            $this->_io->seek($_pos);
-            return $this->_m_typeListAndReferenceLists;
+        public function names() {
+            if ($this->_m_names !== null)
+                return $this->_m_names;
+            $this->_m_names = $this->namesWithIo()->data();
+            return $this->_m_names;
         }
         protected $_m_namesWithIo;
 
@@ -296,16 +291,21 @@ namespace ResourceFork {
             $this->_io->seek($_pos);
             return $this->_m_namesWithIo;
         }
-        protected $_m_names;
+        protected $_m_typeListAndReferenceLists;
 
         /**
-         * Storage area for the names of all resources.
+         * The resource map's resource type list, followed by the resource reference list area.
          */
-        public function names() {
-            if ($this->_m_names !== null)
-                return $this->_m_names;
-            $this->_m_names = $this->namesWithIo()->data();
-            return $this->_m_names;
+        public function typeListAndReferenceLists() {
+            if ($this->_m_typeListAndReferenceLists !== null)
+                return $this->_m_typeListAndReferenceLists;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->ofsTypeList());
+            $this->_m__raw_typeListAndReferenceLists = $this->_io->readBytes($this->ofsNames() - $this->ofsTypeList());
+            $_io__raw_typeListAndReferenceLists = new \Kaitai\Struct\Stream($this->_m__raw_typeListAndReferenceLists);
+            $this->_m_typeListAndReferenceLists = new \ResourceFork\ResourceMap\TypeListAndReferenceLists($_io__raw_typeListAndReferenceLists, $this, $this->_root);
+            $this->_io->seek($_pos);
+            return $this->_m_typeListAndReferenceLists;
         }
         protected $_m_reservedFileHeaderCopy;
         protected $_m_reservedNextResourceMapHandle;
@@ -314,8 +314,8 @@ namespace ResourceFork {
         protected $_m_ofsTypeList;
         protected $_m_ofsNames;
         protected $_m__raw_fileAttributes;
-        protected $_m__raw_typeListAndReferenceLists;
         protected $_m__raw_namesWithIo;
+        protected $_m__raw_typeListAndReferenceLists;
 
         /**
          * Reserved space for a copy of the resource file header.
@@ -353,8 +353,8 @@ namespace ResourceFork {
          */
         public function ofsNames() { return $this->_m_ofsNames; }
         public function _raw_fileAttributes() { return $this->_m__raw_fileAttributes; }
-        public function _raw_typeListAndReferenceLists() { return $this->_m__raw_typeListAndReferenceLists; }
         public function _raw_namesWithIo() { return $this->_m__raw_namesWithIo; }
+        public function _raw_typeListAndReferenceLists() { return $this->_m__raw_typeListAndReferenceLists; }
     }
 }
 
@@ -368,7 +368,7 @@ namespace ResourceFork {
 
 namespace ResourceFork\ResourceMap {
     class FileAttributes extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ResourceFork\ResourceMap $_parent = null, \ResourceFork $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ResourceFork\ResourceMap $_parent = null, ?\ResourceFork $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -467,6 +467,65 @@ namespace ResourceFork\ResourceMap {
 }
 
 /**
+ * A resource name,
+ * as stored in the resource name storage area in the resource map.
+ * 
+ * The resource names are not required to appear in any particular order.
+ * There may be unused space between and around resource names,
+ * but in practice they are often contiguous.
+ */
+
+namespace ResourceFork\ResourceMap {
+    class Name extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference $_parent = null, ?\ResourceFork $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenValue = $this->_io->readU1();
+            $this->_m_value = $this->_io->readBytes($this->lenValue());
+        }
+        protected $_m_lenValue;
+        protected $_m_value;
+
+        /**
+         * The length of the resource name, in bytes.
+         */
+        public function lenValue() { return $this->_m_lenValue; }
+
+        /**
+         * The resource name.
+         * 
+         * This field is exposed as a byte array,
+         * because there is no universal encoding for resource names.
+         * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
+         * including resource names,
+         * use the system encoding,
+         * which varies depending on the system language.
+         * This means that resource names can use different encodings depending on what system language they were created with.
+         * 
+         * Many resource names are plain ASCII,
+         * meaning that the encoding often does not matter
+         * (because all Mac OS encodings are ASCII-compatible).
+         * For non-ASCII resource names,
+         * the most common encoding is perhaps MacRoman
+         * (used for English and other Western languages),
+         * but other encodings are also sometimes used,
+         * especially for software in non-Western languages.
+         * 
+         * There is no requirement that all names in a single resource file use the same encoding.
+         * For example,
+         * localized software may have some (but not all) of its resource names translated.
+         * For non-Western languages,
+         * this can lead to some resource names using MacRoman,
+         * and others using a different encoding.
+         */
+        public function value() { return $this->_m_value; }
+    }
+}
+
+/**
  * Resource type list and storage area for resource reference lists in the resource map.
  * 
  * The two parts are combined into a single type here for technical reasons:
@@ -477,7 +536,7 @@ namespace ResourceFork\ResourceMap {
 
 namespace ResourceFork\ResourceMap {
     class TypeListAndReferenceLists extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ResourceFork\ResourceMap $_parent = null, \ResourceFork $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ResourceFork\ResourceMap $_parent = null, ?\ResourceFork $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -506,131 +565,6 @@ namespace ResourceFork\ResourceMap {
 }
 
 /**
- * Resource type list in the resource map.
- */
-
-namespace ResourceFork\ResourceMap\TypeListAndReferenceLists {
-    class TypeList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ResourceFork\ResourceMap\TypeListAndReferenceLists $_parent = null, \ResourceFork $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_numTypesM1 = $this->_io->readU2be();
-            $this->_m_entries = [];
-            $n = $this->numTypes();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_entries[] = new \ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList\TypeListEntry($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_numTypes;
-
-        /**
-         * The number of resource types in this list.
-         */
-        public function numTypes() {
-            if ($this->_m_numTypes !== null)
-                return $this->_m_numTypes;
-            $this->_m_numTypes = \Kaitai\Struct\Stream::mod(($this->numTypesM1() + 1), 65536);
-            return $this->_m_numTypes;
-        }
-        protected $_m_numTypesM1;
-        protected $_m_entries;
-
-        /**
-         * The number of resource types in this list,
-         * minus one.
-         * 
-         * If the resource list is empty,
-         * the value of this field is `0xffff`,
-         * i. e. `-1` truncated to a 16-bit unsigned integer.
-         */
-        public function numTypesM1() { return $this->_m_numTypesM1; }
-
-        /**
-         * Entries in the resource type list.
-         */
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-/**
- * A single entry in the resource type list.
- * 
- * Each entry corresponds to exactly one resource reference list.
- */
-
-namespace ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList {
-    class TypeListEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList $_parent = null, \ResourceFork $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_type = $this->_io->readBytes(4);
-            $this->_m_numReferencesM1 = $this->_io->readU2be();
-            $this->_m_ofsReferenceList = $this->_io->readU2be();
-        }
-        protected $_m_numReferences;
-
-        /**
-         * The number of resources in the reference list for this type.
-         */
-        public function numReferences() {
-            if ($this->_m_numReferences !== null)
-                return $this->_m_numReferences;
-            $this->_m_numReferences = \Kaitai\Struct\Stream::mod(($this->numReferencesM1() + 1), 65536);
-            return $this->_m_numReferences;
-        }
-        protected $_m_referenceList;
-
-        /**
-         * The resource reference list for this resource type.
-         */
-        public function referenceList() {
-            if ($this->_m_referenceList !== null)
-                return $this->_m_referenceList;
-            $io = $this->_parent()->_parent()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->ofsReferenceList());
-            $this->_m_referenceList = new \ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList($this->numReferences(), $io, $this, $this->_root);
-            $io->seek($_pos);
-            return $this->_m_referenceList;
-        }
-        protected $_m_type;
-        protected $_m_numReferencesM1;
-        protected $_m_ofsReferenceList;
-
-        /**
-         * The four-character type code of the resources in the reference list.
-         */
-        public function type() { return $this->_m_type; }
-
-        /**
-         * The number of resources in the reference list for this type,
-         * minus one.
-         * 
-         * Empty reference lists should never exist.
-         */
-        public function numReferencesM1() { return $this->_m_numReferencesM1; }
-
-        /**
-         * Offset of the resource reference list for this resource type,
-         * from the start of the resource type list.
-         * 
-         * Although the offset is relative to the start of the type list,
-         * it should never point into the type list itself,
-         * but into the reference list storage area that directly follows it.
-         * That is,
-         * it should always be at least `_parent._sizeof`.
-         */
-        public function ofsReferenceList() { return $this->_m_ofsReferenceList; }
-    }
-}
-
-/**
  * A resource reference list,
  * as stored in the reference list area.
  * 
@@ -640,7 +574,7 @@ namespace ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList {
 
 namespace ResourceFork\ResourceMap\TypeListAndReferenceLists {
     class ReferenceList extends \Kaitai\Struct\Struct {
-        public function __construct(int $numReferences, \Kaitai\Struct\Stream $_io, \ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList\TypeListEntry $_parent = null, \ResourceFork $_root = null) {
+        public function __construct(int $numReferences, \Kaitai\Struct\Stream $_io, ?\ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList\TypeListEntry $_parent = null, ?\ResourceFork $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_numReferences = $numReferences;
             $this->_read();
@@ -678,7 +612,7 @@ namespace ResourceFork\ResourceMap\TypeListAndReferenceLists {
 
 namespace ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList {
     class Reference extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList $_parent = null, \ResourceFork $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList $_parent = null, ?\ResourceFork $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -692,6 +626,21 @@ namespace ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList {
             $this->_m_ofsDataBlock = $this->_io->readBitsIntBe(24);
             $this->_io->alignToByte();
             $this->_m_reservedHandle = $this->_io->readU4be();
+        }
+        protected $_m_dataBlock;
+
+        /**
+         * The data block containing the data for the resource described by this reference.
+         */
+        public function dataBlock() {
+            if ($this->_m_dataBlock !== null)
+                return $this->_m_dataBlock;
+            $io = $this->_root()->dataBlocksWithIo()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->ofsDataBlock());
+            $this->_m_dataBlock = new \ResourceFork\DataBlock($io, $this, $this->_root);
+            $io->seek($_pos);
+            return $this->_m_dataBlock;
         }
         protected $_m_name;
 
@@ -709,21 +658,6 @@ namespace ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList {
                 $io->seek($_pos);
             }
             return $this->_m_name;
-        }
-        protected $_m_dataBlock;
-
-        /**
-         * The data block containing the data for the resource described by this reference.
-         */
-        public function dataBlock() {
-            if ($this->_m_dataBlock !== null)
-                return $this->_m_dataBlock;
-            $io = $this->_root()->dataBlocksWithIo()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->ofsDataBlock());
-            $this->_m_dataBlock = new \ResourceFork\DataBlock($io, $this, $this->_root);
-            $io->seek($_pos);
-            return $this->_m_dataBlock;
         }
         protected $_m_id;
         protected $_m_ofsName;
@@ -773,7 +707,7 @@ namespace ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList {
 
 namespace ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference {
     class Attributes extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference $_parent = null, \ResourceFork $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference $_parent = null, ?\ResourceFork $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -921,60 +855,126 @@ namespace ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Refer
 }
 
 /**
- * A resource name,
- * as stored in the resource name storage area in the resource map.
- * 
- * The resource names are not required to appear in any particular order.
- * There may be unused space between and around resource names,
- * but in practice they are often contiguous.
+ * Resource type list in the resource map.
  */
 
-namespace ResourceFork\ResourceMap {
-    class Name extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference $_parent = null, \ResourceFork $_root = null) {
+namespace ResourceFork\ResourceMap\TypeListAndReferenceLists {
+    class TypeList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ResourceFork\ResourceMap\TypeListAndReferenceLists $_parent = null, ?\ResourceFork $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_lenValue = $this->_io->readU1();
-            $this->_m_value = $this->_io->readBytes($this->lenValue());
+            $this->_m_numTypesM1 = $this->_io->readU2be();
+            $this->_m_entries = [];
+            $n = $this->numTypes();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_entries[] = new \ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList\TypeListEntry($this->_io, $this, $this->_root);
+            }
         }
-        protected $_m_lenValue;
-        protected $_m_value;
+        protected $_m_numTypes;
 
         /**
-         * The length of the resource name, in bytes.
+         * The number of resource types in this list.
          */
-        public function lenValue() { return $this->_m_lenValue; }
+        public function numTypes() {
+            if ($this->_m_numTypes !== null)
+                return $this->_m_numTypes;
+            $this->_m_numTypes = \Kaitai\Struct\Stream::mod($this->numTypesM1() + 1, 65536);
+            return $this->_m_numTypes;
+        }
+        protected $_m_numTypesM1;
+        protected $_m_entries;
 
         /**
-         * The resource name.
+         * The number of resource types in this list,
+         * minus one.
          * 
-         * This field is exposed as a byte array,
-         * because there is no universal encoding for resource names.
-         * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
-         * including resource names,
-         * use the system encoding,
-         * which varies depending on the system language.
-         * This means that resource names can use different encodings depending on what system language they were created with.
-         * 
-         * Many resource names are plain ASCII,
-         * meaning that the encoding often does not matter
-         * (because all Mac OS encodings are ASCII-compatible).
-         * For non-ASCII resource names,
-         * the most common encoding is perhaps MacRoman
-         * (used for English and other Western languages),
-         * but other encodings are also sometimes used,
-         * especially for software in non-Western languages.
-         * 
-         * There is no requirement that all names in a single resource file use the same encoding.
-         * For example,
-         * localized software may have some (but not all) of its resource names translated.
-         * For non-Western languages,
-         * this can lead to some resource names using MacRoman,
-         * and others using a different encoding.
+         * If the resource list is empty,
+         * the value of this field is `0xffff`,
+         * i. e. `-1` truncated to a 16-bit unsigned integer.
          */
-        public function value() { return $this->_m_value; }
+        public function numTypesM1() { return $this->_m_numTypesM1; }
+
+        /**
+         * Entries in the resource type list.
+         */
+        public function entries() { return $this->_m_entries; }
+    }
+}
+
+/**
+ * A single entry in the resource type list.
+ * 
+ * Each entry corresponds to exactly one resource reference list.
+ */
+
+namespace ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList {
+    class TypeListEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList $_parent = null, ?\ResourceFork $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_type = $this->_io->readBytes(4);
+            $this->_m_numReferencesM1 = $this->_io->readU2be();
+            $this->_m_ofsReferenceList = $this->_io->readU2be();
+        }
+        protected $_m_numReferences;
+
+        /**
+         * The number of resources in the reference list for this type.
+         */
+        public function numReferences() {
+            if ($this->_m_numReferences !== null)
+                return $this->_m_numReferences;
+            $this->_m_numReferences = \Kaitai\Struct\Stream::mod($this->numReferencesM1() + 1, 65536);
+            return $this->_m_numReferences;
+        }
+        protected $_m_referenceList;
+
+        /**
+         * The resource reference list for this resource type.
+         */
+        public function referenceList() {
+            if ($this->_m_referenceList !== null)
+                return $this->_m_referenceList;
+            $io = $this->_parent()->_parent()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->ofsReferenceList());
+            $this->_m_referenceList = new \ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList($this->numReferences(), $io, $this, $this->_root);
+            $io->seek($_pos);
+            return $this->_m_referenceList;
+        }
+        protected $_m_type;
+        protected $_m_numReferencesM1;
+        protected $_m_ofsReferenceList;
+
+        /**
+         * The four-character type code of the resources in the reference list.
+         */
+        public function type() { return $this->_m_type; }
+
+        /**
+         * The number of resources in the reference list for this type,
+         * minus one.
+         * 
+         * Empty reference lists should never exist.
+         */
+        public function numReferencesM1() { return $this->_m_numReferencesM1; }
+
+        /**
+         * Offset of the resource reference list for this resource type,
+         * from the start of the resource type list.
+         * 
+         * Although the offset is relative to the start of the type list,
+         * it should never point into the type list itself,
+         * but into the reference list storage area that directly follows it.
+         * That is,
+         * it should always be at least `_parent._sizeof`.
+         */
+        public function ofsReferenceList() { return $this->_m_ofsReferenceList; }
     }
 }

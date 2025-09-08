@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Grub2Font = factory(root.KaitaiStream);
+    factory(root.Grub2Font || (root.Grub2Font = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Grub2Font_, KaitaiStream) {
 /**
  * Bitmap font format for the GRUB 2 bootloader.
  * @see {@link https://grub.gibibit.com/New_font_format|Source}
@@ -24,8 +24,8 @@ var Grub2Font = (function() {
   }
   Grub2Font.prototype._read = function() {
     this.magic = this._io.readBytes(12);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50]), this.magic, this._io, "/seq/0");
     }
     this.sections = [];
     var i = 0;
@@ -36,163 +36,11 @@ var Grub2Font = (function() {
     } while (!(_.sectionType == "DATA"));
   }
 
-  var PtszSection = Grub2Font.PtszSection = (function() {
-    function PtszSection(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PtszSection.prototype._read = function() {
-      this.fontPointSize = this._io.readU2be();
-    }
-
-    return PtszSection;
-  })();
-
-  var FamiSection = Grub2Font.FamiSection = (function() {
-    function FamiSection(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    FamiSection.prototype._read = function() {
-      this.fontFamilyName = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
-    }
-
-    return FamiSection;
-  })();
-
-  var WeigSection = Grub2Font.WeigSection = (function() {
-    function WeigSection(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    WeigSection.prototype._read = function() {
-      this.fontWeight = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
-    }
-
-    return WeigSection;
-  })();
-
-  var MaxwSection = Grub2Font.MaxwSection = (function() {
-    function MaxwSection(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    MaxwSection.prototype._read = function() {
-      this.maximumCharacterWidth = this._io.readU2be();
-    }
-
-    return MaxwSection;
-  })();
-
-  var DescSection = Grub2Font.DescSection = (function() {
-    function DescSection(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DescSection.prototype._read = function() {
-      this.descentInPixels = this._io.readU2be();
-    }
-
-    return DescSection;
-  })();
-
-  var Section = Grub2Font.Section = (function() {
-    function Section(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Section.prototype._read = function() {
-      this.sectionType = KaitaiStream.bytesToStr(this._io.readBytes(4), "ASCII");
-      this.lenBody = this._io.readU4be();
-      if (this.sectionType != "DATA") {
-        switch (this.sectionType) {
-        case "MAXH":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new MaxhSection(_io__raw_body, this, this._root);
-          break;
-        case "FAMI":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new FamiSection(_io__raw_body, this, this._root);
-          break;
-        case "PTSZ":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new PtszSection(_io__raw_body, this, this._root);
-          break;
-        case "MAXW":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new MaxwSection(_io__raw_body, this, this._root);
-          break;
-        case "SLAN":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new SlanSection(_io__raw_body, this, this._root);
-          break;
-        case "WEIG":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new WeigSection(_io__raw_body, this, this._root);
-          break;
-        case "CHIX":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new ChixSection(_io__raw_body, this, this._root);
-          break;
-        case "DESC":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new DescSection(_io__raw_body, this, this._root);
-          break;
-        case "NAME":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new NameSection(_io__raw_body, this, this._root);
-          break;
-        case "ASCE":
-          this._raw_body = this._io.readBytes(this.lenBody);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new AsceSection(_io__raw_body, this, this._root);
-          break;
-        default:
-          this.body = this._io.readBytes(this.lenBody);
-          break;
-        }
-      }
-    }
-
-    /**
-     * Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`
-     */
-
-    return Section;
-  })();
-
   var AsceSection = Grub2Font.AsceSection = (function() {
     function AsceSection(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -207,7 +55,7 @@ var Grub2Font = (function() {
     function ChixSection(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -224,7 +72,7 @@ var Grub2Font = (function() {
       function Character(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -257,7 +105,7 @@ var Grub2Font = (function() {
       function CharacterDefinition(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -267,7 +115,7 @@ var Grub2Font = (function() {
         this.xOffset = this._io.readS2be();
         this.yOffset = this._io.readS2be();
         this.deviceWidth = this._io.readS2be();
-        this.bitmapData = this._io.readBytes(Math.floor(((this.width * this.height) + 7) / 8));
+        this.bitmapData = this._io.readBytes(Math.floor((this.width * this.height + 7) / 8));
       }
 
       /**
@@ -291,11 +139,41 @@ var Grub2Font = (function() {
     return ChixSection;
   })();
 
+  var DescSection = Grub2Font.DescSection = (function() {
+    function DescSection(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DescSection.prototype._read = function() {
+      this.descentInPixels = this._io.readU2be();
+    }
+
+    return DescSection;
+  })();
+
+  var FamiSection = Grub2Font.FamiSection = (function() {
+    function FamiSection(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    FamiSection.prototype._read = function() {
+      this.fontFamilyName = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
+    }
+
+    return FamiSection;
+  })();
+
   var MaxhSection = Grub2Font.MaxhSection = (function() {
     function MaxhSection(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -306,11 +184,26 @@ var Grub2Font = (function() {
     return MaxhSection;
   })();
 
+  var MaxwSection = Grub2Font.MaxwSection = (function() {
+    function MaxwSection(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MaxwSection.prototype._read = function() {
+      this.maximumCharacterWidth = this._io.readU2be();
+    }
+
+    return MaxwSection;
+  })();
+
   var NameSection = Grub2Font.NameSection = (function() {
     function NameSection(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -321,11 +214,103 @@ var Grub2Font = (function() {
     return NameSection;
   })();
 
+  var PtszSection = Grub2Font.PtszSection = (function() {
+    function PtszSection(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PtszSection.prototype._read = function() {
+      this.fontPointSize = this._io.readU2be();
+    }
+
+    return PtszSection;
+  })();
+
+  var Section = Grub2Font.Section = (function() {
+    function Section(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Section.prototype._read = function() {
+      this.sectionType = KaitaiStream.bytesToStr(this._io.readBytes(4), "ASCII");
+      this.lenBody = this._io.readU4be();
+      if (this.sectionType != "DATA") {
+        switch (this.sectionType) {
+        case "ASCE":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new AsceSection(_io__raw_body, this, this._root);
+          break;
+        case "CHIX":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new ChixSection(_io__raw_body, this, this._root);
+          break;
+        case "DESC":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new DescSection(_io__raw_body, this, this._root);
+          break;
+        case "FAMI":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new FamiSection(_io__raw_body, this, this._root);
+          break;
+        case "MAXH":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new MaxhSection(_io__raw_body, this, this._root);
+          break;
+        case "MAXW":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new MaxwSection(_io__raw_body, this, this._root);
+          break;
+        case "NAME":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new NameSection(_io__raw_body, this, this._root);
+          break;
+        case "PTSZ":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new PtszSection(_io__raw_body, this, this._root);
+          break;
+        case "SLAN":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new SlanSection(_io__raw_body, this, this._root);
+          break;
+        case "WEIG":
+          this._raw_body = this._io.readBytes(this.lenBody);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new WeigSection(_io__raw_body, this, this._root);
+          break;
+        default:
+          this.body = this._io.readBytes(this.lenBody);
+          break;
+        }
+      }
+    }
+
+    /**
+     * Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`
+     */
+
+    return Section;
+  })();
+
   var SlanSection = Grub2Font.SlanSection = (function() {
     function SlanSection(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -334,6 +319,21 @@ var Grub2Font = (function() {
     }
 
     return SlanSection;
+  })();
+
+  var WeigSection = Grub2Font.WeigSection = (function() {
+    function WeigSection(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    WeigSection.prototype._read = function() {
+      this.fontWeight = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
+    }
+
+    return WeigSection;
   })();
 
   /**
@@ -345,5 +345,5 @@ var Grub2Font = (function() {
 
   return Grub2Font;
 })();
-return Grub2Font;
-}));
+Grub2Font_.Grub2Font = Grub2Font;
+});

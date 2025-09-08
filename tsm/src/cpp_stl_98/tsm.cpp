@@ -5,7 +5,7 @@
 
 tsm_t::tsm_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, tsm_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_header = 0;
     m_index = 0;
     f_index = false;
@@ -51,8 +51,8 @@ tsm_t::header_t::header_t(kaitai::kstream* p__io, tsm_t* p__parent, tsm_t* p__ro
 
 void tsm_t::header_t::_read() {
     m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\x16\xD1\x16\xD1", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x16\xD1\x16\xD1", 4), magic(), _io(), std::string("/types/header/seq/0"));
+    if (!(m_magic == std::string("\x16\xD1\x16\xD1", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x16\xD1\x16\xD1", 4), m_magic, m__io, std::string("/types/header/seq/0"));
     }
     m_version = m__io->read_u1();
 }
@@ -112,7 +112,7 @@ tsm_t::index_t::index_header_t::index_header_t(kaitai::kstream* p__io, tsm_t::in
 
 void tsm_t::index_t::index_header_t::_read() {
     m_key_len = m__io->read_u2be();
-    m_key = kaitai::kstream::bytes_to_str(m__io->read_bytes(key_len()), std::string("UTF-8"));
+    m_key = kaitai::kstream::bytes_to_str(m__io->read_bytes(key_len()), "UTF-8");
     m_type = m__io->read_u1();
     m_entry_count = m__io->read_u2be();
     m_index_entries = new std::vector<index_entry_t*>();
@@ -182,7 +182,7 @@ tsm_t::index_t::index_header_t::index_entry_t::block_entry_t::block_entry_t(kait
 
 void tsm_t::index_t::index_header_t::index_entry_t::block_entry_t::_read() {
     m_crc32 = m__io->read_u4be();
-    m_data = m__io->read_bytes((_parent()->block_size() - 4));
+    m_data = m__io->read_bytes(_parent()->block_size() - 4);
 }
 
 tsm_t::index_t::index_header_t::index_entry_t::block_entry_t::~block_entry_t() {
@@ -195,18 +195,19 @@ void tsm_t::index_t::index_header_t::index_entry_t::block_entry_t::_clean_up() {
 tsm_t::index_t::index_header_t::index_entry_t::block_entry_t* tsm_t::index_t::index_header_t::index_entry_t::block() {
     if (f_block)
         return m_block;
+    f_block = true;
     kaitai::kstream *io = _root()->_io();
     std::streampos _pos = io->pos();
     io->seek(block_offset());
     m_block = new block_entry_t(io, this, m__root);
     io->seek(_pos);
-    f_block = true;
     return m_block;
 }
 
 std::vector<tsm_t::index_t::index_header_t*>* tsm_t::index_t::entries() {
     if (f_entries)
         return m_entries;
+    f_entries = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(offset());
     m_entries = new std::vector<index_header_t*>();
@@ -217,20 +218,19 @@ std::vector<tsm_t::index_t::index_header_t*>* tsm_t::index_t::entries() {
             _ = new index_header_t(m__io, this, m__root);
             m_entries->push_back(_);
             i++;
-        } while (!(_io()->pos() == (_io()->size() - 8)));
+        } while (!(_io()->pos() == _io()->size() - 8));
     }
     m__io->seek(_pos);
-    f_entries = true;
     return m_entries;
 }
 
 tsm_t::index_t* tsm_t::index() {
     if (f_index)
         return m_index;
+    f_index = true;
     std::streampos _pos = m__io->pos();
-    m__io->seek((_io()->size() - 8));
+    m__io->seek(_io()->size() - 8);
     m_index = new index_t(m__io, this, m__root);
     m__io->seek(_pos);
-    f_index = true;
     return m_index;
 }

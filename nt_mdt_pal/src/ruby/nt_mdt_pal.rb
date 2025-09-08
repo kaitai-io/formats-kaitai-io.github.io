@@ -2,22 +2,22 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
 ##
 # It is a color scheme for visualising SPM scans.
 class NtMdtPal < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @signature = @_io.read_bytes(26)
-    raise Kaitai::Struct::ValidationNotEqualError.new([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33].pack('C*'), signature, _io, "/seq/0") if not signature == [78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33].pack('C*'), @signature, @_io, "/seq/0") if not @signature == [78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33].pack('C*')
     @count = @_io.read_u4be
     @meta = []
     (count).times { |i|
@@ -30,8 +30,51 @@ class NtMdtPal < Kaitai::Struct::Struct
     }
     self
   end
+  class ColTable < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, index)
+      super(_io, _parent, _root)
+      @index = index
+      _read
+    end
+
+    def _read
+      @size1 = @_io.read_u1
+      @unkn = @_io.read_u1
+      @title = (@_io.read_bytes(_root.meta[index].name_size)).force_encoding("UTF-16LE").encode('UTF-8')
+      @unkn1 = @_io.read_u2be
+      @colors = []
+      (_root.meta[index].colors_count - 1).times { |i|
+        @colors << Color.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :size1
+    attr_reader :unkn
+    attr_reader :title
+    attr_reader :unkn1
+    attr_reader :colors
+    attr_reader :index
+  end
+  class Color < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @red = @_io.read_u1
+      @unkn = @_io.read_u1
+      @blue = @_io.read_u1
+      @green = @_io.read_u1
+      self
+    end
+    attr_reader :red
+    attr_reader :unkn
+    attr_reader :blue
+    attr_reader :green
+  end
   class Meta < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -72,49 +115,6 @@ class NtMdtPal < Kaitai::Struct::Struct
     # usually 0s
     attr_reader :unkn12
     attr_reader :name_size
-  end
-  class Color < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @red = @_io.read_u1
-      @unkn = @_io.read_u1
-      @blue = @_io.read_u1
-      @green = @_io.read_u1
-      self
-    end
-    attr_reader :red
-    attr_reader :unkn
-    attr_reader :blue
-    attr_reader :green
-  end
-  class ColTable < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, index)
-      super(_io, _parent, _root)
-      @index = index
-      _read
-    end
-
-    def _read
-      @size1 = @_io.read_u1
-      @unkn = @_io.read_u1
-      @title = (@_io.read_bytes(_root.meta[index].name_size)).force_encoding("UTF-16LE")
-      @unkn1 = @_io.read_u2be
-      @colors = []
-      ((_root.meta[index].colors_count - 1)).times { |i|
-        @colors << Color.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :size1
-    attr_reader :unkn
-    attr_reader :title
-    attr_reader :unkn1
-    attr_reader :colors
-    attr_reader :index
   end
   attr_reader :signature
   attr_reader :count

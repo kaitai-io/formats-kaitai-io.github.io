@@ -1,10 +1,8 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/ethernet_frame
-import /network/packet_ppi
+import ethernet_frame
+import packet_ppi
 
-import "packet_ppi"
-import "ethernet_frame"
 type
   Pcap* = ref object of KaitaiStruct
     `hdr`*: Pcap_Header
@@ -361,17 +359,17 @@ proc read*(_: typedesc[Pcap_Packet], io: KaitaiStream, root: KaitaiStruct, paren
   ]##
   block:
     let on = Pcap(this.root).hdr.network
-    if on == pcap.ppi:
+    if on == pcap.ethernet:
       let rawBodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = PacketPpi.read(rawBodyIo, this.root, this)
+      let bodyExpr = EthernetFrame.read(rawBodyIo, nil, nil)
       this.body = bodyExpr
-    elif on == pcap.ethernet:
+    elif on == pcap.ppi:
       let rawBodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = EthernetFrame.read(rawBodyIo, this.root, this)
+      let bodyExpr = PacketPpi.read(rawBodyIo, nil, nil)
       this.body = bodyExpr
     else:
       let bodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package QuicktimeMov;
@@ -311,7 +311,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -327,6 +327,316 @@ sub _read {
 sub atoms {
     my ($self) = @_;
     return $self->{atoms};
+}
+
+########################################################################
+package QuicktimeMov::Atom;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{len32} = $self->{_io}->read_u4be();
+    $self->{atom_type} = $self->{_io}->read_u4be();
+    if ($self->len32() == 1) {
+        $self->{len64} = $self->{_io}->read_u8be();
+    }
+    my $_on = $self->atom_type();
+    if ($_on == $QuicktimeMov::ATOM_TYPE_DINF) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_FTYP) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::FtypBody->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MDIA) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MINF) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MOOF) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MOOV) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MVHD) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::MvhdBody->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_STBL) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_TKHD) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::TkhdBody->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_TRAF) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $QuicktimeMov::ATOM_TYPE_TRAK) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
+    }
+    else {
+        $self->{body} = $self->{_io}->read_bytes($self->len());
+    }
+}
+
+sub len {
+    my ($self) = @_;
+    return $self->{len} if ($self->{len});
+    $self->{len} = ($self->len32() == 0 ? $self->_io()->size() - 8 : ($self->len32() == 1 ? $self->len64() - 16 : $self->len32() - 8));
+    return $self->{len};
+}
+
+sub len32 {
+    my ($self) = @_;
+    return $self->{len32};
+}
+
+sub atom_type {
+    my ($self) = @_;
+    return $self->{atom_type};
+}
+
+sub len64 {
+    my ($self) = @_;
+    return $self->{len64};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self->{_raw_body};
+}
+
+########################################################################
+package QuicktimeMov::AtomList;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{items} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{items}}, QuicktimeMov::Atom->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub items {
+    my ($self) = @_;
+    return $self->{items};
+}
+
+########################################################################
+package QuicktimeMov::Fixed16;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{int_part} = $self->{_io}->read_s1();
+    $self->{frac_part} = $self->{_io}->read_u1();
+}
+
+sub int_part {
+    my ($self) = @_;
+    return $self->{int_part};
+}
+
+sub frac_part {
+    my ($self) = @_;
+    return $self->{frac_part};
+}
+
+########################################################################
+package QuicktimeMov::Fixed32;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{int_part} = $self->{_io}->read_s2be();
+    $self->{frac_part} = $self->{_io}->read_u2be();
+}
+
+sub int_part {
+    my ($self) = @_;
+    return $self->{int_part};
+}
+
+sub frac_part {
+    my ($self) = @_;
+    return $self->{frac_part};
+}
+
+########################################################################
+package QuicktimeMov::FtypBody;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{major_brand} = $self->{_io}->read_u4be();
+    $self->{minor_version} = $self->{_io}->read_bytes(4);
+    $self->{compatible_brands} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{compatible_brands}}, $self->{_io}->read_u4be();
+    }
+}
+
+sub major_brand {
+    my ($self) = @_;
+    return $self->{major_brand};
+}
+
+sub minor_version {
+    my ($self) = @_;
+    return $self->{minor_version};
+}
+
+sub compatible_brands {
+    my ($self) = @_;
+    return $self->{compatible_brands};
 }
 
 ########################################################################
@@ -349,7 +659,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -464,275 +774,6 @@ sub next_track_id {
 }
 
 ########################################################################
-package QuicktimeMov::FtypBody;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{major_brand} = $self->{_io}->read_u4be();
-    $self->{minor_version} = $self->{_io}->read_bytes(4);
-    $self->{compatible_brands} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{compatible_brands}}, $self->{_io}->read_u4be();
-    }
-}
-
-sub major_brand {
-    my ($self) = @_;
-    return $self->{major_brand};
-}
-
-sub minor_version {
-    my ($self) = @_;
-    return $self->{minor_version};
-}
-
-sub compatible_brands {
-    my ($self) = @_;
-    return $self->{compatible_brands};
-}
-
-########################################################################
-package QuicktimeMov::Fixed32;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{int_part} = $self->{_io}->read_s2be();
-    $self->{frac_part} = $self->{_io}->read_u2be();
-}
-
-sub int_part {
-    my ($self) = @_;
-    return $self->{int_part};
-}
-
-sub frac_part {
-    my ($self) = @_;
-    return $self->{frac_part};
-}
-
-########################################################################
-package QuicktimeMov::Fixed16;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{int_part} = $self->{_io}->read_s1();
-    $self->{frac_part} = $self->{_io}->read_u1();
-}
-
-sub int_part {
-    my ($self) = @_;
-    return $self->{int_part};
-}
-
-sub frac_part {
-    my ($self) = @_;
-    return $self->{frac_part};
-}
-
-########################################################################
-package QuicktimeMov::Atom;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{len32} = $self->{_io}->read_u4be();
-    $self->{atom_type} = $self->{_io}->read_u4be();
-    if ($self->len32() == 1) {
-        $self->{len64} = $self->{_io}->read_u8be();
-    }
-    my $_on = $self->atom_type();
-    if ($_on == $QuicktimeMov::ATOM_TYPE_MOOF) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_TKHD) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::TkhdBody->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_STBL) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_TRAF) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MINF) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_TRAK) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MOOV) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MDIA) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_DINF) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::AtomList->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_MVHD) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::MvhdBody->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $QuicktimeMov::ATOM_TYPE_FTYP) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = QuicktimeMov::FtypBody->new($io__raw_body, $self, $self->{_root});
-    }
-    else {
-        $self->{body} = $self->{_io}->read_bytes($self->len());
-    }
-}
-
-sub len {
-    my ($self) = @_;
-    return $self->{len} if ($self->{len});
-    $self->{len} = ($self->len32() == 0 ? ($self->_io()->size() - 8) : ($self->len32() == 1 ? ($self->len64() - 16) : ($self->len32() - 8)));
-    return $self->{len};
-}
-
-sub len32 {
-    my ($self) = @_;
-    return $self->{len32};
-}
-
-sub atom_type {
-    my ($self) = @_;
-    return $self->{atom_type};
-}
-
-sub len64 {
-    my ($self) = @_;
-    return $self->{len64};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body};
-}
-
-sub _raw_body {
-    my ($self) = @_;
-    return $self->{_raw_body};
-}
-
-########################################################################
 package QuicktimeMov::TkhdBody;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -752,7 +793,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -852,47 +893,6 @@ sub width {
 sub height {
     my ($self) = @_;
     return $self->{height};
-}
-
-########################################################################
-package QuicktimeMov::AtomList;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{items} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{items}}, QuicktimeMov::Atom->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub items {
-    my ($self) = @_;
-    return $self->{items};
 }
 
 1;

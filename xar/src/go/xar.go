@@ -24,13 +24,18 @@ const (
 	Xar_ChecksumAlgorithmsApple__Sha256 Xar_ChecksumAlgorithmsApple = 3
 	Xar_ChecksumAlgorithmsApple__Sha512 Xar_ChecksumAlgorithmsApple = 4
 )
+var values_Xar_ChecksumAlgorithmsApple = map[Xar_ChecksumAlgorithmsApple]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}}
+func (v Xar_ChecksumAlgorithmsApple) isDefined() bool {
+	_, ok := values_Xar_ChecksumAlgorithmsApple[v]
+	return ok
+}
 type Xar struct {
 	HeaderPrefix *Xar_FileHeaderPrefix
 	Header *Xar_FileHeader
 	Toc *Xar_TocType
 	_io *kaitai.Stream
 	_root *Xar
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Header []byte
 	_raw_Toc []byte
 	_raw__raw_Toc []byte
@@ -42,7 +47,11 @@ func NewXar() *Xar {
 	}
 }
 
-func (this *Xar) Read(io *kaitai.Stream, parent interface{}, root *Xar) (err error) {
+func (this Xar) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Xar) Read(io *kaitai.Stream, parent kaitai.Struct, root *Xar) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -53,7 +62,7 @@ func (this *Xar) Read(io *kaitai.Stream, parent interface{}, root *Xar) (err err
 		return err
 	}
 	this.HeaderPrefix = tmp1
-	tmp2, err := this._io.ReadBytes(int((this.HeaderPrefix.LenHeader - 6)))
+	tmp2, err := this._io.ReadBytes(int(this.HeaderPrefix.LenHeader - 6))
 	if err != nil {
 		return err
 	}
@@ -94,8 +103,8 @@ func (this *Xar) ChecksumAlgorithmOther() (v int8, err error) {
 	if (this._f_checksumAlgorithmOther) {
 		return this.checksumAlgorithmOther, nil
 	}
-	this.checksumAlgorithmOther = int8(3)
 	this._f_checksumAlgorithmOther = true
+	this.checksumAlgorithmOther = int8(3)
 	return this.checksumAlgorithmOther, nil
 }
 
@@ -105,43 +114,6 @@ func (this *Xar) ChecksumAlgorithmOther() (v int8, err error) {
 
 /**
  * zlib compressed XML further describing the content of the archive
- */
-type Xar_FileHeaderPrefix struct {
-	Magic []byte
-	LenHeader uint16
-	_io *kaitai.Stream
-	_root *Xar
-	_parent *Xar
-}
-func NewXar_FileHeaderPrefix() *Xar_FileHeaderPrefix {
-	return &Xar_FileHeaderPrefix{
-	}
-}
-
-func (this *Xar_FileHeaderPrefix) Read(io *kaitai.Stream, parent *Xar, root *Xar) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp7, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp7 = tmp7
-	this.Magic = tmp7
-	if !(bytes.Equal(this.Magic, []uint8{120, 97, 114, 33})) {
-		return kaitai.NewValidationNotEqualError([]uint8{120, 97, 114, 33}, this.Magic, this._io, "/types/file_header_prefix/seq/0")
-	}
-	tmp8, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.LenHeader = uint16(tmp8)
-	return err
-}
-
-/**
- * internal; access `_root.header.len_header` instead
  */
 type Xar_FileHeader struct {
 	Version uint16
@@ -164,45 +136,49 @@ func NewXar_FileHeader() *Xar_FileHeader {
 	}
 }
 
+func (this Xar_FileHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Xar_FileHeader) Read(io *kaitai.Stream, parent *Xar, root *Xar) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp9, err := this._io.ReadU2be()
+	tmp7, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Version = uint16(tmp9)
+	this.Version = uint16(tmp7)
 	if !(this.Version == 1) {
 		return kaitai.NewValidationNotEqualError(1, this.Version, this._io, "/types/file_header/seq/0")
 	}
-	tmp10, err := this._io.ReadU8be()
+	tmp8, err := this._io.ReadU8be()
 	if err != nil {
 		return err
 	}
-	this.LenTocCompressed = uint64(tmp10)
-	tmp11, err := this._io.ReadU8be()
+	this.LenTocCompressed = uint64(tmp8)
+	tmp9, err := this._io.ReadU8be()
 	if err != nil {
 		return err
 	}
-	this.TocLengthUncompressed = uint64(tmp11)
-	tmp12, err := this._io.ReadU4be()
+	this.TocLengthUncompressed = uint64(tmp9)
+	tmp10, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.ChecksumAlgorithmInt = uint32(tmp12)
-	tmp13, err := this.HasChecksumAlgName()
+	this.ChecksumAlgorithmInt = uint32(tmp10)
+	tmp11, err := this.HasChecksumAlgName()
 	if err != nil {
 		return err
 	}
-	if (tmp13) {
-		tmp14, err := this._io.ReadBytesFull()
+	if (tmp11) {
+		tmp12, err := this._io.ReadBytesFull()
 		if err != nil {
 			return err
 		}
-		tmp14 = kaitai.BytesTerminate(tmp14, 0, false)
-		this.ChecksumAlgName = string(tmp14)
+		tmp12 = kaitai.BytesTerminate(tmp12, 0, false)
+		this.ChecksumAlgName = string(tmp12)
 		{
 			_it := this.ChecksumAlgName
 			if !( ((_it != "") && (_it != "none")) ) {
@@ -239,55 +215,60 @@ func (this *Xar_FileHeader) ChecksumAlgorithmName() (v string, err error) {
 	if (this._f_checksumAlgorithmName) {
 		return this.checksumAlgorithmName, nil
 	}
-	var tmp15 string;
-	tmp16, err := this.HasChecksumAlgName()
+	this._f_checksumAlgorithmName = true
+	var tmp13 string;
+	tmp14, err := this.HasChecksumAlgName()
 	if err != nil {
 		return "", err
 	}
-	if (tmp16) {
-		tmp15 = this.ChecksumAlgName
+	if (tmp14) {
+		tmp13 = this.ChecksumAlgName
 	} else {
-		var tmp17 string;
+		var tmp15 string;
 		if (this.ChecksumAlgorithmInt == Xar_ChecksumAlgorithmsApple__None) {
-			tmp17 = "none"
+			tmp15 = "none"
 		} else {
-			var tmp18 string;
+			var tmp16 string;
 			if (this.ChecksumAlgorithmInt == Xar_ChecksumAlgorithmsApple__Sha1) {
-				tmp18 = "sha1"
+				tmp16 = "sha1"
 			} else {
-				var tmp19 string;
+				var tmp17 string;
 				if (this.ChecksumAlgorithmInt == Xar_ChecksumAlgorithmsApple__Md5) {
-					tmp19 = "md5"
+					tmp17 = "md5"
 				} else {
-					var tmp20 string;
+					var tmp18 string;
 					if (this.ChecksumAlgorithmInt == Xar_ChecksumAlgorithmsApple__Sha256) {
-						tmp20 = "sha256"
+						tmp18 = "sha256"
 					} else {
-						var tmp21 string;
+						var tmp19 string;
 						if (this.ChecksumAlgorithmInt == Xar_ChecksumAlgorithmsApple__Sha512) {
-							tmp21 = "sha512"
+							tmp19 = "sha512"
 						} else {
-							tmp21 = ""
+							tmp19 = ""
 						}
-						tmp20 = tmp21
+						tmp18 = tmp19
 					}
-					tmp19 = tmp20
+					tmp17 = tmp18
 				}
-				tmp18 = tmp19
+				tmp16 = tmp17
 			}
-			tmp17 = tmp18
+			tmp15 = tmp16
 		}
-		tmp15 = tmp17
+		tmp13 = tmp15
 	}
-	this.checksumAlgorithmName = string(tmp15)
-	this._f_checksumAlgorithmName = true
+	this.checksumAlgorithmName = string(tmp13)
 	return this.checksumAlgorithmName, nil
 }
 func (this *Xar_FileHeader) HasChecksumAlgName() (v bool, err error) {
 	if (this._f_hasChecksumAlgName) {
 		return this.hasChecksumAlgName, nil
 	}
-	tmp22, err := this._root.ChecksumAlgorithmOther()
+	this._f_hasChecksumAlgName = true
+	tmp20, err := this._root.ChecksumAlgorithmOther()
+	if err != nil {
+		return false, err
+	}
+	tmp21, err := this.LenHeader()
 	if err != nil {
 		return false, err
 	}
@@ -295,24 +276,19 @@ func (this *Xar_FileHeader) HasChecksumAlgName() (v bool, err error) {
 	if err != nil {
 		return false, err
 	}
-	tmp25, err := this.LenHeader()
-	if err != nil {
-		return false, err
+	tmp22 := tmp23 % 4
+	if tmp22 < 0 {
+		tmp22 += 4
 	}
-	tmp24 := tmp25 % 4
-	if tmp24 < 0 {
-		tmp24 += 4
-	}
-	this.hasChecksumAlgName = bool( ((this.ChecksumAlgorithmInt == tmp22) && (tmp23 >= 32) && (tmp24 == 0)) )
-	this._f_hasChecksumAlgName = true
+	this.hasChecksumAlgName = bool( ((this.ChecksumAlgorithmInt == tmp20) && (tmp21 >= 32) && (tmp22 == 0)) )
 	return this.hasChecksumAlgName, nil
 }
 func (this *Xar_FileHeader) LenHeader() (v uint16, err error) {
 	if (this._f_lenHeader) {
 		return this.lenHeader, nil
 	}
-	this.lenHeader = uint16(this._root.HeaderPrefix.LenHeader)
 	this._f_lenHeader = true
+	this.lenHeader = uint16(this._root.HeaderPrefix.LenHeader)
 	return this.lenHeader, nil
 }
 
@@ -323,6 +299,47 @@ func (this *Xar_FileHeader) LenHeader() (v uint16, err error) {
 /**
  * internal; access `checksum_algorithm_name` instead
  */
+type Xar_FileHeaderPrefix struct {
+	Magic []byte
+	LenHeader uint16
+	_io *kaitai.Stream
+	_root *Xar
+	_parent *Xar
+}
+func NewXar_FileHeaderPrefix() *Xar_FileHeaderPrefix {
+	return &Xar_FileHeaderPrefix{
+	}
+}
+
+func (this Xar_FileHeaderPrefix) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Xar_FileHeaderPrefix) Read(io *kaitai.Stream, parent *Xar, root *Xar) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp24, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp24 = tmp24
+	this.Magic = tmp24
+	if !(bytes.Equal(this.Magic, []uint8{120, 97, 114, 33})) {
+		return kaitai.NewValidationNotEqualError([]uint8{120, 97, 114, 33}, this.Magic, this._io, "/types/file_header_prefix/seq/0")
+	}
+	tmp25, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.LenHeader = uint16(tmp25)
+	return err
+}
+
+/**
+ * internal; access `_root.header.len_header` instead
+ */
 type Xar_TocType struct {
 	XmlString string
 	_io *kaitai.Stream
@@ -332,6 +349,10 @@ type Xar_TocType struct {
 func NewXar_TocType() *Xar_TocType {
 	return &Xar_TocType{
 	}
+}
+
+func (this Xar_TocType) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Xar_TocType) Read(io *kaitai.Stream, parent *Xar, root *Xar) (err error) {

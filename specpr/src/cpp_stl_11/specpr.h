@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class specpr_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -26,15 +29,15 @@
 class specpr_t : public kaitai::kstruct {
 
 public:
-    class data_initial_t;
     class coarse_timestamp_t;
-    class icflag_t;
     class data_continuation_t;
+    class data_initial_t;
+    class icflag_t;
     class identifiers_t;
     class illum_angle_t;
-    class text_initial_t;
     class record_t;
     class text_continuation_t;
+    class text_initial_t;
 
     enum record_type_t {
         RECORD_TYPE_DATA_INITIAL = 0,
@@ -42,6 +45,12 @@ public:
         RECORD_TYPE_DATA_CONTINUATION = 2,
         RECORD_TYPE_TEXT_CONTINUATION = 3
     };
+    static bool _is_defined_record_type_t(record_type_t v);
+
+private:
+    static const std::set<record_type_t> _values_record_type_t;
+
+public:
 
     specpr_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, specpr_t* p__root = nullptr);
 
@@ -51,6 +60,65 @@ private:
 
 public:
     ~specpr_t();
+
+    class coarse_timestamp_t : public kaitai::kstruct {
+
+    public:
+
+        coarse_timestamp_t(kaitai::kstream* p__io, specpr_t::data_initial_t* p__parent = nullptr, specpr_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~coarse_timestamp_t();
+
+    private:
+        bool f_seconds;
+        double m_seconds;
+
+    public:
+        double seconds();
+
+    private:
+        int32_t m_scaled_seconds;
+        specpr_t* m__root;
+        specpr_t::data_initial_t* m__parent;
+
+    public:
+        int32_t scaled_seconds() const { return m_scaled_seconds; }
+        specpr_t* _root() const { return m__root; }
+        specpr_t::data_initial_t* _parent() const { return m__parent; }
+    };
+
+    class data_continuation_t : public kaitai::kstruct {
+
+    public:
+
+        data_continuation_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent = nullptr, specpr_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_continuation_t();
+
+    private:
+        std::unique_ptr<std::vector<float>> m_cdata;
+        specpr_t* m__root;
+        specpr_t::record_t* m__parent;
+
+    public:
+
+        /**
+         * The continuation of the data values (383 channels of 32 bit real numbers).
+         */
+        std::vector<float>* cdata() const { return m_cdata.get(); }
+        specpr_t* _root() const { return m__root; }
+        specpr_t::record_t* _parent() const { return m__parent; }
+    };
 
     class data_initial_t : public kaitai::kstruct {
 
@@ -260,37 +328,6 @@ public:
         specpr_t::record_t* _parent() const { return m__parent; }
     };
 
-    class coarse_timestamp_t : public kaitai::kstruct {
-
-    public:
-
-        coarse_timestamp_t(kaitai::kstream* p__io, specpr_t::data_initial_t* p__parent = nullptr, specpr_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~coarse_timestamp_t();
-
-    private:
-        bool f_seconds;
-        double m_seconds;
-
-    public:
-        double seconds();
-
-    private:
-        int32_t m_scaled_seconds;
-        specpr_t* m__root;
-        specpr_t::data_initial_t* m__parent;
-
-    public:
-        int32_t scaled_seconds() const { return m_scaled_seconds; }
-        specpr_t* _root() const { return m__root; }
-        specpr_t::data_initial_t* _parent() const { return m__parent; }
-    };
-
     /**
      * it is big endian
      */
@@ -375,34 +412,6 @@ public:
         specpr_t::record_t* _parent() const { return m__parent; }
     };
 
-    class data_continuation_t : public kaitai::kstruct {
-
-    public:
-
-        data_continuation_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent = nullptr, specpr_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_continuation_t();
-
-    private:
-        std::unique_ptr<std::vector<float>> m_cdata;
-        specpr_t* m__root;
-        specpr_t::record_t* m__parent;
-
-    public:
-
-        /**
-         * The continuation of the data values (383 channels of 32 bit real numbers).
-         */
-        std::vector<float>* cdata() const { return m_cdata.get(); }
-        specpr_t* _root() const { return m__root; }
-        specpr_t::record_t* _parent() const { return m__parent; }
-    };
-
     class identifiers_t : public kaitai::kstruct {
 
     public:
@@ -451,11 +460,11 @@ public:
         ~illum_angle_t();
 
     private:
-        bool f_seconds_total;
-        int32_t m_seconds_total;
+        bool f_degrees_total;
+        int32_t m_degrees_total;
 
     public:
-        int32_t seconds_total();
+        int32_t degrees_total();
 
     private:
         bool f_minutes_total;
@@ -465,11 +474,11 @@ public:
         int32_t minutes_total();
 
     private:
-        bool f_degrees_total;
-        int32_t m_degrees_total;
+        bool f_seconds_total;
+        int32_t m_seconds_total;
 
     public:
-        int32_t degrees_total();
+        int32_t seconds_total();
 
     private:
         int32_t m_angl;
@@ -484,48 +493,6 @@ public:
         int32_t angl() const { return m_angl; }
         specpr_t* _root() const { return m__root; }
         specpr_t::data_initial_t* _parent() const { return m__parent; }
-    };
-
-    class text_initial_t : public kaitai::kstruct {
-
-    public:
-
-        text_initial_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent = nullptr, specpr_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~text_initial_t();
-
-    private:
-        std::unique_ptr<identifiers_t> m_ids;
-        uint32_t m_itxtpt;
-        int32_t m_itxtch;
-        std::string m_itext;
-        specpr_t* m__root;
-        specpr_t::record_t* m__parent;
-
-    public:
-        identifiers_t* ids() const { return m_ids.get(); }
-
-        /**
-         * Text data record pointer. This pointer points  to a data record where additional text may be may be found.
-         */
-        uint32_t itxtpt() const { return m_itxtpt; }
-
-        /**
-         * The number of text characters (maximum= 19860).
-         */
-        int32_t itxtch() const { return m_itxtch; }
-
-        /**
-         * 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
-         */
-        std::string itext() const { return m_itext; }
-        specpr_t* _root() const { return m__root; }
-        specpr_t::record_t* _parent() const { return m__parent; }
     };
 
     class record_t : public kaitai::kstruct {
@@ -592,6 +559,48 @@ public:
          * 1532 characters of text.
          */
         std::string tdata() const { return m_tdata; }
+        specpr_t* _root() const { return m__root; }
+        specpr_t::record_t* _parent() const { return m__parent; }
+    };
+
+    class text_initial_t : public kaitai::kstruct {
+
+    public:
+
+        text_initial_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent = nullptr, specpr_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~text_initial_t();
+
+    private:
+        std::unique_ptr<identifiers_t> m_ids;
+        uint32_t m_itxtpt;
+        int32_t m_itxtch;
+        std::string m_itext;
+        specpr_t* m__root;
+        specpr_t::record_t* m__parent;
+
+    public:
+        identifiers_t* ids() const { return m_ids.get(); }
+
+        /**
+         * Text data record pointer. This pointer points  to a data record where additional text may be may be found.
+         */
+        uint32_t itxtpt() const { return m_itxtpt; }
+
+        /**
+         * The number of text characters (maximum= 19860).
+         */
+        int32_t itxtch() const { return m_itxtch; }
+
+        /**
+         * 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
+         */
+        std::string itext() const { return m_itext; }
         specpr_t* _root() const { return m__root; }
         specpr_t::record_t* _parent() const { return m__parent; }
     };

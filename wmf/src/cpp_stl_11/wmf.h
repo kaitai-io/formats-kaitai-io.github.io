@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class wmf_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -25,18 +28,43 @@
 class wmf_t : public kaitai::kstruct {
 
 public:
-    class params_setwindoworg_t;
-    class params_setbkmode_t;
-    class point_s_t;
-    class params_setwindowext_t;
-    class params_polygon_t;
-    class header_t;
     class color_ref_t;
-    class params_setrop2_t;
-    class params_setpolyfillmode_t;
+    class header_t;
+    class params_polygon_t;
     class params_polyline_t;
-    class special_header_t;
+    class params_setbkmode_t;
+    class params_setpolyfillmode_t;
+    class params_setrop2_t;
+    class params_setwindowext_t;
+    class params_setwindoworg_t;
+    class point_s_t;
     class record_t;
+    class special_header_t;
+
+    enum bin_raster_op_t {
+        BIN_RASTER_OP_BLACK = 1,
+        BIN_RASTER_OP_NOTMERGEPEN = 2,
+        BIN_RASTER_OP_MASKNOTPEN = 3,
+        BIN_RASTER_OP_NOTCOPYPEN = 4,
+        BIN_RASTER_OP_MASKPENNOT = 5,
+        BIN_RASTER_OP_NOT = 6,
+        BIN_RASTER_OP_XORPEN = 7,
+        BIN_RASTER_OP_NOTMASKPEN = 8,
+        BIN_RASTER_OP_MASKPEN = 9,
+        BIN_RASTER_OP_NOTXORPEN = 10,
+        BIN_RASTER_OP_NOP = 11,
+        BIN_RASTER_OP_MERGENOTPEN = 12,
+        BIN_RASTER_OP_COPYPEN = 13,
+        BIN_RASTER_OP_MERGEPENNOT = 14,
+        BIN_RASTER_OP_MERGEPEN = 15,
+        BIN_RASTER_OP_WHITE = 16
+    };
+    static bool _is_defined_bin_raster_op_t(bin_raster_op_t v);
+
+private:
+    static const std::set<bin_raster_op_t> _values_bin_raster_op_t;
+
+public:
 
     enum func_t {
         FUNC_EOF = 0,
@@ -110,35 +138,34 @@ public:
         FUNC_SETDIBTODEV = 3379,
         FUNC_STRETCHDIB = 3907
     };
+    static bool _is_defined_func_t(func_t v);
 
-    enum bin_raster_op_t {
-        BIN_RASTER_OP_BLACK = 1,
-        BIN_RASTER_OP_NOTMERGEPEN = 2,
-        BIN_RASTER_OP_MASKNOTPEN = 3,
-        BIN_RASTER_OP_NOTCOPYPEN = 4,
-        BIN_RASTER_OP_MASKPENNOT = 5,
-        BIN_RASTER_OP_NOT = 6,
-        BIN_RASTER_OP_XORPEN = 7,
-        BIN_RASTER_OP_NOTMASKPEN = 8,
-        BIN_RASTER_OP_MASKPEN = 9,
-        BIN_RASTER_OP_NOTXORPEN = 10,
-        BIN_RASTER_OP_NOP = 11,
-        BIN_RASTER_OP_MERGENOTPEN = 12,
-        BIN_RASTER_OP_COPYPEN = 13,
-        BIN_RASTER_OP_MERGEPENNOT = 14,
-        BIN_RASTER_OP_MERGEPEN = 15,
-        BIN_RASTER_OP_WHITE = 16
-    };
+private:
+    static const std::set<func_t> _values_func_t;
+
+public:
 
     enum mix_mode_t {
         MIX_MODE_TRANSPARENT = 1,
         MIX_MODE_OPAQUE = 2
     };
+    static bool _is_defined_mix_mode_t(mix_mode_t v);
+
+private:
+    static const std::set<mix_mode_t> _values_mix_mode_t;
+
+public:
 
     enum poly_fill_mode_t {
         POLY_FILL_MODE_ALTERNATE = 1,
         POLY_FILL_MODE_WINDING = 2
     };
+    static bool _is_defined_poly_fill_mode_t(poly_fill_mode_t v);
+
+private:
+    static const std::set<poly_fill_mode_t> _values_poly_fill_mode_t;
+
+public:
 
     wmf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, wmf_t* p__root = nullptr);
 
@@ -148,6 +175,281 @@ private:
 
 public:
     ~wmf_t();
+
+    /**
+     * \sa section 2.2.1.7
+     */
+
+    class color_ref_t : public kaitai::kstruct {
+
+    public:
+
+        color_ref_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~color_ref_t();
+
+    private:
+        uint8_t m_red;
+        uint8_t m_green;
+        uint8_t m_blue;
+        uint8_t m_reserved;
+        wmf_t* m__root;
+        wmf_t::record_t* m__parent;
+
+    public:
+        uint8_t red() const { return m_red; }
+        uint8_t green() const { return m_green; }
+        uint8_t blue() const { return m_blue; }
+        uint8_t reserved() const { return m_reserved; }
+        wmf_t* _root() const { return m__root; }
+        wmf_t::record_t* _parent() const { return m__parent; }
+    };
+
+    class header_t : public kaitai::kstruct {
+
+    public:
+
+        enum metafile_type_t {
+            METAFILE_TYPE_MEMORY_METAFILE = 1,
+            METAFILE_TYPE_DISK_METAFILE = 2
+        };
+        static bool _is_defined_metafile_type_t(metafile_type_t v);
+
+    private:
+        static const std::set<metafile_type_t> _values_metafile_type_t;
+
+    public:
+
+        header_t(kaitai::kstream* p__io, wmf_t* p__parent = nullptr, wmf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header_t();
+
+    private:
+        metafile_type_t m_metafile_type;
+        uint16_t m_header_size;
+        uint16_t m_version;
+        uint32_t m_size;
+        uint16_t m_number_of_objects;
+        uint32_t m_max_record;
+        uint16_t m_number_of_members;
+        wmf_t* m__root;
+        wmf_t* m__parent;
+
+    public:
+        metafile_type_t metafile_type() const { return m_metafile_type; }
+        uint16_t header_size() const { return m_header_size; }
+        uint16_t version() const { return m_version; }
+        uint32_t size() const { return m_size; }
+        uint16_t number_of_objects() const { return m_number_of_objects; }
+        uint32_t max_record() const { return m_max_record; }
+        uint16_t number_of_members() const { return m_number_of_members; }
+        wmf_t* _root() const { return m__root; }
+        wmf_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa section 2.3.3.15 = params_polyline
+     */
+
+    class params_polygon_t : public kaitai::kstruct {
+
+    public:
+
+        params_polygon_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~params_polygon_t();
+
+    private:
+        int16_t m_num_points;
+        std::unique_ptr<std::vector<std::unique_ptr<point_s_t>>> m_points;
+        wmf_t* m__root;
+        wmf_t::record_t* m__parent;
+
+    public:
+        int16_t num_points() const { return m_num_points; }
+        std::vector<std::unique_ptr<point_s_t>>* points() const { return m_points.get(); }
+        wmf_t* _root() const { return m__root; }
+        wmf_t::record_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa section 2.3.3.14
+     */
+
+    class params_polyline_t : public kaitai::kstruct {
+
+    public:
+
+        params_polyline_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~params_polyline_t();
+
+    private:
+        int16_t m_num_points;
+        std::unique_ptr<std::vector<std::unique_ptr<point_s_t>>> m_points;
+        wmf_t* m__root;
+        wmf_t::record_t* m__parent;
+
+    public:
+        int16_t num_points() const { return m_num_points; }
+        std::vector<std::unique_ptr<point_s_t>>* points() const { return m_points.get(); }
+        wmf_t* _root() const { return m__root; }
+        wmf_t::record_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa section 2.3.5.15
+     */
+
+    class params_setbkmode_t : public kaitai::kstruct {
+
+    public:
+
+        params_setbkmode_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~params_setbkmode_t();
+
+    private:
+        mix_mode_t m_bk_mode;
+        wmf_t* m__root;
+        wmf_t::record_t* m__parent;
+
+    public:
+
+        /**
+         * Defines current graphic context background mix mode.
+         */
+        mix_mode_t bk_mode() const { return m_bk_mode; }
+        wmf_t* _root() const { return m__root; }
+        wmf_t::record_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa section 2.3.5.20
+     */
+
+    class params_setpolyfillmode_t : public kaitai::kstruct {
+
+    public:
+
+        params_setpolyfillmode_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~params_setpolyfillmode_t();
+
+    private:
+        poly_fill_mode_t m_poly_fill_mode;
+        wmf_t* m__root;
+        wmf_t::record_t* m__parent;
+
+    public:
+
+        /**
+         * Defines current polygon fill mode.
+         */
+        poly_fill_mode_t poly_fill_mode() const { return m_poly_fill_mode; }
+        wmf_t* _root() const { return m__root; }
+        wmf_t::record_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa section 2.3.5.22
+     */
+
+    class params_setrop2_t : public kaitai::kstruct {
+
+    public:
+
+        params_setrop2_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~params_setrop2_t();
+
+    private:
+        bin_raster_op_t m_draw_mode;
+        wmf_t* m__root;
+        wmf_t::record_t* m__parent;
+
+    public:
+
+        /**
+         * Defines current foreground binary raster operation mixing mode.
+         */
+        bin_raster_op_t draw_mode() const { return m_draw_mode; }
+        wmf_t* _root() const { return m__root; }
+        wmf_t::record_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa section 2.3.5.30
+     */
+
+    class params_setwindowext_t : public kaitai::kstruct {
+
+    public:
+
+        params_setwindowext_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~params_setwindowext_t();
+
+    private:
+        int16_t m_y;
+        int16_t m_x;
+        wmf_t* m__root;
+        wmf_t::record_t* m__parent;
+
+    public:
+
+        /**
+         * Vertical extent of the window in logical units.
+         */
+        int16_t y() const { return m_y; }
+
+        /**
+         * Horizontal extent of the window in logical units.
+         */
+        int16_t x() const { return m_x; }
+        wmf_t* _root() const { return m__root; }
+        wmf_t::record_t* _parent() const { return m__parent; }
+    };
 
     /**
      * \sa section 2.3.5.31
@@ -183,38 +485,6 @@ public:
          * X coordinate of the window origin, in logical units.
          */
         int16_t x() const { return m_x; }
-        wmf_t* _root() const { return m__root; }
-        wmf_t::record_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa section 2.3.5.15
-     */
-
-    class params_setbkmode_t : public kaitai::kstruct {
-
-    public:
-
-        params_setbkmode_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~params_setbkmode_t();
-
-    private:
-        mix_mode_t m_bk_mode;
-        wmf_t* m__root;
-        wmf_t::record_t* m__parent;
-
-    public:
-
-        /**
-         * Defines current graphic context background mix mode.
-         */
-        mix_mode_t bk_mode() const { return m_bk_mode; }
         wmf_t* _root() const { return m__root; }
         wmf_t::record_t* _parent() const { return m__parent; }
     };
@@ -257,241 +527,42 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
-    /**
-     * \sa section 2.3.5.30
-     */
-
-    class params_setwindowext_t : public kaitai::kstruct {
+    class record_t : public kaitai::kstruct {
 
     public:
 
-        params_setwindowext_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
+        record_t(kaitai::kstream* p__io, wmf_t* p__parent = nullptr, wmf_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~params_setwindowext_t();
+        ~record_t();
 
     private:
-        int16_t m_y;
-        int16_t m_x;
-        wmf_t* m__root;
-        wmf_t::record_t* m__parent;
-
-    public:
-
-        /**
-         * Vertical extent of the window in logical units.
-         */
-        int16_t y() const { return m_y; }
-
-        /**
-         * Horizontal extent of the window in logical units.
-         */
-        int16_t x() const { return m_x; }
-        wmf_t* _root() const { return m__root; }
-        wmf_t::record_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa section 2.3.3.15 = params_polyline
-     */
-
-    class params_polygon_t : public kaitai::kstruct {
-
-    public:
-
-        params_polygon_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~params_polygon_t();
-
-    private:
-        int16_t m_num_points;
-        std::unique_ptr<std::vector<std::unique_ptr<point_s_t>>> m_points;
-        wmf_t* m__root;
-        wmf_t::record_t* m__parent;
-
-    public:
-        int16_t num_points() const { return m_num_points; }
-        std::vector<std::unique_ptr<point_s_t>>* points() const { return m_points.get(); }
-        wmf_t* _root() const { return m__root; }
-        wmf_t::record_t* _parent() const { return m__parent; }
-    };
-
-    class header_t : public kaitai::kstruct {
-
-    public:
-
-        enum metafile_type_t {
-            METAFILE_TYPE_MEMORY_METAFILE = 1,
-            METAFILE_TYPE_DISK_METAFILE = 2
-        };
-
-        header_t(kaitai::kstream* p__io, wmf_t* p__parent = nullptr, wmf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~header_t();
-
-    private:
-        metafile_type_t m_metafile_type;
-        uint16_t m_header_size;
-        uint16_t m_version;
         uint32_t m_size;
-        uint16_t m_number_of_objects;
-        uint32_t m_max_record;
-        uint16_t m_number_of_members;
+        func_t m_function;
+        std::unique_ptr<kaitai::kstruct> m_params;
+        bool n_params;
+
+    public:
+        bool _is_null_params() { params(); return n_params; };
+
+    private:
         wmf_t* m__root;
         wmf_t* m__parent;
+        std::string m__raw_params;
+        std::unique_ptr<kaitai::kstream> m__io__raw_params;
 
     public:
-        metafile_type_t metafile_type() const { return m_metafile_type; }
-        uint16_t header_size() const { return m_header_size; }
-        uint16_t version() const { return m_version; }
         uint32_t size() const { return m_size; }
-        uint16_t number_of_objects() const { return m_number_of_objects; }
-        uint32_t max_record() const { return m_max_record; }
-        uint16_t number_of_members() const { return m_number_of_members; }
+        func_t function() const { return m_function; }
+        kaitai::kstruct* params() const { return m_params.get(); }
         wmf_t* _root() const { return m__root; }
         wmf_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa section 2.2.1.7
-     */
-
-    class color_ref_t : public kaitai::kstruct {
-
-    public:
-
-        color_ref_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~color_ref_t();
-
-    private:
-        uint8_t m_red;
-        uint8_t m_green;
-        uint8_t m_blue;
-        uint8_t m_reserved;
-        wmf_t* m__root;
-        wmf_t::record_t* m__parent;
-
-    public:
-        uint8_t red() const { return m_red; }
-        uint8_t green() const { return m_green; }
-        uint8_t blue() const { return m_blue; }
-        uint8_t reserved() const { return m_reserved; }
-        wmf_t* _root() const { return m__root; }
-        wmf_t::record_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa section 2.3.5.22
-     */
-
-    class params_setrop2_t : public kaitai::kstruct {
-
-    public:
-
-        params_setrop2_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~params_setrop2_t();
-
-    private:
-        bin_raster_op_t m_draw_mode;
-        wmf_t* m__root;
-        wmf_t::record_t* m__parent;
-
-    public:
-
-        /**
-         * Defines current foreground binary raster operation mixing mode.
-         */
-        bin_raster_op_t draw_mode() const { return m_draw_mode; }
-        wmf_t* _root() const { return m__root; }
-        wmf_t::record_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa section 2.3.5.20
-     */
-
-    class params_setpolyfillmode_t : public kaitai::kstruct {
-
-    public:
-
-        params_setpolyfillmode_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~params_setpolyfillmode_t();
-
-    private:
-        poly_fill_mode_t m_poly_fill_mode;
-        wmf_t* m__root;
-        wmf_t::record_t* m__parent;
-
-    public:
-
-        /**
-         * Defines current polygon fill mode.
-         */
-        poly_fill_mode_t poly_fill_mode() const { return m_poly_fill_mode; }
-        wmf_t* _root() const { return m__root; }
-        wmf_t::record_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa section 2.3.3.14
-     */
-
-    class params_polyline_t : public kaitai::kstruct {
-
-    public:
-
-        params_polyline_t(kaitai::kstream* p__io, wmf_t::record_t* p__parent = nullptr, wmf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~params_polyline_t();
-
-    private:
-        int16_t m_num_points;
-        std::unique_ptr<std::vector<std::unique_ptr<point_s_t>>> m_points;
-        wmf_t* m__root;
-        wmf_t::record_t* m__parent;
-
-    public:
-        int16_t num_points() const { return m_num_points; }
-        std::vector<std::unique_ptr<point_s_t>>* points() const { return m_points.get(); }
-        wmf_t* _root() const { return m__root; }
-        wmf_t::record_t* _parent() const { return m__parent; }
+        std::string _raw_params() const { return m__raw_params; }
+        kaitai::kstream* _io__raw_params() const { return m__io__raw_params.get(); }
     };
 
     class special_header_t : public kaitai::kstruct {
@@ -532,44 +603,6 @@ public:
         uint16_t checksum() const { return m_checksum; }
         wmf_t* _root() const { return m__root; }
         wmf_t* _parent() const { return m__parent; }
-    };
-
-    class record_t : public kaitai::kstruct {
-
-    public:
-
-        record_t(kaitai::kstream* p__io, wmf_t* p__parent = nullptr, wmf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~record_t();
-
-    private:
-        uint32_t m_size;
-        func_t m_function;
-        std::unique_ptr<kaitai::kstruct> m_params;
-        bool n_params;
-
-    public:
-        bool _is_null_params() { params(); return n_params; };
-
-    private:
-        wmf_t* m__root;
-        wmf_t* m__parent;
-        std::string m__raw_params;
-        std::unique_ptr<kaitai::kstream> m__io__raw_params;
-
-    public:
-        uint32_t size() const { return m_size; }
-        func_t function() const { return m_function; }
-        kaitai::kstruct* params() const { return m_params.get(); }
-        wmf_t* _root() const { return m__root; }
-        wmf_t* _parent() const { return m__parent; }
-        std::string _raw_params() const { return m__raw_params; }
-        kaitai::kstream* _io__raw_params() const { return m__io__raw_params.get(); }
     };
 
 private:

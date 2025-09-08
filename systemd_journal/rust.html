@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>systemd journal file: Rust parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Logs</li>
+        <li class="active">systemd journal file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>systemd journal file:
+            
+            Rust parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>systemd, a popular user-space system/service management suite on Linux,
+offers logging functionality, storing incoming logs in a binary journal
+format.</p>
+<p>On live Linux system running systemd, these journals are typically located at:</p>
+<ul>
+<li>/run/log/journal/machine-id/*.journal (volatile, lost after reboot)</li>
+<li>/var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        journal
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://forensics.wiki/systemd/">systemd in ForensicsWiki</a></li>
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of systemd journal file
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="systemd journal file parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="systemd journal file parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="systemd journal file parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="systemd journal file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="systemd journal file parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="systemd journal file parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="systemd journal file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="systemd journal file parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="systemd journal file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="systemd journal file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="systemd journal file parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="systemd journal file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="systemd journal file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="systemd journal file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title="systemd journal file parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="systemd journal file parsing Ruby library">Ruby</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="rust.html" title="systemd journal file parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Rust source code to parse systemd journal file
+            
+        </h2>
+
+        
+
+        <h3>systemd_journal.rs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/rust/systemd_journal.rs" download="systemd_journal.rs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#![allow(unused_imports)]</span>
+<span class="cp">#![allow(non_snake_case)]</span>
+<span class="cp">#![allow(non_camel_case_types)]</span>
+<span class="cp">#![allow(irrefutable_let_patterns)]</span>
+<span class="cp">#![allow(unused_comparisons)]</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="k">crate</span><span class="w"> </span><span class="n">kaitai</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">kaitai</span><span class="p">::</span><span class="o">*</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">convert</span><span class="p">::{</span><span class="n">TryFrom</span><span class="p">,</span><span class="w"> </span><span class="n">TryInto</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::{</span><span class="n">Ref</span><span class="p">,</span><span class="w"> </span><span class="n">Cell</span><span class="p">,</span><span class="w"> </span><span class="n">RefCell</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::{</span><span class="n">Rc</span><span class="p">,</span><span class="w"> </span><span class="n">Weak</span><span class="p">};</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * systemd, a popular user-space system/service management suite on Linux,</span>
+<span class="sd"> * offers logging functionality, storing incoming logs in a binary journal</span>
+<span class="sd"> * format.</span>
+<span class="sd"> * </span>
+<span class="sd"> * On live Linux system running systemd, these journals are typically located at:</span>
+<span class="sd"> * </span>
+<span class="sd"> * * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)</span>
+<span class="sd"> * * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</span>
+<span class="sd"> * \sa https://www.freedesktop.org/wiki/Software/systemd/journal-files/ Source</span>
+<span class="sd"> */</span>
+
+<span class="sd">#[derive(Default, Debug, Clone)]</span>
+<span class="sd">pub struct SystemdJournal {</span>
+<span class="sd">    pub _root: SharedType&lt;SystemdJournal&gt;,</span>
+<span class="sd">    pub _parent: SharedType&lt;SystemdJournal&gt;,</span>
+<span class="sd">    pub _self: SharedType&lt;Self&gt;,</span>
+<span class="sd">    header: RefCell&lt;OptRc&lt;SystemdJournal_Header&gt;&gt;,</span>
+<span class="sd">    objects: RefCell&lt;Vec&lt;OptRc&lt;SystemdJournal_JournalObject&gt;&gt;&gt;,</span>
+<span class="sd">    _io: RefCell&lt;BytesReader&gt;,</span>
+<span class="sd">    header_raw: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    f_data_hash_table: Cell&lt;bool&gt;,</span>
+<span class="sd">    data_hash_table: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    f_field_hash_table: Cell&lt;bool&gt;,</span>
+<span class="sd">    field_hash_table: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    f_len_header: Cell&lt;bool&gt;,</span>
+<span class="sd">    len_header: RefCell&lt;u64&gt;,</span>
+<span class="sd">}</span>
+<span class="sd">impl KStruct for SystemdJournal {</span>
+<span class="sd">    type Root = SystemdJournal;</span>
+<span class="sd">    type Parent = SystemdJournal;</span>
+
+<span class="sd">    fn read&lt;S: KStream&gt;(</span>
+<span class="sd">        self_rc: &amp;OptRc&lt;Self&gt;,</span>
+<span class="sd">        _io: &amp;S,</span>
+<span class="sd">        _root: SharedType&lt;Self::Root&gt;,</span>
+<span class="sd">        _parent: SharedType&lt;Self::Parent&gt;,</span>
+<span class="sd">    ) -&gt; KResult&lt;()&gt; {</span>
+<span class="sd">        *self_rc._io.borrow_mut() = _io.clone();</span>
+<span class="sd">        self_rc._root.set(_root.get());</span>
+<span class="sd">        self_rc._parent.set(_parent.get());</span>
+<span class="sd">        self_rc._self.set(Ok(self_rc.clone()));</span>
+<span class="sd">        let _rrc = self_rc._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self_rc._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        *self_rc.header_raw.borrow_mut() = _io.read_bytes(*self_rc.len_header()? as usize)?.into();</span>
+<span class="sd">        let header_raw = self_rc.header_raw.borrow();</span>
+<span class="sd">        let _t_header_raw_io = BytesReader::from(header_raw.clone());</span>
+<span class="sd">        let t = Self::read_into::&lt;BytesReader, SystemdJournal_Header&gt;(&amp;_t_header_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();</span>
+<span class="sd">        *self_rc.header.borrow_mut() = t;</span>
+<span class="sd">        *self_rc.objects.borrow_mut() = Vec::new();</span>
+<span class="sd">        let l_objects = *self_rc.header().num_objects();</span>
+<span class="sd">        for _i in 0..l_objects {</span>
+<span class="sd">            let t = Self::read_into::&lt;_, SystemdJournal_JournalObject&gt;(&amp;*_io, Some(self_rc._root.clone()), None)?.into();</span>
+<span class="sd">            self_rc.objects.borrow_mut().push(t);</span>
+<span class="sd">        }</span>
+<span class="sd">        Ok(())</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal {</span>
+<span class="sd">    pub fn data_hash_table(</span>
+<span class="sd">        &amp;self</span>
+<span class="sd">    ) -&gt; KResult&lt;Ref&lt;&#39;_, Vec&lt;u8&gt;&gt;&gt; {</span>
+<span class="sd">        let _io = self._io.borrow();</span>
+<span class="sd">        let _rrc = self._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        if self.f_data_hash_table.get() {</span>
+<span class="sd">            return Ok(self.data_hash_table.borrow());</span>
+<span class="sd">        }</span>
+<span class="sd">        self.f_data_hash_table.set(true);</span>
+<span class="sd">        let _pos = _io.pos();</span>
+<span class="sd">        _io.seek(*self.header().ofs_data_hash_table() as usize)?;</span>
+<span class="sd">        *self.data_hash_table.borrow_mut() = _io.read_bytes(*self.header().len_data_hash_table() as usize)?.into();</span>
+<span class="sd">        _io.seek(_pos)?;</span>
+<span class="sd">        Ok(self.data_hash_table.borrow())</span>
+<span class="sd">    }</span>
+<span class="sd">    pub fn field_hash_table(</span>
+<span class="sd">        &amp;self</span>
+<span class="sd">    ) -&gt; KResult&lt;Ref&lt;&#39;_, Vec&lt;u8&gt;&gt;&gt; {</span>
+<span class="sd">        let _io = self._io.borrow();</span>
+<span class="sd">        let _rrc = self._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        if self.f_field_hash_table.get() {</span>
+<span class="sd">            return Ok(self.field_hash_table.borrow());</span>
+<span class="sd">        }</span>
+<span class="sd">        self.f_field_hash_table.set(true);</span>
+<span class="sd">        let _pos = _io.pos();</span>
+<span class="sd">        _io.seek(*self.header().ofs_field_hash_table() as usize)?;</span>
+<span class="sd">        *self.field_hash_table.borrow_mut() = _io.read_bytes(*self.header().len_field_hash_table() as usize)?.into();</span>
+<span class="sd">        _io.seek(_pos)?;</span>
+<span class="sd">        Ok(self.field_hash_table.borrow())</span>
+<span class="sd">    }</span>
+
+<span class="sd">    /**</span>
+<span class="sd">     * Header length is used to set substream size, as it thus required</span>
+<span class="sd">     * prior to declaration of header.</span>
+<span class="sd">     */</span>
+<span class="sd">    pub fn len_header(</span>
+<span class="sd">        &amp;self</span>
+<span class="sd">    ) -&gt; KResult&lt;Ref&lt;&#39;_, u64&gt;&gt; {</span>
+<span class="sd">        let _io = self._io.borrow();</span>
+<span class="sd">        let _rrc = self._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        if self.f_len_header.get() {</span>
+<span class="sd">            return Ok(self.len_header.borrow());</span>
+<span class="sd">        }</span>
+<span class="sd">        self.f_len_header.set(true);</span>
+<span class="sd">        let _pos = _io.pos();</span>
+<span class="sd">        _io.seek(88 as usize)?;</span>
+<span class="sd">        *self.len_header.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        _io.seek(_pos)?;</span>
+<span class="sd">        Ok(self.len_header.borrow())</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal {</span>
+<span class="sd">    pub fn header(&amp;self) -&gt; Ref&lt;&#39;_, OptRc&lt;SystemdJournal_Header&gt;&gt; {</span>
+<span class="sd">        self.header.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal {</span>
+<span class="sd">    pub fn objects(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;OptRc&lt;SystemdJournal_JournalObject&gt;&gt;&gt; {</span>
+<span class="sd">        self.objects.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal {</span>
+<span class="sd">    pub fn _io(&amp;self) -&gt; Ref&lt;&#39;_, BytesReader&gt; {</span>
+<span class="sd">        self._io.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal {</span>
+<span class="sd">    pub fn header_raw(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.header_raw.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">#[derive(Debug, PartialEq, Clone)]</span>
+<span class="sd">pub enum SystemdJournal_State {</span>
+
+<span class="sd">    /**</span>
+<span class="sd">     * File is closed and thus not being written into right now</span>
+<span class="sd">     */</span>
+<span class="sd">    Offline,</span>
+
+<span class="sd">    /**</span>
+<span class="sd">     * File is open and thus might be undergoing update at the moment</span>
+<span class="sd">     */</span>
+<span class="sd">    Online,</span>
+
+<span class="sd">    /**</span>
+<span class="sd">     * File has been rotated, no further updates to this file are to be expected</span>
+<span class="sd">     */</span>
+<span class="sd">    Archived,</span>
+<span class="sd">    Unknown(i64),</span>
+<span class="sd">}</span>
+
+<span class="sd">impl TryFrom&lt;i64&gt; for SystemdJournal_State {</span>
+<span class="sd">    type Error = KError;</span>
+<span class="sd">    fn try_from(flag: i64) -&gt; KResult&lt;SystemdJournal_State&gt; {</span>
+<span class="sd">        match flag {</span>
+<span class="sd">            0 =&gt; Ok(SystemdJournal_State::Offline),</span>
+<span class="sd">            1 =&gt; Ok(SystemdJournal_State::Online),</span>
+<span class="sd">            2 =&gt; Ok(SystemdJournal_State::Archived),</span>
+<span class="sd">            _ =&gt; Ok(SystemdJournal_State::Unknown(flag)),</span>
+<span class="sd">        }</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+
+<span class="sd">impl From&lt;&amp;SystemdJournal_State&gt; for i64 {</span>
+<span class="sd">    fn from(v: &amp;SystemdJournal_State) -&gt; Self {</span>
+<span class="sd">        match *v {</span>
+<span class="sd">            SystemdJournal_State::Offline =&gt; 0,</span>
+<span class="sd">            SystemdJournal_State::Online =&gt; 1,</span>
+<span class="sd">            SystemdJournal_State::Archived =&gt; 2,</span>
+<span class="sd">            SystemdJournal_State::Unknown(v) =&gt; v</span>
+<span class="sd">        }</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+
+<span class="sd">impl Default for SystemdJournal_State {</span>
+<span class="sd">    fn default() -&gt; Self { SystemdJournal_State::Unknown(0) }</span>
+<span class="sd">}</span>
+
+
+<span class="sd">/**</span>
+<span class="sd"> * Data objects are designed to carry log payload, typically in</span>
+<span class="sd"> * form of a &quot;key=value&quot; string in `payload` attribute.</span>
+<span class="sd"> * \sa https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects Source</span>
+<span class="sd"> */</span>
+
+<span class="sd">#[derive(Default, Debug, Clone)]</span>
+<span class="sd">pub struct SystemdJournal_DataObject {</span>
+<span class="sd">    pub _root: SharedType&lt;SystemdJournal&gt;,</span>
+<span class="sd">    pub _parent: SharedType&lt;SystemdJournal_JournalObject&gt;,</span>
+<span class="sd">    pub _self: SharedType&lt;Self&gt;,</span>
+<span class="sd">    hash: RefCell&lt;u64&gt;,</span>
+<span class="sd">    ofs_next_hash: RefCell&lt;u64&gt;,</span>
+<span class="sd">    ofs_head_field: RefCell&lt;u64&gt;,</span>
+<span class="sd">    ofs_entry: RefCell&lt;u64&gt;,</span>
+<span class="sd">    ofs_entry_array: RefCell&lt;u64&gt;,</span>
+<span class="sd">    num_entries: RefCell&lt;u64&gt;,</span>
+<span class="sd">    payload: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    _io: RefCell&lt;BytesReader&gt;,</span>
+<span class="sd">    f_entry: Cell&lt;bool&gt;,</span>
+<span class="sd">    entry: RefCell&lt;OptRc&lt;SystemdJournal_JournalObject&gt;&gt;,</span>
+<span class="sd">    f_entry_array: Cell&lt;bool&gt;,</span>
+<span class="sd">    entry_array: RefCell&lt;OptRc&lt;SystemdJournal_JournalObject&gt;&gt;,</span>
+<span class="sd">    f_head_field: Cell&lt;bool&gt;,</span>
+<span class="sd">    head_field: RefCell&lt;OptRc&lt;SystemdJournal_JournalObject&gt;&gt;,</span>
+<span class="sd">    f_next_hash: Cell&lt;bool&gt;,</span>
+<span class="sd">    next_hash: RefCell&lt;OptRc&lt;SystemdJournal_JournalObject&gt;&gt;,</span>
+<span class="sd">}</span>
+<span class="sd">impl KStruct for SystemdJournal_DataObject {</span>
+<span class="sd">    type Root = SystemdJournal;</span>
+<span class="sd">    type Parent = SystemdJournal_JournalObject;</span>
+
+<span class="sd">    fn read&lt;S: KStream&gt;(</span>
+<span class="sd">        self_rc: &amp;OptRc&lt;Self&gt;,</span>
+<span class="sd">        _io: &amp;S,</span>
+<span class="sd">        _root: SharedType&lt;Self::Root&gt;,</span>
+<span class="sd">        _parent: SharedType&lt;Self::Parent&gt;,</span>
+<span class="sd">    ) -&gt; KResult&lt;()&gt; {</span>
+<span class="sd">        *self_rc._io.borrow_mut() = _io.clone();</span>
+<span class="sd">        self_rc._root.set(_root.get());</span>
+<span class="sd">        self_rc._parent.set(_parent.get());</span>
+<span class="sd">        self_rc._self.set(Ok(self_rc.clone()));</span>
+<span class="sd">        let _rrc = self_rc._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self_rc._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        *self_rc.hash.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.ofs_next_hash.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.ofs_head_field.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.ofs_entry.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.ofs_entry_array.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.num_entries.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.payload.borrow_mut() = _io.read_bytes_full()?.into();</span>
+<span class="sd">        Ok(())</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_DataObject {</span>
+<span class="sd">    pub fn entry(</span>
+<span class="sd">        &amp;self</span>
+<span class="sd">    ) -&gt; KResult&lt;Ref&lt;&#39;_, OptRc&lt;SystemdJournal_JournalObject&gt;&gt;&gt; {</span>
+<span class="sd">        let _io = self._io.borrow();</span>
+<span class="sd">        let _rrc = self._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        if self.f_entry.get() {</span>
+<span class="sd">            return Ok(self.entry.borrow());</span>
+<span class="sd">        }</span>
+<span class="sd">        if ((*self.ofs_entry() as u64) != (0 as u64)) {</span>
+<span class="sd">            let io = Clone::clone(&amp;*_r._io());</span>
+<span class="sd">            let _pos = io.pos();</span>
+<span class="sd">            io.seek(*self.ofs_entry() as usize)?;</span>
+<span class="sd">            let t = Self::read_into::&lt;BytesReader, SystemdJournal_JournalObject&gt;(&amp;io, Some(self._root.clone()), None)?.into();</span>
+<span class="sd">            *self.entry.borrow_mut() = t;</span>
+<span class="sd">            io.seek(_pos)?;</span>
+<span class="sd">        }</span>
+<span class="sd">        Ok(self.entry.borrow())</span>
+<span class="sd">    }</span>
+<span class="sd">    pub fn entry_array(</span>
+<span class="sd">        &amp;self</span>
+<span class="sd">    ) -&gt; KResult&lt;Ref&lt;&#39;_, OptRc&lt;SystemdJournal_JournalObject&gt;&gt;&gt; {</span>
+<span class="sd">        let _io = self._io.borrow();</span>
+<span class="sd">        let _rrc = self._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        if self.f_entry_array.get() {</span>
+<span class="sd">            return Ok(self.entry_array.borrow());</span>
+<span class="sd">        }</span>
+<span class="sd">        if ((*self.ofs_entry_array() as u64) != (0 as u64)) {</span>
+<span class="sd">            let io = Clone::clone(&amp;*_r._io());</span>
+<span class="sd">            let _pos = io.pos();</span>
+<span class="sd">            io.seek(*self.ofs_entry_array() as usize)?;</span>
+<span class="sd">            let t = Self::read_into::&lt;BytesReader, SystemdJournal_JournalObject&gt;(&amp;io, Some(self._root.clone()), None)?.into();</span>
+<span class="sd">            *self.entry_array.borrow_mut() = t;</span>
+<span class="sd">            io.seek(_pos)?;</span>
+<span class="sd">        }</span>
+<span class="sd">        Ok(self.entry_array.borrow())</span>
+<span class="sd">    }</span>
+<span class="sd">    pub fn head_field(</span>
+<span class="sd">        &amp;self</span>
+<span class="sd">    ) -&gt; KResult&lt;Ref&lt;&#39;_, OptRc&lt;SystemdJournal_JournalObject&gt;&gt;&gt; {</span>
+<span class="sd">        let _io = self._io.borrow();</span>
+<span class="sd">        let _rrc = self._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        if self.f_head_field.get() {</span>
+<span class="sd">            return Ok(self.head_field.borrow());</span>
+<span class="sd">        }</span>
+<span class="sd">        if ((*self.ofs_head_field() as u64) != (0 as u64)) {</span>
+<span class="sd">            let io = Clone::clone(&amp;*_r._io());</span>
+<span class="sd">            let _pos = io.pos();</span>
+<span class="sd">            io.seek(*self.ofs_head_field() as usize)?;</span>
+<span class="sd">            let t = Self::read_into::&lt;BytesReader, SystemdJournal_JournalObject&gt;(&amp;io, Some(self._root.clone()), None)?.into();</span>
+<span class="sd">            *self.head_field.borrow_mut() = t;</span>
+<span class="sd">            io.seek(_pos)?;</span>
+<span class="sd">        }</span>
+<span class="sd">        Ok(self.head_field.borrow())</span>
+<span class="sd">    }</span>
+<span class="sd">    pub fn next_hash(</span>
+<span class="sd">        &amp;self</span>
+<span class="sd">    ) -&gt; KResult&lt;Ref&lt;&#39;_, OptRc&lt;SystemdJournal_JournalObject&gt;&gt;&gt; {</span>
+<span class="sd">        let _io = self._io.borrow();</span>
+<span class="sd">        let _rrc = self._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        if self.f_next_hash.get() {</span>
+<span class="sd">            return Ok(self.next_hash.borrow());</span>
+<span class="sd">        }</span>
+<span class="sd">        if ((*self.ofs_next_hash() as u64) != (0 as u64)) {</span>
+<span class="sd">            let io = Clone::clone(&amp;*_r._io());</span>
+<span class="sd">            let _pos = io.pos();</span>
+<span class="sd">            io.seek(*self.ofs_next_hash() as usize)?;</span>
+<span class="sd">            let t = Self::read_into::&lt;BytesReader, SystemdJournal_JournalObject&gt;(&amp;io, Some(self._root.clone()), None)?.into();</span>
+<span class="sd">            *self.next_hash.borrow_mut() = t;</span>
+<span class="sd">            io.seek(_pos)?;</span>
+<span class="sd">        }</span>
+<span class="sd">        Ok(self.next_hash.borrow())</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_DataObject {</span>
+<span class="sd">    pub fn hash(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.hash.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_DataObject {</span>
+<span class="sd">    pub fn ofs_next_hash(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.ofs_next_hash.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_DataObject {</span>
+<span class="sd">    pub fn ofs_head_field(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.ofs_head_field.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_DataObject {</span>
+<span class="sd">    pub fn ofs_entry(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.ofs_entry.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_DataObject {</span>
+<span class="sd">    pub fn ofs_entry_array(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.ofs_entry_array.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_DataObject {</span>
+<span class="sd">    pub fn num_entries(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.num_entries.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_DataObject {</span>
+<span class="sd">    pub fn payload(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.payload.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_DataObject {</span>
+<span class="sd">    pub fn _io(&amp;self) -&gt; Ref&lt;&#39;_, BytesReader&gt; {</span>
+<span class="sd">        self._io.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+
+<span class="sd">#[derive(Default, Debug, Clone)]</span>
+<span class="sd">pub struct SystemdJournal_Header {</span>
+<span class="sd">    pub _root: SharedType&lt;SystemdJournal&gt;,</span>
+<span class="sd">    pub _parent: SharedType&lt;SystemdJournal&gt;,</span>
+<span class="sd">    pub _self: SharedType&lt;Self&gt;,</span>
+<span class="sd">    signature: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    compatible_flags: RefCell&lt;u32&gt;,</span>
+<span class="sd">    incompatible_flags: RefCell&lt;u32&gt;,</span>
+<span class="sd">    state: RefCell&lt;SystemdJournal_State&gt;,</span>
+<span class="sd">    reserved: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    file_id: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    machine_id: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    boot_id: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    seqnum_id: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    len_header: RefCell&lt;u64&gt;,</span>
+<span class="sd">    len_arena: RefCell&lt;u64&gt;,</span>
+<span class="sd">    ofs_data_hash_table: RefCell&lt;u64&gt;,</span>
+<span class="sd">    len_data_hash_table: RefCell&lt;u64&gt;,</span>
+<span class="sd">    ofs_field_hash_table: RefCell&lt;u64&gt;,</span>
+<span class="sd">    len_field_hash_table: RefCell&lt;u64&gt;,</span>
+<span class="sd">    ofs_tail_object: RefCell&lt;u64&gt;,</span>
+<span class="sd">    num_objects: RefCell&lt;u64&gt;,</span>
+<span class="sd">    num_entries: RefCell&lt;u64&gt;,</span>
+<span class="sd">    tail_entry_seqnum: RefCell&lt;u64&gt;,</span>
+<span class="sd">    head_entry_seqnum: RefCell&lt;u64&gt;,</span>
+<span class="sd">    ofs_entry_array: RefCell&lt;u64&gt;,</span>
+<span class="sd">    head_entry_realtime: RefCell&lt;u64&gt;,</span>
+<span class="sd">    tail_entry_realtime: RefCell&lt;u64&gt;,</span>
+<span class="sd">    tail_entry_monotonic: RefCell&lt;u64&gt;,</span>
+<span class="sd">    num_data: RefCell&lt;u64&gt;,</span>
+<span class="sd">    num_fields: RefCell&lt;u64&gt;,</span>
+<span class="sd">    num_tags: RefCell&lt;u64&gt;,</span>
+<span class="sd">    num_entry_arrays: RefCell&lt;u64&gt;,</span>
+<span class="sd">    _io: RefCell&lt;BytesReader&gt;,</span>
+<span class="sd">}</span>
+<span class="sd">impl KStruct for SystemdJournal_Header {</span>
+<span class="sd">    type Root = SystemdJournal;</span>
+<span class="sd">    type Parent = SystemdJournal;</span>
+
+<span class="sd">    fn read&lt;S: KStream&gt;(</span>
+<span class="sd">        self_rc: &amp;OptRc&lt;Self&gt;,</span>
+<span class="sd">        _io: &amp;S,</span>
+<span class="sd">        _root: SharedType&lt;Self::Root&gt;,</span>
+<span class="sd">        _parent: SharedType&lt;Self::Parent&gt;,</span>
+<span class="sd">    ) -&gt; KResult&lt;()&gt; {</span>
+<span class="sd">        *self_rc._io.borrow_mut() = _io.clone();</span>
+<span class="sd">        self_rc._root.set(_root.get());</span>
+<span class="sd">        self_rc._parent.set(_parent.get());</span>
+<span class="sd">        self_rc._self.set(Ok(self_rc.clone()));</span>
+<span class="sd">        let _rrc = self_rc._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self_rc._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        *self_rc.signature.borrow_mut() = _io.read_bytes(8 as usize)?.into();</span>
+<span class="sd">        if !(*self_rc.signature() == vec![0x4cu8, 0x50u8, 0x4bu8, 0x53u8, 0x48u8, 0x48u8, 0x52u8, 0x48u8]) {</span>
+<span class="sd">            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotEqual, src_path: &quot;/types/header/seq/0&quot;.to_string() }));</span>
+<span class="sd">        }</span>
+<span class="sd">        *self_rc.compatible_flags.borrow_mut() = _io.read_u4le()?.into();</span>
+<span class="sd">        *self_rc.incompatible_flags.borrow_mut() = _io.read_u4le()?.into();</span>
+<span class="sd">        *self_rc.state.borrow_mut() = (_io.read_u1()? as i64).try_into()?;</span>
+<span class="sd">        *self_rc.reserved.borrow_mut() = _io.read_bytes(7 as usize)?.into();</span>
+<span class="sd">        *self_rc.file_id.borrow_mut() = _io.read_bytes(16 as usize)?.into();</span>
+<span class="sd">        *self_rc.machine_id.borrow_mut() = _io.read_bytes(16 as usize)?.into();</span>
+<span class="sd">        *self_rc.boot_id.borrow_mut() = _io.read_bytes(16 as usize)?.into();</span>
+<span class="sd">        *self_rc.seqnum_id.borrow_mut() = _io.read_bytes(16 as usize)?.into();</span>
+<span class="sd">        *self_rc.len_header.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.len_arena.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.ofs_data_hash_table.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.len_data_hash_table.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.ofs_field_hash_table.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.len_field_hash_table.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.ofs_tail_object.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.num_objects.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.num_entries.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.tail_entry_seqnum.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.head_entry_seqnum.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.ofs_entry_array.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.head_entry_realtime.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.tail_entry_realtime.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        *self_rc.tail_entry_monotonic.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        if !(_io.is_eof()) {</span>
+<span class="sd">            *self_rc.num_data.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        }</span>
+<span class="sd">        if !(_io.is_eof()) {</span>
+<span class="sd">            *self_rc.num_fields.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        }</span>
+<span class="sd">        if !(_io.is_eof()) {</span>
+<span class="sd">            *self_rc.num_tags.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        }</span>
+<span class="sd">        if !(_io.is_eof()) {</span>
+<span class="sd">            *self_rc.num_entry_arrays.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        }</span>
+<span class="sd">        Ok(())</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn signature(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.signature.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn compatible_flags(&amp;self) -&gt; Ref&lt;&#39;_, u32&gt; {</span>
+<span class="sd">        self.compatible_flags.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn incompatible_flags(&amp;self) -&gt; Ref&lt;&#39;_, u32&gt; {</span>
+<span class="sd">        self.incompatible_flags.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn state(&amp;self) -&gt; Ref&lt;&#39;_, SystemdJournal_State&gt; {</span>
+<span class="sd">        self.state.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn reserved(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.reserved.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn file_id(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.file_id.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn machine_id(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.machine_id.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn boot_id(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.boot_id.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn seqnum_id(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.seqnum_id.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn len_header(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.len_header.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn len_arena(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.len_arena.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn ofs_data_hash_table(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.ofs_data_hash_table.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn len_data_hash_table(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.len_data_hash_table.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn ofs_field_hash_table(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.ofs_field_hash_table.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn len_field_hash_table(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.len_field_hash_table.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn ofs_tail_object(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.ofs_tail_object.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn num_objects(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.num_objects.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn num_entries(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.num_entries.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn tail_entry_seqnum(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.tail_entry_seqnum.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn head_entry_seqnum(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.head_entry_seqnum.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn ofs_entry_array(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.ofs_entry_array.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn head_entry_realtime(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.head_entry_realtime.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn tail_entry_realtime(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.tail_entry_realtime.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn tail_entry_monotonic(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.tail_entry_monotonic.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn num_data(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.num_data.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn num_fields(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.num_fields.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn num_tags(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.num_tags.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn num_entry_arrays(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.num_entry_arrays.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_Header {</span>
+<span class="sd">    pub fn _io(&amp;self) -&gt; Ref&lt;&#39;_, BytesReader&gt; {</span>
+<span class="sd">        self._io.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * \sa https://www.freedesktop.org/wiki/Software/systemd/journal-files/#objects Source</span>
+<span class="sd"> */</span>
+
+<span class="sd">#[derive(Default, Debug, Clone)]</span>
+<span class="sd">pub struct SystemdJournal_JournalObject {</span>
+<span class="sd">    pub _root: SharedType&lt;SystemdJournal&gt;,</span>
+<span class="sd">    pub _parent: SharedType&lt;KStructUnit&gt;,</span>
+<span class="sd">    pub _self: SharedType&lt;Self&gt;,</span>
+<span class="sd">    padding: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    object_type: RefCell&lt;SystemdJournal_JournalObject_ObjectTypes&gt;,</span>
+<span class="sd">    flags: RefCell&lt;u8&gt;,</span>
+<span class="sd">    reserved: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">    len_object: RefCell&lt;u64&gt;,</span>
+<span class="sd">    payload: RefCell&lt;Option&lt;SystemdJournal_JournalObject_Payload&gt;&gt;,</span>
+<span class="sd">    _io: RefCell&lt;BytesReader&gt;,</span>
+<span class="sd">    payload_raw: RefCell&lt;Vec&lt;u8&gt;&gt;,</span>
+<span class="sd">}</span>
+<span class="sd">#[derive(Debug, Clone)]</span>
+<span class="sd">pub enum SystemdJournal_JournalObject_Payload {</span>
+<span class="sd">    SystemdJournal_DataObject(OptRc&lt;SystemdJournal_DataObject&gt;),</span>
+<span class="sd">    Bytes(Vec&lt;u8&gt;),</span>
+<span class="sd">}</span>
+<span class="sd">impl From&lt;&amp;SystemdJournal_JournalObject_Payload&gt; for OptRc&lt;SystemdJournal_DataObject&gt; {</span>
+<span class="sd">    fn from(v: &amp;SystemdJournal_JournalObject_Payload) -&gt; Self {</span>
+<span class="sd">        if let SystemdJournal_JournalObject_Payload::SystemdJournal_DataObject(x) = v {</span>
+<span class="sd">            return x.clone();</span>
+<span class="sd">        }</span>
+<span class="sd">        panic!(&quot;expected SystemdJournal_JournalObject_Payload::SystemdJournal_DataObject, got {:?}&quot;, v)</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl From&lt;OptRc&lt;SystemdJournal_DataObject&gt;&gt; for SystemdJournal_JournalObject_Payload {</span>
+<span class="sd">    fn from(v: OptRc&lt;SystemdJournal_DataObject&gt;) -&gt; Self {</span>
+<span class="sd">        Self::SystemdJournal_DataObject(v)</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl From&lt;&amp;SystemdJournal_JournalObject_Payload&gt; for Vec&lt;u8&gt; {</span>
+<span class="sd">    fn from(v: &amp;SystemdJournal_JournalObject_Payload) -&gt; Self {</span>
+<span class="sd">        if let SystemdJournal_JournalObject_Payload::Bytes(x) = v {</span>
+<span class="sd">            return x.clone();</span>
+<span class="sd">        }</span>
+<span class="sd">        panic!(&quot;expected SystemdJournal_JournalObject_Payload::Bytes, got {:?}&quot;, v)</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl From&lt;Vec&lt;u8&gt;&gt; for SystemdJournal_JournalObject_Payload {</span>
+<span class="sd">    fn from(v: Vec&lt;u8&gt;) -&gt; Self {</span>
+<span class="sd">        Self::Bytes(v)</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl KStruct for SystemdJournal_JournalObject {</span>
+<span class="sd">    type Root = SystemdJournal;</span>
+<span class="sd">    type Parent = KStructUnit;</span>
+
+<span class="sd">    fn read&lt;S: KStream&gt;(</span>
+<span class="sd">        self_rc: &amp;OptRc&lt;Self&gt;,</span>
+<span class="sd">        _io: &amp;S,</span>
+<span class="sd">        _root: SharedType&lt;Self::Root&gt;,</span>
+<span class="sd">        _parent: SharedType&lt;Self::Parent&gt;,</span>
+<span class="sd">    ) -&gt; KResult&lt;()&gt; {</span>
+<span class="sd">        *self_rc._io.borrow_mut() = _io.clone();</span>
+<span class="sd">        self_rc._root.set(_root.get());</span>
+<span class="sd">        self_rc._parent.set(_parent.get());</span>
+<span class="sd">        self_rc._self.set(Ok(self_rc.clone()));</span>
+<span class="sd">        let _rrc = self_rc._root.get_value().borrow().upgrade();</span>
+<span class="sd">        let _prc = self_rc._parent.get_value().borrow().upgrade();</span>
+<span class="sd">        let _r = _rrc.as_ref().unwrap();</span>
+<span class="sd">        *self_rc.padding.borrow_mut() = _io.read_bytes(modulo(((8 as i32) - (_io.pos() as i32)) as i64, 8 as i64) as usize)?.into();</span>
+<span class="sd">        *self_rc.object_type.borrow_mut() = (_io.read_u1()? as i64).try_into()?;</span>
+<span class="sd">        *self_rc.flags.borrow_mut() = _io.read_u1()?.into();</span>
+<span class="sd">        *self_rc.reserved.borrow_mut() = _io.read_bytes(6 as usize)?.into();</span>
+<span class="sd">        *self_rc.len_object.borrow_mut() = _io.read_u8le()?.into();</span>
+<span class="sd">        match *self_rc.object_type() {</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::Data =&gt; {</span>
+<span class="sd">                *self_rc.payload_raw.borrow_mut() = _io.read_bytes(((*self_rc.len_object() as u64) - (16 as u64)) as usize)?.into();</span>
+<span class="sd">                let payload_raw = self_rc.payload_raw.borrow();</span>
+<span class="sd">                let _t_payload_raw_io = BytesReader::from(payload_raw.clone());</span>
+<span class="sd">                let t = Self::read_into::&lt;BytesReader, SystemdJournal_DataObject&gt;(&amp;_t_payload_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();</span>
+<span class="sd">                *self_rc.payload.borrow_mut() = Some(t);</span>
+<span class="sd">            }</span>
+<span class="sd">            _ =&gt; {</span>
+<span class="sd">                *self_rc.payload.borrow_mut() = Some(_io.read_bytes(((*self_rc.len_object() as u64) - (16 as u64)) as usize)?.into());</span>
+<span class="sd">            }</span>
+<span class="sd">        }</span>
+<span class="sd">        Ok(())</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_JournalObject {</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_JournalObject {</span>
+<span class="sd">    pub fn padding(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.padding.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_JournalObject {</span>
+<span class="sd">    pub fn object_type(&amp;self) -&gt; Ref&lt;&#39;_, SystemdJournal_JournalObject_ObjectTypes&gt; {</span>
+<span class="sd">        self.object_type.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_JournalObject {</span>
+<span class="sd">    pub fn flags(&amp;self) -&gt; Ref&lt;&#39;_, u8&gt; {</span>
+<span class="sd">        self.flags.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_JournalObject {</span>
+<span class="sd">    pub fn reserved(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.reserved.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_JournalObject {</span>
+<span class="sd">    pub fn len_object(&amp;self) -&gt; Ref&lt;&#39;_, u64&gt; {</span>
+<span class="sd">        self.len_object.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_JournalObject {</span>
+<span class="sd">    pub fn payload(&amp;self) -&gt; Ref&lt;&#39;_, Option&lt;SystemdJournal_JournalObject_Payload&gt;&gt; {</span>
+<span class="sd">        self.payload.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_JournalObject {</span>
+<span class="sd">    pub fn _io(&amp;self) -&gt; Ref&lt;&#39;_, BytesReader&gt; {</span>
+<span class="sd">        self._io.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">impl SystemdJournal_JournalObject {</span>
+<span class="sd">    pub fn payload_raw(&amp;self) -&gt; Ref&lt;&#39;_, Vec&lt;u8&gt;&gt; {</span>
+<span class="sd">        self.payload_raw.borrow()</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+<span class="sd">#[derive(Debug, PartialEq, Clone)]</span>
+<span class="sd">pub enum SystemdJournal_JournalObject_ObjectTypes {</span>
+<span class="sd">    Unused,</span>
+<span class="sd">    Data,</span>
+<span class="sd">    Field,</span>
+<span class="sd">    Entry,</span>
+<span class="sd">    DataHashTable,</span>
+<span class="sd">    FieldHashTable,</span>
+<span class="sd">    EntryArray,</span>
+<span class="sd">    Tag,</span>
+<span class="sd">    Unknown(i64),</span>
+<span class="sd">}</span>
+
+<span class="sd">impl TryFrom&lt;i64&gt; for SystemdJournal_JournalObject_ObjectTypes {</span>
+<span class="sd">    type Error = KError;</span>
+<span class="sd">    fn try_from(flag: i64) -&gt; KResult&lt;SystemdJournal_JournalObject_ObjectTypes&gt; {</span>
+<span class="sd">        match flag {</span>
+<span class="sd">            0 =&gt; Ok(SystemdJournal_JournalObject_ObjectTypes::Unused),</span>
+<span class="sd">            1 =&gt; Ok(SystemdJournal_JournalObject_ObjectTypes::Data),</span>
+<span class="sd">            2 =&gt; Ok(SystemdJournal_JournalObject_ObjectTypes::Field),</span>
+<span class="sd">            3 =&gt; Ok(SystemdJournal_JournalObject_ObjectTypes::Entry),</span>
+<span class="sd">            4 =&gt; Ok(SystemdJournal_JournalObject_ObjectTypes::DataHashTable),</span>
+<span class="sd">            5 =&gt; Ok(SystemdJournal_JournalObject_ObjectTypes::FieldHashTable),</span>
+<span class="sd">            6 =&gt; Ok(SystemdJournal_JournalObject_ObjectTypes::EntryArray),</span>
+<span class="sd">            7 =&gt; Ok(SystemdJournal_JournalObject_ObjectTypes::Tag),</span>
+<span class="sd">            _ =&gt; Ok(SystemdJournal_JournalObject_ObjectTypes::Unknown(flag)),</span>
+<span class="sd">        }</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+
+<span class="sd">impl From&lt;&amp;SystemdJournal_JournalObject_ObjectTypes&gt; for i64 {</span>
+<span class="sd">    fn from(v: &amp;SystemdJournal_JournalObject_ObjectTypes) -&gt; Self {</span>
+<span class="sd">        match *v {</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::Unused =&gt; 0,</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::Data =&gt; 1,</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::Field =&gt; 2,</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::Entry =&gt; 3,</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::DataHashTable =&gt; 4,</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::FieldHashTable =&gt; 5,</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::EntryArray =&gt; 6,</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::Tag =&gt; 7,</span>
+<span class="sd">            SystemdJournal_JournalObject_ObjectTypes::Unknown(v) =&gt; v</span>
+<span class="sd">        }</span>
+<span class="sd">    }</span>
+<span class="sd">}</span>
+
+<span class="sd">impl Default for SystemdJournal_JournalObject_ObjectTypes {</span>
+<span class="sd">    fn default() -&gt; Self { SystemdJournal_JournalObject_ObjectTypes::Unknown(0) }</span>
+<span class="sd">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2025 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

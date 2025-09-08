@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Bcd(KaitaiStruct):
     """BCD (Binary Coded Decimals) is a common way to encode integer
@@ -37,9 +38,9 @@ class Bcd(KaitaiStruct):
     `as_str` attributes.
     """
     def __init__(self, num_digits, bits_per_digit, is_le, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Bcd, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self.num_digits = num_digits
         self.bits_per_digit = bits_per_digit
         self.is_le = is_le
@@ -50,9 +51,23 @@ class Bcd(KaitaiStruct):
         for i in range(self.num_digits):
             _on = self.bits_per_digit
             if _on == 4:
+                pass
                 self.digits.append(self._io.read_bits_int_be(4))
             elif _on == 8:
+                pass
                 self.digits.append(self._io.read_u1())
+
+
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.digits)):
+            pass
+            _on = self.bits_per_digit
+            if _on == 4:
+                pass
+            elif _on == 8:
+                pass
 
 
     @property
@@ -65,12 +80,21 @@ class Bcd(KaitaiStruct):
         return getattr(self, '_m_as_int', None)
 
     @property
+    def as_int_be(self):
+        """Value of this BCD number as integer (treating digit order as big-endian)."""
+        if hasattr(self, '_m_as_int_be'):
+            return self._m_as_int_be
+
+        self._m_as_int_be = self.digits[self.last_idx] + (0 if self.num_digits < 2 else self.digits[self.last_idx - 1] * 10 + (0 if self.num_digits < 3 else self.digits[self.last_idx - 2] * 100 + (0 if self.num_digits < 4 else self.digits[self.last_idx - 3] * 1000 + (0 if self.num_digits < 5 else self.digits[self.last_idx - 4] * 10000 + (0 if self.num_digits < 6 else self.digits[self.last_idx - 5] * 100000 + (0 if self.num_digits < 7 else self.digits[self.last_idx - 6] * 1000000 + (0 if self.num_digits < 8 else self.digits[self.last_idx - 7] * 10000000)))))))
+        return getattr(self, '_m_as_int_be', None)
+
+    @property
     def as_int_le(self):
         """Value of this BCD number as integer (treating digit order as little-endian)."""
         if hasattr(self, '_m_as_int_le'):
             return self._m_as_int_le
 
-        self._m_as_int_le = (self.digits[0] + (0 if self.num_digits < 2 else ((self.digits[1] * 10) + (0 if self.num_digits < 3 else ((self.digits[2] * 100) + (0 if self.num_digits < 4 else ((self.digits[3] * 1000) + (0 if self.num_digits < 5 else ((self.digits[4] * 10000) + (0 if self.num_digits < 6 else ((self.digits[5] * 100000) + (0 if self.num_digits < 7 else ((self.digits[6] * 1000000) + (0 if self.num_digits < 8 else (self.digits[7] * 10000000)))))))))))))))
+        self._m_as_int_le = self.digits[0] + (0 if self.num_digits < 2 else self.digits[1] * 10 + (0 if self.num_digits < 3 else self.digits[2] * 100 + (0 if self.num_digits < 4 else self.digits[3] * 1000 + (0 if self.num_digits < 5 else self.digits[4] * 10000 + (0 if self.num_digits < 6 else self.digits[5] * 100000 + (0 if self.num_digits < 7 else self.digits[6] * 1000000 + (0 if self.num_digits < 8 else self.digits[7] * 10000000)))))))
         return getattr(self, '_m_as_int_le', None)
 
     @property
@@ -79,16 +103,7 @@ class Bcd(KaitaiStruct):
         if hasattr(self, '_m_last_idx'):
             return self._m_last_idx
 
-        self._m_last_idx = (self.num_digits - 1)
+        self._m_last_idx = self.num_digits - 1
         return getattr(self, '_m_last_idx', None)
-
-    @property
-    def as_int_be(self):
-        """Value of this BCD number as integer (treating digit order as big-endian)."""
-        if hasattr(self, '_m_as_int_be'):
-            return self._m_as_int_be
-
-        self._m_as_int_be = (self.digits[self.last_idx] + (0 if self.num_digits < 2 else ((self.digits[(self.last_idx - 1)] * 10) + (0 if self.num_digits < 3 else ((self.digits[(self.last_idx - 2)] * 100) + (0 if self.num_digits < 4 else ((self.digits[(self.last_idx - 3)] * 1000) + (0 if self.num_digits < 5 else ((self.digits[(self.last_idx - 4)] * 10000) + (0 if self.num_digits < 6 else ((self.digits[(self.last_idx - 5)] * 100000) + (0 if self.num_digits < 7 else ((self.digits[(self.last_idx - 6)] * 1000000) + (0 if self.num_digits < 8 else (self.digits[(self.last_idx - 7)] * 10000000)))))))))))))))
-        return getattr(self, '_m_as_int_be', None)
 
 

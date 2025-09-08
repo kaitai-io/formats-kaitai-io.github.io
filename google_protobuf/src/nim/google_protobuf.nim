@@ -1,20 +1,23 @@
 import kaitai_struct_nim_runtime
 import options
-import /common/vlq_base128_le
+import vlq_base128_le
 
-import "vlq_base128_le"
 type
   GoogleProtobuf* = ref object of KaitaiStruct
     `pairs`*: seq[GoogleProtobuf_Pair]
     `parent`*: KaitaiStruct
+  GoogleProtobuf_DelimitedBytes* = ref object of KaitaiStruct
+    `len`*: VlqBase128Le
+    `body`*: seq[byte]
+    `parent`*: GoogleProtobuf_Pair
   GoogleProtobuf_Pair* = ref object of KaitaiStruct
     `key`*: VlqBase128Le
     `value`*: KaitaiStruct
     `parent`*: GoogleProtobuf
-    `wireTypeInst`: GoogleProtobuf_Pair_WireTypes
-    `wireTypeInstFlag`: bool
     `fieldTagInst`: int
     `fieldTagInstFlag`: bool
+    `wireTypeInst`: GoogleProtobuf_Pair_WireTypes
+    `wireTypeInstFlag`: bool
   GoogleProtobuf_Pair_WireTypes* = enum
     varint = 0
     bit_64 = 1
@@ -22,17 +25,13 @@ type
     group_start = 3
     group_end = 4
     bit_32 = 5
-  GoogleProtobuf_DelimitedBytes* = ref object of KaitaiStruct
-    `len`*: VlqBase128Le
-    `body`*: seq[byte]
-    `parent`*: GoogleProtobuf_Pair
 
 proc read*(_: typedesc[GoogleProtobuf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GoogleProtobuf
-proc read*(_: typedesc[GoogleProtobuf_Pair], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf): GoogleProtobuf_Pair
 proc read*(_: typedesc[GoogleProtobuf_DelimitedBytes], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf_Pair): GoogleProtobuf_DelimitedBytes
+proc read*(_: typedesc[GoogleProtobuf_Pair], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf): GoogleProtobuf_Pair
 
-proc wireType*(this: GoogleProtobuf_Pair): GoogleProtobuf_Pair_WireTypes
 proc fieldTag*(this: GoogleProtobuf_Pair): int
+proc wireType*(this: GoogleProtobuf_Pair): GoogleProtobuf_Pair_WireTypes
 
 
 ##[
@@ -88,6 +87,22 @@ proc read*(_: typedesc[GoogleProtobuf], io: KaitaiStream, root: KaitaiStruct, pa
 proc fromFile*(_: typedesc[GoogleProtobuf], filename: string): GoogleProtobuf =
   GoogleProtobuf.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[GoogleProtobuf_DelimitedBytes], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf_Pair): GoogleProtobuf_DelimitedBytes =
+  template this: untyped = result
+  this = new(GoogleProtobuf_DelimitedBytes)
+  let root = if root == nil: cast[GoogleProtobuf](this) else: cast[GoogleProtobuf](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lenExpr = VlqBase128Le.read(this.io, nil, nil)
+  this.len = lenExpr
+  let bodyExpr = this.io.readBytes(int(this.len.value))
+  this.body = bodyExpr
+
+proc fromFile*(_: typedesc[GoogleProtobuf_DelimitedBytes], filename: string): GoogleProtobuf_DelimitedBytes =
+  GoogleProtobuf_DelimitedBytes.read(newKaitaiFileStream(filename), nil, nil)
+
 
 ##[
 Key-value pair
@@ -107,7 +122,7 @@ are used for "wire type", and everything higher designates
 an integer "field tag".
 
   ]##
-  let keyExpr = VlqBase128Le.read(this.io, this.root, this)
+  let keyExpr = VlqBase128Le.read(this.io, nil, nil)
   this.key = keyExpr
 
   ##[
@@ -120,18 +135,32 @@ interprete it properly.
   ]##
   block:
     let on = this.wireType
-    if on == google_protobuf.varint:
-      let valueExpr = VlqBase128Le.read(this.io, this.root, this)
-      this.value = valueExpr
-    elif on == google_protobuf.len_delimited:
-      let valueExpr = GoogleProtobuf_DelimitedBytes.read(this.io, this.root, this)
+    if on == google_protobuf.bit_32:
+      let valueExpr = KaitaiStruct(this.io.readU4le())
       this.value = valueExpr
     elif on == google_protobuf.bit_64:
       let valueExpr = KaitaiStruct(this.io.readU8le())
       this.value = valueExpr
-    elif on == google_protobuf.bit_32:
-      let valueExpr = KaitaiStruct(this.io.readU4le())
+    elif on == google_protobuf.len_delimited:
+      let valueExpr = GoogleProtobuf_DelimitedBytes.read(this.io, this.root, this)
       this.value = valueExpr
+    elif on == google_protobuf.varint:
+      let valueExpr = VlqBase128Le.read(this.io, nil, nil)
+      this.value = valueExpr
+
+proc fieldTag(this: GoogleProtobuf_Pair): int = 
+
+  ##[
+  Identifies a field of protocol. One can look up symbolic
+field name in a `.proto` file by this field tag.
+
+  ]##
+  if this.fieldTagInstFlag:
+    return this.fieldTagInst
+  let fieldTagInstExpr = int(this.key.value shr 3)
+  this.fieldTagInst = fieldTagInstExpr
+  this.fieldTagInstFlag = true
+  return this.fieldTagInst
 
 proc wireType(this: GoogleProtobuf_Pair): GoogleProtobuf_Pair_WireTypes = 
 
@@ -147,41 +176,11 @@ arbitrary bytes from UTF-8 encoded strings, etc.
   ]##
   if this.wireTypeInstFlag:
     return this.wireTypeInst
-  let wireTypeInstExpr = GoogleProtobuf_Pair_WireTypes(GoogleProtobuf_Pair_WireTypes((this.key.value and 7)))
+  let wireTypeInstExpr = GoogleProtobuf_Pair_WireTypes(GoogleProtobuf_Pair_WireTypes(this.key.value and 7))
   this.wireTypeInst = wireTypeInstExpr
   this.wireTypeInstFlag = true
   return this.wireTypeInst
 
-proc fieldTag(this: GoogleProtobuf_Pair): int = 
-
-  ##[
-  Identifies a field of protocol. One can look up symbolic
-field name in a `.proto` file by this field tag.
-
-  ]##
-  if this.fieldTagInstFlag:
-    return this.fieldTagInst
-  let fieldTagInstExpr = int((this.key.value shr 3))
-  this.fieldTagInst = fieldTagInstExpr
-  this.fieldTagInstFlag = true
-  return this.fieldTagInst
-
 proc fromFile*(_: typedesc[GoogleProtobuf_Pair], filename: string): GoogleProtobuf_Pair =
   GoogleProtobuf_Pair.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[GoogleProtobuf_DelimitedBytes], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf_Pair): GoogleProtobuf_DelimitedBytes =
-  template this: untyped = result
-  this = new(GoogleProtobuf_DelimitedBytes)
-  let root = if root == nil: cast[GoogleProtobuf](this) else: cast[GoogleProtobuf](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let lenExpr = VlqBase128Le.read(this.io, this.root, this)
-  this.len = lenExpr
-  let bodyExpr = this.io.readBytes(int(this.len.value))
-  this.body = bodyExpr
-
-proc fromFile*(_: typedesc[GoogleProtobuf_DelimitedBytes], filename: string): GoogleProtobuf_DelimitedBytes =
-  GoogleProtobuf_DelimitedBytes.read(newKaitaiFileStream(filename), nil, nil)
 

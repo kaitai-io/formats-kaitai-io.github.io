@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -48,18 +48,17 @@ our $CMD_TYPE_BUFFER_CMD = 81;
 our $CMD_TYPE_RATE_CMD = 82;
 our $CMD_TYPE_GET_RATE_CMD = 85;
 
-our $SOUND_HEADER_TYPE_STANDARD = 0;
-our $SOUND_HEADER_TYPE_COMPRESSED = 254;
-our $SOUND_HEADER_TYPE_EXTENDED = 255;
+our $COMPRESSION_TYPE_ENUM_VARIABLE_COMPRESSION = -2;
+our $COMPRESSION_TYPE_ENUM_FIXED_COMPRESSION = -1;
+our $COMPRESSION_TYPE_ENUM_NOT_COMPRESSED = 0;
+our $COMPRESSION_TYPE_ENUM_TWO_TO_ONE = 1;
+our $COMPRESSION_TYPE_ENUM_EIGHT_TO_THREE = 2;
+our $COMPRESSION_TYPE_ENUM_THREE_TO_ONE = 3;
+our $COMPRESSION_TYPE_ENUM_SIX_TO_ONE = 4;
 
 our $DATA_TYPE_SQUARE_WAVE_SYNTH = 1;
 our $DATA_TYPE_WAVE_TABLE_SYNTH = 3;
 our $DATA_TYPE_SAMPLED_SYNTH = 5;
-
-our $WAVE_INIT_OPTION_CHANNEL0 = 4;
-our $WAVE_INIT_OPTION_CHANNEL1 = 5;
-our $WAVE_INIT_OPTION_CHANNEL2 = 6;
-our $WAVE_INIT_OPTION_CHANNEL3 = 7;
 
 our $INIT_OPTION_CHAN_LEFT = 2;
 our $INIT_OPTION_CHAN_RIGHT = 3;
@@ -70,13 +69,14 @@ our $INIT_OPTION_STEREO = 192;
 our $INIT_OPTION_MACE3 = 768;
 our $INIT_OPTION_MACE6 = 1024;
 
-our $COMPRESSION_TYPE_ENUM_VARIABLE_COMPRESSION = -2;
-our $COMPRESSION_TYPE_ENUM_FIXED_COMPRESSION = -1;
-our $COMPRESSION_TYPE_ENUM_NOT_COMPRESSED = 0;
-our $COMPRESSION_TYPE_ENUM_TWO_TO_ONE = 1;
-our $COMPRESSION_TYPE_ENUM_EIGHT_TO_THREE = 2;
-our $COMPRESSION_TYPE_ENUM_THREE_TO_ONE = 3;
-our $COMPRESSION_TYPE_ENUM_SIX_TO_ONE = 4;
+our $SOUND_HEADER_TYPE_STANDARD = 0;
+our $SOUND_HEADER_TYPE_COMPRESSED = 254;
+our $SOUND_HEADER_TYPE_EXTENDED = 255;
+
+our $WAVE_INIT_OPTION_CHANNEL0 = 4;
+our $WAVE_INIT_OPTION_CHANNEL1 = 5;
+our $WAVE_INIT_OPTION_CHANNEL2 = 6;
+our $WAVE_INIT_OPTION_CHANNEL3 = 7;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -84,7 +84,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -99,7 +99,7 @@ sub _read {
         $self->{num_data_formats} = $self->{_io}->read_u2be();
     }
     if ($self->format() == 1) {
-        $self->{data_formats} = ();
+        $self->{data_formats} = [];
         my $n_data_formats = $self->num_data_formats();
         for (my $i = 0; $i < $n_data_formats; $i++) {
             push @{$self->{data_formats}}, MacOsResourceSnd::DataFormat->new($self->{_io}, $self, $self->{_root});
@@ -109,7 +109,7 @@ sub _read {
         $self->{reference_count} = $self->{_io}->read_u2be();
     }
     $self->{num_sound_commands} = $self->{_io}->read_u2be();
-    $self->{sound_commands} = ();
+    $self->{sound_commands} = [];
     my $n_sound_commands = $self->num_sound_commands();
     for (my $i = 0; $i < $n_sound_commands; $i++) {
         push @{$self->{sound_commands}}, MacOsResourceSnd::SoundCommand->new($self->{_io}, $self, $self->{_root});
@@ -154,6 +154,189 @@ sub sound_commands {
 }
 
 ########################################################################
+package MacOsResourceSnd::Compressed;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{format} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{state_vars_ptr} = $self->{_io}->read_u4be();
+    $self->{left_over_samples_ptr} = $self->{_io}->read_u4be();
+    $self->{compression_id} = $self->{_io}->read_s2be();
+    $self->{packet_size} = $self->{_io}->read_u2be();
+    $self->{synthesizer_id} = $self->{_io}->read_u2be();
+}
+
+sub compression_type {
+    my ($self) = @_;
+    return $self->{compression_type} if ($self->{compression_type});
+    $self->{compression_type} = $self->compression_id();
+    return $self->{compression_type};
+}
+
+sub format {
+    my ($self) = @_;
+    return $self->{format};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub state_vars_ptr {
+    my ($self) = @_;
+    return $self->{state_vars_ptr};
+}
+
+sub left_over_samples_ptr {
+    my ($self) = @_;
+    return $self->{left_over_samples_ptr};
+}
+
+sub compression_id {
+    my ($self) = @_;
+    return $self->{compression_id};
+}
+
+sub packet_size {
+    my ($self) = @_;
+    return $self->{packet_size};
+}
+
+sub synthesizer_id {
+    my ($self) = @_;
+    return $self->{synthesizer_id};
+}
+
+########################################################################
+package MacOsResourceSnd::DataFormat;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{id} = $self->{_io}->read_u2be();
+    $self->{options} = $self->{_io}->read_u4be();
+}
+
+sub comp_init {
+    my ($self) = @_;
+    return $self->{comp_init} if ($self->{comp_init});
+    $self->{comp_init} = $self->options() & $self->init_comp_mask();
+    return $self->{comp_init};
+}
+
+sub init_comp_mask {
+    my ($self) = @_;
+    return $self->{init_comp_mask} if ($self->{init_comp_mask});
+    $self->{init_comp_mask} = 65280;
+    return $self->{init_comp_mask};
+}
+
+sub init_pan_mask {
+    my ($self) = @_;
+    return $self->{init_pan_mask} if ($self->{init_pan_mask});
+    $self->{init_pan_mask} = 3;
+    return $self->{init_pan_mask};
+}
+
+sub init_stereo_mask {
+    my ($self) = @_;
+    return $self->{init_stereo_mask} if ($self->{init_stereo_mask});
+    $self->{init_stereo_mask} = 192;
+    return $self->{init_stereo_mask};
+}
+
+sub pan_init {
+    my ($self) = @_;
+    return $self->{pan_init} if ($self->{pan_init});
+    $self->{pan_init} = $self->options() & $self->init_pan_mask();
+    return $self->{pan_init};
+}
+
+sub stereo_init {
+    my ($self) = @_;
+    return $self->{stereo_init} if ($self->{stereo_init});
+    $self->{stereo_init} = $self->options() & $self->init_stereo_mask();
+    return $self->{stereo_init};
+}
+
+sub wave_init {
+    my ($self) = @_;
+    return $self->{wave_init} if ($self->{wave_init});
+    if ($self->id() == $MacOsResourceSnd::DATA_TYPE_WAVE_TABLE_SYNTH) {
+        $self->{wave_init} = $self->options() & $self->wave_init_channel_mask();
+    }
+    return $self->{wave_init};
+}
+
+sub wave_init_channel_mask {
+    my ($self) = @_;
+    return $self->{wave_init_channel_mask} if ($self->{wave_init_channel_mask});
+    $self->{wave_init_channel_mask} = 7;
+    return $self->{wave_init_channel_mask};
+}
+
+sub id {
+    my ($self) = @_;
+    return $self->{id};
+}
+
+sub options {
+    my ($self) = @_;
+    return $self->{options};
+}
+
+########################################################################
 package MacOsResourceSnd::Extended;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -173,7 +356,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -198,6 +381,155 @@ sub aes_recording_ptr {
 }
 
 ########################################################################
+package MacOsResourceSnd::ExtendedOrCompressed;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_frames} = $self->{_io}->read_u4be();
+    $self->{aiff_sample_rate} = $self->{_io}->read_bytes(10);
+    $self->{marker_chunk} = $self->{_io}->read_u4be();
+    if ($self->_parent()->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_EXTENDED) {
+        $self->{extended} = MacOsResourceSnd::Extended->new($self->{_io}, $self, $self->{_root});
+    }
+    if ($self->_parent()->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_COMPRESSED) {
+        $self->{compressed} = MacOsResourceSnd::Compressed->new($self->{_io}, $self, $self->{_root});
+    }
+    $self->{bits_per_sample} = $self->{_io}->read_u2be();
+    if ($self->_parent()->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_EXTENDED) {
+        $self->{reserved} = $self->{_io}->read_bytes(14);
+    }
+}
+
+sub num_frames {
+    my ($self) = @_;
+    return $self->{num_frames};
+}
+
+sub aiff_sample_rate {
+    my ($self) = @_;
+    return $self->{aiff_sample_rate};
+}
+
+sub marker_chunk {
+    my ($self) = @_;
+    return $self->{marker_chunk};
+}
+
+sub extended {
+    my ($self) = @_;
+    return $self->{extended};
+}
+
+sub compressed {
+    my ($self) = @_;
+    return $self->{compressed};
+}
+
+sub bits_per_sample {
+    my ($self) = @_;
+    return $self->{bits_per_sample};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+########################################################################
+package MacOsResourceSnd::SoundCommand;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{is_data_offset} = $self->{_io}->read_bits_int_be(1);
+    $self->{cmd} = $self->{_io}->read_bits_int_be(15);
+    $self->{_io}->align_to_byte();
+    $self->{param1} = $self->{_io}->read_u2be();
+    $self->{param2} = $self->{_io}->read_u4be();
+}
+
+sub sound_header {
+    my ($self) = @_;
+    return $self->{sound_header} if ($self->{sound_header});
+    if ( (($self->is_data_offset()) && ($self->cmd() == $MacOsResourceSnd::CMD_TYPE_BUFFER_CMD)) ) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek($self->param2());
+        $self->{sound_header} = MacOsResourceSnd::SoundHeader->new($self->{_io}, $self, $self->{_root});
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{sound_header};
+}
+
+sub is_data_offset {
+    my ($self) = @_;
+    return $self->{is_data_offset};
+}
+
+sub cmd {
+    my ($self) = @_;
+    return $self->{cmd};
+}
+
+sub param1 {
+    my ($self) = @_;
+    return $self->{param1};
+}
+
+sub param2 {
+    my ($self) = @_;
+    return $self->{param2};
+}
+
+########################################################################
 package MacOsResourceSnd::SoundHeader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -217,7 +549,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -246,15 +578,8 @@ sub _read {
         $self->{extended_or_compressed} = MacOsResourceSnd::ExtendedOrCompressed->new($self->{_io}, $self, $self->{_root});
     }
     if ($self->sample_ptr() == 0) {
-        $self->{sample_area} = $self->{_io}->read_bytes(($self->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_STANDARD ? $self->num_samples() : ($self->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_EXTENDED ? int((($self->extended_or_compressed()->num_frames() * $self->num_channels()) * $self->extended_or_compressed()->bits_per_sample()) / 8) : ($self->_io()->size() - $self->_io()->pos()))));
+        $self->{sample_area} = $self->{_io}->read_bytes(($self->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_STANDARD ? $self->num_samples() : ($self->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_EXTENDED ? int((($self->extended_or_compressed()->num_frames() * $self->num_channels()) * $self->extended_or_compressed()->bits_per_sample()) / 8) : $self->_io()->size() - $self->_io()->pos())));
     }
-}
-
-sub start_ofs {
-    my ($self) = @_;
-    return $self->{start_ofs} if ($self->{start_ofs});
-    $self->{start_ofs} = $self->_io()->pos();
-    return $self->{start_ofs};
 }
 
 sub base_freqeuncy {
@@ -270,10 +595,17 @@ sub sound_header_type {
     my ($self) = @_;
     return $self->{sound_header_type} if ($self->{sound_header_type});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->start_ofs() + 20));
+    $self->{_io}->seek($self->start_ofs() + 20);
     $self->{sound_header_type} = $self->{_io}->read_u1();
     $self->{_io}->seek($_pos);
     return $self->{sound_header_type};
+}
+
+sub start_ofs {
+    my ($self) = @_;
+    return $self->{start_ofs} if ($self->{start_ofs});
+    $self->{start_ofs} = $self->_io()->pos();
+    return $self->{start_ofs};
 }
 
 sub _unnamed0 {
@@ -351,7 +683,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -368,7 +700,7 @@ sub _read {
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = ($self->integer_part() + ($self->fraction_part() / 65535.0));
+    $self->{value} = $self->integer_part() + $self->fraction_part() / 65535.0;
     return $self->{value};
 }
 
@@ -380,338 +712,6 @@ sub integer_part {
 sub fraction_part {
     my ($self) = @_;
     return $self->{fraction_part};
-}
-
-########################################################################
-package MacOsResourceSnd::SoundCommand;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{is_data_offset} = $self->{_io}->read_bits_int_be(1);
-    $self->{cmd} = $self->{_io}->read_bits_int_be(15);
-    $self->{_io}->align_to_byte();
-    $self->{param1} = $self->{_io}->read_u2be();
-    $self->{param2} = $self->{_io}->read_u4be();
-}
-
-sub sound_header {
-    my ($self) = @_;
-    return $self->{sound_header} if ($self->{sound_header});
-    if ( (($self->is_data_offset()) && ($self->cmd() == $MacOsResourceSnd::CMD_TYPE_BUFFER_CMD)) ) {
-        my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek($self->param2());
-        $self->{sound_header} = MacOsResourceSnd::SoundHeader->new($self->{_io}, $self, $self->{_root});
-        $self->{_io}->seek($_pos);
-    }
-    return $self->{sound_header};
-}
-
-sub is_data_offset {
-    my ($self) = @_;
-    return $self->{is_data_offset};
-}
-
-sub cmd {
-    my ($self) = @_;
-    return $self->{cmd};
-}
-
-sub param1 {
-    my ($self) = @_;
-    return $self->{param1};
-}
-
-sub param2 {
-    my ($self) = @_;
-    return $self->{param2};
-}
-
-########################################################################
-package MacOsResourceSnd::Compressed;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{format} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{state_vars_ptr} = $self->{_io}->read_u4be();
-    $self->{left_over_samples_ptr} = $self->{_io}->read_u4be();
-    $self->{compression_id} = $self->{_io}->read_s2be();
-    $self->{packet_size} = $self->{_io}->read_u2be();
-    $self->{synthesizer_id} = $self->{_io}->read_u2be();
-}
-
-sub compression_type {
-    my ($self) = @_;
-    return $self->{compression_type} if ($self->{compression_type});
-    $self->{compression_type} = $self->compression_id();
-    return $self->{compression_type};
-}
-
-sub format {
-    my ($self) = @_;
-    return $self->{format};
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub state_vars_ptr {
-    my ($self) = @_;
-    return $self->{state_vars_ptr};
-}
-
-sub left_over_samples_ptr {
-    my ($self) = @_;
-    return $self->{left_over_samples_ptr};
-}
-
-sub compression_id {
-    my ($self) = @_;
-    return $self->{compression_id};
-}
-
-sub packet_size {
-    my ($self) = @_;
-    return $self->{packet_size};
-}
-
-sub synthesizer_id {
-    my ($self) = @_;
-    return $self->{synthesizer_id};
-}
-
-########################################################################
-package MacOsResourceSnd::ExtendedOrCompressed;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{num_frames} = $self->{_io}->read_u4be();
-    $self->{aiff_sample_rate} = $self->{_io}->read_bytes(10);
-    $self->{marker_chunk} = $self->{_io}->read_u4be();
-    if ($self->_parent()->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_EXTENDED) {
-        $self->{extended} = MacOsResourceSnd::Extended->new($self->{_io}, $self, $self->{_root});
-    }
-    if ($self->_parent()->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_COMPRESSED) {
-        $self->{compressed} = MacOsResourceSnd::Compressed->new($self->{_io}, $self, $self->{_root});
-    }
-    $self->{bits_per_sample} = $self->{_io}->read_u2be();
-    if ($self->_parent()->sound_header_type() == $MacOsResourceSnd::SOUND_HEADER_TYPE_EXTENDED) {
-        $self->{reserved} = $self->{_io}->read_bytes(14);
-    }
-}
-
-sub num_frames {
-    my ($self) = @_;
-    return $self->{num_frames};
-}
-
-sub aiff_sample_rate {
-    my ($self) = @_;
-    return $self->{aiff_sample_rate};
-}
-
-sub marker_chunk {
-    my ($self) = @_;
-    return $self->{marker_chunk};
-}
-
-sub extended {
-    my ($self) = @_;
-    return $self->{extended};
-}
-
-sub compressed {
-    my ($self) = @_;
-    return $self->{compressed};
-}
-
-sub bits_per_sample {
-    my ($self) = @_;
-    return $self->{bits_per_sample};
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-########################################################################
-package MacOsResourceSnd::DataFormat;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{id} = $self->{_io}->read_u2be();
-    $self->{options} = $self->{_io}->read_u4be();
-}
-
-sub init_pan_mask {
-    my ($self) = @_;
-    return $self->{init_pan_mask} if ($self->{init_pan_mask});
-    $self->{init_pan_mask} = 3;
-    return $self->{init_pan_mask};
-}
-
-sub wave_init_channel_mask {
-    my ($self) = @_;
-    return $self->{wave_init_channel_mask} if ($self->{wave_init_channel_mask});
-    $self->{wave_init_channel_mask} = 7;
-    return $self->{wave_init_channel_mask};
-}
-
-sub init_stereo_mask {
-    my ($self) = @_;
-    return $self->{init_stereo_mask} if ($self->{init_stereo_mask});
-    $self->{init_stereo_mask} = 192;
-    return $self->{init_stereo_mask};
-}
-
-sub wave_init {
-    my ($self) = @_;
-    return $self->{wave_init} if ($self->{wave_init});
-    if ($self->id() == $MacOsResourceSnd::DATA_TYPE_WAVE_TABLE_SYNTH) {
-        $self->{wave_init} = ($self->options() & $self->wave_init_channel_mask());
-    }
-    return $self->{wave_init};
-}
-
-sub pan_init {
-    my ($self) = @_;
-    return $self->{pan_init} if ($self->{pan_init});
-    $self->{pan_init} = ($self->options() & $self->init_pan_mask());
-    return $self->{pan_init};
-}
-
-sub init_comp_mask {
-    my ($self) = @_;
-    return $self->{init_comp_mask} if ($self->{init_comp_mask});
-    $self->{init_comp_mask} = 65280;
-    return $self->{init_comp_mask};
-}
-
-sub stereo_init {
-    my ($self) = @_;
-    return $self->{stereo_init} if ($self->{stereo_init});
-    $self->{stereo_init} = ($self->options() & $self->init_stereo_mask());
-    return $self->{stereo_init};
-}
-
-sub comp_init {
-    my ($self) = @_;
-    return $self->{comp_init} if ($self->{comp_init});
-    $self->{comp_init} = ($self->options() & $self->init_comp_mask());
-    return $self->{comp_init};
-}
-
-sub id {
-    my ($self) = @_;
-    return $self->{id};
-}
-
-sub options {
-    my ($self) = @_;
-    return $self->{options};
 }
 
 1;

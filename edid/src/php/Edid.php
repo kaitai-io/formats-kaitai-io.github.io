@@ -3,15 +3,15 @@
 
 namespace {
     class Edid extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Edid $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Edid $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(8);
-            if (!($this->magic() == "\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_mfgBytes = $this->_io->readU2be();
             $this->_m_productCode = $this->_io->readU2le();
@@ -36,49 +36,49 @@ namespace {
                 $this->_m_stdTimings[] = new \Edid\StdTiming($_io__raw_stdTimings, $this, $this->_root);
             }
         }
-        protected $_m_mfgYear;
-        public function mfgYear() {
-            if ($this->_m_mfgYear !== null)
-                return $this->_m_mfgYear;
-            $this->_m_mfgYear = ($this->mfgYearMod() + 1990);
-            return $this->_m_mfgYear;
-        }
-        protected $_m_mfgIdCh1;
-        public function mfgIdCh1() {
-            if ($this->_m_mfgIdCh1 !== null)
-                return $this->_m_mfgIdCh1;
-            $this->_m_mfgIdCh1 = (($this->mfgBytes() & 31744) >> 10);
-            return $this->_m_mfgIdCh1;
-        }
-        protected $_m_mfgIdCh3;
-        public function mfgIdCh3() {
-            if ($this->_m_mfgIdCh3 !== null)
-                return $this->_m_mfgIdCh3;
-            $this->_m_mfgIdCh3 = ($this->mfgBytes() & 31);
-            return $this->_m_mfgIdCh3;
-        }
         protected $_m_gamma;
         public function gamma() {
             if ($this->_m_gamma !== null)
                 return $this->_m_gamma;
             if ($this->gammaMod() != 255) {
-                $this->_m_gamma = (($this->gammaMod() + 100) / 100.0);
+                $this->_m_gamma = ($this->gammaMod() + 100) / 100.0;
             }
             return $this->_m_gamma;
         }
-        protected $_m_mfgStr;
-        public function mfgStr() {
-            if ($this->_m_mfgStr !== null)
-                return $this->_m_mfgStr;
-            $this->_m_mfgStr = \Kaitai\Struct\Stream::bytesToStr(pack('C*', ($this->mfgIdCh1() + 64), ($this->mfgIdCh2() + 64), ($this->mfgIdCh3() + 64)), "ASCII");
-            return $this->_m_mfgStr;
+        protected $_m_mfgIdCh1;
+        public function mfgIdCh1() {
+            if ($this->_m_mfgIdCh1 !== null)
+                return $this->_m_mfgIdCh1;
+            $this->_m_mfgIdCh1 = ($this->mfgBytes() & 31744) >> 10;
+            return $this->_m_mfgIdCh1;
         }
         protected $_m_mfgIdCh2;
         public function mfgIdCh2() {
             if ($this->_m_mfgIdCh2 !== null)
                 return $this->_m_mfgIdCh2;
-            $this->_m_mfgIdCh2 = (($this->mfgBytes() & 992) >> 5);
+            $this->_m_mfgIdCh2 = ($this->mfgBytes() & 992) >> 5;
             return $this->_m_mfgIdCh2;
+        }
+        protected $_m_mfgIdCh3;
+        public function mfgIdCh3() {
+            if ($this->_m_mfgIdCh3 !== null)
+                return $this->_m_mfgIdCh3;
+            $this->_m_mfgIdCh3 = $this->mfgBytes() & 31;
+            return $this->_m_mfgIdCh3;
+        }
+        protected $_m_mfgStr;
+        public function mfgStr() {
+            if ($this->_m_mfgStr !== null)
+                return $this->_m_mfgStr;
+            $this->_m_mfgStr = \Kaitai\Struct\Stream::bytesToStr(pack('C*', $this->mfgIdCh1() + 64, $this->mfgIdCh2() + 64, $this->mfgIdCh3() + 64), "ASCII");
+            return $this->_m_mfgStr;
+        }
+        protected $_m_mfgYear;
+        public function mfgYear() {
+            if ($this->_m_mfgYear !== null)
+                return $this->_m_mfgYear;
+            $this->_m_mfgYear = $this->mfgYearMod() + 1990;
+            return $this->_m_mfgYear;
         }
         protected $_m_magic;
         protected $_m_mfgBytes;
@@ -177,7 +177,7 @@ namespace {
 
 namespace Edid {
     class ChromacityInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Edid $_parent = null, \Edid $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Edid $_parent = null, ?\Edid $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -201,64 +201,6 @@ namespace Edid {
             $this->_m_whiteX92 = $this->_io->readU1();
             $this->_m_whiteY92 = $this->_io->readU1();
         }
-        protected $_m_greenXInt;
-        public function greenXInt() {
-            if ($this->_m_greenXInt !== null)
-                return $this->_m_greenXInt;
-            $this->_m_greenXInt = (($this->greenX92() << 2) | $this->greenX10());
-            return $this->_m_greenXInt;
-        }
-        protected $_m_redY;
-
-        /**
-         * Red Y coordinate
-         */
-        public function redY() {
-            if ($this->_m_redY !== null)
-                return $this->_m_redY;
-            $this->_m_redY = ($this->redYInt() / 1024.0);
-            return $this->_m_redY;
-        }
-        protected $_m_greenYInt;
-        public function greenYInt() {
-            if ($this->_m_greenYInt !== null)
-                return $this->_m_greenYInt;
-            $this->_m_greenYInt = (($this->greenY92() << 2) | $this->greenY10());
-            return $this->_m_greenYInt;
-        }
-        protected $_m_whiteY;
-
-        /**
-         * White Y coordinate
-         */
-        public function whiteY() {
-            if ($this->_m_whiteY !== null)
-                return $this->_m_whiteY;
-            $this->_m_whiteY = ($this->whiteYInt() / 1024.0);
-            return $this->_m_whiteY;
-        }
-        protected $_m_redX;
-
-        /**
-         * Red X coordinate
-         */
-        public function redX() {
-            if ($this->_m_redX !== null)
-                return $this->_m_redX;
-            $this->_m_redX = ($this->redXInt() / 1024.0);
-            return $this->_m_redX;
-        }
-        protected $_m_whiteX;
-
-        /**
-         * White X coordinate
-         */
-        public function whiteX() {
-            if ($this->_m_whiteX !== null)
-                return $this->_m_whiteX;
-            $this->_m_whiteX = ($this->whiteXInt() / 1024.0);
-            return $this->_m_whiteX;
-        }
         protected $_m_blueX;
 
         /**
@@ -267,53 +209,14 @@ namespace Edid {
         public function blueX() {
             if ($this->_m_blueX !== null)
                 return $this->_m_blueX;
-            $this->_m_blueX = ($this->blueXInt() / 1024.0);
+            $this->_m_blueX = $this->blueXInt() / 1024.0;
             return $this->_m_blueX;
-        }
-        protected $_m_whiteXInt;
-        public function whiteXInt() {
-            if ($this->_m_whiteXInt !== null)
-                return $this->_m_whiteXInt;
-            $this->_m_whiteXInt = (($this->whiteX92() << 2) | $this->whiteX10());
-            return $this->_m_whiteXInt;
-        }
-        protected $_m_whiteYInt;
-        public function whiteYInt() {
-            if ($this->_m_whiteYInt !== null)
-                return $this->_m_whiteYInt;
-            $this->_m_whiteYInt = (($this->whiteY92() << 2) | $this->whiteY10());
-            return $this->_m_whiteYInt;
-        }
-        protected $_m_greenX;
-
-        /**
-         * Green X coordinate
-         */
-        public function greenX() {
-            if ($this->_m_greenX !== null)
-                return $this->_m_greenX;
-            $this->_m_greenX = ($this->greenXInt() / 1024.0);
-            return $this->_m_greenX;
-        }
-        protected $_m_redXInt;
-        public function redXInt() {
-            if ($this->_m_redXInt !== null)
-                return $this->_m_redXInt;
-            $this->_m_redXInt = (($this->redX92() << 2) | $this->redX10());
-            return $this->_m_redXInt;
-        }
-        protected $_m_redYInt;
-        public function redYInt() {
-            if ($this->_m_redYInt !== null)
-                return $this->_m_redYInt;
-            $this->_m_redYInt = (($this->redY92() << 2) | $this->redY10());
-            return $this->_m_redYInt;
         }
         protected $_m_blueXInt;
         public function blueXInt() {
             if ($this->_m_blueXInt !== null)
                 return $this->_m_blueXInt;
-            $this->_m_blueXInt = (($this->blueX92() << 2) | $this->blueX10());
+            $this->_m_blueXInt = $this->blueX92() << 2 | $this->blueX10();
             return $this->_m_blueXInt;
         }
         protected $_m_blueY;
@@ -324,8 +227,33 @@ namespace Edid {
         public function blueY() {
             if ($this->_m_blueY !== null)
                 return $this->_m_blueY;
-            $this->_m_blueY = ($this->blueYInt() / 1024.0);
+            $this->_m_blueY = $this->blueYInt() / 1024.0;
             return $this->_m_blueY;
+        }
+        protected $_m_blueYInt;
+        public function blueYInt() {
+            if ($this->_m_blueYInt !== null)
+                return $this->_m_blueYInt;
+            $this->_m_blueYInt = $this->blueY92() << 2 | $this->blueY10();
+            return $this->_m_blueYInt;
+        }
+        protected $_m_greenX;
+
+        /**
+         * Green X coordinate
+         */
+        public function greenX() {
+            if ($this->_m_greenX !== null)
+                return $this->_m_greenX;
+            $this->_m_greenX = $this->greenXInt() / 1024.0;
+            return $this->_m_greenX;
+        }
+        protected $_m_greenXInt;
+        public function greenXInt() {
+            if ($this->_m_greenXInt !== null)
+                return $this->_m_greenXInt;
+            $this->_m_greenXInt = $this->greenX92() << 2 | $this->greenX10();
+            return $this->_m_greenXInt;
         }
         protected $_m_greenY;
 
@@ -335,15 +263,87 @@ namespace Edid {
         public function greenY() {
             if ($this->_m_greenY !== null)
                 return $this->_m_greenY;
-            $this->_m_greenY = ($this->greenYInt() / 1024.0);
+            $this->_m_greenY = $this->greenYInt() / 1024.0;
             return $this->_m_greenY;
         }
-        protected $_m_blueYInt;
-        public function blueYInt() {
-            if ($this->_m_blueYInt !== null)
-                return $this->_m_blueYInt;
-            $this->_m_blueYInt = (($this->blueY92() << 2) | $this->blueY10());
-            return $this->_m_blueYInt;
+        protected $_m_greenYInt;
+        public function greenYInt() {
+            if ($this->_m_greenYInt !== null)
+                return $this->_m_greenYInt;
+            $this->_m_greenYInt = $this->greenY92() << 2 | $this->greenY10();
+            return $this->_m_greenYInt;
+        }
+        protected $_m_redX;
+
+        /**
+         * Red X coordinate
+         */
+        public function redX() {
+            if ($this->_m_redX !== null)
+                return $this->_m_redX;
+            $this->_m_redX = $this->redXInt() / 1024.0;
+            return $this->_m_redX;
+        }
+        protected $_m_redXInt;
+        public function redXInt() {
+            if ($this->_m_redXInt !== null)
+                return $this->_m_redXInt;
+            $this->_m_redXInt = $this->redX92() << 2 | $this->redX10();
+            return $this->_m_redXInt;
+        }
+        protected $_m_redY;
+
+        /**
+         * Red Y coordinate
+         */
+        public function redY() {
+            if ($this->_m_redY !== null)
+                return $this->_m_redY;
+            $this->_m_redY = $this->redYInt() / 1024.0;
+            return $this->_m_redY;
+        }
+        protected $_m_redYInt;
+        public function redYInt() {
+            if ($this->_m_redYInt !== null)
+                return $this->_m_redYInt;
+            $this->_m_redYInt = $this->redY92() << 2 | $this->redY10();
+            return $this->_m_redYInt;
+        }
+        protected $_m_whiteX;
+
+        /**
+         * White X coordinate
+         */
+        public function whiteX() {
+            if ($this->_m_whiteX !== null)
+                return $this->_m_whiteX;
+            $this->_m_whiteX = $this->whiteXInt() / 1024.0;
+            return $this->_m_whiteX;
+        }
+        protected $_m_whiteXInt;
+        public function whiteXInt() {
+            if ($this->_m_whiteXInt !== null)
+                return $this->_m_whiteXInt;
+            $this->_m_whiteXInt = $this->whiteX92() << 2 | $this->whiteX10();
+            return $this->_m_whiteXInt;
+        }
+        protected $_m_whiteY;
+
+        /**
+         * White Y coordinate
+         */
+        public function whiteY() {
+            if ($this->_m_whiteY !== null)
+                return $this->_m_whiteY;
+            $this->_m_whiteY = $this->whiteYInt() / 1024.0;
+            return $this->_m_whiteY;
+        }
+        protected $_m_whiteYInt;
+        public function whiteYInt() {
+            if ($this->_m_whiteYInt !== null)
+                return $this->_m_whiteYInt;
+            $this->_m_whiteYInt = $this->whiteY92() << 2 | $this->whiteY10();
+            return $this->_m_whiteYInt;
         }
         protected $_m_redX10;
         protected $_m_redY10;
@@ -446,7 +446,7 @@ namespace Edid {
 
 namespace Edid {
     class EstTimingsInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Edid $_parent = null, \Edid $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Edid $_parent = null, ?\Edid $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -580,7 +580,7 @@ namespace Edid {
 
 namespace Edid {
     class StdTiming extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Edid $_parent = null, \Edid $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Edid $_parent = null, ?\Edid $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -600,13 +600,6 @@ namespace Edid {
             $this->_io->seek($_pos);
             return $this->_m_bytesLookahead;
         }
-        protected $_m_isUsed;
-        public function isUsed() {
-            if ($this->_m_isUsed !== null)
-                return $this->_m_isUsed;
-            $this->_m_isUsed = $this->bytesLookahead() != "\x01\x01";
-            return $this->_m_isUsed;
-        }
         protected $_m_horizActivePixels;
 
         /**
@@ -616,9 +609,16 @@ namespace Edid {
             if ($this->_m_horizActivePixels !== null)
                 return $this->_m_horizActivePixels;
             if ($this->isUsed()) {
-                $this->_m_horizActivePixels = (($this->horizActivePixelsMod() + 31) * 8);
+                $this->_m_horizActivePixels = ($this->horizActivePixelsMod() + 31) * 8;
             }
             return $this->_m_horizActivePixels;
+        }
+        protected $_m_isUsed;
+        public function isUsed() {
+            if ($this->_m_isUsed !== null)
+                return $this->_m_isUsed;
+            $this->_m_isUsed = $this->bytesLookahead() != "\x01\x01";
+            return $this->_m_isUsed;
         }
         protected $_m_refreshRate;
 
@@ -629,7 +629,7 @@ namespace Edid {
             if ($this->_m_refreshRate !== null)
                 return $this->_m_refreshRate;
             if ($this->isUsed()) {
-                $this->_m_refreshRate = ($this->refreshRateMod() + 60);
+                $this->_m_refreshRate = $this->refreshRateMod() + 60;
             }
             return $this->_m_refreshRate;
         }
@@ -664,5 +664,11 @@ namespace Edid\StdTiming {
         const RATIO_4_3 = 1;
         const RATIO_5_4 = 2;
         const RATIO_16_9 = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

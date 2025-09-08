@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -88,8 +89,8 @@ public class CreativeVoiceFile extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(20);
-        if (!(Arrays.equals(magic(), new byte[] { 67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26 }, this.magic, this._io, "/seq/0");
         }
         this.headerSize = this._io.readU2le();
         this.version = this._io.readU2le();
@@ -102,6 +103,233 @@ public class CreativeVoiceFile extends KaitaiStruct {
                 i++;
             }
         }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.blocks.size(); i++) {
+            this.blocks.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class Block extends KaitaiStruct {
+        public static Block fromFile(String fileName) throws IOException {
+            return new Block(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Block(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Block(KaitaiStream _io, CreativeVoiceFile _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Block(KaitaiStream _io, CreativeVoiceFile _parent, CreativeVoiceFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.blockType = CreativeVoiceFile.BlockTypes.byId(this._io.readU1());
+            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
+                this.bodySize1 = this._io.readU2le();
+            }
+            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
+                this.bodySize2 = this._io.readU1();
+            }
+            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
+                {
+                    BlockTypes on = blockType();
+                    if (on != null) {
+                        switch (blockType()) {
+                        case EXTRA_INFO: {
+                            KaitaiStream _io_body = this._io.substream(bodySize());
+                            this.body = new BlockExtraInfo(_io_body, this, _root);
+                            break;
+                        }
+                        case MARKER: {
+                            KaitaiStream _io_body = this._io.substream(bodySize());
+                            this.body = new BlockMarker(_io_body, this, _root);
+                            break;
+                        }
+                        case REPEAT_START: {
+                            KaitaiStream _io_body = this._io.substream(bodySize());
+                            this.body = new BlockRepeatStart(_io_body, this, _root);
+                            break;
+                        }
+                        case SILENCE: {
+                            KaitaiStream _io_body = this._io.substream(bodySize());
+                            this.body = new BlockSilence(_io_body, this, _root);
+                            break;
+                        }
+                        case SOUND_DATA: {
+                            KaitaiStream _io_body = this._io.substream(bodySize());
+                            this.body = new BlockSoundData(_io_body, this, _root);
+                            break;
+                        }
+                        case SOUND_DATA_NEW: {
+                            KaitaiStream _io_body = this._io.substream(bodySize());
+                            this.body = new BlockSoundDataNew(_io_body, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.body = this._io.readBytes(bodySize());
+                            break;
+                        }
+                        }
+                    } else {
+                        this.body = this._io.readBytes(bodySize());
+                    }
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
+            }
+            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
+            }
+            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
+                {
+                    BlockTypes on = blockType();
+                    if (on != null) {
+                        switch (blockType()) {
+                        case EXTRA_INFO: {
+                            ((BlockExtraInfo) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case MARKER: {
+                            ((BlockMarker) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case REPEAT_START: {
+                            ((BlockRepeatStart) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case SILENCE: {
+                            ((BlockSilence) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case SOUND_DATA: {
+                            ((BlockSoundData) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case SOUND_DATA_NEW: {
+                            ((BlockSoundDataNew) (this.body))._fetchInstances();
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                        }
+                    } else {
+                    }
+                }
+            }
+        }
+        private Integer bodySize;
+
+        /**
+         * body_size is a 24-bit little-endian integer, so we're
+         * emulating that by adding two standard-sized integers
+         * (body_size1 and body_size2).
+         */
+        public Integer bodySize() {
+            if (this.bodySize != null)
+                return this.bodySize;
+            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
+                this.bodySize = ((Number) (bodySize1() + (bodySize2() << 16))).intValue();
+            }
+            return this.bodySize;
+        }
+        private BlockTypes blockType;
+        private Integer bodySize1;
+        private Integer bodySize2;
+        private Object body;
+        private CreativeVoiceFile _root;
+        private CreativeVoiceFile _parent;
+
+        /**
+         * Byte that determines type of block content
+         */
+        public BlockTypes blockType() { return blockType; }
+        public Integer bodySize1() { return bodySize1; }
+        public Integer bodySize2() { return bodySize2; }
+
+        /**
+         * Block body, type depends on block type byte
+         */
+        public Object body() { return body; }
+        public CreativeVoiceFile _root() { return _root; }
+        public CreativeVoiceFile _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info">Source</a>
+     */
+    public static class BlockExtraInfo extends KaitaiStruct {
+        public static BlockExtraInfo fromFile(String fileName) throws IOException {
+            return new BlockExtraInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BlockExtraInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BlockExtraInfo(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BlockExtraInfo(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.freqDiv = this._io.readU2le();
+            this.codec = CreativeVoiceFile.Codecs.byId(this._io.readU1());
+            this.numChannels1 = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer numChannels;
+
+        /**
+         * Number of channels (1 = mono, 2 = stereo)
+         */
+        public Integer numChannels() {
+            if (this.numChannels != null)
+                return this.numChannels;
+            this.numChannels = ((Number) (numChannels1() + 1)).intValue();
+            return this.numChannels;
+        }
+        private Double sampleRate;
+        public Double sampleRate() {
+            if (this.sampleRate != null)
+                return this.sampleRate;
+            this.sampleRate = ((Number) (256000000.0 / (numChannels() * (65536 - freqDiv())))).doubleValue();
+            return this.sampleRate;
+        }
+        private int freqDiv;
+        private Codecs codec;
+        private int numChannels1;
+        private CreativeVoiceFile _root;
+        private CreativeVoiceFile.Block _parent;
+
+        /**
+         * Frequency divisor
+         */
+        public int freqDiv() { return freqDiv; }
+        public Codecs codec() { return codec; }
+
+        /**
+         * Number of channels minus 1 (0 = mono, 1 = stereo)
+         */
+        public int numChannels1() { return numChannels1; }
+        public CreativeVoiceFile _root() { return _root; }
+        public CreativeVoiceFile.Block _parent() { return _parent; }
     }
 
     /**
@@ -129,6 +357,9 @@ public class CreativeVoiceFile extends KaitaiStruct {
         private void _read() {
             this.markerId = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+        }
         private int markerId;
         private CreativeVoiceFile _root;
         private CreativeVoiceFile.Block _parent;
@@ -137,6 +368,46 @@ public class CreativeVoiceFile extends KaitaiStruct {
          * Marker ID
          */
         public int markerId() { return markerId; }
+        public CreativeVoiceFile _root() { return _root; }
+        public CreativeVoiceFile.Block _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start">Source</a>
+     */
+    public static class BlockRepeatStart extends KaitaiStruct {
+        public static BlockRepeatStart fromFile(String fileName) throws IOException {
+            return new BlockRepeatStart(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BlockRepeatStart(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BlockRepeatStart(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BlockRepeatStart(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.repeatCount1 = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int repeatCount1;
+        private CreativeVoiceFile _root;
+        private CreativeVoiceFile.Block _parent;
+
+        /**
+         * Number of repetitions minus 1; 0xffff means infinite repetitions
+         */
+        public int repeatCount1() { return repeatCount1; }
         public CreativeVoiceFile _root() { return _root; }
         public CreativeVoiceFile.Block _parent() { return _parent; }
     }
@@ -167,13 +438,8 @@ public class CreativeVoiceFile extends KaitaiStruct {
             this.durationSamples = this._io.readU2le();
             this.freqDiv = this._io.readU1();
         }
-        private Double sampleRate;
-        public Double sampleRate() {
-            if (this.sampleRate != null)
-                return this.sampleRate;
-            double _tmp = (double) ((1000000.0 / (256 - freqDiv())));
-            this.sampleRate = _tmp;
-            return this.sampleRate;
+
+        public void _fetchInstances() {
         }
         private Double durationSec;
 
@@ -183,9 +449,15 @@ public class CreativeVoiceFile extends KaitaiStruct {
         public Double durationSec() {
             if (this.durationSec != null)
                 return this.durationSec;
-            double _tmp = (double) ((durationSamples() / sampleRate()));
-            this.durationSec = _tmp;
+            this.durationSec = ((Number) (durationSamples() / sampleRate())).doubleValue();
             return this.durationSec;
+        }
+        private Double sampleRate;
+        public Double sampleRate() {
+            if (this.sampleRate != null)
+                return this.sampleRate;
+            this.sampleRate = ((Number) (1000000.0 / (256 - freqDiv()))).doubleValue();
+            return this.sampleRate;
         }
         private int durationSamples;
         private int freqDiv;
@@ -201,6 +473,59 @@ public class CreativeVoiceFile extends KaitaiStruct {
          * Frequency divisor, used to determine sample rate
          */
         public int freqDiv() { return freqDiv; }
+        public CreativeVoiceFile _root() { return _root; }
+        public CreativeVoiceFile.Block _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data">Source</a>
+     */
+    public static class BlockSoundData extends KaitaiStruct {
+        public static BlockSoundData fromFile(String fileName) throws IOException {
+            return new BlockSoundData(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BlockSoundData(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BlockSoundData(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BlockSoundData(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.freqDiv = this._io.readU1();
+            this.codec = CreativeVoiceFile.Codecs.byId(this._io.readU1());
+            this.wave = this._io.readBytesFull();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double sampleRate;
+        public Double sampleRate() {
+            if (this.sampleRate != null)
+                return this.sampleRate;
+            this.sampleRate = ((Number) (1000000.0 / (256 - freqDiv()))).doubleValue();
+            return this.sampleRate;
+        }
+        private int freqDiv;
+        private Codecs codec;
+        private byte[] wave;
+        private CreativeVoiceFile _root;
+        private CreativeVoiceFile.Block _parent;
+
+        /**
+         * Frequency divisor, used to determine sample rate
+         */
+        public int freqDiv() { return freqDiv; }
+        public Codecs codec() { return codec; }
+        public byte[] wave() { return wave; }
         public CreativeVoiceFile _root() { return _root; }
         public CreativeVoiceFile.Block _parent() { return _parent; }
     }
@@ -235,6 +560,9 @@ public class CreativeVoiceFile extends KaitaiStruct {
             this.reserved = this._io.readBytes(4);
             this.wave = this._io.readBytesFull();
         }
+
+        public void _fetchInstances() {
+        }
         private long sampleRate;
         private int bitsPerSample;
         private int numChannels;
@@ -252,284 +580,11 @@ public class CreativeVoiceFile extends KaitaiStruct {
         public CreativeVoiceFile _root() { return _root; }
         public CreativeVoiceFile.Block _parent() { return _parent; }
     }
-    public static class Block extends KaitaiStruct {
-        public static Block fromFile(String fileName) throws IOException {
-            return new Block(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Block(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Block(KaitaiStream _io, CreativeVoiceFile _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Block(KaitaiStream _io, CreativeVoiceFile _parent, CreativeVoiceFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.blockType = CreativeVoiceFile.BlockTypes.byId(this._io.readU1());
-            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
-                this.bodySize1 = this._io.readU2le();
-            }
-            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
-                this.bodySize2 = this._io.readU1();
-            }
-            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
-                {
-                    BlockTypes on = blockType();
-                    if (on != null) {
-                        switch (blockType()) {
-                        case SOUND_DATA_NEW: {
-                            this._raw_body = this._io.readBytes(bodySize());
-                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                            this.body = new BlockSoundDataNew(_io__raw_body, this, _root);
-                            break;
-                        }
-                        case REPEAT_START: {
-                            this._raw_body = this._io.readBytes(bodySize());
-                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                            this.body = new BlockRepeatStart(_io__raw_body, this, _root);
-                            break;
-                        }
-                        case MARKER: {
-                            this._raw_body = this._io.readBytes(bodySize());
-                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                            this.body = new BlockMarker(_io__raw_body, this, _root);
-                            break;
-                        }
-                        case SOUND_DATA: {
-                            this._raw_body = this._io.readBytes(bodySize());
-                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                            this.body = new BlockSoundData(_io__raw_body, this, _root);
-                            break;
-                        }
-                        case EXTRA_INFO: {
-                            this._raw_body = this._io.readBytes(bodySize());
-                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                            this.body = new BlockExtraInfo(_io__raw_body, this, _root);
-                            break;
-                        }
-                        case SILENCE: {
-                            this._raw_body = this._io.readBytes(bodySize());
-                            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                            this.body = new BlockSilence(_io__raw_body, this, _root);
-                            break;
-                        }
-                        default: {
-                            this.body = this._io.readBytes(bodySize());
-                            break;
-                        }
-                        }
-                    } else {
-                        this.body = this._io.readBytes(bodySize());
-                    }
-                }
-            }
-        }
-        private Integer bodySize;
-
-        /**
-         * body_size is a 24-bit little-endian integer, so we're
-         * emulating that by adding two standard-sized integers
-         * (body_size1 and body_size2).
-         */
-        public Integer bodySize() {
-            if (this.bodySize != null)
-                return this.bodySize;
-            if (blockType() != CreativeVoiceFile.BlockTypes.TERMINATOR) {
-                int _tmp = (int) ((bodySize1() + (bodySize2() << 16)));
-                this.bodySize = _tmp;
-            }
-            return this.bodySize;
-        }
-        private BlockTypes blockType;
-        private Integer bodySize1;
-        private Integer bodySize2;
-        private Object body;
-        private CreativeVoiceFile _root;
-        private CreativeVoiceFile _parent;
-        private byte[] _raw_body;
-
-        /**
-         * Byte that determines type of block content
-         */
-        public BlockTypes blockType() { return blockType; }
-        public Integer bodySize1() { return bodySize1; }
-        public Integer bodySize2() { return bodySize2; }
-
-        /**
-         * Block body, type depends on block type byte
-         */
-        public Object body() { return body; }
-        public CreativeVoiceFile _root() { return _root; }
-        public CreativeVoiceFile _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
-
-    /**
-     * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start">Source</a>
-     */
-    public static class BlockRepeatStart extends KaitaiStruct {
-        public static BlockRepeatStart fromFile(String fileName) throws IOException {
-            return new BlockRepeatStart(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BlockRepeatStart(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BlockRepeatStart(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BlockRepeatStart(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.repeatCount1 = this._io.readU2le();
-        }
-        private int repeatCount1;
-        private CreativeVoiceFile _root;
-        private CreativeVoiceFile.Block _parent;
-
-        /**
-         * Number of repetitions minus 1; 0xffff means infinite repetitions
-         */
-        public int repeatCount1() { return repeatCount1; }
-        public CreativeVoiceFile _root() { return _root; }
-        public CreativeVoiceFile.Block _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data">Source</a>
-     */
-    public static class BlockSoundData extends KaitaiStruct {
-        public static BlockSoundData fromFile(String fileName) throws IOException {
-            return new BlockSoundData(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BlockSoundData(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BlockSoundData(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BlockSoundData(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.freqDiv = this._io.readU1();
-            this.codec = CreativeVoiceFile.Codecs.byId(this._io.readU1());
-            this.wave = this._io.readBytesFull();
-        }
-        private Double sampleRate;
-        public Double sampleRate() {
-            if (this.sampleRate != null)
-                return this.sampleRate;
-            double _tmp = (double) ((1000000.0 / (256 - freqDiv())));
-            this.sampleRate = _tmp;
-            return this.sampleRate;
-        }
-        private int freqDiv;
-        private Codecs codec;
-        private byte[] wave;
-        private CreativeVoiceFile _root;
-        private CreativeVoiceFile.Block _parent;
-
-        /**
-         * Frequency divisor, used to determine sample rate
-         */
-        public int freqDiv() { return freqDiv; }
-        public Codecs codec() { return codec; }
-        public byte[] wave() { return wave; }
-        public CreativeVoiceFile _root() { return _root; }
-        public CreativeVoiceFile.Block _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info">Source</a>
-     */
-    public static class BlockExtraInfo extends KaitaiStruct {
-        public static BlockExtraInfo fromFile(String fileName) throws IOException {
-            return new BlockExtraInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BlockExtraInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BlockExtraInfo(KaitaiStream _io, CreativeVoiceFile.Block _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BlockExtraInfo(KaitaiStream _io, CreativeVoiceFile.Block _parent, CreativeVoiceFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.freqDiv = this._io.readU2le();
-            this.codec = CreativeVoiceFile.Codecs.byId(this._io.readU1());
-            this.numChannels1 = this._io.readU1();
-        }
-        private Integer numChannels;
-
-        /**
-         * Number of channels (1 = mono, 2 = stereo)
-         */
-        public Integer numChannels() {
-            if (this.numChannels != null)
-                return this.numChannels;
-            int _tmp = (int) ((numChannels1() + 1));
-            this.numChannels = _tmp;
-            return this.numChannels;
-        }
-        private Double sampleRate;
-        public Double sampleRate() {
-            if (this.sampleRate != null)
-                return this.sampleRate;
-            double _tmp = (double) ((256000000.0 / (numChannels() * (65536 - freqDiv()))));
-            this.sampleRate = _tmp;
-            return this.sampleRate;
-        }
-        private int freqDiv;
-        private Codecs codec;
-        private int numChannels1;
-        private CreativeVoiceFile _root;
-        private CreativeVoiceFile.Block _parent;
-
-        /**
-         * Frequency divisor
-         */
-        public int freqDiv() { return freqDiv; }
-        public Codecs codec() { return codec; }
-
-        /**
-         * Number of channels minus 1 (0 = mono, 1 = stereo)
-         */
-        public int numChannels1() { return numChannels1; }
-        public CreativeVoiceFile _root() { return _root; }
-        public CreativeVoiceFile.Block _parent() { return _parent; }
-    }
     private byte[] magic;
     private int headerSize;
     private int version;
     private int checksum;
-    private ArrayList<Block> blocks;
+    private List<Block> blocks;
     private CreativeVoiceFile _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
@@ -548,7 +603,7 @@ public class CreativeVoiceFile extends KaitaiStruct {
     /**
      * Series of blocks that contain the actual audio data
      */
-    public ArrayList<Block> blocks() { return blocks; }
+    public List<Block> blocks() { return blocks; }
     public CreativeVoiceFile _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

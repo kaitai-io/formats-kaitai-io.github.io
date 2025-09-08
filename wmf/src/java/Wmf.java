@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
 
@@ -23,6 +24,35 @@ import java.util.Arrays;
 public class Wmf extends KaitaiStruct {
     public static Wmf fromFile(String fileName) throws IOException {
         return new Wmf(new ByteBufferKaitaiStream(fileName));
+    }
+
+    public enum BinRasterOp {
+        BLACK(1),
+        NOTMERGEPEN(2),
+        MASKNOTPEN(3),
+        NOTCOPYPEN(4),
+        MASKPENNOT(5),
+        NOT(6),
+        XORPEN(7),
+        NOTMASKPEN(8),
+        MASKPEN(9),
+        NOTXORPEN(10),
+        NOP(11),
+        MERGENOTPEN(12),
+        COPYPEN(13),
+        MERGEPENNOT(14),
+        MERGEPEN(15),
+        WHITE(16);
+
+        private final long id;
+        BinRasterOp(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, BinRasterOp> byId = new HashMap<Long, BinRasterOp>(16);
+        static {
+            for (BinRasterOp e : BinRasterOp.values())
+                byId.put(e.id(), e);
+        }
+        public static BinRasterOp byId(long id) { return byId.get(id); }
     }
 
     public enum Func {
@@ -108,35 +138,6 @@ public class Wmf extends KaitaiStruct {
         public static Func byId(long id) { return byId.get(id); }
     }
 
-    public enum BinRasterOp {
-        BLACK(1),
-        NOTMERGEPEN(2),
-        MASKNOTPEN(3),
-        NOTCOPYPEN(4),
-        MASKPENNOT(5),
-        NOT(6),
-        XORPEN(7),
-        NOTMASKPEN(8),
-        MASKPEN(9),
-        NOTXORPEN(10),
-        NOP(11),
-        MERGENOTPEN(12),
-        COPYPEN(13),
-        MERGEPENNOT(14),
-        MERGEPEN(15),
-        WHITE(16);
-
-        private final long id;
-        BinRasterOp(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, BinRasterOp> byId = new HashMap<Long, BinRasterOp>(16);
-        static {
-            for (BinRasterOp e : BinRasterOp.values())
-                byId.put(e.id(), e);
-        }
-        public static BinRasterOp byId(long id) { return byId.get(id); }
-    }
-
     public enum MixMode {
         TRANSPARENT(1),
         OPAQUE(2);
@@ -196,210 +197,55 @@ public class Wmf extends KaitaiStruct {
         }
     }
 
-    /**
-     * @see "section 2.3.5.31"
-     */
-    public static class ParamsSetwindoworg extends KaitaiStruct {
-        public static ParamsSetwindoworg fromFile(String fileName) throws IOException {
-            return new ParamsSetwindoworg(new ByteBufferKaitaiStream(fileName));
+    public void _fetchInstances() {
+        this.specialHeader._fetchInstances();
+        this.header._fetchInstances();
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public ParamsSetwindoworg(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ParamsSetwindoworg(KaitaiStream _io, Wmf.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ParamsSetwindoworg(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.y = this._io.readS2le();
-            this.x = this._io.readS2le();
-        }
-        private short y;
-        private short x;
-        private Wmf _root;
-        private Wmf.Record _parent;
-
-        /**
-         * Y coordinate of the window origin, in logical units.
-         */
-        public short y() { return y; }
-
-        /**
-         * X coordinate of the window origin, in logical units.
-         */
-        public short x() { return x; }
-        public Wmf _root() { return _root; }
-        public Wmf.Record _parent() { return _parent; }
     }
 
     /**
-     * @see "section 2.3.5.15"
+     * @see "section 2.2.1.7"
      */
-    public static class ParamsSetbkmode extends KaitaiStruct {
-        public static ParamsSetbkmode fromFile(String fileName) throws IOException {
-            return new ParamsSetbkmode(new ByteBufferKaitaiStream(fileName));
+    public static class ColorRef extends KaitaiStruct {
+        public static ColorRef fromFile(String fileName) throws IOException {
+            return new ColorRef(new ByteBufferKaitaiStream(fileName));
         }
 
-        public ParamsSetbkmode(KaitaiStream _io) {
+        public ColorRef(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public ParamsSetbkmode(KaitaiStream _io, Wmf.Record _parent) {
+        public ColorRef(KaitaiStream _io, Wmf.Record _parent) {
             this(_io, _parent, null);
         }
 
-        public ParamsSetbkmode(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+        public ColorRef(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.bkMode = Wmf.MixMode.byId(this._io.readU2le());
+            this.red = this._io.readU1();
+            this.green = this._io.readU1();
+            this.blue = this._io.readU1();
+            this.reserved = this._io.readU1();
         }
-        private MixMode bkMode;
+
+        public void _fetchInstances() {
+        }
+        private int red;
+        private int green;
+        private int blue;
+        private int reserved;
         private Wmf _root;
         private Wmf.Record _parent;
-
-        /**
-         * Defines current graphic context background mix mode.
-         */
-        public MixMode bkMode() { return bkMode; }
-        public Wmf _root() { return _root; }
-        public Wmf.Record _parent() { return _parent; }
-    }
-
-    /**
-     * @see "section 2.2.1.12"
-     */
-    public static class PointS extends KaitaiStruct {
-        public static PointS fromFile(String fileName) throws IOException {
-            return new PointS(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PointS(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PointS(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PointS(KaitaiStream _io, KaitaiStruct _parent, Wmf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.x = this._io.readS2le();
-            this.y = this._io.readS2le();
-        }
-        private short x;
-        private short y;
-        private Wmf _root;
-        private KaitaiStruct _parent;
-
-        /**
-         * X coordinate of the point, in logical units.
-         */
-        public short x() { return x; }
-
-        /**
-         * Y coordinate of the point, in logical units.
-         */
-        public short y() { return y; }
-        public Wmf _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-
-    /**
-     * @see "section 2.3.5.30"
-     */
-    public static class ParamsSetwindowext extends KaitaiStruct {
-        public static ParamsSetwindowext fromFile(String fileName) throws IOException {
-            return new ParamsSetwindowext(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ParamsSetwindowext(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ParamsSetwindowext(KaitaiStream _io, Wmf.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ParamsSetwindowext(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.y = this._io.readS2le();
-            this.x = this._io.readS2le();
-        }
-        private short y;
-        private short x;
-        private Wmf _root;
-        private Wmf.Record _parent;
-
-        /**
-         * Vertical extent of the window in logical units.
-         */
-        public short y() { return y; }
-
-        /**
-         * Horizontal extent of the window in logical units.
-         */
-        public short x() { return x; }
-        public Wmf _root() { return _root; }
-        public Wmf.Record _parent() { return _parent; }
-    }
-
-    /**
-     * @see "section 2.3.3.15 = params_polyline"
-     */
-    public static class ParamsPolygon extends KaitaiStruct {
-        public static ParamsPolygon fromFile(String fileName) throws IOException {
-            return new ParamsPolygon(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ParamsPolygon(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ParamsPolygon(KaitaiStream _io, Wmf.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ParamsPolygon(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numPoints = this._io.readS2le();
-            this.points = new ArrayList<PointS>();
-            for (int i = 0; i < numPoints(); i++) {
-                this.points.add(new PointS(this._io, this, _root));
-            }
-        }
-        private short numPoints;
-        private ArrayList<PointS> points;
-        private Wmf _root;
-        private Wmf.Record _parent;
-        public short numPoints() { return numPoints; }
-        public ArrayList<PointS> points() { return points; }
+        public int red() { return red; }
+        public int green() { return green; }
+        public int blue() { return blue; }
+        public int reserved() { return reserved; }
         public Wmf _root() { return _root; }
         public Wmf.Record _parent() { return _parent; }
     }
@@ -446,6 +292,9 @@ public class Wmf extends KaitaiStruct {
             this.maxRecord = this._io.readU4le();
             this.numberOfMembers = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+        }
         private MetafileType metafileType;
         private int headerSize;
         private int version;
@@ -467,117 +316,46 @@ public class Wmf extends KaitaiStruct {
     }
 
     /**
-     * @see "section 2.2.1.7"
+     * @see "section 2.3.3.15 = params_polyline"
      */
-    public static class ColorRef extends KaitaiStruct {
-        public static ColorRef fromFile(String fileName) throws IOException {
-            return new ColorRef(new ByteBufferKaitaiStream(fileName));
+    public static class ParamsPolygon extends KaitaiStruct {
+        public static ParamsPolygon fromFile(String fileName) throws IOException {
+            return new ParamsPolygon(new ByteBufferKaitaiStream(fileName));
         }
 
-        public ColorRef(KaitaiStream _io) {
+        public ParamsPolygon(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public ColorRef(KaitaiStream _io, Wmf.Record _parent) {
+        public ParamsPolygon(KaitaiStream _io, Wmf.Record _parent) {
             this(_io, _parent, null);
         }
 
-        public ColorRef(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+        public ParamsPolygon(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.red = this._io.readU1();
-            this.green = this._io.readU1();
-            this.blue = this._io.readU1();
-            this.reserved = this._io.readU1();
+            this.numPoints = this._io.readS2le();
+            this.points = new ArrayList<PointS>();
+            for (int i = 0; i < numPoints(); i++) {
+                this.points.add(new PointS(this._io, this, _root));
+            }
         }
-        private int red;
-        private int green;
-        private int blue;
-        private int reserved;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.points.size(); i++) {
+                this.points.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private short numPoints;
+        private List<PointS> points;
         private Wmf _root;
         private Wmf.Record _parent;
-        public int red() { return red; }
-        public int green() { return green; }
-        public int blue() { return blue; }
-        public int reserved() { return reserved; }
-        public Wmf _root() { return _root; }
-        public Wmf.Record _parent() { return _parent; }
-    }
-
-    /**
-     * @see "section 2.3.5.22"
-     */
-    public static class ParamsSetrop2 extends KaitaiStruct {
-        public static ParamsSetrop2 fromFile(String fileName) throws IOException {
-            return new ParamsSetrop2(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ParamsSetrop2(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ParamsSetrop2(KaitaiStream _io, Wmf.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ParamsSetrop2(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.drawMode = Wmf.BinRasterOp.byId(this._io.readU2le());
-        }
-        private BinRasterOp drawMode;
-        private Wmf _root;
-        private Wmf.Record _parent;
-
-        /**
-         * Defines current foreground binary raster operation mixing mode.
-         */
-        public BinRasterOp drawMode() { return drawMode; }
-        public Wmf _root() { return _root; }
-        public Wmf.Record _parent() { return _parent; }
-    }
-
-    /**
-     * @see "section 2.3.5.20"
-     */
-    public static class ParamsSetpolyfillmode extends KaitaiStruct {
-        public static ParamsSetpolyfillmode fromFile(String fileName) throws IOException {
-            return new ParamsSetpolyfillmode(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ParamsSetpolyfillmode(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ParamsSetpolyfillmode(KaitaiStream _io, Wmf.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ParamsSetpolyfillmode(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.polyFillMode = Wmf.PolyFillMode.byId(this._io.readU2le());
-        }
-        private PolyFillMode polyFillMode;
-        private Wmf _root;
-        private Wmf.Record _parent;
-
-        /**
-         * Defines current polygon fill mode.
-         */
-        public PolyFillMode polyFillMode() { return polyFillMode; }
+        public short numPoints() { return numPoints; }
+        public List<PointS> points() { return points; }
         public Wmf _root() { return _root; }
         public Wmf.Record _parent() { return _parent; }
     }
@@ -611,76 +389,281 @@ public class Wmf extends KaitaiStruct {
                 this.points.add(new PointS(this._io, this, _root));
             }
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.points.size(); i++) {
+                this.points.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private short numPoints;
-        private ArrayList<PointS> points;
+        private List<PointS> points;
         private Wmf _root;
         private Wmf.Record _parent;
         public short numPoints() { return numPoints; }
-        public ArrayList<PointS> points() { return points; }
+        public List<PointS> points() { return points; }
         public Wmf _root() { return _root; }
         public Wmf.Record _parent() { return _parent; }
     }
-    public static class SpecialHeader extends KaitaiStruct {
-        public static SpecialHeader fromFile(String fileName) throws IOException {
-            return new SpecialHeader(new ByteBufferKaitaiStream(fileName));
+
+    /**
+     * @see "section 2.3.5.15"
+     */
+    public static class ParamsSetbkmode extends KaitaiStruct {
+        public static ParamsSetbkmode fromFile(String fileName) throws IOException {
+            return new ParamsSetbkmode(new ByteBufferKaitaiStream(fileName));
         }
 
-        public SpecialHeader(KaitaiStream _io) {
+        public ParamsSetbkmode(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public SpecialHeader(KaitaiStream _io, Wmf _parent) {
+        public ParamsSetbkmode(KaitaiStream _io, Wmf.Record _parent) {
             this(_io, _parent, null);
         }
 
-        public SpecialHeader(KaitaiStream _io, Wmf _parent, Wmf _root) {
+        public ParamsSetbkmode(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { -41, -51, -58, -102 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -41, -51, -58, -102 }, magic(), _io(), "/types/special_header/seq/0");
-            }
-            this.handle = this._io.readBytes(2);
-            if (!(Arrays.equals(handle(), new byte[] { 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, handle(), _io(), "/types/special_header/seq/1");
-            }
-            this.left = this._io.readS2le();
-            this.top = this._io.readS2le();
-            this.right = this._io.readS2le();
-            this.bottom = this._io.readS2le();
-            this.inch = this._io.readU2le();
-            this.reserved = this._io.readBytes(4);
-            if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, reserved(), _io(), "/types/special_header/seq/7");
-            }
-            this.checksum = this._io.readU2le();
+            this.bkMode = Wmf.MixMode.byId(this._io.readU2le());
         }
-        private byte[] magic;
-        private byte[] handle;
-        private short left;
-        private short top;
-        private short right;
-        private short bottom;
-        private int inch;
-        private byte[] reserved;
-        private int checksum;
+
+        public void _fetchInstances() {
+        }
+        private MixMode bkMode;
         private Wmf _root;
-        private Wmf _parent;
-        public byte[] magic() { return magic; }
-        public byte[] handle() { return handle; }
-        public short left() { return left; }
-        public short top() { return top; }
-        public short right() { return right; }
-        public short bottom() { return bottom; }
-        public int inch() { return inch; }
-        public byte[] reserved() { return reserved; }
-        public int checksum() { return checksum; }
+        private Wmf.Record _parent;
+
+        /**
+         * Defines current graphic context background mix mode.
+         */
+        public MixMode bkMode() { return bkMode; }
         public Wmf _root() { return _root; }
-        public Wmf _parent() { return _parent; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+
+    /**
+     * @see "section 2.3.5.20"
+     */
+    public static class ParamsSetpolyfillmode extends KaitaiStruct {
+        public static ParamsSetpolyfillmode fromFile(String fileName) throws IOException {
+            return new ParamsSetpolyfillmode(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsSetpolyfillmode(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsSetpolyfillmode(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsSetpolyfillmode(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.polyFillMode = Wmf.PolyFillMode.byId(this._io.readU2le());
+        }
+
+        public void _fetchInstances() {
+        }
+        private PolyFillMode polyFillMode;
+        private Wmf _root;
+        private Wmf.Record _parent;
+
+        /**
+         * Defines current polygon fill mode.
+         */
+        public PolyFillMode polyFillMode() { return polyFillMode; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+
+    /**
+     * @see "section 2.3.5.22"
+     */
+    public static class ParamsSetrop2 extends KaitaiStruct {
+        public static ParamsSetrop2 fromFile(String fileName) throws IOException {
+            return new ParamsSetrop2(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsSetrop2(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsSetrop2(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsSetrop2(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.drawMode = Wmf.BinRasterOp.byId(this._io.readU2le());
+        }
+
+        public void _fetchInstances() {
+        }
+        private BinRasterOp drawMode;
+        private Wmf _root;
+        private Wmf.Record _parent;
+
+        /**
+         * Defines current foreground binary raster operation mixing mode.
+         */
+        public BinRasterOp drawMode() { return drawMode; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+
+    /**
+     * @see "section 2.3.5.30"
+     */
+    public static class ParamsSetwindowext extends KaitaiStruct {
+        public static ParamsSetwindowext fromFile(String fileName) throws IOException {
+            return new ParamsSetwindowext(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsSetwindowext(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsSetwindowext(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsSetwindowext(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.y = this._io.readS2le();
+            this.x = this._io.readS2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private short y;
+        private short x;
+        private Wmf _root;
+        private Wmf.Record _parent;
+
+        /**
+         * Vertical extent of the window in logical units.
+         */
+        public short y() { return y; }
+
+        /**
+         * Horizontal extent of the window in logical units.
+         */
+        public short x() { return x; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+
+    /**
+     * @see "section 2.3.5.31"
+     */
+    public static class ParamsSetwindoworg extends KaitaiStruct {
+        public static ParamsSetwindoworg fromFile(String fileName) throws IOException {
+            return new ParamsSetwindoworg(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ParamsSetwindoworg(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ParamsSetwindoworg(KaitaiStream _io, Wmf.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ParamsSetwindoworg(KaitaiStream _io, Wmf.Record _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.y = this._io.readS2le();
+            this.x = this._io.readS2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private short y;
+        private short x;
+        private Wmf _root;
+        private Wmf.Record _parent;
+
+        /**
+         * Y coordinate of the window origin, in logical units.
+         */
+        public short y() { return y; }
+
+        /**
+         * X coordinate of the window origin, in logical units.
+         */
+        public short x() { return x; }
+        public Wmf _root() { return _root; }
+        public Wmf.Record _parent() { return _parent; }
+    }
+
+    /**
+     * @see "section 2.2.1.12"
+     */
+    public static class PointS extends KaitaiStruct {
+        public static PointS fromFile(String fileName) throws IOException {
+            return new PointS(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PointS(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PointS(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PointS(KaitaiStream _io, KaitaiStruct _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.x = this._io.readS2le();
+            this.y = this._io.readS2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private short x;
+        private short y;
+        private Wmf _root;
+        private KaitaiStruct _parent;
+
+        /**
+         * X coordinate of the point, in logical units.
+         */
+        public short x() { return x; }
+
+        /**
+         * Y coordinate of the point, in logical units.
+         */
+        public short y() { return y; }
+        public Wmf _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
     }
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
@@ -708,61 +691,99 @@ public class Wmf extends KaitaiStruct {
                 Func on = function();
                 if (on != null) {
                     switch (function()) {
-                    case SETBKMODE: {
-                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                        this.params = new ParamsSetbkmode(_io__raw_params, this, _root);
-                        break;
-                    }
                     case POLYGON: {
-                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                        this.params = new ParamsPolygon(_io__raw_params, this, _root);
-                        break;
-                    }
-                    case SETBKCOLOR: {
-                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                        this.params = new ColorRef(_io__raw_params, this, _root);
-                        break;
-                    }
-                    case SETPOLYFILLMODE: {
-                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                        this.params = new ParamsSetpolyfillmode(_io__raw_params, this, _root);
-                        break;
-                    }
-                    case SETWINDOWORG: {
-                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                        this.params = new ParamsSetwindoworg(_io__raw_params, this, _root);
-                        break;
-                    }
-                    case SETROP2: {
-                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                        this.params = new ParamsSetrop2(_io__raw_params, this, _root);
-                        break;
-                    }
-                    case SETWINDOWEXT: {
-                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                        this.params = new ParamsSetwindowext(_io__raw_params, this, _root);
+                        KaitaiStream _io_params = this._io.substream((size() - 3) * 2);
+                        this.params = new ParamsPolygon(_io_params, this, _root);
                         break;
                     }
                     case POLYLINE: {
-                        this._raw_params = this._io.readBytes(((size() - 3) * 2));
-                        KaitaiStream _io__raw_params = new ByteBufferKaitaiStream(_raw_params);
-                        this.params = new ParamsPolyline(_io__raw_params, this, _root);
+                        KaitaiStream _io_params = this._io.substream((size() - 3) * 2);
+                        this.params = new ParamsPolyline(_io_params, this, _root);
+                        break;
+                    }
+                    case SETBKCOLOR: {
+                        KaitaiStream _io_params = this._io.substream((size() - 3) * 2);
+                        this.params = new ColorRef(_io_params, this, _root);
+                        break;
+                    }
+                    case SETBKMODE: {
+                        KaitaiStream _io_params = this._io.substream((size() - 3) * 2);
+                        this.params = new ParamsSetbkmode(_io_params, this, _root);
+                        break;
+                    }
+                    case SETPOLYFILLMODE: {
+                        KaitaiStream _io_params = this._io.substream((size() - 3) * 2);
+                        this.params = new ParamsSetpolyfillmode(_io_params, this, _root);
+                        break;
+                    }
+                    case SETROP2: {
+                        KaitaiStream _io_params = this._io.substream((size() - 3) * 2);
+                        this.params = new ParamsSetrop2(_io_params, this, _root);
+                        break;
+                    }
+                    case SETWINDOWEXT: {
+                        KaitaiStream _io_params = this._io.substream((size() - 3) * 2);
+                        this.params = new ParamsSetwindowext(_io_params, this, _root);
+                        break;
+                    }
+                    case SETWINDOWORG: {
+                        KaitaiStream _io_params = this._io.substream((size() - 3) * 2);
+                        this.params = new ParamsSetwindoworg(_io_params, this, _root);
                         break;
                     }
                     default: {
-                        this.params = this._io.readBytes(((size() - 3) * 2));
+                        this.params = this._io.readBytes((size() - 3) * 2);
                         break;
                     }
                     }
                 } else {
-                    this.params = this._io.readBytes(((size() - 3) * 2));
+                    this.params = this._io.readBytes((size() - 3) * 2);
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            {
+                Func on = function();
+                if (on != null) {
+                    switch (function()) {
+                    case POLYGON: {
+                        ((ParamsPolygon) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case POLYLINE: {
+                        ((ParamsPolyline) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case SETBKCOLOR: {
+                        ((ColorRef) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case SETBKMODE: {
+                        ((ParamsSetbkmode) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case SETPOLYFILLMODE: {
+                        ((ParamsSetpolyfillmode) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case SETROP2: {
+                        ((ParamsSetrop2) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case SETWINDOWEXT: {
+                        ((ParamsSetwindowext) (this.params))._fetchInstances();
+                        break;
+                    }
+                    case SETWINDOWORG: {
+                        ((ParamsSetwindoworg) (this.params))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
                 }
             }
         }
@@ -771,22 +792,85 @@ public class Wmf extends KaitaiStruct {
         private Object params;
         private Wmf _root;
         private Wmf _parent;
-        private byte[] _raw_params;
         public long size() { return size; }
         public Func function() { return function; }
         public Object params() { return params; }
         public Wmf _root() { return _root; }
         public Wmf _parent() { return _parent; }
-        public byte[] _raw_params() { return _raw_params; }
+    }
+    public static class SpecialHeader extends KaitaiStruct {
+        public static SpecialHeader fromFile(String fileName) throws IOException {
+            return new SpecialHeader(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SpecialHeader(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SpecialHeader(KaitaiStream _io, Wmf _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SpecialHeader(KaitaiStream _io, Wmf _parent, Wmf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(this.magic, new byte[] { -41, -51, -58, -102 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -41, -51, -58, -102 }, this.magic, this._io, "/types/special_header/seq/0");
+            }
+            this.handle = this._io.readBytes(2);
+            if (!(Arrays.equals(this.handle, new byte[] { 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, this.handle, this._io, "/types/special_header/seq/1");
+            }
+            this.left = this._io.readS2le();
+            this.top = this._io.readS2le();
+            this.right = this._io.readS2le();
+            this.bottom = this._io.readS2le();
+            this.inch = this._io.readU2le();
+            this.reserved = this._io.readBytes(4);
+            if (!(Arrays.equals(this.reserved, new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, this.reserved, this._io, "/types/special_header/seq/7");
+            }
+            this.checksum = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] magic;
+        private byte[] handle;
+        private short left;
+        private short top;
+        private short right;
+        private short bottom;
+        private int inch;
+        private byte[] reserved;
+        private int checksum;
+        private Wmf _root;
+        private Wmf _parent;
+        public byte[] magic() { return magic; }
+        public byte[] handle() { return handle; }
+        public short left() { return left; }
+        public short top() { return top; }
+        public short right() { return right; }
+        public short bottom() { return bottom; }
+        public int inch() { return inch; }
+        public byte[] reserved() { return reserved; }
+        public int checksum() { return checksum; }
+        public Wmf _root() { return _root; }
+        public Wmf _parent() { return _parent; }
     }
     private SpecialHeader specialHeader;
     private Header header;
-    private ArrayList<Record> records;
+    private List<Record> records;
     private Wmf _root;
     private KaitaiStruct _parent;
     public SpecialHeader specialHeader() { return specialHeader; }
     public Header header() { return header; }
-    public ArrayList<Record> records() { return records; }
+    public List<Record> records() { return records; }
     public Wmf _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

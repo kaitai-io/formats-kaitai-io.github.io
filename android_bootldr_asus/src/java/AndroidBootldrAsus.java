@@ -6,7 +6,8 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -39,18 +40,24 @@ public class AndroidBootldrAsus extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(8);
-        if (!(Arrays.equals(magic(), new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }, this.magic, this._io, "/seq/0");
         }
         this.revision = this._io.readU2le();
-        if (!(revision() >= 2)) {
-            throw new KaitaiStream.ValidationLessThanError(2, revision(), _io(), "/seq/1");
+        if (!(this.revision >= 2)) {
+            throw new KaitaiStream.ValidationLessThanError(2, this.revision, this._io, "/seq/1");
         }
         this.reserved1 = this._io.readU2le();
         this.reserved2 = this._io.readU4le();
         this.images = new ArrayList<Image>();
         for (int i = 0; i < 3; i++) {
             this.images.add(new Image(this._io, this, _root));
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.images.size(); i++) {
+            this.images.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
     public static class Image extends KaitaiStruct {
@@ -73,22 +80,25 @@ public class AndroidBootldrAsus extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.chunkId = new String(this._io.readBytes(8), Charset.forName("ASCII"));
-            if (!( ((chunkId().equals("IFWI!!!!")) || (chunkId().equals("DROIDBT!")) || (chunkId().equals("SPLASHS!"))) )) {
-                throw new KaitaiStream.ValidationNotAnyOfError(chunkId(), _io(), "/types/image/seq/0");
+            this.chunkId = new String(this._io.readBytes(8), StandardCharsets.US_ASCII);
+            if (!( ((this.chunkId.equals("IFWI!!!!")) || (this.chunkId.equals("DROIDBT!")) || (this.chunkId.equals("SPLASHS!"))) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.chunkId, this._io, "/types/image/seq/0");
             }
             this.lenBody = this._io.readU4le();
             this.flags = this._io.readU1();
             {
-                int _it = flags();
+                int _it = this.flags;
                 if (!((_it & 1) != 0)) {
-                    throw new KaitaiStream.ValidationExprError(flags(), _io(), "/types/image/seq/2");
+                    throw new KaitaiStream.ValidationExprError(this.flags, this._io, "/types/image/seq/2");
                 }
             }
             this.reserved1 = this._io.readU1();
             this.reserved2 = this._io.readU1();
             this.reserved3 = this._io.readU1();
             this.body = this._io.readBytes(lenBody());
+        }
+
+        public void _fetchInstances() {
         }
         private String fileName;
         public String fileName() {
@@ -120,7 +130,7 @@ public class AndroidBootldrAsus extends KaitaiStruct {
     private int revision;
     private int reserved1;
     private long reserved2;
-    private ArrayList<Image> images;
+    private List<Image> images;
     private AndroidBootldrAsus _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
@@ -132,7 +142,7 @@ public class AndroidBootldrAsus extends KaitaiStruct {
      * Only three images are included: `ifwi.bin`, `droidboot.img`
      * and `splashscreen.img`
      */
-    public ArrayList<Image> images() { return images; }
+    public List<Image> images() { return images; }
     public AndroidBootldrAsus _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

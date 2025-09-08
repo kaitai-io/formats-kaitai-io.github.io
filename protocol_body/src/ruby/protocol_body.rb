@@ -1,9 +1,14 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'ipv6_packet'
+require_relative 'udp_datagram'
+require_relative 'icmp_packet'
+require_relative 'tcp_segment'
+require_relative 'ipv4_packet'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -170,28 +175,28 @@ class ProtocolBody < Kaitai::Struct::Struct
     255 => :protocol_enum_reserved_255,
   }
   I__PROTOCOL_ENUM = PROTOCOL_ENUM.invert
-  def initialize(_io, _parent = nil, _root = self, protocol_num)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil, protocol_num)
+    super(_io, _parent, _root || self)
     @protocol_num = protocol_num
     _read
   end
 
   def _read
     case protocol
-    when :protocol_enum_ipv6_nonxt
-      @body = NoNextHeader.new(@_io, self, @_root)
-    when :protocol_enum_ipv4
-      @body = Ipv4Packet.new(@_io)
-    when :protocol_enum_udp
-      @body = UdpDatagram.new(@_io)
-    when :protocol_enum_icmp
-      @body = IcmpPacket.new(@_io)
     when :protocol_enum_hopopt
       @body = OptionHopByHop.new(@_io, self, @_root)
+    when :protocol_enum_icmp
+      @body = IcmpPacket.new(@_io)
+    when :protocol_enum_ipv4
+      @body = Ipv4Packet.new(@_io)
     when :protocol_enum_ipv6
       @body = Ipv6Packet.new(@_io)
+    when :protocol_enum_ipv6_nonxt
+      @body = NoNextHeader.new(@_io, self, @_root)
     when :protocol_enum_tcp
       @body = TcpSegment.new(@_io)
+    when :protocol_enum_udp
+      @body = UdpDatagram.new(@_io)
     end
     self
   end
@@ -199,7 +204,7 @@ class ProtocolBody < Kaitai::Struct::Struct
   ##
   # Dummy type for IPv6 "no next header" type, which signifies end of headers chain.
   class NoNextHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -209,7 +214,7 @@ class ProtocolBody < Kaitai::Struct::Struct
     end
   end
   class OptionHopByHop < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -217,8 +222,8 @@ class ProtocolBody < Kaitai::Struct::Struct
     def _read
       @next_header_type = @_io.read_u1
       @hdr_ext_len = @_io.read_u1
-      @body = @_io.read_bytes((hdr_ext_len > 0 ? (hdr_ext_len - 1) : 1))
-      @next_header = ProtocolBody.new(@_io, next_header_type)
+      @body = @_io.read_bytes((hdr_ext_len > 0 ? hdr_ext_len - 1 : 1))
+      @next_header = ProtocolBody.new(@_io, self, @_root, next_header_type)
       self
     end
     attr_reader :next_header_type

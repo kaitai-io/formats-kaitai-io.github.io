@@ -4,10 +4,10 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("rtp_packet")
 local str_decode = require("string_decode")
 local stringstream = require("string_stream")
 
-require("rtp_packet")
 -- 
 -- rtpdump is a format used by rtptools to record and replay
 -- rtp data from network capture.
@@ -37,21 +37,21 @@ Rtpdump.HeaderT = class.class(KaitaiStruct)
 function Rtpdump.HeaderT:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Rtpdump.HeaderT:_read()
   self.shebang = self._io:read_bytes(12)
   if not(self.shebang == "\035\033\114\116\112\112\108\097\121\049\046\048") then
-    error("not equal, expected " ..  "\035\033\114\116\112\112\108\097\121\049\046\048" .. ", but got " .. self.shebang)
+    error("not equal, expected " .. "\035\033\114\116\112\112\108\097\121\049\046\048" .. ", but got " .. self.shebang)
   end
   self.space = self._io:read_bytes(1)
   if not(self.space == "\032") then
-    error("not equal, expected " ..  "\032" .. ", but got " .. self.space)
+    error("not equal, expected " .. "\032" .. ", but got " .. self.space)
   end
-  self.ip = str_decode.decode(self._io:read_bytes_term(47, false, true, true), "ascii")
-  self.port = str_decode.decode(self._io:read_bytes_term(10, false, true, true), "ascii")
+  self.ip = str_decode.decode(self._io:read_bytes_term(47, false, true, true), "ASCII")
+  self.port = str_decode.decode(self._io:read_bytes_term(10, false, true, true), "ASCII")
   self.start_sec = self._io:read_u4be()
   self.start_usec = self._io:read_u4be()
   self.ip2 = self._io:read_u4be()
@@ -75,7 +75,7 @@ Rtpdump.PacketT = class.class(KaitaiStruct)
 function Rtpdump.PacketT:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

@@ -31,16 +31,16 @@ namespace Kaitai
         private void _read()
         {
             _magic1 = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 68, 75, 73, 70 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic1, new byte[] { 68, 75, 73, 70 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 68, 75, 73, 70 }, Magic1, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 68, 75, 73, 70 }, _magic1, m_io, "/seq/0");
             }
             _version = m_io.ReadU2le();
             _lenHeader = m_io.ReadU2le();
             _codec = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Codec, new byte[] { 86, 80, 56, 48 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_codec, new byte[] { 86, 80, 56, 48 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 86, 80, 56, 48 }, Codec, M_Io, "/seq/3");
+                throw new ValidationNotEqualError(new byte[] { 86, 80, 56, 48 }, _codec, m_io, "/seq/3");
             }
             _width = m_io.ReadU2le();
             _height = m_io.ReadU2le();
@@ -53,30 +53,6 @@ namespace Kaitai
             {
                 _imageData.Add(new Blocks(m_io, this, m_root));
             }
-        }
-        public partial class Blocks : KaitaiStruct
-        {
-            public static Blocks FromFile(string fileName)
-            {
-                return new Blocks(new KaitaiStream(fileName));
-            }
-
-            public Blocks(KaitaiStream p__io, Vp8DuckIvf p__parent = null, Vp8DuckIvf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new Block(m_io, this, m_root);
-            }
-            private Block _entries;
-            private Vp8DuckIvf m_root;
-            private Vp8DuckIvf m_parent;
-            public Block Entries { get { return _entries; } }
-            public Vp8DuckIvf M_Root { get { return m_root; } }
-            public Vp8DuckIvf M_Parent { get { return m_parent; } }
         }
         public partial class Block : KaitaiStruct
         {
@@ -111,6 +87,30 @@ namespace Kaitai
             public byte[] Framedata { get { return _framedata; } }
             public Vp8DuckIvf M_Root { get { return m_root; } }
             public Vp8DuckIvf.Blocks M_Parent { get { return m_parent; } }
+        }
+        public partial class Blocks : KaitaiStruct
+        {
+            public static Blocks FromFile(string fileName)
+            {
+                return new Blocks(new KaitaiStream(fileName));
+            }
+
+            public Blocks(KaitaiStream p__io, Vp8DuckIvf p__parent = null, Vp8DuckIvf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _entries = new Block(m_io, this, m_root);
+            }
+            private Block _entries;
+            private Vp8DuckIvf m_root;
+            private Vp8DuckIvf m_parent;
+            public Block Entries { get { return _entries; } }
+            public Vp8DuckIvf M_Root { get { return m_root; } }
+            public Vp8DuckIvf M_Parent { get { return m_parent; } }
         }
         private byte[] _magic1;
         private ushort _version;

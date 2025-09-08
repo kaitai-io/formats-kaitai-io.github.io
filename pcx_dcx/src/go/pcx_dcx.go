@@ -18,14 +18,18 @@ type PcxDcx struct {
 	Files []*PcxDcx_PcxOffset
 	_io *kaitai.Stream
 	_root *PcxDcx
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewPcxDcx() *PcxDcx {
 	return &PcxDcx{
 	}
 }
 
-func (this *PcxDcx) Read(io *kaitai.Stream, parent interface{}, root *PcxDcx) (err error) {
+func (this PcxDcx) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PcxDcx) Read(io *kaitai.Stream, parent kaitai.Struct, root *PcxDcx) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -66,6 +70,10 @@ func NewPcxDcx_PcxOffset() *PcxDcx_PcxOffset {
 	}
 }
 
+func (this PcxDcx_PcxOffset) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PcxDcx_PcxOffset) Read(io *kaitai.Stream, parent *PcxDcx, root *PcxDcx) (err error) {
 	this._io = io
 	this._parent = parent
@@ -82,6 +90,7 @@ func (this *PcxDcx_PcxOffset) Body() (v *Pcx, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
+	this._f_body = true
 	if (this.OfsBody != 0) {
 		_pos, err := this._io.Pos()
 		if err != nil {
@@ -92,7 +101,7 @@ func (this *PcxDcx_PcxOffset) Body() (v *Pcx, err error) {
 			return nil, err
 		}
 		tmp4 := NewPcx()
-		err = tmp4.Read(this._io, this, nil)
+		err = tmp4.Read(this._io, nil, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -101,8 +110,6 @@ func (this *PcxDcx_PcxOffset) Body() (v *Pcx, err error) {
 		if err != nil {
 			return nil, err
 		}
-		this._f_body = true
 	}
-	this._f_body = true
 	return this.body, nil
 }

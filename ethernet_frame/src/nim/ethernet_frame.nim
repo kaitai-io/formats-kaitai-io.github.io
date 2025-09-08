@@ -1,10 +1,8 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/ipv4_packet
-import /network/ipv6_packet
+import ipv6_packet
+import ipv4_packet
 
-import "ipv4_packet"
-import "ipv6_packet"
 type
   EthernetFrame* = ref object of KaitaiStruct
     `dstMac`*: seq[byte]
@@ -84,13 +82,13 @@ proc read*(_: typedesc[EthernetFrame], io: KaitaiStream, root: KaitaiStruct, par
       let rawBodyExpr = this.io.readBytesFull()
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Ipv4Packet.read(rawBodyIo, this.root, this)
+      let bodyExpr = Ipv4Packet.read(rawBodyIo, nil, nil)
       this.body = bodyExpr
     elif on == ethernet_frame.ipv6:
       let rawBodyExpr = this.io.readBytesFull()
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Ipv6Packet.read(rawBodyIo, this.root, this)
+      let bodyExpr = Ipv6Packet.read(rawBodyIo, nil, nil)
       this.body = bodyExpr
     else:
       let bodyExpr = this.io.readBytesFull()

@@ -24,14 +24,18 @@ type TcpSegment struct {
 	Body []byte
 	_io *kaitai.Stream
 	_root *TcpSegment
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewTcpSegment() *TcpSegment {
 	return &TcpSegment{
 	}
 }
 
-func (this *TcpSegment) Read(io *kaitai.Stream, parent interface{}, root *TcpSegment) (err error) {
+func (this TcpSegment) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TcpSegment) Read(io *kaitai.Stream, parent kaitai.Struct, root *TcpSegment) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -88,8 +92,8 @@ func (this *TcpSegment) Read(io *kaitai.Stream, parent interface{}, root *TcpSeg
 		return err
 	}
 	this.UrgentPointer = uint16(tmp10)
-	if (((this.DataOffset * 4) - 20) != 0) {
-		tmp11, err := this._io.ReadBytes(int(((this.DataOffset * 4) - 20)))
+	if (this.DataOffset * 4 - 20 != 0) {
+		tmp11, err := this._io.ReadBytes(int(this.DataOffset * 4 - 20))
 		if err != nil {
 			return err
 		}
@@ -146,6 +150,10 @@ func NewTcpSegment_Flags() *TcpSegment_Flags {
 	}
 }
 
+func (this TcpSegment_Flags) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *TcpSegment_Flags) Read(io *kaitai.Stream, parent *TcpSegment, root *TcpSegment) (err error) {
 	this._io = io
 	this._parent = parent
@@ -192,6 +200,58 @@ func (this *TcpSegment_Flags) Read(io *kaitai.Stream, parent *TcpSegment, root *
 	}
 	this.Fin = tmp20 != 0
 	return err
+}
+
+func (this TcpSegment_Flags) String() string {
+	var tmp21 string;
+	if (this.Cwr) {
+		tmp21 = "|CWR"
+	} else {
+		tmp21 = ""
+	}
+	var tmp22 string;
+	if (this.Ece) {
+		tmp22 = "|ECE"
+	} else {
+		tmp22 = ""
+	}
+	var tmp23 string;
+	if (this.Urg) {
+		tmp23 = "|URG"
+	} else {
+		tmp23 = ""
+	}
+	var tmp24 string;
+	if (this.Ack) {
+		tmp24 = "|ACK"
+	} else {
+		tmp24 = ""
+	}
+	var tmp25 string;
+	if (this.Psh) {
+		tmp25 = "|PSH"
+	} else {
+		tmp25 = ""
+	}
+	var tmp26 string;
+	if (this.Rst) {
+		tmp26 = "|RST"
+	} else {
+		tmp26 = ""
+	}
+	var tmp27 string;
+	if (this.Syn) {
+		tmp27 = "|SYN"
+	} else {
+		tmp27 = ""
+	}
+	var tmp28 string;
+	if (this.Fin) {
+		tmp28 = "|FIN"
+	} else {
+		tmp28 = ""
+	}
+	return ((((((tmp21 + tmp22) + tmp23) + tmp24) + tmp25) + tmp26) + tmp27) + tmp28
 }
 
 /**

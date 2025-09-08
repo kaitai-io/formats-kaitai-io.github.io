@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'dos_datetime'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -16,8 +17,8 @@ end
 # File format is pretty simple and essentially consists of a stream of
 # records.
 class Lzh < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -30,32 +31,15 @@ class Lzh < Kaitai::Struct::Struct
     end
     self
   end
-  class Record < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @header_len = @_io.read_u1
-      if header_len > 0
-        @file_record = FileRecord.new(@_io, self, @_root)
-      end
-      self
-    end
-    attr_reader :header_len
-    attr_reader :file_record
-  end
   class FileRecord < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @_raw_header = @_io.read_bytes((_parent.header_len - 1))
-      _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-      @header = Header.new(_io__raw_header, self, @_root)
+      _io_header = @_io.substream(_parent.header_len - 1)
+      @header = Header.new(_io_header, self, @_root)
       if header.header1.lha_level == 0
         @file_uncompr_crc16 = @_io.read_u2le
       end
@@ -68,7 +52,7 @@ class Lzh < Kaitai::Struct::Struct
     attr_reader :_raw_header
   end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -79,7 +63,7 @@ class Lzh < Kaitai::Struct::Struct
         @filename_len = @_io.read_u1
       end
       if header1.lha_level == 0
-        @filename = (@_io.read_bytes(filename_len)).force_encoding("ASCII")
+        @filename = (@_io.read_bytes(filename_len)).force_encoding("ASCII").encode('UTF-8')
       end
       if header1.lha_level == 2
         @file_uncompr_crc16 = @_io.read_u2le
@@ -103,19 +87,18 @@ class Lzh < Kaitai::Struct::Struct
     attr_reader :ext_header_size
   end
   class Header1 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @header_checksum = @_io.read_u1
-      @method_id = (@_io.read_bytes(5)).force_encoding("ASCII")
+      @method_id = (@_io.read_bytes(5)).force_encoding("ASCII").encode('UTF-8')
       @file_size_compr = @_io.read_u4le
       @file_size_uncompr = @_io.read_u4le
-      @_raw_file_timestamp = @_io.read_bytes(4)
-      _io__raw_file_timestamp = Kaitai::Struct::Stream.new(@_raw_file_timestamp)
-      @file_timestamp = DosDatetime.new(_io__raw_file_timestamp)
+      _io_file_timestamp = @_io.substream(4)
+      @file_timestamp = DosDatetime.new(_io_file_timestamp)
       @attr = @_io.read_u1
       @lha_level = @_io.read_u1
       self
@@ -140,6 +123,22 @@ class Lzh < Kaitai::Struct::Struct
     attr_reader :attr
     attr_reader :lha_level
     attr_reader :_raw_file_timestamp
+  end
+  class Record < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @header_len = @_io.read_u1
+      if header_len > 0
+        @file_record = FileRecord.new(@_io, self, @_root)
+      end
+      self
+    end
+    attr_reader :header_len
+    attr_reader :file_record
   end
   attr_reader :entries
 end

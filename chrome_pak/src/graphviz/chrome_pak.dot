@@ -8,22 +8,40 @@ digraph {
 		chrome_pak__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">4</TD><TD>u4le</TD><TD PORT="version_type">version</TD></TR>
+			<TR><TD COLSPAN="4" PORT="version__valid">must be any of 4, 5</TD></TR>
 			<TR><TD PORT="num_resources_v4_pos">4</TD><TD PORT="num_resources_v4_size">4</TD><TD>u4le</TD><TD PORT="num_resources_v4_type">num_resources_v4</TD></TR>
+			<TR><TD COLSPAN="4" PORT="num_resources_v4__if">if version == 4</TD></TR>
 			<TR><TD PORT="encoding_pos">8</TD><TD PORT="encoding_size">1</TD><TD>u1→Encodings</TD><TD PORT="encoding_type">encoding</TD></TR>
 			<TR><TD PORT="v5_part_pos">9</TD><TD PORT="v5_part_size">7</TD><TD>HeaderV5Part</TD><TD PORT="v5_part_type">v5_part</TD></TR>
+			<TR><TD COLSPAN="4" PORT="v5_part__if">if version == 5</TD></TR>
 			<TR><TD PORT="resources_pos">16</TD><TD PORT="resources_size">6</TD><TD>Resource</TD><TD PORT="resources_type">resources</TD></TR>
-			<TR><TD COLSPAN="4" PORT="resources__repeat">repeat (num_resources + 1) times</TD></TR>
+			<TR><TD COLSPAN="4" PORT="resources__repeat">repeat num_resources + 1 times</TD></TR>
 			<TR><TD PORT="aliases_pos">...</TD><TD PORT="aliases_size">4</TD><TD>Alias</TD><TD PORT="aliases_type">aliases</TD></TR>
 			<TR><TD COLSPAN="4" PORT="aliases__repeat">repeat num_aliases times</TD></TR>
-		</TABLE>>];
-		chrome_pak__inst__num_resources [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>num_resources</TD><TD>(version == 5 ? v5_part.num_resources : num_resources_v4)</TD></TR>
 		</TABLE>>];
 		chrome_pak__inst__num_aliases [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>num_aliases</TD><TD>(version == 5 ? v5_part.num_aliases : 0)</TD></TR>
 		</TABLE>>];
+		chrome_pak__inst__num_resources [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>num_resources</TD><TD>(version == 5 ? v5_part.num_resources : num_resources_v4)</TD></TR>
+		</TABLE>>];
+		subgraph cluster__alias {
+			label="ChromePak::Alias";
+			graph[style=dotted];
+
+			alias__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>u2le</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="resource_idx_pos">2</TD><TD PORT="resource_idx_size">2</TD><TD>u2le</TD><TD PORT="resource_idx_type">resource_idx</TD></TR>
+				<TR><TD COLSPAN="4" PORT="resource_idx__valid">must be at most _parent.num_resources - 1</TD></TR>
+			</TABLE>>];
+			alias__inst__resource [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>resource</TD><TD>_parent.resources[resource_idx]</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__header_v5_part {
 			label="ChromePak::HeaderV5Part";
 			graph[style=dotted];
@@ -44,44 +62,34 @@ digraph {
 				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>u2le</TD><TD PORT="id_type">id</TD></TR>
 				<TR><TD PORT="ofs_body_pos">2</TD><TD PORT="ofs_body_size">4</TD><TD>u4le</TD><TD PORT="ofs_body_type">ofs_body</TD></TR>
 			</TABLE>>];
-			resource__inst__len_body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>len_body</TD><TD>(_parent.resources[(idx + 1)].ofs_body - ofs_body)</TD></TR>
-			</TABLE>>];
 			resource__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="body_pos">ofs_body</TD><TD PORT="body_size">len_body</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+				<TR><TD COLSPAN="4" PORT="body__if">if has_body</TD></TR>
 			</TABLE>>];
-		}
-		subgraph cluster__alias {
-			label="ChromePak::Alias";
-			graph[style=dotted];
-
-			alias__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>u2le</TD><TD PORT="id_type">id</TD></TR>
-				<TR><TD PORT="resource_idx_pos">2</TD><TD PORT="resource_idx_size">2</TD><TD>u2le</TD><TD PORT="resource_idx_type">resource_idx</TD></TR>
-			</TABLE>>];
-			alias__inst__resource [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			resource__inst__len_body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>resource</TD><TD>_parent.resources[resource_idx]</TD></TR>
+				<TR><TD>len_body</TD><TD>_parent.resources[idx + 1].ofs_body - ofs_body</TD></TR>
 			</TABLE>>];
 		}
 	}
+	chrome_pak__seq:version_type -> chrome_pak__seq:num_resources_v4__if [color="#404040"];
 	chrome_pak__seq:v5_part_type -> header_v5_part__seq [style=bold];
+	chrome_pak__seq:version_type -> chrome_pak__seq:v5_part__if [color="#404040"];
 	chrome_pak__seq:resources_type -> resource__seq [style=bold];
 	chrome_pak__inst__num_resources:num_resources_type -> chrome_pak__seq:resources__repeat [color="#404040"];
 	chrome_pak__seq:aliases_type -> alias__seq [style=bold];
 	chrome_pak__inst__num_aliases:num_aliases_type -> chrome_pak__seq:aliases__repeat [color="#404040"];
+	chrome_pak__seq:version_type -> chrome_pak__inst__num_aliases [color="#404040"];
+	header_v5_part__seq:num_aliases_type -> chrome_pak__inst__num_aliases [color="#404040"];
 	chrome_pak__seq:version_type -> chrome_pak__inst__num_resources [color="#404040"];
 	header_v5_part__seq:num_resources_type -> chrome_pak__inst__num_resources [color="#404040"];
 	chrome_pak__seq:num_resources_v4_type -> chrome_pak__inst__num_resources [color="#404040"];
-	chrome_pak__seq:version_type -> chrome_pak__inst__num_aliases [color="#404040"];
-	header_v5_part__seq:num_aliases_type -> chrome_pak__inst__num_aliases [color="#404040"];
-	resource__seq:ofs_body_type -> resource__inst__len_body [color="#404040"];
-	resource__seq:ofs_body_type -> resource__inst__len_body [color="#404040"];
-	resource__seq:ofs_body_type -> resource__inst__body:body_pos [color="#404040"];
-	resource__inst__len_body:len_body_type -> resource__inst__body:body_size [color="#404040"];
+	chrome_pak__inst__num_resources:num_resources_type -> alias__seq:resource_idx__valid [color="#404040"];
 	chrome_pak__seq:resources_type -> alias__inst__resource [color="#404040"];
 	alias__seq:resource_idx_type -> alias__inst__resource [color="#404040"];
+	resource__seq:ofs_body_type -> resource__inst__body:body_pos [color="#404040"];
+	resource__inst__len_body:len_body_type -> resource__inst__body:body_size [color="#404040"];
+	resource__params:has_body_type -> resource__inst__body:body__if [color="#404040"];
+	resource__seq:ofs_body_type -> resource__inst__len_body [color="#404040"];
 }
