@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -245,6 +244,23 @@ public class Pcap extends KaitaiStruct {
         public static Linktype byId(long id) { return byId.get(id); }
     }
 
+    public enum Magic {
+        LE_NANOSECONDS(1295823521),
+        BE_NANOSECONDS(2712812621L),
+        BE_MICROSECONDS(2712847316L),
+        LE_MICROSECONDS(3569595041L);
+
+        private final long id;
+        Magic(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, Magic> byId = new HashMap<Long, Magic>(4);
+        static {
+            for (Magic e : Magic.values())
+                byId.put(e.id(), e);
+        }
+        public static Magic byId(long id) { return byId.get(id); }
+    }
+
     public Pcap(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -260,6 +276,7 @@ public class Pcap extends KaitaiStruct {
         _read();
     }
     private void _read() {
+        this.magicNumber = Magic.byId(this._io.readU4be());
         this.hdr = new Header(this._io, this, _root);
         this.packets = new ArrayList<Packet>();
         {
@@ -285,6 +302,7 @@ public class Pcap extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
             return new Header(new ByteBufferKaitaiStream(fileName));
         }
+        private Boolean _is_le;
 
         public Header(KaitaiStream _io) {
             this(_io, null, null);
@@ -301,13 +319,42 @@ public class Pcap extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magicNumber = this._io.readBytes(4);
-            if (!(Arrays.equals(this.magicNumber, new byte[] { -44, -61, -78, -95 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -44, -61, -78, -95 }, this.magicNumber, this._io, "/types/header/seq/0");
+            {
+                Magic on = _root().magicNumber();
+                if (on != null) {
+                    switch (_root().magicNumber()) {
+                    case LE_MICROSECONDS: {
+                        this._is_le = true;
+                        break;
+                    }
+                    case LE_NANOSECONDS: {
+                        this._is_le = true;
+                        break;
+                    }
+                    case BE_MICROSECONDS: {
+                        this._is_le = false;
+                        break;
+                    }
+                    case BE_NANOSECONDS: {
+                        this._is_le = false;
+                        break;
+                    }
+                    }
+                }
             }
+
+            if (_is_le == null) {
+                throw new KaitaiStream.UndecidedEndiannessError();
+            } else if (_is_le) {
+                _readLE();
+            } else {
+                _readBE();
+            }
+        }
+        private void _readLE() {
             this.versionMajor = this._io.readU2le();
             if (!(this.versionMajor == 2)) {
-                throw new KaitaiStream.ValidationNotEqualError(2, this.versionMajor, this._io, "/types/header/seq/1");
+                throw new KaitaiStream.ValidationNotEqualError(2, this.versionMajor, this._io, "/types/header/seq/0");
             }
             this.versionMinor = this._io.readU2le();
             this.thiszone = this._io.readS4le();
@@ -315,10 +362,20 @@ public class Pcap extends KaitaiStruct {
             this.snaplen = this._io.readU4le();
             this.network = Pcap.Linktype.byId(this._io.readU4le());
         }
+        private void _readBE() {
+            this.versionMajor = this._io.readU2be();
+            if (!(this.versionMajor == 2)) {
+                throw new KaitaiStream.ValidationNotEqualError(2, this.versionMajor, this._io, "/types/header/seq/0");
+            }
+            this.versionMinor = this._io.readU2be();
+            this.thiszone = this._io.readS4be();
+            this.sigfigs = this._io.readU4be();
+            this.snaplen = this._io.readU4be();
+            this.network = Pcap.Linktype.byId(this._io.readU4be());
+        }
 
         public void _fetchInstances() {
         }
-        private byte[] magicNumber;
         private int versionMajor;
         private int versionMinor;
         private int thiszone;
@@ -327,7 +384,6 @@ public class Pcap extends KaitaiStruct {
         private Linktype network;
         private Pcap _root;
         private Pcap _parent;
-        public byte[] magicNumber() { return magicNumber; }
         public int versionMajor() { return versionMajor; }
         public int versionMinor() { return versionMinor; }
 
@@ -366,6 +422,7 @@ public class Pcap extends KaitaiStruct {
         public static Packet fromFile(String fileName) throws IOException {
             return new Packet(new ByteBufferKaitaiStream(fileName));
         }
+        private Boolean _is_le;
 
         public Packet(KaitaiStream _io) {
             this(_io, null, null);
@@ -382,10 +439,72 @@ public class Pcap extends KaitaiStruct {
             _read();
         }
         private void _read() {
+            {
+                Magic on = _root().magicNumber();
+                if (on != null) {
+                    switch (_root().magicNumber()) {
+                    case LE_MICROSECONDS: {
+                        this._is_le = true;
+                        break;
+                    }
+                    case LE_NANOSECONDS: {
+                        this._is_le = true;
+                        break;
+                    }
+                    case BE_MICROSECONDS: {
+                        this._is_le = false;
+                        break;
+                    }
+                    case BE_NANOSECONDS: {
+                        this._is_le = false;
+                        break;
+                    }
+                    }
+                }
+            }
+
+            if (_is_le == null) {
+                throw new KaitaiStream.UndecidedEndiannessError();
+            } else if (_is_le) {
+                _readLE();
+            } else {
+                _readBE();
+            }
+        }
+        private void _readLE() {
             this.tsSec = this._io.readU4le();
             this.tsUsec = this._io.readU4le();
             this.inclLen = this._io.readU4le();
             this.origLen = this._io.readU4le();
+            {
+                Linktype on = _root().hdr().network();
+                if (on != null) {
+                    switch (_root().hdr().network()) {
+                    case ETHERNET: {
+                        KaitaiStream _io_body = this._io.substream((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
+                        this.body = new EthernetFrame(_io_body);
+                        break;
+                    }
+                    case PPI: {
+                        KaitaiStream _io_body = this._io.substream((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
+                        this.body = new PacketPpi(_io_body);
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
+                }
+            }
+        }
+        private void _readBE() {
+            this.tsSec = this._io.readU4be();
+            this.tsUsec = this._io.readU4be();
+            this.inclLen = this._io.readU4be();
+            this.origLen = this._io.readU4be();
             {
                 Linktype on = _root().hdr().network();
                 if (on != null) {
@@ -439,7 +558,24 @@ public class Pcap extends KaitaiStruct {
         private Object body;
         private Pcap _root;
         private Pcap _parent;
+
+        /**
+         * Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+         * 
+         * In practice, some captures are not following that (e.g. because the device lacks
+         * a real-time clock), so this field might represent time since device boot, start of
+         * capture, or other arbitrary epoch.
+         */
         public long tsSec() { return tsSec; }
+
+        /**
+         * Depending on `_root.magic_number`, units for this field change:
+         * 
+         * * If it's `le_microseconds` or `be_microseconds`, this field
+         *   contains microseconds.
+         * * If it's `le_nanoseconds` or `be_nanoseconds`, this field
+         *   contains nanoseconds.
+         */
         public long tsUsec() { return tsUsec; }
 
         /**
@@ -459,10 +595,12 @@ public class Pcap extends KaitaiStruct {
         public Pcap _root() { return _root; }
         public Pcap _parent() { return _parent; }
     }
+    private Magic magicNumber;
     private Header hdr;
     private List<Packet> packets;
     private Pcap _root;
     private KaitaiStruct _parent;
+    public Magic magicNumber() { return magicNumber; }
     public Header hdr() { return hdr; }
     public List<Packet> packets() { return packets; }
     public Pcap _root() { return _root; }

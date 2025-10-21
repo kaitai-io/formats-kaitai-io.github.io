@@ -27,6 +27,7 @@ pub struct Pcap {
     pub _root: SharedType<Pcap>,
     pub _parent: SharedType<Pcap>,
     pub _self: SharedType<Self>,
+    magic_number: RefCell<Pcap_Magic>,
     hdr: RefCell<OptRc<Pcap_Header>>,
     packets: RefCell<Vec<OptRc<Pcap_Packet>>>,
     _io: RefCell<BytesReader>,
@@ -48,6 +49,7 @@ impl KStruct for Pcap {
         let _rrc = self_rc._root.get_value().borrow().upgrade();
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
+        *self_rc.magic_number.borrow_mut() = (_io.read_u4be()? as i64).try_into()?;
         let t = Self::read_into::<_, Pcap_Header>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
         *self_rc.hdr.borrow_mut() = t;
         *self_rc.packets.borrow_mut() = Vec::new();
@@ -63,6 +65,11 @@ impl KStruct for Pcap {
     }
 }
 impl Pcap {
+}
+impl Pcap {
+    pub fn magic_number(&self) -> Ref<'_, Pcap_Magic> {
+        self.magic_number.borrow()
+    }
 }
 impl Pcap {
     pub fn hdr(&self) -> Ref<'_, OptRc<Pcap_Header>> {
@@ -732,6 +739,44 @@ impl Default for Pcap_Linktype {
     fn default() -> Self { Pcap_Linktype::Unknown(0) }
 }
 
+#[derive(Debug, PartialEq, Clone)]
+pub enum Pcap_Magic {
+    LeNanoseconds,
+    BeNanoseconds,
+    BeMicroseconds,
+    LeMicroseconds,
+    Unknown(i64),
+}
+
+impl TryFrom<i64> for Pcap_Magic {
+    type Error = KError;
+    fn try_from(flag: i64) -> KResult<Pcap_Magic> {
+        match flag {
+            1295823521 => Ok(Pcap_Magic::LeNanoseconds),
+            2712812621 => Ok(Pcap_Magic::BeNanoseconds),
+            2712847316 => Ok(Pcap_Magic::BeMicroseconds),
+            3569595041 => Ok(Pcap_Magic::LeMicroseconds),
+            _ => Ok(Pcap_Magic::Unknown(flag)),
+        }
+    }
+}
+
+impl From<&Pcap_Magic> for i64 {
+    fn from(v: &Pcap_Magic) -> Self {
+        match *v {
+            Pcap_Magic::LeNanoseconds => 1295823521,
+            Pcap_Magic::BeNanoseconds => 2712812621,
+            Pcap_Magic::BeMicroseconds => 2712847316,
+            Pcap_Magic::LeMicroseconds => 3569595041,
+            Pcap_Magic::Unknown(v) => v
+        }
+    }
+}
+
+impl Default for Pcap_Magic {
+    fn default() -> Self { Pcap_Magic::Unknown(0) }
+}
+
 
 /**
  * \sa https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header Source
@@ -742,7 +787,6 @@ pub struct Pcap_Header {
     pub _root: SharedType<Pcap>,
     pub _parent: SharedType<Pcap>,
     pub _self: SharedType<Self>,
-    magic_number: RefCell<Vec<u8>>,
     version_major: RefCell<u16>,
     version_minor: RefCell<u16>,
     thiszone: RefCell<i32>,
@@ -750,6 +794,7 @@ pub struct Pcap_Header {
     snaplen: RefCell<u32>,
     network: RefCell<Pcap_Linktype>,
     _io: RefCell<BytesReader>,
+    _is_le: RefCell<i32>,
 }
 impl KStruct for Pcap_Header {
     type Root = Pcap;
@@ -768,28 +813,42 @@ impl KStruct for Pcap_Header {
         let _rrc = self_rc._root.get_value().borrow().upgrade();
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        *self_rc.magic_number.borrow_mut() = _io.read_bytes(4 as usize)?.into();
-        if !(*self_rc.magic_number() == vec![0xd4u8, 0xc3u8, 0xb2u8, 0xa1u8]) {
+        match *_r.magic_number() {
+            Pcap_Magic::LeMicroseconds => {
+                *self_rc._is_le.borrow_mut() = (1) as i32;
+            }
+            Pcap_Magic::LeNanoseconds => {
+                *self_rc._is_le.borrow_mut() = (1) as i32;
+            }
+            Pcap_Magic::BeMicroseconds => {
+                *self_rc._is_le.borrow_mut() = (2) as i32;
+            }
+            Pcap_Magic::BeNanoseconds => {
+                *self_rc._is_le.borrow_mut() = (2) as i32;
+            }
+            _ => {}
+        }
+        if *self_rc._is_le.borrow() == 0 {
+            return Err(KError::UndecidedEndianness { src_path: "/types/header".to_string() });
+        }
+        *self_rc.version_major.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        if !(((*self_rc.version_major() as u16) == (2 as u16))) {
             return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotEqual, src_path: "/types/header/seq/0".to_string() }));
         }
-        *self_rc.version_major.borrow_mut() = _io.read_u2le()?.into();
-        if !(((*self_rc.version_major() as u16) == (2 as u16))) {
-            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotEqual, src_path: "/types/header/seq/1".to_string() }));
-        }
-        *self_rc.version_minor.borrow_mut() = _io.read_u2le()?.into();
-        *self_rc.thiszone.borrow_mut() = _io.read_s4le()?.into();
-        *self_rc.sigfigs.borrow_mut() = _io.read_u4le()?.into();
-        *self_rc.snaplen.borrow_mut() = _io.read_u4le()?.into();
-        *self_rc.network.borrow_mut() = (_io.read_u4le()? as i64).try_into()?;
+        *self_rc.version_minor.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        *self_rc.thiszone.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_s4le()?.into() } else { _io.read_s4be()?.into() };
+        *self_rc.sigfigs.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.snaplen.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.network.borrow_mut() = (_io.read_u4()? as i64).try_into()?;
         Ok(())
     }
 }
 impl Pcap_Header {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
 }
 impl Pcap_Header {
-    pub fn magic_number(&self) -> Ref<'_, Vec<u8>> {
-        self.magic_number.borrow()
-    }
 }
 impl Pcap_Header {
     pub fn version_major(&self) -> Ref<'_, u16> {
@@ -864,6 +923,7 @@ pub struct Pcap_Packet {
     body: RefCell<Option<Pcap_Packet_Body>>,
     _io: RefCell<BytesReader>,
     body_raw: RefCell<Vec<u8>>,
+    _is_le: RefCell<i32>,
 }
 #[derive(Debug, Clone)]
 pub enum Pcap_Packet_Body {
@@ -927,10 +987,28 @@ impl KStruct for Pcap_Packet {
         let _rrc = self_rc._root.get_value().borrow().upgrade();
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        *self_rc.ts_sec.borrow_mut() = _io.read_u4le()?.into();
-        *self_rc.ts_usec.borrow_mut() = _io.read_u4le()?.into();
-        *self_rc.incl_len.borrow_mut() = _io.read_u4le()?.into();
-        *self_rc.orig_len.borrow_mut() = _io.read_u4le()?.into();
+        match *_r.magic_number() {
+            Pcap_Magic::LeMicroseconds => {
+                *self_rc._is_le.borrow_mut() = (1) as i32;
+            }
+            Pcap_Magic::LeNanoseconds => {
+                *self_rc._is_le.borrow_mut() = (1) as i32;
+            }
+            Pcap_Magic::BeMicroseconds => {
+                *self_rc._is_le.borrow_mut() = (2) as i32;
+            }
+            Pcap_Magic::BeNanoseconds => {
+                *self_rc._is_le.borrow_mut() = (2) as i32;
+            }
+            _ => {}
+        }
+        if *self_rc._is_le.borrow() == 0 {
+            return Err(KError::UndecidedEndianness { src_path: "/types/packet".to_string() });
+        }
+        *self_rc.ts_sec.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.ts_usec.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.incl_len.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.orig_len.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
         match *_r.hdr().network() {
             Pcap_Linktype::Ethernet => {
                 *self_rc.body_raw.borrow_mut() = _io.read_bytes(if *self_rc.incl_len() < *_r.hdr().snaplen() { *self_rc.incl_len() } else { *_r.hdr().snaplen() } as usize)?.into();
@@ -954,12 +1032,34 @@ impl KStruct for Pcap_Packet {
     }
 }
 impl Pcap_Packet {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
 }
+impl Pcap_Packet {
+}
+
+/**
+ * Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+ * 
+ * In practice, some captures are not following that (e.g. because the device lacks
+ * a real-time clock), so this field might represent time since device boot, start of
+ * capture, or other arbitrary epoch.
+ */
 impl Pcap_Packet {
     pub fn ts_sec(&self) -> Ref<'_, u32> {
         self.ts_sec.borrow()
     }
 }
+
+/**
+ * Depending on `_root.magic_number`, units for this field change:
+ * 
+ * * If it's `le_microseconds` or `be_microseconds`, this field
+ *   contains microseconds.
+ * * If it's `le_nanoseconds` or `be_nanoseconds`, this field
+ *   contains nanoseconds.
+ */
 impl Pcap_Packet {
     pub fn ts_usec(&self) -> Ref<'_, u32> {
         self.ts_usec.borrow()

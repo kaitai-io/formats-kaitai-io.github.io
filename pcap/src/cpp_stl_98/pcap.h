@@ -249,6 +249,20 @@ private:
 
 public:
 
+    enum magic_t {
+        MAGIC_LE_NANOSECONDS = 1295823521,
+        MAGIC_BE_NANOSECONDS = 2712812621UL,
+        MAGIC_BE_MICROSECONDS = 2712847316UL,
+        MAGIC_LE_MICROSECONDS = 3569595041UL
+    };
+    static bool _is_defined_magic_t(magic_t v);
+
+private:
+    static const std::set<magic_t> _values_magic_t;
+    static std::set<magic_t> _build_values_magic_t();
+
+public:
+
     pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, pcap_t* p__root = 0);
 
 private:
@@ -269,14 +283,20 @@ public:
         header_t(kaitai::kstream* p__io, pcap_t* p__parent = 0, pcap_t* p__root = 0);
 
     private:
+        int m__is_le;
+
+    public:
+
+    private:
         void _read();
+        void _read_le();
+        void _read_be();
         void _clean_up();
 
     public:
         ~header_t();
 
     private:
-        std::string m_magic_number;
         uint16_t m_version_major;
         uint16_t m_version_minor;
         int32_t m_thiszone;
@@ -287,7 +307,6 @@ public:
         pcap_t* m__parent;
 
     public:
-        std::string magic_number() const { return m_magic_number; }
         uint16_t version_major() const { return m_version_major; }
         uint16_t version_minor() const { return m_version_minor; }
 
@@ -330,7 +349,14 @@ public:
         packet_t(kaitai::kstream* p__io, pcap_t* p__parent = 0, pcap_t* p__root = 0);
 
     private:
+        int m__is_le;
+
+    public:
+
+    private:
         void _read();
+        void _read_le();
+        void _read_be();
         void _clean_up();
 
     public:
@@ -354,7 +380,24 @@ public:
         kaitai::kstream* m__io__raw_body;
 
     public:
+
+        /**
+         * Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+         * 
+         * In practice, some captures are not following that (e.g. because the device lacks
+         * a real-time clock), so this field might represent time since device boot, start of
+         * capture, or other arbitrary epoch.
+         */
         uint32_t ts_sec() const { return m_ts_sec; }
+
+        /**
+         * Depending on `_root.magic_number`, units for this field change:
+         * 
+         * * If it's `le_microseconds` or `be_microseconds`, this field
+         *   contains microseconds.
+         * * If it's `le_nanoseconds` or `be_nanoseconds`, this field
+         *   contains nanoseconds.
+         */
         uint32_t ts_usec() const { return m_ts_usec; }
 
         /**
@@ -378,12 +421,14 @@ public:
     };
 
 private:
+    magic_t m_magic_number;
     header_t* m_hdr;
     std::vector<packet_t*>* m_packets;
     pcap_t* m__root;
     kaitai::kstruct* m__parent;
 
 public:
+    magic_t magic_number() const { return m_magic_number; }
     header_t* hdr() const { return m_hdr; }
     std::vector<packet_t*>* packets() const { return m_packets; }
     pcap_t* _root() const { return m__root; }

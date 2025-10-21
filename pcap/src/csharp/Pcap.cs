@@ -1,6 +1,7 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 using System.Collections.Generic;
+using System;
 
 namespace Kaitai
 {
@@ -234,6 +235,14 @@ namespace Kaitai
             SilabsDebugChannel = 298,
             FiraUci = 299,
         }
+
+        public enum Magic
+        {
+            LeNanoseconds = 1295823521,
+            BeNanoseconds = 2712812621,
+            BeMicroseconds = 2712847316,
+            LeMicroseconds = 3569595041,
+        }
         public Pcap(KaitaiStream p__io, KaitaiStruct p__parent = null, Pcap p__root = null) : base(p__io)
         {
             m_parent = p__parent;
@@ -242,6 +251,7 @@ namespace Kaitai
         }
         private void _read()
         {
+            _magicNumber = ((Magic) m_io.ReadU4be());
             _hdr = new Header(m_io, this, m_root);
             _packets = new List<Packet>();
             {
@@ -263,6 +273,7 @@ namespace Kaitai
                 return new Header(new KaitaiStream(fileName));
             }
 
+            private bool? m_isLe;
             public Header(KaitaiStream p__io, Pcap p__parent = null, Pcap p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
@@ -271,15 +282,39 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magicNumber = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(_magicNumber, new byte[] { 212, 195, 178, 161 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 212, 195, 178, 161 }, _magicNumber, m_io, "/types/header/seq/0");
+                switch (M_Root.MagicNumber) {
+                case Pcap.Magic.LeMicroseconds: {
+                    m_isLe = (bool) (true);
+                    break;
                 }
+                case Pcap.Magic.LeNanoseconds: {
+                    m_isLe = (bool) (true);
+                    break;
+                }
+                case Pcap.Magic.BeMicroseconds: {
+                    m_isLe = (bool) (false);
+                    break;
+                }
+                case Pcap.Magic.BeNanoseconds: {
+                    m_isLe = (bool) (false);
+                    break;
+                }
+                }
+
+                if (m_isLe == null) {
+                    throw new UndecidedEndiannessError();
+                } else if (m_isLe == true) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE()
+            {
                 _versionMajor = m_io.ReadU2le();
                 if (!(_versionMajor == 2))
                 {
-                    throw new ValidationNotEqualError(2, _versionMajor, m_io, "/types/header/seq/1");
+                    throw new ValidationNotEqualError(2, _versionMajor, m_io, "/types/header/seq/0");
                 }
                 _versionMinor = m_io.ReadU2le();
                 _thiszone = m_io.ReadS4le();
@@ -287,7 +322,19 @@ namespace Kaitai
                 _snaplen = m_io.ReadU4le();
                 _network = ((Pcap.Linktype) m_io.ReadU4le());
             }
-            private byte[] _magicNumber;
+            private void _readBE()
+            {
+                _versionMajor = m_io.ReadU2be();
+                if (!(_versionMajor == 2))
+                {
+                    throw new ValidationNotEqualError(2, _versionMajor, m_io, "/types/header/seq/0");
+                }
+                _versionMinor = m_io.ReadU2be();
+                _thiszone = m_io.ReadS4be();
+                _sigfigs = m_io.ReadU4be();
+                _snaplen = m_io.ReadU4be();
+                _network = ((Pcap.Linktype) m_io.ReadU4be());
+            }
             private ushort _versionMajor;
             private ushort _versionMinor;
             private int _thiszone;
@@ -296,7 +343,6 @@ namespace Kaitai
             private Linktype _network;
             private Pcap m_root;
             private Pcap m_parent;
-            public byte[] MagicNumber { get { return _magicNumber; } }
             public ushort VersionMajor { get { return _versionMajor; } }
             public ushort VersionMinor { get { return _versionMinor; } }
 
@@ -338,6 +384,7 @@ namespace Kaitai
                 return new Packet(new KaitaiStream(fileName));
             }
 
+            private bool? m_isLe;
             public Packet(KaitaiStream p__io, Pcap p__parent = null, Pcap p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
@@ -346,10 +393,64 @@ namespace Kaitai
             }
             private void _read()
             {
+                switch (M_Root.MagicNumber) {
+                case Pcap.Magic.LeMicroseconds: {
+                    m_isLe = (bool) (true);
+                    break;
+                }
+                case Pcap.Magic.LeNanoseconds: {
+                    m_isLe = (bool) (true);
+                    break;
+                }
+                case Pcap.Magic.BeMicroseconds: {
+                    m_isLe = (bool) (false);
+                    break;
+                }
+                case Pcap.Magic.BeNanoseconds: {
+                    m_isLe = (bool) (false);
+                    break;
+                }
+                }
+
+                if (m_isLe == null) {
+                    throw new UndecidedEndiannessError();
+                } else if (m_isLe == true) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE()
+            {
                 _tsSec = m_io.ReadU4le();
                 _tsUsec = m_io.ReadU4le();
                 _inclLen = m_io.ReadU4le();
                 _origLen = m_io.ReadU4le();
+                switch (M_Root.Hdr.Network) {
+                case Pcap.Linktype.Ethernet: {
+                    __raw_body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new EthernetFrame(io___raw_body);
+                    break;
+                }
+                case Pcap.Linktype.Ppi: {
+                    __raw_body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new PacketPpi(io___raw_body);
+                    break;
+                }
+                default: {
+                    _body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
+                    break;
+                }
+                }
+            }
+            private void _readBE()
+            {
+                _tsSec = m_io.ReadU4be();
+                _tsUsec = m_io.ReadU4be();
+                _inclLen = m_io.ReadU4be();
+                _origLen = m_io.ReadU4be();
                 switch (M_Root.Hdr.Network) {
                 case Pcap.Linktype.Ethernet: {
                     __raw_body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
@@ -377,7 +478,24 @@ namespace Kaitai
             private Pcap m_root;
             private Pcap m_parent;
             private byte[] __raw_body;
+
+            /// <summary>
+            /// Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+            /// 
+            /// In practice, some captures are not following that (e.g. because the device lacks
+            /// a real-time clock), so this field might represent time since device boot, start of
+            /// capture, or other arbitrary epoch.
+            /// </summary>
             public uint TsSec { get { return _tsSec; } }
+
+            /// <summary>
+            /// Depending on `_root.magic_number`, units for this field change:
+            /// 
+            /// * If it's `le_microseconds` or `be_microseconds`, this field
+            ///   contains microseconds.
+            /// * If it's `le_nanoseconds` or `be_nanoseconds`, this field
+            ///   contains nanoseconds.
+            /// </summary>
             public uint TsUsec { get { return _tsUsec; } }
 
             /// <summary>
@@ -398,10 +516,12 @@ namespace Kaitai
             public Pcap M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
         }
+        private Magic _magicNumber;
         private Header _hdr;
         private List<Packet> _packets;
         private Pcap m_root;
         private KaitaiStruct m_parent;
+        public Magic MagicNumber { get { return _magicNumber; } }
         public Header Hdr { get { return _hdr; } }
         public List<Packet> Packets { get { return _packets; } }
         public Pcap M_Root { get { return m_root; } }

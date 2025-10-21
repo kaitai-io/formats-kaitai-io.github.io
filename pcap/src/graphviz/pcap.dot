@@ -7,7 +7,8 @@ digraph {
 
 		pcap__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="hdr_pos">0</TD><TD PORT="hdr_size">24</TD><TD>Header</TD><TD PORT="hdr_type">hdr</TD></TR>
+			<TR><TD PORT="magic_number_pos">0</TD><TD PORT="magic_number_size">4</TD><TD>u4be→Magic</TD><TD PORT="magic_number_type">magic_number</TD></TR>
+			<TR><TD PORT="hdr_pos">4</TD><TD PORT="hdr_size">20</TD><TD>Header</TD><TD PORT="hdr_type">hdr</TD></TR>
 			<TR><TD PORT="packets_pos">24</TD><TD PORT="packets_size">...</TD><TD>Packet</TD><TD PORT="packets_type">packets</TD></TR>
 			<TR><TD COLSPAN="4" PORT="packets__repeat">repeat to end of stream</TD></TR>
 		</TABLE>>];
@@ -17,14 +18,13 @@ digraph {
 
 			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_number_pos">0</TD><TD PORT="magic_number_size">4</TD><TD>D4 C3 B2 A1</TD><TD PORT="magic_number_type">magic_number</TD></TR>
-				<TR><TD PORT="version_major_pos">4</TD><TD PORT="version_major_size">2</TD><TD>u2le</TD><TD PORT="version_major_type">version_major</TD></TR>
+				<TR><TD PORT="version_major_pos">0</TD><TD PORT="version_major_size">2</TD><TD>u2</TD><TD PORT="version_major_type">version_major</TD></TR>
 				<TR><TD COLSPAN="4" PORT="version_major__valid">must be equal to 2</TD></TR>
-				<TR><TD PORT="version_minor_pos">6</TD><TD PORT="version_minor_size">2</TD><TD>u2le</TD><TD PORT="version_minor_type">version_minor</TD></TR>
-				<TR><TD PORT="thiszone_pos">8</TD><TD PORT="thiszone_size">4</TD><TD>s4le</TD><TD PORT="thiszone_type">thiszone</TD></TR>
-				<TR><TD PORT="sigfigs_pos">12</TD><TD PORT="sigfigs_size">4</TD><TD>u4le</TD><TD PORT="sigfigs_type">sigfigs</TD></TR>
-				<TR><TD PORT="snaplen_pos">16</TD><TD PORT="snaplen_size">4</TD><TD>u4le</TD><TD PORT="snaplen_type">snaplen</TD></TR>
-				<TR><TD PORT="network_pos">20</TD><TD PORT="network_size">4</TD><TD>u4le→Linktype</TD><TD PORT="network_type">network</TD></TR>
+				<TR><TD PORT="version_minor_pos">2</TD><TD PORT="version_minor_size">2</TD><TD>u2</TD><TD PORT="version_minor_type">version_minor</TD></TR>
+				<TR><TD PORT="thiszone_pos">4</TD><TD PORT="thiszone_size">4</TD><TD>s4</TD><TD PORT="thiszone_type">thiszone</TD></TR>
+				<TR><TD PORT="sigfigs_pos">8</TD><TD PORT="sigfigs_size">4</TD><TD>u4</TD><TD PORT="sigfigs_type">sigfigs</TD></TR>
+				<TR><TD PORT="snaplen_pos">12</TD><TD PORT="snaplen_size">4</TD><TD>u4</TD><TD PORT="snaplen_type">snaplen</TD></TR>
+				<TR><TD PORT="network_pos">16</TD><TD PORT="network_size">4</TD><TD>u4→Linktype</TD><TD PORT="network_type">network</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__packet {
@@ -33,10 +33,10 @@ digraph {
 
 			packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ts_sec_pos">0</TD><TD PORT="ts_sec_size">4</TD><TD>u4le</TD><TD PORT="ts_sec_type">ts_sec</TD></TR>
-				<TR><TD PORT="ts_usec_pos">4</TD><TD PORT="ts_usec_size">4</TD><TD>u4le</TD><TD PORT="ts_usec_type">ts_usec</TD></TR>
-				<TR><TD PORT="incl_len_pos">8</TD><TD PORT="incl_len_size">4</TD><TD>u4le</TD><TD PORT="incl_len_type">incl_len</TD></TR>
-				<TR><TD PORT="orig_len_pos">12</TD><TD PORT="orig_len_size">4</TD><TD>u4le</TD><TD PORT="orig_len_type">orig_len</TD></TR>
+				<TR><TD PORT="ts_sec_pos">0</TD><TD PORT="ts_sec_size">4</TD><TD>u4</TD><TD PORT="ts_sec_type">ts_sec</TD></TR>
+				<TR><TD PORT="ts_usec_pos">4</TD><TD PORT="ts_usec_size">4</TD><TD>u4</TD><TD PORT="ts_usec_type">ts_usec</TD></TR>
+				<TR><TD PORT="incl_len_pos">8</TD><TD PORT="incl_len_size">4</TD><TD>u4</TD><TD PORT="incl_len_type">incl_len</TD></TR>
+				<TR><TD PORT="orig_len_pos">12</TD><TD PORT="orig_len_size">4</TD><TD>u4</TD><TD PORT="orig_len_type">orig_len</TD></TR>
 				<TR><TD PORT="body_pos">16</TD><TD PORT="body_size">...</TD><TD>switch (_root.hdr.network)</TD><TD PORT="body_type">body</TD></TR>
 			</TABLE>>];
 packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">

@@ -5,6 +5,7 @@ import packet_ppi
 
 type
   Pcap* = ref object of KaitaiStruct
+    `magicNumber`*: Pcap_Magic
     `hdr`*: Pcap_Header
     `packets`*: seq[Pcap_Packet]
     `parent`*: KaitaiStruct
@@ -218,8 +219,12 @@ type
     zwave_tap = 297
     silabs_debug_channel = 298
     fira_uci = 299
+  Pcap_Magic* = enum
+    le_nanoseconds = 1295823521
+    be_nanoseconds = 2712812621
+    be_microseconds = 2712847316
+    le_microseconds = 3569595041
   Pcap_Header* = ref object of KaitaiStruct
-    `magicNumber`*: seq[byte]
     `versionMajor`*: uint16
     `versionMinor`*: uint16
     `thiszone`*: int32
@@ -227,6 +232,7 @@ type
     `snaplen`*: uint32
     `network`*: Pcap_Linktype
     `parent`*: Pcap
+    isLe: bool
   Pcap_Packet* = ref object of KaitaiStruct
     `tsSec`*: uint32
     `tsUsec`*: uint32
@@ -235,6 +241,7 @@ type
     `body`*: KaitaiStruct
     `parent`*: Pcap
     `rawBody`*: seq[byte]
+    isLe: bool
 
 proc read*(_: typedesc[Pcap], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Pcap
 proc read*(_: typedesc[Pcap_Header], io: KaitaiStream, root: KaitaiStruct, parent: Pcap): Pcap_Header
@@ -258,6 +265,8 @@ proc read*(_: typedesc[Pcap], io: KaitaiStream, root: KaitaiStruct, parent: Kait
   this.root = root
   this.parent = parent
 
+  let magicNumberExpr = Pcap_Magic(this.io.readU4be())
+  this.magicNumber = magicNumberExpr
   let hdrExpr = Pcap_Header.read(this.io, this.root, this)
   this.hdr = hdrExpr
   block:
@@ -274,16 +283,8 @@ proc fromFile*(_: typedesc[Pcap], filename: string): Pcap =
 ##[
 @see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header">Source</a>
 ]##
-proc read*(_: typedesc[Pcap_Header], io: KaitaiStream, root: KaitaiStruct, parent: Pcap): Pcap_Header =
-  template this: untyped = result
-  this = new(Pcap_Header)
-  let root = if root == nil: cast[Pcap](this) else: cast[Pcap](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
 
-  let magicNumberExpr = this.io.readBytes(int(4))
-  this.magicNumber = magicNumberExpr
+proc readLe(this: Pcap_Header) =
   let versionMajorExpr = this.io.readU2le()
   this.versionMajor = versionMajorExpr
   let versionMinorExpr = this.io.readU2le()
@@ -322,6 +323,75 @@ the beginning of the packet.
   let networkExpr = Pcap_Linktype(this.io.readU4le())
   this.network = networkExpr
 
+
+proc readBe(this: Pcap_Header) =
+  let versionMajorExpr = this.io.readU2be()
+  this.versionMajor = versionMajorExpr
+  let versionMinorExpr = this.io.readU2be()
+  this.versionMinor = versionMinorExpr
+
+  ##[
+  Correction time in seconds between UTC and the local
+timezone of the following packet header timestamps.
+
+  ]##
+  let thiszoneExpr = this.io.readS4be()
+  this.thiszone = thiszoneExpr
+
+  ##[
+  In theory, the accuracy of time stamps in the capture; in
+practice, all tools set it to 0.
+
+  ]##
+  let sigfigsExpr = this.io.readU4be()
+  this.sigfigs = sigfigsExpr
+
+  ##[
+  The "snapshot length" for the capture (typically 65535 or
+even more, but might be limited by the user), see: incl_len
+vs. orig_len.
+
+  ]##
+  let snaplenExpr = this.io.readU4be()
+  this.snaplen = snaplenExpr
+
+  ##[
+  Link-layer header type, specifying the type of headers at
+the beginning of the packet.
+
+  ]##
+  let networkExpr = Pcap_Linktype(this.io.readU4be())
+  this.network = networkExpr
+
+proc read*(_: typedesc[Pcap_Header], io: KaitaiStream, root: KaitaiStruct, parent: Pcap): Pcap_Header =
+  template this: untyped = result
+  this = new(Pcap_Header)
+  let root = if root == nil: cast[Pcap](this) else: cast[Pcap](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  this.isLe = false
+
+  block:
+    let on = Pcap(this.root).magicNumber
+    if on == pcap.le_microseconds:
+      let isLeExpr = bool(true)
+      this.isLe = isLeExpr
+    elif on == pcap.le_nanoseconds:
+      let isLeExpr = bool(true)
+      this.isLe = isLeExpr
+    elif on == pcap.be_microseconds:
+      let isLeExpr = bool(false)
+      this.isLe = isLeExpr
+    elif on == pcap.be_nanoseconds:
+      let isLeExpr = bool(false)
+      this.isLe = isLeExpr
+
+  if this.isLe:
+    readLe(this)
+  else:
+    readBe(this)
+
 proc fromFile*(_: typedesc[Pcap_Header], filename: string): Pcap_Header =
   Pcap_Header.read(newKaitaiFileStream(filename), nil, nil)
 
@@ -329,16 +399,29 @@ proc fromFile*(_: typedesc[Pcap_Header], filename: string): Pcap_Header =
 ##[
 @see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header">Source</a>
 ]##
-proc read*(_: typedesc[Pcap_Packet], io: KaitaiStream, root: KaitaiStruct, parent: Pcap): Pcap_Packet =
-  template this: untyped = result
-  this = new(Pcap_Packet)
-  let root = if root == nil: cast[Pcap](this) else: cast[Pcap](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
 
+proc readLe(this: Pcap_Packet) =
+
+  ##[
+  Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+
+In practice, some captures are not following that (e.g. because the device lacks
+a real-time clock), so this field might represent time since device boot, start of
+capture, or other arbitrary epoch.
+
+  ]##
   let tsSecExpr = this.io.readU4le()
   this.tsSec = tsSecExpr
+
+  ##[
+  Depending on `_root.magic_number`, units for this field change:
+
+* If it's `le_microseconds` or `be_microseconds`, this field
+  contains microseconds.
+* If it's `le_nanoseconds` or `be_nanoseconds`, this field
+  contains nanoseconds.
+
+  ]##
   let tsUsecExpr = this.io.readU4le()
   this.tsUsec = tsUsecExpr
 
@@ -374,6 +457,94 @@ proc read*(_: typedesc[Pcap_Packet], io: KaitaiStream, root: KaitaiStruct, paren
     else:
       let bodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))
       this.body = bodyExpr
+
+
+proc readBe(this: Pcap_Packet) =
+
+  ##[
+  Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+
+In practice, some captures are not following that (e.g. because the device lacks
+a real-time clock), so this field might represent time since device boot, start of
+capture, or other arbitrary epoch.
+
+  ]##
+  let tsSecExpr = this.io.readU4be()
+  this.tsSec = tsSecExpr
+
+  ##[
+  Depending on `_root.magic_number`, units for this field change:
+
+* If it's `le_microseconds` or `be_microseconds`, this field
+  contains microseconds.
+* If it's `le_nanoseconds` or `be_nanoseconds`, this field
+  contains nanoseconds.
+
+  ]##
+  let tsUsecExpr = this.io.readU4be()
+  this.tsUsec = tsUsecExpr
+
+  ##[
+  Number of bytes of packet data actually captured and saved in the file.
+  ]##
+  let inclLenExpr = this.io.readU4be()
+  this.inclLen = inclLenExpr
+
+  ##[
+  Length of the packet as it appeared on the network when it was captured.
+  ]##
+  let origLenExpr = this.io.readU4be()
+  this.origLen = origLenExpr
+
+  ##[
+  @see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Packet_Data">Source</a>
+  ]##
+  block:
+    let on = Pcap(this.root).hdr.network
+    if on == pcap.ethernet:
+      let rawBodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = EthernetFrame.read(rawBodyIo, nil, nil)
+      this.body = bodyExpr
+    elif on == pcap.ppi:
+      let rawBodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = PacketPpi.read(rawBodyIo, nil, nil)
+      this.body = bodyExpr
+    else:
+      let bodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))
+      this.body = bodyExpr
+
+proc read*(_: typedesc[Pcap_Packet], io: KaitaiStream, root: KaitaiStruct, parent: Pcap): Pcap_Packet =
+  template this: untyped = result
+  this = new(Pcap_Packet)
+  let root = if root == nil: cast[Pcap](this) else: cast[Pcap](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  this.isLe = false
+
+  block:
+    let on = Pcap(this.root).magicNumber
+    if on == pcap.le_microseconds:
+      let isLeExpr = bool(true)
+      this.isLe = isLeExpr
+    elif on == pcap.le_nanoseconds:
+      let isLeExpr = bool(true)
+      this.isLe = isLeExpr
+    elif on == pcap.be_microseconds:
+      let isLeExpr = bool(false)
+      this.isLe = isLeExpr
+    elif on == pcap.be_nanoseconds:
+      let isLeExpr = bool(false)
+      this.isLe = isLeExpr
+
+  if this.isLe:
+    readLe(this)
+  else:
+    readBe(this)
 
 proc fromFile*(_: typedesc[Pcap_Packet], filename: string): Pcap_Packet =
   Pcap_Packet.read(newKaitaiFileStream(filename), nil, nil)

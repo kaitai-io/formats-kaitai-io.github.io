@@ -231,6 +231,12 @@ class Pcap(KaitaiStruct):
         zwave_tap = 297
         silabs_debug_channel = 298
         fira_uci = 299
+
+    class Magic(IntEnum):
+        le_nanoseconds = 1295823521
+        be_nanoseconds = 2712812621
+        be_microseconds = 2712847316
+        le_microseconds = 3569595041
     def __init__(self, _io, _parent=None, _root=None):
         super(Pcap, self).__init__(_io)
         self._parent = _parent
@@ -238,6 +244,7 @@ class Pcap(KaitaiStruct):
         self._read()
 
     def _read(self):
+        self.magic_number = KaitaiStream.resolve_enum(Pcap.Magic, self._io.read_u4be())
         self.hdr = Pcap.Header(self._io, self, self._root)
         self.packets = []
         i = 0
@@ -267,17 +274,45 @@ class Pcap(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic_number = self._io.read_bytes(4)
-            if not self.magic_number == b"\xD4\xC3\xB2\xA1":
-                raise kaitaistruct.ValidationNotEqualError(b"\xD4\xC3\xB2\xA1", self.magic_number, self._io, u"/types/header/seq/0")
+            _on = self._root.magic_number
+            if _on == Pcap.Magic.le_microseconds:
+                pass
+                self._is_le = True
+            elif _on == Pcap.Magic.le_nanoseconds:
+                pass
+                self._is_le = True
+            elif _on == Pcap.Magic.be_microseconds:
+                pass
+                self._is_le = False
+            elif _on == Pcap.Magic.be_nanoseconds:
+                pass
+                self._is_le = False
+            if not hasattr(self, '_is_le'):
+                raise kaitaistruct.UndecidedEndiannessError("/types/header")
+            elif self._is_le == True:
+                self._read_le()
+            elif self._is_le == False:
+                self._read_be()
+
+        def _read_le(self):
             self.version_major = self._io.read_u2le()
             if not self.version_major == 2:
-                raise kaitaistruct.ValidationNotEqualError(2, self.version_major, self._io, u"/types/header/seq/1")
+                raise kaitaistruct.ValidationNotEqualError(2, self.version_major, self._io, u"/types/header/seq/0")
             self.version_minor = self._io.read_u2le()
             self.thiszone = self._io.read_s4le()
             self.sigfigs = self._io.read_u4le()
             self.snaplen = self._io.read_u4le()
             self.network = KaitaiStream.resolve_enum(Pcap.Linktype, self._io.read_u4le())
+
+        def _read_be(self):
+            self.version_major = self._io.read_u2be()
+            if not self.version_major == 2:
+                raise kaitaistruct.ValidationNotEqualError(2, self.version_major, self._io, u"/types/header/seq/0")
+            self.version_minor = self._io.read_u2be()
+            self.thiszone = self._io.read_s4be()
+            self.sigfigs = self._io.read_u4be()
+            self.snaplen = self._io.read_u4be()
+            self.network = KaitaiStream.resolve_enum(Pcap.Linktype, self._io.read_u4be())
 
 
         def _fetch_instances(self):
@@ -296,10 +331,51 @@ class Pcap(KaitaiStruct):
             self._read()
 
         def _read(self):
+            _on = self._root.magic_number
+            if _on == Pcap.Magic.le_microseconds:
+                pass
+                self._is_le = True
+            elif _on == Pcap.Magic.le_nanoseconds:
+                pass
+                self._is_le = True
+            elif _on == Pcap.Magic.be_microseconds:
+                pass
+                self._is_le = False
+            elif _on == Pcap.Magic.be_nanoseconds:
+                pass
+                self._is_le = False
+            if not hasattr(self, '_is_le'):
+                raise kaitaistruct.UndecidedEndiannessError("/types/packet")
+            elif self._is_le == True:
+                self._read_le()
+            elif self._is_le == False:
+                self._read_be()
+
+        def _read_le(self):
             self.ts_sec = self._io.read_u4le()
             self.ts_usec = self._io.read_u4le()
             self.incl_len = self._io.read_u4le()
             self.orig_len = self._io.read_u4le()
+            _on = self._root.hdr.network
+            if _on == Pcap.Linktype.ethernet:
+                pass
+                self._raw_body = self._io.read_bytes((self.incl_len if self.incl_len < self._root.hdr.snaplen else self._root.hdr.snaplen))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = ethernet_frame.EthernetFrame(_io__raw_body)
+            elif _on == Pcap.Linktype.ppi:
+                pass
+                self._raw_body = self._io.read_bytes((self.incl_len if self.incl_len < self._root.hdr.snaplen else self._root.hdr.snaplen))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = packet_ppi.PacketPpi(_io__raw_body)
+            else:
+                pass
+                self.body = self._io.read_bytes((self.incl_len if self.incl_len < self._root.hdr.snaplen else self._root.hdr.snaplen))
+
+        def _read_be(self):
+            self.ts_sec = self._io.read_u4be()
+            self.ts_usec = self._io.read_u4be()
+            self.incl_len = self._io.read_u4be()
+            self.orig_len = self._io.read_u4be()
             _on = self._root.hdr.network
             if _on == Pcap.Linktype.ethernet:
                 pass

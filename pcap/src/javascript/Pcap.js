@@ -440,6 +440,18 @@ var Pcap = (function() {
     299: "FIRA_UCI",
   });
 
+  Pcap.Magic = Object.freeze({
+    LE_NANOSECONDS: 1295823521,
+    BE_NANOSECONDS: 2712812621,
+    BE_MICROSECONDS: 2712847316,
+    LE_MICROSECONDS: 3569595041,
+
+    1295823521: "LE_NANOSECONDS",
+    2712812621: "BE_NANOSECONDS",
+    2712847316: "BE_MICROSECONDS",
+    3569595041: "LE_MICROSECONDS",
+  });
+
   function Pcap(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -448,6 +460,7 @@ var Pcap = (function() {
     this._read();
   }
   Pcap.prototype._read = function() {
+    this.magicNumber = this._io.readU4be();
     this.hdr = new Header(this._io, this, this._root);
     this.packets = [];
     var i = 0;
@@ -470,19 +483,50 @@ var Pcap = (function() {
       this._read();
     }
     Header.prototype._read = function() {
-      this.magicNumber = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magicNumber, new Uint8Array([212, 195, 178, 161])) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([212, 195, 178, 161]), this.magicNumber, this._io, "/types/header/seq/0");
+      switch (this._root.magicNumber) {
+      case Pcap.Magic.LE_MICROSECONDS:
+        this._is_le = true;
+        break;
+      case Pcap.Magic.LE_NANOSECONDS:
+        this._is_le = true;
+        break;
+      case Pcap.Magic.BE_MICROSECONDS:
+        this._is_le = false;
+        break;
+      case Pcap.Magic.BE_NANOSECONDS:
+        this._is_le = false;
+        break;
       }
+
+      if (this._is_le === true) {
+        this._readLE();
+      } else if (this._is_le === false) {
+        this._readBE();
+      } else {
+        throw new KaitaiStream.UndecidedEndiannessError();
+      }
+    }
+    Header.prototype._readLE = function() {
       this.versionMajor = this._io.readU2le();
       if (!(this.versionMajor == 2)) {
-        throw new KaitaiStream.ValidationNotEqualError(2, this.versionMajor, this._io, "/types/header/seq/1");
+        throw new KaitaiStream.ValidationNotEqualError(2, this.versionMajor, this._io, "/types/header/seq/0");
       }
       this.versionMinor = this._io.readU2le();
       this.thiszone = this._io.readS4le();
       this.sigfigs = this._io.readU4le();
       this.snaplen = this._io.readU4le();
       this.network = this._io.readU4le();
+    }
+    Header.prototype._readBE = function() {
+      this.versionMajor = this._io.readU2be();
+      if (!(this.versionMajor == 2)) {
+        throw new KaitaiStream.ValidationNotEqualError(2, this.versionMajor, this._io, "/types/header/seq/0");
+      }
+      this.versionMinor = this._io.readU2be();
+      this.thiszone = this._io.readS4be();
+      this.sigfigs = this._io.readU4be();
+      this.snaplen = this._io.readU4be();
+      this.network = this._io.readU4be();
     }
 
     /**
@@ -522,6 +566,30 @@ var Pcap = (function() {
       this._read();
     }
     Packet.prototype._read = function() {
+      switch (this._root.magicNumber) {
+      case Pcap.Magic.LE_MICROSECONDS:
+        this._is_le = true;
+        break;
+      case Pcap.Magic.LE_NANOSECONDS:
+        this._is_le = true;
+        break;
+      case Pcap.Magic.BE_MICROSECONDS:
+        this._is_le = false;
+        break;
+      case Pcap.Magic.BE_NANOSECONDS:
+        this._is_le = false;
+        break;
+      }
+
+      if (this._is_le === true) {
+        this._readLE();
+      } else if (this._is_le === false) {
+        this._readBE();
+      } else {
+        throw new KaitaiStream.UndecidedEndiannessError();
+      }
+    }
+    Packet.prototype._readLE = function() {
       this.tsSec = this._io.readU4le();
       this.tsUsec = this._io.readU4le();
       this.inclLen = this._io.readU4le();
@@ -542,6 +610,44 @@ var Pcap = (function() {
         break;
       }
     }
+    Packet.prototype._readBE = function() {
+      this.tsSec = this._io.readU4be();
+      this.tsUsec = this._io.readU4be();
+      this.inclLen = this._io.readU4be();
+      this.origLen = this._io.readU4be();
+      switch (this._root.hdr.network) {
+      case Pcap.Linktype.ETHERNET:
+        this._raw_body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EthernetFrame_.EthernetFrame(_io__raw_body, null, null);
+        break;
+      case Pcap.Linktype.PPI:
+        this._raw_body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new PacketPpi_.PacketPpi(_io__raw_body, null, null);
+        break;
+      default:
+        this.body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
+        break;
+      }
+    }
+
+    /**
+     * Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+     * 
+     * In practice, some captures are not following that (e.g. because the device lacks
+     * a real-time clock), so this field might represent time since device boot, start of
+     * capture, or other arbitrary epoch.
+     */
+
+    /**
+     * Depending on `_root.magic_number`, units for this field change:
+     * 
+     * * If it's `le_microseconds` or `be_microseconds`, this field
+     *   contains microseconds.
+     * * If it's `le_nanoseconds` or `be_nanoseconds`, this field
+     *   contains nanoseconds.
+     */
 
     /**
      * Number of bytes of packet data actually captured and saved in the file.

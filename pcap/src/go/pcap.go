@@ -231,7 +231,21 @@ func (v Pcap_Linktype) isDefined() bool {
 	_, ok := values_Pcap_Linktype[v]
 	return ok
 }
+
+type Pcap_Magic int
+const (
+	Pcap_Magic__LeNanoseconds Pcap_Magic = 1295823521
+	Pcap_Magic__BeNanoseconds Pcap_Magic = 2712812621
+	Pcap_Magic__BeMicroseconds Pcap_Magic = 2712847316
+	Pcap_Magic__LeMicroseconds Pcap_Magic = 3569595041
+)
+var values_Pcap_Magic = map[Pcap_Magic]struct{}{1295823521: {}, 2712812621: {}, 2712847316: {}, 3569595041: {}}
+func (v Pcap_Magic) isDefined() bool {
+	_, ok := values_Pcap_Magic[v]
+	return ok
+}
 type Pcap struct {
+	MagicNumber Pcap_Magic
 	Hdr *Pcap_Header
 	Packets []*Pcap_Packet
 	_io *kaitai.Stream
@@ -252,26 +266,31 @@ func (this *Pcap) Read(io *kaitai.Stream, parent kaitai.Struct, root *Pcap) (err
 	this._parent = parent
 	this._root = root
 
-	tmp1 := NewPcap_Header()
-	err = tmp1.Read(this._io, this, this._root)
+	tmp1, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Hdr = tmp1
+	this.MagicNumber = Pcap_Magic(tmp1)
+	tmp2 := NewPcap_Header()
+	err = tmp2.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Hdr = tmp2
 	for i := 0;; i++ {
-		tmp2, err := this._io.EOF()
+		tmp3, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp2 {
+		if tmp3 {
 			break
 		}
-		tmp3 := NewPcap_Packet()
-		err = tmp3.Read(this._io, this, this._root)
+		tmp4 := NewPcap_Packet()
+		err = tmp4.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Packets = append(this.Packets, tmp3)
+		this.Packets = append(this.Packets, tmp4)
 	}
 	return err
 }
@@ -280,7 +299,6 @@ func (this *Pcap) Read(io *kaitai.Stream, parent kaitai.Struct, root *Pcap) (err
  * @see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header">Source</a>
  */
 type Pcap_Header struct {
-	MagicNumber []byte
 	VersionMajor uint16
 	VersionMinor uint16
 	Thiszone int32
@@ -290,6 +308,7 @@ type Pcap_Header struct {
 	_io *kaitai.Stream
 	_root *Pcap
 	_parent *Pcap
+	_is_le int
 }
 func NewPcap_Header() *Pcap_Header {
 	return &Pcap_Header{
@@ -304,23 +323,38 @@ func (this *Pcap_Header) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err 
 	this._io = io
 	this._parent = parent
 	this._root = root
+	this._is_le = -1
 
-	tmp4, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
+	switch (this._root.MagicNumber) {
+	case Pcap_Magic__LeMicroseconds:
+		this._is_le = int(1)
+	case Pcap_Magic__LeNanoseconds:
+		this._is_le = int(1)
+	case Pcap_Magic__BeMicroseconds:
+		this._is_le = int(0)
+	case Pcap_Magic__BeNanoseconds:
+		this._is_le = int(0)
 	}
-	tmp4 = tmp4
-	this.MagicNumber = tmp4
-	if !(bytes.Equal(this.MagicNumber, []uint8{212, 195, 178, 161})) {
-		return kaitai.NewValidationNotEqualError([]uint8{212, 195, 178, 161}, this.MagicNumber, this._io, "/types/header/seq/0")
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
 	}
+	return err
+}
+
+func (this *Pcap_Header) _read_le() (err error) {
 	tmp5, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
 	this.VersionMajor = uint16(tmp5)
 	if !(this.VersionMajor == 2) {
-		return kaitai.NewValidationNotEqualError(2, this.VersionMajor, this._io, "/types/header/seq/1")
+		return kaitai.NewValidationNotEqualError(2, this.VersionMajor, this._io, "/types/header/seq/0")
 	}
 	tmp6, err := this._io.ReadU2le()
 	if err != nil {
@@ -347,6 +381,43 @@ func (this *Pcap_Header) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err 
 		return err
 	}
 	this.Network = Pcap_Linktype(tmp10)
+	return err
+}
+
+func (this *Pcap_Header) _read_be() (err error) {
+	tmp11, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.VersionMajor = uint16(tmp11)
+	if !(this.VersionMajor == 2) {
+		return kaitai.NewValidationNotEqualError(2, this.VersionMajor, this._io, "/types/header/seq/0")
+	}
+	tmp12, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.VersionMinor = uint16(tmp12)
+	tmp13, err := this._io.ReadS4be()
+	if err != nil {
+		return err
+	}
+	this.Thiszone = int32(tmp13)
+	tmp14, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Sigfigs = uint32(tmp14)
+	tmp15, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Snaplen = uint32(tmp15)
+	tmp16, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Network = Pcap_Linktype(tmp16)
 	return err
 }
 
@@ -384,6 +455,7 @@ type Pcap_Packet struct {
 	_root *Pcap
 	_parent *Pcap
 	_raw_Body []byte
+	_is_le int
 }
 func NewPcap_Packet() *Pcap_Packet {
 	return &Pcap_Packet{
@@ -398,69 +470,53 @@ func (this *Pcap_Packet) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err 
 	this._io = io
 	this._parent = parent
 	this._root = root
+	this._is_le = -1
 
-	tmp11, err := this._io.ReadU4le()
+	switch (this._root.MagicNumber) {
+	case Pcap_Magic__LeMicroseconds:
+		this._is_le = int(1)
+	case Pcap_Magic__LeNanoseconds:
+		this._is_le = int(1)
+	case Pcap_Magic__BeMicroseconds:
+		this._is_le = int(0)
+	case Pcap_Magic__BeNanoseconds:
+		this._is_le = int(0)
+	}
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Pcap_Packet) _read_le() (err error) {
+	tmp17, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TsSec = uint32(tmp11)
-	tmp12, err := this._io.ReadU4le()
+	this.TsSec = uint32(tmp17)
+	tmp18, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TsUsec = uint32(tmp12)
-	tmp13, err := this._io.ReadU4le()
+	this.TsUsec = uint32(tmp18)
+	tmp19, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.InclLen = uint32(tmp13)
-	tmp14, err := this._io.ReadU4le()
+	this.InclLen = uint32(tmp19)
+	tmp20, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OrigLen = uint32(tmp14)
+	this.OrigLen = uint32(tmp20)
 	switch (this._root.Hdr.Network) {
 	case Pcap_Linktype__Ethernet:
-		var tmp15 uint32;
-		if (this.InclLen < this._root.Hdr.Snaplen) {
-			tmp15 = this.InclLen
-		} else {
-			tmp15 = this._root.Hdr.Snaplen
-		}
-		tmp16, err := this._io.ReadBytes(int(tmp15))
-		if err != nil {
-			return err
-		}
-		tmp16 = tmp16
-		this._raw_Body = tmp16
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp17 := NewEthernetFrame()
-		err = tmp17.Read(_io__raw_Body, nil, nil)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp17
-	case Pcap_Linktype__Ppi:
-		var tmp18 uint32;
-		if (this.InclLen < this._root.Hdr.Snaplen) {
-			tmp18 = this.InclLen
-		} else {
-			tmp18 = this._root.Hdr.Snaplen
-		}
-		tmp19, err := this._io.ReadBytes(int(tmp18))
-		if err != nil {
-			return err
-		}
-		tmp19 = tmp19
-		this._raw_Body = tmp19
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp20 := NewPacketPpi()
-		err = tmp20.Read(_io__raw_Body, nil, nil)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp20
-	default:
 		var tmp21 uint32;
 		if (this.InclLen < this._root.Hdr.Snaplen) {
 			tmp21 = this.InclLen
@@ -473,9 +529,145 @@ func (this *Pcap_Packet) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err 
 		}
 		tmp22 = tmp22
 		this._raw_Body = tmp22
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp23 := NewEthernetFrame()
+		err = tmp23.Read(_io__raw_Body, nil, nil)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp23
+	case Pcap_Linktype__Ppi:
+		var tmp24 uint32;
+		if (this.InclLen < this._root.Hdr.Snaplen) {
+			tmp24 = this.InclLen
+		} else {
+			tmp24 = this._root.Hdr.Snaplen
+		}
+		tmp25, err := this._io.ReadBytes(int(tmp24))
+		if err != nil {
+			return err
+		}
+		tmp25 = tmp25
+		this._raw_Body = tmp25
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp26 := NewPacketPpi()
+		err = tmp26.Read(_io__raw_Body, nil, nil)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp26
+	default:
+		var tmp27 uint32;
+		if (this.InclLen < this._root.Hdr.Snaplen) {
+			tmp27 = this.InclLen
+		} else {
+			tmp27 = this._root.Hdr.Snaplen
+		}
+		tmp28, err := this._io.ReadBytes(int(tmp27))
+		if err != nil {
+			return err
+		}
+		tmp28 = tmp28
+		this._raw_Body = tmp28
 	}
 	return err
 }
+
+func (this *Pcap_Packet) _read_be() (err error) {
+	tmp29, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.TsSec = uint32(tmp29)
+	tmp30, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.TsUsec = uint32(tmp30)
+	tmp31, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.InclLen = uint32(tmp31)
+	tmp32, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.OrigLen = uint32(tmp32)
+	switch (this._root.Hdr.Network) {
+	case Pcap_Linktype__Ethernet:
+		var tmp33 uint32;
+		if (this.InclLen < this._root.Hdr.Snaplen) {
+			tmp33 = this.InclLen
+		} else {
+			tmp33 = this._root.Hdr.Snaplen
+		}
+		tmp34, err := this._io.ReadBytes(int(tmp33))
+		if err != nil {
+			return err
+		}
+		tmp34 = tmp34
+		this._raw_Body = tmp34
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp35 := NewEthernetFrame()
+		err = tmp35.Read(_io__raw_Body, nil, nil)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp35
+	case Pcap_Linktype__Ppi:
+		var tmp36 uint32;
+		if (this.InclLen < this._root.Hdr.Snaplen) {
+			tmp36 = this.InclLen
+		} else {
+			tmp36 = this._root.Hdr.Snaplen
+		}
+		tmp37, err := this._io.ReadBytes(int(tmp36))
+		if err != nil {
+			return err
+		}
+		tmp37 = tmp37
+		this._raw_Body = tmp37
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp38 := NewPacketPpi()
+		err = tmp38.Read(_io__raw_Body, nil, nil)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp38
+	default:
+		var tmp39 uint32;
+		if (this.InclLen < this._root.Hdr.Snaplen) {
+			tmp39 = this.InclLen
+		} else {
+			tmp39 = this._root.Hdr.Snaplen
+		}
+		tmp40, err := this._io.ReadBytes(int(tmp39))
+		if err != nil {
+			return err
+		}
+		tmp40 = tmp40
+		this._raw_Body = tmp40
+	}
+	return err
+}
+
+/**
+ * Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+ * 
+ * In practice, some captures are not following that (e.g. because the device lacks
+ * a real-time clock), so this field might represent time since device boot, start of
+ * capture, or other arbitrary epoch.
+ */
+
+/**
+ * Depending on `_root.magic_number`, units for this field change:
+ * 
+ * * If it's `le_microseconds` or `be_microseconds`, this field
+ *   contains microseconds.
+ * * If it's `le_nanoseconds` or `be_nanoseconds`, this field
+ *   contains nanoseconds.
+ */
 
 /**
  * Number of bytes of packet data actually captured and saved in the file.

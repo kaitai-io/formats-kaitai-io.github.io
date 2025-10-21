@@ -230,6 +230,11 @@ our $LINKTYPE_ZWAVE_TAP = 297;
 our $LINKTYPE_SILABS_DEBUG_CHANNEL = 298;
 our $LINKTYPE_FIRA_UCI = 299;
 
+our $MAGIC_LE_NANOSECONDS = 1295823521;
+our $MAGIC_BE_NANOSECONDS = 2712812621;
+our $MAGIC_BE_MICROSECONDS = 2712847316;
+our $MAGIC_LE_MICROSECONDS = 3569595041;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct->new($_io);
@@ -246,11 +251,17 @@ sub new {
 sub _read {
     my ($self) = @_;
 
+    $self->{magic_number} = $self->{_io}->read_u4be();
     $self->{hdr} = Pcap::Header->new($self->{_io}, $self, $self->{_root});
     $self->{packets} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{packets}}, Pcap::Packet->new($self->{_io}, $self, $self->{_root});
     }
+}
+
+sub magic_number {
+    my ($self) = @_;
+    return $self->{magic_number};
 }
 
 sub hdr {
@@ -293,7 +304,31 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic_number} = $self->{_io}->read_bytes(4);
+    my $_on = $self->_root()->magic_number();
+    if ($_on == $Pcap::MAGIC_LE_MICROSECONDS) {
+        $self->{_is_le} = 1;
+    }
+    elsif ($_on == $Pcap::MAGIC_LE_NANOSECONDS) {
+        $self->{_is_le} = 1;
+    }
+    elsif ($_on == $Pcap::MAGIC_BE_MICROSECONDS) {
+        $self->{_is_le} = 0;
+    }
+    elsif ($_on == $Pcap::MAGIC_BE_NANOSECONDS) {
+        $self->{_is_le} = 0;
+    }
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
     $self->{version_major} = $self->{_io}->read_u2le();
     $self->{version_minor} = $self->{_io}->read_u2le();
     $self->{thiszone} = $self->{_io}->read_s4le();
@@ -302,9 +337,15 @@ sub _read {
     $self->{network} = $self->{_io}->read_u4le();
 }
 
-sub magic_number {
+sub _read_be {
     my ($self) = @_;
-    return $self->{magic_number};
+
+    $self->{version_major} = $self->{_io}->read_u2be();
+    $self->{version_minor} = $self->{_io}->read_u2be();
+    $self->{thiszone} = $self->{_io}->read_s4be();
+    $self->{sigfigs} = $self->{_io}->read_u4be();
+    $self->{snaplen} = $self->{_io}->read_u4be();
+    $self->{network} = $self->{_io}->read_u4be();
 }
 
 sub version_major {
@@ -367,10 +408,58 @@ sub new {
 sub _read {
     my ($self) = @_;
 
+    my $_on = $self->_root()->magic_number();
+    if ($_on == $Pcap::MAGIC_LE_MICROSECONDS) {
+        $self->{_is_le} = 1;
+    }
+    elsif ($_on == $Pcap::MAGIC_LE_NANOSECONDS) {
+        $self->{_is_le} = 1;
+    }
+    elsif ($_on == $Pcap::MAGIC_BE_MICROSECONDS) {
+        $self->{_is_le} = 0;
+    }
+    elsif ($_on == $Pcap::MAGIC_BE_NANOSECONDS) {
+        $self->{_is_le} = 0;
+    }
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
     $self->{ts_sec} = $self->{_io}->read_u4le();
     $self->{ts_usec} = $self->{_io}->read_u4le();
     $self->{incl_len} = $self->{_io}->read_u4le();
     $self->{orig_len} = $self->{_io}->read_u4le();
+    my $_on = $self->_root()->hdr()->network();
+    if ($_on == $Pcap::LINKTYPE_ETHERNET) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = EthernetFrame->new($io__raw_body);
+    }
+    elsif ($_on == $Pcap::LINKTYPE_PPI) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = PacketPpi->new($io__raw_body);
+    }
+    else {
+        $self->{body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{ts_sec} = $self->{_io}->read_u4be();
+    $self->{ts_usec} = $self->{_io}->read_u4be();
+    $self->{incl_len} = $self->{_io}->read_u4be();
+    $self->{orig_len} = $self->{_io}->read_u4be();
     my $_on = $self->_root()->hdr()->network();
     if ($_on == $Pcap::LINKTYPE_ETHERNET) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));

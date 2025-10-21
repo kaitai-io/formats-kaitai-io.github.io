@@ -219,6 +219,18 @@ const std::set<pcap_t::linktype_t> pcap_t::_values_linktype_t = pcap_t::_build_v
 bool pcap_t::_is_defined_linktype_t(pcap_t::linktype_t v) {
     return pcap_t::_values_linktype_t.find(v) != pcap_t::_values_linktype_t.end();
 }
+std::set<pcap_t::magic_t> pcap_t::_build_values_magic_t() {
+    std::set<pcap_t::magic_t> _t;
+    _t.insert(pcap_t::MAGIC_LE_NANOSECONDS);
+    _t.insert(pcap_t::MAGIC_BE_NANOSECONDS);
+    _t.insert(pcap_t::MAGIC_BE_MICROSECONDS);
+    _t.insert(pcap_t::MAGIC_LE_MICROSECONDS);
+    return _t;
+}
+const std::set<pcap_t::magic_t> pcap_t::_values_magic_t = pcap_t::_build_values_magic_t();
+bool pcap_t::_is_defined_magic_t(pcap_t::magic_t v) {
+    return pcap_t::_values_magic_t.find(v) != pcap_t::_values_magic_t.end();
+}
 
 pcap_t::pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pcap_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
@@ -235,6 +247,7 @@ pcap_t::pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pcap_t* p__ro
 }
 
 void pcap_t::_read() {
+    m_magic_number = static_cast<pcap_t::magic_t>(m__io->read_u4be());
     m_hdr = new header_t(m__io, this, m__root);
     m_packets = new std::vector<packet_t*>();
     {
@@ -265,6 +278,7 @@ void pcap_t::_clean_up() {
 pcap_t::header_t::header_t(kaitai::kstream* p__io, pcap_t* p__parent, pcap_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m__is_le = -1;
 
     try {
         _read();
@@ -275,19 +289,56 @@ pcap_t::header_t::header_t(kaitai::kstream* p__io, pcap_t* p__parent, pcap_t* p_
 }
 
 void pcap_t::header_t::_read() {
-    m_magic_number = m__io->read_bytes(4);
-    if (!(m_magic_number == std::string("\xD4\xC3\xB2\xA1", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\xD4\xC3\xB2\xA1", 4), m_magic_number, m__io, std::string("/types/header/seq/0"));
+    switch (_root()->magic_number()) {
+    case pcap_t::MAGIC_LE_MICROSECONDS: {
+        m__is_le = true;
+        break;
     }
+    case pcap_t::MAGIC_LE_NANOSECONDS: {
+        m__is_le = true;
+        break;
+    }
+    case pcap_t::MAGIC_BE_MICROSECONDS: {
+        m__is_le = false;
+        break;
+    }
+    case pcap_t::MAGIC_BE_NANOSECONDS: {
+        m__is_le = false;
+        break;
+    }
+    }
+
+    if (m__is_le == -1) {
+        throw kaitai::undecided_endianness_error("/types/header");
+    } else if (m__is_le == 1) {
+        _read_le();
+    } else {
+        _read_be();
+    }
+}
+
+void pcap_t::header_t::_read_le() {
     m_version_major = m__io->read_u2le();
     if (!(m_version_major == 2)) {
-        throw kaitai::validation_not_equal_error<uint16_t>(2, m_version_major, m__io, std::string("/types/header/seq/1"));
+        throw kaitai::validation_not_equal_error<uint16_t>(2, m_version_major, m__io, std::string("/types/header/seq/0"));
     }
     m_version_minor = m__io->read_u2le();
     m_thiszone = m__io->read_s4le();
     m_sigfigs = m__io->read_u4le();
     m_snaplen = m__io->read_u4le();
     m_network = static_cast<pcap_t::linktype_t>(m__io->read_u4le());
+}
+
+void pcap_t::header_t::_read_be() {
+    m_version_major = m__io->read_u2be();
+    if (!(m_version_major == 2)) {
+        throw kaitai::validation_not_equal_error<uint16_t>(2, m_version_major, m__io, std::string("/types/header/seq/0"));
+    }
+    m_version_minor = m__io->read_u2be();
+    m_thiszone = m__io->read_s4be();
+    m_sigfigs = m__io->read_u4be();
+    m_snaplen = m__io->read_u4be();
+    m_network = static_cast<pcap_t::linktype_t>(m__io->read_u4be());
 }
 
 pcap_t::header_t::~header_t() {
@@ -300,6 +351,7 @@ void pcap_t::header_t::_clean_up() {
 pcap_t::packet_t::packet_t(kaitai::kstream* p__io, pcap_t* p__parent, pcap_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m__is_le = -1;
     m__io__raw_body = 0;
 
     try {
@@ -311,10 +363,67 @@ pcap_t::packet_t::packet_t(kaitai::kstream* p__io, pcap_t* p__parent, pcap_t* p_
 }
 
 void pcap_t::packet_t::_read() {
+    switch (_root()->magic_number()) {
+    case pcap_t::MAGIC_LE_MICROSECONDS: {
+        m__is_le = true;
+        break;
+    }
+    case pcap_t::MAGIC_LE_NANOSECONDS: {
+        m__is_le = true;
+        break;
+    }
+    case pcap_t::MAGIC_BE_MICROSECONDS: {
+        m__is_le = false;
+        break;
+    }
+    case pcap_t::MAGIC_BE_NANOSECONDS: {
+        m__is_le = false;
+        break;
+    }
+    }
+
+    if (m__is_le == -1) {
+        throw kaitai::undecided_endianness_error("/types/packet");
+    } else if (m__is_le == 1) {
+        _read_le();
+    } else {
+        _read_be();
+    }
+}
+
+void pcap_t::packet_t::_read_le() {
     m_ts_sec = m__io->read_u4le();
     m_ts_usec = m__io->read_u4le();
     m_incl_len = m__io->read_u4le();
     m_orig_len = m__io->read_u4le();
+    n_body = true;
+    switch (_root()->hdr()->network()) {
+    case pcap_t::LINKTYPE_ETHERNET: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes(((incl_len() < _root()->hdr()->snaplen()) ? (incl_len()) : (_root()->hdr()->snaplen())));
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new ethernet_frame_t(m__io__raw_body);
+        break;
+    }
+    case pcap_t::LINKTYPE_PPI: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes(((incl_len() < _root()->hdr()->snaplen()) ? (incl_len()) : (_root()->hdr()->snaplen())));
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new packet_ppi_t(m__io__raw_body);
+        break;
+    }
+    default: {
+        m__raw_body = m__io->read_bytes(((incl_len() < _root()->hdr()->snaplen()) ? (incl_len()) : (_root()->hdr()->snaplen())));
+        break;
+    }
+    }
+}
+
+void pcap_t::packet_t::_read_be() {
+    m_ts_sec = m__io->read_u4be();
+    m_ts_usec = m__io->read_u4be();
+    m_incl_len = m__io->read_u4be();
+    m_orig_len = m__io->read_u4be();
     n_body = true;
     switch (_root()->hdr()->network()) {
     case pcap_t::LINKTYPE_ETHERNET: {

@@ -123,7 +123,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -281,11 +281,10 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">    </span><span class="nt">pronom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fmt/779</span>
 <span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q28009435</span>
 <span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.8</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0.11&#39;</span>
 <span class="w">  </span><span class="nt">imports</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/network/ethernet_frame</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/network/packet_ppi</span>
-<span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
 <span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">PCAP (named after libpcap / winpcap) is a popular format for saving</span>
 <span class="w">  </span><span class="no">network traffic grabbed by network sniffers. It is typically</span>
@@ -293,6 +292,9 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">  </span><span class="no">[Wireshark](https://www.wireshark.org/).</span>
 <span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://wiki.wireshark.org/Development/LibpcapFileFormat</span>
 <span class="nt">seq</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic_number</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4be</span>
+<span class="w">    </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hdr</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">packets</span>
@@ -300,10 +302,16 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eos</span>
 <span class="nt">types</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">header</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">endian</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_root.magic_number</span>
+<span class="w">        </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">          </span><span class="s">&#39;magic::le_microseconds&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="w">          </span><span class="s">&#39;magic::le_nanoseconds&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="w">          </span><span class="s">&#39;magic::be_microseconds&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="w">          </span><span class="s">&#39;magic::be_nanoseconds&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header&#39;</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic_number</span>
-<span class="w">        </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0xd4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0xc3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0xb2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0xa1</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version_major</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
 <span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
@@ -333,12 +341,33 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">          </span><span class="no">Link-layer header type, specifying the type of headers at</span>
 <span class="w">          </span><span class="no">the beginning of the packet.</span>
 <span class="w">  </span><span class="nt">packet</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">endian</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_root.magic_number</span>
+<span class="w">        </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">          </span><span class="s">&#39;magic::le_microseconds&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="w">          </span><span class="s">&#39;magic::le_nanoseconds&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="w">          </span><span class="s">&#39;magic::be_microseconds&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="w">          </span><span class="s">&#39;magic::be_nanoseconds&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header&#39;</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ts_sec</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).</span>
+
+<span class="w">          </span><span class="no">In practice, some captures are not following that (e.g. because the device lacks</span>
+<span class="w">          </span><span class="no">a real-time clock), so this field might represent time since device boot, start of</span>
+<span class="w">          </span><span class="no">capture, or other arbitrary epoch.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ts_usec</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Depending on `_root.magic_number`, units for this field change:</span>
+
+<span class="w">          </span><span class="no">* If it&#39;s `le_microseconds` or `be_microseconds`, this field</span>
+<span class="w">            </span><span class="no">contains microseconds.</span>
+<span class="w">          </span><span class="no">* If it&#39;s `le_nanoseconds` or `be_nanoseconds`, this field</span>
+<span class="w">            </span><span class="no">contains nanoseconds.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">incl_len</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Number of bytes of packet data actually captured and saved in the file.</span>
@@ -568,6 +597,12 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">    </span><span class="nt">297</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zwave_tap</span>
 <span class="w">    </span><span class="nt">298</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">silabs_debug_channel</span>
 <span class="w">    </span><span class="nt">299</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fira_uci</span>
+<span class="w">  </span><span class="nt">magic</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># https://stackoverflow.com/a/17932578</span>
+<span class="w">    </span><span class="nt">0xd4c3b2a1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le_microseconds</span>
+<span class="w">    </span><span class="nt">0x4d3cb2a1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le_nanoseconds</span>
+<span class="w">    </span><span class="nt">0xa1b2c3d4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be_microseconds</span>
+<span class="w">    </span><span class="nt">0xa1b23c4d</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be_nanoseconds</span>
 </pre></div>
     </div>
 </section>

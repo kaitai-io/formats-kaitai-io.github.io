@@ -123,7 +123,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -513,7 +513,21 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">values_Pcap_Linktype</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">ok</span>
 <span class="p">}</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">Pcap_Magic</span><span class="w"> </span><span class="kt">int</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">(</span>
+<span class="w">	</span><span class="nx">Pcap_Magic__LeNanoseconds</span><span class="w"> </span><span class="nx">Pcap_Magic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1295823521</span>
+<span class="w">	</span><span class="nx">Pcap_Magic__BeNanoseconds</span><span class="w"> </span><span class="nx">Pcap_Magic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2712812621</span>
+<span class="w">	</span><span class="nx">Pcap_Magic__BeMicroseconds</span><span class="w"> </span><span class="nx">Pcap_Magic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2712847316</span>
+<span class="w">	</span><span class="nx">Pcap_Magic__LeMicroseconds</span><span class="w"> </span><span class="nx">Pcap_Magic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3569595041</span>
+<span class="p">)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">values_Pcap_Magic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="nx">Pcap_Magic</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}{</span><span class="mi">1295823521</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2712812621</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2712847316</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3569595041</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="nx">Pcap_Magic</span><span class="p">)</span><span class="w"> </span><span class="nx">isDefined</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">values_Pcap_Magic</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">ok</span>
+<span class="p">}</span>
 <span class="kd">type</span><span class="w"> </span><span class="nx">Pcap</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">MagicNumber</span><span class="w"> </span><span class="nx">Pcap_Magic</span>
 <span class="w">	</span><span class="nx">Hdr</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap_Header</span>
 <span class="w">	</span><span class="nx">Packets</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">Pcap_Packet</span>
 <span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
@@ -534,26 +548,31 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
 
-<span class="w">	</span><span class="nx">tmp1</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewPcap_Header</span><span class="p">()</span>
-<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp1</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp1</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Hdr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp1</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">MagicNumber</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">Pcap_Magic</span><span class="p">(</span><span class="nx">tmp1</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp2</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewPcap_Header</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp2</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Hdr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp2</span>
 <span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp2</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">tmp3</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp3</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">break</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">tmp3</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewPcap_Packet</span><span class="p">()</span>
-<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp3</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="nx">tmp4</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewPcap_Packet</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Packets</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Packets</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp3</span><span class="p">)</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Packets</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Packets</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp4</span><span class="p">)</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
@@ -562,7 +581,6 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="cm"> * @see &lt;a href=&quot;https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">type</span><span class="w"> </span><span class="nx">Pcap_Header</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">MagicNumber</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
 <span class="w">	</span><span class="nx">VersionMajor</span><span class="w"> </span><span class="kt">uint16</span>
 <span class="w">	</span><span class="nx">VersionMinor</span><span class="w"> </span><span class="kt">uint16</span>
 <span class="w">	</span><span class="nx">Thiszone</span><span class="w"> </span><span class="kt">int32</span>
@@ -572,6 +590,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 <span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap</span>
 <span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap</span>
+<span class="w">	</span><span class="nx">_is_le</span><span class="w"> </span><span class="kt">int</span>
 <span class="p">}</span>
 <span class="kd">func</span><span class="w"> </span><span class="nx">NewPcap_Header</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap_Header</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Pcap_Header</span><span class="p">{</span>
@@ -586,23 +605,38 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
 
-<span class="w">	</span><span class="nx">tmp4</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">MagicNumber</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Magic__LeMicroseconds</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Magic__LeNanoseconds</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Magic__BeMicroseconds</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Magic__BeNanoseconds</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp4</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">MagicNumber</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">MagicNumber</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">212</span><span class="p">,</span><span class="w"> </span><span class="mi">195</span><span class="p">,</span><span class="w"> </span><span class="mi">178</span><span class="p">,</span><span class="w"> </span><span class="mi">161</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">212</span><span class="p">,</span><span class="w"> </span><span class="mi">195</span><span class="p">,</span><span class="w"> </span><span class="mi">178</span><span class="p">,</span><span class="w"> </span><span class="mi">161</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">MagicNumber</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
+
+<span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_read_be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_read_le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">default</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">UndecidedEndiannessError</span><span class="p">{}</span>
 <span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap_Header</span><span class="p">)</span><span class="w"> </span><span class="nx">_read_le</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">tmp5</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">VersionMajor</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp5</span><span class="p">)</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">this</span><span class="p">.</span><span class="nx">VersionMajor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">VersionMajor</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header/seq/1&quot;</span><span class="p">)</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">VersionMajor</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="nx">tmp6</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
@@ -629,6 +663,43 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Network</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">Pcap_Linktype</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap_Header</span><span class="p">)</span><span class="w"> </span><span class="nx">_read_be</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">VersionMajor</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">this</span><span class="p">.</span><span class="nx">VersionMajor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">VersionMajor</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp12</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">VersionMinor</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp13</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Thiszone</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int32</span><span class="p">(</span><span class="nx">tmp13</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp14</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Sigfigs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp15</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Snaplen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp15</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp16</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Network</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">Pcap_Linktype</span><span class="p">(</span><span class="nx">tmp16</span><span class="p">)</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
 
@@ -666,6 +737,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap</span>
 <span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap</span>
 <span class="w">	</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">_is_le</span><span class="w"> </span><span class="kt">int</span>
 <span class="p">}</span>
 <span class="kd">func</span><span class="w"> </span><span class="nx">NewPcap_Packet</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap_Packet</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Pcap_Packet</span><span class="p">{</span>
@@ -680,69 +752,53 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
 
-<span class="w">	</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">MagicNumber</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Magic__LeMicroseconds</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Magic__LeNanoseconds</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Magic__BeMicroseconds</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Magic__BeNanoseconds</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+
+<span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_read_be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_read_le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">default</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">UndecidedEndiannessError</span><span class="p">{}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap_Packet</span><span class="p">)</span><span class="w"> </span><span class="nx">_read_le</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">tmp17</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TsSec</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp12</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TsSec</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp17</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp18</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TsUsec</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp13</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TsUsec</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp19</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp13</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp14</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp19</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp20</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">OrigLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">OrigLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp20</span><span class="p">)</span>
 <span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Network</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Linktype__Ethernet</span><span class="p">:</span>
-<span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp15</span><span class="w"> </span><span class="kt">uint32</span><span class="p">;</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="nx">tmp15</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span>
-<span class="w">		</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="nx">tmp15</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">tmp16</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp15</span><span class="p">))</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">tmp16</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span>
-<span class="w">		</span><span class="nx">_io__raw_Body</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
-<span class="w">		</span><span class="nx">tmp17</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewEthernetFrame</span><span class="p">()</span>
-<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span>
-<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Linktype__Ppi</span><span class="p">:</span>
-<span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp18</span><span class="w"> </span><span class="kt">uint32</span><span class="p">;</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="nx">tmp18</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span>
-<span class="w">		</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="nx">tmp18</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">tmp19</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">))</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">tmp19</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp19</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp19</span>
-<span class="w">		</span><span class="nx">_io__raw_Body</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
-<span class="w">		</span><span class="nx">tmp20</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewPacketPpi</span><span class="p">()</span>
-<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp20</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp20</span>
-<span class="w">	</span><span class="k">default</span><span class="p">:</span>
 <span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp21</span><span class="w"> </span><span class="kt">uint32</span><span class="p">;</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="nx">tmp21</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span>
@@ -755,9 +811,145 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">		</span><span class="p">}</span>
 <span class="w">		</span><span class="nx">tmp22</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp22</span>
 <span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp22</span>
+<span class="w">		</span><span class="nx">_io__raw_Body</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
+<span class="w">		</span><span class="nx">tmp23</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewEthernetFrame</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp23</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp23</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Linktype__Ppi</span><span class="p">:</span>
+<span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp24</span><span class="w"> </span><span class="kt">uint32</span><span class="p">;</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp24</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span>
+<span class="w">		</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp24</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp25</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp24</span><span class="p">))</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp25</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp25</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp25</span>
+<span class="w">		</span><span class="nx">_io__raw_Body</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
+<span class="w">		</span><span class="nx">tmp26</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewPacketPpi</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp26</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp26</span>
+<span class="w">	</span><span class="k">default</span><span class="p">:</span>
+<span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp27</span><span class="w"> </span><span class="kt">uint32</span><span class="p">;</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp27</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span>
+<span class="w">		</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp27</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp28</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">))</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp28</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp28</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp28</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Pcap_Packet</span><span class="p">)</span><span class="w"> </span><span class="nx">_read_be</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">tmp29</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TsSec</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp30</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TsUsec</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp30</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp31</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp32</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">OrigLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">)</span>
+<span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Network</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Linktype__Ethernet</span><span class="p">:</span>
+<span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp33</span><span class="w"> </span><span class="kt">uint32</span><span class="p">;</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp33</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span>
+<span class="w">		</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp33</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp34</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp33</span><span class="p">))</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp34</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp34</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp34</span>
+<span class="w">		</span><span class="nx">_io__raw_Body</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
+<span class="w">		</span><span class="nx">tmp35</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewEthernetFrame</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp35</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp35</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Pcap_Linktype__Ppi</span><span class="p">:</span>
+<span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp36</span><span class="w"> </span><span class="kt">uint32</span><span class="p">;</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp36</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span>
+<span class="w">		</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp36</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp37</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp36</span><span class="p">))</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp37</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp37</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp37</span>
+<span class="w">		</span><span class="nx">_io__raw_Body</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
+<span class="w">		</span><span class="nx">tmp38</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewPacketPpi</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp38</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp38</span>
+<span class="w">	</span><span class="k">default</span><span class="p">:</span>
+<span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp39</span><span class="w"> </span><span class="kt">uint32</span><span class="p">;</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp39</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">InclLen</span>
+<span class="w">		</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp39</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Snaplen</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp40</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp39</span><span class="p">))</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp40</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp40</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp40</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).</span>
+<span class="cm"> * </span>
+<span class="cm"> * In practice, some captures are not following that (e.g. because the device lacks</span>
+<span class="cm"> * a real-time clock), so this field might represent time since device boot, start of</span>
+<span class="cm"> * capture, or other arbitrary epoch.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Depending on `_root.magic_number`, units for this field change:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * If it&#39;s `le_microseconds` or `be_microseconds`, this field</span>
+<span class="cm"> *   contains microseconds.</span>
+<span class="cm"> * * If it&#39;s `le_nanoseconds` or `be_nanoseconds`, this field</span>
+<span class="cm"> *   contains nanoseconds.</span>
+<span class="cm"> */</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * Number of bytes of packet data actually captured and saved in the file.</span>

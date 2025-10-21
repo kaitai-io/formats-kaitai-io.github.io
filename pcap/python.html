@@ -123,7 +123,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -296,7 +296,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">hdr</span> <span class="c1"># =&gt; get hdr</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">magic_number</span> <span class="c1"># =&gt; get magic number</span>
 </pre></div>
 
     </div>
@@ -557,6 +557,12 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
         <span class="n">zwave_tap</span> <span class="o">=</span> <span class="mi">297</span>
         <span class="n">silabs_debug_channel</span> <span class="o">=</span> <span class="mi">298</span>
         <span class="n">fira_uci</span> <span class="o">=</span> <span class="mi">299</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Magic</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">le_nanoseconds</span> <span class="o">=</span> <span class="mi">1295823521</span>
+        <span class="n">be_nanoseconds</span> <span class="o">=</span> <span class="mi">2712812621</span>
+        <span class="n">be_microseconds</span> <span class="o">=</span> <span class="mi">2712847316</span>
+        <span class="n">le_microseconds</span> <span class="o">=</span> <span class="mi">3569595041</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Pcap</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
@@ -564,6 +570,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">magic_number</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Pcap</span><span class="o">.</span><span class="n">Magic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hdr</span> <span class="o">=</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Header</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">packets</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -593,17 +600,45 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">magic_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_number</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xD4\xC3\xB2\xA1</span><span class="s2">&quot;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xD4\xC3\xB2\xA1</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">magic_number</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Magic</span><span class="o">.</span><span class="n">le_microseconds</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Magic</span><span class="o">.</span><span class="n">le_nanoseconds</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Magic</span><span class="o">.</span><span class="n">be_microseconds</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Magic</span><span class="o">.</span><span class="n">be_nanoseconds</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_is_le&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">UndecidedEndiannessError</span><span class="p">(</span><span class="s2">&quot;/types/header&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read_le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read_be</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read_le</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">version_major</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_major</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/header/seq/1&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_major</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">version_minor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">thiszone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sigfigs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">snaplen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Pcap</span><span class="o">.</span><span class="n">Linktype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read_be</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version_major</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_major</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version_minor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thiszone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sigfigs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">snaplen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Pcap</span><span class="o">.</span><span class="n">Linktype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">())</span>
 
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -622,10 +657,51 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">magic_number</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Magic</span><span class="o">.</span><span class="n">le_microseconds</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Magic</span><span class="o">.</span><span class="n">le_nanoseconds</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Magic</span><span class="o">.</span><span class="n">be_microseconds</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Magic</span><span class="o">.</span><span class="n">be_nanoseconds</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_is_le&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">UndecidedEndiannessError</span><span class="p">(</span><span class="s2">&quot;/types/packet&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read_le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read_be</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read_le</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ts_sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ts_usec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">incl_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">orig_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">network</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Linktype</span><span class="o">.</span><span class="n">ethernet</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">incl_len</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incl_len</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span><span class="p">))</span>
+                <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">ethernet_frame</span><span class="o">.</span><span class="n">EthernetFrame</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Linktype</span><span class="o">.</span><span class="n">ppi</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">incl_len</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incl_len</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span><span class="p">))</span>
+                <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">packet_ppi</span><span class="o">.</span><span class="n">PacketPpi</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">incl_len</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incl_len</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span><span class="p">))</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read_be</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_usec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">incl_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">orig_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
             <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">network</span>
             <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="o">.</span><span class="n">Linktype</span><span class="o">.</span><span class="n">ethernet</span><span class="p">:</span>
                 <span class="k">pass</span>

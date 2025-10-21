@@ -229,12 +229,21 @@ class Pcap < Kaitai::Struct::Struct
     299 => :linktype_fira_uci,
   }
   I__LINKTYPE = LINKTYPE.invert
+
+  MAGIC = {
+    1295823521 => :magic_le_nanoseconds,
+    2712812621 => :magic_be_nanoseconds,
+    2712847316 => :magic_be_microseconds,
+    3569595041 => :magic_le_microseconds,
+  }
+  I__MAGIC = MAGIC.invert
   def initialize(_io, _parent = nil, _root = nil)
     super(_io, _parent, _root || self)
     _read
   end
 
   def _read
+    @magic_number = Kaitai::Struct::Stream::resolve_enum(MAGIC, @_io.read_u4be)
     @hdr = Header.new(@_io, self, @_root)
     @packets = []
     i = 0
@@ -254,10 +263,30 @@ class Pcap < Kaitai::Struct::Struct
     end
 
     def _read
-      @magic_number = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([212, 195, 178, 161].pack('C*'), @magic_number, @_io, "/types/header/seq/0") if not @magic_number == [212, 195, 178, 161].pack('C*')
+      case _root.magic_number
+      when :magic_le_microseconds
+        @_is_le = true
+      when :magic_le_nanoseconds
+        @_is_le = true
+      when :magic_be_microseconds
+        @_is_le = false
+      when :magic_be_nanoseconds
+        @_is_le = false
+      end
+
+      if @_is_le == true
+        _read_le
+      elsif @_is_le == false
+        _read_be
+      else
+        raise Kaitai::Struct::UndecidedEndiannessError.new("/types/header")
+      end
+      self
+    end
+
+    def _read_le
       @version_major = @_io.read_u2le
-      raise Kaitai::Struct::ValidationNotEqualError.new(2, @version_major, @_io, "/types/header/seq/1") if not @version_major == 2
+      raise Kaitai::Struct::ValidationNotEqualError.new(2, @version_major, @_io, "/types/header/seq/0") if not @version_major == 2
       @version_minor = @_io.read_u2le
       @thiszone = @_io.read_s4le
       @sigfigs = @_io.read_u4le
@@ -265,7 +294,17 @@ class Pcap < Kaitai::Struct::Struct
       @network = Kaitai::Struct::Stream::resolve_enum(Pcap::LINKTYPE, @_io.read_u4le)
       self
     end
-    attr_reader :magic_number
+
+    def _read_be
+      @version_major = @_io.read_u2be
+      raise Kaitai::Struct::ValidationNotEqualError.new(2, @version_major, @_io, "/types/header/seq/0") if not @version_major == 2
+      @version_minor = @_io.read_u2be
+      @thiszone = @_io.read_s4be
+      @sigfigs = @_io.read_u4be
+      @snaplen = @_io.read_u4be
+      @network = Kaitai::Struct::Stream::resolve_enum(Pcap::LINKTYPE, @_io.read_u4be)
+      self
+    end
     attr_reader :version_major
     attr_reader :version_minor
 
@@ -300,6 +339,28 @@ class Pcap < Kaitai::Struct::Struct
     end
 
     def _read
+      case _root.magic_number
+      when :magic_le_microseconds
+        @_is_le = true
+      when :magic_le_nanoseconds
+        @_is_le = true
+      when :magic_be_microseconds
+        @_is_le = false
+      when :magic_be_nanoseconds
+        @_is_le = false
+      end
+
+      if @_is_le == true
+        _read_le
+      elsif @_is_le == false
+        _read_be
+      else
+        raise Kaitai::Struct::UndecidedEndiannessError.new("/types/packet")
+      end
+      self
+    end
+
+    def _read_le
       @ts_sec = @_io.read_u4le
       @ts_usec = @_io.read_u4le
       @incl_len = @_io.read_u4le
@@ -316,7 +377,40 @@ class Pcap < Kaitai::Struct::Struct
       end
       self
     end
+
+    def _read_be
+      @ts_sec = @_io.read_u4be
+      @ts_usec = @_io.read_u4be
+      @incl_len = @_io.read_u4be
+      @orig_len = @_io.read_u4be
+      case _root.hdr.network
+      when :linktype_ethernet
+        _io_body = @_io.substream((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
+        @body = EthernetFrame.new(_io_body)
+      when :linktype_ppi
+        _io_body = @_io.substream((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
+        @body = PacketPpi.new(_io_body)
+      else
+        @body = @_io.read_bytes((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
+      end
+      self
+    end
+
+    ##
+    # Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+    # 
+    # In practice, some captures are not following that (e.g. because the device lacks
+    # a real-time clock), so this field might represent time since device boot, start of
+    # capture, or other arbitrary epoch.
     attr_reader :ts_sec
+
+    ##
+    # Depending on `_root.magic_number`, units for this field change:
+    # 
+    # * If it's `le_microseconds` or `be_microseconds`, this field
+    #   contains microseconds.
+    # * If it's `le_nanoseconds` or `be_nanoseconds`, this field
+    #   contains nanoseconds.
     attr_reader :ts_usec
 
     ##
@@ -332,6 +426,7 @@ class Pcap < Kaitai::Struct::Struct
     attr_reader :body
     attr_reader :_raw_body
   end
+  attr_reader :magic_number
   attr_reader :hdr
   attr_reader :packets
 end

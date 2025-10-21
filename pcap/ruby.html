@@ -123,7 +123,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -294,7 +294,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">hdr</span><span class="w"> </span><span class="c1"># =&gt; get hdr</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">magic_number</span><span class="w"> </span><span class="c1"># =&gt; get magic number</span>
 </pre></div>
 
     </div>
@@ -553,12 +553,21 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">    </span><span class="mi">299</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:linktype_fira_uci</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__LINKTYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">LINKTYPE</span><span class="o">.</span><span class="n">invert</span>
+
+<span class="w">  </span><span class="no">MAGIC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="mi">1295823521</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:magic_le_nanoseconds</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">2712812621</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:magic_be_nanoseconds</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">2712847316</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:magic_be_microseconds</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">3569595041</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:magic_le_microseconds</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="no">I__MAGIC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MAGIC</span><span class="o">.</span><span class="n">invert</span>
 <span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">    </span><span class="vi">@magic_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MAGIC</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@packets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
 <span class="w">    </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
@@ -578,10 +587,30 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@magic_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">212</span><span class="p">,</span><span class="w"> </span><span class="mi">195</span><span class="p">,</span><span class="w"> </span><span class="mi">178</span><span class="p">,</span><span class="w"> </span><span class="mi">161</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="vi">@magic_number</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@magic_number</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">212</span><span class="p">,</span><span class="w"> </span><span class="mi">195</span><span class="p">,</span><span class="w"> </span><span class="mi">178</span><span class="p">,</span><span class="w"> </span><span class="mi">161</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">magic_number</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:magic_le_microseconds</span>
+<span class="w">        </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:magic_le_nanoseconds</span>
+<span class="w">        </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:magic_be_microseconds</span>
+<span class="w">        </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">false</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:magic_be_nanoseconds</span>
+<span class="w">        </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">false</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">        </span><span class="n">_read_le</span>
+<span class="w">      </span><span class="k">elsif</span><span class="w"> </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">false</span>
+<span class="w">        </span><span class="n">_read_be</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">UndecidedEndiannessError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;/types/header&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read_le</span>
 <span class="w">      </span><span class="vi">@version_major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="vi">@version_major</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/header/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@version_major</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="vi">@version_major</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@version_major</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span>
 <span class="w">      </span><span class="vi">@version_minor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
 <span class="w">      </span><span class="vi">@thiszone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
 <span class="w">      </span><span class="vi">@sigfigs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -589,7 +618,17 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">      </span><span class="vi">@network</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Pcap</span><span class="o">::</span><span class="no">LINKTYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:magic_number</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read_be</span>
+<span class="w">      </span><span class="vi">@version_major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="vi">@version_major</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@version_major</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">      </span><span class="vi">@version_minor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="vi">@thiszone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+<span class="w">      </span><span class="vi">@sigfigs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@snaplen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@network</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Pcap</span><span class="o">::</span><span class="no">LINKTYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:version_major</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:version_minor</span>
 
@@ -624,6 +663,28 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">magic_number</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:magic_le_microseconds</span>
+<span class="w">        </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:magic_le_nanoseconds</span>
+<span class="w">        </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:magic_be_microseconds</span>
+<span class="w">        </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">false</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:magic_be_nanoseconds</span>
+<span class="w">        </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">false</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">        </span><span class="n">_read_le</span>
+<span class="w">      </span><span class="k">elsif</span><span class="w"> </span><span class="vi">@_is_le</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">false</span>
+<span class="w">        </span><span class="n">_read_be</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">UndecidedEndiannessError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;/types/packet&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read_le</span>
 <span class="w">      </span><span class="vi">@ts_sec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
 <span class="w">      </span><span class="vi">@ts_usec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
 <span class="w">      </span><span class="vi">@incl_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -640,7 +701,40 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">      </span><span class="k">end</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read_be</span>
+<span class="w">      </span><span class="vi">@ts_sec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@ts_usec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@incl_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@orig_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">network</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:linktype_ethernet</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">((</span><span class="n">incl_len</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="n">incl_len</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span><span class="p">))</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">EthernetFrame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:linktype_ppi</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">((</span><span class="n">incl_len</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="n">incl_len</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span><span class="p">))</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">PacketPpi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">)</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">incl_len</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="n">incl_len</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">snaplen</span><span class="p">))</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># In practice, some captures are not following that (e.g. because the device lacks</span>
+<span class="w">    </span><span class="c1"># a real-time clock), so this field might represent time since device boot, start of</span>
+<span class="w">    </span><span class="c1"># capture, or other arbitrary epoch.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:ts_sec</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Depending on `_root.magic_number`, units for this field change:</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># * If it&#39;s `le_microseconds` or `be_microseconds`, this field</span>
+<span class="w">    </span><span class="c1">#   contains microseconds.</span>
+<span class="w">    </span><span class="c1"># * If it&#39;s `le_nanoseconds` or `be_nanoseconds`, this field</span>
+<span class="w">    </span><span class="c1">#   contains nanoseconds.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:ts_usec</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -656,6 +750,7 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:body</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_body</span>
 <span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:magic_number</span>
 <span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:hdr</span>
 <span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:packets</span>
 <span class="k">end</span>

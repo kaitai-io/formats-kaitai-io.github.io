@@ -230,6 +230,13 @@ Pcap.Linktype = enum.Enum {
   fira_uci = 299,
 }
 
+Pcap.Magic = enum.Enum {
+  le_nanoseconds = 1295823521,
+  be_nanoseconds = 2712812621,
+  be_microseconds = 2712847316,
+  le_microseconds = 3569595041,
+}
+
 function Pcap:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
@@ -238,6 +245,7 @@ function Pcap:_init(io, parent, root)
 end
 
 function Pcap:_read()
+  self.magic_number = Pcap.Magic(self._io:read_u4be())
   self.hdr = Pcap.Header(self._io, self, self._root)
   self.packets = {}
   local i = 0
@@ -260,10 +268,27 @@ function Pcap.Header:_init(io, parent, root)
 end
 
 function Pcap.Header:_read()
-  self.magic_number = self._io:read_bytes(4)
-  if not(self.magic_number == "\212\195\178\161") then
-    error("not equal, expected " .. "\212\195\178\161" .. ", but got " .. self.magic_number)
+  local _on = self._root.magic_number
+  if _on == Pcap.Magic.le_microseconds then
+    self._is_le = true
+  elseif _on == Pcap.Magic.le_nanoseconds then
+    self._is_le = true
+  elseif _on == Pcap.Magic.be_microseconds then
+    self._is_le = false
+  elseif _on == Pcap.Magic.be_nanoseconds then
+    self._is_le = false
   end
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Pcap.Header:_read_le()
   self.version_major = self._io:read_u2le()
   if not(self.version_major == 2) then
     error("not equal, expected " .. 2 .. ", but got " .. self.version_major)
@@ -273,6 +298,18 @@ function Pcap.Header:_read()
   self.sigfigs = self._io:read_u4le()
   self.snaplen = self._io:read_u4le()
   self.network = Pcap.Linktype(self._io:read_u4le())
+end
+
+function Pcap.Header:_read_be()
+  self.version_major = self._io:read_u2be()
+  if not(self.version_major == 2) then
+    error("not equal, expected " .. 2 .. ", but got " .. self.version_major)
+  end
+  self.version_minor = self._io:read_u2be()
+  self.thiszone = self._io:read_s4be()
+  self.sigfigs = self._io:read_u4be()
+  self.snaplen = self._io:read_u4be()
+  self.network = Pcap.Linktype(self._io:read_u4be())
 end
 
 -- 
@@ -301,6 +338,27 @@ function Pcap.Packet:_init(io, parent, root)
 end
 
 function Pcap.Packet:_read()
+  local _on = self._root.magic_number
+  if _on == Pcap.Magic.le_microseconds then
+    self._is_le = true
+  elseif _on == Pcap.Magic.le_nanoseconds then
+    self._is_le = true
+  elseif _on == Pcap.Magic.be_microseconds then
+    self._is_le = false
+  elseif _on == Pcap.Magic.be_nanoseconds then
+    self._is_le = false
+  end
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Pcap.Packet:_read_le()
   self.ts_sec = self._io:read_u4le()
   self.ts_usec = self._io:read_u4le()
   self.incl_len = self._io:read_u4le()
@@ -319,6 +377,38 @@ function Pcap.Packet:_read()
   end
 end
 
+function Pcap.Packet:_read_be()
+  self.ts_sec = self._io:read_u4be()
+  self.ts_usec = self._io:read_u4be()
+  self.incl_len = self._io:read_u4be()
+  self.orig_len = self._io:read_u4be()
+  local _on = self._root.hdr.network
+  if _on == Pcap.Linktype.ethernet then
+    self._raw_body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = EthernetFrame(_io)
+  elseif _on == Pcap.Linktype.ppi then
+    self._raw_body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = PacketPpi(_io)
+  else
+    self.body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
+  end
+end
+
+-- 
+-- Timestamp of a packet in seconds since 1970-01-01 00:00:00 UTC (UNIX timestamp).
+-- 
+-- In practice, some captures are not following that (e.g. because the device lacks
+-- a real-time clock), so this field might represent time since device boot, start of
+-- capture, or other arbitrary epoch.
+-- 
+-- Depending on `_root.magic_number`, units for this field change:
+-- 
+-- * If it's `le_microseconds` or `be_microseconds`, this field
+--   contains microseconds.
+-- * If it's `le_nanoseconds` or `be_nanoseconds`, this field
+--   contains nanoseconds.
 -- 
 -- Number of bytes of packet data actually captured and saved in the file.
 -- 
