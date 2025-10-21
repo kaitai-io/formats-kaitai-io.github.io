@@ -169,6 +169,10 @@ public class WindowsMinidump extends KaitaiStruct {
                             ((ExceptionStream) (this.data))._fetchInstances();
                             break;
                         }
+                        case MEMORY_64_LIST: {
+                            ((Memory64List) (this.data))._fetchInstances();
+                            break;
+                        }
                         case MEMORY_LIST: {
                             ((MemoryList) (this.data))._fetchInstances();
                             break;
@@ -207,6 +211,11 @@ public class WindowsMinidump extends KaitaiStruct {
                     case EXCEPTION: {
                         KaitaiStream _io_data = this._io.substream(lenData());
                         this.data = new ExceptionStream(_io_data, this, _root);
+                        break;
+                    }
+                    case MEMORY_64_LIST: {
+                        KaitaiStream _io_data = this._io.substream(lenData());
+                        this.data = new Memory64List(_io_data, this, _root);
                         break;
                     }
                     case MEMORY_LIST: {
@@ -430,6 +439,54 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+     */
+    public static class Memory64List extends KaitaiStruct {
+        public static Memory64List fromFile(String fileName) throws IOException {
+            return new Memory64List(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Memory64List(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Memory64List(KaitaiStream _io, WindowsMinidump.Dir _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Memory64List(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numMemRanges = this._io.readU8le();
+            this.ofsBase = this._io.readU8le();
+            this.memRanges = new ArrayList<MemoryDescriptor64>();
+            for (int i = 0; i < numMemRanges(); i++) {
+                this.memRanges.add(new MemoryDescriptor64(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.memRanges.size(); i++) {
+                this.memRanges.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private long numMemRanges;
+        private long ofsBase;
+        private List<MemoryDescriptor64> memRanges;
+        private WindowsMinidump _root;
+        private WindowsMinidump.Dir _parent;
+        public long numMemRanges() { return numMemRanges; }
+        public long ofsBase() { return ofsBase; }
+        public List<MemoryDescriptor64> memRanges() { return memRanges; }
+        public WindowsMinidump _root() { return _root; }
+        public WindowsMinidump.Dir _parent() { return _parent; }
+    }
+
+    /**
      * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
      */
     public static class MemoryDescriptor extends KaitaiStruct {
@@ -470,7 +527,46 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64">Source</a>
+     */
+    public static class MemoryDescriptor64 extends KaitaiStruct {
+        public static MemoryDescriptor64 fromFile(String fileName) throws IOException {
+            return new MemoryDescriptor64(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MemoryDescriptor64(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MemoryDescriptor64(KaitaiStream _io, WindowsMinidump.Memory64List _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MemoryDescriptor64(KaitaiStream _io, WindowsMinidump.Memory64List _parent, WindowsMinidump _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.addrMemoryRange = this._io.readU8le();
+            this.lenData = this._io.readU8le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long addrMemoryRange;
+        private long lenData;
+        private WindowsMinidump _root;
+        private WindowsMinidump.Memory64List _parent;
+        public long addrMemoryRange() { return addrMemoryRange; }
+        public long lenData() { return lenData; }
+        public WindowsMinidump _root() { return _root; }
+        public WindowsMinidump.Memory64List _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list">Source</a>
      */
     public static class MemoryList extends KaitaiStruct {
         public static MemoryList fromFile(String fileName) throws IOException {

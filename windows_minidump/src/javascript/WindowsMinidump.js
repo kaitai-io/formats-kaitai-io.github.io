@@ -177,6 +177,11 @@ var WindowsMinidump = (function() {
           var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
           this._m_data = new ExceptionStream(_io__raw__m_data, this, this._root);
           break;
+        case WindowsMinidump.StreamTypes.MEMORY_64_LIST:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new Memory64List(_io__raw__m_data, this, this._root);
+          break;
         case WindowsMinidump.StreamTypes.MEMORY_LIST:
           this._raw__m_data = this._io.readBytes(this.lenData);
           var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
@@ -309,6 +314,30 @@ var WindowsMinidump = (function() {
   })();
 
   /**
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list|Source}
+   */
+
+  var Memory64List = WindowsMinidump.Memory64List = (function() {
+    function Memory64List(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Memory64List.prototype._read = function() {
+      this.numMemRanges = this._io.readU8le();
+      this.ofsBase = this._io.readU8le();
+      this.memRanges = [];
+      for (var i = 0; i < this.numMemRanges; i++) {
+        this.memRanges.push(new MemoryDescriptor64(this._io, this, this._root));
+      }
+    }
+
+    return Memory64List;
+  })();
+
+  /**
    * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor|Source}
    */
 
@@ -329,7 +358,27 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64|Source}
+   */
+
+  var MemoryDescriptor64 = WindowsMinidump.MemoryDescriptor64 = (function() {
+    function MemoryDescriptor64(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MemoryDescriptor64.prototype._read = function() {
+      this.addrMemoryRange = this._io.readU8le();
+      this.lenData = this._io.readU8le();
+    }
+
+    return MemoryDescriptor64;
+  })();
+
+  /**
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list|Source}
    */
 
   var MemoryList = WindowsMinidump.MemoryList = (function() {

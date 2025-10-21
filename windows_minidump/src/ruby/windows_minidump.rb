@@ -112,6 +112,9 @@ class WindowsMinidump < Kaitai::Struct::Struct
       when :stream_types_exception
         _io_data = @_io.substream(len_data)
         @data = ExceptionStream.new(_io_data, self, @_root)
+      when :stream_types_memory_64_list
+        _io_data = @_io.substream(len_data)
+        @data = Memory64List.new(_io_data, self, @_root)
       when :stream_types_memory_list
         _io_data = @_io.substream(len_data)
         @data = MemoryList.new(_io_data, self, @_root)
@@ -228,6 +231,28 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
+  class Memory64List < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_mem_ranges = @_io.read_u8le
+      @ofs_base = @_io.read_u8le
+      @mem_ranges = []
+      (num_mem_ranges).times { |i|
+        @mem_ranges << MemoryDescriptor64.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :num_mem_ranges
+    attr_reader :ofs_base
+    attr_reader :mem_ranges
+  end
+
+  ##
   # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor Source
   class MemoryDescriptor < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
@@ -245,7 +270,24 @@ class WindowsMinidump < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64 Source
+  class MemoryDescriptor64 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @addr_memory_range = @_io.read_u8le
+      @len_data = @_io.read_u8le
+      self
+    end
+    attr_reader :addr_memory_range
+    attr_reader :len_data
+  end
+
+  ##
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list Source
   class MemoryList < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)

@@ -339,6 +339,7 @@ pub struct WindowsMinidump_Dir {
 pub enum WindowsMinidump_Dir_Data {
     WindowsMinidump_ExceptionStream(OptRc<WindowsMinidump_ExceptionStream>),
     WindowsMinidump_SystemInfo(OptRc<WindowsMinidump_SystemInfo>),
+    WindowsMinidump_Memory64List(OptRc<WindowsMinidump_Memory64List>),
     WindowsMinidump_ThreadList(OptRc<WindowsMinidump_ThreadList>),
     Bytes(Vec<u8>),
     WindowsMinidump_MemoryList(OptRc<WindowsMinidump_MemoryList>),
@@ -368,6 +369,19 @@ impl From<&WindowsMinidump_Dir_Data> for OptRc<WindowsMinidump_SystemInfo> {
 impl From<OptRc<WindowsMinidump_SystemInfo>> for WindowsMinidump_Dir_Data {
     fn from(v: OptRc<WindowsMinidump_SystemInfo>) -> Self {
         Self::WindowsMinidump_SystemInfo(v)
+    }
+}
+impl From<&WindowsMinidump_Dir_Data> for OptRc<WindowsMinidump_Memory64List> {
+    fn from(v: &WindowsMinidump_Dir_Data) -> Self {
+        if let WindowsMinidump_Dir_Data::WindowsMinidump_Memory64List(x) = v {
+            return x.clone();
+        }
+        panic!("expected WindowsMinidump_Dir_Data::WindowsMinidump_Memory64List, got {:?}", v)
+    }
+}
+impl From<OptRc<WindowsMinidump_Memory64List>> for WindowsMinidump_Dir_Data {
+    fn from(v: OptRc<WindowsMinidump_Memory64List>) -> Self {
+        Self::WindowsMinidump_Memory64List(v)
     }
 }
 impl From<&WindowsMinidump_Dir_Data> for OptRc<WindowsMinidump_ThreadList> {
@@ -465,6 +479,13 @@ impl WindowsMinidump_Dir {
                 let data_raw = self.data_raw.borrow();
                 let _t_data_raw_io = BytesReader::from(data_raw.clone());
                 let t = Self::read_into::<BytesReader, WindowsMinidump_ExceptionStream>(&_t_data_raw_io, Some(self._root.clone()), Some(self._self.clone()))?.into();
+                *self.data.borrow_mut() = Some(t);
+            }
+            WindowsMinidump_StreamTypes::Memory64List => {
+                *self.data_raw.borrow_mut() = _io.read_bytes(*self.len_data() as usize)?.into();
+                let data_raw = self.data_raw.borrow();
+                let _t_data_raw_io = BytesReader::from(data_raw.clone());
+                let t = Self::read_into::<BytesReader, WindowsMinidump_Memory64List>(&_t_data_raw_io, Some(self._root.clone()), Some(self._self.clone()))?.into();
                 *self.data.borrow_mut() = Some(t);
             }
             WindowsMinidump_StreamTypes::MemoryList => {
@@ -781,6 +802,71 @@ impl WindowsMinidump_LocationDescriptor {
 }
 
 /**
+ * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct WindowsMinidump_Memory64List {
+    pub _root: SharedType<WindowsMinidump>,
+    pub _parent: SharedType<WindowsMinidump_Dir>,
+    pub _self: SharedType<Self>,
+    num_mem_ranges: RefCell<u64>,
+    ofs_base: RefCell<u64>,
+    mem_ranges: RefCell<Vec<OptRc<WindowsMinidump_MemoryDescriptor64>>>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for WindowsMinidump_Memory64List {
+    type Root = WindowsMinidump;
+    type Parent = WindowsMinidump_Dir;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.num_mem_ranges.borrow_mut() = _io.read_u8le()?.into();
+        *self_rc.ofs_base.borrow_mut() = _io.read_u8le()?.into();
+        *self_rc.mem_ranges.borrow_mut() = Vec::new();
+        let l_mem_ranges = *self_rc.num_mem_ranges();
+        for _i in 0..l_mem_ranges {
+            let t = Self::read_into::<_, WindowsMinidump_MemoryDescriptor64>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+            self_rc.mem_ranges.borrow_mut().push(t);
+        }
+        Ok(())
+    }
+}
+impl WindowsMinidump_Memory64List {
+}
+impl WindowsMinidump_Memory64List {
+    pub fn num_mem_ranges(&self) -> Ref<'_, u64> {
+        self.num_mem_ranges.borrow()
+    }
+}
+impl WindowsMinidump_Memory64List {
+    pub fn ofs_base(&self) -> Ref<'_, u64> {
+        self.ofs_base.borrow()
+    }
+}
+impl WindowsMinidump_Memory64List {
+    pub fn mem_ranges(&self) -> Ref<'_, Vec<OptRc<WindowsMinidump_MemoryDescriptor64>>> {
+        self.mem_ranges.borrow()
+    }
+}
+impl WindowsMinidump_Memory64List {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
  * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor Source
  */
 
@@ -835,7 +921,60 @@ impl WindowsMinidump_MemoryDescriptor {
 }
 
 /**
- * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
+ * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64 Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct WindowsMinidump_MemoryDescriptor64 {
+    pub _root: SharedType<WindowsMinidump>,
+    pub _parent: SharedType<WindowsMinidump_Memory64List>,
+    pub _self: SharedType<Self>,
+    addr_memory_range: RefCell<u64>,
+    len_data: RefCell<u64>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for WindowsMinidump_MemoryDescriptor64 {
+    type Root = WindowsMinidump;
+    type Parent = WindowsMinidump_Memory64List;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.addr_memory_range.borrow_mut() = _io.read_u8le()?.into();
+        *self_rc.len_data.borrow_mut() = _io.read_u8le()?.into();
+        Ok(())
+    }
+}
+impl WindowsMinidump_MemoryDescriptor64 {
+}
+impl WindowsMinidump_MemoryDescriptor64 {
+    pub fn addr_memory_range(&self) -> Ref<'_, u64> {
+        self.addr_memory_range.borrow()
+    }
+}
+impl WindowsMinidump_MemoryDescriptor64 {
+    pub fn len_data(&self) -> Ref<'_, u64> {
+        self.len_data.borrow()
+    }
+}
+impl WindowsMinidump_MemoryDescriptor64 {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list Source
  */
 
 #[derive(Default, Debug, Clone)]

@@ -215,6 +215,10 @@ public class WindowsMinidump extends KaitaiStruct.ReadWrite {
                             ((ExceptionStream) (this.data))._fetchInstances();
                             break;
                         }
+                        case MEMORY_64_LIST: {
+                            ((Memory64List) (this.data))._fetchInstances();
+                            break;
+                        }
                         case MEMORY_LIST: {
                             ((MemoryList) (this.data))._fetchInstances();
                             break;
@@ -260,6 +264,13 @@ public class WindowsMinidump extends KaitaiStruct.ReadWrite {
                                 throw new ConsistencyError("data", _root(), ((WindowsMinidump.ExceptionStream) (this.data))._root());
                             if (!Objects.equals(((WindowsMinidump.ExceptionStream) (this.data))._parent(), this))
                                 throw new ConsistencyError("data", this, ((WindowsMinidump.ExceptionStream) (this.data))._parent());
+                            break;
+                        }
+                        case MEMORY_64_LIST: {
+                            if (!Objects.equals(((WindowsMinidump.Memory64List) (this.data))._root(), _root()))
+                                throw new ConsistencyError("data", _root(), ((WindowsMinidump.Memory64List) (this.data))._root());
+                            if (!Objects.equals(((WindowsMinidump.Memory64List) (this.data))._parent(), this))
+                                throw new ConsistencyError("data", this, ((WindowsMinidump.Memory64List) (this.data))._parent());
                             break;
                         }
                         case MEMORY_LIST: {
@@ -325,6 +336,13 @@ public class WindowsMinidump extends KaitaiStruct.ReadWrite {
                         KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(this._raw_data);
                         this.data = new ExceptionStream(_io__raw_data, this, _root);
                         ((ExceptionStream) (this.data))._read();
+                        break;
+                    }
+                    case MEMORY_64_LIST: {
+                        this._raw_data = this._io.readBytes(lenData());
+                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(this._raw_data);
+                        this.data = new Memory64List(_io__raw_data, this, _root);
+                        ((Memory64List) (this.data))._read();
                         break;
                     }
                     case MEMORY_LIST: {
@@ -396,6 +414,26 @@ public class WindowsMinidump extends KaitaiStruct.ReadWrite {
                             });
                         }
                         ((ExceptionStream) (this.data))._write_Seq(_io__raw_data);
+                        break;
+                    }
+                    case MEMORY_64_LIST: {
+                        final KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(lenData());
+                        this._io.addChildStream(_io__raw_data);
+                        {
+                            long _pos2 = this._io.pos();
+                            this._io.seek(this._io.pos() + (lenData()));
+                            final Dir _this = this;
+                            _io__raw_data.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                                @Override
+                                protected void write(KaitaiStream parent) {
+                                    _this._raw_data = _io__raw_data.toByteArray();
+                                    if (((byte[]) (_this._raw_data)).length != lenData())
+                                        throw new ConsistencyError("raw(data)", lenData(), ((byte[]) (_this._raw_data)).length);
+                                    parent.writeBytes(((byte[]) (((byte[]) (_this._raw_data)))));
+                                }
+                            });
+                        }
+                        ((Memory64List) (this.data))._write_Seq(_io__raw_data);
                         break;
                     }
                     case MEMORY_LIST: {
@@ -789,6 +827,88 @@ public class WindowsMinidump extends KaitaiStruct.ReadWrite {
     }
 
     /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+     */
+    public static class Memory64List extends KaitaiStruct.ReadWrite {
+        public static Memory64List fromFile(String fileName) throws IOException {
+            return new Memory64List(new ByteBufferKaitaiStream(fileName));
+        }
+        public Memory64List() {
+            this(null, null, null);
+        }
+
+        public Memory64List(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Memory64List(KaitaiStream _io, WindowsMinidump.Dir _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Memory64List(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.numMemRanges = this._io.readU8le();
+            this.ofsBase = this._io.readU8le();
+            this.memRanges = new ArrayList<MemoryDescriptor64>();
+            for (int i = 0; i < numMemRanges(); i++) {
+                MemoryDescriptor64 _t_memRanges = new MemoryDescriptor64(this._io, this, _root);
+                try {
+                    _t_memRanges._read();
+                } finally {
+                    this.memRanges.add(_t_memRanges);
+                }
+            }
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.memRanges.size(); i++) {
+                this.memRanges.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeU8le(this.numMemRanges);
+            this._io.writeU8le(this.ofsBase);
+            for (int i = 0; i < this.memRanges.size(); i++) {
+                this.memRanges.get(((Number) (i)).intValue())._write_Seq(this._io);
+            }
+        }
+
+        public void _check() {
+            if (this.memRanges.size() != numMemRanges())
+                throw new ConsistencyError("mem_ranges", numMemRanges(), this.memRanges.size());
+            for (int i = 0; i < this.memRanges.size(); i++) {
+                if (!Objects.equals(this.memRanges.get(((Number) (i)).intValue())._root(), _root()))
+                    throw new ConsistencyError("mem_ranges", _root(), this.memRanges.get(((Number) (i)).intValue())._root());
+                if (!Objects.equals(this.memRanges.get(((Number) (i)).intValue())._parent(), this))
+                    throw new ConsistencyError("mem_ranges", this, this.memRanges.get(((Number) (i)).intValue())._parent());
+            }
+            _dirty = false;
+        }
+        private long numMemRanges;
+        private long ofsBase;
+        private List<MemoryDescriptor64> memRanges;
+        private WindowsMinidump _root;
+        private WindowsMinidump.Dir _parent;
+        public long numMemRanges() { return numMemRanges; }
+        public void setNumMemRanges(long _v) { _dirty = true; numMemRanges = _v; }
+        public long ofsBase() { return ofsBase; }
+        public void setOfsBase(long _v) { _dirty = true; ofsBase = _v; }
+        public List<MemoryDescriptor64> memRanges() { return memRanges; }
+        public void setMemRanges(List<MemoryDescriptor64> _v) { _dirty = true; memRanges = _v; }
+        public WindowsMinidump _root() { return _root; }
+        public void set_root(WindowsMinidump _v) { _dirty = true; _root = _v; }
+        public WindowsMinidump.Dir _parent() { return _parent; }
+        public void set_parent(WindowsMinidump.Dir _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
      * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
      */
     public static class MemoryDescriptor extends KaitaiStruct.ReadWrite {
@@ -851,7 +971,63 @@ public class WindowsMinidump extends KaitaiStruct.ReadWrite {
     }
 
     /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64">Source</a>
+     */
+    public static class MemoryDescriptor64 extends KaitaiStruct.ReadWrite {
+        public static MemoryDescriptor64 fromFile(String fileName) throws IOException {
+            return new MemoryDescriptor64(new ByteBufferKaitaiStream(fileName));
+        }
+        public MemoryDescriptor64() {
+            this(null, null, null);
+        }
+
+        public MemoryDescriptor64(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MemoryDescriptor64(KaitaiStream _io, WindowsMinidump.Memory64List _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MemoryDescriptor64(KaitaiStream _io, WindowsMinidump.Memory64List _parent, WindowsMinidump _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.addrMemoryRange = this._io.readU8le();
+            this.lenData = this._io.readU8le();
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeU8le(this.addrMemoryRange);
+            this._io.writeU8le(this.lenData);
+        }
+
+        public void _check() {
+            _dirty = false;
+        }
+        private long addrMemoryRange;
+        private long lenData;
+        private WindowsMinidump _root;
+        private WindowsMinidump.Memory64List _parent;
+        public long addrMemoryRange() { return addrMemoryRange; }
+        public void setAddrMemoryRange(long _v) { _dirty = true; addrMemoryRange = _v; }
+        public long lenData() { return lenData; }
+        public void setLenData(long _v) { _dirty = true; lenData = _v; }
+        public WindowsMinidump _root() { return _root; }
+        public void set_root(WindowsMinidump _v) { _dirty = true; _root = _v; }
+        public WindowsMinidump.Memory64List _parent() { return _parent; }
+        public void set_parent(WindowsMinidump.Memory64List _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list">Source</a>
      */
     public static class MemoryList extends KaitaiStruct.ReadWrite {
         public static MemoryList fromFile(String fileName) throws IOException {

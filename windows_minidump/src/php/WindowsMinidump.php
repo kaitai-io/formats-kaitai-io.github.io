@@ -92,6 +92,11 @@ namespace WindowsMinidump {
                     $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                     $this->_m_data = new \WindowsMinidump\ExceptionStream($_io__raw_data, $this, $this->_root);
                     break;
+                case \WindowsMinidump\StreamTypes::MEMORY_64_LIST:
+                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \WindowsMinidump\Memory64List($_io__raw_data, $this, $this->_root);
+                    break;
                 case \WindowsMinidump\StreamTypes::MEMORY_LIST:
                     $this->_m__raw_data = $this->_io->readBytes($this->lenData());
                     $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
@@ -234,6 +239,31 @@ namespace WindowsMinidump {
 }
 
 namespace WindowsMinidump {
+    class Memory64List extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\Dir $_parent = null, ?\WindowsMinidump $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numMemRanges = $this->_io->readU8le();
+            $this->_m_ofsBase = $this->_io->readU8le();
+            $this->_m_memRanges = [];
+            $n = $this->numMemRanges();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_memRanges[] = new \WindowsMinidump\MemoryDescriptor64($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_numMemRanges;
+        protected $_m_ofsBase;
+        protected $_m_memRanges;
+        public function numMemRanges() { return $this->_m_numMemRanges; }
+        public function ofsBase() { return $this->_m_ofsBase; }
+        public function memRanges() { return $this->_m_memRanges; }
+    }
+}
+
+namespace WindowsMinidump {
     class MemoryDescriptor extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\WindowsMinidump $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -248,6 +278,24 @@ namespace WindowsMinidump {
         protected $_m_memory;
         public function addrMemoryRange() { return $this->_m_addrMemoryRange; }
         public function memory() { return $this->_m_memory; }
+    }
+}
+
+namespace WindowsMinidump {
+    class MemoryDescriptor64 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\Memory64List $_parent = null, ?\WindowsMinidump $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_addrMemoryRange = $this->_io->readU8le();
+            $this->_m_lenData = $this->_io->readU8le();
+        }
+        protected $_m_addrMemoryRange;
+        protected $_m_lenData;
+        public function addrMemoryRange() { return $this->_m_addrMemoryRange; }
+        public function lenData() { return $this->_m_lenData; }
     }
 }
 

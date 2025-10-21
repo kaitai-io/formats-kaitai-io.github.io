@@ -93,10 +93,19 @@ type
     `parent`*: KaitaiStruct
     `dataInst`: seq[byte]
     `dataInstFlag`: bool
+  WindowsMinidump_Memory64List* = ref object of KaitaiStruct
+    `numMemRanges`*: uint64
+    `ofsBase`*: uint64
+    `memRanges`*: seq[WindowsMinidump_MemoryDescriptor64]
+    `parent`*: WindowsMinidump_Dir
   WindowsMinidump_MemoryDescriptor* = ref object of KaitaiStruct
     `addrMemoryRange`*: uint64
     `memory`*: WindowsMinidump_LocationDescriptor
     `parent`*: KaitaiStruct
+  WindowsMinidump_MemoryDescriptor64* = ref object of KaitaiStruct
+    `addrMemoryRange`*: uint64
+    `lenData`*: uint64
+    `parent`*: WindowsMinidump_Memory64List
   WindowsMinidump_MemoryList* = ref object of KaitaiStruct
     `numMemRanges`*: uint32
     `memRanges`*: seq[WindowsMinidump_MemoryDescriptor]
@@ -159,7 +168,9 @@ proc read*(_: typedesc[WindowsMinidump_Dir], io: KaitaiStream, root: KaitaiStruc
 proc read*(_: typedesc[WindowsMinidump_ExceptionRecord], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ExceptionStream): WindowsMinidump_ExceptionRecord
 proc read*(_: typedesc[WindowsMinidump_ExceptionStream], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ExceptionStream
 proc read*(_: typedesc[WindowsMinidump_LocationDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_LocationDescriptor
+proc read*(_: typedesc[WindowsMinidump_Memory64List], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_Memory64List
 proc read*(_: typedesc[WindowsMinidump_MemoryDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_MemoryDescriptor
+proc read*(_: typedesc[WindowsMinidump_MemoryDescriptor64], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Memory64List): WindowsMinidump_MemoryDescriptor64
 proc read*(_: typedesc[WindowsMinidump_MemoryList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MemoryList
 proc read*(_: typedesc[WindowsMinidump_MinidumpString], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_SystemInfo): WindowsMinidump_MinidumpString
 proc read*(_: typedesc[WindowsMinidump_MiscInfo], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MiscInfo
@@ -260,6 +271,12 @@ proc data(this: WindowsMinidump_Dir): KaitaiStruct =
       this.rawDataInst = rawDataInstExpr
       let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
       let dataInstExpr = WindowsMinidump_ExceptionStream.read(rawDataInstIo, this.root, this)
+      this.dataInst = dataInstExpr
+    elif on == windows_minidump.memory_64_list:
+      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
+      this.rawDataInst = rawDataInstExpr
+      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
+      let dataInstExpr = WindowsMinidump_Memory64List.read(rawDataInstIo, this.root, this)
       this.dataInst = dataInstExpr
     elif on == windows_minidump.memory_list:
       let rawDataInstExpr = this.io.readBytes(int(this.lenData))
@@ -398,6 +415,29 @@ proc fromFile*(_: typedesc[WindowsMinidump_LocationDescriptor], filename: string
 
 
 ##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+]##
+proc read*(_: typedesc[WindowsMinidump_Memory64List], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_Memory64List =
+  template this: untyped = result
+  this = new(WindowsMinidump_Memory64List)
+  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let numMemRangesExpr = this.io.readU8le()
+  this.numMemRanges = numMemRangesExpr
+  let ofsBaseExpr = this.io.readU8le()
+  this.ofsBase = ofsBaseExpr
+  for i in 0 ..< int(this.numMemRanges):
+    let it = WindowsMinidump_MemoryDescriptor64.read(this.io, this.root, this)
+    this.memRanges.add(it)
+
+proc fromFile*(_: typedesc[WindowsMinidump_Memory64List], filename: string): WindowsMinidump_Memory64List =
+  WindowsMinidump_Memory64List.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
 @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_MemoryDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_MemoryDescriptor =
@@ -418,7 +458,27 @@ proc fromFile*(_: typedesc[WindowsMinidump_MemoryDescriptor], filename: string):
 
 
 ##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64">Source</a>
+]##
+proc read*(_: typedesc[WindowsMinidump_MemoryDescriptor64], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Memory64List): WindowsMinidump_MemoryDescriptor64 =
+  template this: untyped = result
+  this = new(WindowsMinidump_MemoryDescriptor64)
+  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let addrMemoryRangeExpr = this.io.readU8le()
+  this.addrMemoryRange = addrMemoryRangeExpr
+  let lenDataExpr = this.io.readU8le()
+  this.lenData = lenDataExpr
+
+proc fromFile*(_: typedesc[WindowsMinidump_MemoryDescriptor64], filename: string): WindowsMinidump_MemoryDescriptor64 =
+  WindowsMinidump_MemoryDescriptor64.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_MemoryList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MemoryList =
   template this: untyped = result

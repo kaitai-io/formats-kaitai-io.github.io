@@ -146,6 +146,12 @@ namespace Kaitai
                         _data = new ExceptionStream(io___raw_data, this, m_root);
                         break;
                     }
+                    case WindowsMinidump.StreamTypes.Memory64List: {
+                        __raw_data = m_io.ReadBytes(LenData);
+                        var io___raw_data = new KaitaiStream(__raw_data);
+                        _data = new Memory64List(io___raw_data, this, m_root);
+                        break;
+                    }
                     case WindowsMinidump.StreamTypes.MemoryList: {
                         __raw_data = m_io.ReadBytes(LenData);
                         var io___raw_data = new KaitaiStream(__raw_data);
@@ -347,6 +353,44 @@ namespace Kaitai
         }
 
         /// <remarks>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+        /// </remarks>
+        public partial class Memory64List : KaitaiStruct
+        {
+            public static Memory64List FromFile(string fileName)
+            {
+                return new Memory64List(new KaitaiStream(fileName));
+            }
+
+            public Memory64List(KaitaiStream p__io, WindowsMinidump.Dir p__parent = null, WindowsMinidump p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numMemRanges = m_io.ReadU8le();
+                _ofsBase = m_io.ReadU8le();
+                _memRanges = new List<MemoryDescriptor64>();
+                for (var i = 0; i < NumMemRanges; i++)
+                {
+                    _memRanges.Add(new MemoryDescriptor64(m_io, this, m_root));
+                }
+            }
+            private ulong _numMemRanges;
+            private ulong _ofsBase;
+            private List<MemoryDescriptor64> _memRanges;
+            private WindowsMinidump m_root;
+            private WindowsMinidump.Dir m_parent;
+            public ulong NumMemRanges { get { return _numMemRanges; } }
+            public ulong OfsBase { get { return _ofsBase; } }
+            public List<MemoryDescriptor64> MemRanges { get { return _memRanges; } }
+            public WindowsMinidump M_Root { get { return m_root; } }
+            public WindowsMinidump.Dir M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
         /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
         /// </remarks>
         public partial class MemoryDescriptor : KaitaiStruct
@@ -378,7 +422,38 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64">Source</a>
+        /// </remarks>
+        public partial class MemoryDescriptor64 : KaitaiStruct
+        {
+            public static MemoryDescriptor64 FromFile(string fileName)
+            {
+                return new MemoryDescriptor64(new KaitaiStream(fileName));
+            }
+
+            public MemoryDescriptor64(KaitaiStream p__io, WindowsMinidump.Memory64List p__parent = null, WindowsMinidump p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _addrMemoryRange = m_io.ReadU8le();
+                _lenData = m_io.ReadU8le();
+            }
+            private ulong _addrMemoryRange;
+            private ulong _lenData;
+            private WindowsMinidump m_root;
+            private WindowsMinidump.Memory64List m_parent;
+            public ulong AddrMemoryRange { get { return _addrMemoryRange; } }
+            public ulong LenData { get { return _lenData; } }
+            public WindowsMinidump M_Root { get { return m_root; } }
+            public WindowsMinidump.Memory64List M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list">Source</a>
         /// </remarks>
         public partial class MemoryList : KaitaiStruct
         {

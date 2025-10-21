@@ -172,6 +172,9 @@ class WindowsMinidump(ReadWriteKaitaiStruct):
                 if _on == WindowsMinidump.StreamTypes.exception:
                     pass
                     self._m_data._fetch_instances()
+                elif _on == WindowsMinidump.StreamTypes.memory_64_list:
+                    pass
+                    self._m_data._fetch_instances()
                 elif _on == WindowsMinidump.StreamTypes.memory_list:
                     pass
                     self._m_data._fetch_instances()
@@ -202,6 +205,12 @@ class WindowsMinidump(ReadWriteKaitaiStruct):
                 pass
                 _on = self.stream_type
                 if _on == WindowsMinidump.StreamTypes.exception:
+                    pass
+                    if self._m_data._root != self._root:
+                        raise kaitaistruct.ConsistencyError(u"data", self._root, self._m_data._root)
+                    if self._m_data._parent != self:
+                        raise kaitaistruct.ConsistencyError(u"data", self, self._m_data._parent)
+                elif _on == WindowsMinidump.StreamTypes.memory_64_list:
                     pass
                     if self._m_data._root != self._root:
                         raise kaitaistruct.ConsistencyError(u"data", self._root, self._m_data._root)
@@ -257,6 +266,12 @@ class WindowsMinidump(ReadWriteKaitaiStruct):
                 _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
                 self._m_data = WindowsMinidump.ExceptionStream(_io__raw__m_data, self, self._root)
                 self._m_data._read()
+            elif _on == WindowsMinidump.StreamTypes.memory_64_list:
+                pass
+                self._raw__m_data = self._io.read_bytes(self.len_data)
+                _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                self._m_data = WindowsMinidump.Memory64List(_io__raw__m_data, self, self._root)
+                self._m_data._read()
             elif _on == WindowsMinidump.StreamTypes.memory_list:
                 pass
                 self._raw__m_data = self._io.read_bytes(self.len_data)
@@ -298,6 +313,19 @@ class WindowsMinidump(ReadWriteKaitaiStruct):
             self._io.seek(self.ofs_data)
             _on = self.stream_type
             if _on == WindowsMinidump.StreamTypes.exception:
+                pass
+                _io__raw__m_data = KaitaiStream(BytesIO(bytearray(self.len_data)))
+                self._io.add_child_stream(_io__raw__m_data)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len_data))
+                def handler(parent, _io__raw__m_data=_io__raw__m_data):
+                    self._raw__m_data = _io__raw__m_data.to_byte_array()
+                    if len(self._raw__m_data) != self.len_data:
+                        raise kaitaistruct.ConsistencyError(u"raw(data)", self.len_data, len(self._raw__m_data))
+                    parent.write_bytes(self._raw__m_data)
+                _io__raw__m_data.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self._m_data._write__seq(_io__raw__m_data)
+            elif _on == WindowsMinidump.StreamTypes.memory_64_list:
                 pass
                 _io__raw__m_data = KaitaiStream(BytesIO(bytearray(self.len_data)))
                 self._io.add_child_stream(_io__raw__m_data)
@@ -540,6 +568,61 @@ class WindowsMinidump(ReadWriteKaitaiStruct):
             io.seek(_pos)
 
 
+    class Memory64List(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list
+        """
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(WindowsMinidump.Memory64List, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.num_mem_ranges = self._io.read_u8le()
+            self.ofs_base = self._io.read_u8le()
+            self.mem_ranges = []
+            for i in range(self.num_mem_ranges):
+                _t_mem_ranges = WindowsMinidump.MemoryDescriptor64(self._io, self, self._root)
+                try:
+                    _t_mem_ranges._read()
+                finally:
+                    self.mem_ranges.append(_t_mem_ranges)
+
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.mem_ranges)):
+                pass
+                self.mem_ranges[i]._fetch_instances()
+
+
+
+        def _write__seq(self, io=None):
+            super(WindowsMinidump.Memory64List, self)._write__seq(io)
+            self._io.write_u8le(self.num_mem_ranges)
+            self._io.write_u8le(self.ofs_base)
+            for i in range(len(self.mem_ranges)):
+                pass
+                self.mem_ranges[i]._write__seq(self._io)
+
+
+
+        def _check(self):
+            if len(self.mem_ranges) != self.num_mem_ranges:
+                raise kaitaistruct.ConsistencyError(u"mem_ranges", self.num_mem_ranges, len(self.mem_ranges))
+            for i in range(len(self.mem_ranges)):
+                pass
+                if self.mem_ranges[i]._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"mem_ranges", self._root, self.mem_ranges[i]._root)
+                if self.mem_ranges[i]._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"mem_ranges", self, self.mem_ranges[i]._parent)
+
+            self._dirty = False
+
+
     class MemoryDescriptor(ReadWriteKaitaiStruct):
         """
         .. seealso::
@@ -576,10 +659,40 @@ class WindowsMinidump(ReadWriteKaitaiStruct):
             self._dirty = False
 
 
+    class MemoryDescriptor64(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64
+        """
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(WindowsMinidump.MemoryDescriptor64, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.addr_memory_range = self._io.read_u8le()
+            self.len_data = self._io.read_u8le()
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(WindowsMinidump.MemoryDescriptor64, self)._write__seq(io)
+            self._io.write_u8le(self.addr_memory_range)
+            self._io.write_u8le(self.len_data)
+
+
+        def _check(self):
+            self._dirty = False
+
+
     class MemoryList(ReadWriteKaitaiStruct):
         """
         .. seealso::
-           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list
+           Source - https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list
         """
         def __init__(self, _io=None, _parent=None, _root=None):
             super(WindowsMinidump.MemoryList, self).__init__(_io)

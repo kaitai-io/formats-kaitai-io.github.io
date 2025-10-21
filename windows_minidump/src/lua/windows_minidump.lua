@@ -143,6 +143,10 @@ function WindowsMinidump.Dir.property.data:get()
     self._raw__m_data = self._io:read_bytes(self.len_data)
     local _io = KaitaiStream(stringstream(self._raw__m_data))
     self._m_data = WindowsMinidump.ExceptionStream(_io, self, self._root)
+  elseif _on == WindowsMinidump.StreamTypes.memory_64_list then
+    self._raw__m_data = self._io:read_bytes(self.len_data)
+    local _io = KaitaiStream(stringstream(self._raw__m_data))
+    self._m_data = WindowsMinidump.Memory64List(_io, self, self._root)
   elseif _on == WindowsMinidump.StreamTypes.memory_list then
     self._raw__m_data = self._io:read_bytes(self.len_data)
     local _io = KaitaiStream(stringstream(self._raw__m_data))
@@ -254,6 +258,27 @@ end
 
 
 -- 
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list)
+WindowsMinidump.Memory64List = class.class(KaitaiStruct)
+
+function WindowsMinidump.Memory64List:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsMinidump.Memory64List:_read()
+  self.num_mem_ranges = self._io:read_u8le()
+  self.ofs_base = self._io:read_u8le()
+  self.mem_ranges = {}
+  for i = 0, self.num_mem_ranges - 1 do
+    self.mem_ranges[i + 1] = WindowsMinidump.MemoryDescriptor64(self._io, self, self._root)
+  end
+end
+
+
+-- 
 -- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor)
 WindowsMinidump.MemoryDescriptor = class.class(KaitaiStruct)
 
@@ -271,7 +296,24 @@ end
 
 
 -- 
--- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64)
+WindowsMinidump.MemoryDescriptor64 = class.class(KaitaiStruct)
+
+function WindowsMinidump.MemoryDescriptor64:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsMinidump.MemoryDescriptor64:_read()
+  self.addr_memory_range = self._io:read_u8le()
+  self.len_data = self._io:read_u8le()
+end
+
+
+-- 
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list)
 WindowsMinidump.MemoryList = class.class(KaitaiStruct)
 
 function WindowsMinidump.MemoryList:_init(io, parent, root)

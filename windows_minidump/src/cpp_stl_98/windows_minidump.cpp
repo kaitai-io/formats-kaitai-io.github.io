@@ -156,6 +156,13 @@ kaitai::kstruct* windows_minidump_t::dir_t::data() {
         m_data = new exception_stream_t(m__io__raw_data, this, m__root);
         break;
     }
+    case windows_minidump_t::STREAM_TYPES_MEMORY_64_LIST: {
+        n_data = false;
+        m__raw_data = m__io->read_bytes(len_data());
+        m__io__raw_data = new kaitai::kstream(m__raw_data);
+        m_data = new memory_64_list_t(m__io__raw_data, this, m__root);
+        break;
+    }
     case windows_minidump_t::STREAM_TYPES_MEMORY_LIST: {
         n_data = false;
         m__raw_data = m__io->read_bytes(len_data());
@@ -303,6 +310,42 @@ std::string windows_minidump_t::location_descriptor_t::data() {
     return m_data;
 }
 
+windows_minidump_t::memory_64_list_t::memory_64_list_t(kaitai::kstream* p__io, windows_minidump_t::dir_t* p__parent, windows_minidump_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_mem_ranges = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void windows_minidump_t::memory_64_list_t::_read() {
+    m_num_mem_ranges = m__io->read_u8le();
+    m_ofs_base = m__io->read_u8le();
+    m_mem_ranges = new std::vector<memory_descriptor_64_t*>();
+    const int l_mem_ranges = num_mem_ranges();
+    for (int i = 0; i < l_mem_ranges; i++) {
+        m_mem_ranges->push_back(new memory_descriptor_64_t(m__io, this, m__root));
+    }
+}
+
+windows_minidump_t::memory_64_list_t::~memory_64_list_t() {
+    _clean_up();
+}
+
+void windows_minidump_t::memory_64_list_t::_clean_up() {
+    if (m_mem_ranges) {
+        for (std::vector<memory_descriptor_64_t*>::iterator it = m_mem_ranges->begin(); it != m_mem_ranges->end(); ++it) {
+            delete *it;
+        }
+        delete m_mem_ranges; m_mem_ranges = 0;
+    }
+}
+
 windows_minidump_t::memory_descriptor_t::memory_descriptor_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, windows_minidump_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -329,6 +372,30 @@ void windows_minidump_t::memory_descriptor_t::_clean_up() {
     if (m_memory) {
         delete m_memory; m_memory = 0;
     }
+}
+
+windows_minidump_t::memory_descriptor_64_t::memory_descriptor_64_t(kaitai::kstream* p__io, windows_minidump_t::memory_64_list_t* p__parent, windows_minidump_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void windows_minidump_t::memory_descriptor_64_t::_read() {
+    m_addr_memory_range = m__io->read_u8le();
+    m_len_data = m__io->read_u8le();
+}
+
+windows_minidump_t::memory_descriptor_64_t::~memory_descriptor_64_t() {
+    _clean_up();
+}
+
+void windows_minidump_t::memory_descriptor_64_t::_clean_up() {
 }
 
 windows_minidump_t::memory_list_t::memory_list_t(kaitai::kstream* p__io, windows_minidump_t::dir_t* p__parent, windows_minidump_t* p__root) : kaitai::kstruct(p__io) {

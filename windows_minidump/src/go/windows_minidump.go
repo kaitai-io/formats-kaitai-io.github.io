@@ -258,7 +258,7 @@ func (this *WindowsMinidump_Dir) Data() (v interface{}, err error) {
 			return nil, err
 		}
 		this.data = tmp14
-	case WindowsMinidump_StreamTypes__MemoryList:
+	case WindowsMinidump_StreamTypes__Memory64List:
 		tmp15, err := this._io.ReadBytes(int(this.LenData))
 		if err != nil {
 			return nil, err
@@ -266,13 +266,13 @@ func (this *WindowsMinidump_Dir) Data() (v interface{}, err error) {
 		tmp15 = tmp15
 		this._raw_data = tmp15
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp16 := NewWindowsMinidump_MemoryList()
+		tmp16 := NewWindowsMinidump_Memory64List()
 		err = tmp16.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp16
-	case WindowsMinidump_StreamTypes__MiscInfo:
+	case WindowsMinidump_StreamTypes__MemoryList:
 		tmp17, err := this._io.ReadBytes(int(this.LenData))
 		if err != nil {
 			return nil, err
@@ -280,13 +280,13 @@ func (this *WindowsMinidump_Dir) Data() (v interface{}, err error) {
 		tmp17 = tmp17
 		this._raw_data = tmp17
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp18 := NewWindowsMinidump_MiscInfo()
+		tmp18 := NewWindowsMinidump_MemoryList()
 		err = tmp18.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp18
-	case WindowsMinidump_StreamTypes__SystemInfo:
+	case WindowsMinidump_StreamTypes__MiscInfo:
 		tmp19, err := this._io.ReadBytes(int(this.LenData))
 		if err != nil {
 			return nil, err
@@ -294,13 +294,13 @@ func (this *WindowsMinidump_Dir) Data() (v interface{}, err error) {
 		tmp19 = tmp19
 		this._raw_data = tmp19
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp20 := NewWindowsMinidump_SystemInfo()
+		tmp20 := NewWindowsMinidump_MiscInfo()
 		err = tmp20.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp20
-	case WindowsMinidump_StreamTypes__ThreadList:
+	case WindowsMinidump_StreamTypes__SystemInfo:
 		tmp21, err := this._io.ReadBytes(int(this.LenData))
 		if err != nil {
 			return nil, err
@@ -308,19 +308,33 @@ func (this *WindowsMinidump_Dir) Data() (v interface{}, err error) {
 		tmp21 = tmp21
 		this._raw_data = tmp21
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp22 := NewWindowsMinidump_ThreadList()
+		tmp22 := NewWindowsMinidump_SystemInfo()
 		err = tmp22.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp22
-	default:
+	case WindowsMinidump_StreamTypes__ThreadList:
 		tmp23, err := this._io.ReadBytes(int(this.LenData))
 		if err != nil {
 			return nil, err
 		}
 		tmp23 = tmp23
 		this._raw_data = tmp23
+		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+		tmp24 := NewWindowsMinidump_ThreadList()
+		err = tmp24.Read(_io__raw_data, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.data = tmp24
+	default:
+		tmp25, err := this._io.ReadBytes(int(this.LenData))
+		if err != nil {
+			return nil, err
+		}
+		tmp25 = tmp25
+		this._raw_data = tmp25
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
@@ -362,43 +376,43 @@ func (this *WindowsMinidump_ExceptionRecord) Read(io *kaitai.Stream, parent *Win
 	this._parent = parent
 	this._root = root
 
-	tmp24, err := this._io.ReadU4le()
+	tmp26, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Code = uint32(tmp24)
-	tmp25, err := this._io.ReadU4le()
+	this.Code = uint32(tmp26)
+	tmp27, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Flags = uint32(tmp25)
-	tmp26, err := this._io.ReadU8le()
+	this.Flags = uint32(tmp27)
+	tmp28, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.InnerException = uint64(tmp26)
-	tmp27, err := this._io.ReadU8le()
+	this.InnerException = uint64(tmp28)
+	tmp29, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Addr = uint64(tmp27)
-	tmp28, err := this._io.ReadU4le()
+	this.Addr = uint64(tmp29)
+	tmp30, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumParams = uint32(tmp28)
-	tmp29, err := this._io.ReadU4le()
+	this.NumParams = uint32(tmp30)
+	tmp31, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Reserved = uint32(tmp29)
+	this.Reserved = uint32(tmp31)
 	for i := 0; i < int(15); i++ {
 		_ = i
-		tmp30, err := this._io.ReadU8le()
+		tmp32, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.Params = append(this.Params, tmp30)
+		this.Params = append(this.Params, tmp32)
 	}
 	return err
 }
@@ -442,28 +456,28 @@ func (this *WindowsMinidump_ExceptionStream) Read(io *kaitai.Stream, parent *Win
 	this._parent = parent
 	this._root = root
 
-	tmp31, err := this._io.ReadU4le()
+	tmp33, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ThreadId = uint32(tmp31)
-	tmp32, err := this._io.ReadU4le()
+	this.ThreadId = uint32(tmp33)
+	tmp34, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Reserved = uint32(tmp32)
-	tmp33 := NewWindowsMinidump_ExceptionRecord()
-	err = tmp33.Read(this._io, this, this._root)
+	this.Reserved = uint32(tmp34)
+	tmp35 := NewWindowsMinidump_ExceptionRecord()
+	err = tmp35.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ExceptionRec = tmp33
-	tmp34 := NewWindowsMinidump_LocationDescriptor()
-	err = tmp34.Read(this._io, this, this._root)
+	this.ExceptionRec = tmp35
+	tmp36 := NewWindowsMinidump_LocationDescriptor()
+	err = tmp36.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ThreadContext = tmp34
+	this.ThreadContext = tmp36
 	return err
 }
 
@@ -493,16 +507,16 @@ func (this *WindowsMinidump_LocationDescriptor) Read(io *kaitai.Stream, parent k
 	this._parent = parent
 	this._root = root
 
-	tmp35, err := this._io.ReadU4le()
+	tmp37, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenData = uint32(tmp35)
-	tmp36, err := this._io.ReadU4le()
+	this.LenData = uint32(tmp37)
+	tmp38, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OfsData = uint32(tmp36)
+	this.OfsData = uint32(tmp38)
 	return err
 }
 func (this *WindowsMinidump_LocationDescriptor) Data() (v []byte, err error) {
@@ -519,17 +533,64 @@ func (this *WindowsMinidump_LocationDescriptor) Data() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp37, err := thisIo.ReadBytes(int(this.LenData))
+	tmp39, err := thisIo.ReadBytes(int(this.LenData))
 	if err != nil {
 		return nil, err
 	}
-	tmp37 = tmp37
-	this.data = tmp37
+	tmp39 = tmp39
+	this.data = tmp39
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
 	return this.data, nil
+}
+
+/**
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+ */
+type WindowsMinidump_Memory64List struct {
+	NumMemRanges uint64
+	OfsBase uint64
+	MemRanges []*WindowsMinidump_MemoryDescriptor64
+	_io *kaitai.Stream
+	_root *WindowsMinidump
+	_parent *WindowsMinidump_Dir
+}
+func NewWindowsMinidump_Memory64List() *WindowsMinidump_Memory64List {
+	return &WindowsMinidump_Memory64List{
+	}
+}
+
+func (this WindowsMinidump_Memory64List) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsMinidump_Memory64List) Read(io *kaitai.Stream, parent *WindowsMinidump_Dir, root *WindowsMinidump) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp40, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.NumMemRanges = uint64(tmp40)
+	tmp41, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.OfsBase = uint64(tmp41)
+	for i := 0; i < int(this.NumMemRanges); i++ {
+		_ = i
+		tmp42 := NewWindowsMinidump_MemoryDescriptor64()
+		err = tmp42.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.MemRanges = append(this.MemRanges, tmp42)
+	}
+	return err
 }
 
 /**
@@ -556,22 +617,59 @@ func (this *WindowsMinidump_MemoryDescriptor) Read(io *kaitai.Stream, parent kai
 	this._parent = parent
 	this._root = root
 
-	tmp38, err := this._io.ReadU8le()
+	tmp43, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.AddrMemoryRange = uint64(tmp38)
-	tmp39 := NewWindowsMinidump_LocationDescriptor()
-	err = tmp39.Read(this._io, this, this._root)
+	this.AddrMemoryRange = uint64(tmp43)
+	tmp44 := NewWindowsMinidump_LocationDescriptor()
+	err = tmp44.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Memory = tmp39
+	this.Memory = tmp44
 	return err
 }
 
 /**
- * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64">Source</a>
+ */
+type WindowsMinidump_MemoryDescriptor64 struct {
+	AddrMemoryRange uint64
+	LenData uint64
+	_io *kaitai.Stream
+	_root *WindowsMinidump
+	_parent *WindowsMinidump_Memory64List
+}
+func NewWindowsMinidump_MemoryDescriptor64() *WindowsMinidump_MemoryDescriptor64 {
+	return &WindowsMinidump_MemoryDescriptor64{
+	}
+}
+
+func (this WindowsMinidump_MemoryDescriptor64) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsMinidump_MemoryDescriptor64) Read(io *kaitai.Stream, parent *WindowsMinidump_Memory64List, root *WindowsMinidump) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp45, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.AddrMemoryRange = uint64(tmp45)
+	tmp46, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.LenData = uint64(tmp46)
+	return err
+}
+
+/**
+ * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list">Source</a>
  */
 type WindowsMinidump_MemoryList struct {
 	NumMemRanges uint32
@@ -594,19 +692,19 @@ func (this *WindowsMinidump_MemoryList) Read(io *kaitai.Stream, parent *WindowsM
 	this._parent = parent
 	this._root = root
 
-	tmp40, err := this._io.ReadU4le()
+	tmp47, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumMemRanges = uint32(tmp40)
+	this.NumMemRanges = uint32(tmp47)
 	for i := 0; i < int(this.NumMemRanges); i++ {
 		_ = i
-		tmp41 := NewWindowsMinidump_MemoryDescriptor()
-		err = tmp41.Read(this._io, this, this._root)
+		tmp48 := NewWindowsMinidump_MemoryDescriptor()
+		err = tmp48.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.MemRanges = append(this.MemRanges, tmp41)
+		this.MemRanges = append(this.MemRanges, tmp48)
 	}
 	return err
 }
@@ -637,21 +735,21 @@ func (this *WindowsMinidump_MinidumpString) Read(io *kaitai.Stream, parent *Wind
 	this._parent = parent
 	this._root = root
 
-	tmp42, err := this._io.ReadU4le()
+	tmp49, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenStr = uint32(tmp42)
-	tmp43, err := this._io.ReadBytes(int(this.LenStr))
+	this.LenStr = uint32(tmp49)
+	tmp50, err := this._io.ReadBytes(int(this.LenStr))
 	if err != nil {
 		return err
 	}
-	tmp43 = tmp43
-	tmp44, err := kaitai.BytesToStr(tmp43, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
+	tmp50 = tmp50
+	tmp51, err := kaitai.BytesToStr(tmp50, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
 	if err != nil {
 		return err
 	}
-	this.Str = tmp44
+	this.Str = tmp51
 	return err
 }
 
@@ -688,61 +786,61 @@ func (this *WindowsMinidump_MiscInfo) Read(io *kaitai.Stream, parent *WindowsMin
 	this._parent = parent
 	this._root = root
 
-	tmp45, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenInfo = uint32(tmp45)
-	tmp46, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Flags1 = uint32(tmp46)
-	tmp47, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ProcessId = uint32(tmp47)
-	tmp48, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ProcessCreateTime = uint32(tmp48)
-	tmp49, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ProcessUserTime = uint32(tmp49)
-	tmp50, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ProcessKernelTime = uint32(tmp50)
-	tmp51, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.CpuMaxMhz = uint32(tmp51)
 	tmp52, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.CpuCurMhz = uint32(tmp52)
+	this.LenInfo = uint32(tmp52)
 	tmp53, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.CpuLimitMhz = uint32(tmp53)
+	this.Flags1 = uint32(tmp53)
 	tmp54, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.CpuMaxIdleState = uint32(tmp54)
+	this.ProcessId = uint32(tmp54)
 	tmp55, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.CpuCurIdleState = uint32(tmp55)
+	this.ProcessCreateTime = uint32(tmp55)
+	tmp56, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ProcessUserTime = uint32(tmp56)
+	tmp57, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ProcessKernelTime = uint32(tmp57)
+	tmp58, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.CpuMaxMhz = uint32(tmp58)
+	tmp59, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.CpuCurMhz = uint32(tmp59)
+	tmp60, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.CpuLimitMhz = uint32(tmp60)
+	tmp61, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.CpuMaxIdleState = uint32(tmp61)
+	tmp62, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.CpuCurIdleState = uint32(tmp62)
 	return err
 }
 
@@ -798,66 +896,66 @@ func (this *WindowsMinidump_SystemInfo) Read(io *kaitai.Stream, parent *WindowsM
 	this._parent = parent
 	this._root = root
 
-	tmp56, err := this._io.ReadU2le()
+	tmp63, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.CpuArch = WindowsMinidump_SystemInfo_CpuArchs(tmp56)
-	tmp57, err := this._io.ReadU2le()
+	this.CpuArch = WindowsMinidump_SystemInfo_CpuArchs(tmp63)
+	tmp64, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.CpuLevel = uint16(tmp57)
-	tmp58, err := this._io.ReadU2le()
+	this.CpuLevel = uint16(tmp64)
+	tmp65, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.CpuRevision = uint16(tmp58)
-	tmp59, err := this._io.ReadU1()
+	this.CpuRevision = uint16(tmp65)
+	tmp66, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.NumCpus = tmp59
-	tmp60, err := this._io.ReadU1()
+	this.NumCpus = tmp66
+	tmp67, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.OsType = tmp60
-	tmp61, err := this._io.ReadU4le()
+	this.OsType = tmp67
+	tmp68, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OsVerMajor = uint32(tmp61)
-	tmp62, err := this._io.ReadU4le()
+	this.OsVerMajor = uint32(tmp68)
+	tmp69, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OsVerMinor = uint32(tmp62)
-	tmp63, err := this._io.ReadU4le()
+	this.OsVerMinor = uint32(tmp69)
+	tmp70, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OsBuild = uint32(tmp63)
-	tmp64, err := this._io.ReadU4le()
+	this.OsBuild = uint32(tmp70)
+	tmp71, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OsPlatform = uint32(tmp64)
-	tmp65, err := this._io.ReadU4le()
+	this.OsPlatform = uint32(tmp71)
+	tmp72, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OfsServicePack = uint32(tmp65)
-	tmp66, err := this._io.ReadU2le()
+	this.OfsServicePack = uint32(tmp72)
+	tmp73, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.OsSuiteMask = uint16(tmp66)
-	tmp67, err := this._io.ReadU2le()
+	this.OsSuiteMask = uint16(tmp73)
+	tmp74, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Reserved2 = uint16(tmp67)
+	this.Reserved2 = uint16(tmp74)
 	return err
 }
 func (this *WindowsMinidump_SystemInfo) ServicePack() (v *WindowsMinidump_MinidumpString, err error) {
@@ -875,12 +973,12 @@ func (this *WindowsMinidump_SystemInfo) ServicePack() (v *WindowsMinidump_Minidu
 		if err != nil {
 			return nil, err
 		}
-		tmp68 := NewWindowsMinidump_MinidumpString()
-		err = tmp68.Read(thisIo, this, this._root)
+		tmp75 := NewWindowsMinidump_MinidumpString()
+		err = tmp75.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.servicePack = tmp68
+		this.servicePack = tmp75
 		_, err = thisIo.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return nil, err
@@ -918,43 +1016,43 @@ func (this *WindowsMinidump_Thread) Read(io *kaitai.Stream, parent *WindowsMinid
 	this._parent = parent
 	this._root = root
 
-	tmp69, err := this._io.ReadU4le()
+	tmp76, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ThreadId = uint32(tmp69)
-	tmp70, err := this._io.ReadU4le()
+	this.ThreadId = uint32(tmp76)
+	tmp77, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.SuspendCount = uint32(tmp70)
-	tmp71, err := this._io.ReadU4le()
+	this.SuspendCount = uint32(tmp77)
+	tmp78, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.PriorityClass = uint32(tmp71)
-	tmp72, err := this._io.ReadU4le()
+	this.PriorityClass = uint32(tmp78)
+	tmp79, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Priority = uint32(tmp72)
-	tmp73, err := this._io.ReadU8le()
+	this.Priority = uint32(tmp79)
+	tmp80, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Teb = uint64(tmp73)
-	tmp74 := NewWindowsMinidump_MemoryDescriptor()
-	err = tmp74.Read(this._io, this, this._root)
+	this.Teb = uint64(tmp80)
+	tmp81 := NewWindowsMinidump_MemoryDescriptor()
+	err = tmp81.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Stack = tmp74
-	tmp75 := NewWindowsMinidump_LocationDescriptor()
-	err = tmp75.Read(this._io, this, this._root)
+	this.Stack = tmp81
+	tmp82 := NewWindowsMinidump_LocationDescriptor()
+	err = tmp82.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ThreadContext = tmp75
+	this.ThreadContext = tmp82
 	return err
 }
 
@@ -986,19 +1084,19 @@ func (this *WindowsMinidump_ThreadList) Read(io *kaitai.Stream, parent *WindowsM
 	this._parent = parent
 	this._root = root
 
-	tmp76, err := this._io.ReadU4le()
+	tmp83, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumThreads = uint32(tmp76)
+	this.NumThreads = uint32(tmp83)
 	for i := 0; i < int(this.NumThreads); i++ {
 		_ = i
-		tmp77 := NewWindowsMinidump_Thread()
-		err = tmp77.Read(this._io, this, this._root)
+		tmp84 := NewWindowsMinidump_Thread()
+		err = tmp84.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Threads = append(this.Threads, tmp77)
+		this.Threads = append(this.Threads, tmp84)
 	}
 	return err
 }

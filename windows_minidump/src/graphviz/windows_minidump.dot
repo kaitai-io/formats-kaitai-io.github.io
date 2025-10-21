@@ -38,10 +38,11 @@ digraph {
 dir__inst__data_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>:stream_types_exception</TD><TD PORT="case0">ExceptionStream</TD></TR>
-	<TR><TD>:stream_types_memory_list</TD><TD PORT="case1">MemoryList</TD></TR>
-	<TR><TD>:stream_types_misc_info</TD><TD PORT="case2">MiscInfo</TD></TR>
-	<TR><TD>:stream_types_system_info</TD><TD PORT="case3">SystemInfo</TD></TR>
-	<TR><TD>:stream_types_thread_list</TD><TD PORT="case4">ThreadList</TD></TR>
+	<TR><TD>:stream_types_memory_64_list</TD><TD PORT="case1">Memory64List</TD></TR>
+	<TR><TD>:stream_types_memory_list</TD><TD PORT="case2">MemoryList</TD></TR>
+	<TR><TD>:stream_types_misc_info</TD><TD PORT="case3">MiscInfo</TD></TR>
+	<TR><TD>:stream_types_system_info</TD><TD PORT="case4">SystemInfo</TD></TR>
+	<TR><TD>:stream_types_thread_list</TD><TD PORT="case5">ThreadList</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__exception_record {
@@ -86,6 +87,18 @@ dir__inst__data_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD PORT="data_pos">ofs_data</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__memory_64_list {
+			label="WindowsMinidump::Memory64List";
+			graph[style=dotted];
+
+			memory_64_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_mem_ranges_pos">0</TD><TD PORT="num_mem_ranges_size">8</TD><TD>u8le</TD><TD PORT="num_mem_ranges_type">num_mem_ranges</TD></TR>
+				<TR><TD PORT="ofs_base_pos">8</TD><TD PORT="ofs_base_size">8</TD><TD>u8le</TD><TD PORT="ofs_base_type">ofs_base</TD></TR>
+				<TR><TD PORT="mem_ranges_pos">16</TD><TD PORT="mem_ranges_size">16</TD><TD>MemoryDescriptor64</TD><TD PORT="mem_ranges_type">mem_ranges</TD></TR>
+				<TR><TD COLSPAN="4" PORT="mem_ranges__repeat">repeat num_mem_ranges times</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__memory_descriptor {
 			label="WindowsMinidump::MemoryDescriptor";
 			graph[style=dotted];
@@ -94,6 +107,16 @@ dir__inst__data_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="addr_memory_range_pos">0</TD><TD PORT="addr_memory_range_size">8</TD><TD>u8le</TD><TD PORT="addr_memory_range_type">addr_memory_range</TD></TR>
 				<TR><TD PORT="memory_pos">8</TD><TD PORT="memory_size">8</TD><TD>LocationDescriptor</TD><TD PORT="memory_type">memory</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__memory_descriptor_64 {
+			label="WindowsMinidump::MemoryDescriptor64";
+			graph[style=dotted];
+
+			memory_descriptor_64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="addr_memory_range_pos">0</TD><TD PORT="addr_memory_range_size">8</TD><TD>u8le</TD><TD PORT="addr_memory_range_type">addr_memory_range</TD></TR>
+				<TR><TD PORT="len_data_pos">8</TD><TD PORT="len_data_size">8</TD><TD>u8le</TD><TD PORT="len_data_type">len_data</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__memory_list {
@@ -194,15 +217,18 @@ dir__inst__data_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	dir__seq:ofs_data_type -> dir__inst__data:data_pos [color="#404040"];
 	dir__inst__data:data_type -> dir__inst__data_data_switch [style=bold];
 	dir__inst__data_data_switch:case0 -> exception_stream__seq [style=bold];
-	dir__inst__data_data_switch:case1 -> memory_list__seq [style=bold];
-	dir__inst__data_data_switch:case2 -> misc_info__seq [style=bold];
-	dir__inst__data_data_switch:case3 -> system_info__seq [style=bold];
-	dir__inst__data_data_switch:case4 -> thread_list__seq [style=bold];
+	dir__inst__data_data_switch:case1 -> memory_64_list__seq [style=bold];
+	dir__inst__data_data_switch:case2 -> memory_list__seq [style=bold];
+	dir__inst__data_data_switch:case3 -> misc_info__seq [style=bold];
+	dir__inst__data_data_switch:case4 -> system_info__seq [style=bold];
+	dir__inst__data_data_switch:case5 -> thread_list__seq [style=bold];
 	dir__seq:stream_type_type -> dir__inst__data:data_type [color="#404040"];
 	exception_stream__seq:exception_rec_type -> exception_record__seq [style=bold];
 	exception_stream__seq:thread_context_type -> location_descriptor__seq [style=bold];
 	location_descriptor__seq:ofs_data_type -> location_descriptor__inst__data:data_pos [color="#404040"];
 	location_descriptor__seq:len_data_type -> location_descriptor__inst__data:data_size [color="#404040"];
+	memory_64_list__seq:mem_ranges_type -> memory_descriptor_64__seq [style=bold];
+	memory_64_list__seq:num_mem_ranges_type -> memory_64_list__seq:mem_ranges__repeat [color="#404040"];
 	memory_descriptor__seq:memory_type -> location_descriptor__seq [style=bold];
 	memory_list__seq:mem_ranges_type -> memory_descriptor__seq [style=bold];
 	memory_list__seq:num_mem_ranges_type -> memory_list__seq:mem_ranges__repeat [color="#404040"];

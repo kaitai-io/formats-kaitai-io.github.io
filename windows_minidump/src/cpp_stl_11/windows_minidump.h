@@ -33,7 +33,9 @@ public:
     class exception_record_t;
     class exception_stream_t;
     class location_descriptor_t;
+    class memory_64_list_t;
     class memory_descriptor_t;
+    class memory_descriptor_64_t;
     class memory_list_t;
     class minidump_string_t;
     class misc_info_t;
@@ -286,6 +288,38 @@ public:
     };
 
     /**
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
+     */
+
+    class memory_64_list_t : public kaitai::kstruct {
+
+    public:
+
+        memory_64_list_t(kaitai::kstream* p__io, windows_minidump_t::dir_t* p__parent = nullptr, windows_minidump_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~memory_64_list_t();
+
+    private:
+        uint64_t m_num_mem_ranges;
+        uint64_t m_ofs_base;
+        std::unique_ptr<std::vector<std::unique_ptr<memory_descriptor_64_t>>> m_mem_ranges;
+        windows_minidump_t* m__root;
+        windows_minidump_t::dir_t* m__parent;
+
+    public:
+        uint64_t num_mem_ranges() const { return m_num_mem_ranges; }
+        uint64_t ofs_base() const { return m_ofs_base; }
+        std::vector<std::unique_ptr<memory_descriptor_64_t>>* mem_ranges() const { return m_mem_ranges.get(); }
+        windows_minidump_t* _root() const { return m__root; }
+        windows_minidump_t::dir_t* _parent() const { return m__parent; }
+    };
+
+    /**
      * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor Source
      */
 
@@ -316,7 +350,37 @@ public:
     };
 
     /**
-     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor64 Source
+     */
+
+    class memory_descriptor_64_t : public kaitai::kstruct {
+
+    public:
+
+        memory_descriptor_64_t(kaitai::kstream* p__io, windows_minidump_t::memory_64_list_t* p__parent = nullptr, windows_minidump_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~memory_descriptor_64_t();
+
+    private:
+        uint64_t m_addr_memory_range;
+        uint64_t m_len_data;
+        windows_minidump_t* m__root;
+        windows_minidump_t::memory_64_list_t* m__parent;
+
+    public:
+        uint64_t addr_memory_range() const { return m_addr_memory_range; }
+        uint64_t len_data() const { return m_len_data; }
+        windows_minidump_t* _root() const { return m__root; }
+        windows_minidump_t::memory_64_list_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_list Source
      */
 
     class memory_list_t : public kaitai::kstruct {

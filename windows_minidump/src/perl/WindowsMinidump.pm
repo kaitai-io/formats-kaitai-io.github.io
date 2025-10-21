@@ -195,6 +195,11 @@ sub data {
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
         $self->{data} = WindowsMinidump::ExceptionStream->new($io__raw_data, $self, $self->{_root});
     }
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_MEMORY_64_LIST) {
+        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+        $self->{data} = WindowsMinidump::Memory64List->new($io__raw_data, $self, $self->{_root});
+    }
     elsif ($_on == $WindowsMinidump::STREAM_TYPES_MEMORY_LIST) {
         $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
         my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
@@ -432,6 +437,60 @@ sub ofs_data {
 }
 
 ########################################################################
+package WindowsMinidump::Memory64List;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_mem_ranges} = $self->{_io}->read_u8le();
+    $self->{ofs_base} = $self->{_io}->read_u8le();
+    $self->{mem_ranges} = [];
+    my $n_mem_ranges = $self->num_mem_ranges();
+    for (my $i = 0; $i < $n_mem_ranges; $i++) {
+        push @{$self->{mem_ranges}}, WindowsMinidump::MemoryDescriptor64->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub num_mem_ranges {
+    my ($self) = @_;
+    return $self->{num_mem_ranges};
+}
+
+sub ofs_base {
+    my ($self) = @_;
+    return $self->{ofs_base};
+}
+
+sub mem_ranges {
+    my ($self) = @_;
+    return $self->{mem_ranges};
+}
+
+########################################################################
 package WindowsMinidump::MemoryDescriptor;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -473,6 +532,50 @@ sub addr_memory_range {
 sub memory {
     my ($self) = @_;
     return $self->{memory};
+}
+
+########################################################################
+package WindowsMinidump::MemoryDescriptor64;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{addr_memory_range} = $self->{_io}->read_u8le();
+    $self->{len_data} = $self->{_io}->read_u8le();
+}
+
+sub addr_memory_range {
+    my ($self) = @_;
+    return $self->{addr_memory_range};
+}
+
+sub len_data {
+    my ($self) = @_;
+    return $self->{len_data};
 }
 
 ########################################################################
