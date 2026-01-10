@@ -358,7 +358,7 @@ class SomeIp(ReadWriteKaitaiStruct):
 
         @property
         def is_valid_service_discovery(self):
-            """auxillary value.
+            """auxiliary value.
             
             .. seealso::
                AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements

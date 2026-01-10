@@ -132,7 +132,7 @@ public class Id3v11 extends KaitaiStruct {
             NATIVE_AMERICAN(64),
             CABARET(65),
             NEW_WAVE(66),
-            PSYCHADELIC(67),
+            PSYCHEDELIC(67),
             RAVE(68),
             SHOWTUNES(69),
             TRAILER(70),
@@ -264,7 +264,7 @@ public class Id3v11 extends KaitaiStruct {
         public String year() { return year; }
 
         /**
-         * Arbitary comment
+         * Arbitrary comment
          */
         public byte[] comment() { return comment; }
         public GenreEnum genre() { return genre; }

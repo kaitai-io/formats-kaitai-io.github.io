@@ -83,7 +83,7 @@ type
     native_american = 64
     cabaret = 65
     new_wave = 66
-    psychadelic = 67
+    psychedelic = 67
     rave = 68
     showtunes = 69
     trailer = 70
@@ -231,7 +231,7 @@ proc read*(_: typedesc[Id3v11_Id3V11Tag], io: KaitaiStream, root: KaitaiStruct, 
   this.year = yearExpr
 
   ##[
-  Arbitary comment
+  Arbitrary comment
   ]##
   let commentExpr = this.io.readBytes(int(30))
   this.comment = commentExpr

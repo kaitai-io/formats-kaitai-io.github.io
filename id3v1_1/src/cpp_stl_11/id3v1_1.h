@@ -121,7 +121,7 @@ public:
             GENRE_ENUM_NATIVE_AMERICAN = 64,
             GENRE_ENUM_CABARET = 65,
             GENRE_ENUM_NEW_WAVE = 66,
-            GENRE_ENUM_PSYCHADELIC = 67,
+            GENRE_ENUM_PSYCHEDELIC = 67,
             GENRE_ENUM_RAVE = 68,
             GENRE_ENUM_SHOWTUNES = 69,
             GENRE_ENUM_TRAILER = 70,
@@ -232,7 +232,7 @@ public:
         std::string year() const { return m_year; }
 
         /**
-         * Arbitary comment
+         * Arbitrary comment
          */
         std::string comment() const { return m_comment; }
         genre_enum_t genre() const { return m_genre; }

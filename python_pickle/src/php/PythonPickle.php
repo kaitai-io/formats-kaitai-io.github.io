@@ -53,7 +53,7 @@ namespace {
 /**
  * Length prefixed string, between 0 and 2**64-1 bytes long.
  * 
- * The contents are deserilised into a `bytearray` object.
+ * The contents are deserialised into a `bytearray` object.
  */
 
 namespace PythonPickle {
@@ -146,7 +146,7 @@ namespace PythonPickle {
 }
 
 /**
- * Integer, encoded with the ASCII chracters [0-9-], followed by 'L'.
+ * Integer, encoded with the ASCII characters [0-9-], followed by 'L'.
  */
 
 namespace PythonPickle {
@@ -514,8 +514,8 @@ namespace PythonPickle {
  * Instead, opcodes and types with a known encoding are used.
  * When unpickling
  * 
- * - `pickle.Unpickler` objects default to ASCII, which can be overriden
- * - `pickletools.dis` uses latin1, and cannot be overriden
+ * - `pickle.Unpickler` objects default to ASCII, which can be overridden
+ * - `pickletools.dis` uses latin1, and cannot be overridden
  */
 
 namespace PythonPickle {

@@ -251,7 +251,7 @@ namespace Kaitai
             private bool _isValidServiceDiscovery;
 
             /// <summary>
-            /// auxillary value
+            /// auxiliary value
             /// </summary>
             /// <remarks>
             /// Reference: AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements

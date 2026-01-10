@@ -310,7 +310,7 @@ public class BitcoinTransaction extends KaitaiStruct {
         public byte[] txid() { return txid; }
 
         /**
-         * ID indexing an ouput of the transaction refered by txid.
+         * ID indexing an output of the transaction referred by txid.
          * This output will be used as an input in the present transaction.
          */
         public long outputId() { return outputId; }
@@ -369,7 +369,7 @@ public class BitcoinTransaction extends KaitaiStruct {
         private BitcoinTransaction _parent;
 
         /**
-         * Number of Satoshis to be transfered.
+         * Number of Satoshis to be transferred.
          */
         public long amount() { return amount; }
 

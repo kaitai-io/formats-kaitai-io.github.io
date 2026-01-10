@@ -5014,7 +5014,7 @@ impl MachO_MachoFlags {
     }
 
     /**
-     * the object file is input for the dynamic linker and can't be staticly link edited again
+     * the object file is input for the dynamic linker and can't be statically link-edited again
      */
     pub fn dyld_link(
         &self
@@ -5064,7 +5064,7 @@ impl MachO_MachoFlags {
     }
 
     /**
-     * the object file is the output of an incremental link against a base file and can't be link edited again
+     * the object file is the output of an incremental link against a base file and can't be link-edited again
      */
     pub fn incr_link(
         &self
@@ -5132,7 +5132,7 @@ impl MachO_MachoFlags {
     }
 
     /**
-     * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+     * this umbrella guarantees no multiple definitions of symbols in its sub-images so the two-level namespace hints can always be used.
      */
     pub fn no_multi_defs(
         &self

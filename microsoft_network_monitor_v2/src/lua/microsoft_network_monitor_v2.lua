@@ -4,8 +4,8 @@
 
 local class = require("class")
 require("kaitaistruct")
-require("windows_systemtime")
 require("ethernet_frame")
+require("windows_systemtime")
 local enum = require("enum")
 local stringstream = require("string_stream")
 

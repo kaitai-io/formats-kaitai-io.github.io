@@ -3583,7 +3583,7 @@ func (this *MachO_MachoFlags) DeadStrippableDylib() (v bool, err error) {
 }
 
 /**
- * the object file is input for the dynamic linker and can't be staticly link edited again
+ * the object file is input for the dynamic linker and can't be statically link-edited again
  */
 func (this *MachO_MachoFlags) DyldLink() (v bool, err error) {
 	if (this._f_dyldLink) {
@@ -3615,7 +3615,7 @@ func (this *MachO_MachoFlags) HasTlvDescriptors() (v bool, err error) {
 }
 
 /**
- * the object file is the output of an incremental link against a base file and can't be link edited again
+ * the object file is the output of an incremental link against a base file and can't be link-edited again
  */
 func (this *MachO_MachoFlags) IncrLink() (v bool, err error) {
 	if (this._f_incrLink) {
@@ -3659,7 +3659,7 @@ func (this *MachO_MachoFlags) NoHeapExecution() (v bool, err error) {
 }
 
 /**
- * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+ * this umbrella guarantees no multiple definitions of symbols in its sub-images so the two-level namespace hints can always be used.
  */
 func (this *MachO_MachoFlags) NoMultiDefs() (v bool, err error) {
 	if (this._f_noMultiDefs) {

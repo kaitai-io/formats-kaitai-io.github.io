@@ -198,7 +198,7 @@ func (this *DnsPacket) Read(io *kaitai.Stream, parent kaitai.Struct, root *DnsPa
 }
 
 /**
- * ID to keep track of request/responces
+ * ID to keep track of request/responses
  */
 
 /**
@@ -471,7 +471,7 @@ func (this *DnsPacket_Answer) Read(io *kaitai.Stream, parent *DnsPacket, root *D
  */
 type DnsPacket_AuthorityInfo struct {
 	PrimaryNs *DnsPacket_DomainName
-	ResoponsibleMailbox *DnsPacket_DomainName
+	ResponsibleMailbox *DnsPacket_DomainName
 	Serial uint32
 	RefreshInterval uint32
 	RetryInterval uint32
@@ -506,7 +506,7 @@ func (this *DnsPacket_AuthorityInfo) Read(io *kaitai.Stream, parent *DnsPacket_A
 	if err != nil {
 		return err
 	}
-	this.ResoponsibleMailbox = tmp46
+	this.ResponsibleMailbox = tmp46
 	tmp47, err := this._io.ReadU4be()
 	if err != nil {
 		return err

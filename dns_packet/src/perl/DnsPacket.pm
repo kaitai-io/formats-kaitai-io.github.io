@@ -381,7 +381,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{primary_ns} = DnsPacket::DomainName->new($self->{_io}, $self, $self->{_root});
-    $self->{resoponsible_mailbox} = DnsPacket::DomainName->new($self->{_io}, $self, $self->{_root});
+    $self->{responsible_mailbox} = DnsPacket::DomainName->new($self->{_io}, $self, $self->{_root});
     $self->{serial} = $self->{_io}->read_u4be();
     $self->{refresh_interval} = $self->{_io}->read_u4be();
     $self->{retry_interval} = $self->{_io}->read_u4be();
@@ -394,9 +394,9 @@ sub primary_ns {
     return $self->{primary_ns};
 }
 
-sub resoponsible_mailbox {
+sub responsible_mailbox {
     my ($self) = @_;
-    return $self->{resoponsible_mailbox};
+    return $self->{responsible_mailbox};
 }
 
 sub serial {

@@ -177,7 +177,7 @@ impl Id3v11_Id3V11Tag {
 }
 
 /**
- * Arbitary comment
+ * Arbitrary comment
  */
 impl Id3v11_Id3V11Tag {
     pub fn comment(&self) -> Ref<'_, Vec<u8>> {
@@ -263,7 +263,7 @@ pub enum Id3v11_Id3V11Tag_GenreEnum {
     NativeAmerican,
     Cabaret,
     NewWave,
-    Psychadelic,
+    Psychedelic,
     Rave,
     Showtunes,
     Trailer,
@@ -396,7 +396,7 @@ impl TryFrom<i64> for Id3v11_Id3V11Tag_GenreEnum {
             64 => Ok(Id3v11_Id3V11Tag_GenreEnum::NativeAmerican),
             65 => Ok(Id3v11_Id3V11Tag_GenreEnum::Cabaret),
             66 => Ok(Id3v11_Id3V11Tag_GenreEnum::NewWave),
-            67 => Ok(Id3v11_Id3V11Tag_GenreEnum::Psychadelic),
+            67 => Ok(Id3v11_Id3V11Tag_GenreEnum::Psychedelic),
             68 => Ok(Id3v11_Id3V11Tag_GenreEnum::Rave),
             69 => Ok(Id3v11_Id3V11Tag_GenreEnum::Showtunes),
             70 => Ok(Id3v11_Id3V11Tag_GenreEnum::Trailer),
@@ -530,7 +530,7 @@ impl From<&Id3v11_Id3V11Tag_GenreEnum> for i64 {
             Id3v11_Id3V11Tag_GenreEnum::NativeAmerican => 64,
             Id3v11_Id3V11Tag_GenreEnum::Cabaret => 65,
             Id3v11_Id3V11Tag_GenreEnum::NewWave => 66,
-            Id3v11_Id3V11Tag_GenreEnum::Psychadelic => 67,
+            Id3v11_Id3V11Tag_GenreEnum::Psychedelic => 67,
             Id3v11_Id3V11Tag_GenreEnum::Rave => 68,
             Id3v11_Id3V11Tag_GenreEnum::Showtunes => 69,
             Id3v11_Id3V11Tag_GenreEnum::Trailer => 70,

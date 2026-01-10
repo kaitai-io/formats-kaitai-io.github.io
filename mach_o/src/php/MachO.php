@@ -1742,7 +1742,7 @@ namespace MachO {
         protected $_m_dyldLink;
 
         /**
-         * the object file is input for the dynamic linker and can't be staticly link edited again
+         * the object file is input for the dynamic linker and can't be statically link-edited again
          */
         public function dyldLink() {
             if ($this->_m_dyldLink !== null)
@@ -1771,7 +1771,7 @@ namespace MachO {
         protected $_m_incrLink;
 
         /**
-         * the object file is the output of an incremental link against a base file and can't be link edited again
+         * the object file is the output of an incremental link against a base file and can't be link-edited again
          */
         public function incrLink() {
             if ($this->_m_incrLink !== null)
@@ -1811,7 +1811,7 @@ namespace MachO {
         protected $_m_noMultiDefs;
 
         /**
-         * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+         * this umbrella guarantees no multiple definitions of symbols in its sub-images so the two-level namespace hints can always be used.
          */
         public function noMultiDefs() {
             if ($this->_m_noMultiDefs !== null)

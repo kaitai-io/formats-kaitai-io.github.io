@@ -3,9 +3,9 @@
 require 'kaitai/struct/struct'
 require_relative 'ipv6_packet'
 require_relative 'udp_datagram'
-require_relative 'icmp_packet'
 require_relative 'tcp_segment'
 require_relative 'ipv4_packet'
+require_relative 'icmp_packet'
 
 unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
   raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"

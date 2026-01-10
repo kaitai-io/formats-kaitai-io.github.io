@@ -140,7 +140,7 @@ end
 -- 
 -- True if last write operation failed due to log being full.
 -- 
--- True if wrapping of record has occured.
+-- True if wrapping of record has occurred.
 -- 
 -- True if write operation was in progress, but log file
 -- wasn't properly closed.
@@ -253,7 +253,7 @@ end
 -- 
 -- Time when this record was generated, POSIX timestamp format.
 -- 
--- Time when thsi record was written into the log file, POSIX timestamp format.
+-- Time when this record was written into the log file, POSIX timestamp format.
 -- 
 -- Identifier of an event, meaning is specific to particular
 -- source of events / event type.

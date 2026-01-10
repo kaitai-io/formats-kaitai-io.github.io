@@ -184,7 +184,7 @@ impl BitcoinTransaction_Vin {
 }
 
 /**
- * ID indexing an ouput of the transaction refered by txid.
+ * ID indexing an output of the transaction referred by txid.
  * This output will be used as an input in the present transaction.
  */
 impl BitcoinTransaction_Vin {
@@ -577,7 +577,7 @@ impl BitcoinTransaction_Vout {
 }
 
 /**
- * Number of Satoshis to be transfered.
+ * Number of Satoshis to be transferred.
  */
 impl BitcoinTransaction_Vout {
     pub fn amount(&self) -> Ref<'_, u64> {

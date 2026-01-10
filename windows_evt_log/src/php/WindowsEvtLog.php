@@ -190,7 +190,7 @@ namespace WindowsEvtLog\Header {
         public function logFull() { return $this->_m_logFull; }
 
         /**
-         * True if wrapping of record has occured.
+         * True if wrapping of record has occurred.
          */
         public function wrap() { return $this->_m_wrap; }
 
@@ -329,7 +329,7 @@ namespace WindowsEvtLog {
         public function timeGenerated() { return $this->_m_timeGenerated; }
 
         /**
-         * Time when thsi record was written into the log file, POSIX timestamp format.
+         * Time when this record was written into the log file, POSIX timestamp format.
          */
         public function timeWritten() { return $this->_m_timeWritten; }
 

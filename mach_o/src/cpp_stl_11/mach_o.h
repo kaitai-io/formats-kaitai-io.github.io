@@ -1948,7 +1948,7 @@ public:
     public:
 
         /**
-         * the object file is input for the dynamic linker and can't be staticly link edited again
+         * the object file is input for the dynamic linker and can't be statically link-edited again
          */
         bool dyld_link();
 
@@ -1977,7 +1977,7 @@ public:
     public:
 
         /**
-         * the object file is the output of an incremental link against a base file and can't be link edited again
+         * the object file is the output of an incremental link against a base file and can't be link-edited again
          */
         bool incr_link();
 
@@ -2017,7 +2017,7 @@ public:
     public:
 
         /**
-         * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+         * this umbrella guarantees no multiple definitions of symbols in its sub-images so the two-level namespace hints can always be used.
          */
         bool no_multi_defs();
 

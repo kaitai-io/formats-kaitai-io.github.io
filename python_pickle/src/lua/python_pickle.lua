@@ -131,7 +131,7 @@ end
 -- 
 -- Length prefixed string, between 0 and 2**64-1 bytes long.
 -- 
--- The contents are deserilised into a `bytearray` object.
+-- The contents are deserialised into a `bytearray` object.
 PythonPickle.Bytearray8 = class.class(KaitaiStruct)
 
 function PythonPickle.Bytearray8:_init(io, parent, root)
@@ -204,7 +204,7 @@ end
 
 
 -- 
--- Integer, encoded with the ASCII chracters [0-9-], followed by 'L'.
+-- Integer, encoded with the ASCII characters [0-9-], followed by 'L'.
 PythonPickle.DecimalnlLong = class.class(KaitaiStruct)
 
 function PythonPickle.DecimalnlLong:_init(io, parent, root)
@@ -477,8 +477,8 @@ end
 -- Instead, opcodes and types with a known encoding are used.
 -- When unpickling
 -- 
--- - `pickle.Unpickler` objects default to ASCII, which can be overriden
--- - `pickletools.dis` uses latin1, and cannot be overriden
+-- - `pickle.Unpickler` objects default to ASCII, which can be overridden
+-- - `pickletools.dis` uses latin1, and cannot be overridden
 -- See also: Source (https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495)
 PythonPickle.String1 = class.class(KaitaiStruct)
 

@@ -392,7 +392,7 @@ impl WindowsEvtLog_Header_Flags {
 }
 
 /**
- * True if wrapping of record has occured.
+ * True if wrapping of record has occurred.
  */
 impl WindowsEvtLog_Header_Flags {
     pub fn wrap(&self) -> Ref<'_, bool> {
@@ -688,7 +688,7 @@ impl WindowsEvtLog_RecordBody {
 }
 
 /**
- * Time when thsi record was written into the log file, POSIX timestamp format.
+ * Time when this record was written into the log file, POSIX timestamp format.
  */
 impl WindowsEvtLog_RecordBody {
     pub fn time_written(&self) -> Ref<'_, u32> {

@@ -213,7 +213,7 @@ var SomeIp = (function() {
     })();
 
     /**
-     * auxillary value
+     * auxiliary value
      * @see AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements
      */
     Object.defineProperty(Header.prototype, 'isValidServiceDiscovery', {

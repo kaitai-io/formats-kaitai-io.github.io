@@ -53,7 +53,7 @@ import java.util.Arrays;
  * the documentation on MSDN has probably got lost and they have probably
  * forgotten about this type of header.
  * 
- * This is the only source I could find about these structures, so we could't rely
+ * This is the only source I could find about these structures, so we couldn't rely
  * on it so much, but I think supporting them as a read-only format won't harm anything.
  * Due to the fact that it isn't documented anywhere else, most applications don't support it.
  * 
@@ -931,7 +931,7 @@ public class Bmp extends KaitaiStruct {
         public boolean hasReservedField() { return hasReservedField; }
 
         /**
-         * If equal to 0, the pallete should contain as many colors as can fit into the pixel value
+         * If equal to 0, the palette should contain as many colors as can fit into the pixel value
          * according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can
          * represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,
          * it reads as many colors as it can until EOS is reached (and the image data begin).

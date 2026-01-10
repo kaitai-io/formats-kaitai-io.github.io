@@ -57,7 +57,7 @@ proc keyLength*(this: SshPublicKey_KeyRsa): int
 ##[
 SSH public keys are encoded in a special binary format, typically represented
 to end users as either one-liner OpenSSH format or multi-line PEM format
-(commerical SSH). Text wrapper carries extra information about user who
+(commercial SSH). Text wrapper carries extra information about user who
 created the key, comment, etc, but the inner binary is always base64-encoded
 and follows the same internal format.
 

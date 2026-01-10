@@ -72,7 +72,7 @@ end
 -- 
 -- Previous transaction hash.
 -- 
--- ID indexing an ouput of the transaction refered by txid.
+-- ID indexing an output of the transaction referred by txid.
 -- This output will be used as an input in the present transaction.
 -- 
 -- ScriptSig's length.
@@ -194,7 +194,7 @@ function BitcoinTransaction.Vout:_read()
 end
 
 -- 
--- Number of Satoshis to be transfered.
+-- Number of Satoshis to be transferred.
 -- 
 -- ScriptPubKey's length.
 -- 

@@ -177,7 +177,7 @@ class DnsPacket < Kaitai::Struct::Struct
 
     def _read
       @primary_ns = DomainName.new(@_io, self, @_root)
-      @resoponsible_mailbox = DomainName.new(@_io, self, @_root)
+      @responsible_mailbox = DomainName.new(@_io, self, @_root)
       @serial = @_io.read_u4be
       @refresh_interval = @_io.read_u4be
       @retry_interval = @_io.read_u4be
@@ -186,7 +186,7 @@ class DnsPacket < Kaitai::Struct::Struct
       self
     end
     attr_reader :primary_ns
-    attr_reader :resoponsible_mailbox
+    attr_reader :responsible_mailbox
     attr_reader :serial
     attr_reader :refresh_interval
     attr_reader :retry_interval
@@ -417,7 +417,7 @@ class DnsPacket < Kaitai::Struct::Struct
   end
 
   ##
-  # ID to keep track of request/responces
+  # ID to keep track of request/responses
   attr_reader :transaction_id
   attr_reader :flags
 

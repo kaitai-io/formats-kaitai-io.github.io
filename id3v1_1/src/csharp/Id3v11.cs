@@ -122,7 +122,7 @@ namespace Kaitai
                 NativeAmerican = 64,
                 Cabaret = 65,
                 NewWave = 66,
-                Psychadelic = 67,
+                Psychedelic = 67,
                 Rave = 68,
                 Showtunes = 69,
                 Trailer = 70,
@@ -234,7 +234,7 @@ namespace Kaitai
             public string Year { get { return _year; } }
 
             /// <summary>
-            /// Arbitary comment
+            /// Arbitrary comment
             /// </summary>
             public byte[] Comment { get { return _comment; } }
             public GenreEnum Genre { get { return _genre; } }

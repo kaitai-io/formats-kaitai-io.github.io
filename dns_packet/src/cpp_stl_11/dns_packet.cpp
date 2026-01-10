@@ -262,13 +262,13 @@ dns_packet_t::authority_info_t::authority_info_t(kaitai::kstream* p__io, dns_pac
     m__parent = p__parent;
     m__root = p__root;
     m_primary_ns = nullptr;
-    m_resoponsible_mailbox = nullptr;
+    m_responsible_mailbox = nullptr;
     _read();
 }
 
 void dns_packet_t::authority_info_t::_read() {
     m_primary_ns = std::unique_ptr<domain_name_t>(new domain_name_t(m__io, this, m__root));
-    m_resoponsible_mailbox = std::unique_ptr<domain_name_t>(new domain_name_t(m__io, this, m__root));
+    m_responsible_mailbox = std::unique_ptr<domain_name_t>(new domain_name_t(m__io, this, m__root));
     m_serial = m__io->read_u4be();
     m_refresh_interval = m__io->read_u4be();
     m_retry_interval = m__io->read_u4be();

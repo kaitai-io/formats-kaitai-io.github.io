@@ -6326,7 +6326,7 @@ public class MachO extends KaitaiStruct.ReadWrite {
         private Boolean dyldLink;
 
         /**
-         * the object file is input for the dynamic linker and can't be staticly link edited again
+         * the object file is input for the dynamic linker and can't be statically link-edited again
          */
         public Boolean dyldLink() {
             if (this.dyldLink != null)
@@ -6358,7 +6358,7 @@ public class MachO extends KaitaiStruct.ReadWrite {
         private Boolean incrLink;
 
         /**
-         * the object file is the output of an incremental link against a base file and can't be link edited again
+         * the object file is the output of an incremental link against a base file and can't be link-edited again
          */
         public Boolean incrLink() {
             if (this.incrLink != null)
@@ -6402,7 +6402,7 @@ public class MachO extends KaitaiStruct.ReadWrite {
         private Boolean noMultiDefs;
 
         /**
-         * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+         * this umbrella guarantees no multiple definitions of symbols in its sub-images so the two-level namespace hints can always be used.
          */
         public Boolean noMultiDefs() {
             if (this.noMultiDefs != null)

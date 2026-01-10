@@ -510,7 +510,7 @@ public class BitcoinTransaction extends KaitaiStruct.ReadWrite {
         public void setTxid(byte[] _v) { _dirty = true; txid = _v; }
 
         /**
-         * ID indexing an ouput of the transaction refered by txid.
+         * ID indexing an output of the transaction referred by txid.
          * This output will be used as an input in the present transaction.
          */
         public long outputId() { return outputId; }
@@ -593,7 +593,7 @@ public class BitcoinTransaction extends KaitaiStruct.ReadWrite {
         private BitcoinTransaction _parent;
 
         /**
-         * Number of Satoshis to be transfered.
+         * Number of Satoshis to be transferred.
          */
         public long amount() { return amount; }
         public void setAmount(long _v) { _dirty = true; amount = _v; }

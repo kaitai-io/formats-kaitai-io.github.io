@@ -89,7 +89,7 @@ function DnsPacket:_read()
 end
 
 -- 
--- ID to keep track of request/responces.
+-- ID to keep track of request/responses.
 -- 
 -- How many questions are there.
 -- 
@@ -200,7 +200,7 @@ end
 
 function DnsPacket.AuthorityInfo:_read()
   self.primary_ns = DnsPacket.DomainName(self._io, self, self._root)
-  self.resoponsible_mailbox = DnsPacket.DomainName(self._io, self, self._root)
+  self.responsible_mailbox = DnsPacket.DomainName(self._io, self, self._root)
   self.serial = self._io:read_u4be()
   self.refresh_interval = self._io:read_u4be()
   self.retry_interval = self._io:read_u4be()

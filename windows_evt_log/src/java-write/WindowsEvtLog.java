@@ -333,7 +333,7 @@ public class WindowsEvtLog extends KaitaiStruct.ReadWrite {
             public void setLogFull(boolean _v) { _dirty = true; logFull = _v; }
 
             /**
-             * True if wrapping of record has occured.
+             * True if wrapping of record has occurred.
              */
             public boolean wrap() { return wrap; }
             public void setWrap(boolean _v) { _dirty = true; wrap = _v; }
@@ -790,7 +790,7 @@ public class WindowsEvtLog extends KaitaiStruct.ReadWrite {
         public void setTimeGenerated(long _v) { _dirty = true; timeGenerated = _v; }
 
         /**
-         * Time when thsi record was written into the log file, POSIX timestamp format.
+         * Time when this record was written into the log file, POSIX timestamp format.
          */
         public long timeWritten() { return timeWritten; }
         public void setTimeWritten(long _v) { _dirty = true; timeWritten = _v; }

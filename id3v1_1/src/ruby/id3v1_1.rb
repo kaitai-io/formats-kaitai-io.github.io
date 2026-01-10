@@ -105,7 +105,7 @@ class Id3v11 < Kaitai::Struct::Struct
       64 => :genre_enum_native_american,
       65 => :genre_enum_cabaret,
       66 => :genre_enum_new_wave,
-      67 => :genre_enum_psychadelic,
+      67 => :genre_enum_psychedelic,
       68 => :genre_enum_rave,
       69 => :genre_enum_showtunes,
       70 => :genre_enum_trailer,
@@ -201,7 +201,7 @@ class Id3v11 < Kaitai::Struct::Struct
     attr_reader :year
 
     ##
-    # Arbitary comment
+    # Arbitrary comment
     attr_reader :comment
     attr_reader :genre
   end

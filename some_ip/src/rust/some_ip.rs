@@ -174,7 +174,7 @@ impl KStruct for SomeIp_Header {
 impl SomeIp_Header {
 
     /**
-     * auxillary value
+     * auxiliary value
      * \sa AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements
      */
     pub fn is_valid_service_discovery(

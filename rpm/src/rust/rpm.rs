@@ -394,7 +394,7 @@ pub enum Rpm_HeaderTags {
 
     /**
      * Specifies the description of the package. The description value
-     * pointed to by this index record contains a full desription of
+     * pointed to by this index record contains a full description of
      * the package.
      */
     Description,
@@ -629,7 +629,7 @@ pub enum Rpm_HeaderTags {
     ChangelogName,
 
     /**
-     * Specifies the changes asssociated with a changelog entry.
+     * Specifies the changes associated with a changelog entry.
      */
     ChangelogText,
     BrokenMd5Internal,
@@ -644,7 +644,7 @@ pub enum Rpm_HeaderTags {
 
     /**
      * Specifies the name of the interpreter to which the postinstall
-     * scriptlet will be passed. The intepreter pointed to by this
+     * scriptlet will be passed. The interpreter pointed to by this
      * index record shall be `/bin/sh`.
      */
     PostInstallInterpreter,

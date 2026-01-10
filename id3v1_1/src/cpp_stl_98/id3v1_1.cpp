@@ -100,7 +100,7 @@ std::set<id3v1_1_t::id3_v1_1_tag_t::genre_enum_t> id3v1_1_t::id3_v1_1_tag_t::_bu
     _t.insert(id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_NATIVE_AMERICAN);
     _t.insert(id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_CABARET);
     _t.insert(id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_NEW_WAVE);
-    _t.insert(id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_PSYCHADELIC);
+    _t.insert(id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_PSYCHEDELIC);
     _t.insert(id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_RAVE);
     _t.insert(id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_SHOWTUNES);
     _t.insert(id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_TRAILER);

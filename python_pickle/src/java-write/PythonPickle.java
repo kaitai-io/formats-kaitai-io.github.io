@@ -196,7 +196,7 @@ public class PythonPickle extends KaitaiStruct.ReadWrite {
     /**
      * Length prefixed string, between 0 and 2**64-1 bytes long.
      * 
-     * The contents are deserilised into a `bytearray` object.
+     * The contents are deserialised into a `bytearray` object.
      */
     public static class Bytearray8 extends KaitaiStruct.ReadWrite {
         public static Bytearray8 fromFile(String fileName) throws IOException {
@@ -433,7 +433,7 @@ public class PythonPickle extends KaitaiStruct.ReadWrite {
     }
 
     /**
-     * Integer, encoded with the ASCII chracters [0-9-], followed by 'L'.
+     * Integer, encoded with the ASCII characters [0-9-], followed by 'L'.
      */
     public static class DecimalnlLong extends KaitaiStruct.ReadWrite {
         public static DecimalnlLong fromFile(String fileName) throws IOException {
@@ -2145,8 +2145,8 @@ public class PythonPickle extends KaitaiStruct.ReadWrite {
      * Instead, opcodes and types with a known encoding are used.
      * When unpickling
      * 
-     * - `pickle.Unpickler` objects default to ASCII, which can be overriden
-     * - `pickletools.dis` uses latin1, and cannot be overriden
+     * - `pickle.Unpickler` objects default to ASCII, which can be overridden
+     * - `pickletools.dis` uses latin1, and cannot be overridden
      * @see <a href="https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495">Source</a>
      */
     public static class String1 extends KaitaiStruct.ReadWrite {

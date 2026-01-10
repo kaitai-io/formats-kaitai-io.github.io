@@ -223,7 +223,7 @@ public:
         std::string txid() const { return m_txid; }
 
         /**
-         * ID indexing an ouput of the transaction refered by txid.
+         * ID indexing an output of the transaction referred by txid.
          * This output will be used as an input in the present transaction.
          */
         uint32_t output_id() const { return m_output_id; }
@@ -274,7 +274,7 @@ public:
     public:
 
         /**
-         * Number of Satoshis to be transfered.
+         * Number of Satoshis to be transferred.
          */
         uint64_t amount() const { return m_amount; }
 

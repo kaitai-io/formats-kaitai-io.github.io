@@ -104,7 +104,7 @@ impl DnsPacket {
 }
 
 /**
- * ID to keep track of request/responces
+ * ID to keep track of request/responses
  */
 impl DnsPacket {
     pub fn transaction_id(&self) -> Ref<'_, u16> {
@@ -660,7 +660,7 @@ pub struct DnsPacket_AuthorityInfo {
     pub _parent: SharedType<DnsPacket_Answer>,
     pub _self: SharedType<Self>,
     primary_ns: RefCell<OptRc<DnsPacket_DomainName>>,
-    resoponsible_mailbox: RefCell<OptRc<DnsPacket_DomainName>>,
+    responsible_mailbox: RefCell<OptRc<DnsPacket_DomainName>>,
     serial: RefCell<u32>,
     refresh_interval: RefCell<u32>,
     retry_interval: RefCell<u32>,
@@ -688,7 +688,7 @@ impl KStruct for DnsPacket_AuthorityInfo {
         let t = Self::read_into::<_, DnsPacket_DomainName>(&*_io, Some(self_rc._root.clone()), None)?.into();
         *self_rc.primary_ns.borrow_mut() = t;
         let t = Self::read_into::<_, DnsPacket_DomainName>(&*_io, Some(self_rc._root.clone()), None)?.into();
-        *self_rc.resoponsible_mailbox.borrow_mut() = t;
+        *self_rc.responsible_mailbox.borrow_mut() = t;
         *self_rc.serial.borrow_mut() = _io.read_u4be()?.into();
         *self_rc.refresh_interval.borrow_mut() = _io.read_u4be()?.into();
         *self_rc.retry_interval.borrow_mut() = _io.read_u4be()?.into();
@@ -705,8 +705,8 @@ impl DnsPacket_AuthorityInfo {
     }
 }
 impl DnsPacket_AuthorityInfo {
-    pub fn resoponsible_mailbox(&self) -> Ref<'_, OptRc<DnsPacket_DomainName>> {
-        self.resoponsible_mailbox.borrow()
+    pub fn responsible_mailbox(&self) -> Ref<'_, OptRc<DnsPacket_DomainName>> {
+        self.responsible_mailbox.borrow()
     }
 }
 impl DnsPacket_AuthorityInfo {

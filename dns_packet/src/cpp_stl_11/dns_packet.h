@@ -199,7 +199,7 @@ public:
 
     private:
         std::unique_ptr<domain_name_t> m_primary_ns;
-        std::unique_ptr<domain_name_t> m_resoponsible_mailbox;
+        std::unique_ptr<domain_name_t> m_responsible_mailbox;
         uint32_t m_serial;
         uint32_t m_refresh_interval;
         uint32_t m_retry_interval;
@@ -210,7 +210,7 @@ public:
 
     public:
         domain_name_t* primary_ns() const { return m_primary_ns.get(); }
-        domain_name_t* resoponsible_mailbox() const { return m_resoponsible_mailbox.get(); }
+        domain_name_t* responsible_mailbox() const { return m_responsible_mailbox.get(); }
         uint32_t serial() const { return m_serial; }
         uint32_t refresh_interval() const { return m_refresh_interval; }
         uint32_t retry_interval() const { return m_retry_interval; }
@@ -638,7 +638,7 @@ private:
 public:
 
     /**
-     * ID to keep track of request/responces
+     * ID to keep track of request/responses
      */
     uint16_t transaction_id() const { return m_transaction_id; }
     packet_flags_t* flags() const { return m_flags.get(); }

@@ -326,7 +326,7 @@ func (this *WindowsEvtLog_Header_Flags) Read(io *kaitai.Stream, parent *WindowsE
  */
 
 /**
- * True if wrapping of record has occured.
+ * True if wrapping of record has occurred.
  */
 
 /**
@@ -617,7 +617,7 @@ func (this *WindowsEvtLog_RecordBody) UserSid() (v []byte, err error) {
  */
 
 /**
- * Time when thsi record was written into the log file, POSIX timestamp format.
+ * Time when this record was written into the log file, POSIX timestamp format.
  */
 
 /**

@@ -59,7 +59,7 @@ namespace SomeIp {
         protected $_m_isValidServiceDiscovery;
 
         /**
-         * auxillary value
+         * auxiliary value
          */
         public function isValidServiceDiscovery() {
             if ($this->_m_isValidServiceDiscovery !== null)

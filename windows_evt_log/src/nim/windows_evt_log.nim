@@ -243,7 +243,7 @@ proc read*(_: typedesc[WindowsEvtLog_Header_Flags], io: KaitaiStream, root: Kait
   this.logFull = logFullExpr
 
   ##[
-  True if wrapping of record has occured.
+  True if wrapping of record has occurred.
   ]##
   let wrapExpr = this.io.readBitsIntBe(1) != 0
   this.wrap = wrapExpr
@@ -346,7 +346,7 @@ proc read*(_: typedesc[WindowsEvtLog_RecordBody], io: KaitaiStream, root: Kaitai
   this.timeGenerated = timeGeneratedExpr
 
   ##[
-  Time when thsi record was written into the log file, POSIX timestamp format.
+  Time when this record was written into the log file, POSIX timestamp format.
   ]##
   let timeWrittenExpr = this.io.readU4le()
   this.timeWritten = timeWrittenExpr

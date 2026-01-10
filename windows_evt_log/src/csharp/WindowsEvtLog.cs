@@ -177,7 +177,7 @@ namespace Kaitai
                 public bool LogFull { get { return _logFull; } }
 
                 /// <summary>
-                /// True if wrapping of record has occured.
+                /// True if wrapping of record has occurred.
                 /// </summary>
                 public bool Wrap { get { return _wrap; } }
 
@@ -426,7 +426,7 @@ namespace Kaitai
             public uint TimeGenerated { get { return _timeGenerated; } }
 
             /// <summary>
-            /// Time when thsi record was written into the log file, POSIX timestamp format.
+            /// Time when this record was written into the log file, POSIX timestamp format.
             /// </summary>
             public uint TimeWritten { get { return _timeWritten; } }
 

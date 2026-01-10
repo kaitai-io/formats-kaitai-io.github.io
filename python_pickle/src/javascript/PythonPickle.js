@@ -199,7 +199,7 @@ var PythonPickle = (function() {
   /**
    * Length prefixed string, between 0 and 2**64-1 bytes long.
    * 
-   * The contents are deserilised into a `bytearray` object.
+   * The contents are deserialised into a `bytearray` object.
    */
 
   var Bytearray8 = PythonPickle.Bytearray8 = (function() {
@@ -284,7 +284,7 @@ var PythonPickle = (function() {
   })();
 
   /**
-   * Integer, encoded with the ASCII chracters [0-9-], followed by 'L'.
+   * Integer, encoded with the ASCII characters [0-9-], followed by 'L'.
    */
 
   var DecimalnlLong = PythonPickle.DecimalnlLong = (function() {
@@ -648,8 +648,8 @@ var PythonPickle = (function() {
    * Instead, opcodes and types with a known encoding are used.
    * When unpickling
    * 
-   * - `pickle.Unpickler` objects default to ASCII, which can be overriden
-   * - `pickletools.dis` uses latin1, and cannot be overriden
+   * - `pickle.Unpickler` objects default to ASCII, which can be overridden
+   * - `pickletools.dis` uses latin1, and cannot be overridden
    * @see {@link https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495|Source}
    */
 

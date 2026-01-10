@@ -9,9 +9,9 @@ class protocol_body_t;
 #include <memory>
 #include "ipv6_packet.h"
 #include "udp_datagram.h"
-#include "icmp_packet.h"
 #include "tcp_segment.h"
 #include "ipv4_packet.h"
+#include "icmp_packet.h"
 #include <set>
 
 #if KAITAI_STRUCT_VERSION < 11000L

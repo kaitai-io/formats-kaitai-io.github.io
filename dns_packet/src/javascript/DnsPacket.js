@@ -231,7 +231,7 @@ var DnsPacket = (function() {
     }
     AuthorityInfo.prototype._read = function() {
       this.primaryNs = new DomainName(this._io, this, this._root);
-      this.resoponsibleMailbox = new DomainName(this._io, this, this._root);
+      this.responsibleMailbox = new DomainName(this._io, this, this._root);
       this.serial = this._io.readU4be();
       this.refreshInterval = this._io.readU4be();
       this.retryInterval = this._io.readU4be();
@@ -526,7 +526,7 @@ var DnsPacket = (function() {
   })();
 
   /**
-   * ID to keep track of request/responces
+   * ID to keep track of request/responses
    */
 
   /**

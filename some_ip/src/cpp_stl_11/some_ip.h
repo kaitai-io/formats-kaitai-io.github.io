@@ -220,7 +220,7 @@ public:
     public:
 
         /**
-         * auxillary value
+         * auxiliary value
          * \sa AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements
          */
         bool is_valid_service_discovery();

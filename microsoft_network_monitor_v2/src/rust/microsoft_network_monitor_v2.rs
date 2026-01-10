@@ -11,8 +11,8 @@ use kaitai::*;
 use std::convert::{TryFrom, TryInto};
 use std::cell::{Ref, Cell, RefCell};
 use std::rc::{Rc, Weak};
-use super::windows_systemtime::WindowsSystemtime;
 use super::ethernet_frame::EthernetFrame;
+use super::windows_systemtime::WindowsSystemtime;
 
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's

@@ -93,7 +93,7 @@ namespace Id3v11 {
         public function year() { return $this->_m_year; }
 
         /**
-         * Arbitary comment
+         * Arbitrary comment
          */
         public function comment() { return $this->_m_comment; }
         public function genre() { return $this->_m_genre; }
@@ -169,7 +169,7 @@ namespace Id3v11\Id3V11Tag {
         const NATIVE_AMERICAN = 64;
         const CABARET = 65;
         const NEW_WAVE = 66;
-        const PSYCHADELIC = 67;
+        const PSYCHEDELIC = 67;
         const RAVE = 68;
         const SHOWTUNES = 69;
         const TRAILER = 70;

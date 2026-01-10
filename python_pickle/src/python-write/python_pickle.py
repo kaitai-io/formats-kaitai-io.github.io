@@ -164,7 +164,7 @@ class PythonPickle(ReadWriteKaitaiStruct):
     class Bytearray8(ReadWriteKaitaiStruct):
         """Length prefixed string, between 0 and 2**64-1 bytes long.
         
-        The contents are deserilised into a `bytearray` object.
+        The contents are deserialised into a `bytearray` object.
         """
         def __init__(self, _io=None, _parent=None, _root=None):
             super(PythonPickle.Bytearray8, self).__init__(_io)
@@ -287,7 +287,7 @@ class PythonPickle(ReadWriteKaitaiStruct):
 
 
     class DecimalnlLong(ReadWriteKaitaiStruct):
-        """Integer, encoded with the ASCII chracters [0-9-], followed by 'L'."""
+        """Integer, encoded with the ASCII characters [0-9-], followed by 'L'."""
         def __init__(self, _io=None, _parent=None, _root=None):
             super(PythonPickle.DecimalnlLong, self).__init__(_io)
             self._parent = _parent
@@ -1512,8 +1512,8 @@ class PythonPickle(ReadWriteKaitaiStruct):
         Instead, opcodes and types with a known encoding are used.
         When unpickling
         
-        - `pickle.Unpickler` objects default to ASCII, which can be overriden
-        - `pickletools.dis` uses latin1, and cannot be overriden
+        - `pickle.Unpickler` objects default to ASCII, which can be overridden
+        - `pickletools.dis` uses latin1, and cannot be overridden
         
         .. seealso::
            Source - https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495

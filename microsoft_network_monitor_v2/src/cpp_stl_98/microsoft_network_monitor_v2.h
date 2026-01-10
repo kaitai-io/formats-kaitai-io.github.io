@@ -7,8 +7,8 @@ class microsoft_network_monitor_v2_t;
 
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
-#include "windows_systemtime.h"
 #include "ethernet_frame.h"
+#include "windows_systemtime.h"
 #include <set>
 #include <vector>
 

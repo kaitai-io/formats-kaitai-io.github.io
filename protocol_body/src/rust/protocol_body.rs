@@ -13,9 +13,9 @@ use std::cell::{Ref, Cell, RefCell};
 use std::rc::{Rc, Weak};
 use super::ipv6_packet::Ipv6Packet;
 use super::udp_datagram::UdpDatagram;
-use super::icmp_packet::IcmpPacket;
 use super::tcp_segment::TcpSegment;
 use super::ipv4_packet::Ipv4Packet;
+use super::icmp_packet::IcmpPacket;
 
 /**
  * Protocol body represents particular payload on transport level (OSI

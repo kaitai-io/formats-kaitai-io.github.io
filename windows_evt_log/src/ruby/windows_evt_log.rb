@@ -120,7 +120,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
       attr_reader :log_full
 
       ##
-      # True if wrapping of record has occured.
+      # True if wrapping of record has occurred.
       attr_reader :wrap
 
       ##
@@ -270,7 +270,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
     attr_reader :time_generated
 
     ##
-    # Time when thsi record was written into the log file, POSIX timestamp format.
+    # Time when this record was written into the log file, POSIX timestamp format.
     attr_reader :time_written
 
     ##

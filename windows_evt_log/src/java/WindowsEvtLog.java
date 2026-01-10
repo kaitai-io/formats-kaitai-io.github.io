@@ -216,7 +216,7 @@ public class WindowsEvtLog extends KaitaiStruct {
             public boolean logFull() { return logFull; }
 
             /**
-             * True if wrapping of record has occured.
+             * True if wrapping of record has occurred.
              */
             public boolean wrap() { return wrap; }
 
@@ -491,7 +491,7 @@ public class WindowsEvtLog extends KaitaiStruct {
         public long timeGenerated() { return timeGenerated; }
 
         /**
-         * Time when thsi record was written into the log file, POSIX timestamp format.
+         * Time when this record was written into the log file, POSIX timestamp format.
          */
         public long timeWritten() { return timeWritten; }
 

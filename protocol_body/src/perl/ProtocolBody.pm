@@ -5,9 +5,9 @@ use warnings;
 use IO::KaitaiStruct 0.011_000;
 use Ipv6Packet;
 use UdpDatagram;
-use IcmpPacket;
 use TcpSegment;
 use Ipv4Packet;
+use IcmpPacket;
 
 ########################################################################
 package ProtocolBody;

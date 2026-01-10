@@ -438,7 +438,7 @@ proc fromFile*(_: typedesc[PcfFont_Table_Properties], filename: string): PcfFont
 ##[
 Property is a key-value pair, "key" being always a
 string and "value" being either a string or a 32-bit
-integer based on an additinal flag (`is_string`).
+integer based on an additional flag (`is_string`).
 
 Simple offset-based mechanism is employed to keep this
 type's sequence fixed-sized and thus have simple access

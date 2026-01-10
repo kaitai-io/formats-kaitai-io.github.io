@@ -1384,7 +1384,7 @@ class MachO < Kaitai::Struct::Struct
     end
 
     ##
-    # the object file is input for the dynamic linker and can't be staticly link edited again
+    # the object file is input for the dynamic linker and can't be statically link-edited again
     def dyld_link
       return @dyld_link unless @dyld_link.nil?
       @dyld_link = value & 4 != 0
@@ -1405,7 +1405,7 @@ class MachO < Kaitai::Struct::Struct
     end
 
     ##
-    # the object file is the output of an incremental link against a base file and can't be link edited again
+    # the object file is the output of an incremental link against a base file and can't be link-edited again
     def incr_link
       return @incr_link unless @incr_link.nil?
       @incr_link = value & 2 != 0
@@ -1434,7 +1434,7 @@ class MachO < Kaitai::Struct::Struct
     end
 
     ##
-    # this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+    # this umbrella guarantees no multiple definitions of symbols in its sub-images so the two-level namespace hints can always be used.
     def no_multi_defs
       return @no_multi_defs unless @no_multi_defs.nil?
       @no_multi_defs = value & 512 != 0

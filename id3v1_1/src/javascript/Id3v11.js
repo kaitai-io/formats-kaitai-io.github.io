@@ -111,7 +111,7 @@ var Id3v11 = (function() {
       NATIVE_AMERICAN: 64,
       CABARET: 65,
       NEW_WAVE: 66,
-      PSYCHADELIC: 67,
+      PSYCHEDELIC: 67,
       RAVE: 68,
       SHOWTUNES: 69,
       TRAILER: 70,
@@ -238,7 +238,7 @@ var Id3v11 = (function() {
       64: "NATIVE_AMERICAN",
       65: "CABARET",
       66: "NEW_WAVE",
-      67: "PSYCHADELIC",
+      67: "PSYCHEDELIC",
       68: "RAVE",
       69: "SHOWTUNES",
       70: "TRAILER",
@@ -336,7 +336,7 @@ var Id3v11 = (function() {
      */
 
     /**
-     * Arbitary comment
+     * Arbitrary comment
      */
 
     return Id3V11Tag;

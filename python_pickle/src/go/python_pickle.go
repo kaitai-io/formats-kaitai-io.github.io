@@ -146,7 +146,7 @@ func (this *PythonPickle) Read(io *kaitai.Stream, parent kaitai.Struct, root *Py
 /**
  * Length prefixed string, between 0 and 2**64-1 bytes long.
  * 
- * The contents are deserilised into a `bytearray` object.
+ * The contents are deserialised into a `bytearray` object.
  */
 type PythonPickle_Bytearray8 struct {
 	Len uint64
@@ -303,7 +303,7 @@ func (this *PythonPickle_Bytes8) Read(io *kaitai.Stream, parent *PythonPickle_Op
 }
 
 /**
- * Integer, encoded with the ASCII chracters [0-9-], followed by 'L'.
+ * Integer, encoded with the ASCII characters [0-9-], followed by 'L'.
  */
 type PythonPickle_DecimalnlLong struct {
 	Val string
@@ -1018,8 +1018,8 @@ func (this *PythonPickle_Op) Read(io *kaitai.Stream, parent *PythonPickle, root 
  * Instead, opcodes and types with a known encoding are used.
  * When unpickling
  * 
- * - `pickle.Unpickler` objects default to ASCII, which can be overriden
- * - `pickletools.dis` uses latin1, and cannot be overriden
+ * - `pickle.Unpickler` objects default to ASCII, which can be overridden
+ * - `pickletools.dis` uses latin1, and cannot be overridden
  * @see <a href="https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495">Source</a>
  */
 type PythonPickle_String1 struct {

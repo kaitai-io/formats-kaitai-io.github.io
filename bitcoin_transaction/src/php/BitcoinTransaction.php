@@ -92,7 +92,7 @@ namespace BitcoinTransaction {
         public function txid() { return $this->_m_txid; }
 
         /**
-         * ID indexing an ouput of the transaction refered by txid.
+         * ID indexing an output of the transaction referred by txid.
          * This output will be used as an input in the present transaction.
          */
         public function outputId() { return $this->_m_outputId; }
@@ -276,7 +276,7 @@ namespace BitcoinTransaction {
         protected $_m_scriptPubKey;
 
         /**
-         * Number of Satoshis to be transfered.
+         * Number of Satoshis to be transferred.
          */
         public function amount() { return $this->_m_amount; }
 

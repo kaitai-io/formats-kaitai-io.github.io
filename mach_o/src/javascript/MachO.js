@@ -1772,7 +1772,7 @@ var MachO = (function() {
     });
 
     /**
-     * the object file is input for the dynamic linker and can't be staticly link edited again
+     * the object file is input for the dynamic linker and can't be statically link-edited again
      */
     Object.defineProperty(MachoFlags.prototype, 'dyldLink', {
       get: function() {
@@ -1804,7 +1804,7 @@ var MachO = (function() {
     });
 
     /**
-     * the object file is the output of an incremental link against a base file and can't be link edited again
+     * the object file is the output of an incremental link against a base file and can't be link-edited again
      */
     Object.defineProperty(MachoFlags.prototype, 'incrLink', {
       get: function() {
@@ -1848,7 +1848,7 @@ var MachO = (function() {
     });
 
     /**
-     * this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+     * this umbrella guarantees no multiple definitions of symbols in its sub-images so the two-level namespace hints can always be used.
      */
     Object.defineProperty(MachoFlags.prototype, 'noMultiDefs', {
       get: function() {

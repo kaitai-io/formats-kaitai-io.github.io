@@ -68,7 +68,7 @@ namespace {
         protected $_m_additionals;
 
         /**
-         * ID to keep track of request/responces
+         * ID to keep track of request/responses
          */
         public function transactionId() { return $this->_m_transactionId; }
         public function flags() { return $this->_m_flags; }
@@ -227,7 +227,7 @@ namespace DnsPacket {
 
         private function _read() {
             $this->_m_primaryNs = new \DnsPacket\DomainName($this->_io, $this, $this->_root);
-            $this->_m_resoponsibleMailbox = new \DnsPacket\DomainName($this->_io, $this, $this->_root);
+            $this->_m_responsibleMailbox = new \DnsPacket\DomainName($this->_io, $this, $this->_root);
             $this->_m_serial = $this->_io->readU4be();
             $this->_m_refreshInterval = $this->_io->readU4be();
             $this->_m_retryInterval = $this->_io->readU4be();
@@ -235,14 +235,14 @@ namespace DnsPacket {
             $this->_m_minTtl = $this->_io->readU4be();
         }
         protected $_m_primaryNs;
-        protected $_m_resoponsibleMailbox;
+        protected $_m_responsibleMailbox;
         protected $_m_serial;
         protected $_m_refreshInterval;
         protected $_m_retryInterval;
         protected $_m_expireLimit;
         protected $_m_minTtl;
         public function primaryNs() { return $this->_m_primaryNs; }
-        public function resoponsibleMailbox() { return $this->_m_resoponsibleMailbox; }
+        public function responsibleMailbox() { return $this->_m_responsibleMailbox; }
         public function serial() { return $this->_m_serial; }
         public function refreshInterval() { return $this->_m_refreshInterval; }
         public function retryInterval() { return $this->_m_retryInterval; }

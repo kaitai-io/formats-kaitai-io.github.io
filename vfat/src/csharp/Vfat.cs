@@ -490,7 +490,7 @@ namespace Kaitai
             /// Logical sector number of FS Information Sector, typically 1,
             /// i.e., the second of the three FAT32 boot sectors. Values
             /// like 0 and 0xFFFF are used by some FAT32 implementations to
-            /// designate abscence of FS Information Sector.
+            /// designate absence of FS Information Sector.
             /// </summary>
             public ushort LsFsInfo { get { return _lsFsInfo; } }
 

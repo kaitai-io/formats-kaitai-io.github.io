@@ -650,7 +650,7 @@ namespace Rpm {
 
         /**
          * Specifies the description of the package. The description value
-         * pointed to by this index record contains a full desription of
+         * pointed to by this index record contains a full description of
          * the package.
          */
         const DESCRIPTION = 1005;
@@ -885,7 +885,7 @@ namespace Rpm {
         const CHANGELOG_NAME = 1081;
 
         /**
-         * Specifies the changes asssociated with a changelog entry.
+         * Specifies the changes associated with a changelog entry.
          */
         const CHANGELOG_TEXT = 1082;
         const BROKEN_MD5_INTERNAL = 1083;
@@ -900,7 +900,7 @@ namespace Rpm {
 
         /**
          * Specifies the name of the interpreter to which the postinstall
-         * scriptlet will be passed. The intepreter pointed to by this
+         * scriptlet will be passed. The interpreter pointed to by this
          * index record shall be `/bin/sh`.
          */
         const POST_INSTALL_INTERPRETER = 1086;

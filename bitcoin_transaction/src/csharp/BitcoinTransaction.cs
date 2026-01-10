@@ -260,7 +260,7 @@ namespace Kaitai
             public byte[] Txid { get { return _txid; } }
 
             /// <summary>
-            /// ID indexing an ouput of the transaction refered by txid.
+            /// ID indexing an output of the transaction referred by txid.
             /// This output will be used as an input in the present transaction.
             /// </summary>
             public uint OutputId { get { return _outputId; } }
@@ -314,7 +314,7 @@ namespace Kaitai
             private BitcoinTransaction m_parent;
 
             /// <summary>
-            /// Number of Satoshis to be transfered.
+            /// Number of Satoshis to be transferred.
             /// </summary>
             public ulong Amount { get { return _amount; } }
 

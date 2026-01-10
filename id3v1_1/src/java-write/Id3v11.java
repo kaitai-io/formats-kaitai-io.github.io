@@ -153,7 +153,7 @@ public class Id3v11 extends KaitaiStruct.ReadWrite {
             NATIVE_AMERICAN(64),
             CABARET(65),
             NEW_WAVE(66),
-            PSYCHADELIC(67),
+            PSYCHEDELIC(67),
             RAVE(68),
             SHOWTUNES(69),
             TRAILER(70),
@@ -323,7 +323,7 @@ public class Id3v11 extends KaitaiStruct.ReadWrite {
         public void setYear(String _v) { _dirty = true; year = _v; }
 
         /**
-         * Arbitary comment
+         * Arbitrary comment
          */
         public byte[] comment() { return comment; }
         public void setComment(byte[] _v) { _dirty = true; comment = _v; }

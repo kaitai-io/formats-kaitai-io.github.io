@@ -2096,7 +2096,7 @@ namespace Elf {
          * specific, and should have been in the range DT_LOPROC-DT_HIPROC
          * instead of here. When the error was fixed,
          * DT_DEPRECATED_SPARC_REGISTER was created to maintain backward
-         * compatability.
+         * compatibility.
          */
         const DEPRECATED_SPARC_REGISTER = 117440513;
         const SUNW_AUXILIARY = 1610612749;

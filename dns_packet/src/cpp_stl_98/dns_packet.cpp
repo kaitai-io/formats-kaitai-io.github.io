@@ -328,7 +328,7 @@ dns_packet_t::authority_info_t::authority_info_t(kaitai::kstream* p__io, dns_pac
     m__parent = p__parent;
     m__root = p__root;
     m_primary_ns = 0;
-    m_resoponsible_mailbox = 0;
+    m_responsible_mailbox = 0;
 
     try {
         _read();
@@ -340,7 +340,7 @@ dns_packet_t::authority_info_t::authority_info_t(kaitai::kstream* p__io, dns_pac
 
 void dns_packet_t::authority_info_t::_read() {
     m_primary_ns = new domain_name_t(m__io, this, m__root);
-    m_resoponsible_mailbox = new domain_name_t(m__io, this, m__root);
+    m_responsible_mailbox = new domain_name_t(m__io, this, m__root);
     m_serial = m__io->read_u4be();
     m_refresh_interval = m__io->read_u4be();
     m_retry_interval = m__io->read_u4be();
@@ -356,8 +356,8 @@ void dns_packet_t::authority_info_t::_clean_up() {
     if (m_primary_ns) {
         delete m_primary_ns; m_primary_ns = 0;
     }
-    if (m_resoponsible_mailbox) {
-        delete m_resoponsible_mailbox; m_resoponsible_mailbox = 0;
+    if (m_responsible_mailbox) {
+        delete m_responsible_mailbox; m_responsible_mailbox = 0;
     }
 }
 

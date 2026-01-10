@@ -159,7 +159,7 @@ class BitcoinTransaction < Kaitai::Struct::Struct
     attr_reader :txid
 
     ##
-    # ID indexing an ouput of the transaction refered by txid.
+    # ID indexing an output of the transaction referred by txid.
     # This output will be used as an input in the present transaction.
     attr_reader :output_id
 
@@ -193,7 +193,7 @@ class BitcoinTransaction < Kaitai::Struct::Struct
     end
 
     ##
-    # Number of Satoshis to be transfered.
+    # Number of Satoshis to be transferred.
     attr_reader :amount
 
     ##

@@ -268,7 +268,7 @@ namespace Kaitai
             private void _read()
             {
                 _primaryNs = new DomainName(m_io, this, m_root);
-                _resoponsibleMailbox = new DomainName(m_io, this, m_root);
+                _responsibleMailbox = new DomainName(m_io, this, m_root);
                 _serial = m_io.ReadU4be();
                 _refreshInterval = m_io.ReadU4be();
                 _retryInterval = m_io.ReadU4be();
@@ -276,7 +276,7 @@ namespace Kaitai
                 _minTtl = m_io.ReadU4be();
             }
             private DomainName _primaryNs;
-            private DomainName _resoponsibleMailbox;
+            private DomainName _responsibleMailbox;
             private uint _serial;
             private uint _refreshInterval;
             private uint _retryInterval;
@@ -285,7 +285,7 @@ namespace Kaitai
             private DnsPacket m_root;
             private DnsPacket.Answer m_parent;
             public DomainName PrimaryNs { get { return _primaryNs; } }
-            public DomainName ResoponsibleMailbox { get { return _resoponsibleMailbox; } }
+            public DomainName ResponsibleMailbox { get { return _responsibleMailbox; } }
             public uint Serial { get { return _serial; } }
             public uint RefreshInterval { get { return _refreshInterval; } }
             public uint RetryInterval { get { return _retryInterval; } }
@@ -773,7 +773,7 @@ namespace Kaitai
         private KaitaiStruct m_parent;
 
         /// <summary>
-        /// ID to keep track of request/responces
+        /// ID to keep track of request/responses
         /// </summary>
         public ushort TransactionId { get { return _transactionId; } }
         public PacketFlags Flags { get { return _flags; } }

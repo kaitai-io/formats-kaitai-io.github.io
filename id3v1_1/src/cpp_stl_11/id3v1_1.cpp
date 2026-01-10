@@ -90,7 +90,7 @@ const std::set<id3v1_1_t::id3_v1_1_tag_t::genre_enum_t> id3v1_1_t::id3_v1_1_tag_
     id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_NATIVE_AMERICAN,
     id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_CABARET,
     id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_NEW_WAVE,
-    id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_PSYCHADELIC,
+    id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_PSYCHEDELIC,
     id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_RAVE,
     id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_SHOWTUNES,
     id3v1_1_t::id3_v1_1_tag_t::GENRE_ENUM_TRAILER,

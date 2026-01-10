@@ -1,7 +1,7 @@
 import kaitai_struct_nim_runtime
 import options
-import windows_systemtime
 import ethernet_frame
+import windows_systemtime
 
 type
   MicrosoftNetworkMonitorV2* = ref object of KaitaiStruct

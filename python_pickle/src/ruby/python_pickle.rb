@@ -126,7 +126,7 @@ class PythonPickle < Kaitai::Struct::Struct
   ##
   # Length prefixed string, between 0 and 2**64-1 bytes long.
   # 
-  # The contents are deserilised into a `bytearray` object.
+  # The contents are deserialised into a `bytearray` object.
   class Bytearray8 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
@@ -199,7 +199,7 @@ class PythonPickle < Kaitai::Struct::Struct
   end
 
   ##
-  # Integer, encoded with the ASCII chracters [0-9-], followed by 'L'.
+  # Integer, encoded with the ASCII characters [0-9-], followed by 'L'.
   class DecimalnlLong < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
@@ -468,8 +468,8 @@ class PythonPickle < Kaitai::Struct::Struct
   # Instead, opcodes and types with a known encoding are used.
   # When unpickling
   # 
-  # - `pickle.Unpickler` objects default to ASCII, which can be overriden
-  # - `pickletools.dis` uses latin1, and cannot be overriden
+  # - `pickle.Unpickler` objects default to ASCII, which can be overridden
+  # - `pickletools.dis` uses latin1, and cannot be overridden
   # @see https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495 Source
   class String1 < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)

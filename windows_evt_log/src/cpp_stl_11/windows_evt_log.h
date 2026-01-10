@@ -146,7 +146,7 @@ public:
             bool log_full() const { return m_log_full; }
 
             /**
-             * True if wrapping of record has occured.
+             * True if wrapping of record has occurred.
              */
             bool wrap() const { return m_wrap; }
 
@@ -360,7 +360,7 @@ public:
         uint32_t time_generated() const { return m_time_generated; }
 
         /**
-         * Time when thsi record was written into the log file, POSIX timestamp format.
+         * Time when this record was written into the log file, POSIX timestamp format.
          */
         uint32_t time_written() const { return m_time_written; }
 

@@ -57,8 +57,8 @@ namespace IcmpPacket\DestinationUnreachableMsg {
         const PORT_UNREACHABLE = 3;
         const FRAGMENTATION_NEEDED_AND_DF_SET = 4;
         const SOURCE_ROUTE_FAILED = 5;
-        const DST_NET_UNKOWN = 6;
-        const SDT_HOST_UNKOWN = 7;
+        const DST_NET_UNKNOWN = 6;
+        const SDT_HOST_UNKNOWN = 7;
         const SRC_ISOLATED = 8;
         const NET_PROHIBITED_BY_ADMIN = 9;
         const HOST_PROHIBITED_BY_ADMIN = 10;

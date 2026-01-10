@@ -194,7 +194,7 @@ func (this *SomeIp_Header) Read(io *kaitai.Stream, parent *SomeIp, root *SomeIp)
 }
 
 /**
- * auxillary value
+ * auxiliary value
  * @see "AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements"
  */
 func (this *SomeIp_Header) IsValidServiceDiscovery() (v bool, err error) {

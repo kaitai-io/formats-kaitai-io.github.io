@@ -144,8 +144,8 @@ class GoogleProtobuf(KaitaiStruct):
         def wire_type(self):
             """"Wire type" is a part of the "key" that carries enough
             information to parse value from the wire, i.e. read correct
-            amount of bytes, but there's not enough informaton to
-            interprete in unambiguously. For example, one can't clearly
+            amount of bytes, but there's not enough information to
+            interpret in unambiguously. For example, one can't clearly
             distinguish 64-bit fixed-sized integers from 64-bit floats,
             signed zigzag-encoded varints from regular unsigned varints,
             arbitrary bytes from UTF-8 encoded strings, etc.

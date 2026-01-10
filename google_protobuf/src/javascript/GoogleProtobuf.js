@@ -135,8 +135,8 @@ var GoogleProtobuf = (function() {
     /**
      * "Wire type" is a part of the "key" that carries enough
      * information to parse value from the wire, i.e. read correct
-     * amount of bytes, but there's not enough informaton to
-     * interprete in unambiguously. For example, one can't clearly
+     * amount of bytes, but there's not enough information to
+     * interpret in unambiguously. For example, one can't clearly
      * distinguish 64-bit fixed-sized integers from 64-bit floats,
      * signed zigzag-encoded varints from regular unsigned varints,
      * arbitrary bytes from UTF-8 encoded strings, etc.
@@ -160,8 +160,8 @@ var GoogleProtobuf = (function() {
      * Value that corresponds to field identified by
      * `field_tag`. Type is determined approximately: there is
      * enough information to parse it unambiguously from a stream,
-     * but further infromation from `.proto` file is required to
-     * interprete it properly.
+     * but further information from `.proto` file is required to
+     * interpret it properly.
      */
 
     return Pair;

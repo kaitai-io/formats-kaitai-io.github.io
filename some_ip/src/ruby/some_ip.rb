@@ -165,7 +165,7 @@ class SomeIp < Kaitai::Struct::Struct
     end
 
     ##
-    # auxillary value
+    # auxiliary value
     # @see '' AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements
     def is_valid_service_discovery
       return @is_valid_service_discovery unless @is_valid_service_discovery.nil?

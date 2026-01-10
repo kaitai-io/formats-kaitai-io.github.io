@@ -118,7 +118,7 @@ class Id3v11(KaitaiStruct):
             native_american = 64
             cabaret = 65
             new_wave = 66
-            psychadelic = 67
+            psychedelic = 67
             rave = 68
             showtunes = 69
             trailer = 70

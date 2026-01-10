@@ -55,7 +55,7 @@ type
     `rawPayload`*: seq[byte]
   DnsPacket_AuthorityInfo* = ref object of KaitaiStruct
     `primaryNs`*: DnsPacket_DomainName
-    `resoponsibleMailbox`*: DnsPacket_DomainName
+    `responsibleMailbox`*: DnsPacket_DomainName
     `serial`*: uint32
     `refreshInterval`*: uint32
     `retryInterval`*: uint32
@@ -169,7 +169,7 @@ proc read*(_: typedesc[DnsPacket], io: KaitaiStream, root: KaitaiStruct, parent:
 
 
   ##[
-  ID to keep track of request/responces
+  ID to keep track of request/responses
   ]##
   let transactionIdExpr = this.io.readU2be()
   this.transactionId = transactionIdExpr
@@ -350,8 +350,8 @@ proc read*(_: typedesc[DnsPacket_AuthorityInfo], io: KaitaiStream, root: KaitaiS
 
   let primaryNsExpr = DnsPacket_DomainName.read(this.io, this.root, this)
   this.primaryNs = primaryNsExpr
-  let resoponsibleMailboxExpr = DnsPacket_DomainName.read(this.io, this.root, this)
-  this.resoponsibleMailbox = resoponsibleMailboxExpr
+  let responsibleMailboxExpr = DnsPacket_DomainName.read(this.io, this.root, this)
+  this.responsibleMailbox = responsibleMailboxExpr
   let serialExpr = this.io.readU4be()
   this.serial = serialExpr
   let refreshIntervalExpr = this.io.readU4be()

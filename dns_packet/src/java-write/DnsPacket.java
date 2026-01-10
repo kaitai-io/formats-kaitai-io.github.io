@@ -877,8 +877,8 @@ public class DnsPacket extends KaitaiStruct.ReadWrite {
         public void _read() {
             this.primaryNs = new DomainName(this._io, this, _root);
             this.primaryNs._read();
-            this.resoponsibleMailbox = new DomainName(this._io, this, _root);
-            this.resoponsibleMailbox._read();
+            this.responsibleMailbox = new DomainName(this._io, this, _root);
+            this.responsibleMailbox._read();
             this.serial = this._io.readU4be();
             this.refreshInterval = this._io.readU4be();
             this.retryInterval = this._io.readU4be();
@@ -889,13 +889,13 @@ public class DnsPacket extends KaitaiStruct.ReadWrite {
 
         public void _fetchInstances() {
             this.primaryNs._fetchInstances();
-            this.resoponsibleMailbox._fetchInstances();
+            this.responsibleMailbox._fetchInstances();
         }
 
         public void _write_Seq() {
             _assertNotDirty();
             this.primaryNs._write_Seq(this._io);
-            this.resoponsibleMailbox._write_Seq(this._io);
+            this.responsibleMailbox._write_Seq(this._io);
             this._io.writeU4be(this.serial);
             this._io.writeU4be(this.refreshInterval);
             this._io.writeU4be(this.retryInterval);
@@ -908,14 +908,14 @@ public class DnsPacket extends KaitaiStruct.ReadWrite {
                 throw new ConsistencyError("primary_ns", _root(), this.primaryNs._root());
             if (!Objects.equals(this.primaryNs._parent(), this))
                 throw new ConsistencyError("primary_ns", this, this.primaryNs._parent());
-            if (!Objects.equals(this.resoponsibleMailbox._root(), _root()))
-                throw new ConsistencyError("resoponsible_mailbox", _root(), this.resoponsibleMailbox._root());
-            if (!Objects.equals(this.resoponsibleMailbox._parent(), this))
-                throw new ConsistencyError("resoponsible_mailbox", this, this.resoponsibleMailbox._parent());
+            if (!Objects.equals(this.responsibleMailbox._root(), _root()))
+                throw new ConsistencyError("responsible_mailbox", _root(), this.responsibleMailbox._root());
+            if (!Objects.equals(this.responsibleMailbox._parent(), this))
+                throw new ConsistencyError("responsible_mailbox", this, this.responsibleMailbox._parent());
             _dirty = false;
         }
         private DomainName primaryNs;
-        private DomainName resoponsibleMailbox;
+        private DomainName responsibleMailbox;
         private long serial;
         private long refreshInterval;
         private long retryInterval;
@@ -925,8 +925,8 @@ public class DnsPacket extends KaitaiStruct.ReadWrite {
         private DnsPacket.Answer _parent;
         public DomainName primaryNs() { return primaryNs; }
         public void setPrimaryNs(DomainName _v) { _dirty = true; primaryNs = _v; }
-        public DomainName resoponsibleMailbox() { return resoponsibleMailbox; }
-        public void setResoponsibleMailbox(DomainName _v) { _dirty = true; resoponsibleMailbox = _v; }
+        public DomainName responsibleMailbox() { return responsibleMailbox; }
+        public void setResponsibleMailbox(DomainName _v) { _dirty = true; responsibleMailbox = _v; }
         public long serial() { return serial; }
         public void setSerial(long _v) { _dirty = true; serial = _v; }
         public long refreshInterval() { return refreshInterval; }
@@ -1679,7 +1679,7 @@ public class DnsPacket extends KaitaiStruct.ReadWrite {
     private KaitaiStruct.ReadWrite _parent;
 
     /**
-     * ID to keep track of request/responces
+     * ID to keep track of request/responses
      */
     public int transactionId() { return transactionId; }
     public void setTransactionId(int _v) { _dirty = true; transactionId = _v; }

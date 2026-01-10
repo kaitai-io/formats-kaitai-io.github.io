@@ -2292,7 +2292,7 @@ proc deadStrippableDylib(this: MachO_MachoFlags): bool =
 proc dyldLink(this: MachO_MachoFlags): bool = 
 
   ##[
-  the object file is input for the dynamic linker and can't be staticly link edited again
+  the object file is input for the dynamic linker and can't be statically link-edited again
   ]##
   if this.dyldLinkInstFlag:
     return this.dyldLinkInst
@@ -2324,7 +2324,7 @@ proc hasTlvDescriptors(this: MachO_MachoFlags): bool =
 proc incrLink(this: MachO_MachoFlags): bool = 
 
   ##[
-  the object file is the output of an incremental link against a base file and can't be link edited again
+  the object file is the output of an incremental link against a base file and can't be link-edited again
   ]##
   if this.incrLinkInstFlag:
     return this.incrLinkInst
@@ -2368,7 +2368,7 @@ proc noHeapExecution(this: MachO_MachoFlags): bool =
 proc noMultiDefs(this: MachO_MachoFlags): bool = 
 
   ##[
-  this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used.
+  this umbrella guarantees no multiple definitions of symbols in its sub-images so the two-level namespace hints can always be used.
   ]##
   if this.noMultiDefsInstFlag:
     return this.noMultiDefsInst

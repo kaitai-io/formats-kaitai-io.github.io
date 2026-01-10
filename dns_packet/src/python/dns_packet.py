@@ -275,7 +275,7 @@ class DnsPacket(KaitaiStruct):
 
         def _read(self):
             self.primary_ns = DnsPacket.DomainName(self._io, self, self._root)
-            self.resoponsible_mailbox = DnsPacket.DomainName(self._io, self, self._root)
+            self.responsible_mailbox = DnsPacket.DomainName(self._io, self, self._root)
             self.serial = self._io.read_u4be()
             self.refresh_interval = self._io.read_u4be()
             self.retry_interval = self._io.read_u4be()
@@ -286,7 +286,7 @@ class DnsPacket(KaitaiStruct):
         def _fetch_instances(self):
             pass
             self.primary_ns._fetch_instances()
-            self.resoponsible_mailbox._fetch_instances()
+            self.responsible_mailbox._fetch_instances()
 
 
     class DomainName(KaitaiStruct):

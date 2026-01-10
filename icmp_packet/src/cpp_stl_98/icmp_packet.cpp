@@ -80,8 +80,8 @@ std::set<icmp_packet_t::destination_unreachable_msg_t::destination_unreachable_c
     _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_PORT_UNREACHABLE);
     _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_FRAGMENTATION_NEEDED_AND_DF_SET);
     _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_SOURCE_ROUTE_FAILED);
-    _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_DST_NET_UNKOWN);
-    _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_SDT_HOST_UNKOWN);
+    _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_DST_NET_UNKNOWN);
+    _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_SDT_HOST_UNKNOWN);
     _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_SRC_ISOLATED);
     _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_NET_PROHIBITED_BY_ADMIN);
     _t.insert(icmp_packet_t::destination_unreachable_msg_t::DESTINATION_UNREACHABLE_CODE_HOST_PROHIBITED_BY_ADMIN);

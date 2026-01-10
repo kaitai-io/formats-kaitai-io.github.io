@@ -5,9 +5,9 @@ import kaitaistruct
 from kaitaistruct import ReadWriteKaitaiStruct, KaitaiStream, BytesIO
 import ipv6_packet
 import udp_datagram
-import icmp_packet
 import tcp_segment
 import ipv4_packet
+import icmp_packet
 from enum import IntEnum
 
 

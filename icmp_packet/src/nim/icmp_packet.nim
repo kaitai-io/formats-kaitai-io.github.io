@@ -26,8 +26,8 @@ type
     port_unreachable = 3
     fragmentation_needed_and_df_set = 4
     source_route_failed = 5
-    dst_net_unkown = 6
-    sdt_host_unkown = 7
+    dst_net_unknown = 6
+    sdt_host_unknown = 7
     src_isolated = 8
     net_prohibited_by_admin = 9
     host_prohibited_by_admin = 10

@@ -639,8 +639,8 @@ class DnsPacket(ReadWriteKaitaiStruct):
         def _read(self):
             self.primary_ns = DnsPacket.DomainName(self._io, self, self._root)
             self.primary_ns._read()
-            self.resoponsible_mailbox = DnsPacket.DomainName(self._io, self, self._root)
-            self.resoponsible_mailbox._read()
+            self.responsible_mailbox = DnsPacket.DomainName(self._io, self, self._root)
+            self.responsible_mailbox._read()
             self.serial = self._io.read_u4be()
             self.refresh_interval = self._io.read_u4be()
             self.retry_interval = self._io.read_u4be()
@@ -652,13 +652,13 @@ class DnsPacket(ReadWriteKaitaiStruct):
         def _fetch_instances(self):
             pass
             self.primary_ns._fetch_instances()
-            self.resoponsible_mailbox._fetch_instances()
+            self.responsible_mailbox._fetch_instances()
 
 
         def _write__seq(self, io=None):
             super(DnsPacket.AuthorityInfo, self)._write__seq(io)
             self.primary_ns._write__seq(self._io)
-            self.resoponsible_mailbox._write__seq(self._io)
+            self.responsible_mailbox._write__seq(self._io)
             self._io.write_u4be(self.serial)
             self._io.write_u4be(self.refresh_interval)
             self._io.write_u4be(self.retry_interval)
@@ -671,10 +671,10 @@ class DnsPacket(ReadWriteKaitaiStruct):
                 raise kaitaistruct.ConsistencyError(u"primary_ns", self._root, self.primary_ns._root)
             if self.primary_ns._parent != self:
                 raise kaitaistruct.ConsistencyError(u"primary_ns", self, self.primary_ns._parent)
-            if self.resoponsible_mailbox._root != self._root:
-                raise kaitaistruct.ConsistencyError(u"resoponsible_mailbox", self._root, self.resoponsible_mailbox._root)
-            if self.resoponsible_mailbox._parent != self:
-                raise kaitaistruct.ConsistencyError(u"resoponsible_mailbox", self, self.resoponsible_mailbox._parent)
+            if self.responsible_mailbox._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"responsible_mailbox", self._root, self.responsible_mailbox._root)
+            if self.responsible_mailbox._parent != self:
+                raise kaitaistruct.ConsistencyError(u"responsible_mailbox", self, self.responsible_mailbox._parent)
             self._dirty = False
 
 

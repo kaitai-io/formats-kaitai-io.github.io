@@ -398,7 +398,7 @@ public class DnsPacket extends KaitaiStruct {
         }
         private void _read() {
             this.primaryNs = new DomainName(this._io, this, _root);
-            this.resoponsibleMailbox = new DomainName(this._io, this, _root);
+            this.responsibleMailbox = new DomainName(this._io, this, _root);
             this.serial = this._io.readU4be();
             this.refreshInterval = this._io.readU4be();
             this.retryInterval = this._io.readU4be();
@@ -408,10 +408,10 @@ public class DnsPacket extends KaitaiStruct {
 
         public void _fetchInstances() {
             this.primaryNs._fetchInstances();
-            this.resoponsibleMailbox._fetchInstances();
+            this.responsibleMailbox._fetchInstances();
         }
         private DomainName primaryNs;
-        private DomainName resoponsibleMailbox;
+        private DomainName responsibleMailbox;
         private long serial;
         private long refreshInterval;
         private long retryInterval;
@@ -420,7 +420,7 @@ public class DnsPacket extends KaitaiStruct {
         private DnsPacket _root;
         private DnsPacket.Answer _parent;
         public DomainName primaryNs() { return primaryNs; }
-        public DomainName resoponsibleMailbox() { return resoponsibleMailbox; }
+        public DomainName responsibleMailbox() { return responsibleMailbox; }
         public long serial() { return serial; }
         public long refreshInterval() { return refreshInterval; }
         public long retryInterval() { return retryInterval; }
@@ -907,7 +907,7 @@ public class DnsPacket extends KaitaiStruct {
     private KaitaiStruct _parent;
 
     /**
-     * ID to keep track of request/responces
+     * ID to keep track of request/responses
      */
     public int transactionId() { return transactionId; }
     public PacketFlags flags() { return flags; }

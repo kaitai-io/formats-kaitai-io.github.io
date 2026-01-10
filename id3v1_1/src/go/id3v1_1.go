@@ -150,7 +150,7 @@ const (
 	Id3v11_Id3V11Tag_GenreEnum__NativeAmerican Id3v11_Id3V11Tag_GenreEnum = 64
 	Id3v11_Id3V11Tag_GenreEnum__Cabaret Id3v11_Id3V11Tag_GenreEnum = 65
 	Id3v11_Id3V11Tag_GenreEnum__NewWave Id3v11_Id3V11Tag_GenreEnum = 66
-	Id3v11_Id3V11Tag_GenreEnum__Psychadelic Id3v11_Id3V11Tag_GenreEnum = 67
+	Id3v11_Id3V11Tag_GenreEnum__Psychedelic Id3v11_Id3V11Tag_GenreEnum = 67
 	Id3v11_Id3V11Tag_GenreEnum__Rave Id3v11_Id3V11Tag_GenreEnum = 68
 	Id3v11_Id3V11Tag_GenreEnum__Showtunes Id3v11_Id3V11Tag_GenreEnum = 69
 	Id3v11_Id3V11Tag_GenreEnum__Trailer Id3v11_Id3V11Tag_GenreEnum = 70
@@ -305,5 +305,5 @@ func (this *Id3v11_Id3V11Tag) Read(io *kaitai.Stream, parent *Id3v11, root *Id3v
  */
 
 /**
- * Arbitary comment
+ * Arbitrary comment
  */

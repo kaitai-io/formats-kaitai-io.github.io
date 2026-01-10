@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['exports', 'kaitai-struct/KaitaiStream', './WindowsSystemtime', './EthernetFrame'], factory);
+    define(['exports', 'kaitai-struct/KaitaiStream', './EthernetFrame', './WindowsSystemtime'], factory);
   } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
-    factory(exports, require('kaitai-struct/KaitaiStream'), require('./WindowsSystemtime'), require('./EthernetFrame'));
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./EthernetFrame'), require('./WindowsSystemtime'));
   } else {
-    factory(root.MicrosoftNetworkMonitorV2 || (root.MicrosoftNetworkMonitorV2 = {}), root.KaitaiStream, root.WindowsSystemtime || (root.WindowsSystemtime = {}), root.EthernetFrame || (root.EthernetFrame = {}));
+    factory(root.MicrosoftNetworkMonitorV2 || (root.MicrosoftNetworkMonitorV2 = {}), root.KaitaiStream, root.EthernetFrame || (root.EthernetFrame = {}), root.WindowsSystemtime || (root.WindowsSystemtime = {}));
   }
-})(typeof self !== 'undefined' ? self : this, function (MicrosoftNetworkMonitorV2_, KaitaiStream, WindowsSystemtime_, EthernetFrame_) {
+})(typeof self !== 'undefined' ? self : this, function (MicrosoftNetworkMonitorV2_, KaitaiStream, EthernetFrame_, WindowsSystemtime_) {
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
  * network packet sniffing and analysis tool. It can save captured

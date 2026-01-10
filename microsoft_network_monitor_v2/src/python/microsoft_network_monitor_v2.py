@@ -3,8 +3,8 @@
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-import windows_systemtime
 import ethernet_frame
+import windows_systemtime
 from enum import IntEnum
 
 

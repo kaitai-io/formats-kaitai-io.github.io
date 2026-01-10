@@ -2,9 +2,9 @@ import kaitai_struct_nim_runtime
 import options
 import ipv6_packet
 import udp_datagram
-import icmp_packet
 import tcp_segment
 import ipv4_packet
+import icmp_packet
 
 type
   ProtocolBody* = ref object of KaitaiStruct

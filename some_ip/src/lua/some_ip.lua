@@ -86,7 +86,7 @@ function SomeIp.Header:_read()
 end
 
 -- 
--- auxillary value.
+-- auxiliary value.
 -- See also: AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements
 SomeIp.Header.property.is_valid_service_discovery = {}
 function SomeIp.Header.property.is_valid_service_discovery:get()

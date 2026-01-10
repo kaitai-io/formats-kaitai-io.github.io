@@ -4411,7 +4411,7 @@ class MachO(ReadWriteKaitaiStruct):
             del self._m_dead_strippable_dylib
         @property
         def dyld_link(self):
-            """the object file is input for the dynamic linker and can't be staticly link edited again."""
+            """the object file is input for the dynamic linker and can't be statically link-edited again."""
             if hasattr(self, '_m_dyld_link'):
                 return self._m_dyld_link
 
@@ -4443,7 +4443,7 @@ class MachO(ReadWriteKaitaiStruct):
             del self._m_has_tlv_descriptors
         @property
         def incr_link(self):
-            """the object file is the output of an incremental link against a base file and can't be link edited again."""
+            """the object file is the output of an incremental link against a base file and can't be link-edited again."""
             if hasattr(self, '_m_incr_link'):
                 return self._m_incr_link
 
@@ -4486,7 +4486,7 @@ class MachO(ReadWriteKaitaiStruct):
             del self._m_no_heap_execution
         @property
         def no_multi_defs(self):
-            """this umbrella guarantees no multiple defintions of symbols in its sub-images so the two-level namespace hints can always be used."""
+            """this umbrella guarantees no multiple definitions of symbols in its sub-images so the two-level namespace hints can always be used."""
             if hasattr(self, '_m_no_multi_defs'):
                 return self._m_no_multi_defs
 

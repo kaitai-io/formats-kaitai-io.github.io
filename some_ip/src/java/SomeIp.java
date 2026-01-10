@@ -297,7 +297,7 @@ public class SomeIp extends KaitaiStruct {
         private Boolean isValidServiceDiscovery;
 
         /**
-         * auxillary value
+         * auxiliary value
          * @see "AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements"
          */
         public Boolean isValidServiceDiscovery() {
