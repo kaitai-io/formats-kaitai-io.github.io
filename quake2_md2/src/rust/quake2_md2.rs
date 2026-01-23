@@ -268,7 +268,7 @@ impl Quake2Md2 {
         }
         let _pos = _io.pos();
         _io.seek(*self.ofs_gl_cmds() as usize)?;
-        *self.gl_cmds_raw.borrow_mut() = _io.read_bytes(((4 as u32) * (*self.num_gl_cmds() as u32)) as usize)?.into();
+        *self.gl_cmds_raw.borrow_mut() = _io.read_bytes(((4 as i32) * (*self.num_gl_cmds() as i32)) as usize)?.into();
         let gl_cmds_raw = self.gl_cmds_raw.borrow();
         let _t_gl_cmds_raw_io = BytesReader::from(gl_cmds_raw.clone());
         let t = Self::read_into::<BytesReader, Quake2Md2_GlCmdsList>(&_t_gl_cmds_raw_io, Some(self._root.clone()), Some(self._self.clone()))?.into();
