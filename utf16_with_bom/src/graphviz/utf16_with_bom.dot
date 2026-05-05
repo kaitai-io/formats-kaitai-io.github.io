@@ -1,0 +1,37 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__utf16_with_bom {
+		label="Utf16WithBom";
+		graph[style=dotted];
+
+		utf16_with_bom__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="bom_pos">0</TD><TD PORT="bom_size">2</TD><TD></TD><TD PORT="bom_type">bom</TD></TR>
+			<TR><TD COLSPAN="4" PORT="bom__valid">must be any of [254, 255].pack('C*'), [255, 254].pack('C*')</TD></TR>
+			<TR><TD PORT="str_be_pos">2</TD><TD PORT="str_be_size">⇲</TD><TD>str(UTF-16BE)</TD><TD PORT="str_be_type">str_be</TD></TR>
+			<TR><TD COLSPAN="4" PORT="str_be__if">if is_be</TD></TR>
+			<TR><TD PORT="str_le_pos">...</TD><TD PORT="str_le_size">⇲</TD><TD>str(UTF-16LE)</TD><TD PORT="str_le_type">str_le</TD></TR>
+			<TR><TD COLSPAN="4" PORT="str_le__if">if is_le</TD></TR>
+		</TABLE>>];
+		utf16_with_bom__inst__is_be [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>is_be</TD><TD>bom == [254, 255].pack('C*')</TD></TR>
+		</TABLE>>];
+		utf16_with_bom__inst__is_le [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>is_le</TD><TD>bom == [255, 254].pack('C*')</TD></TR>
+		</TABLE>>];
+		utf16_with_bom__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>value</TD><TD>(is_be ? str_be : str_le)</TD></TR>
+		</TABLE>>];
+	}
+	utf16_with_bom__inst__is_be:is_be_type -> utf16_with_bom__seq:str_be__if [color="#404040"];
+	utf16_with_bom__inst__is_le:is_le_type -> utf16_with_bom__seq:str_le__if [color="#404040"];
+	utf16_with_bom__seq:bom_type -> utf16_with_bom__inst__is_be [color="#404040"];
+	utf16_with_bom__seq:bom_type -> utf16_with_bom__inst__is_le [color="#404040"];
+	utf16_with_bom__inst__is_be:is_be_type -> utf16_with_bom__inst__value [color="#404040"];
+	utf16_with_bom__seq:str_be_type -> utf16_with_bom__inst__value [color="#404040"];
+	utf16_with_bom__seq:str_le_type -> utf16_with_bom__inst__value [color="#404040"];
+}
