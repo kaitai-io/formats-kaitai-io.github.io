@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.011_000;
-use Encode;
 use Compress::Zlib;
+use Encode;
 
 ########################################################################
 package Png;
@@ -100,6 +100,50 @@ sub chunks {
 }
 
 ########################################################################
+package Png::AdobeFireworksChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{_raw_preview_data} = $self->{_io}->read_bytes_full();
+    $self->{preview_data} = Compress::Zlib::uncompress($self->{_raw_preview_data});
+}
+
+sub preview_data {
+    my ($self) = @_;
+    return $self->{preview_data};
+}
+
+sub _raw_preview_data {
+    my ($self) = @_;
+    return $self->{_raw_preview_data};
+}
+
+########################################################################
 package Png::AnimationControlChunk;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -141,6 +185,85 @@ sub num_frames {
 sub num_plays {
     my ($self) = @_;
     return $self->{num_plays};
+}
+
+########################################################################
+package Png::AtchChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $COMPRESSION_ATTACH_METHODS_NONE = 0;
+our $COMPRESSION_ATTACH_METHODS_ZLIB = 1;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{file_name} = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    {
+        my $_it = $self->{file_name};
+    }
+    $self->{compression} = $self->{_io}->read_u1();
+    if ($self->compression() == $Png::AtchChunk::COMPRESSION_ATTACH_METHODS_NONE) {
+        $self->{data_plain} = $self->{_io}->read_bytes_full();
+    }
+    if ($self->compression() == $Png::AtchChunk::COMPRESSION_ATTACH_METHODS_ZLIB) {
+        $self->{_raw_data_zlib} = $self->{_io}->read_bytes_full();
+        $self->{data_zlib} = Compress::Zlib::uncompress($self->{_raw_data_zlib});
+    }
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data} if ($self->{data});
+    $self->{data} = ($self->compression() == $Png::AtchChunk::COMPRESSION_ATTACH_METHODS_NONE ? $self->data_plain() : $self->data_zlib());
+    return $self->{data};
+}
+
+sub file_name {
+    my ($self) = @_;
+    return $self->{file_name};
+}
+
+sub compression {
+    my ($self) = @_;
+    return $self->{compression};
+}
+
+sub data_plain {
+    my ($self) = @_;
+    return $self->{data_plain};
+}
+
+sub data_zlib {
+    my ($self) = @_;
+    return $self->{data_zlib};
+}
+
+sub _raw_data_zlib {
+    my ($self) = @_;
+    return $self->{_raw_data_zlib};
 }
 
 ########################################################################
@@ -410,6 +533,9 @@ sub _read {
 
     $self->{len} = $self->{_io}->read_u4be();
     $self->{type} = Encode::decode("UTF-8", $self->{_io}->read_bytes(4));
+    {
+        my $_it = $self->{type};
+    }
     my $_on = $self->type();
     if ($_on eq "PLTE") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
@@ -420,6 +546,11 @@ sub _read {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::AnimationControlChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "atCh") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::AtchChunk->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on eq "bKGD") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
@@ -451,15 +582,40 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::InternationalTextChunk->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on eq "mkBS") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::AdobeFireworksChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "mkTS") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::AdobeFireworksChunk->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on eq "pHYs") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::PhysChunk->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on eq "prVW") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::AdobeFireworksChunk->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on eq "sRGB") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::SrgbChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "skMf") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::EvernoteSkmfChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "skRf") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::EvernoteSkrfChunk->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on eq "tEXt") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
@@ -561,6 +717,88 @@ sub text_datastream {
 sub _raw_text_datastream {
     my ($self) = @_;
     return $self->{_raw_text_datastream};
+}
+
+########################################################################
+package Png::EvernoteSkmfChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{json} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
+}
+
+sub json {
+    my ($self) = @_;
+    return $self->{json};
+}
+
+########################################################################
+package Png::EvernoteSkrfChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{uuid} = $self->{_io}->read_bytes(16);
+    $self->{orig_img} = $self->{_io}->read_bytes_full();
+}
+
+sub uuid {
+    my ($self) = @_;
+    return $self->{uuid};
+}
+
+sub orig_img {
+    my ($self) = @_;
+    return $self->{orig_img};
 }
 
 ########################################################################

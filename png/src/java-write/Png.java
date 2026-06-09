@@ -210,6 +210,64 @@ public class Png extends KaitaiStruct.ReadWrite {
     }
 
     /**
+     * @see <a href="https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285">Source</a>
+     */
+    public static class AdobeFireworksChunk extends KaitaiStruct.ReadWrite {
+        public static AdobeFireworksChunk fromFile(String fileName) throws IOException {
+            return new AdobeFireworksChunk(new ByteBufferKaitaiStream(fileName));
+        }
+        public AdobeFireworksChunk() {
+            this(null, null, null);
+        }
+
+        public AdobeFireworksChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public AdobeFireworksChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public AdobeFireworksChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this._raw_previewData = this._io.readBytesFull();
+            this.previewData = KaitaiStream.processZlib(this._raw_previewData);
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._raw_previewData = KaitaiStream.unprocessZlib(this.previewData);
+            this._io.writeBytes(this._raw_previewData);
+            if (!(this._io.isEof()))
+                throw new ConsistencyError("preview_data", 0, this._io.size() - this._io.pos());
+        }
+
+        public void _check() {
+            _dirty = false;
+        }
+        private byte[] previewData;
+        private Png _root;
+        private Png.Chunk _parent;
+        private byte[] _raw_previewData;
+        public byte[] previewData() { return previewData; }
+        public void setPreviewData(byte[] _v) { _dirty = true; previewData = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+        public byte[] _raw_previewData() { return _raw_previewData; }
+        public void set_raw_PreviewData(byte[] _v) { _dirty = true; _raw_previewData = _v; }
+    }
+
+    /**
      * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
      */
     public static class AnimationControlChunk extends KaitaiStruct.ReadWrite {
@@ -271,6 +329,160 @@ public class Png extends KaitaiStruct.ReadWrite {
         public void set_root(Png _v) { _dirty = true; _root = _v; }
         public Png.Chunk _parent() { return _parent; }
         public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
+     * @see <a href="https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach">Source</a>
+     * @see <a href="https://nullprogram.com/blog/2021/12/31/">A new protocol and tool for PNG file attachments</a>
+     */
+    public static class AtchChunk extends KaitaiStruct.ReadWrite {
+        public static AtchChunk fromFile(String fileName) throws IOException {
+            return new AtchChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum CompressionAttachMethods {
+            NONE(0),
+            ZLIB(1);
+
+            private final long id;
+            CompressionAttachMethods(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, CompressionAttachMethods> byId = new HashMap<Long, CompressionAttachMethods>(2);
+            static {
+                for (CompressionAttachMethods e : CompressionAttachMethods.values())
+                    byId.put(e.id(), e);
+            }
+            public static CompressionAttachMethods byId(long id) { return byId.get(id); }
+        }
+        public AtchChunk() {
+            this(null, null, null);
+        }
+
+        public AtchChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public AtchChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public AtchChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.fileName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+            {
+                String _it = this.fileName;
+                if (!( ((_it.length() != 0) && (!_it.substring(0, 1).equals("."))) )) {
+                    throw new KaitaiStream.ValidationExprError(this.fileName, this._io, "/types/atch_chunk/seq/0");
+                }
+            }
+            this.compression = CompressionAttachMethods.byId(this._io.readU1());
+            if (!( ((this.compression == CompressionAttachMethods.NONE) || (this.compression == CompressionAttachMethods.ZLIB)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.compression, this._io, "/types/atch_chunk/seq/1");
+            }
+            if (compression() == CompressionAttachMethods.NONE) {
+                this.dataPlain = this._io.readBytesFull();
+            }
+            if (compression() == CompressionAttachMethods.ZLIB) {
+                this._raw_dataZlib = this._io.readBytesFull();
+                this.dataZlib = KaitaiStream.processZlib(this._raw_dataZlib);
+            }
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            if (compression() == CompressionAttachMethods.NONE) {
+            }
+            if (compression() == CompressionAttachMethods.ZLIB) {
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeBytes((this.fileName).getBytes(Charset.forName("UTF-8")));
+            this._io.writeU1(0);
+            this._io.writeU1(((Number) (this.compression.id())).intValue());
+            if (compression() == CompressionAttachMethods.NONE) {
+                this._io.writeBytes(this.dataPlain);
+                if (!(this._io.isEof()))
+                    throw new ConsistencyError("data_plain", 0, this._io.size() - this._io.pos());
+            }
+            if (compression() == CompressionAttachMethods.ZLIB) {
+                this._raw_dataZlib = KaitaiStream.unprocessZlib(this.dataZlib);
+                this._io.writeBytes(this._raw_dataZlib);
+                if (!(this._io.isEof()))
+                    throw new ConsistencyError("data_zlib", 0, this._io.size() - this._io.pos());
+            }
+        }
+
+        public void _check() {
+            if (KaitaiStream.byteArrayIndexOf((this.fileName).getBytes(Charset.forName("UTF-8")), ((byte) 0)) != -1)
+                throw new ConsistencyError("file_name", -1, KaitaiStream.byteArrayIndexOf((this.fileName).getBytes(Charset.forName("UTF-8")), ((byte) 0)));
+            {
+                String _it = this.fileName;
+                if (!( ((_it.length() != 0) && (!_it.substring(0, 1).equals("."))) )) {
+                    throw new KaitaiStream.ValidationExprError(this.fileName, null, "/types/atch_chunk/seq/0");
+                }
+            }
+            if (!( ((this.compression == CompressionAttachMethods.NONE) || (this.compression == CompressionAttachMethods.ZLIB)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.compression, null, "/types/atch_chunk/seq/1");
+            }
+            if (compression() == CompressionAttachMethods.NONE) {
+            }
+            if (compression() == CompressionAttachMethods.ZLIB) {
+            }
+            _dirty = false;
+        }
+        private byte[] data;
+        public byte[] data() {
+            if (this.data != null)
+                return this.data;
+            this.data = (compression() == CompressionAttachMethods.NONE ? dataPlain() : dataZlib());
+            return this.data;
+        }
+        public void _invalidateData() { this.data = null; }
+        private String fileName;
+        private CompressionAttachMethods compression;
+        private byte[] dataPlain;
+        private byte[] dataZlib;
+        private Png _root;
+        private Png.Chunk _parent;
+        private byte[] _raw_dataZlib;
+
+        /**
+         * From the [official
+         * specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+         * 
+         * > The name can be any length that fits in the chunk, and should be
+         * > encoded with UTF-8. It's up to each implementation to determine how
+         * > to appropriately interpret the bytestring for the local system.
+         * 
+         * > The name must be at least one byte long, not counting the null
+         * > terminator. It cannot begin with a period (`0x2e`), nor contain
+         * > control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+         * > backslash (`0x5c`), i.e. no directory hierarchies.
+         * 
+         * As of Kaitai Struct 0.11, we cannot easily check whether a string
+         * contains certain characters, so we only enforce that the file name is
+         * not empty and that it doesn't start with a period.
+         */
+        public String fileName() { return fileName; }
+        public void setFileName(String _v) { _dirty = true; fileName = _v; }
+        public CompressionAttachMethods compression() { return compression; }
+        public void setCompression(CompressionAttachMethods _v) { _dirty = true; compression = _v; }
+        public byte[] dataPlain() { return dataPlain; }
+        public void setDataPlain(byte[] _v) { _dirty = true; dataPlain = _v; }
+        public byte[] dataZlib() { return dataZlib; }
+        public void setDataZlib(byte[] _v) { _dirty = true; dataZlib = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+        public byte[] _raw_dataZlib() { return _raw_dataZlib; }
+        public void set_raw_DataZlib(byte[] _v) { _dirty = true; _raw_dataZlib = _v; }
     }
 
     /**
@@ -728,6 +940,12 @@ public class Png extends KaitaiStruct.ReadWrite {
         public void _read() {
             this.len = this._io.readU4be();
             this.type = new String(this._io.readBytes(4), StandardCharsets.UTF_8);
+            {
+                String _it = this.type;
+                if (!(!type().equals("\000\000\000\000"))) {
+                    throw new KaitaiStream.ValidationExprError(this.type, this._io, "/types/chunk/seq/1");
+                }
+            }
             switch (type()) {
             case "PLTE": {
                 this._raw_body = this._io.readBytes(len());
@@ -741,6 +959,13 @@ public class Png extends KaitaiStruct.ReadWrite {
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
                 this.body = new AnimationControlChunk(_io__raw_body, this, _root);
                 ((AnimationControlChunk) (this.body))._read();
+                break;
+            }
+            case "atCh": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new AtchChunk(_io__raw_body, this, _root);
+                ((AtchChunk) (this.body))._read();
                 break;
             }
             case "bKGD": {
@@ -785,6 +1010,20 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((InternationalTextChunk) (this.body))._read();
                 break;
             }
+            case "mkBS": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new AdobeFireworksChunk(_io__raw_body, this, _root);
+                ((AdobeFireworksChunk) (this.body))._read();
+                break;
+            }
+            case "mkTS": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new AdobeFireworksChunk(_io__raw_body, this, _root);
+                ((AdobeFireworksChunk) (this.body))._read();
+                break;
+            }
             case "pHYs": {
                 this._raw_body = this._io.readBytes(len());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
@@ -792,11 +1031,32 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((PhysChunk) (this.body))._read();
                 break;
             }
+            case "prVW": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new AdobeFireworksChunk(_io__raw_body, this, _root);
+                ((AdobeFireworksChunk) (this.body))._read();
+                break;
+            }
             case "sRGB": {
                 this._raw_body = this._io.readBytes(len());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
                 this.body = new SrgbChunk(_io__raw_body, this, _root);
                 ((SrgbChunk) (this.body))._read();
+                break;
+            }
+            case "skMf": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new EvernoteSkmfChunk(_io__raw_body, this, _root);
+                ((EvernoteSkmfChunk) (this.body))._read();
+                break;
+            }
+            case "skRf": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new EvernoteSkrfChunk(_io__raw_body, this, _root);
+                ((EvernoteSkrfChunk) (this.body))._read();
                 break;
             }
             case "tEXt": {
@@ -839,6 +1099,10 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((AnimationControlChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "atCh": {
+                ((AtchChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "bKGD": {
                 ((BkgdChunk) (this.body))._fetchInstances();
                 break;
@@ -863,12 +1127,32 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((InternationalTextChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "mkBS": {
+                ((AdobeFireworksChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "mkTS": {
+                ((AdobeFireworksChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "pHYs": {
                 ((PhysChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "prVW": {
+                ((AdobeFireworksChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "sRGB": {
                 ((SrgbChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "skMf": {
+                ((EvernoteSkmfChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "skRf": {
+                ((EvernoteSkrfChunk) (this.body))._fetchInstances();
                 break;
             }
             case "tEXt": {
@@ -932,6 +1216,26 @@ public class Png extends KaitaiStruct.ReadWrite {
                     });
                 }
                 ((AnimationControlChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
+            case "atCh": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((AtchChunk) (this.body))._write_Seq(_io__raw_body);
                 break;
             }
             case "bKGD": {
@@ -1054,6 +1358,46 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((InternationalTextChunk) (this.body))._write_Seq(_io__raw_body);
                 break;
             }
+            case "mkBS": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((AdobeFireworksChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
+            case "mkTS": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((AdobeFireworksChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
             case "pHYs": {
                 final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
                 this._io.addChildStream(_io__raw_body);
@@ -1074,6 +1418,26 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((PhysChunk) (this.body))._write_Seq(_io__raw_body);
                 break;
             }
+            case "prVW": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((AdobeFireworksChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
             case "sRGB": {
                 final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
                 this._io.addChildStream(_io__raw_body);
@@ -1092,6 +1456,46 @@ public class Png extends KaitaiStruct.ReadWrite {
                     });
                 }
                 ((SrgbChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
+            case "skMf": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((EvernoteSkmfChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
+            case "skRf": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((EvernoteSkrfChunk) (this.body))._write_Seq(_io__raw_body);
                 break;
             }
             case "tEXt": {
@@ -1165,6 +1569,12 @@ public class Png extends KaitaiStruct.ReadWrite {
         public void _check() {
             if ((this.type).getBytes(Charset.forName("UTF-8")).length != 4)
                 throw new ConsistencyError("type", 4, (this.type).getBytes(Charset.forName("UTF-8")).length);
+            {
+                String _it = this.type;
+                if (!(!type().equals("\000\000\000\000"))) {
+                    throw new KaitaiStream.ValidationExprError(this.type, null, "/types/chunk/seq/1");
+                }
+            }
             switch (type()) {
             case "PLTE": {
                 if (!Objects.equals(((Png.PlteChunk) (this.body))._root(), _root()))
@@ -1178,6 +1588,13 @@ public class Png extends KaitaiStruct.ReadWrite {
                     throw new ConsistencyError("body", _root(), ((Png.AnimationControlChunk) (this.body))._root());
                 if (!Objects.equals(((Png.AnimationControlChunk) (this.body))._parent(), this))
                     throw new ConsistencyError("body", this, ((Png.AnimationControlChunk) (this.body))._parent());
+                break;
+            }
+            case "atCh": {
+                if (!Objects.equals(((Png.AtchChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.AtchChunk) (this.body))._root());
+                if (!Objects.equals(((Png.AtchChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.AtchChunk) (this.body))._parent());
                 break;
             }
             case "bKGD": {
@@ -1222,6 +1639,20 @@ public class Png extends KaitaiStruct.ReadWrite {
                     throw new ConsistencyError("body", this, ((Png.InternationalTextChunk) (this.body))._parent());
                 break;
             }
+            case "mkBS": {
+                if (!Objects.equals(((Png.AdobeFireworksChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.AdobeFireworksChunk) (this.body))._root());
+                if (!Objects.equals(((Png.AdobeFireworksChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.AdobeFireworksChunk) (this.body))._parent());
+                break;
+            }
+            case "mkTS": {
+                if (!Objects.equals(((Png.AdobeFireworksChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.AdobeFireworksChunk) (this.body))._root());
+                if (!Objects.equals(((Png.AdobeFireworksChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.AdobeFireworksChunk) (this.body))._parent());
+                break;
+            }
             case "pHYs": {
                 if (!Objects.equals(((Png.PhysChunk) (this.body))._root(), _root()))
                     throw new ConsistencyError("body", _root(), ((Png.PhysChunk) (this.body))._root());
@@ -1229,11 +1660,32 @@ public class Png extends KaitaiStruct.ReadWrite {
                     throw new ConsistencyError("body", this, ((Png.PhysChunk) (this.body))._parent());
                 break;
             }
+            case "prVW": {
+                if (!Objects.equals(((Png.AdobeFireworksChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.AdobeFireworksChunk) (this.body))._root());
+                if (!Objects.equals(((Png.AdobeFireworksChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.AdobeFireworksChunk) (this.body))._parent());
+                break;
+            }
             case "sRGB": {
                 if (!Objects.equals(((Png.SrgbChunk) (this.body))._root(), _root()))
                     throw new ConsistencyError("body", _root(), ((Png.SrgbChunk) (this.body))._root());
                 if (!Objects.equals(((Png.SrgbChunk) (this.body))._parent(), this))
                     throw new ConsistencyError("body", this, ((Png.SrgbChunk) (this.body))._parent());
+                break;
+            }
+            case "skMf": {
+                if (!Objects.equals(((Png.EvernoteSkmfChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.EvernoteSkmfChunk) (this.body))._root());
+                if (!Objects.equals(((Png.EvernoteSkmfChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.EvernoteSkmfChunk) (this.body))._parent());
+                break;
+            }
+            case "skRf": {
+                if (!Objects.equals(((Png.EvernoteSkrfChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.EvernoteSkrfChunk) (this.body))._root());
+                if (!Objects.equals(((Png.EvernoteSkrfChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.EvernoteSkrfChunk) (this.body))._parent());
                 break;
             }
             case "tEXt": {
@@ -1366,6 +1818,142 @@ public class Png extends KaitaiStruct.ReadWrite {
         public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
         public byte[] _raw_textDatastream() { return _raw_textDatastream; }
         public void set_raw_TextDatastream(byte[] _v) { _dirty = true; _raw_textDatastream = _v; }
+    }
+
+    /**
+     * @see <a href="https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501">Source</a>
+     */
+    public static class EvernoteSkmfChunk extends KaitaiStruct.ReadWrite {
+        public static EvernoteSkmfChunk fromFile(String fileName) throws IOException {
+            return new EvernoteSkmfChunk(new ByteBufferKaitaiStream(fileName));
+        }
+        public EvernoteSkmfChunk() {
+            this(null, null, null);
+        }
+
+        public EvernoteSkmfChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public EvernoteSkmfChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public EvernoteSkmfChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.json = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeBytes((this.json).getBytes(Charset.forName("UTF-8")));
+            if (!(this._io.isEof()))
+                throw new ConsistencyError("json", 0, this._io.size() - this._io.pos());
+        }
+
+        public void _check() {
+            _dirty = false;
+        }
+        private String json;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * JSON document with information about editable annotations (text,
+         * lines, paths, etc.) in Evernote/Skitch.
+         * 
+         * It refers to the original image stored in the `skRf` chunk (which
+         * usually follows immediately after `skMf`) via the
+         * `.children[0].children[0].uri` JSON property. This has the format
+         * `"skitch+uuid:///$UUID"`, where `$UUID` is a random UUIDv4 value that
+         * matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+         * 16 bytes of the `skRf` chunk).
+         */
+        public String json() { return json; }
+        public void setJson(String _v) { _dirty = true; json = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
+     * @see <a href="https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501">Source</a>
+     */
+    public static class EvernoteSkrfChunk extends KaitaiStruct.ReadWrite {
+        public static EvernoteSkrfChunk fromFile(String fileName) throws IOException {
+            return new EvernoteSkrfChunk(new ByteBufferKaitaiStream(fileName));
+        }
+        public EvernoteSkrfChunk() {
+            this(null, null, null);
+        }
+
+        public EvernoteSkrfChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public EvernoteSkrfChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public EvernoteSkrfChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.uuid = this._io.readBytes(16);
+            this.origImg = this._io.readBytesFull();
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeBytes(this.uuid);
+            this._io.writeBytes(this.origImg);
+            if (!(this._io.isEof()))
+                throw new ConsistencyError("orig_img", 0, this._io.size() - this._io.pos());
+        }
+
+        public void _check() {
+            if (this.uuid.length != 16)
+                throw new ConsistencyError("uuid", 16, this.uuid.length);
+            _dirty = false;
+        }
+        private byte[] uuid;
+        private byte[] origImg;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Random UUIDv4 value used to identify the image. It is referenced by
+         * the `skMf` chunk - see the documentation for the `json` field in
+         * `evernote_skmf_chunk`.
+         */
+        public byte[] uuid() { return uuid; }
+        public void setUuid(byte[] _v) { _dirty = true; uuid = _v; }
+
+        /**
+         * The original source image without annotations. It's usually a PNG
+         * image as well, but it can also be a JPEG or possibly other formats.
+         */
+        public byte[] origImg() { return origImg; }
+        public void setOrigImg(byte[] _v) { _dirty = true; origImg = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
     }
 
     /**
@@ -1700,7 +2288,13 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
         public void _read() {
             this.width = this._io.readU4be();
+            if (!(this.width >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.width, this._io, "/types/ihdr_chunk/seq/0");
+            }
             this.height = this._io.readU4be();
+            if (!(this.height >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.height, this._io, "/types/ihdr_chunk/seq/1");
+            }
             this.bitDepth = this._io.readU1();
             this.colorType = Png.ColorType.byId(this._io.readU1());
             this.compressionMethod = this._io.readU1();
@@ -1724,6 +2318,12 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
 
         public void _check() {
+            if (!(this.width >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.width, null, "/types/ihdr_chunk/seq/0");
+            }
+            if (!(this.height >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.height, null, "/types/ihdr_chunk/seq/1");
+            }
             _dirty = false;
         }
         private long width;

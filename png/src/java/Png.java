@@ -150,6 +150,45 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * @see <a href="https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285">Source</a>
+     */
+    public static class AdobeFireworksChunk extends KaitaiStruct {
+        public static AdobeFireworksChunk fromFile(String fileName) throws IOException {
+            return new AdobeFireworksChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public AdobeFireworksChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public AdobeFireworksChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public AdobeFireworksChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this._raw_previewData = this._io.readBytesFull();
+            this.previewData = KaitaiStream.processZlib(this._raw_previewData);
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] previewData;
+        private Png _root;
+        private Png.Chunk _parent;
+        private byte[] _raw_previewData;
+        public byte[] previewData() { return previewData; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+        public byte[] _raw_previewData() { return _raw_previewData; }
+    }
+
+    /**
      * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
      */
     public static class AnimationControlChunk extends KaitaiStruct {
@@ -194,6 +233,112 @@ public class Png extends KaitaiStruct {
         public long numPlays() { return numPlays; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach">Source</a>
+     * @see <a href="https://nullprogram.com/blog/2021/12/31/">A new protocol and tool for PNG file attachments</a>
+     */
+    public static class AtchChunk extends KaitaiStruct {
+        public static AtchChunk fromFile(String fileName) throws IOException {
+            return new AtchChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum CompressionAttachMethods {
+            NONE(0),
+            ZLIB(1);
+
+            private final long id;
+            CompressionAttachMethods(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, CompressionAttachMethods> byId = new HashMap<Long, CompressionAttachMethods>(2);
+            static {
+                for (CompressionAttachMethods e : CompressionAttachMethods.values())
+                    byId.put(e.id(), e);
+            }
+            public static CompressionAttachMethods byId(long id) { return byId.get(id); }
+        }
+
+        public AtchChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public AtchChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public AtchChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.fileName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+            {
+                String _it = this.fileName;
+                if (!( ((_it.length() != 0) && (!_it.substring(0, 1).equals("."))) )) {
+                    throw new KaitaiStream.ValidationExprError(this.fileName, this._io, "/types/atch_chunk/seq/0");
+                }
+            }
+            this.compression = CompressionAttachMethods.byId(this._io.readU1());
+            if (!( ((this.compression == CompressionAttachMethods.NONE) || (this.compression == CompressionAttachMethods.ZLIB)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.compression, this._io, "/types/atch_chunk/seq/1");
+            }
+            if (compression() == CompressionAttachMethods.NONE) {
+                this.dataPlain = this._io.readBytesFull();
+            }
+            if (compression() == CompressionAttachMethods.ZLIB) {
+                this._raw_dataZlib = this._io.readBytesFull();
+                this.dataZlib = KaitaiStream.processZlib(this._raw_dataZlib);
+            }
+        }
+
+        public void _fetchInstances() {
+            if (compression() == CompressionAttachMethods.NONE) {
+            }
+            if (compression() == CompressionAttachMethods.ZLIB) {
+            }
+        }
+        private byte[] data;
+        public byte[] data() {
+            if (this.data != null)
+                return this.data;
+            this.data = (compression() == CompressionAttachMethods.NONE ? dataPlain() : dataZlib());
+            return this.data;
+        }
+        private String fileName;
+        private CompressionAttachMethods compression;
+        private byte[] dataPlain;
+        private byte[] dataZlib;
+        private Png _root;
+        private Png.Chunk _parent;
+        private byte[] _raw_dataZlib;
+
+        /**
+         * From the [official
+         * specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+         * 
+         * > The name can be any length that fits in the chunk, and should be
+         * > encoded with UTF-8. It's up to each implementation to determine how
+         * > to appropriately interpret the bytestring for the local system.
+         * 
+         * > The name must be at least one byte long, not counting the null
+         * > terminator. It cannot begin with a period (`0x2e`), nor contain
+         * > control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+         * > backslash (`0x5c`), i.e. no directory hierarchies.
+         * 
+         * As of Kaitai Struct 0.11, we cannot easily check whether a string
+         * contains certain characters, so we only enforce that the file name is
+         * not empty and that it doesn't start with a period.
+         */
+        public String fileName() { return fileName; }
+        public CompressionAttachMethods compression() { return compression; }
+        public byte[] dataPlain() { return dataPlain; }
+        public byte[] dataZlib() { return dataZlib; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+        public byte[] _raw_dataZlib() { return _raw_dataZlib; }
     }
 
     /**
@@ -471,6 +616,12 @@ public class Png extends KaitaiStruct {
         private void _read() {
             this.len = this._io.readU4be();
             this.type = new String(this._io.readBytes(4), StandardCharsets.UTF_8);
+            {
+                String _it = this.type;
+                if (!(!type().equals("\000\000\000\000"))) {
+                    throw new KaitaiStream.ValidationExprError(this.type, this._io, "/types/chunk/seq/1");
+                }
+            }
             switch (type()) {
             case "PLTE": {
                 KaitaiStream _io_body = this._io.substream(len());
@@ -480,6 +631,11 @@ public class Png extends KaitaiStruct {
             case "acTL": {
                 KaitaiStream _io_body = this._io.substream(len());
                 this.body = new AnimationControlChunk(_io_body, this, _root);
+                break;
+            }
+            case "atCh": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new AtchChunk(_io_body, this, _root);
                 break;
             }
             case "bKGD": {
@@ -512,14 +668,39 @@ public class Png extends KaitaiStruct {
                 this.body = new InternationalTextChunk(_io_body, this, _root);
                 break;
             }
+            case "mkBS": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new AdobeFireworksChunk(_io_body, this, _root);
+                break;
+            }
+            case "mkTS": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new AdobeFireworksChunk(_io_body, this, _root);
+                break;
+            }
             case "pHYs": {
                 KaitaiStream _io_body = this._io.substream(len());
                 this.body = new PhysChunk(_io_body, this, _root);
                 break;
             }
+            case "prVW": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new AdobeFireworksChunk(_io_body, this, _root);
+                break;
+            }
             case "sRGB": {
                 KaitaiStream _io_body = this._io.substream(len());
                 this.body = new SrgbChunk(_io_body, this, _root);
+                break;
+            }
+            case "skMf": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new EvernoteSkmfChunk(_io_body, this, _root);
+                break;
+            }
+            case "skRf": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new EvernoteSkrfChunk(_io_body, this, _root);
                 break;
             }
             case "tEXt": {
@@ -555,6 +736,10 @@ public class Png extends KaitaiStruct {
                 ((AnimationControlChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "atCh": {
+                ((AtchChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "bKGD": {
                 ((BkgdChunk) (this.body))._fetchInstances();
                 break;
@@ -579,12 +764,32 @@ public class Png extends KaitaiStruct {
                 ((InternationalTextChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "mkBS": {
+                ((AdobeFireworksChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "mkTS": {
+                ((AdobeFireworksChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "pHYs": {
                 ((PhysChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "prVW": {
+                ((AdobeFireworksChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "sRGB": {
                 ((SrgbChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "skMf": {
+                ((EvernoteSkmfChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "skRf": {
+                ((EvernoteSkrfChunk) (this.body))._fetchInstances();
                 break;
             }
             case "tEXt": {
@@ -668,6 +873,104 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
         public byte[] _raw_textDatastream() { return _raw_textDatastream; }
+    }
+
+    /**
+     * @see <a href="https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501">Source</a>
+     */
+    public static class EvernoteSkmfChunk extends KaitaiStruct {
+        public static EvernoteSkmfChunk fromFile(String fileName) throws IOException {
+            return new EvernoteSkmfChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public EvernoteSkmfChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public EvernoteSkmfChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public EvernoteSkmfChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.json = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
+        }
+        private String json;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * JSON document with information about editable annotations (text,
+         * lines, paths, etc.) in Evernote/Skitch.
+         * 
+         * It refers to the original image stored in the `skRf` chunk (which
+         * usually follows immediately after `skMf`) via the
+         * `.children[0].children[0].uri` JSON property. This has the format
+         * `"skitch+uuid:///$UUID"`, where `$UUID` is a random UUIDv4 value that
+         * matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+         * 16 bytes of the `skRf` chunk).
+         */
+        public String json() { return json; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501">Source</a>
+     */
+    public static class EvernoteSkrfChunk extends KaitaiStruct {
+        public static EvernoteSkrfChunk fromFile(String fileName) throws IOException {
+            return new EvernoteSkrfChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public EvernoteSkrfChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public EvernoteSkrfChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public EvernoteSkrfChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.uuid = this._io.readBytes(16);
+            this.origImg = this._io.readBytesFull();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] uuid;
+        private byte[] origImg;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Random UUIDv4 value used to identify the image. It is referenced by
+         * the `skMf` chunk - see the documentation for the `json` field in
+         * `evernote_skmf_chunk`.
+         */
+        public byte[] uuid() { return uuid; }
+
+        /**
+         * The original source image without annotations. It's usually a PNG
+         * image as well, but it can also be a JPEG or possibly other formats.
+         */
+        public byte[] origImg() { return origImg; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
     }
 
     /**
@@ -915,7 +1218,13 @@ public class Png extends KaitaiStruct {
         }
         private void _read() {
             this.width = this._io.readU4be();
+            if (!(this.width >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.width, this._io, "/types/ihdr_chunk/seq/0");
+            }
             this.height = this._io.readU4be();
+            if (!(this.height >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.height, this._io, "/types/ihdr_chunk/seq/1");
+            }
             this.bitDepth = this._io.readU1();
             this.colorType = Png.ColorType.byId(this._io.readU1());
             this.compressionMethod = this._io.readU1();

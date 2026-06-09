@@ -16,6 +16,15 @@ digraph {
 			<TR><TD PORT="chunks_pos">33</TD><TD PORT="chunks_size">...</TD><TD>Chunk</TD><TD PORT="chunks_type">chunks</TD></TR>
 			<TR><TD COLSPAN="4" PORT="chunks__repeat">repeat until  ((_.type == &quot;IEND&quot;) || (_io.eof?)) </TD></TR>
 		</TABLE>>];
+		subgraph cluster__adobe_fireworks_chunk {
+			label="Png::AdobeFireworksChunk";
+			graph[style=dotted];
+
+			adobe_fireworks_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="preview_data_pos">0</TD><TD PORT="preview_data_size">⇲</TD><TD></TD><TD PORT="preview_data_type">preview_data</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__animation_control_chunk {
 			label="Png::AnimationControlChunk";
 			graph[style=dotted];
@@ -24,6 +33,26 @@ digraph {
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="num_frames_pos">0</TD><TD PORT="num_frames_size">4</TD><TD>u4be</TD><TD PORT="num_frames_type">num_frames</TD></TR>
 				<TR><TD PORT="num_plays_pos">4</TD><TD PORT="num_plays_size">4</TD><TD>u4be</TD><TD PORT="num_plays_type">num_plays</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__atch_chunk {
+			label="Png::AtchChunk";
+			graph[style=dotted];
+
+			atch_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_name_pos">0</TD><TD PORT="file_name_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="file_name_type">file_name</TD></TR>
+				<TR><TD COLSPAN="4" PORT="file_name__valid">must satisfy  ((_.size != 0) &amp;&amp; (_[0...1] != &quot;.&quot;)) </TD></TR>
+				<TR><TD PORT="compression_pos">...</TD><TD PORT="compression_size">1</TD><TD>u1→CompressionAttachMethods</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression__valid">must be any of :compression_attach_methods_none, :compression_attach_methods_zlib</TD></TR>
+				<TR><TD PORT="data_plain_pos">...</TD><TD PORT="data_plain_size">⇲</TD><TD></TD><TD PORT="data_plain_type">data_plain</TD></TR>
+				<TR><TD COLSPAN="4" PORT="data_plain__if">if compression == :compression_attach_methods_none</TD></TR>
+				<TR><TD PORT="data_zlib_pos">...</TD><TD PORT="data_zlib_size">⇲</TD><TD></TD><TD PORT="data_zlib_type">data_zlib</TD></TR>
+				<TR><TD COLSPAN="4" PORT="data_zlib__if">if compression == :compression_attach_methods_zlib</TD></TR>
+			</TABLE>>];
+			atch_chunk__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>data</TD><TD>(compression == :compression_attach_methods_none ? data_plain : data_zlib)</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__bkgd_chunk {
@@ -92,6 +121,7 @@ bkgd_chunk__seq_bkgd_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">4</TD><TD>u4be</TD><TD PORT="len_type">len</TD></TR>
 				<TR><TD PORT="type_pos">4</TD><TD PORT="type_size">4</TD><TD>str(UTF-8)</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="type__valid">must satisfy type != &quot;\000\000\000\000&quot;</TD></TR>
 				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
 				<TR><TD PORT="crc_pos">...</TD><TD PORT="crc_size">4</TD><TD></TD><TD PORT="crc_type">crc</TD></TR>
 			</TABLE>>];
@@ -99,17 +129,23 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>&quot;PLTE&quot;</TD><TD PORT="case0">PlteChunk</TD></TR>
 	<TR><TD>&quot;acTL&quot;</TD><TD PORT="case1">AnimationControlChunk</TD></TR>
-	<TR><TD>&quot;bKGD&quot;</TD><TD PORT="case2">BkgdChunk</TD></TR>
-	<TR><TD>&quot;cHRM&quot;</TD><TD PORT="case3">ChrmChunk</TD></TR>
-	<TR><TD>&quot;fcTL&quot;</TD><TD PORT="case4">FrameControlChunk</TD></TR>
-	<TR><TD>&quot;fdAT&quot;</TD><TD PORT="case5">FrameDataChunk</TD></TR>
-	<TR><TD>&quot;gAMA&quot;</TD><TD PORT="case6">GamaChunk</TD></TR>
-	<TR><TD>&quot;iTXt&quot;</TD><TD PORT="case7">InternationalTextChunk</TD></TR>
-	<TR><TD>&quot;pHYs&quot;</TD><TD PORT="case8">PhysChunk</TD></TR>
-	<TR><TD>&quot;sRGB&quot;</TD><TD PORT="case9">SrgbChunk</TD></TR>
-	<TR><TD>&quot;tEXt&quot;</TD><TD PORT="case10">TextChunk</TD></TR>
-	<TR><TD>&quot;tIME&quot;</TD><TD PORT="case11">TimeChunk</TD></TR>
-	<TR><TD>&quot;zTXt&quot;</TD><TD PORT="case12">CompressedTextChunk</TD></TR>
+	<TR><TD>&quot;atCh&quot;</TD><TD PORT="case2">AtchChunk</TD></TR>
+	<TR><TD>&quot;bKGD&quot;</TD><TD PORT="case3">BkgdChunk</TD></TR>
+	<TR><TD>&quot;cHRM&quot;</TD><TD PORT="case4">ChrmChunk</TD></TR>
+	<TR><TD>&quot;fcTL&quot;</TD><TD PORT="case5">FrameControlChunk</TD></TR>
+	<TR><TD>&quot;fdAT&quot;</TD><TD PORT="case6">FrameDataChunk</TD></TR>
+	<TR><TD>&quot;gAMA&quot;</TD><TD PORT="case7">GamaChunk</TD></TR>
+	<TR><TD>&quot;iTXt&quot;</TD><TD PORT="case8">InternationalTextChunk</TD></TR>
+	<TR><TD>&quot;mkBS&quot;</TD><TD PORT="case9">AdobeFireworksChunk</TD></TR>
+	<TR><TD>&quot;mkTS&quot;</TD><TD PORT="case10">AdobeFireworksChunk</TD></TR>
+	<TR><TD>&quot;pHYs&quot;</TD><TD PORT="case11">PhysChunk</TD></TR>
+	<TR><TD>&quot;prVW&quot;</TD><TD PORT="case12">AdobeFireworksChunk</TD></TR>
+	<TR><TD>&quot;sRGB&quot;</TD><TD PORT="case13">SrgbChunk</TD></TR>
+	<TR><TD>&quot;skMf&quot;</TD><TD PORT="case14">EvernoteSkmfChunk</TD></TR>
+	<TR><TD>&quot;skRf&quot;</TD><TD PORT="case15">EvernoteSkrfChunk</TD></TR>
+	<TR><TD>&quot;tEXt&quot;</TD><TD PORT="case16">TextChunk</TD></TR>
+	<TR><TD>&quot;tIME&quot;</TD><TD PORT="case17">TimeChunk</TD></TR>
+	<TR><TD>&quot;zTXt&quot;</TD><TD PORT="case18">CompressedTextChunk</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__compressed_text_chunk {
@@ -121,6 +157,25 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD PORT="keyword_pos">0</TD><TD PORT="keyword_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="keyword_type">keyword</TD></TR>
 				<TR><TD PORT="compression_method_pos">...</TD><TD PORT="compression_method_size">1</TD><TD>u1→CompressionMethods</TD><TD PORT="compression_method_type">compression_method</TD></TR>
 				<TR><TD PORT="text_datastream_pos">...</TD><TD PORT="text_datastream_size">⇲</TD><TD></TD><TD PORT="text_datastream_type">text_datastream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__evernote_skmf_chunk {
+			label="Png::EvernoteSkmfChunk";
+			graph[style=dotted];
+
+			evernote_skmf_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="json_pos">0</TD><TD PORT="json_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="json_type">json</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__evernote_skrf_chunk {
+			label="Png::EvernoteSkrfChunk";
+			graph[style=dotted];
+
+			evernote_skrf_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="uuid_pos">0</TD><TD PORT="uuid_size">16</TD><TD></TD><TD PORT="uuid_type">uuid</TD></TR>
+				<TR><TD PORT="orig_img_pos">16</TD><TD PORT="orig_img_size">⇲</TD><TD></TD><TD PORT="orig_img_type">orig_img</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__frame_control_chunk {
@@ -178,7 +233,9 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			ihdr_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="width_pos">0</TD><TD PORT="width_size">4</TD><TD>u4be</TD><TD PORT="width_type">width</TD></TR>
+				<TR><TD COLSPAN="4" PORT="width__valid">must be at least 1</TD></TR>
 				<TR><TD PORT="height_pos">4</TD><TD PORT="height_size">4</TD><TD>u4be</TD><TD PORT="height_type">height</TD></TR>
+				<TR><TD COLSPAN="4" PORT="height__valid">must be at least 1</TD></TR>
 				<TR><TD PORT="bit_depth_pos">8</TD><TD PORT="bit_depth_size">1</TD><TD>u1</TD><TD PORT="bit_depth_type">bit_depth</TD></TR>
 				<TR><TD PORT="color_type_pos">9</TD><TD PORT="color_type_size">1</TD><TD>u1→ColorType</TD><TD PORT="color_type_type">color_type</TD></TR>
 				<TR><TD PORT="compression_method_pos">10</TD><TD PORT="compression_method_size">1</TD><TD>u1</TD><TD PORT="compression_method_type">compression_method</TD></TR>
@@ -287,6 +344,11 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	png__seq:ihdr_type -> ihdr_chunk__seq [style=bold];
 	png__seq:chunks_type -> chunk__seq [style=bold];
 	chunk__seq:type_type -> png__seq:chunks__repeat [color="#404040"];
+	atch_chunk__seq:compression_type -> atch_chunk__seq:data_plain__if [color="#404040"];
+	atch_chunk__seq:compression_type -> atch_chunk__seq:data_zlib__if [color="#404040"];
+	atch_chunk__seq:compression_type -> atch_chunk__inst__data [color="#404040"];
+	atch_chunk__seq:data_plain_type -> atch_chunk__inst__data [color="#404040"];
+	atch_chunk__seq:data_zlib_type -> atch_chunk__inst__data [color="#404040"];
 	bkgd_chunk__seq:bkgd_type -> bkgd_chunk__seq_bkgd_switch [style=bold];
 	bkgd_chunk__seq_bkgd_switch:case0 -> bkgd_greyscale__seq [style=bold];
 	bkgd_chunk__seq_bkgd_switch:case1 -> bkgd_greyscale__seq [style=bold];
@@ -298,20 +360,27 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	chrm_chunk__seq:red_type -> point__seq [style=bold];
 	chrm_chunk__seq:green_type -> point__seq [style=bold];
 	chrm_chunk__seq:blue_type -> point__seq [style=bold];
+	chunk__seq:type_type -> chunk__seq:type__valid [color="#404040"];
 	chunk__seq:body_type -> chunk__seq_body_switch [style=bold];
 	chunk__seq_body_switch:case0 -> plte_chunk__seq [style=bold];
 	chunk__seq_body_switch:case1 -> animation_control_chunk__seq [style=bold];
-	chunk__seq_body_switch:case2 -> bkgd_chunk__seq [style=bold];
-	chunk__seq_body_switch:case3 -> chrm_chunk__seq [style=bold];
-	chunk__seq_body_switch:case4 -> frame_control_chunk__seq [style=bold];
-	chunk__seq_body_switch:case5 -> frame_data_chunk__seq [style=bold];
-	chunk__seq_body_switch:case6 -> gama_chunk__seq [style=bold];
-	chunk__seq_body_switch:case7 -> international_text_chunk__seq [style=bold];
-	chunk__seq_body_switch:case8 -> phys_chunk__seq [style=bold];
-	chunk__seq_body_switch:case9 -> srgb_chunk__seq [style=bold];
-	chunk__seq_body_switch:case10 -> text_chunk__seq [style=bold];
-	chunk__seq_body_switch:case11 -> time_chunk__seq [style=bold];
-	chunk__seq_body_switch:case12 -> compressed_text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case2 -> atch_chunk__seq [style=bold];
+	chunk__seq_body_switch:case3 -> bkgd_chunk__seq [style=bold];
+	chunk__seq_body_switch:case4 -> chrm_chunk__seq [style=bold];
+	chunk__seq_body_switch:case5 -> frame_control_chunk__seq [style=bold];
+	chunk__seq_body_switch:case6 -> frame_data_chunk__seq [style=bold];
+	chunk__seq_body_switch:case7 -> gama_chunk__seq [style=bold];
+	chunk__seq_body_switch:case8 -> international_text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case9 -> adobe_fireworks_chunk__seq [style=bold];
+	chunk__seq_body_switch:case10 -> adobe_fireworks_chunk__seq [style=bold];
+	chunk__seq_body_switch:case11 -> phys_chunk__seq [style=bold];
+	chunk__seq_body_switch:case12 -> adobe_fireworks_chunk__seq [style=bold];
+	chunk__seq_body_switch:case13 -> srgb_chunk__seq [style=bold];
+	chunk__seq_body_switch:case14 -> evernote_skmf_chunk__seq [style=bold];
+	chunk__seq_body_switch:case15 -> evernote_skrf_chunk__seq [style=bold];
+	chunk__seq_body_switch:case16 -> text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case17 -> time_chunk__seq [style=bold];
+	chunk__seq_body_switch:case18 -> compressed_text_chunk__seq [style=bold];
 	chunk__seq:type_type -> chunk__seq:body_type [color="#404040"];
 	ihdr_chunk__seq:width_type -> frame_control_chunk__seq:width__valid [color="#404040"];
 	ihdr_chunk__seq:height_type -> frame_control_chunk__seq:height__valid [color="#404040"];

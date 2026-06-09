@@ -125,6 +125,38 @@ class Png(ReadWriteKaitaiStruct):
 
         self._dirty = False
 
+    class AdobeFireworksChunk(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285
+        """
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.AdobeFireworksChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self._raw_preview_data = self._io.read_bytes_full()
+            self.preview_data = zlib.decompress(self._raw_preview_data)
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Png.AdobeFireworksChunk, self)._write__seq(io)
+            self._raw_preview_data = zlib.compress(self.preview_data)
+            self._io.write_bytes(self._raw_preview_data)
+            if not self._io.is_eof():
+                raise kaitaistruct.ConsistencyError(u"preview_data", 0, self._io.size() - self._io.pos())
+
+
+        def _check(self):
+            self._dirty = False
+
+
     class AnimationControlChunk(ReadWriteKaitaiStruct):
         """
         .. seealso::
@@ -154,6 +186,101 @@ class Png(ReadWriteKaitaiStruct):
         def _check(self):
             self._dirty = False
 
+
+    class AtchChunk(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach
+        
+        
+        .. seealso::
+           A new protocol and tool for PNG file attachments - https://nullprogram.com/blog/2021/12/31/
+        """
+
+        class CompressionAttachMethods(IntEnum):
+            none = 0
+            zlib = 1
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.AtchChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.file_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+            _ = self.file_name
+            if not  ((len(_) != 0) and (_[0:1] != u".")) :
+                raise kaitaistruct.ValidationExprError(self.file_name, self._io, u"/types/atch_chunk/seq/0")
+            self.compression = KaitaiStream.resolve_enum(Png.AtchChunk.CompressionAttachMethods, self._io.read_u1())
+            if not  ((self.compression == Png.AtchChunk.CompressionAttachMethods.none) or (self.compression == Png.AtchChunk.CompressionAttachMethods.zlib)) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.compression, self._io, u"/types/atch_chunk/seq/1")
+            if self.compression == Png.AtchChunk.CompressionAttachMethods.none:
+                pass
+                self.data_plain = self._io.read_bytes_full()
+
+            if self.compression == Png.AtchChunk.CompressionAttachMethods.zlib:
+                pass
+                self._raw_data_zlib = self._io.read_bytes_full()
+                self.data_zlib = zlib.decompress(self._raw_data_zlib)
+
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+            if self.compression == Png.AtchChunk.CompressionAttachMethods.none:
+                pass
+
+            if self.compression == Png.AtchChunk.CompressionAttachMethods.zlib:
+                pass
+
+
+
+        def _write__seq(self, io=None):
+            super(Png.AtchChunk, self)._write__seq(io)
+            self._io.write_bytes((self.file_name).encode(u"UTF-8"))
+            self._io.write_u1(0)
+            self._io.write_u1(int(self.compression))
+            if self.compression == Png.AtchChunk.CompressionAttachMethods.none:
+                pass
+                self._io.write_bytes(self.data_plain)
+                if not self._io.is_eof():
+                    raise kaitaistruct.ConsistencyError(u"data_plain", 0, self._io.size() - self._io.pos())
+
+            if self.compression == Png.AtchChunk.CompressionAttachMethods.zlib:
+                pass
+                self._raw_data_zlib = zlib.compress(self.data_zlib)
+                self._io.write_bytes(self._raw_data_zlib)
+                if not self._io.is_eof():
+                    raise kaitaistruct.ConsistencyError(u"data_zlib", 0, self._io.size() - self._io.pos())
+
+
+
+        def _check(self):
+            if KaitaiStream.byte_array_index_of((self.file_name).encode(u"UTF-8"), 0) != -1:
+                raise kaitaistruct.ConsistencyError(u"file_name", -1, KaitaiStream.byte_array_index_of((self.file_name).encode(u"UTF-8"), 0))
+            _ = self.file_name
+            if not  ((len(_) != 0) and (_[0:1] != u".")) :
+                raise kaitaistruct.ValidationExprError(self.file_name, None, u"/types/atch_chunk/seq/0")
+            if not  ((self.compression == Png.AtchChunk.CompressionAttachMethods.none) or (self.compression == Png.AtchChunk.CompressionAttachMethods.zlib)) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.compression, None, u"/types/atch_chunk/seq/1")
+            if self.compression == Png.AtchChunk.CompressionAttachMethods.none:
+                pass
+
+            if self.compression == Png.AtchChunk.CompressionAttachMethods.zlib:
+                pass
+
+            self._dirty = False
+
+        @property
+        def data(self):
+            if hasattr(self, '_m_data'):
+                return self._m_data
+
+            self._m_data = (self.data_plain if self.compression == Png.AtchChunk.CompressionAttachMethods.none else self.data_zlib)
+            return getattr(self, '_m_data', None)
+
+        def _invalidate_data(self):
+            del self._m_data
 
     class BkgdChunk(ReadWriteKaitaiStruct):
         """Background chunk stores default background color to display this
@@ -413,6 +540,9 @@ class Png(ReadWriteKaitaiStruct):
         def _read(self):
             self.len = self._io.read_u4be()
             self.type = (self._io.read_bytes(4)).decode(u"UTF-8")
+            _ = self.type
+            if not self.type != u"\000\000\000\000":
+                raise kaitaistruct.ValidationExprError(self.type, self._io, u"/types/chunk/seq/1")
             _on = self.type
             if _on == u"PLTE":
                 pass
@@ -425,6 +555,12 @@ class Png(ReadWriteKaitaiStruct):
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.AnimationControlChunk(_io__raw_body, self, self._root)
+                self.body._read()
+            elif _on == u"atCh":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.AtchChunk(_io__raw_body, self, self._root)
                 self.body._read()
             elif _on == u"bKGD":
                 pass
@@ -462,17 +598,47 @@ class Png(ReadWriteKaitaiStruct):
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.InternationalTextChunk(_io__raw_body, self, self._root)
                 self.body._read()
+            elif _on == u"mkBS":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.AdobeFireworksChunk(_io__raw_body, self, self._root)
+                self.body._read()
+            elif _on == u"mkTS":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.AdobeFireworksChunk(_io__raw_body, self, self._root)
+                self.body._read()
             elif _on == u"pHYs":
                 pass
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.PhysChunk(_io__raw_body, self, self._root)
                 self.body._read()
+            elif _on == u"prVW":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.AdobeFireworksChunk(_io__raw_body, self, self._root)
+                self.body._read()
             elif _on == u"sRGB":
                 pass
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.SrgbChunk(_io__raw_body, self, self._root)
+                self.body._read()
+            elif _on == u"skMf":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.EvernoteSkmfChunk(_io__raw_body, self, self._root)
+                self.body._read()
+            elif _on == u"skRf":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.EvernoteSkrfChunk(_io__raw_body, self, self._root)
                 self.body._read()
             elif _on == u"tEXt":
                 pass
@@ -508,6 +674,9 @@ class Png(ReadWriteKaitaiStruct):
             elif _on == u"acTL":
                 pass
                 self.body._fetch_instances()
+            elif _on == u"atCh":
+                pass
+                self.body._fetch_instances()
             elif _on == u"bKGD":
                 pass
                 self.body._fetch_instances()
@@ -526,10 +695,25 @@ class Png(ReadWriteKaitaiStruct):
             elif _on == u"iTXt":
                 pass
                 self.body._fetch_instances()
+            elif _on == u"mkBS":
+                pass
+                self.body._fetch_instances()
+            elif _on == u"mkTS":
+                pass
+                self.body._fetch_instances()
             elif _on == u"pHYs":
                 pass
                 self.body._fetch_instances()
+            elif _on == u"prVW":
+                pass
+                self.body._fetch_instances()
             elif _on == u"sRGB":
+                pass
+                self.body._fetch_instances()
+            elif _on == u"skMf":
+                pass
+                self.body._fetch_instances()
+            elif _on == u"skRf":
                 pass
                 self.body._fetch_instances()
             elif _on == u"tEXt":
@@ -576,6 +760,19 @@ class Png(ReadWriteKaitaiStruct):
                     parent.write_bytes(self._raw_body)
                 _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
                 self.body._write__seq(_io__raw_body)
+            elif _on == u"atCh":
+                pass
+                _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
+                self._io.add_child_stream(_io__raw_body)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len))
+                def handler(parent, _io__raw_body=_io__raw_body):
+                    self._raw_body = _io__raw_body.to_byte_array()
+                    if len(self._raw_body) != self.len:
+                        raise kaitaistruct.ConsistencyError(u"raw(body)", self.len, len(self._raw_body))
+                    parent.write_bytes(self._raw_body)
+                _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.body._write__seq(_io__raw_body)
             elif _on == u"bKGD":
                 pass
                 _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
@@ -654,6 +851,32 @@ class Png(ReadWriteKaitaiStruct):
                     parent.write_bytes(self._raw_body)
                 _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
                 self.body._write__seq(_io__raw_body)
+            elif _on == u"mkBS":
+                pass
+                _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
+                self._io.add_child_stream(_io__raw_body)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len))
+                def handler(parent, _io__raw_body=_io__raw_body):
+                    self._raw_body = _io__raw_body.to_byte_array()
+                    if len(self._raw_body) != self.len:
+                        raise kaitaistruct.ConsistencyError(u"raw(body)", self.len, len(self._raw_body))
+                    parent.write_bytes(self._raw_body)
+                _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.body._write__seq(_io__raw_body)
+            elif _on == u"mkTS":
+                pass
+                _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
+                self._io.add_child_stream(_io__raw_body)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len))
+                def handler(parent, _io__raw_body=_io__raw_body):
+                    self._raw_body = _io__raw_body.to_byte_array()
+                    if len(self._raw_body) != self.len:
+                        raise kaitaistruct.ConsistencyError(u"raw(body)", self.len, len(self._raw_body))
+                    parent.write_bytes(self._raw_body)
+                _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.body._write__seq(_io__raw_body)
             elif _on == u"pHYs":
                 pass
                 _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
@@ -667,7 +890,46 @@ class Png(ReadWriteKaitaiStruct):
                     parent.write_bytes(self._raw_body)
                 _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
                 self.body._write__seq(_io__raw_body)
+            elif _on == u"prVW":
+                pass
+                _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
+                self._io.add_child_stream(_io__raw_body)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len))
+                def handler(parent, _io__raw_body=_io__raw_body):
+                    self._raw_body = _io__raw_body.to_byte_array()
+                    if len(self._raw_body) != self.len:
+                        raise kaitaistruct.ConsistencyError(u"raw(body)", self.len, len(self._raw_body))
+                    parent.write_bytes(self._raw_body)
+                _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.body._write__seq(_io__raw_body)
             elif _on == u"sRGB":
+                pass
+                _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
+                self._io.add_child_stream(_io__raw_body)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len))
+                def handler(parent, _io__raw_body=_io__raw_body):
+                    self._raw_body = _io__raw_body.to_byte_array()
+                    if len(self._raw_body) != self.len:
+                        raise kaitaistruct.ConsistencyError(u"raw(body)", self.len, len(self._raw_body))
+                    parent.write_bytes(self._raw_body)
+                _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.body._write__seq(_io__raw_body)
+            elif _on == u"skMf":
+                pass
+                _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
+                self._io.add_child_stream(_io__raw_body)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len))
+                def handler(parent, _io__raw_body=_io__raw_body):
+                    self._raw_body = _io__raw_body.to_byte_array()
+                    if len(self._raw_body) != self.len:
+                        raise kaitaistruct.ConsistencyError(u"raw(body)", self.len, len(self._raw_body))
+                    parent.write_bytes(self._raw_body)
+                _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.body._write__seq(_io__raw_body)
+            elif _on == u"skRf":
                 pass
                 _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
                 self._io.add_child_stream(_io__raw_body)
@@ -728,6 +990,9 @@ class Png(ReadWriteKaitaiStruct):
         def _check(self):
             if len((self.type).encode(u"UTF-8")) != 4:
                 raise kaitaistruct.ConsistencyError(u"type", 4, len((self.type).encode(u"UTF-8")))
+            _ = self.type
+            if not self.type != u"\000\000\000\000":
+                raise kaitaistruct.ValidationExprError(self.type, None, u"/types/chunk/seq/1")
             _on = self.type
             if _on == u"PLTE":
                 pass
@@ -736,6 +1001,12 @@ class Png(ReadWriteKaitaiStruct):
                 if self.body._parent != self:
                     raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
             elif _on == u"acTL":
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == u"atCh":
                 pass
                 if self.body._root != self._root:
                     raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
@@ -777,13 +1048,43 @@ class Png(ReadWriteKaitaiStruct):
                     raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
                 if self.body._parent != self:
                     raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == u"mkBS":
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == u"mkTS":
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
             elif _on == u"pHYs":
                 pass
                 if self.body._root != self._root:
                     raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
                 if self.body._parent != self:
                     raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == u"prVW":
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
             elif _on == u"sRGB":
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == u"skMf":
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == u"skRf":
                 pass
                 if self.body._root != self._root:
                     raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
@@ -855,6 +1156,70 @@ class Png(ReadWriteKaitaiStruct):
         def _check(self):
             if KaitaiStream.byte_array_index_of((self.keyword).encode(u"UTF-8"), 0) != -1:
                 raise kaitaistruct.ConsistencyError(u"keyword", -1, KaitaiStream.byte_array_index_of((self.keyword).encode(u"UTF-8"), 0))
+            self._dirty = False
+
+
+    class EvernoteSkmfChunk(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501
+        """
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.EvernoteSkmfChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.json = (self._io.read_bytes_full()).decode(u"UTF-8")
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Png.EvernoteSkmfChunk, self)._write__seq(io)
+            self._io.write_bytes((self.json).encode(u"UTF-8"))
+            if not self._io.is_eof():
+                raise kaitaistruct.ConsistencyError(u"json", 0, self._io.size() - self._io.pos())
+
+
+        def _check(self):
+            self._dirty = False
+
+
+    class EvernoteSkrfChunk(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501
+        """
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.EvernoteSkrfChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.uuid = self._io.read_bytes(16)
+            self.orig_img = self._io.read_bytes_full()
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Png.EvernoteSkrfChunk, self)._write__seq(io)
+            self._io.write_bytes(self.uuid)
+            self._io.write_bytes(self.orig_img)
+            if not self._io.is_eof():
+                raise kaitaistruct.ConsistencyError(u"orig_img", 0, self._io.size() - self._io.pos())
+
+
+        def _check(self):
+            if len(self.uuid) != 16:
+                raise kaitaistruct.ConsistencyError(u"uuid", 16, len(self.uuid))
             self._dirty = False
 
 
@@ -1019,7 +1384,11 @@ class Png(ReadWriteKaitaiStruct):
 
         def _read(self):
             self.width = self._io.read_u4be()
+            if not self.width >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.width, self._io, u"/types/ihdr_chunk/seq/0")
             self.height = self._io.read_u4be()
+            if not self.height >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.height, self._io, u"/types/ihdr_chunk/seq/1")
             self.bit_depth = self._io.read_u1()
             self.color_type = KaitaiStream.resolve_enum(Png.ColorType, self._io.read_u1())
             self.compression_method = self._io.read_u1()
@@ -1044,6 +1413,10 @@ class Png(ReadWriteKaitaiStruct):
 
 
         def _check(self):
+            if not self.width >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.width, None, u"/types/ihdr_chunk/seq/0")
+            if not self.height >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.height, None, u"/types/ihdr_chunk/seq/1")
             self._dirty = False
 
 

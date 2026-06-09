@@ -315,6 +315,59 @@ impl Default for Png_PhysUnit {
 
 
 /**
+ * \sa https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285 Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_AdobeFireworksChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    preview_data: RefCell<Vec<u8>>,
+    _io: RefCell<BytesReader>,
+    preview_data_raw: RefCell<Vec<u8>>,
+}
+impl KStruct for Png_AdobeFireworksChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.preview_data_raw.borrow_mut() = _io.read_bytes_full()?.into();
+        *self_rc.preview_data.borrow_mut() = process_zlib(&self_rc.preview_data_raw.borrow()).map_err(|msg| KError::BytesDecodingError { msg })?;
+        Ok(())
+    }
+}
+impl Png_AdobeFireworksChunk {
+}
+impl Png_AdobeFireworksChunk {
+    pub fn preview_data(&self) -> Ref<'_, Vec<u8>> {
+        self.preview_data.borrow()
+    }
+}
+impl Png_AdobeFireworksChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+impl Png_AdobeFireworksChunk {
+    pub fn preview_data_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.preview_data_raw.borrow()
+    }
+}
+
+/**
  * \sa https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
  */
 
@@ -374,6 +427,158 @@ impl Png_AnimationControlChunk {
         self._io.borrow()
     }
 }
+
+/**
+ * \sa https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach Source
+ * \sa https://nullprogram.com/blog/2021/12/31/ A new protocol and tool for PNG file attachments
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_AtchChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    file_name: RefCell<String>,
+    compression: RefCell<Png_AtchChunk_CompressionAttachMethods>,
+    data_plain: RefCell<Vec<u8>>,
+    data_zlib: RefCell<Vec<u8>>,
+    _io: RefCell<BytesReader>,
+    data_zlib_raw: RefCell<Vec<u8>>,
+    f_data: Cell<bool>,
+    data: RefCell<Vec<u8>>,
+}
+impl KStruct for Png_AtchChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.file_name.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "UTF-8")?;
+        let _tmpa = *self_rc.file_name();
+        if !( ((((_tmpa.len() as i32) != (0 as i32))) && (_tmpa[0..1] != ".".to_string())) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/atch_chunk/seq/0".to_string() }));
+        }
+        *self_rc.compression.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
+        if !( ((*self_rc.compression() == Png_AtchChunk_CompressionAttachMethods::None) || (*self_rc.compression() == Png_AtchChunk_CompressionAttachMethods::Zlib)) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotAnyOf, src_path: "/types/atch_chunk/seq/1".to_string() }));
+        }
+        if *self_rc.compression() == Png_AtchChunk_CompressionAttachMethods::None {
+            *self_rc.data_plain.borrow_mut() = _io.read_bytes_full()?.into();
+        }
+        if *self_rc.compression() == Png_AtchChunk_CompressionAttachMethods::Zlib {
+            *self_rc.data_zlib_raw.borrow_mut() = _io.read_bytes_full()?.into();
+            *self_rc.data_zlib.borrow_mut() = process_zlib(&self_rc.data_zlib_raw.borrow()).map_err(|msg| KError::BytesDecodingError { msg })?;
+        }
+        Ok(())
+    }
+}
+impl Png_AtchChunk {
+    pub fn data(
+        &self
+    ) -> KResult<Ref<'_, Vec<u8>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_data.get() {
+            return Ok(self.data.borrow());
+        }
+        self.f_data.set(true);
+        *self.data.borrow_mut() = if *self.compression() == Png_AtchChunk_CompressionAttachMethods::None { self.data_plain().to_vec() } else { self.data_zlib().to_vec() }.to_vec();
+        Ok(self.data.borrow())
+    }
+}
+
+/**
+ * From the [official
+ * specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+ * 
+ * > The name can be any length that fits in the chunk, and should be
+ * > encoded with UTF-8. It's up to each implementation to determine how
+ * > to appropriately interpret the bytestring for the local system.
+ * 
+ * > The name must be at least one byte long, not counting the null
+ * > terminator. It cannot begin with a period (`0x2e`), nor contain
+ * > control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+ * > backslash (`0x5c`), i.e. no directory hierarchies.
+ * 
+ * As of Kaitai Struct 0.11, we cannot easily check whether a string
+ * contains certain characters, so we only enforce that the file name is
+ * not empty and that it doesn't start with a period.
+ */
+impl Png_AtchChunk {
+    pub fn file_name(&self) -> Ref<'_, String> {
+        self.file_name.borrow()
+    }
+}
+impl Png_AtchChunk {
+    pub fn compression(&self) -> Ref<'_, Png_AtchChunk_CompressionAttachMethods> {
+        self.compression.borrow()
+    }
+}
+impl Png_AtchChunk {
+    pub fn data_plain(&self) -> Ref<'_, Vec<u8>> {
+        self.data_plain.borrow()
+    }
+}
+impl Png_AtchChunk {
+    pub fn data_zlib(&self) -> Ref<'_, Vec<u8>> {
+        self.data_zlib.borrow()
+    }
+}
+impl Png_AtchChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+impl Png_AtchChunk {
+    pub fn data_zlib_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.data_zlib_raw.borrow()
+    }
+}
+#[derive(Debug, PartialEq, Clone)]
+pub enum Png_AtchChunk_CompressionAttachMethods {
+    None,
+    Zlib,
+    Unknown(i64),
+}
+
+impl TryFrom<i64> for Png_AtchChunk_CompressionAttachMethods {
+    type Error = KError;
+    fn try_from(flag: i64) -> KResult<Png_AtchChunk_CompressionAttachMethods> {
+        match flag {
+            0 => Ok(Png_AtchChunk_CompressionAttachMethods::None),
+            1 => Ok(Png_AtchChunk_CompressionAttachMethods::Zlib),
+            _ => Ok(Png_AtchChunk_CompressionAttachMethods::Unknown(flag)),
+        }
+    }
+}
+
+impl From<&Png_AtchChunk_CompressionAttachMethods> for i64 {
+    fn from(v: &Png_AtchChunk_CompressionAttachMethods) -> Self {
+        match *v {
+            Png_AtchChunk_CompressionAttachMethods::None => 0,
+            Png_AtchChunk_CompressionAttachMethods::Zlib => 1,
+            Png_AtchChunk_CompressionAttachMethods::Unknown(v) => v
+        }
+    }
+}
+
+impl Default for Png_AtchChunk_CompressionAttachMethods {
+    fn default() -> Self { Png_AtchChunk_CompressionAttachMethods::Unknown(0) }
+}
+
 
 /**
  * Background chunk stores default background color to display this
@@ -731,14 +936,18 @@ pub enum Png_Chunk_Body {
     Png_FrameControlChunk(OptRc<Png_FrameControlChunk>),
     Png_PhysChunk(OptRc<Png_PhysChunk>),
     Png_ChrmChunk(OptRc<Png_ChrmChunk>),
+    Png_EvernoteSkmfChunk(OptRc<Png_EvernoteSkmfChunk>),
     Png_TimeChunk(OptRc<Png_TimeChunk>),
     Png_AnimationControlChunk(OptRc<Png_AnimationControlChunk>),
-    Bytes(Vec<u8>),
     Png_CompressedTextChunk(OptRc<Png_CompressedTextChunk>),
     Png_InternationalTextChunk(OptRc<Png_InternationalTextChunk>),
     Png_GamaChunk(OptRc<Png_GamaChunk>),
+    Png_AdobeFireworksChunk(OptRc<Png_AdobeFireworksChunk>),
+    Png_AtchChunk(OptRc<Png_AtchChunk>),
     Png_FrameDataChunk(OptRc<Png_FrameDataChunk>),
     Png_TextChunk(OptRc<Png_TextChunk>),
+    Png_EvernoteSkrfChunk(OptRc<Png_EvernoteSkrfChunk>),
+    Bytes(Vec<u8>),
     Png_PlteChunk(OptRc<Png_PlteChunk>),
     Png_BkgdChunk(OptRc<Png_BkgdChunk>),
 }
@@ -794,6 +1003,19 @@ impl From<OptRc<Png_ChrmChunk>> for Png_Chunk_Body {
         Self::Png_ChrmChunk(v)
     }
 }
+impl From<&Png_Chunk_Body> for OptRc<Png_EvernoteSkmfChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_EvernoteSkmfChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_EvernoteSkmfChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_EvernoteSkmfChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_EvernoteSkmfChunk>) -> Self {
+        Self::Png_EvernoteSkmfChunk(v)
+    }
+}
 impl From<&Png_Chunk_Body> for OptRc<Png_TimeChunk> {
     fn from(v: &Png_Chunk_Body) -> Self {
         if let Png_Chunk_Body::Png_TimeChunk(x) = v {
@@ -818,19 +1040,6 @@ impl From<&Png_Chunk_Body> for OptRc<Png_AnimationControlChunk> {
 impl From<OptRc<Png_AnimationControlChunk>> for Png_Chunk_Body {
     fn from(v: OptRc<Png_AnimationControlChunk>) -> Self {
         Self::Png_AnimationControlChunk(v)
-    }
-}
-impl From<&Png_Chunk_Body> for Vec<u8> {
-    fn from(v: &Png_Chunk_Body) -> Self {
-        if let Png_Chunk_Body::Bytes(x) = v {
-            return x.clone();
-        }
-        panic!("expected Png_Chunk_Body::Bytes, got {:?}", v)
-    }
-}
-impl From<Vec<u8>> for Png_Chunk_Body {
-    fn from(v: Vec<u8>) -> Self {
-        Self::Bytes(v)
     }
 }
 impl From<&Png_Chunk_Body> for OptRc<Png_CompressedTextChunk> {
@@ -872,6 +1081,32 @@ impl From<OptRc<Png_GamaChunk>> for Png_Chunk_Body {
         Self::Png_GamaChunk(v)
     }
 }
+impl From<&Png_Chunk_Body> for OptRc<Png_AdobeFireworksChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_AdobeFireworksChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_AdobeFireworksChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_AdobeFireworksChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_AdobeFireworksChunk>) -> Self {
+        Self::Png_AdobeFireworksChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_AtchChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_AtchChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_AtchChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_AtchChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_AtchChunk>) -> Self {
+        Self::Png_AtchChunk(v)
+    }
+}
 impl From<&Png_Chunk_Body> for OptRc<Png_FrameDataChunk> {
     fn from(v: &Png_Chunk_Body) -> Self {
         if let Png_Chunk_Body::Png_FrameDataChunk(x) = v {
@@ -896,6 +1131,32 @@ impl From<&Png_Chunk_Body> for OptRc<Png_TextChunk> {
 impl From<OptRc<Png_TextChunk>> for Png_Chunk_Body {
     fn from(v: OptRc<Png_TextChunk>) -> Self {
         Self::Png_TextChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_EvernoteSkrfChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_EvernoteSkrfChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_EvernoteSkrfChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_EvernoteSkrfChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_EvernoteSkrfChunk>) -> Self {
+        Self::Png_EvernoteSkrfChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for Vec<u8> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Bytes(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Bytes, got {:?}", v)
+    }
+}
+impl From<Vec<u8>> for Png_Chunk_Body {
+    fn from(v: Vec<u8>) -> Self {
+        Self::Bytes(v)
     }
 }
 impl From<&Png_Chunk_Body> for OptRc<Png_PlteChunk> {
@@ -943,6 +1204,10 @@ impl KStruct for Png_Chunk {
         let _r = _rrc.as_ref().unwrap();
         *self_rc.len.borrow_mut() = _io.read_u4be()?.into();
         *self_rc.type.borrow_mut() = bytes_to_str(&_io.read_bytes(4 as usize)?.into(), "UTF-8")?;
+        let _tmpa = *self_rc.type();
+        if !(*self_rc.type() != "\u{0}\u{0}\u{0}\u{0}".to_string()) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/chunk/seq/1".to_string() }));
+        }
         {
             let on = self_rc.type();
             if *on == "PLTE" {
@@ -957,6 +1222,13 @@ impl KStruct for Png_Chunk {
                 let body_raw = self_rc.body_raw.borrow();
                 let _t_body_raw_io = BytesReader::from(body_raw.clone());
                 let t = Self::read_into::<BytesReader, Png_AnimationControlChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "atCh" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_AtchChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
             else if *on == "bKGD" {
@@ -1001,6 +1273,20 @@ impl KStruct for Png_Chunk {
                 let t = Self::read_into::<BytesReader, Png_InternationalTextChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
+            else if *on == "mkBS" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_AdobeFireworksChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "mkTS" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_AdobeFireworksChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
             else if *on == "pHYs" {
                 *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
                 let body_raw = self_rc.body_raw.borrow();
@@ -1008,11 +1294,32 @@ impl KStruct for Png_Chunk {
                 let t = Self::read_into::<BytesReader, Png_PhysChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
+            else if *on == "prVW" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_AdobeFireworksChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
             else if *on == "sRGB" {
                 *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
                 let body_raw = self_rc.body_raw.borrow();
                 let _t_body_raw_io = BytesReader::from(body_raw.clone());
                 let t = Self::read_into::<BytesReader, Png_SrgbChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "skMf" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_EvernoteSkmfChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "skRf" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_EvernoteSkrfChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
             else if *on == "tEXt" {
@@ -1148,6 +1455,128 @@ impl Png_CompressedTextChunk {
 impl Png_CompressedTextChunk {
     pub fn text_datastream_raw(&self) -> Ref<'_, Vec<u8>> {
         self.text_datastream_raw.borrow()
+    }
+}
+
+/**
+ * \sa https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501 Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_EvernoteSkmfChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    json: RefCell<String>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_EvernoteSkmfChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.json.borrow_mut() = bytes_to_str(&_io.read_bytes_full()?.into(), "UTF-8")?;
+        Ok(())
+    }
+}
+impl Png_EvernoteSkmfChunk {
+}
+
+/**
+ * JSON document with information about editable annotations (text,
+ * lines, paths, etc.) in Evernote/Skitch.
+ * 
+ * It refers to the original image stored in the `skRf` chunk (which
+ * usually follows immediately after `skMf`) via the
+ * `.children[0].children[0].uri` JSON property. This has the format
+ * `"skitch+uuid:///$UUID"`, where `$UUID` is a random UUIDv4 value that
+ * matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+ * 16 bytes of the `skRf` chunk).
+ */
+impl Png_EvernoteSkmfChunk {
+    pub fn json(&self) -> Ref<'_, String> {
+        self.json.borrow()
+    }
+}
+impl Png_EvernoteSkmfChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * \sa https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501 Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_EvernoteSkrfChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    uuid: RefCell<Vec<u8>>,
+    orig_img: RefCell<Vec<u8>>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_EvernoteSkrfChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.uuid.borrow_mut() = _io.read_bytes(16 as usize)?.into();
+        *self_rc.orig_img.borrow_mut() = _io.read_bytes_full()?.into();
+        Ok(())
+    }
+}
+impl Png_EvernoteSkrfChunk {
+}
+
+/**
+ * Random UUIDv4 value used to identify the image. It is referenced by
+ * the `skMf` chunk - see the documentation for the `json` field in
+ * `evernote_skmf_chunk`.
+ */
+impl Png_EvernoteSkrfChunk {
+    pub fn uuid(&self) -> Ref<'_, Vec<u8>> {
+        self.uuid.borrow()
+    }
+}
+
+/**
+ * The original source image without annotations. It's usually a PNG
+ * image as well, but it can also be a JPEG or possibly other formats.
+ */
+impl Png_EvernoteSkrfChunk {
+    pub fn orig_img(&self) -> Ref<'_, Vec<u8>> {
+        self.orig_img.borrow()
+    }
+}
+impl Png_EvernoteSkrfChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
     }
 }
 
@@ -1492,7 +1921,13 @@ impl KStruct for Png_IhdrChunk {
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
         *self_rc.width.borrow_mut() = _io.read_u4be()?.into();
+        if !(((*self_rc.width() as u32) >= (1 as u32))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/ihdr_chunk/seq/0".to_string() }));
+        }
         *self_rc.height.borrow_mut() = _io.read_u4be()?.into();
+        if !(((*self_rc.height() as u32) >= (1 as u32))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/ihdr_chunk/seq/1".to_string() }));
+        }
         *self_rc.bit_depth.borrow_mut() = _io.read_u1()?.into();
         *self_rc.color_type.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
         *self_rc.compression_method.borrow_mut() = _io.read_u1()?.into();

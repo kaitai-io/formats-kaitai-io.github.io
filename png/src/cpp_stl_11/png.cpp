@@ -83,6 +83,24 @@ png_t::~png_t() {
 void png_t::_clean_up() {
 }
 
+png_t::adobe_fireworks_chunk_t::adobe_fireworks_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void png_t::adobe_fireworks_chunk_t::_read() {
+    m__raw_preview_data = m__io->read_bytes_full();
+    m_preview_data = kaitai::kstream::process_zlib(m__raw_preview_data);
+}
+
+png_t::adobe_fireworks_chunk_t::~adobe_fireworks_chunk_t() {
+    _clean_up();
+}
+
+void png_t::adobe_fireworks_chunk_t::_clean_up() {
+}
+
 png_t::animation_control_chunk_t::animation_control_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -99,6 +117,64 @@ png_t::animation_control_chunk_t::~animation_control_chunk_t() {
 }
 
 void png_t::animation_control_chunk_t::_clean_up() {
+}
+const std::set<png_t::atch_chunk_t::compression_attach_methods_t> png_t::atch_chunk_t::_values_compression_attach_methods_t{
+    png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_NONE,
+    png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_ZLIB,
+};
+bool png_t::atch_chunk_t::_is_defined_compression_attach_methods_t(png_t::atch_chunk_t::compression_attach_methods_t v) {
+    return png_t::atch_chunk_t::_values_compression_attach_methods_t.find(v) != png_t::atch_chunk_t::_values_compression_attach_methods_t.end();
+}
+
+png_t::atch_chunk_t::atch_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_data = false;
+    _read();
+}
+
+void png_t::atch_chunk_t::_read() {
+    m_file_name = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "UTF-8");
+    {
+        std::string _ = m_file_name;
+        if (!( ((_.length() != 0) && (_.substr(0, 1 - 0) != std::string("."))) )) {
+            throw kaitai::validation_expr_error<std::string>(m_file_name, m__io, std::string("/types/atch_chunk/seq/0"));
+        }
+    }
+    m_compression = static_cast<png_t::atch_chunk_t::compression_attach_methods_t>(m__io->read_u1());
+    if (!( ((m_compression == png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_NONE) || (m_compression == png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_ZLIB)) )) {
+        throw kaitai::validation_not_any_of_error<png_t::atch_chunk_t::compression_attach_methods_t>(m_compression, m__io, std::string("/types/atch_chunk/seq/1"));
+    }
+    n_data_plain = true;
+    if (compression() == png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_NONE) {
+        n_data_plain = false;
+        m_data_plain = m__io->read_bytes_full();
+    }
+    n_data_zlib = true;
+    if (compression() == png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_ZLIB) {
+        n_data_zlib = false;
+        m__raw_data_zlib = m__io->read_bytes_full();
+        m_data_zlib = kaitai::kstream::process_zlib(m__raw_data_zlib);
+    }
+}
+
+png_t::atch_chunk_t::~atch_chunk_t() {
+    _clean_up();
+}
+
+void png_t::atch_chunk_t::_clean_up() {
+    if (!n_data_plain) {
+    }
+    if (!n_data_zlib) {
+    }
+}
+
+std::string png_t::atch_chunk_t::data() {
+    if (f_data)
+        return m_data;
+    f_data = true;
+    m_data = ((compression() == png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_NONE) ? (data_plain()) : (data_zlib()));
+    return m_data;
 }
 
 png_t::bkgd_chunk_t::bkgd_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
@@ -234,6 +310,12 @@ png_t::chunk_t::chunk_t(kaitai::kstream* p__io, png_t* p__parent, png_t* p__root
 void png_t::chunk_t::_read() {
     m_len = m__io->read_u4be();
     m_type = kaitai::kstream::bytes_to_str(m__io->read_bytes(4), "UTF-8");
+    {
+        std::string _ = m_type;
+        if (!(type() != std::string("\000\000\000\000", 4))) {
+            throw kaitai::validation_expr_error<std::string>(m_type, m__io, std::string("/types/chunk/seq/1"));
+        }
+    }
     n_body = true;
     {
         std::string on = type();
@@ -248,6 +330,12 @@ void png_t::chunk_t::_read() {
             m__raw_body = m__io->read_bytes(len());
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<animation_control_chunk_t>(new animation_control_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
+        else if (on == std::string("atCh")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<atch_chunk_t>(new atch_chunk_t(m__io__raw_body.get(), this, m__root));
         }
         else if (on == std::string("bKGD")) {
             n_body = false;
@@ -285,17 +373,47 @@ void png_t::chunk_t::_read() {
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<international_text_chunk_t>(new international_text_chunk_t(m__io__raw_body.get(), this, m__root));
         }
+        else if (on == std::string("mkBS")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<adobe_fireworks_chunk_t>(new adobe_fireworks_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
+        else if (on == std::string("mkTS")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<adobe_fireworks_chunk_t>(new adobe_fireworks_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
         else if (on == std::string("pHYs")) {
             n_body = false;
             m__raw_body = m__io->read_bytes(len());
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<phys_chunk_t>(new phys_chunk_t(m__io__raw_body.get(), this, m__root));
         }
+        else if (on == std::string("prVW")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<adobe_fireworks_chunk_t>(new adobe_fireworks_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
         else if (on == std::string("sRGB")) {
             n_body = false;
             m__raw_body = m__io->read_bytes(len());
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<srgb_chunk_t>(new srgb_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
+        else if (on == std::string("skMf")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<evernote_skmf_chunk_t>(new evernote_skmf_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
+        else if (on == std::string("skRf")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<evernote_skrf_chunk_t>(new evernote_skrf_chunk_t(m__io__raw_body.get(), this, m__root));
         }
         else if (on == std::string("tEXt")) {
             n_body = false;
@@ -349,6 +467,41 @@ png_t::compressed_text_chunk_t::~compressed_text_chunk_t() {
 }
 
 void png_t::compressed_text_chunk_t::_clean_up() {
+}
+
+png_t::evernote_skmf_chunk_t::evernote_skmf_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void png_t::evernote_skmf_chunk_t::_read() {
+    m_json = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), "UTF-8");
+}
+
+png_t::evernote_skmf_chunk_t::~evernote_skmf_chunk_t() {
+    _clean_up();
+}
+
+void png_t::evernote_skmf_chunk_t::_clean_up() {
+}
+
+png_t::evernote_skrf_chunk_t::evernote_skrf_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void png_t::evernote_skrf_chunk_t::_read() {
+    m_uuid = m__io->read_bytes(16);
+    m_orig_img = m__io->read_bytes_full();
+}
+
+png_t::evernote_skrf_chunk_t::~evernote_skrf_chunk_t() {
+    _clean_up();
+}
+
+void png_t::evernote_skrf_chunk_t::_clean_up() {
 }
 
 png_t::frame_control_chunk_t::frame_control_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
@@ -455,7 +608,13 @@ png_t::ihdr_chunk_t::ihdr_chunk_t(kaitai::kstream* p__io, png_t* p__parent, png_
 
 void png_t::ihdr_chunk_t::_read() {
     m_width = m__io->read_u4be();
+    if (!(m_width >= 1)) {
+        throw kaitai::validation_less_than_error<uint32_t>(1, m_width, m__io, std::string("/types/ihdr_chunk/seq/0"));
+    }
     m_height = m__io->read_u4be();
+    if (!(m_height >= 1)) {
+        throw kaitai::validation_less_than_error<uint32_t>(1, m_height, m__io, std::string("/types/ihdr_chunk/seq/1"));
+    }
     m_bit_depth = m__io->read_u1();
     m_color_type = static_cast<png_t::color_type_t>(m__io->read_u1());
     m_compression_method = m__io->read_u1();

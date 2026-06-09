@@ -95,6 +95,26 @@ var Png = (function() {
   }
 
   /**
+   * @see {@link https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285|Source}
+   */
+
+  var AdobeFireworksChunk = Png.AdobeFireworksChunk = (function() {
+    function AdobeFireworksChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    AdobeFireworksChunk.prototype._read = function() {
+      this._raw_previewData = this._io.readBytesFull();
+      this.previewData = KaitaiStream.processZlib(this._raw_previewData);
+    }
+
+    return AdobeFireworksChunk;
+  })();
+
+  /**
    * @see {@link https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk|Source}
    */
 
@@ -120,6 +140,75 @@ var Png = (function() {
      */
 
     return AnimationControlChunk;
+  })();
+
+  /**
+   * @see {@link https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach|Source}
+   * @see {@link https://nullprogram.com/blog/2021/12/31/|A new protocol and tool for PNG file attachments}
+   */
+
+  var AtchChunk = Png.AtchChunk = (function() {
+    AtchChunk.CompressionAttachMethods = Object.freeze({
+      NONE: 0,
+      ZLIB: 1,
+
+      0: "NONE",
+      1: "ZLIB",
+    });
+
+    function AtchChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    AtchChunk.prototype._read = function() {
+      this.fileName = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
+      var _ = this.fileName;
+      if (!( ((_.length != 0) && (_.substring(0, 1) != ".")) )) {
+        throw new KaitaiStream.ValidationExprError(this.fileName, this._io, "/types/atch_chunk/seq/0");
+      }
+      this.compression = this._io.readU1();
+      if (!( ((this.compression == Png.AtchChunk.CompressionAttachMethods.NONE) || (this.compression == Png.AtchChunk.CompressionAttachMethods.ZLIB)) )) {
+        throw new KaitaiStream.ValidationNotAnyOfError(this.compression, this._io, "/types/atch_chunk/seq/1");
+      }
+      if (this.compression == Png.AtchChunk.CompressionAttachMethods.NONE) {
+        this.dataPlain = this._io.readBytesFull();
+      }
+      if (this.compression == Png.AtchChunk.CompressionAttachMethods.ZLIB) {
+        this._raw_dataZlib = this._io.readBytesFull();
+        this.dataZlib = KaitaiStream.processZlib(this._raw_dataZlib);
+      }
+    }
+    Object.defineProperty(AtchChunk.prototype, 'data', {
+      get: function() {
+        if (this._m_data !== undefined)
+          return this._m_data;
+        this._m_data = (this.compression == Png.AtchChunk.CompressionAttachMethods.NONE ? this.dataPlain : this.dataZlib);
+        return this._m_data;
+      }
+    });
+
+    /**
+     * From the [official
+     * specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+     * 
+     * > The name can be any length that fits in the chunk, and should be
+     * > encoded with UTF-8. It's up to each implementation to determine how
+     * > to appropriately interpret the bytestring for the local system.
+     * 
+     * > The name must be at least one byte long, not counting the null
+     * > terminator. It cannot begin with a period (`0x2e`), nor contain
+     * > control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+     * > backslash (`0x5c`), i.e. no directory hierarchies.
+     * 
+     * As of Kaitai Struct 0.11, we cannot easily check whether a string
+     * contains certain characters, so we only enforce that the file name is
+     * not empty and that it doesn't start with a period.
+     */
+
+    return AtchChunk;
   })();
 
   /**
@@ -251,6 +340,10 @@ var Png = (function() {
     Chunk.prototype._read = function() {
       this.len = this._io.readU4be();
       this.type = KaitaiStream.bytesToStr(this._io.readBytes(4), "UTF-8");
+      var _ = this.type;
+      if (!(this.type != "\x00\x00\x00\x00")) {
+        throw new KaitaiStream.ValidationExprError(this.type, this._io, "/types/chunk/seq/1");
+      }
       switch (this.type) {
       case "PLTE":
         this._raw_body = this._io.readBytes(this.len);
@@ -261,6 +354,11 @@ var Png = (function() {
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new AnimationControlChunk(_io__raw_body, this, this._root);
+        break;
+      case "atCh":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtchChunk(_io__raw_body, this, this._root);
         break;
       case "bKGD":
         this._raw_body = this._io.readBytes(this.len);
@@ -292,15 +390,40 @@ var Png = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new InternationalTextChunk(_io__raw_body, this, this._root);
         break;
+      case "mkBS":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AdobeFireworksChunk(_io__raw_body, this, this._root);
+        break;
+      case "mkTS":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AdobeFireworksChunk(_io__raw_body, this, this._root);
+        break;
       case "pHYs":
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new PhysChunk(_io__raw_body, this, this._root);
         break;
+      case "prVW":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AdobeFireworksChunk(_io__raw_body, this, this._root);
+        break;
       case "sRGB":
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SrgbChunk(_io__raw_body, this, this._root);
+        break;
+      case "skMf":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EvernoteSkmfChunk(_io__raw_body, this, this._root);
+        break;
+      case "skRf":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EvernoteSkrfChunk(_io__raw_body, this, this._root);
         break;
       case "tEXt":
         this._raw_body = this._io.readBytes(this.len);
@@ -354,6 +477,68 @@ var Png = (function() {
      */
 
     return CompressedTextChunk;
+  })();
+
+  /**
+   * @see {@link https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501|Source}
+   */
+
+  var EvernoteSkmfChunk = Png.EvernoteSkmfChunk = (function() {
+    function EvernoteSkmfChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EvernoteSkmfChunk.prototype._read = function() {
+      this.json = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+    }
+
+    /**
+     * JSON document with information about editable annotations (text,
+     * lines, paths, etc.) in Evernote/Skitch.
+     * 
+     * It refers to the original image stored in the `skRf` chunk (which
+     * usually follows immediately after `skMf`) via the
+     * `.children[0].children[0].uri` JSON property. This has the format
+     * `"skitch+uuid:///$UUID"`, where `$UUID` is a random UUIDv4 value that
+     * matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+     * 16 bytes of the `skRf` chunk).
+     */
+
+    return EvernoteSkmfChunk;
+  })();
+
+  /**
+   * @see {@link https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501|Source}
+   */
+
+  var EvernoteSkrfChunk = Png.EvernoteSkrfChunk = (function() {
+    function EvernoteSkrfChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EvernoteSkrfChunk.prototype._read = function() {
+      this.uuid = this._io.readBytes(16);
+      this.origImg = this._io.readBytesFull();
+    }
+
+    /**
+     * Random UUIDv4 value used to identify the image. It is referenced by
+     * the `skMf` chunk - see the documentation for the `json` field in
+     * `evernote_skmf_chunk`.
+     */
+
+    /**
+     * The original source image without annotations. It's usually a PNG
+     * image as well, but it can also be a JPEG or possibly other formats.
+     */
+
+    return EvernoteSkrfChunk;
   })();
 
   /**
@@ -524,7 +709,13 @@ var Png = (function() {
     }
     IhdrChunk.prototype._read = function() {
       this.width = this._io.readU4be();
+      if (!(this.width >= 1)) {
+        throw new KaitaiStream.ValidationLessThanError(1, this.width, this._io, "/types/ihdr_chunk/seq/0");
+      }
       this.height = this._io.readU4be();
+      if (!(this.height >= 1)) {
+        throw new KaitaiStream.ValidationLessThanError(1, this.height, this._io, "/types/ihdr_chunk/seq/1");
+      }
       this.bitDepth = this._io.readU1();
       this.colorType = this._io.readU1();
       this.compressionMethod = this._io.readU1();

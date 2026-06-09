@@ -3,6 +3,7 @@
 import (
 	"github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
 	"bytes"
+	"unicode/utf8"
 	"golang.org/x/text/encoding/charmap"
 )
 
@@ -154,6 +155,44 @@ func (this *Png) Read(io *kaitai.Stream, parent kaitai.Struct, root *Png) (err e
 }
 
 /**
+ * @see <a href="https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285">Source</a>
+ */
+type Png_AdobeFireworksChunk struct {
+	PreviewData []byte
+	_io *kaitai.Stream
+	_root *Png
+	_parent *Png_Chunk
+	_raw_PreviewData []byte
+}
+func NewPng_AdobeFireworksChunk() *Png_AdobeFireworksChunk {
+	return &Png_AdobeFireworksChunk{
+	}
+}
+
+func (this Png_AdobeFireworksChunk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Png_AdobeFireworksChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp8, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp8 = tmp8
+	this._raw_PreviewData = tmp8
+	tmp9, err := kaitai.ProcessZlib(this._raw_PreviewData)
+	if err != nil {
+		return err
+	}
+	this.PreviewData = tmp9
+	return err
+}
+
+/**
  * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
  */
 type Png_AnimationControlChunk struct {
@@ -177,16 +216,16 @@ func (this *Png_AnimationControlChunk) Read(io *kaitai.Stream, parent *Png_Chunk
 	this._parent = parent
 	this._root = root
 
-	tmp8, err := this._io.ReadU4be()
+	tmp10, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.NumFrames = uint32(tmp8)
-	tmp9, err := this._io.ReadU4be()
+	this.NumFrames = uint32(tmp10)
+	tmp11, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.NumPlays = uint32(tmp9)
+	this.NumPlays = uint32(tmp11)
 	return err
 }
 
@@ -196,6 +235,122 @@ func (this *Png_AnimationControlChunk) Read(io *kaitai.Stream, parent *Png_Chunk
 
 /**
  * Number of times to loop, 0 indicates infinite looping.
+ */
+
+/**
+ * @see <a href="https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach">Source</a>
+ * @see <a href="https://nullprogram.com/blog/2021/12/31/">A new protocol and tool for PNG file attachments</a>
+ */
+
+type Png_AtchChunk_CompressionAttachMethods int
+const (
+	Png_AtchChunk_CompressionAttachMethods__None Png_AtchChunk_CompressionAttachMethods = 0
+	Png_AtchChunk_CompressionAttachMethods__Zlib Png_AtchChunk_CompressionAttachMethods = 1
+)
+var values_Png_AtchChunk_CompressionAttachMethods = map[Png_AtchChunk_CompressionAttachMethods]struct{}{0: {}, 1: {}}
+func (v Png_AtchChunk_CompressionAttachMethods) isDefined() bool {
+	_, ok := values_Png_AtchChunk_CompressionAttachMethods[v]
+	return ok
+}
+type Png_AtchChunk struct {
+	FileName string
+	Compression Png_AtchChunk_CompressionAttachMethods
+	DataPlain []byte
+	DataZlib []byte
+	_io *kaitai.Stream
+	_root *Png
+	_parent *Png_Chunk
+	_raw_DataZlib []byte
+	_f_data bool
+	data []byte
+}
+func NewPng_AtchChunk() *Png_AtchChunk {
+	return &Png_AtchChunk{
+	}
+}
+
+func (this Png_AtchChunk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Png_AtchChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp12, err := this._io.ReadBytesTerm(0, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.FileName = string(tmp12)
+	{
+		_it := this.FileName
+		if !( ((utf8.RuneCountInString(_it) != 0) && (_it[0:1] != ".")) ) {
+			return kaitai.NewValidationExprError(this.FileName, this._io, "/types/atch_chunk/seq/0")
+		}
+	}
+	tmp13, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Compression = Png_AtchChunk_CompressionAttachMethods(tmp13)
+	if !( ((this.Compression == Png_AtchChunk_CompressionAttachMethods__None) || (this.Compression == Png_AtchChunk_CompressionAttachMethods__Zlib)) ) {
+		return kaitai.NewValidationNotAnyOfError(this.Compression, this._io, "/types/atch_chunk/seq/1")
+	}
+	if (this.Compression == Png_AtchChunk_CompressionAttachMethods__None) {
+		tmp14, err := this._io.ReadBytesFull()
+		if err != nil {
+			return err
+		}
+		tmp14 = tmp14
+		this.DataPlain = tmp14
+	}
+	if (this.Compression == Png_AtchChunk_CompressionAttachMethods__Zlib) {
+		tmp15, err := this._io.ReadBytesFull()
+		if err != nil {
+			return err
+		}
+		tmp15 = tmp15
+		this._raw_DataZlib = tmp15
+		tmp16, err := kaitai.ProcessZlib(this._raw_DataZlib)
+		if err != nil {
+			return err
+		}
+		this.DataZlib = tmp16
+	}
+	return err
+}
+func (this *Png_AtchChunk) Data() (v []byte, err error) {
+	if (this._f_data) {
+		return this.data, nil
+	}
+	this._f_data = true
+	var tmp17 []byte;
+	if (this.Compression == Png_AtchChunk_CompressionAttachMethods__None) {
+		tmp17 = this.DataPlain
+	} else {
+		tmp17 = this.DataZlib
+	}
+	this.data = []byte(tmp17)
+	return this.data, nil
+}
+
+/**
+ * From the [official
+ * specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+ * 
+ * > The name can be any length that fits in the chunk, and should be
+ * > encoded with UTF-8. It's up to each implementation to determine how
+ * > to appropriately interpret the bytestring for the local system.
+ * 
+ * > The name must be at least one byte long, not counting the null
+ * > terminator. It cannot begin with a period (`0x2e`), nor contain
+ * > control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+ * > backslash (`0x5c`), i.e. no directory hierarchies.
+ * 
+ * As of Kaitai Struct 0.11, we cannot easily check whether a string
+ * contains certain characters, so we only enforce that the file name is
+ * not empty and that it doesn't start with a period.
  */
 
 /**
@@ -225,40 +380,40 @@ func (this *Png_BkgdChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 
 	switch (this._root.Ihdr.ColorType) {
 	case Png_ColorType__Greyscale:
-		tmp10 := NewPng_BkgdGreyscale()
-		err = tmp10.Read(this._io, this, this._root)
+		tmp18 := NewPng_BkgdGreyscale()
+		err = tmp18.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Bkgd = tmp10
+		this.Bkgd = tmp18
 	case Png_ColorType__GreyscaleAlpha:
-		tmp11 := NewPng_BkgdGreyscale()
-		err = tmp11.Read(this._io, this, this._root)
+		tmp19 := NewPng_BkgdGreyscale()
+		err = tmp19.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Bkgd = tmp11
+		this.Bkgd = tmp19
 	case Png_ColorType__Indexed:
-		tmp12 := NewPng_BkgdIndexed()
-		err = tmp12.Read(this._io, this, this._root)
+		tmp20 := NewPng_BkgdIndexed()
+		err = tmp20.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Bkgd = tmp12
+		this.Bkgd = tmp20
 	case Png_ColorType__Truecolor:
-		tmp13 := NewPng_BkgdTruecolor()
-		err = tmp13.Read(this._io, this, this._root)
+		tmp21 := NewPng_BkgdTruecolor()
+		err = tmp21.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Bkgd = tmp13
+		this.Bkgd = tmp21
 	case Png_ColorType__TruecolorAlpha:
-		tmp14 := NewPng_BkgdTruecolor()
-		err = tmp14.Read(this._io, this, this._root)
+		tmp22 := NewPng_BkgdTruecolor()
+		err = tmp22.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Bkgd = tmp14
+		this.Bkgd = tmp22
 	}
 	return err
 }
@@ -286,11 +441,11 @@ func (this *Png_BkgdGreyscale) Read(io *kaitai.Stream, parent *Png_BkgdChunk, ro
 	this._parent = parent
 	this._root = root
 
-	tmp15, err := this._io.ReadU2be()
+	tmp23, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Value = uint16(tmp15)
+	this.Value = uint16(tmp23)
 	return err
 }
 
@@ -317,11 +472,11 @@ func (this *Png_BkgdIndexed) Read(io *kaitai.Stream, parent *Png_BkgdChunk, root
 	this._parent = parent
 	this._root = root
 
-	tmp16, err := this._io.ReadU1()
+	tmp24, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PaletteIndex = tmp16
+	this.PaletteIndex = tmp24
 	return err
 }
 
@@ -350,21 +505,21 @@ func (this *Png_BkgdTruecolor) Read(io *kaitai.Stream, parent *Png_BkgdChunk, ro
 	this._parent = parent
 	this._root = root
 
-	tmp17, err := this._io.ReadU2be()
+	tmp25, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Red = uint16(tmp17)
-	tmp18, err := this._io.ReadU2be()
+	this.Red = uint16(tmp25)
+	tmp26, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Green = uint16(tmp18)
-	tmp19, err := this._io.ReadU2be()
+	this.Green = uint16(tmp26)
+	tmp27, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Blue = uint16(tmp19)
+	this.Blue = uint16(tmp27)
 	return err
 }
 
@@ -394,30 +549,30 @@ func (this *Png_ChrmChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 	this._parent = parent
 	this._root = root
 
-	tmp20 := NewPng_Point()
-	err = tmp20.Read(this._io, this, this._root)
+	tmp28 := NewPng_Point()
+	err = tmp28.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.WhitePoint = tmp20
-	tmp21 := NewPng_Point()
-	err = tmp21.Read(this._io, this, this._root)
+	this.WhitePoint = tmp28
+	tmp29 := NewPng_Point()
+	err = tmp29.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Red = tmp21
-	tmp22 := NewPng_Point()
-	err = tmp22.Read(this._io, this, this._root)
+	this.Red = tmp29
+	tmp30 := NewPng_Point()
+	err = tmp30.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Green = tmp22
-	tmp23 := NewPng_Point()
-	err = tmp23.Read(this._io, this, this._root)
+	this.Green = tmp30
+	tmp31 := NewPng_Point()
+	err = tmp31.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Blue = tmp23
+	this.Blue = tmp31
 	return err
 }
 type Png_Chunk struct {
@@ -444,75 +599,25 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 	this._parent = parent
 	this._root = root
 
-	tmp24, err := this._io.ReadU4be()
+	tmp32, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Len = uint32(tmp24)
-	tmp25, err := this._io.ReadBytes(int(4))
+	this.Len = uint32(tmp32)
+	tmp33, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp25 = tmp25
-	this.Type = string(tmp25)
+	tmp33 = tmp33
+	this.Type = string(tmp33)
+	{
+		_it := this.Type
+		if !(this.Type != "\000\000\000\000") {
+			return kaitai.NewValidationExprError(this.Type, this._io, "/types/chunk/seq/1")
+		}
+	}
 	switch (this.Type) {
 	case "PLTE":
-		tmp26, err := this._io.ReadBytes(int(this.Len))
-		if err != nil {
-			return err
-		}
-		tmp26 = tmp26
-		this._raw_Body = tmp26
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp27 := NewPng_PlteChunk()
-		err = tmp27.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp27
-	case "acTL":
-		tmp28, err := this._io.ReadBytes(int(this.Len))
-		if err != nil {
-			return err
-		}
-		tmp28 = tmp28
-		this._raw_Body = tmp28
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp29 := NewPng_AnimationControlChunk()
-		err = tmp29.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp29
-	case "bKGD":
-		tmp30, err := this._io.ReadBytes(int(this.Len))
-		if err != nil {
-			return err
-		}
-		tmp30 = tmp30
-		this._raw_Body = tmp30
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp31 := NewPng_BkgdChunk()
-		err = tmp31.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp31
-	case "cHRM":
-		tmp32, err := this._io.ReadBytes(int(this.Len))
-		if err != nil {
-			return err
-		}
-		tmp32 = tmp32
-		this._raw_Body = tmp32
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp33 := NewPng_ChrmChunk()
-		err = tmp33.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp33
-	case "fcTL":
 		tmp34, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
@@ -520,13 +625,13 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 		tmp34 = tmp34
 		this._raw_Body = tmp34
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp35 := NewPng_FrameControlChunk()
+		tmp35 := NewPng_PlteChunk()
 		err = tmp35.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp35
-	case "fdAT":
+	case "acTL":
 		tmp36, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
@@ -534,13 +639,13 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 		tmp36 = tmp36
 		this._raw_Body = tmp36
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp37 := NewPng_FrameDataChunk()
+		tmp37 := NewPng_AnimationControlChunk()
 		err = tmp37.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp37
-	case "gAMA":
+	case "atCh":
 		tmp38, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
@@ -548,13 +653,13 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 		tmp38 = tmp38
 		this._raw_Body = tmp38
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp39 := NewPng_GamaChunk()
+		tmp39 := NewPng_AtchChunk()
 		err = tmp39.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp39
-	case "iTXt":
+	case "bKGD":
 		tmp40, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
@@ -562,13 +667,13 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 		tmp40 = tmp40
 		this._raw_Body = tmp40
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp41 := NewPng_InternationalTextChunk()
+		tmp41 := NewPng_BkgdChunk()
 		err = tmp41.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp41
-	case "pHYs":
+	case "cHRM":
 		tmp42, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
@@ -576,13 +681,13 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 		tmp42 = tmp42
 		this._raw_Body = tmp42
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp43 := NewPng_PhysChunk()
+		tmp43 := NewPng_ChrmChunk()
 		err = tmp43.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp43
-	case "sRGB":
+	case "fcTL":
 		tmp44, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
@@ -590,13 +695,13 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 		tmp44 = tmp44
 		this._raw_Body = tmp44
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp45 := NewPng_SrgbChunk()
+		tmp45 := NewPng_FrameControlChunk()
 		err = tmp45.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp45
-	case "tEXt":
+	case "fdAT":
 		tmp46, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
@@ -604,13 +709,13 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 		tmp46 = tmp46
 		this._raw_Body = tmp46
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp47 := NewPng_TextChunk()
+		tmp47 := NewPng_FrameDataChunk()
 		err = tmp47.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp47
-	case "tIME":
+	case "gAMA":
 		tmp48, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
@@ -618,13 +723,13 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 		tmp48 = tmp48
 		this._raw_Body = tmp48
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp49 := NewPng_TimeChunk()
+		tmp49 := NewPng_GamaChunk()
 		err = tmp49.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp49
-	case "zTXt":
+	case "iTXt":
 		tmp50, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
@@ -632,26 +737,166 @@ func (this *Png_Chunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err erro
 		tmp50 = tmp50
 		this._raw_Body = tmp50
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp51 := NewPng_CompressedTextChunk()
+		tmp51 := NewPng_InternationalTextChunk()
 		err = tmp51.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp51
-	default:
+	case "mkBS":
 		tmp52, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
 		}
 		tmp52 = tmp52
 		this._raw_Body = tmp52
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp53 := NewPng_AdobeFireworksChunk()
+		err = tmp53.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp53
+	case "mkTS":
+		tmp54, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp54 = tmp54
+		this._raw_Body = tmp54
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp55 := NewPng_AdobeFireworksChunk()
+		err = tmp55.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp55
+	case "pHYs":
+		tmp56, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp56 = tmp56
+		this._raw_Body = tmp56
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp57 := NewPng_PhysChunk()
+		err = tmp57.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp57
+	case "prVW":
+		tmp58, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp58 = tmp58
+		this._raw_Body = tmp58
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp59 := NewPng_AdobeFireworksChunk()
+		err = tmp59.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp59
+	case "sRGB":
+		tmp60, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp60 = tmp60
+		this._raw_Body = tmp60
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp61 := NewPng_SrgbChunk()
+		err = tmp61.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp61
+	case "skMf":
+		tmp62, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp62 = tmp62
+		this._raw_Body = tmp62
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp63 := NewPng_EvernoteSkmfChunk()
+		err = tmp63.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp63
+	case "skRf":
+		tmp64, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp64 = tmp64
+		this._raw_Body = tmp64
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp65 := NewPng_EvernoteSkrfChunk()
+		err = tmp65.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp65
+	case "tEXt":
+		tmp66, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp66 = tmp66
+		this._raw_Body = tmp66
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp67 := NewPng_TextChunk()
+		err = tmp67.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp67
+	case "tIME":
+		tmp68, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp68 = tmp68
+		this._raw_Body = tmp68
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp69 := NewPng_TimeChunk()
+		err = tmp69.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp69
+	case "zTXt":
+		tmp70, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp70 = tmp70
+		this._raw_Body = tmp70
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp71 := NewPng_CompressedTextChunk()
+		err = tmp71.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp71
+	default:
+		tmp72, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp72 = tmp72
+		this._raw_Body = tmp72
 	}
-	tmp53, err := this._io.ReadBytes(int(4))
+	tmp73, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp53 = tmp53
-	this.Crc = tmp53
+	tmp73 = tmp73
+	this.Crc = tmp73
 	return err
 }
 
@@ -684,32 +929,126 @@ func (this *Png_CompressedTextChunk) Read(io *kaitai.Stream, parent *Png_Chunk, 
 	this._parent = parent
 	this._root = root
 
-	tmp54, err := this._io.ReadBytesTerm(0, false, true, true)
+	tmp74, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Keyword = string(tmp54)
-	tmp55, err := this._io.ReadU1()
+	this.Keyword = string(tmp74)
+	tmp75, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.CompressionMethod = Png_CompressionMethods(tmp55)
-	tmp56, err := this._io.ReadBytesFull()
+	this.CompressionMethod = Png_CompressionMethods(tmp75)
+	tmp76, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp56 = tmp56
-	this._raw_TextDatastream = tmp56
-	tmp57, err := kaitai.ProcessZlib(this._raw_TextDatastream)
+	tmp76 = tmp76
+	this._raw_TextDatastream = tmp76
+	tmp77, err := kaitai.ProcessZlib(this._raw_TextDatastream)
 	if err != nil {
 		return err
 	}
-	this.TextDatastream = tmp57
+	this.TextDatastream = tmp77
 	return err
 }
 
 /**
  * Indicates purpose of the following text data.
+ */
+
+/**
+ * @see <a href="https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501">Source</a>
+ */
+type Png_EvernoteSkmfChunk struct {
+	Json string
+	_io *kaitai.Stream
+	_root *Png
+	_parent *Png_Chunk
+}
+func NewPng_EvernoteSkmfChunk() *Png_EvernoteSkmfChunk {
+	return &Png_EvernoteSkmfChunk{
+	}
+}
+
+func (this Png_EvernoteSkmfChunk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Png_EvernoteSkmfChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp78, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp78 = tmp78
+	this.Json = string(tmp78)
+	return err
+}
+
+/**
+ * JSON document with information about editable annotations (text,
+ * lines, paths, etc.) in Evernote/Skitch.
+ * 
+ * It refers to the original image stored in the `skRf` chunk (which
+ * usually follows immediately after `skMf`) via the
+ * `.children[0].children[0].uri` JSON property. This has the format
+ * `"skitch+uuid:///$UUID"`, where `$UUID` is a random UUIDv4 value that
+ * matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+ * 16 bytes of the `skRf` chunk).
+ */
+
+/**
+ * @see <a href="https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501">Source</a>
+ */
+type Png_EvernoteSkrfChunk struct {
+	Uuid []byte
+	OrigImg []byte
+	_io *kaitai.Stream
+	_root *Png
+	_parent *Png_Chunk
+}
+func NewPng_EvernoteSkrfChunk() *Png_EvernoteSkrfChunk {
+	return &Png_EvernoteSkrfChunk{
+	}
+}
+
+func (this Png_EvernoteSkrfChunk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Png_EvernoteSkrfChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp79, err := this._io.ReadBytes(int(16))
+	if err != nil {
+		return err
+	}
+	tmp79 = tmp79
+	this.Uuid = tmp79
+	tmp80, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp80 = tmp80
+	this.OrigImg = tmp80
+	return err
+}
+
+/**
+ * Random UUIDv4 value used to identify the image. It is referenced by
+ * the `skMf` chunk - see the documentation for the `json` field in
+ * `evernote_skmf_chunk`.
+ */
+
+/**
+ * The original source image without annotations. It's usually a PNG
+ * image as well, but it can also be a JPEG or possibly other formats.
  */
 
 /**
@@ -745,69 +1084,69 @@ func (this *Png_FrameControlChunk) Read(io *kaitai.Stream, parent *Png_Chunk, ro
 	this._parent = parent
 	this._root = root
 
-	tmp58, err := this._io.ReadU4be()
+	tmp81, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.SequenceNumber = uint32(tmp58)
-	tmp59, err := this._io.ReadU4be()
+	this.SequenceNumber = uint32(tmp81)
+	tmp82, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Width = uint32(tmp59)
+	this.Width = uint32(tmp82)
 	if !(this.Width >= 1) {
 		return kaitai.NewValidationLessThanError(1, this.Width, this._io, "/types/frame_control_chunk/seq/1")
 	}
 	if !(this.Width <= this._root.Ihdr.Width) {
 		return kaitai.NewValidationGreaterThanError(this._root.Ihdr.Width, this.Width, this._io, "/types/frame_control_chunk/seq/1")
 	}
-	tmp60, err := this._io.ReadU4be()
+	tmp83, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Height = uint32(tmp60)
+	this.Height = uint32(tmp83)
 	if !(this.Height >= 1) {
 		return kaitai.NewValidationLessThanError(1, this.Height, this._io, "/types/frame_control_chunk/seq/2")
 	}
 	if !(this.Height <= this._root.Ihdr.Height) {
 		return kaitai.NewValidationGreaterThanError(this._root.Ihdr.Height, this.Height, this._io, "/types/frame_control_chunk/seq/2")
 	}
-	tmp61, err := this._io.ReadU4be()
+	tmp84, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.XOffset = uint32(tmp61)
+	this.XOffset = uint32(tmp84)
 	if !(this.XOffset <= this._root.Ihdr.Width - this.Width) {
 		return kaitai.NewValidationGreaterThanError(this._root.Ihdr.Width - this.Width, this.XOffset, this._io, "/types/frame_control_chunk/seq/3")
 	}
-	tmp62, err := this._io.ReadU4be()
+	tmp85, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.YOffset = uint32(tmp62)
+	this.YOffset = uint32(tmp85)
 	if !(this.YOffset <= this._root.Ihdr.Height - this.Height) {
 		return kaitai.NewValidationGreaterThanError(this._root.Ihdr.Height - this.Height, this.YOffset, this._io, "/types/frame_control_chunk/seq/4")
 	}
-	tmp63, err := this._io.ReadU2be()
+	tmp86, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.DelayNum = uint16(tmp63)
-	tmp64, err := this._io.ReadU2be()
+	this.DelayNum = uint16(tmp86)
+	tmp87, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.DelayDen = uint16(tmp64)
-	tmp65, err := this._io.ReadU1()
+	this.DelayDen = uint16(tmp87)
+	tmp88, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.DisposeOp = Png_DisposeOpValues(tmp65)
-	tmp66, err := this._io.ReadU1()
+	this.DisposeOp = Png_DisposeOpValues(tmp88)
+	tmp89, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.BlendOp = Png_BlendOpValues(tmp66)
+	this.BlendOp = Png_BlendOpValues(tmp89)
 	return err
 }
 
@@ -819,13 +1158,13 @@ func (this *Png_FrameControlChunk) Delay() (v float64, err error) {
 		return this.delay, nil
 	}
 	this._f_delay = true
-	var tmp67 float64;
+	var tmp90 float64;
 	if (this.DelayDen == 0) {
-		tmp67 = 100.0
+		tmp90 = 100.0
 	} else {
-		tmp67 = this.DelayDen
+		tmp90 = this.DelayDen
 	}
-	this.delay = float64(this.DelayNum / tmp67)
+	this.delay = float64(this.DelayNum / tmp90)
 	return this.delay, nil
 }
 
@@ -889,17 +1228,17 @@ func (this *Png_FrameDataChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root 
 	this._parent = parent
 	this._root = root
 
-	tmp68, err := this._io.ReadU4be()
+	tmp91, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.SequenceNumber = uint32(tmp68)
-	tmp69, err := this._io.ReadBytesFull()
+	this.SequenceNumber = uint32(tmp91)
+	tmp92, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp69 = tmp69
-	this.FrameData = tmp69
+	tmp92 = tmp92
+	this.FrameData = tmp92
 	return err
 }
 
@@ -942,11 +1281,11 @@ func (this *Png_GamaChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 	this._parent = parent
 	this._root = root
 
-	tmp70, err := this._io.ReadU4be()
+	tmp93, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.GammaInt = uint32(tmp70)
+	this.GammaInt = uint32(tmp93)
 	return err
 }
 func (this *Png_GamaChunk) GammaRatio() (v float64, err error) {
@@ -987,41 +1326,47 @@ func (this *Png_IhdrChunk) Read(io *kaitai.Stream, parent *Png, root *Png) (err 
 	this._parent = parent
 	this._root = root
 
-	tmp71, err := this._io.ReadU4be()
+	tmp94, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Width = uint32(tmp71)
-	tmp72, err := this._io.ReadU4be()
+	this.Width = uint32(tmp94)
+	if !(this.Width >= 1) {
+		return kaitai.NewValidationLessThanError(1, this.Width, this._io, "/types/ihdr_chunk/seq/0")
+	}
+	tmp95, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Height = uint32(tmp72)
-	tmp73, err := this._io.ReadU1()
+	this.Height = uint32(tmp95)
+	if !(this.Height >= 1) {
+		return kaitai.NewValidationLessThanError(1, this.Height, this._io, "/types/ihdr_chunk/seq/1")
+	}
+	tmp96, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.BitDepth = tmp73
-	tmp74, err := this._io.ReadU1()
+	this.BitDepth = tmp96
+	tmp97, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ColorType = Png_ColorType(tmp74)
-	tmp75, err := this._io.ReadU1()
+	this.ColorType = Png_ColorType(tmp97)
+	tmp98, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.CompressionMethod = tmp75
-	tmp76, err := this._io.ReadU1()
+	this.CompressionMethod = tmp98
+	tmp99, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.FilterMethod = tmp76
-	tmp77, err := this._io.ReadU1()
+	this.FilterMethod = tmp99
+	tmp100, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.InterlaceMethod = tmp77
+	this.InterlaceMethod = tmp100
 	return err
 }
 
@@ -1057,37 +1402,37 @@ func (this *Png_InternationalTextChunk) Read(io *kaitai.Stream, parent *Png_Chun
 	this._parent = parent
 	this._root = root
 
-	tmp78, err := this._io.ReadBytesTerm(0, false, true, true)
+	tmp101, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Keyword = string(tmp78)
-	tmp79, err := this._io.ReadU1()
+	this.Keyword = string(tmp101)
+	tmp102, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.CompressionFlag = tmp79
-	tmp80, err := this._io.ReadU1()
+	this.CompressionFlag = tmp102
+	tmp103, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.CompressionMethod = Png_CompressionMethods(tmp80)
-	tmp81, err := this._io.ReadBytesTerm(0, false, true, true)
+	this.CompressionMethod = Png_CompressionMethods(tmp103)
+	tmp104, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.LanguageTag = string(tmp81)
-	tmp82, err := this._io.ReadBytesTerm(0, false, true, true)
+	this.LanguageTag = string(tmp104)
+	tmp105, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.TranslatedKeyword = string(tmp82)
-	tmp83, err := this._io.ReadBytesFull()
+	this.TranslatedKeyword = string(tmp105)
+	tmp106, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp83 = tmp83
-	this.Text = string(tmp83)
+	tmp106 = tmp106
+	this.Text = string(tmp106)
 	return err
 }
 
@@ -1144,21 +1489,21 @@ func (this *Png_PhysChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 	this._parent = parent
 	this._root = root
 
-	tmp84, err := this._io.ReadU4be()
+	tmp107, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.PixelsPerUnitX = uint32(tmp84)
-	tmp85, err := this._io.ReadU4be()
+	this.PixelsPerUnitX = uint32(tmp107)
+	tmp108, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.PixelsPerUnitY = uint32(tmp85)
-	tmp86, err := this._io.ReadU1()
+	this.PixelsPerUnitY = uint32(tmp108)
+	tmp109, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Unit = Png_PhysUnit(tmp86)
+	this.Unit = Png_PhysUnit(tmp109)
 	return err
 }
 
@@ -1196,19 +1541,19 @@ func (this *Png_PlteChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 	this._root = root
 
 	for i := 0;; i++ {
-		tmp87, err := this._io.EOF()
+		tmp110, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp87 {
+		if tmp110 {
 			break
 		}
-		tmp88 := NewPng_Rgb()
-		err = tmp88.Read(this._io, this, this._root)
+		tmp111 := NewPng_Rgb()
+		err = tmp111.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp88)
+		this.Entries = append(this.Entries, tmp111)
 	}
 	return err
 }
@@ -1237,16 +1582,16 @@ func (this *Png_Point) Read(io *kaitai.Stream, parent *Png_ChrmChunk, root *Png)
 	this._parent = parent
 	this._root = root
 
-	tmp89, err := this._io.ReadU4be()
+	tmp112, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.XInt = uint32(tmp89)
-	tmp90, err := this._io.ReadU4be()
+	this.XInt = uint32(tmp112)
+	tmp113, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.YInt = uint32(tmp90)
+	this.YInt = uint32(tmp113)
 	return err
 }
 func (this *Png_Point) X() (v float64, err error) {
@@ -1287,21 +1632,21 @@ func (this *Png_Rgb) Read(io *kaitai.Stream, parent *Png_PlteChunk, root *Png) (
 	this._parent = parent
 	this._root = root
 
-	tmp91, err := this._io.ReadU1()
+	tmp114, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.R = tmp91
-	tmp92, err := this._io.ReadU1()
+	this.R = tmp114
+	tmp115, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.G = tmp92
-	tmp93, err := this._io.ReadU1()
+	this.G = tmp115
+	tmp116, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.B = tmp93
+	this.B = tmp116
 	return err
 }
 
@@ -1341,11 +1686,11 @@ func (this *Png_SrgbChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 	this._parent = parent
 	this._root = root
 
-	tmp94, err := this._io.ReadU1()
+	tmp117, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.RenderIntent = Png_SrgbChunk_Intent(tmp94)
+	this.RenderIntent = Png_SrgbChunk_Intent(tmp117)
 	return err
 }
 
@@ -1377,25 +1722,25 @@ func (this *Png_TextChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 	this._parent = parent
 	this._root = root
 
-	tmp95, err := this._io.ReadBytesTerm(0, false, true, true)
+	tmp118, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	tmp96, err := kaitai.BytesToStr(tmp95, charmap.ISO8859_1.NewDecoder())
+	tmp119, err := kaitai.BytesToStr(tmp118, charmap.ISO8859_1.NewDecoder())
 	if err != nil {
 		return err
 	}
-	this.Keyword = tmp96
-	tmp97, err := this._io.ReadBytesFull()
+	this.Keyword = tmp119
+	tmp120, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp97 = tmp97
-	tmp98, err := kaitai.BytesToStr(tmp97, charmap.ISO8859_1.NewDecoder())
+	tmp120 = tmp120
+	tmp121, err := kaitai.BytesToStr(tmp120, charmap.ISO8859_1.NewDecoder())
 	if err != nil {
 		return err
 	}
-	this.Text = tmp98
+	this.Text = tmp121
 	return err
 }
 
@@ -1433,35 +1778,35 @@ func (this *Png_TimeChunk) Read(io *kaitai.Stream, parent *Png_Chunk, root *Png)
 	this._parent = parent
 	this._root = root
 
-	tmp99, err := this._io.ReadU2be()
+	tmp122, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Year = uint16(tmp99)
-	tmp100, err := this._io.ReadU1()
+	this.Year = uint16(tmp122)
+	tmp123, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Month = tmp100
-	tmp101, err := this._io.ReadU1()
+	this.Month = tmp123
+	tmp124, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Day = tmp101
-	tmp102, err := this._io.ReadU1()
+	this.Day = tmp124
+	tmp125, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Hour = tmp102
-	tmp103, err := this._io.ReadU1()
+	this.Hour = tmp125
+	tmp126, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Minute = tmp103
-	tmp104, err := this._io.ReadU1()
+	this.Minute = tmp126
+	tmp127, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Second = tmp104
+	this.Second = tmp127
 	return err
 }

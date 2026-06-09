@@ -72,6 +72,23 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285 Source
+  class AdobeFireworksChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @_raw_preview_data = @_io.read_bytes_full
+      @preview_data = Zlib::Inflate.inflate(@_raw_preview_data)
+      self
+    end
+    attr_reader :preview_data
+    attr_reader :_raw_preview_data
+  end
+
+  ##
   # @see https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
   class AnimationControlChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
@@ -92,6 +109,65 @@ class Png < Kaitai::Struct::Struct
     ##
     # Number of times to loop, 0 indicates infinite looping.
     attr_reader :num_plays
+  end
+
+  ##
+  # @see https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach Source
+  # @see https://nullprogram.com/blog/2021/12/31/ A new protocol and tool for PNG file attachments
+  class AtchChunk < Kaitai::Struct::Struct
+
+    COMPRESSION_ATTACH_METHODS = {
+      0 => :compression_attach_methods_none,
+      1 => :compression_attach_methods_zlib,
+    }
+    I__COMPRESSION_ATTACH_METHODS = COMPRESSION_ATTACH_METHODS.invert
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @file_name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+      _ = @file_name
+      raise Kaitai::Struct::ValidationExprError.new(@file_name, @_io, "/types/atch_chunk/seq/0") if not  ((_.size != 0) && (_[0...1] != ".")) 
+      @compression = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_ATTACH_METHODS, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotAnyOfError.new(@compression, @_io, "/types/atch_chunk/seq/1") if not  ((@compression == :compression_attach_methods_none) || (@compression == :compression_attach_methods_zlib)) 
+      if compression == :compression_attach_methods_none
+        @data_plain = @_io.read_bytes_full
+      end
+      if compression == :compression_attach_methods_zlib
+        @_raw_data_zlib = @_io.read_bytes_full
+        @data_zlib = Zlib::Inflate.inflate(@_raw_data_zlib)
+      end
+      self
+    end
+    def data
+      return @data unless @data.nil?
+      @data = (compression == :compression_attach_methods_none ? data_plain : data_zlib)
+      @data
+    end
+
+    ##
+    # From the [official
+    # specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+    # 
+    # > The name can be any length that fits in the chunk, and should be
+    # > encoded with UTF-8. It's up to each implementation to determine how
+    # > to appropriately interpret the bytestring for the local system.
+    # 
+    # > The name must be at least one byte long, not counting the null
+    # > terminator. It cannot begin with a period (`0x2e`), nor contain
+    # > control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+    # > backslash (`0x5c`), i.e. no directory hierarchies.
+    # 
+    # As of Kaitai Struct 0.11, we cannot easily check whether a string
+    # contains certain characters, so we only enforce that the file name is
+    # not empty and that it doesn't start with a period.
+    attr_reader :file_name
+    attr_reader :compression
+    attr_reader :data_plain
+    attr_reader :data_zlib
+    attr_reader :_raw_data_zlib
   end
 
   ##
@@ -200,6 +276,8 @@ class Png < Kaitai::Struct::Struct
     def _read
       @len = @_io.read_u4be
       @type = (@_io.read_bytes(4)).force_encoding("UTF-8")
+      _ = @type
+      raise Kaitai::Struct::ValidationExprError.new(@type, @_io, "/types/chunk/seq/1") if not type != "\000\000\000\000"
       case type
       when "PLTE"
         _io_body = @_io.substream(len)
@@ -207,6 +285,9 @@ class Png < Kaitai::Struct::Struct
       when "acTL"
         _io_body = @_io.substream(len)
         @body = AnimationControlChunk.new(_io_body, self, @_root)
+      when "atCh"
+        _io_body = @_io.substream(len)
+        @body = AtchChunk.new(_io_body, self, @_root)
       when "bKGD"
         _io_body = @_io.substream(len)
         @body = BkgdChunk.new(_io_body, self, @_root)
@@ -225,12 +306,27 @@ class Png < Kaitai::Struct::Struct
       when "iTXt"
         _io_body = @_io.substream(len)
         @body = InternationalTextChunk.new(_io_body, self, @_root)
+      when "mkBS"
+        _io_body = @_io.substream(len)
+        @body = AdobeFireworksChunk.new(_io_body, self, @_root)
+      when "mkTS"
+        _io_body = @_io.substream(len)
+        @body = AdobeFireworksChunk.new(_io_body, self, @_root)
       when "pHYs"
         _io_body = @_io.substream(len)
         @body = PhysChunk.new(_io_body, self, @_root)
+      when "prVW"
+        _io_body = @_io.substream(len)
+        @body = AdobeFireworksChunk.new(_io_body, self, @_root)
       when "sRGB"
         _io_body = @_io.substream(len)
         @body = SrgbChunk.new(_io_body, self, @_root)
+      when "skMf"
+        _io_body = @_io.substream(len)
+        @body = EvernoteSkmfChunk.new(_io_body, self, @_root)
+      when "skRf"
+        _io_body = @_io.substream(len)
+        @body = EvernoteSkrfChunk.new(_io_body, self, @_root)
       when "tEXt"
         _io_body = @_io.substream(len)
         @body = TextChunk.new(_io_body, self, @_root)
@@ -278,6 +374,58 @@ class Png < Kaitai::Struct::Struct
     attr_reader :compression_method
     attr_reader :text_datastream
     attr_reader :_raw_text_datastream
+  end
+
+  ##
+  # @see https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501 Source
+  class EvernoteSkmfChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @json = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+
+    ##
+    # JSON document with information about editable annotations (text,
+    # lines, paths, etc.) in Evernote/Skitch.
+    # 
+    # It refers to the original image stored in the `skRf` chunk (which
+    # usually follows immediately after `skMf`) via the
+    # `.children[0].children[0].uri` JSON property. This has the format
+    # `"skitch+uuid:///$UUID"`, where `$UUID` is a random UUIDv4 value that
+    # matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+    # 16 bytes of the `skRf` chunk).
+    attr_reader :json
+  end
+
+  ##
+  # @see https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501 Source
+  class EvernoteSkrfChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @uuid = @_io.read_bytes(16)
+      @orig_img = @_io.read_bytes_full
+      self
+    end
+
+    ##
+    # Random UUIDv4 value used to identify the image. It is referenced by
+    # the `skMf` chunk - see the documentation for the `json` field in
+    # `evernote_skmf_chunk`.
+    attr_reader :uuid
+
+    ##
+    # The original source image without annotations. It's usually a PNG
+    # image as well, but it can also be a JPEG or possibly other formats.
+    attr_reader :orig_img
   end
 
   ##
@@ -411,7 +559,9 @@ class Png < Kaitai::Struct::Struct
 
     def _read
       @width = @_io.read_u4be
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @width, @_io, "/types/ihdr_chunk/seq/0") if not @width >= 1
       @height = @_io.read_u4be
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @height, @_io, "/types/ihdr_chunk/seq/1") if not @height >= 1
       @bit_depth = @_io.read_u1
       @color_type = Kaitai::Struct::Stream::resolve_enum(Png::COLOR_TYPE, @_io.read_u1)
       @compression_method = @_io.read_u1

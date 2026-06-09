@@ -89,6 +89,37 @@ namespace Kaitai
         }
 
         /// <remarks>
+        /// Reference: <a href="https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285">Source</a>
+        /// </remarks>
+        public partial class AdobeFireworksChunk : KaitaiStruct
+        {
+            public static AdobeFireworksChunk FromFile(string fileName)
+            {
+                return new AdobeFireworksChunk(new KaitaiStream(fileName));
+            }
+
+            public AdobeFireworksChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                __raw_previewData = m_io.ReadBytesFull();
+                _previewData = m_io.ProcessZlib(__raw_previewData);
+            }
+            private byte[] _previewData;
+            private Png m_root;
+            private Png.Chunk m_parent;
+            private byte[] __raw_previewData;
+            public byte[] PreviewData { get { return _previewData; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+            public byte[] M_RawPreviewData { get { return __raw_previewData; } }
+        }
+
+        /// <remarks>
         /// Reference: <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
         /// </remarks>
         public partial class AnimationControlChunk : KaitaiStruct
@@ -125,6 +156,102 @@ namespace Kaitai
             public uint NumPlays { get { return _numPlays; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://nullprogram.com/blog/2021/12/31/">A new protocol and tool for PNG file attachments</a>
+        /// </remarks>
+        public partial class AtchChunk : KaitaiStruct
+        {
+            public static AtchChunk FromFile(string fileName)
+            {
+                return new AtchChunk(new KaitaiStream(fileName));
+            }
+
+
+            public enum CompressionAttachMethods
+            {
+                None = 0,
+                Zlib = 1,
+            }
+            public AtchChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_data = false;
+                _read();
+            }
+            private void _read()
+            {
+                _fileName = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                {
+                    string M_ = _fileName;
+                    if (!( ((M_.Length != 0) && (M_.Substring(0, 1 - 0) != ".")) ))
+                    {
+                        throw new ValidationExprError(_fileName, m_io, "/types/atch_chunk/seq/0");
+                    }
+                }
+                _compression = ((CompressionAttachMethods) m_io.ReadU1());
+                if (!( ((_compression == CompressionAttachMethods.None) || (_compression == CompressionAttachMethods.Zlib)) ))
+                {
+                    throw new ValidationNotAnyOfError(_compression, m_io, "/types/atch_chunk/seq/1");
+                }
+                if (Compression == CompressionAttachMethods.None) {
+                    _dataPlain = m_io.ReadBytesFull();
+                }
+                if (Compression == CompressionAttachMethods.Zlib) {
+                    __raw_dataZlib = m_io.ReadBytesFull();
+                    _dataZlib = m_io.ProcessZlib(__raw_dataZlib);
+                }
+            }
+            private bool f_data;
+            private byte[] _data;
+            public byte[] Data
+            {
+                get
+                {
+                    if (f_data)
+                        return _data;
+                    f_data = true;
+                    _data = (byte[]) ((Compression == CompressionAttachMethods.None ? DataPlain : DataZlib));
+                    return _data;
+                }
+            }
+            private string _fileName;
+            private CompressionAttachMethods _compression;
+            private byte[] _dataPlain;
+            private byte[] _dataZlib;
+            private Png m_root;
+            private Png.Chunk m_parent;
+            private byte[] __raw_dataZlib;
+
+            /// <summary>
+            /// From the [official
+            /// specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+            /// 
+            /// &gt; The name can be any length that fits in the chunk, and should be
+            /// &gt; encoded with UTF-8. It's up to each implementation to determine how
+            /// &gt; to appropriately interpret the bytestring for the local system.
+            /// 
+            /// &gt; The name must be at least one byte long, not counting the null
+            /// &gt; terminator. It cannot begin with a period (`0x2e`), nor contain
+            /// &gt; control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+            /// &gt; backslash (`0x5c`), i.e. no directory hierarchies.
+            /// 
+            /// As of Kaitai Struct 0.11, we cannot easily check whether a string
+            /// contains certain characters, so we only enforce that the file name is
+            /// not empty and that it doesn't start with a period.
+            /// </summary>
+            public string FileName { get { return _fileName; } }
+            public CompressionAttachMethods Compression { get { return _compression; } }
+            public byte[] DataPlain { get { return _dataPlain; } }
+            public byte[] DataZlib { get { return _dataZlib; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+            public byte[] M_RawDataZlib { get { return __raw_dataZlib; } }
         }
 
         /// <summary>
@@ -323,6 +450,13 @@ namespace Kaitai
             {
                 _len = m_io.ReadU4be();
                 _type = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                {
+                    string M_ = _type;
+                    if (!(Type != "\0\0\0\0"))
+                    {
+                        throw new ValidationExprError(_type, m_io, "/types/chunk/seq/1");
+                    }
+                }
                 switch (Type) {
                 case "PLTE": {
                     __raw_body = m_io.ReadBytes(Len);
@@ -334,6 +468,12 @@ namespace Kaitai
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new AnimationControlChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "atCh": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtchChunk(io___raw_body, this, m_root);
                     break;
                 }
                 case "bKGD": {
@@ -372,16 +512,46 @@ namespace Kaitai
                     _body = new InternationalTextChunk(io___raw_body, this, m_root);
                     break;
                 }
+                case "mkBS": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AdobeFireworksChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "mkTS": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AdobeFireworksChunk(io___raw_body, this, m_root);
+                    break;
+                }
                 case "pHYs": {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new PhysChunk(io___raw_body, this, m_root);
                     break;
                 }
+                case "prVW": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AdobeFireworksChunk(io___raw_body, this, m_root);
+                    break;
+                }
                 case "sRGB": {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new SrgbChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "skMf": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new EvernoteSkmfChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "skRf": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new EvernoteSkrfChunk(io___raw_body, this, m_root);
                     break;
                 }
                 case "tEXt": {
@@ -469,6 +639,88 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
             public byte[] M_RawTextDatastream { get { return __raw_textDatastream; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501">Source</a>
+        /// </remarks>
+        public partial class EvernoteSkmfChunk : KaitaiStruct
+        {
+            public static EvernoteSkmfChunk FromFile(string fileName)
+            {
+                return new EvernoteSkmfChunk(new KaitaiStream(fileName));
+            }
+
+            public EvernoteSkmfChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _json = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
+            }
+            private string _json;
+            private Png m_root;
+            private Png.Chunk m_parent;
+
+            /// <summary>
+            /// JSON document with information about editable annotations (text,
+            /// lines, paths, etc.) in Evernote/Skitch.
+            /// 
+            /// It refers to the original image stored in the `skRf` chunk (which
+            /// usually follows immediately after `skMf`) via the
+            /// `.children[0].children[0].uri` JSON property. This has the format
+            /// `&quot;skitch+uuid:///$UUID&quot;`, where `$UUID` is a random UUIDv4 value that
+            /// matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+            /// 16 bytes of the `skRf` chunk).
+            /// </summary>
+            public string Json { get { return _json; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501">Source</a>
+        /// </remarks>
+        public partial class EvernoteSkrfChunk : KaitaiStruct
+        {
+            public static EvernoteSkrfChunk FromFile(string fileName)
+            {
+                return new EvernoteSkrfChunk(new KaitaiStream(fileName));
+            }
+
+            public EvernoteSkrfChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _uuid = m_io.ReadBytes(16);
+                _origImg = m_io.ReadBytesFull();
+            }
+            private byte[] _uuid;
+            private byte[] _origImg;
+            private Png m_root;
+            private Png.Chunk m_parent;
+
+            /// <summary>
+            /// Random UUIDv4 value used to identify the image. It is referenced by
+            /// the `skMf` chunk - see the documentation for the `json` field in
+            /// `evernote_skmf_chunk`.
+            /// </summary>
+            public byte[] Uuid { get { return _uuid; } }
+
+            /// <summary>
+            /// The original source image without annotations. It's usually a PNG
+            /// image as well, but it can also be a JPEG or possibly other formats.
+            /// </summary>
+            public byte[] OrigImg { get { return _origImg; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
         /// <remarks>
@@ -707,7 +959,15 @@ namespace Kaitai
             private void _read()
             {
                 _width = m_io.ReadU4be();
+                if (!(_width >= 1))
+                {
+                    throw new ValidationLessThanError(1, _width, m_io, "/types/ihdr_chunk/seq/0");
+                }
                 _height = m_io.ReadU4be();
+                if (!(_height >= 1))
+                {
+                    throw new ValidationLessThanError(1, _height, m_io, "/types/ihdr_chunk/seq/1");
+                }
                 _bitDepth = m_io.ReadU1();
                 _colorType = ((Png.ColorType) m_io.ReadU1());
                 _compressionMethod = m_io.ReadU1();

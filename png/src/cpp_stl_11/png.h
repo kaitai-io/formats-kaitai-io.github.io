@@ -24,7 +24,9 @@ class png_t;
 class png_t : public kaitai::kstruct {
 
 public:
+    class adobe_fireworks_chunk_t;
     class animation_control_chunk_t;
+    class atch_chunk_t;
     class bkgd_chunk_t;
     class bkgd_greyscale_t;
     class bkgd_indexed_t;
@@ -32,6 +34,8 @@ public:
     class chrm_chunk_t;
     class chunk_t;
     class compressed_text_chunk_t;
+    class evernote_skmf_chunk_t;
+    class evernote_skrf_chunk_t;
     class frame_control_chunk_t;
     class frame_data_chunk_t;
     class gama_chunk_t;
@@ -113,6 +117,36 @@ public:
     ~png_t();
 
     /**
+     * \sa https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285 Source
+     */
+
+    class adobe_fireworks_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        adobe_fireworks_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~adobe_fireworks_chunk_t();
+
+    private:
+        std::string m_preview_data;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+        std::string m__raw_preview_data;
+
+    public:
+        std::string preview_data() const { return m_preview_data; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+        std::string _raw_preview_data() const { return m__raw_preview_data; }
+    };
+
+    /**
      * \sa https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
      */
 
@@ -148,6 +182,97 @@ public:
         uint32_t num_plays() const { return m_num_plays; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach Source
+     * \sa https://nullprogram.com/blog/2021/12/31/ A new protocol and tool for PNG file attachments
+     */
+
+    class atch_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        enum compression_attach_methods_t {
+            COMPRESSION_ATTACH_METHODS_NONE = 0,
+            COMPRESSION_ATTACH_METHODS_ZLIB = 1
+        };
+        static bool _is_defined_compression_attach_methods_t(compression_attach_methods_t v);
+
+    private:
+        static const std::set<compression_attach_methods_t> _values_compression_attach_methods_t;
+
+    public:
+
+        atch_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~atch_chunk_t();
+
+    private:
+        bool f_data;
+        std::string m_data;
+
+    public:
+        std::string data();
+
+    private:
+        std::string m_file_name;
+        compression_attach_methods_t m_compression;
+        std::string m_data_plain;
+        bool n_data_plain;
+
+    public:
+        bool _is_null_data_plain() { data_plain(); return n_data_plain; };
+
+    private:
+        std::string m_data_zlib;
+        bool n_data_zlib;
+
+    public:
+        bool _is_null_data_zlib() { data_zlib(); return n_data_zlib; };
+
+    private:
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+        std::string m__raw_data_zlib;
+        bool n__raw_data_zlib;
+
+    public:
+        bool _is_null__raw_data_zlib() { _raw_data_zlib(); return n__raw_data_zlib; };
+
+    private:
+
+    public:
+
+        /**
+         * From the [official
+         * specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+         * 
+         * > The name can be any length that fits in the chunk, and should be
+         * > encoded with UTF-8. It's up to each implementation to determine how
+         * > to appropriately interpret the bytestring for the local system.
+         * 
+         * > The name must be at least one byte long, not counting the null
+         * > terminator. It cannot begin with a period (`0x2e`), nor contain
+         * > control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+         * > backslash (`0x5c`), i.e. no directory hierarchies.
+         * 
+         * As of Kaitai Struct 0.11, we cannot easily check whether a string
+         * contains certain characters, so we only enforce that the file name is
+         * not empty and that it doesn't start with a period.
+         */
+        std::string file_name() const { return m_file_name; }
+        compression_attach_methods_t compression() const { return m_compression; }
+        std::string data_plain() const { return m_data_plain; }
+        std::string data_zlib() const { return m_data_zlib; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+        std::string _raw_data_zlib() const { return m__raw_data_zlib; }
     };
 
     /**
@@ -387,6 +512,87 @@ public:
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
         std::string _raw_text_datastream() const { return m__raw_text_datastream; }
+    };
+
+    /**
+     * \sa https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501 Source
+     */
+
+    class evernote_skmf_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        evernote_skmf_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~evernote_skmf_chunk_t();
+
+    private:
+        std::string m_json;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * JSON document with information about editable annotations (text,
+         * lines, paths, etc.) in Evernote/Skitch.
+         * 
+         * It refers to the original image stored in the `skRf` chunk (which
+         * usually follows immediately after `skMf`) via the
+         * `.children[0].children[0].uri` JSON property. This has the format
+         * `"skitch+uuid:///$UUID"`, where `$UUID` is a random UUIDv4 value that
+         * matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+         * 16 bytes of the `skRf` chunk).
+         */
+        std::string json() const { return m_json; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501 Source
+     */
+
+    class evernote_skrf_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        evernote_skrf_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~evernote_skrf_chunk_t();
+
+    private:
+        std::string m_uuid;
+        std::string m_orig_img;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Random UUIDv4 value used to identify the image. It is referenced by
+         * the `skMf` chunk - see the documentation for the `json` field in
+         * `evernote_skmf_chunk`.
+         */
+        std::string uuid() const { return m_uuid; }
+
+        /**
+         * The original source image without annotations. It's usually a PNG
+         * image as well, but it can also be a JPEG or possibly other formats.
+         */
+        std::string orig_img() const { return m_orig_img; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
     };
 
     /**

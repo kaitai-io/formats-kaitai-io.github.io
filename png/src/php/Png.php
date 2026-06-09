@@ -54,6 +54,24 @@ namespace {
 }
 
 namespace Png {
+    class AdobeFireworksChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m__raw_previewData = $this->_io->readBytesFull();
+            $this->_m_previewData = \Kaitai\Struct\Stream::processZlib($this->_m__raw_previewData);
+        }
+        protected $_m_previewData;
+        protected $_m__raw_previewData;
+        public function previewData() { return $this->_m_previewData; }
+        public function _raw_previewData() { return $this->_m__raw_previewData; }
+    }
+}
+
+namespace Png {
     class AnimationControlChunk extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -76,6 +94,82 @@ namespace Png {
          * Number of times to loop, 0 indicates infinite looping.
          */
         public function numPlays() { return $this->_m_numPlays; }
+    }
+}
+
+namespace Png {
+    class AtchChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
+            $_ = $this->_m_fileName;
+            if (!( ((strlen($_) != 0) && (\Kaitai\Struct\Stream::substring($_, 0, 1) != ".")) )) {
+                throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_fileName, $this->_io, "/types/atch_chunk/seq/0");
+            }
+            $this->_m_compression = $this->_io->readU1();
+            if (!( (($this->_m_compression == \Png\AtchChunk\CompressionAttachMethods::NONE) || ($this->_m_compression == \Png\AtchChunk\CompressionAttachMethods::ZLIB)) )) {
+                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_compression, $this->_io, "/types/atch_chunk/seq/1");
+            }
+            if ($this->compression() == \Png\AtchChunk\CompressionAttachMethods::NONE) {
+                $this->_m_dataPlain = $this->_io->readBytesFull();
+            }
+            if ($this->compression() == \Png\AtchChunk\CompressionAttachMethods::ZLIB) {
+                $this->_m__raw_dataZlib = $this->_io->readBytesFull();
+                $this->_m_dataZlib = \Kaitai\Struct\Stream::processZlib($this->_m__raw_dataZlib);
+            }
+        }
+        protected $_m_data;
+        public function data() {
+            if ($this->_m_data !== null)
+                return $this->_m_data;
+            $this->_m_data = ($this->compression() == \Png\AtchChunk\CompressionAttachMethods::NONE ? $this->dataPlain() : $this->dataZlib());
+            return $this->_m_data;
+        }
+        protected $_m_fileName;
+        protected $_m_compression;
+        protected $_m_dataPlain;
+        protected $_m_dataZlib;
+        protected $_m__raw_dataZlib;
+
+        /**
+         * From the [official
+         * specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+         * 
+         * > The name can be any length that fits in the chunk, and should be
+         * > encoded with UTF-8. It's up to each implementation to determine how
+         * > to appropriately interpret the bytestring for the local system.
+         * 
+         * > The name must be at least one byte long, not counting the null
+         * > terminator. It cannot begin with a period (`0x2e`), nor contain
+         * > control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+         * > backslash (`0x5c`), i.e. no directory hierarchies.
+         * 
+         * As of Kaitai Struct 0.11, we cannot easily check whether a string
+         * contains certain characters, so we only enforce that the file name is
+         * not empty and that it doesn't start with a period.
+         */
+        public function fileName() { return $this->_m_fileName; }
+        public function compression() { return $this->_m_compression; }
+        public function dataPlain() { return $this->_m_dataPlain; }
+        public function dataZlib() { return $this->_m_dataZlib; }
+        public function _raw_dataZlib() { return $this->_m__raw_dataZlib; }
+    }
+}
+
+namespace Png\AtchChunk {
+    class CompressionAttachMethods {
+        const NONE = 0;
+        const ZLIB = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -212,6 +306,10 @@ namespace Png {
         private function _read() {
             $this->_m_len = $this->_io->readU4be();
             $this->_m_type = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "UTF-8");
+            $_ = $this->_m_type;
+            if (!($this->type() != "\000\000\000\000")) {
+                throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_type, $this->_io, "/types/chunk/seq/1");
+            }
             switch ($this->type()) {
                 case "PLTE":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
@@ -222,6 +320,11 @@ namespace Png {
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\AnimationControlChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "atCh":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\AtchChunk($_io__raw_body, $this, $this->_root);
                     break;
                 case "bKGD":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
@@ -253,15 +356,40 @@ namespace Png {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\InternationalTextChunk($_io__raw_body, $this, $this->_root);
                     break;
+                case "mkBS":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\AdobeFireworksChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "mkTS":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\AdobeFireworksChunk($_io__raw_body, $this, $this->_root);
+                    break;
                 case "pHYs":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\PhysChunk($_io__raw_body, $this, $this->_root);
                     break;
+                case "prVW":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\AdobeFireworksChunk($_io__raw_body, $this, $this->_root);
+                    break;
                 case "sRGB":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\SrgbChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "skMf":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\EvernoteSkmfChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "skRf":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\EvernoteSkrfChunk($_io__raw_body, $this, $this->_root);
                     break;
                 case "tEXt":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
@@ -328,6 +456,62 @@ namespace Png {
         public function compressionMethod() { return $this->_m_compressionMethod; }
         public function textDatastream() { return $this->_m_textDatastream; }
         public function _raw_textDatastream() { return $this->_m__raw_textDatastream; }
+    }
+}
+
+namespace Png {
+    class EvernoteSkmfChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_json = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
+        }
+        protected $_m_json;
+
+        /**
+         * JSON document with information about editable annotations (text,
+         * lines, paths, etc.) in Evernote/Skitch.
+         * 
+         * It refers to the original image stored in the `skRf` chunk (which
+         * usually follows immediately after `skMf`) via the
+         * `.children[0].children[0].uri` JSON property. This has the format
+         * `"skitch+uuid:///$UUID"`, where `$UUID` is a random UUIDv4 value that
+         * matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+         * 16 bytes of the `skRf` chunk).
+         */
+        public function json() { return $this->_m_json; }
+    }
+}
+
+namespace Png {
+    class EvernoteSkrfChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_uuid = $this->_io->readBytes(16);
+            $this->_m_origImg = $this->_io->readBytesFull();
+        }
+        protected $_m_uuid;
+        protected $_m_origImg;
+
+        /**
+         * Random UUIDv4 value used to identify the image. It is referenced by
+         * the `skMf` chunk - see the documentation for the `json` field in
+         * `evernote_skmf_chunk`.
+         */
+        public function uuid() { return $this->_m_uuid; }
+
+        /**
+         * The original source image without annotations. It's usually a PNG
+         * image as well, but it can also be a JPEG or possibly other formats.
+         */
+        public function origImg() { return $this->_m_origImg; }
     }
 }
 
@@ -498,7 +682,13 @@ namespace Png {
 
         private function _read() {
             $this->_m_width = $this->_io->readU4be();
+            if (!($this->_m_width >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_width, $this->_io, "/types/ihdr_chunk/seq/0");
+            }
             $this->_m_height = $this->_io->readU4be();
+            if (!($this->_m_height >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_height, $this->_io, "/types/ihdr_chunk/seq/1");
+            }
             $this->_m_bitDepth = $this->_io->readU1();
             $this->_m_colorType = $this->_io->readU1();
             $this->_m_compressionMethod = $this->_io->readU1();

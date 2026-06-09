@@ -6,8 +6,8 @@ local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
 local str_decode = require("string_decode")
-local stringstream = require("string_stream")
 local utils = require("utils")
+local stringstream = require("string_stream")
 
 -- 
 -- Test files for APNG can be found at the following locations:
@@ -80,6 +80,23 @@ end
 
 
 -- 
+-- See also: Source (https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285)
+Png.AdobeFireworksChunk = class.class(KaitaiStruct)
+
+function Png.AdobeFireworksChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.AdobeFireworksChunk:_read()
+  self._raw_preview_data = self._io:read_bytes_full()
+  self.preview_data = KaitaiStream.process_zlib(self._raw_preview_data)
+end
+
+
+-- 
 -- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk)
 Png.AnimationControlChunk = class.class(KaitaiStruct)
 
@@ -99,6 +116,69 @@ end
 -- Number of frames, must be equal to the number of `frame_control_chunk`s.
 -- 
 -- Number of times to loop, 0 indicates infinite looping.
+
+-- 
+-- See also: Source (https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach)
+-- See also: A new protocol and tool for PNG file attachments (https://nullprogram.com/blog/2021/12/31/)
+Png.AtchChunk = class.class(KaitaiStruct)
+
+Png.AtchChunk.CompressionAttachMethods = enum.Enum {
+  none = 0,
+  zlib = 1,
+}
+
+function Png.AtchChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.AtchChunk:_read()
+  self.file_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
+  local _ = self.file_name
+  if not( ((string.len(_) ~= 0) and (string.sub(_, 0 + 1, 1) ~= ".")) ) then
+    error("ValidationExprError")
+  end
+  self.compression = Png.AtchChunk.CompressionAttachMethods(self._io:read_u1())
+  if not( ((self.compression == Png.AtchChunk.CompressionAttachMethods.none) or (self.compression == Png.AtchChunk.CompressionAttachMethods.zlib)) ) then
+    error("ValidationNotAnyOfError")
+  end
+  if self.compression == Png.AtchChunk.CompressionAttachMethods.none then
+    self.data_plain = self._io:read_bytes_full()
+  end
+  if self.compression == Png.AtchChunk.CompressionAttachMethods.zlib then
+    self._raw_data_zlib = self._io:read_bytes_full()
+    self.data_zlib = KaitaiStream.process_zlib(self._raw_data_zlib)
+  end
+end
+
+Png.AtchChunk.property.data = {}
+function Png.AtchChunk.property.data:get()
+  if self._m_data ~= nil then
+    return self._m_data
+  end
+
+  self._m_data = utils.box_unwrap((self.compression == Png.AtchChunk.CompressionAttachMethods.none) and utils.box_wrap(self.data_plain) or (self.data_zlib))
+  return self._m_data
+end
+
+-- 
+-- From the [official
+-- specification](https://github.com/skeeto/scratch/tree/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach#atch-chunk-specification):
+-- 
+-- > The name can be any length that fits in the chunk, and should be
+-- > encoded with UTF-8. It's up to each implementation to determine how
+-- > to appropriately interpret the bytestring for the local system.
+-- 
+-- > The name must be at least one byte long, not counting the null
+-- > terminator. It cannot begin with a period (`0x2e`), nor contain
+-- > control bytes (anything less than `0x20`), nor slash (`0x2f`), nor
+-- > backslash (`0x5c`), i.e. no directory hierarchies.
+-- 
+-- As of Kaitai Struct 0.11, we cannot easily check whether a string
+-- contains certain characters, so we only enforce that the file name is
+-- not empty and that it doesn't start with a period.
 
 -- 
 -- Background chunk stores default background color to display this
@@ -210,6 +290,10 @@ end
 function Png.Chunk:_read()
   self.len = self._io:read_u4be()
   self.type = str_decode.decode(self._io:read_bytes(4), "UTF-8")
+  local _ = self.type
+  if not(self.type ~= "\000\000\000\000") then
+    error("ValidationExprError")
+  end
   local _on = self.type
   if _on == "PLTE" then
     self._raw_body = self._io:read_bytes(self.len)
@@ -219,6 +303,10 @@ function Png.Chunk:_read()
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.AnimationControlChunk(_io, self, self._root)
+  elseif _on == "atCh" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.AtchChunk(_io, self, self._root)
   elseif _on == "bKGD" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
@@ -243,14 +331,34 @@ function Png.Chunk:_read()
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.InternationalTextChunk(_io, self, self._root)
+  elseif _on == "mkBS" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.AdobeFireworksChunk(_io, self, self._root)
+  elseif _on == "mkTS" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.AdobeFireworksChunk(_io, self, self._root)
   elseif _on == "pHYs" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.PhysChunk(_io, self, self._root)
+  elseif _on == "prVW" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.AdobeFireworksChunk(_io, self, self._root)
   elseif _on == "sRGB" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.SrgbChunk(_io, self, self._root)
+  elseif _on == "skMf" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.EvernoteSkmfChunk(_io, self, self._root)
+  elseif _on == "skRf" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.EvernoteSkrfChunk(_io, self, self._root)
   elseif _on == "tEXt" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
@@ -293,6 +401,56 @@ end
 
 -- 
 -- Indicates purpose of the following text data.
+
+-- 
+-- See also: Source (https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501)
+Png.EvernoteSkmfChunk = class.class(KaitaiStruct)
+
+function Png.EvernoteSkmfChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.EvernoteSkmfChunk:_read()
+  self.json = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
+end
+
+-- 
+-- JSON document with information about editable annotations (text,
+-- lines, paths, etc.) in Evernote/Skitch.
+-- 
+-- It refers to the original image stored in the `skRf` chunk (which
+-- usually follows immediately after `skMf`) via the
+-- `.children[0].children[0].uri` JSON property. This has the format
+-- `"skitch+uuid:///$UUID"`, where `$UUID` is a random UUIDv4 value that
+-- matches the `uuid` field in `evernote_skrf_chunk` (i.e. in the first
+-- 16 bytes of the `skRf` chunk).
+
+-- 
+-- See also: Source (https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501)
+Png.EvernoteSkrfChunk = class.class(KaitaiStruct)
+
+function Png.EvernoteSkrfChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.EvernoteSkrfChunk:_read()
+  self.uuid = self._io:read_bytes(16)
+  self.orig_img = self._io:read_bytes_full()
+end
+
+-- 
+-- Random UUIDv4 value used to identify the image. It is referenced by
+-- the `skMf` chunk - see the documentation for the `json` field in
+-- `evernote_skmf_chunk`.
+-- 
+-- The original source image without annotations. It's usually a PNG
+-- image as well, but it can also be a JPEG or possibly other formats.
 
 -- 
 -- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk)
@@ -432,7 +590,13 @@ end
 
 function Png.IhdrChunk:_read()
   self.width = self._io:read_u4be()
+  if not(self.width >= 1) then
+    error("ValidationLessThanError")
+  end
   self.height = self._io:read_u4be()
+  if not(self.height >= 1) then
+    error("ValidationLessThanError")
+  end
   self.bit_depth = self._io:read_u1()
   self.color_type = Png.ColorType(self._io:read_u1())
   self.compression_method = self._io:read_u1()
