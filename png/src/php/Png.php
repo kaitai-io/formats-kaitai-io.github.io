@@ -111,8 +111,8 @@ namespace Png {
                 throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_fileName, $this->_io, "/types/atch_chunk/seq/0");
             }
             $this->_m_compression = $this->_io->readU1();
-            if (!( (($this->_m_compression == \Png\AtchChunk\CompressionAttachMethods::NONE) || ($this->_m_compression == \Png\AtchChunk\CompressionAttachMethods::ZLIB)) )) {
-                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_compression, $this->_io, "/types/atch_chunk/seq/1");
+            if (!\Png\AtchChunk\CompressionAttachMethods::isDefined($this->_m_compression)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_compression, $this->_io, "/types/atch_chunk/seq/1");
             }
             if ($this->compression() == \Png\AtchChunk\CompressionAttachMethods::NONE) {
                 $this->_m_dataPlain = $this->_io->readBytesFull();
@@ -273,6 +273,38 @@ namespace Png {
 }
 
 namespace Png {
+    class ChrmChromaticity extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\ChrmChunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_xInt = $this->_io->readU4be();
+            $this->_m_yInt = $this->_io->readU4be();
+        }
+        protected $_m_x;
+        public function x() {
+            if ($this->_m_x !== null)
+                return $this->_m_x;
+            $this->_m_x = $this->xInt() / 100000.0;
+            return $this->_m_x;
+        }
+        protected $_m_y;
+        public function y() {
+            if ($this->_m_y !== null)
+                return $this->_m_y;
+            $this->_m_y = $this->yInt() / 100000.0;
+            return $this->_m_y;
+        }
+        protected $_m_xInt;
+        protected $_m_yInt;
+        public function xInt() { return $this->_m_xInt; }
+        public function yInt() { return $this->_m_yInt; }
+    }
+}
+
+namespace Png {
     class ChrmChunk extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -280,10 +312,10 @@ namespace Png {
         }
 
         private function _read() {
-            $this->_m_whitePoint = new \Png\Point($this->_io, $this, $this->_root);
-            $this->_m_red = new \Png\Point($this->_io, $this, $this->_root);
-            $this->_m_green = new \Png\Point($this->_io, $this, $this->_root);
-            $this->_m_blue = new \Png\Point($this->_io, $this, $this->_root);
+            $this->_m_whitePoint = new \Png\ChrmChromaticity($this->_io, $this, $this->_root);
+            $this->_m_red = new \Png\ChrmChromaticity($this->_io, $this, $this->_root);
+            $this->_m_green = new \Png\ChrmChromaticity($this->_io, $this, $this->_root);
+            $this->_m_blue = new \Png\ChrmChromaticity($this->_io, $this, $this->_root);
         }
         protected $_m_whitePoint;
         protected $_m_red;
@@ -336,6 +368,16 @@ namespace Png {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\ChrmChunk($_io__raw_body, $this, $this->_root);
                     break;
+                case "cICP":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\CicpChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "cLLI":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\ClliChunk($_io__raw_body, $this, $this->_root);
+                    break;
                 case "fcTL":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -355,6 +397,11 @@ namespace Png {
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\InternationalTextChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "mDCV":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\MdcvChunk($_io__raw_body, $this, $this->_root);
                     break;
                 case "mkBS":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
@@ -422,6 +469,108 @@ namespace Png {
         public function body() { return $this->_m_body; }
         public function crc() { return $this->_m_crc; }
         public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace Png {
+    class CicpChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_colorPrimaries = $this->_io->readU1();
+            $this->_m_transferFunction = $this->_io->readU1();
+            $this->_m_matrixCoefficients = $this->_io->readU1();
+            if (!($this->_m_matrixCoefficients == 0)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(0, $this->_m_matrixCoefficients, $this->_io, "/types/cicp_chunk/seq/2");
+            }
+            $this->_m_videoFullRangeFlag = $this->_io->readU1();
+            if (!( (($this->_m_videoFullRangeFlag == 0) || ($this->_m_videoFullRangeFlag == 1)) )) {
+                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_videoFullRangeFlag, $this->_io, "/types/cicp_chunk/seq/3");
+            }
+        }
+        protected $_m_colorPrimaries;
+        protected $_m_transferFunction;
+        protected $_m_matrixCoefficients;
+        protected $_m_videoFullRangeFlag;
+
+        /**
+         * values above 22 are reserved, see
+         * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325>
+         */
+        public function colorPrimaries() { return $this->_m_colorPrimaries; }
+
+        /**
+         * values above 18 are reserved, see
+         * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329>
+         */
+        public function transferFunction() { return $this->_m_transferFunction; }
+
+        /**
+         * From the [official
+         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+         * 
+         * > RGB is currently the only supported color model in PNG, and as such
+         * > `Matrix Coefficients` shall be set to `0`.
+         */
+        public function matrixCoefficients() { return $this->_m_matrixCoefficients; }
+
+        /**
+         * From the [official
+         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+         * 
+         * > If `Video Full Range Flag` value is `1`, then the image is a
+         * > full-range image. Typically, images in the RGB color representation
+         * > are stored in the full-range signal quantization, therefore the vast
+         * > majority of computer graphics and web images, including those used
+         * > in traditional PNG workflows, are full-range images.
+         * 
+         * > If `Video Full Range Flag` value is `0`, then the image is a
+         * > narrow-range image.
+         */
+        public function videoFullRangeFlag() { return $this->_m_videoFullRangeFlag; }
+    }
+}
+
+namespace Png {
+    class ClliChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_maxContentLightLevelInt = $this->_io->readU4be();
+            $this->_m_maxFrameAverageLightLevelInt = $this->_io->readU4be();
+        }
+        protected $_m_maxContentLightLevel;
+
+        /**
+         * Maximum Content Light Level (MaxCLL), in cd/m^2
+         */
+        public function maxContentLightLevel() {
+            if ($this->_m_maxContentLightLevel !== null)
+                return $this->_m_maxContentLightLevel;
+            $this->_m_maxContentLightLevel = $this->maxContentLightLevelInt() * 0.0001;
+            return $this->_m_maxContentLightLevel;
+        }
+        protected $_m_maxFrameAverageLightLevel;
+
+        /**
+         * Maximum Frame Average Light Level (MaxFALL), in cd/m^2
+         */
+        public function maxFrameAverageLightLevel() {
+            if ($this->_m_maxFrameAverageLightLevel !== null)
+                return $this->_m_maxFrameAverageLightLevel;
+            $this->_m_maxFrameAverageLightLevel = $this->maxFrameAverageLightLevelInt() * 0.0001;
+            return $this->_m_maxFrameAverageLightLevel;
+        }
+        protected $_m_maxContentLightLevelInt;
+        protected $_m_maxFrameAverageLightLevelInt;
+        public function maxContentLightLevelInt() { return $this->_m_maxContentLightLevelInt; }
+        public function maxFrameAverageLightLevelInt() { return $this->_m_maxFrameAverageLightLevelInt; }
     }
 }
 
@@ -690,6 +839,9 @@ namespace Png {
                 throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_height, $this->_io, "/types/ihdr_chunk/seq/1");
             }
             $this->_m_bitDepth = $this->_io->readU1();
+            if (!( (($this->_m_bitDepth == 1) || ($this->_m_bitDepth == 2) || ($this->_m_bitDepth == 4) || ($this->_m_bitDepth == 8) || ($this->_m_bitDepth == 16)) )) {
+                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_bitDepth, $this->_io, "/types/ihdr_chunk/seq/2");
+            }
             $this->_m_colorType = $this->_io->readU1();
             $this->_m_compressionMethod = $this->_io->readU1();
             $this->_m_filterMethod = $this->_io->readU1();
@@ -712,6 +864,27 @@ namespace Png {
     }
 }
 
+namespace Png {
+    class InternationalText extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\InternationalTextChunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_text = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
+        }
+        protected $_m_text;
+
+        /**
+         * Text contents ("value" of this key-value pair), written in
+         * language specified in `language_tag`. Line breaks are
+         * allowed.
+         */
+        public function text() { return $this->_m_text; }
+    }
+}
+
 /**
  * International text chunk effectively allows to store key-value string pairs in
  * PNG container. Both "key" (keyword) and "value" (text) parts are
@@ -729,17 +902,47 @@ namespace Png {
         private function _read() {
             $this->_m_keyword = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
             $this->_m_compressionFlag = $this->_io->readU1();
+            if (!( (($this->_m_compressionFlag == 0) || ($this->_m_compressionFlag == 1)) )) {
+                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_compressionFlag, $this->_io, "/types/international_text_chunk/seq/1");
+            }
             $this->_m_compressionMethod = $this->_io->readU1();
             $this->_m_languageTag = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
             $this->_m_translatedKeyword = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
-            $this->_m_text = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
+            if ($this->compressionFlag() == 0) {
+                $this->_m__raw_textPlain = $this->_io->readBytesFull();
+                $_io__raw_textPlain = new \Kaitai\Struct\Stream($this->_m__raw_textPlain);
+                $this->_m_textPlain = new \Png\InternationalText($_io__raw_textPlain, $this, $this->_root);
+            }
+            if ($this->compressionFlag() == 1) {
+                $this->_m__raw__raw_textZlib = $this->_io->readBytesFull();
+                $this->_m__raw_textZlib = \Kaitai\Struct\Stream::processZlib($this->_m__raw__raw_textZlib);
+                $_io__raw_textZlib = new \Kaitai\Struct\Stream($this->_m__raw_textZlib);
+                $this->_m_textZlib = new \Png\InternationalText($_io__raw_textZlib, $this, $this->_root);
+            }
+        }
+        protected $_m_text;
+
+        /**
+         * Text contents ("value" of this key-value pair), written in
+         * language specified in `language_tag`. Line breaks are
+         * allowed.
+         */
+        public function text() {
+            if ($this->_m_text !== null)
+                return $this->_m_text;
+            $this->_m_text = ($this->compressionFlag() == 0 ? $this->textPlain() : $this->textZlib())->text();
+            return $this->_m_text;
         }
         protected $_m_keyword;
         protected $_m_compressionFlag;
         protected $_m_compressionMethod;
         protected $_m_languageTag;
         protected $_m_translatedKeyword;
-        protected $_m_text;
+        protected $_m_textPlain;
+        protected $_m_textZlib;
+        protected $_m__raw_textPlain;
+        protected $_m__raw_textZlib;
+        protected $_m__raw__raw_textZlib;
 
         /**
          * Indicates purpose of the following text data.
@@ -765,13 +968,95 @@ namespace Png {
          * `language_tag`. Line breaks are not allowed.
          */
         public function translatedKeyword() { return $this->_m_translatedKeyword; }
+        public function textPlain() { return $this->_m_textPlain; }
+        public function textZlib() { return $this->_m_textZlib; }
+        public function _raw_textPlain() { return $this->_m__raw_textPlain; }
+        public function _raw_textZlib() { return $this->_m__raw_textZlib; }
+        public function _raw__raw_textZlib() { return $this->_m__raw__raw_textZlib; }
+    }
+}
+
+namespace Png {
+    class MdcvChromaticity extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\MdcvChunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_xInt = $this->_io->readU2be();
+            $this->_m_yInt = $this->_io->readU2be();
+        }
+        protected $_m_x;
+        public function x() {
+            if ($this->_m_x !== null)
+                return $this->_m_x;
+            $this->_m_x = $this->xInt() * 0.00002;
+            return $this->_m_x;
+        }
+        protected $_m_y;
+        public function y() {
+            if ($this->_m_y !== null)
+                return $this->_m_y;
+            $this->_m_y = $this->yInt() * 0.00002;
+            return $this->_m_y;
+        }
+        protected $_m_xInt;
+        protected $_m_yInt;
+        public function xInt() { return $this->_m_xInt; }
+        public function yInt() { return $this->_m_yInt; }
+    }
+}
+
+namespace Png {
+    class MdcvChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_red = new \Png\MdcvChromaticity($this->_io, $this, $this->_root);
+            $this->_m_green = new \Png\MdcvChromaticity($this->_io, $this, $this->_root);
+            $this->_m_blue = new \Png\MdcvChromaticity($this->_io, $this, $this->_root);
+            $this->_m_whitePoint = new \Png\MdcvChromaticity($this->_io, $this, $this->_root);
+            $this->_m_maxLuminanceInt = $this->_io->readU4be();
+            $this->_m_minLuminanceInt = $this->_io->readU4be();
+        }
+        protected $_m_maxLuminance;
 
         /**
-         * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Line breaks are
-         * allowed.
+         * Maximum luminance in cd/m^2
          */
-        public function text() { return $this->_m_text; }
+        public function maxLuminance() {
+            if ($this->_m_maxLuminance !== null)
+                return $this->_m_maxLuminance;
+            $this->_m_maxLuminance = $this->maxLuminanceInt() * 0.0001;
+            return $this->_m_maxLuminance;
+        }
+        protected $_m_minLuminance;
+
+        /**
+         * Minimum luminance in cd/m^2
+         */
+        public function minLuminance() {
+            if ($this->_m_minLuminance !== null)
+                return $this->_m_minLuminance;
+            $this->_m_minLuminance = $this->minLuminanceInt() * 0.0001;
+            return $this->_m_minLuminance;
+        }
+        protected $_m_red;
+        protected $_m_green;
+        protected $_m_blue;
+        protected $_m_whitePoint;
+        protected $_m_maxLuminanceInt;
+        protected $_m_minLuminanceInt;
+        public function red() { return $this->_m_red; }
+        public function green() { return $this->_m_green; }
+        public function blue() { return $this->_m_blue; }
+        public function whitePoint() { return $this->_m_whitePoint; }
+        public function maxLuminanceInt() { return $this->_m_maxLuminanceInt; }
+        public function minLuminanceInt() { return $this->_m_minLuminanceInt; }
     }
 }
 
@@ -828,38 +1113,6 @@ namespace Png {
         }
         protected $_m_entries;
         public function entries() { return $this->_m_entries; }
-    }
-}
-
-namespace Png {
-    class Point extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\ChrmChunk $_parent = null, ?\Png $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_xInt = $this->_io->readU4be();
-            $this->_m_yInt = $this->_io->readU4be();
-        }
-        protected $_m_x;
-        public function x() {
-            if ($this->_m_x !== null)
-                return $this->_m_x;
-            $this->_m_x = $this->xInt() / 100000.0;
-            return $this->_m_x;
-        }
-        protected $_m_y;
-        public function y() {
-            if ($this->_m_y !== null)
-                return $this->_m_y;
-            $this->_m_y = $this->yInt() / 100000.0;
-            return $this->_m_y;
-        }
-        protected $_m_xInt;
-        protected $_m_yInt;
-        public function xInt() { return $this->_m_xInt; }
-        public function yInt() { return $this->_m_yInt; }
     }
 }
 

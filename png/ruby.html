@@ -124,7 +124,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.9
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -459,7 +459,7 @@ section#format-index .row {
 <span class="w">      </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@file_name</span>
 <span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationExprError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@file_name</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/atch_chunk/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w">  </span><span class="p">((</span><span class="n">_</span><span class="o">.</span><span class="n">size</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">[</span><span class="mi">0</span><span class="o">...</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">))</span><span class="w"> </span>
 <span class="w">      </span><span class="vi">@compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">COMPRESSION_ATTACH_METHODS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotAnyOfError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@compression</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/atch_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w">  </span><span class="p">((</span><span class="vi">@compression</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:compression_attach_methods_none</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@compression</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:compression_attach_methods_zlib</span><span class="p">))</span><span class="w"> </span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotInEnumError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@compression</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/atch_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="no">I__COMPRESSION_ATTACH_METHODS</span><span class="o">.</span><span class="n">key?</span><span class="p">(</span><span class="vi">@compression</span><span class="p">)</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">compression</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:compression_attach_methods_none</span>
 <span class="w">        </span><span class="vi">@data_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
 <span class="w">      </span><span class="k">end</span>
@@ -574,6 +574,30 @@ section#format-index .row {
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue</span>
 <span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ChrmChromaticity</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">x</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@x</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@x</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">y</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@y</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@y</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:x_int</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:y_int</span>
+<span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11cHRM Source</span>
@@ -584,10 +608,10 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@white_point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Point</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Point</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Point</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Point</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@white_point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ChrmChromaticity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ChrmChromaticity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ChrmChromaticity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ChrmChromaticity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:white_point</span>
@@ -622,6 +646,12 @@ section#format-index .row {
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;cHRM&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ChrmChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;cICP&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">CicpChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;cLLI&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ClliChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;fcTL&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FrameControlChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
@@ -634,6 +664,9 @@ section#format-index .row {
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;iTXt&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">InternationalTextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;mDCV&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MdcvChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;mkBS&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">AdobeFireworksChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
@@ -675,6 +708,92 @@ section#format-index .row {
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:body</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:crc</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_body</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#cICP-chunk Source</span>
+<span class="w">  </span><span class="c1"># @see https://w3c.github.io/png/Implementation_Report_3e/#cicp Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">CicpChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@color_primaries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@transfer_function</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@matrix_coefficients</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="vi">@matrix_coefficients</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/cicp_chunk/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@matrix_coefficients</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@video_full_range_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotAnyOfError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@video_full_range_flag</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/cicp_chunk/seq/3&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w">  </span><span class="p">((</span><span class="vi">@video_full_range_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@video_full_range_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># values above 22 are reserved, see</span>
+<span class="w">    </span><span class="c1"># &lt;https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325&gt;</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:color_primaries</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># values above 18 are reserved, see</span>
+<span class="w">    </span><span class="c1"># &lt;https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329&gt;</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:transfer_function</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># From the [official</span>
+<span class="w">    </span><span class="c1"># specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># &gt; RGB is currently the only supported color model in PNG, and as such</span>
+<span class="w">    </span><span class="c1"># &gt; `Matrix Coefficients` shall be set to `0`.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:matrix_coefficients</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># From the [official</span>
+<span class="w">    </span><span class="c1"># specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># &gt; If `Video Full Range Flag` value is `1`, then the image is a</span>
+<span class="w">    </span><span class="c1"># &gt; full-range image. Typically, images in the RGB color representation</span>
+<span class="w">    </span><span class="c1"># &gt; are stored in the full-range signal quantization, therefore the vast</span>
+<span class="w">    </span><span class="c1"># &gt; majority of computer graphics and web images, including those used</span>
+<span class="w">    </span><span class="c1"># &gt; in traditional PNG workflows, are full-range images.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># &gt; If `Video Full Range Flag` value is `0`, then the image is a</span>
+<span class="w">    </span><span class="c1"># &gt; narrow-range image.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:video_full_range_flag</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#cLLI-chunk Source</span>
+<span class="w">  </span><span class="c1"># @see https://w3c.github.io/png/Implementation_Report_3e/#light Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ClliChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@max_content_light_level_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@max_frame_average_light_level_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Maximum Content Light Level (MaxCLL), in cd/m^2</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">max_content_light_level</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@max_content_light_level</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@max_content_light_level</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@max_content_light_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max_content_light_level_int</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>
+<span class="w">      </span><span class="vi">@max_content_light_level</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Maximum Frame Average Light Level (MaxFALL), in cd/m^2</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">max_frame_average_light_level</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@max_frame_average_light_level</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@max_frame_average_light_level</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@max_frame_average_light_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max_frame_average_light_level_int</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>
+<span class="w">      </span><span class="vi">@max_frame_average_light_level</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:max_content_light_level_int</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:max_frame_average_light_level_int</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
@@ -891,6 +1010,7 @@ section#format-index .row {
 <span class="w">      </span><span class="vi">@height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="vi">@height</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/ihdr_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@height</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">      </span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotAnyOfError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@bit_depth</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/ihdr_chunk/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w">  </span><span class="p">((</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">16</span><span class="p">))</span><span class="w"> </span>
 <span class="w">      </span><span class="vi">@color_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COLOR_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
 <span class="w">      </span><span class="vi">@filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
@@ -904,6 +1024,23 @@ section#format-index .row {
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:compression_method</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:filter_method</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:interlace_method</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">InternationalText</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Text contents (&quot;value&quot; of this key-value pair), written in</span>
+<span class="w">    </span><span class="c1"># language specified in `language_tag`. Line breaks are</span>
+<span class="w">    </span><span class="c1"># allowed.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
@@ -921,11 +1058,32 @@ section#format-index .row {
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">      </span><span class="vi">@keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@compression_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotAnyOfError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@compression_flag</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/international_text_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w">  </span><span class="p">((</span><span class="vi">@compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span>
 <span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COMPRESSION_METHODS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@language_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@translated_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="vi">@_raw_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+<span class="w">        </span><span class="n">_io__raw_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_text_plain</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">InternationalText</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_text_plain</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="vi">@_raw__raw_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+<span class="w">        </span><span class="vi">@_raw_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Zlib</span><span class="o">::</span><span class="no">Inflate</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="vi">@_raw__raw_text_zlib</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_io__raw_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_text_zlib</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">InternationalText</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_text_zlib</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
 <span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Text contents (&quot;value&quot; of this key-value pair), written in</span>
+<span class="w">    </span><span class="c1"># language specified in `language_tag`. Line breaks are</span>
+<span class="w">    </span><span class="c1"># allowed.</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">text</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@text</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@text</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">text_plain</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">text_zlib</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+<span class="w">      </span><span class="vi">@text</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -948,12 +1106,77 @@ section#format-index .row {
 <span class="w">    </span><span class="c1"># Keyword translated into language specified in</span>
 <span class="w">    </span><span class="c1"># `language_tag`. Line breaks are not allowed.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:translated_keyword</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text_plain</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text_zlib</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_text_plain</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_text_zlib</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw__raw_text_zlib</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">MdcvChromaticity</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="vi">@y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">x</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@x</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x_int</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="o">.</span><span class="mo">00002</span>
+<span class="w">      </span><span class="vi">@x</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">y</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@y</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y_int</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="o">.</span><span class="mo">00002</span>
+<span class="w">      </span><span class="vi">@y</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:x_int</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:y_int</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#mDCV-chunk Source</span>
+<span class="w">  </span><span class="c1"># @see https://w3c.github.io/png/Implementation_Report_3e/#mastering Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">MdcvChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MdcvChromaticity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MdcvChromaticity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MdcvChromaticity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@white_point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MdcvChromaticity</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@max_luminance_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@min_luminance_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="w">    </span><span class="c1"># language specified in `language_tag`. Line breaks are</span>
-<span class="w">    </span><span class="c1"># allowed.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text</span>
+<span class="w">    </span><span class="c1"># Maximum luminance in cd/m^2</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">max_luminance</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@max_luminance</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@max_luminance</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@max_luminance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max_luminance_int</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>
+<span class="w">      </span><span class="vi">@max_luminance</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Minimum luminance in cd/m^2</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">min_luminance</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@min_luminance</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@min_luminance</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@min_luminance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min_luminance_int</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="o">.</span><span class="mo">0001</span>
+<span class="w">      </span><span class="vi">@min_luminance</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:white_point</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:max_luminance_int</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:min_luminance_int</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
@@ -1003,30 +1226,6 @@ section#format-index .row {
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:entries</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">x</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@x</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span>
-<span class="w">      </span><span class="vi">@x</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">y</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@y</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span>
-<span class="w">      </span><span class="vi">@y</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:x_int</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:y_int</span>
 <span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Rgb</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>

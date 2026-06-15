@@ -141,8 +141,8 @@ function Png.AtchChunk:_read()
     error("ValidationExprError")
   end
   self.compression = Png.AtchChunk.CompressionAttachMethods(self._io:read_u1())
-  if not( ((self.compression == Png.AtchChunk.CompressionAttachMethods.none) or (self.compression == Png.AtchChunk.CompressionAttachMethods.zlib)) ) then
-    error("ValidationNotAnyOfError")
+  if self.compression == nil then
+    error("ValidationNotInEnumError")
   end
   if self.compression == Png.AtchChunk.CompressionAttachMethods.none then
     self.data_plain = self._io:read_bytes_full()
@@ -259,6 +259,41 @@ function Png.BkgdTruecolor:_read()
 end
 
 
+Png.ChrmChromaticity = class.class(KaitaiStruct)
+
+function Png.ChrmChromaticity:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.ChrmChromaticity:_read()
+  self.x_int = self._io:read_u4be()
+  self.y_int = self._io:read_u4be()
+end
+
+Png.ChrmChromaticity.property.x = {}
+function Png.ChrmChromaticity.property.x:get()
+  if self._m_x ~= nil then
+    return self._m_x
+  end
+
+  self._m_x = self.x_int / 100000.0
+  return self._m_x
+end
+
+Png.ChrmChromaticity.property.y = {}
+function Png.ChrmChromaticity.property.y:get()
+  if self._m_y ~= nil then
+    return self._m_y
+  end
+
+  self._m_y = self.y_int / 100000.0
+  return self._m_y
+end
+
+
 -- 
 -- See also: Source (https://www.w3.org/TR/png/#11cHRM)
 Png.ChrmChunk = class.class(KaitaiStruct)
@@ -271,10 +306,10 @@ function Png.ChrmChunk:_init(io, parent, root)
 end
 
 function Png.ChrmChunk:_read()
-  self.white_point = Png.Point(self._io, self, self._root)
-  self.red = Png.Point(self._io, self, self._root)
-  self.green = Png.Point(self._io, self, self._root)
-  self.blue = Png.Point(self._io, self, self._root)
+  self.white_point = Png.ChrmChromaticity(self._io, self, self._root)
+  self.red = Png.ChrmChromaticity(self._io, self, self._root)
+  self.green = Png.ChrmChromaticity(self._io, self, self._root)
+  self.blue = Png.ChrmChromaticity(self._io, self, self._root)
 end
 
 
@@ -315,6 +350,14 @@ function Png.Chunk:_read()
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.ChrmChunk(_io, self, self._root)
+  elseif _on == "cICP" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.CicpChunk(_io, self, self._root)
+  elseif _on == "cLLI" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.ClliChunk(_io, self, self._root)
   elseif _on == "fcTL" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
@@ -331,6 +374,10 @@ function Png.Chunk:_read()
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.InternationalTextChunk(_io, self, self._root)
+  elseif _on == "mDCV" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.MdcvChunk(_io, self, self._root)
   elseif _on == "mkBS" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
@@ -375,6 +422,98 @@ function Png.Chunk:_read()
     self.body = self._io:read_bytes(self.len)
   end
   self.crc = self._io:read_bytes(4)
+end
+
+
+-- 
+-- See also: Source (https://www.w3.org/TR/png/#cICP-chunk)
+-- See also: Source (https://w3c.github.io/png/Implementation_Report_3e/#cicp)
+Png.CicpChunk = class.class(KaitaiStruct)
+
+function Png.CicpChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.CicpChunk:_read()
+  self.color_primaries = self._io:read_u1()
+  self.transfer_function = self._io:read_u1()
+  self.matrix_coefficients = self._io:read_u1()
+  if not(self.matrix_coefficients == 0) then
+    error("not equal, expected " .. 0 .. ", but got " .. self.matrix_coefficients)
+  end
+  self.video_full_range_flag = self._io:read_u1()
+  if not( ((self.video_full_range_flag == 0) or (self.video_full_range_flag == 1)) ) then
+    error("ValidationNotAnyOfError")
+  end
+end
+
+-- 
+-- values above 22 are reserved, see
+-- <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325>
+-- 
+-- values above 18 are reserved, see
+-- <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329>
+-- 
+-- From the [official
+-- specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+-- 
+-- > RGB is currently the only supported color model in PNG, and as such
+-- > `Matrix Coefficients` shall be set to `0`.
+-- 
+-- From the [official
+-- specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+-- 
+-- > If `Video Full Range Flag` value is `1`, then the image is a
+-- > full-range image. Typically, images in the RGB color representation
+-- > are stored in the full-range signal quantization, therefore the vast
+-- > majority of computer graphics and web images, including those used
+-- > in traditional PNG workflows, are full-range images.
+-- 
+-- > If `Video Full Range Flag` value is `0`, then the image is a
+-- > narrow-range image.
+
+-- 
+-- See also: Source (https://www.w3.org/TR/png/#cLLI-chunk)
+-- See also: Source (https://w3c.github.io/png/Implementation_Report_3e/#light)
+Png.ClliChunk = class.class(KaitaiStruct)
+
+function Png.ClliChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.ClliChunk:_read()
+  self.max_content_light_level_int = self._io:read_u4be()
+  self.max_frame_average_light_level_int = self._io:read_u4be()
+end
+
+-- 
+-- Maximum Content Light Level (MaxCLL), in cd/m^2.
+Png.ClliChunk.property.max_content_light_level = {}
+function Png.ClliChunk.property.max_content_light_level:get()
+  if self._m_max_content_light_level ~= nil then
+    return self._m_max_content_light_level
+  end
+
+  self._m_max_content_light_level = self.max_content_light_level_int * 0.0001
+  return self._m_max_content_light_level
+end
+
+-- 
+-- Maximum Frame Average Light Level (MaxFALL), in cd/m^2.
+Png.ClliChunk.property.max_frame_average_light_level = {}
+function Png.ClliChunk.property.max_frame_average_light_level:get()
+  if self._m_max_frame_average_light_level ~= nil then
+    return self._m_max_frame_average_light_level
+  end
+
+  self._m_max_frame_average_light_level = self.max_frame_average_light_level_int * 0.0001
+  return self._m_max_frame_average_light_level
 end
 
 
@@ -598,12 +737,33 @@ function Png.IhdrChunk:_read()
     error("ValidationLessThanError")
   end
   self.bit_depth = self._io:read_u1()
+  if not( ((self.bit_depth == 1) or (self.bit_depth == 2) or (self.bit_depth == 4) or (self.bit_depth == 8) or (self.bit_depth == 16)) ) then
+    error("ValidationNotAnyOfError")
+  end
   self.color_type = Png.ColorType(self._io:read_u1())
   self.compression_method = self._io:read_u1()
   self.filter_method = self._io:read_u1()
   self.interlace_method = self._io:read_u1()
 end
 
+
+Png.InternationalText = class.class(KaitaiStruct)
+
+function Png.InternationalText:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.InternationalText:_read()
+  self.text = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
+end
+
+-- 
+-- Text contents ("value" of this key-value pair), written in
+-- language specified in `language_tag`. Line breaks are
+-- allowed.
 
 -- 
 -- International text chunk effectively allows to store key-value string pairs in
@@ -623,10 +783,37 @@ end
 function Png.InternationalTextChunk:_read()
   self.keyword = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
   self.compression_flag = self._io:read_u1()
+  if not( ((self.compression_flag == 0) or (self.compression_flag == 1)) ) then
+    error("ValidationNotAnyOfError")
+  end
   self.compression_method = Png.CompressionMethods(self._io:read_u1())
   self.language_tag = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
   self.translated_keyword = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
-  self.text = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
+  if self.compression_flag == 0 then
+    self._raw_text_plain = self._io:read_bytes_full()
+    local _io = KaitaiStream(stringstream(self._raw_text_plain))
+    self.text_plain = Png.InternationalText(_io, self, self._root)
+  end
+  if self.compression_flag == 1 then
+    self._raw__raw_text_zlib = self._io:read_bytes_full()
+    self._raw_text_zlib = KaitaiStream.process_zlib(self._raw__raw_text_zlib)
+    local _io = KaitaiStream(stringstream(self._raw_text_zlib))
+    self.text_zlib = Png.InternationalText(_io, self, self._root)
+  end
+end
+
+-- 
+-- Text contents ("value" of this key-value pair), written in
+-- language specified in `language_tag`. Line breaks are
+-- allowed.
+Png.InternationalTextChunk.property.text = {}
+function Png.InternationalTextChunk.property.text:get()
+  if self._m_text ~= nil then
+    return self._m_text
+  end
+
+  self._m_text = utils.box_unwrap((self.compression_flag == 0) and utils.box_wrap(self.text_plain) or (self.text_zlib)).text
+  return self._m_text
 end
 
 -- 
@@ -641,10 +828,87 @@ end
 -- 
 -- Keyword translated into language specified in
 -- `language_tag`. Line breaks are not allowed.
+
+Png.MdcvChromaticity = class.class(KaitaiStruct)
+
+function Png.MdcvChromaticity:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.MdcvChromaticity:_read()
+  self.x_int = self._io:read_u2be()
+  self.y_int = self._io:read_u2be()
+end
+
+Png.MdcvChromaticity.property.x = {}
+function Png.MdcvChromaticity.property.x:get()
+  if self._m_x ~= nil then
+    return self._m_x
+  end
+
+  self._m_x = self.x_int * 0.00002
+  return self._m_x
+end
+
+Png.MdcvChromaticity.property.y = {}
+function Png.MdcvChromaticity.property.y:get()
+  if self._m_y ~= nil then
+    return self._m_y
+  end
+
+  self._m_y = self.y_int * 0.00002
+  return self._m_y
+end
+
+
 -- 
--- Text contents ("value" of this key-value pair), written in
--- language specified in `language_tag`. Line breaks are
--- allowed.
+-- See also: Source (https://www.w3.org/TR/png/#mDCV-chunk)
+-- See also: Source (https://w3c.github.io/png/Implementation_Report_3e/#mastering)
+Png.MdcvChunk = class.class(KaitaiStruct)
+
+function Png.MdcvChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.MdcvChunk:_read()
+  self.red = Png.MdcvChromaticity(self._io, self, self._root)
+  self.green = Png.MdcvChromaticity(self._io, self, self._root)
+  self.blue = Png.MdcvChromaticity(self._io, self, self._root)
+  self.white_point = Png.MdcvChromaticity(self._io, self, self._root)
+  self.max_luminance_int = self._io:read_u4be()
+  self.min_luminance_int = self._io:read_u4be()
+end
+
+-- 
+-- Maximum luminance in cd/m^2.
+Png.MdcvChunk.property.max_luminance = {}
+function Png.MdcvChunk.property.max_luminance:get()
+  if self._m_max_luminance ~= nil then
+    return self._m_max_luminance
+  end
+
+  self._m_max_luminance = self.max_luminance_int * 0.0001
+  return self._m_max_luminance
+end
+
+-- 
+-- Minimum luminance in cd/m^2.
+Png.MdcvChunk.property.min_luminance = {}
+function Png.MdcvChunk.property.min_luminance:get()
+  if self._m_min_luminance ~= nil then
+    return self._m_min_luminance
+  end
+
+  self._m_min_luminance = self.min_luminance_int * 0.0001
+  return self._m_min_luminance
+end
+
 
 -- 
 -- "Physical size" chunk stores data that allows to translate
@@ -690,41 +954,6 @@ function Png.PlteChunk:_read()
     self.entries[i + 1] = Png.Rgb(self._io, self, self._root)
     i = i + 1
   end
-end
-
-
-Png.Point = class.class(KaitaiStruct)
-
-function Png.Point:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root
-  self:_read()
-end
-
-function Png.Point:_read()
-  self.x_int = self._io:read_u4be()
-  self.y_int = self._io:read_u4be()
-end
-
-Png.Point.property.x = {}
-function Png.Point.property.x:get()
-  if self._m_x ~= nil then
-    return self._m_x
-  end
-
-  self._m_x = self.x_int / 100000.0
-  return self._m_x
-end
-
-Png.Point.property.y = {}
-function Png.Point.property.y:get()
-  if self._m_y ~= nil then
-    return self._m_y
-  end
-
-  self._m_y = self.y_int / 100000.0
-  return self._m_y
 end
 
 

@@ -211,8 +211,8 @@ class Png(ReadWriteKaitaiStruct):
             if not  ((len(_) != 0) and (_[0:1] != u".")) :
                 raise kaitaistruct.ValidationExprError(self.file_name, self._io, u"/types/atch_chunk/seq/0")
             self.compression = KaitaiStream.resolve_enum(Png.AtchChunk.CompressionAttachMethods, self._io.read_u1())
-            if not  ((self.compression == Png.AtchChunk.CompressionAttachMethods.none) or (self.compression == Png.AtchChunk.CompressionAttachMethods.zlib)) :
-                raise kaitaistruct.ValidationNotAnyOfError(self.compression, self._io, u"/types/atch_chunk/seq/1")
+            if not isinstance(self.compression, Png.AtchChunk.CompressionAttachMethods):
+                raise kaitaistruct.ValidationNotInEnumError(self.compression, self._io, u"/types/atch_chunk/seq/1")
             if self.compression == Png.AtchChunk.CompressionAttachMethods.none:
                 pass
                 self.data_plain = self._io.read_bytes_full()
@@ -261,8 +261,8 @@ class Png(ReadWriteKaitaiStruct):
             _ = self.file_name
             if not  ((len(_) != 0) and (_[0:1] != u".")) :
                 raise kaitaistruct.ValidationExprError(self.file_name, None, u"/types/atch_chunk/seq/0")
-            if not  ((self.compression == Png.AtchChunk.CompressionAttachMethods.none) or (self.compression == Png.AtchChunk.CompressionAttachMethods.zlib)) :
-                raise kaitaistruct.ValidationNotAnyOfError(self.compression, None, u"/types/atch_chunk/seq/1")
+            if not isinstance(self.compression, Png.AtchChunk.CompressionAttachMethods):
+                raise kaitaistruct.ValidationNotInEnumError(self.compression, None, u"/types/atch_chunk/seq/1")
             if self.compression == Png.AtchChunk.CompressionAttachMethods.none:
                 pass
 
@@ -473,6 +473,52 @@ class Png(ReadWriteKaitaiStruct):
             self._dirty = False
 
 
+    class ChrmChromaticity(ReadWriteKaitaiStruct):
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.ChrmChromaticity, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.x_int = self._io.read_u4be()
+            self.y_int = self._io.read_u4be()
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Png.ChrmChromaticity, self)._write__seq(io)
+            self._io.write_u4be(self.x_int)
+            self._io.write_u4be(self.y_int)
+
+
+        def _check(self):
+            self._dirty = False
+
+        @property
+        def x(self):
+            if hasattr(self, '_m_x'):
+                return self._m_x
+
+            self._m_x = self.x_int / 100000.0
+            return getattr(self, '_m_x', None)
+
+        def _invalidate_x(self):
+            del self._m_x
+        @property
+        def y(self):
+            if hasattr(self, '_m_y'):
+                return self._m_y
+
+            self._m_y = self.y_int / 100000.0
+            return getattr(self, '_m_y', None)
+
+        def _invalidate_y(self):
+            del self._m_y
+
     class ChrmChunk(ReadWriteKaitaiStruct):
         """
         .. seealso::
@@ -484,13 +530,13 @@ class Png(ReadWriteKaitaiStruct):
             self._root = _root
 
         def _read(self):
-            self.white_point = Png.Point(self._io, self, self._root)
+            self.white_point = Png.ChrmChromaticity(self._io, self, self._root)
             self.white_point._read()
-            self.red = Png.Point(self._io, self, self._root)
+            self.red = Png.ChrmChromaticity(self._io, self, self._root)
             self.red._read()
-            self.green = Png.Point(self._io, self, self._root)
+            self.green = Png.ChrmChromaticity(self._io, self, self._root)
             self.green._read()
-            self.blue = Png.Point(self._io, self, self._root)
+            self.blue = Png.ChrmChromaticity(self._io, self, self._root)
             self.blue._read()
             self._dirty = False
 
@@ -574,6 +620,18 @@ class Png(ReadWriteKaitaiStruct):
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.ChrmChunk(_io__raw_body, self, self._root)
                 self.body._read()
+            elif _on == u"cICP":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.CicpChunk(_io__raw_body, self, self._root)
+                self.body._read()
+            elif _on == u"cLLI":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.ClliChunk(_io__raw_body, self, self._root)
+                self.body._read()
             elif _on == u"fcTL":
                 pass
                 self._raw_body = self._io.read_bytes(self.len)
@@ -597,6 +655,12 @@ class Png(ReadWriteKaitaiStruct):
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.InternationalTextChunk(_io__raw_body, self, self._root)
+                self.body._read()
+            elif _on == u"mDCV":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.MdcvChunk(_io__raw_body, self, self._root)
                 self.body._read()
             elif _on == u"mkBS":
                 pass
@@ -683,6 +747,12 @@ class Png(ReadWriteKaitaiStruct):
             elif _on == u"cHRM":
                 pass
                 self.body._fetch_instances()
+            elif _on == u"cICP":
+                pass
+                self.body._fetch_instances()
+            elif _on == u"cLLI":
+                pass
+                self.body._fetch_instances()
             elif _on == u"fcTL":
                 pass
                 self.body._fetch_instances()
@@ -693,6 +763,9 @@ class Png(ReadWriteKaitaiStruct):
                 pass
                 self.body._fetch_instances()
             elif _on == u"iTXt":
+                pass
+                self.body._fetch_instances()
+            elif _on == u"mDCV":
                 pass
                 self.body._fetch_instances()
             elif _on == u"mkBS":
@@ -799,6 +872,32 @@ class Png(ReadWriteKaitaiStruct):
                     parent.write_bytes(self._raw_body)
                 _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
                 self.body._write__seq(_io__raw_body)
+            elif _on == u"cICP":
+                pass
+                _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
+                self._io.add_child_stream(_io__raw_body)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len))
+                def handler(parent, _io__raw_body=_io__raw_body):
+                    self._raw_body = _io__raw_body.to_byte_array()
+                    if len(self._raw_body) != self.len:
+                        raise kaitaistruct.ConsistencyError(u"raw(body)", self.len, len(self._raw_body))
+                    parent.write_bytes(self._raw_body)
+                _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.body._write__seq(_io__raw_body)
+            elif _on == u"cLLI":
+                pass
+                _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
+                self._io.add_child_stream(_io__raw_body)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len))
+                def handler(parent, _io__raw_body=_io__raw_body):
+                    self._raw_body = _io__raw_body.to_byte_array()
+                    if len(self._raw_body) != self.len:
+                        raise kaitaistruct.ConsistencyError(u"raw(body)", self.len, len(self._raw_body))
+                    parent.write_bytes(self._raw_body)
+                _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.body._write__seq(_io__raw_body)
             elif _on == u"fcTL":
                 pass
                 _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
@@ -839,6 +938,19 @@ class Png(ReadWriteKaitaiStruct):
                 _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
                 self.body._write__seq(_io__raw_body)
             elif _on == u"iTXt":
+                pass
+                _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
+                self._io.add_child_stream(_io__raw_body)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self.len))
+                def handler(parent, _io__raw_body=_io__raw_body):
+                    self._raw_body = _io__raw_body.to_byte_array()
+                    if len(self._raw_body) != self.len:
+                        raise kaitaistruct.ConsistencyError(u"raw(body)", self.len, len(self._raw_body))
+                    parent.write_bytes(self._raw_body)
+                _io__raw_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.body._write__seq(_io__raw_body)
+            elif _on == u"mDCV":
                 pass
                 _io__raw_body = KaitaiStream(BytesIO(bytearray(self.len)))
                 self._io.add_child_stream(_io__raw_body)
@@ -1024,6 +1136,18 @@ class Png(ReadWriteKaitaiStruct):
                     raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
                 if self.body._parent != self:
                     raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == u"cICP":
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == u"cLLI":
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
             elif _on == u"fcTL":
                 pass
                 if self.body._root != self._root:
@@ -1043,6 +1167,12 @@ class Png(ReadWriteKaitaiStruct):
                 if self.body._parent != self:
                     raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
             elif _on == u"iTXt":
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == u"mDCV":
                 pass
                 if self.body._root != self._root:
                     raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
@@ -1116,6 +1246,108 @@ class Png(ReadWriteKaitaiStruct):
                 raise kaitaistruct.ConsistencyError(u"crc", 4, len(self.crc))
             self._dirty = False
 
+
+    class CicpChunk(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#cICP-chunk
+        
+        
+        .. seealso::
+           Source - https://w3c.github.io/png/Implementation_Report_3e/#cicp
+        """
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.CicpChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.color_primaries = self._io.read_u1()
+            self.transfer_function = self._io.read_u1()
+            self.matrix_coefficients = self._io.read_u1()
+            if not self.matrix_coefficients == 0:
+                raise kaitaistruct.ValidationNotEqualError(0, self.matrix_coefficients, self._io, u"/types/cicp_chunk/seq/2")
+            self.video_full_range_flag = self._io.read_u1()
+            if not  ((self.video_full_range_flag == 0) or (self.video_full_range_flag == 1)) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.video_full_range_flag, self._io, u"/types/cicp_chunk/seq/3")
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Png.CicpChunk, self)._write__seq(io)
+            self._io.write_u1(self.color_primaries)
+            self._io.write_u1(self.transfer_function)
+            self._io.write_u1(self.matrix_coefficients)
+            self._io.write_u1(self.video_full_range_flag)
+
+
+        def _check(self):
+            if not self.matrix_coefficients == 0:
+                raise kaitaistruct.ValidationNotEqualError(0, self.matrix_coefficients, None, u"/types/cicp_chunk/seq/2")
+            if not  ((self.video_full_range_flag == 0) or (self.video_full_range_flag == 1)) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.video_full_range_flag, None, u"/types/cicp_chunk/seq/3")
+            self._dirty = False
+
+
+    class ClliChunk(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#cLLI-chunk
+        
+        
+        .. seealso::
+           Source - https://w3c.github.io/png/Implementation_Report_3e/#light
+        """
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.ClliChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.max_content_light_level_int = self._io.read_u4be()
+            self.max_frame_average_light_level_int = self._io.read_u4be()
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Png.ClliChunk, self)._write__seq(io)
+            self._io.write_u4be(self.max_content_light_level_int)
+            self._io.write_u4be(self.max_frame_average_light_level_int)
+
+
+        def _check(self):
+            self._dirty = False
+
+        @property
+        def max_content_light_level(self):
+            """Maximum Content Light Level (MaxCLL), in cd/m^2."""
+            if hasattr(self, '_m_max_content_light_level'):
+                return self._m_max_content_light_level
+
+            self._m_max_content_light_level = self.max_content_light_level_int * 0.0001
+            return getattr(self, '_m_max_content_light_level', None)
+
+        def _invalidate_max_content_light_level(self):
+            del self._m_max_content_light_level
+        @property
+        def max_frame_average_light_level(self):
+            """Maximum Frame Average Light Level (MaxFALL), in cd/m^2."""
+            if hasattr(self, '_m_max_frame_average_light_level'):
+                return self._m_max_frame_average_light_level
+
+            self._m_max_frame_average_light_level = self.max_frame_average_light_level_int * 0.0001
+            return getattr(self, '_m_max_frame_average_light_level', None)
+
+        def _invalidate_max_frame_average_light_level(self):
+            del self._m_max_frame_average_light_level
 
     class CompressedTextChunk(ReadWriteKaitaiStruct):
         """Compressed text chunk effectively allows to store key-value
@@ -1390,6 +1622,8 @@ class Png(ReadWriteKaitaiStruct):
             if not self.height >= 1:
                 raise kaitaistruct.ValidationLessThanError(1, self.height, self._io, u"/types/ihdr_chunk/seq/1")
             self.bit_depth = self._io.read_u1()
+            if not  ((self.bit_depth == 1) or (self.bit_depth == 2) or (self.bit_depth == 4) or (self.bit_depth == 8) or (self.bit_depth == 16)) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.bit_depth, self._io, u"/types/ihdr_chunk/seq/2")
             self.color_type = KaitaiStream.resolve_enum(Png.ColorType, self._io.read_u1())
             self.compression_method = self._io.read_u1()
             self.filter_method = self._io.read_u1()
@@ -1417,6 +1651,34 @@ class Png(ReadWriteKaitaiStruct):
                 raise kaitaistruct.ValidationLessThanError(1, self.width, None, u"/types/ihdr_chunk/seq/0")
             if not self.height >= 1:
                 raise kaitaistruct.ValidationLessThanError(1, self.height, None, u"/types/ihdr_chunk/seq/1")
+            if not  ((self.bit_depth == 1) or (self.bit_depth == 2) or (self.bit_depth == 4) or (self.bit_depth == 8) or (self.bit_depth == 16)) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.bit_depth, None, u"/types/ihdr_chunk/seq/2")
+            self._dirty = False
+
+
+    class InternationalText(ReadWriteKaitaiStruct):
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.InternationalText, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.text = (self._io.read_bytes_full()).decode(u"UTF-8")
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Png.InternationalText, self)._write__seq(io)
+            self._io.write_bytes((self.text).encode(u"UTF-8"))
+            if not self._io.is_eof():
+                raise kaitaistruct.ConsistencyError(u"text", 0, self._io.size() - self._io.pos())
+
+
+        def _check(self):
             self._dirty = False
 
 
@@ -1437,15 +1699,40 @@ class Png(ReadWriteKaitaiStruct):
         def _read(self):
             self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
             self.compression_flag = self._io.read_u1()
+            if not  ((self.compression_flag == 0) or (self.compression_flag == 1)) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.compression_flag, self._io, u"/types/international_text_chunk/seq/1")
             self.compression_method = KaitaiStream.resolve_enum(Png.CompressionMethods, self._io.read_u1())
             self.language_tag = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
             self.translated_keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
-            self.text = (self._io.read_bytes_full()).decode(u"UTF-8")
+            if self.compression_flag == 0:
+                pass
+                self._raw_text_plain = self._io.read_bytes_full()
+                _io__raw_text_plain = KaitaiStream(BytesIO(self._raw_text_plain))
+                self.text_plain = Png.InternationalText(_io__raw_text_plain, self, self._root)
+                self.text_plain._read()
+
+            if self.compression_flag == 1:
+                pass
+                self._raw__raw_text_zlib = self._io.read_bytes_full()
+                self._raw_text_zlib = zlib.decompress(self._raw__raw_text_zlib)
+                self.text_zlib__inner_size = len(self._raw_text_zlib)
+                _io__raw_text_zlib = KaitaiStream(BytesIO(self._raw_text_zlib))
+                self.text_zlib = Png.InternationalText(_io__raw_text_zlib, self, self._root)
+                self.text_zlib._read()
+
             self._dirty = False
 
 
         def _fetch_instances(self):
             pass
+            if self.compression_flag == 0:
+                pass
+                self.text_plain._fetch_instances()
+
+            if self.compression_flag == 1:
+                pass
+                self.text_zlib._fetch_instances()
+
 
 
         def _write__seq(self, io=None):
@@ -1458,20 +1745,210 @@ class Png(ReadWriteKaitaiStruct):
             self._io.write_u1(0)
             self._io.write_bytes((self.translated_keyword).encode(u"UTF-8"))
             self._io.write_u1(0)
-            self._io.write_bytes((self.text).encode(u"UTF-8"))
-            if not self._io.is_eof():
-                raise kaitaistruct.ConsistencyError(u"text", 0, self._io.size() - self._io.pos())
+            if self.compression_flag == 0:
+                pass
+                _io__raw_text_plain = KaitaiStream(BytesIO(bytearray(self._io.size() - self._io.pos())))
+                self._io.add_child_stream(_io__raw_text_plain)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self._io.size() - self._io.pos()))
+                def handler(parent, _io__raw_text_plain=_io__raw_text_plain):
+                    self._raw_text_plain = _io__raw_text_plain.to_byte_array()
+                    parent.write_bytes(self._raw_text_plain)
+                    if not parent.is_eof():
+                        raise kaitaistruct.ConsistencyError(u"raw(text_plain)", 0, parent.size() - parent.pos())
+                _io__raw_text_plain.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.text_plain._write__seq(_io__raw_text_plain)
+
+            if self.compression_flag == 1:
+                pass
+                _io__raw_text_zlib = KaitaiStream(BytesIO(bytearray(self.text_zlib__inner_size)))
+                self._io.add_child_stream(_io__raw_text_zlib)
+                _pos2 = self._io.pos()
+                self._io.seek(self._io.pos() + (self._io.size() - self._io.pos()))
+                def handler(parent, _io__raw_text_zlib=_io__raw_text_zlib):
+                    self._raw_text_zlib = _io__raw_text_zlib.to_byte_array()
+                    self._raw__raw_text_zlib = zlib.compress(self._raw_text_zlib)
+                    parent.write_bytes(self._raw__raw_text_zlib)
+                    if not parent.is_eof():
+                        raise kaitaistruct.ConsistencyError(u"raw(text_zlib)", 0, parent.size() - parent.pos())
+                _io__raw_text_zlib.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                self.text_zlib._write__seq(_io__raw_text_zlib)
+
 
 
         def _check(self):
             if KaitaiStream.byte_array_index_of((self.keyword).encode(u"UTF-8"), 0) != -1:
                 raise kaitaistruct.ConsistencyError(u"keyword", -1, KaitaiStream.byte_array_index_of((self.keyword).encode(u"UTF-8"), 0))
+            if not  ((self.compression_flag == 0) or (self.compression_flag == 1)) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.compression_flag, None, u"/types/international_text_chunk/seq/1")
             if KaitaiStream.byte_array_index_of((self.language_tag).encode(u"ASCII"), 0) != -1:
                 raise kaitaistruct.ConsistencyError(u"language_tag", -1, KaitaiStream.byte_array_index_of((self.language_tag).encode(u"ASCII"), 0))
             if KaitaiStream.byte_array_index_of((self.translated_keyword).encode(u"UTF-8"), 0) != -1:
                 raise kaitaistruct.ConsistencyError(u"translated_keyword", -1, KaitaiStream.byte_array_index_of((self.translated_keyword).encode(u"UTF-8"), 0))
+            if self.compression_flag == 0:
+                pass
+                if self.text_plain._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"text_plain", self._root, self.text_plain._root)
+                if self.text_plain._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"text_plain", self, self.text_plain._parent)
+
+            if self.compression_flag == 1:
+                pass
+                if self.text_zlib._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"text_zlib", self._root, self.text_zlib._root)
+                if self.text_zlib._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"text_zlib", self, self.text_zlib._parent)
+
             self._dirty = False
 
+        @property
+        def text(self):
+            """Text contents ("value" of this key-value pair), written in
+            language specified in `language_tag`. Line breaks are
+            allowed.
+            """
+            if hasattr(self, '_m_text'):
+                return self._m_text
+
+            self._m_text = (self.text_plain if self.compression_flag == 0 else self.text_zlib).text
+            return getattr(self, '_m_text', None)
+
+        def _invalidate_text(self):
+            del self._m_text
+
+    class MdcvChromaticity(ReadWriteKaitaiStruct):
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.MdcvChromaticity, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.x_int = self._io.read_u2be()
+            self.y_int = self._io.read_u2be()
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Png.MdcvChromaticity, self)._write__seq(io)
+            self._io.write_u2be(self.x_int)
+            self._io.write_u2be(self.y_int)
+
+
+        def _check(self):
+            self._dirty = False
+
+        @property
+        def x(self):
+            if hasattr(self, '_m_x'):
+                return self._m_x
+
+            self._m_x = self.x_int * 0.00002
+            return getattr(self, '_m_x', None)
+
+        def _invalidate_x(self):
+            del self._m_x
+        @property
+        def y(self):
+            if hasattr(self, '_m_y'):
+                return self._m_y
+
+            self._m_y = self.y_int * 0.00002
+            return getattr(self, '_m_y', None)
+
+        def _invalidate_y(self):
+            del self._m_y
+
+    class MdcvChunk(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#mDCV-chunk
+        
+        
+        .. seealso::
+           Source - https://w3c.github.io/png/Implementation_Report_3e/#mastering
+        """
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.MdcvChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.red = Png.MdcvChromaticity(self._io, self, self._root)
+            self.red._read()
+            self.green = Png.MdcvChromaticity(self._io, self, self._root)
+            self.green._read()
+            self.blue = Png.MdcvChromaticity(self._io, self, self._root)
+            self.blue._read()
+            self.white_point = Png.MdcvChromaticity(self._io, self, self._root)
+            self.white_point._read()
+            self.max_luminance_int = self._io.read_u4be()
+            self.min_luminance_int = self._io.read_u4be()
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+            self.red._fetch_instances()
+            self.green._fetch_instances()
+            self.blue._fetch_instances()
+            self.white_point._fetch_instances()
+
+
+        def _write__seq(self, io=None):
+            super(Png.MdcvChunk, self)._write__seq(io)
+            self.red._write__seq(self._io)
+            self.green._write__seq(self._io)
+            self.blue._write__seq(self._io)
+            self.white_point._write__seq(self._io)
+            self._io.write_u4be(self.max_luminance_int)
+            self._io.write_u4be(self.min_luminance_int)
+
+
+        def _check(self):
+            if self.red._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"red", self._root, self.red._root)
+            if self.red._parent != self:
+                raise kaitaistruct.ConsistencyError(u"red", self, self.red._parent)
+            if self.green._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"green", self._root, self.green._root)
+            if self.green._parent != self:
+                raise kaitaistruct.ConsistencyError(u"green", self, self.green._parent)
+            if self.blue._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"blue", self._root, self.blue._root)
+            if self.blue._parent != self:
+                raise kaitaistruct.ConsistencyError(u"blue", self, self.blue._parent)
+            if self.white_point._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"white_point", self._root, self.white_point._root)
+            if self.white_point._parent != self:
+                raise kaitaistruct.ConsistencyError(u"white_point", self, self.white_point._parent)
+            self._dirty = False
+
+        @property
+        def max_luminance(self):
+            """Maximum luminance in cd/m^2."""
+            if hasattr(self, '_m_max_luminance'):
+                return self._m_max_luminance
+
+            self._m_max_luminance = self.max_luminance_int * 0.0001
+            return getattr(self, '_m_max_luminance', None)
+
+        def _invalidate_max_luminance(self):
+            del self._m_max_luminance
+        @property
+        def min_luminance(self):
+            """Minimum luminance in cd/m^2."""
+            if hasattr(self, '_m_min_luminance'):
+                return self._m_min_luminance
+
+            self._m_min_luminance = self.min_luminance_int * 0.0001
+            return getattr(self, '_m_min_luminance', None)
+
+        def _invalidate_min_luminance(self):
+            del self._m_min_luminance
 
     class PhysChunk(ReadWriteKaitaiStruct):
         """"Physical size" chunk stores data that allows to translate
@@ -1561,52 +2038,6 @@ class Png(ReadWriteKaitaiStruct):
 
             self._dirty = False
 
-
-    class Point(ReadWriteKaitaiStruct):
-        def __init__(self, _io=None, _parent=None, _root=None):
-            super(Png.Point, self).__init__(_io)
-            self._parent = _parent
-            self._root = _root
-
-        def _read(self):
-            self.x_int = self._io.read_u4be()
-            self.y_int = self._io.read_u4be()
-            self._dirty = False
-
-
-        def _fetch_instances(self):
-            pass
-
-
-        def _write__seq(self, io=None):
-            super(Png.Point, self)._write__seq(io)
-            self._io.write_u4be(self.x_int)
-            self._io.write_u4be(self.y_int)
-
-
-        def _check(self):
-            self._dirty = False
-
-        @property
-        def x(self):
-            if hasattr(self, '_m_x'):
-                return self._m_x
-
-            self._m_x = self.x_int / 100000.0
-            return getattr(self, '_m_x', None)
-
-        def _invalidate_x(self):
-            del self._m_x
-        @property
-        def y(self):
-            if hasattr(self, '_m_y'):
-                return self._m_y
-
-            self._m_y = self.y_int / 100000.0
-            return getattr(self, '_m_y', None)
-
-        def _invalidate_y(self):
-            del self._m_y
 
     class Rgb(ReadWriteKaitaiStruct):
         def __init__(self, _io=None, _parent=None, _root=None):

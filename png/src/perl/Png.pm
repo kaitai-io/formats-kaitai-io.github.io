@@ -446,6 +446,64 @@ sub blue {
 }
 
 ########################################################################
+package Png::ChrmChromaticity;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{x_int} = $self->{_io}->read_u4be();
+    $self->{y_int} = $self->{_io}->read_u4be();
+}
+
+sub x {
+    my ($self) = @_;
+    return $self->{x} if ($self->{x});
+    $self->{x} = $self->x_int() / 100000.0;
+    return $self->{x};
+}
+
+sub y {
+    my ($self) = @_;
+    return $self->{y} if ($self->{y});
+    $self->{y} = $self->y_int() / 100000.0;
+    return $self->{y};
+}
+
+sub x_int {
+    my ($self) = @_;
+    return $self->{x_int};
+}
+
+sub y_int {
+    my ($self) = @_;
+    return $self->{y_int};
+}
+
+########################################################################
 package Png::ChrmChunk;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -475,10 +533,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{white_point} = Png::Point->new($self->{_io}, $self, $self->{_root});
-    $self->{red} = Png::Point->new($self->{_io}, $self, $self->{_root});
-    $self->{green} = Png::Point->new($self->{_io}, $self, $self->{_root});
-    $self->{blue} = Png::Point->new($self->{_io}, $self, $self->{_root});
+    $self->{white_point} = Png::ChrmChromaticity->new($self->{_io}, $self, $self->{_root});
+    $self->{red} = Png::ChrmChromaticity->new($self->{_io}, $self, $self->{_root});
+    $self->{green} = Png::ChrmChromaticity->new($self->{_io}, $self, $self->{_root});
+    $self->{blue} = Png::ChrmChromaticity->new($self->{_io}, $self, $self->{_root});
 }
 
 sub white_point {
@@ -562,6 +620,16 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::ChrmChunk->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on eq "cICP") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::CicpChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "cLLI") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::ClliChunk->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on eq "fcTL") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
@@ -581,6 +649,11 @@ sub _read {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::InternationalTextChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "mDCV") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::MdcvChunk->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on eq "mkBS") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
@@ -661,6 +734,120 @@ sub crc {
 sub _raw_body {
     my ($self) = @_;
     return $self->{_raw_body};
+}
+
+########################################################################
+package Png::CicpChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{color_primaries} = $self->{_io}->read_u1();
+    $self->{transfer_function} = $self->{_io}->read_u1();
+    $self->{matrix_coefficients} = $self->{_io}->read_u1();
+    $self->{video_full_range_flag} = $self->{_io}->read_u1();
+}
+
+sub color_primaries {
+    my ($self) = @_;
+    return $self->{color_primaries};
+}
+
+sub transfer_function {
+    my ($self) = @_;
+    return $self->{transfer_function};
+}
+
+sub matrix_coefficients {
+    my ($self) = @_;
+    return $self->{matrix_coefficients};
+}
+
+sub video_full_range_flag {
+    my ($self) = @_;
+    return $self->{video_full_range_flag};
+}
+
+########################################################################
+package Png::ClliChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{max_content_light_level_int} = $self->{_io}->read_u4be();
+    $self->{max_frame_average_light_level_int} = $self->{_io}->read_u4be();
+}
+
+sub max_content_light_level {
+    my ($self) = @_;
+    return $self->{max_content_light_level} if ($self->{max_content_light_level});
+    $self->{max_content_light_level} = $self->max_content_light_level_int() * 0.0001;
+    return $self->{max_content_light_level};
+}
+
+sub max_frame_average_light_level {
+    my ($self) = @_;
+    return $self->{max_frame_average_light_level} if ($self->{max_frame_average_light_level});
+    $self->{max_frame_average_light_level} = $self->max_frame_average_light_level_int() * 0.0001;
+    return $self->{max_frame_average_light_level};
+}
+
+sub max_content_light_level_int {
+    my ($self) = @_;
+    return $self->{max_content_light_level_int};
+}
+
+sub max_frame_average_light_level_int {
+    my ($self) = @_;
+    return $self->{max_frame_average_light_level_int};
 }
 
 ########################################################################
@@ -1058,6 +1245,44 @@ sub interlace_method {
 }
 
 ########################################################################
+package Png::InternationalText;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{text} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
+}
+
+sub text {
+    my ($self) = @_;
+    return $self->{text};
+}
+
+########################################################################
 package Png::InternationalTextChunk;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1092,7 +1317,24 @@ sub _read {
     $self->{compression_method} = $self->{_io}->read_u1();
     $self->{language_tag} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     $self->{translated_keyword} = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    $self->{text} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
+    if ($self->compression_flag() == 0) {
+        $self->{_raw_text_plain} = $self->{_io}->read_bytes_full();
+        my $io__raw_text_plain = IO::KaitaiStruct::Stream->new($self->{_raw_text_plain});
+        $self->{text_plain} = Png::InternationalText->new($io__raw_text_plain, $self, $self->{_root});
+    }
+    if ($self->compression_flag() == 1) {
+        $self->{_raw__raw_text_zlib} = $self->{_io}->read_bytes_full();
+        $self->{_raw_text_zlib} = Compress::Zlib::uncompress($self->{_raw__raw_text_zlib});
+        my $io__raw_text_zlib = IO::KaitaiStruct::Stream->new($self->{_raw_text_zlib});
+        $self->{text_zlib} = Png::InternationalText->new($io__raw_text_zlib, $self, $self->{_root});
+    }
+}
+
+sub text {
+    my ($self) = @_;
+    return $self->{text} if ($self->{text});
+    $self->{text} = ($self->compression_flag() == 0 ? $self->text_plain() : $self->text_zlib())->text();
+    return $self->{text};
 }
 
 sub keyword {
@@ -1120,9 +1362,169 @@ sub translated_keyword {
     return $self->{translated_keyword};
 }
 
-sub text {
+sub text_plain {
     my ($self) = @_;
-    return $self->{text};
+    return $self->{text_plain};
+}
+
+sub text_zlib {
+    my ($self) = @_;
+    return $self->{text_zlib};
+}
+
+sub _raw_text_plain {
+    my ($self) = @_;
+    return $self->{_raw_text_plain};
+}
+
+sub _raw_text_zlib {
+    my ($self) = @_;
+    return $self->{_raw_text_zlib};
+}
+
+sub _raw__raw_text_zlib {
+    my ($self) = @_;
+    return $self->{_raw__raw_text_zlib};
+}
+
+########################################################################
+package Png::MdcvChromaticity;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{x_int} = $self->{_io}->read_u2be();
+    $self->{y_int} = $self->{_io}->read_u2be();
+}
+
+sub x {
+    my ($self) = @_;
+    return $self->{x} if ($self->{x});
+    $self->{x} = $self->x_int() * 0.00002;
+    return $self->{x};
+}
+
+sub y {
+    my ($self) = @_;
+    return $self->{y} if ($self->{y});
+    $self->{y} = $self->y_int() * 0.00002;
+    return $self->{y};
+}
+
+sub x_int {
+    my ($self) = @_;
+    return $self->{x_int};
+}
+
+sub y_int {
+    my ($self) = @_;
+    return $self->{y_int};
+}
+
+########################################################################
+package Png::MdcvChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{red} = Png::MdcvChromaticity->new($self->{_io}, $self, $self->{_root});
+    $self->{green} = Png::MdcvChromaticity->new($self->{_io}, $self, $self->{_root});
+    $self->{blue} = Png::MdcvChromaticity->new($self->{_io}, $self, $self->{_root});
+    $self->{white_point} = Png::MdcvChromaticity->new($self->{_io}, $self, $self->{_root});
+    $self->{max_luminance_int} = $self->{_io}->read_u4be();
+    $self->{min_luminance_int} = $self->{_io}->read_u4be();
+}
+
+sub max_luminance {
+    my ($self) = @_;
+    return $self->{max_luminance} if ($self->{max_luminance});
+    $self->{max_luminance} = $self->max_luminance_int() * 0.0001;
+    return $self->{max_luminance};
+}
+
+sub min_luminance {
+    my ($self) = @_;
+    return $self->{min_luminance} if ($self->{min_luminance});
+    $self->{min_luminance} = $self->min_luminance_int() * 0.0001;
+    return $self->{min_luminance};
+}
+
+sub red {
+    my ($self) = @_;
+    return $self->{red};
+}
+
+sub green {
+    my ($self) = @_;
+    return $self->{green};
+}
+
+sub blue {
+    my ($self) = @_;
+    return $self->{blue};
+}
+
+sub white_point {
+    my ($self) = @_;
+    return $self->{white_point};
+}
+
+sub max_luminance_int {
+    my ($self) = @_;
+    return $self->{max_luminance_int};
+}
+
+sub min_luminance_int {
+    my ($self) = @_;
+    return $self->{min_luminance_int};
 }
 
 ########################################################################
@@ -1214,64 +1616,6 @@ sub _read {
 sub entries {
     my ($self) = @_;
     return $self->{entries};
-}
-
-########################################################################
-package Png::Point;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{x_int} = $self->{_io}->read_u4be();
-    $self->{y_int} = $self->{_io}->read_u4be();
-}
-
-sub x {
-    my ($self) = @_;
-    return $self->{x} if ($self->{x});
-    $self->{x} = $self->x_int() / 100000.0;
-    return $self->{x};
-}
-
-sub y {
-    my ($self) = @_;
-    return $self->{y} if ($self->{y});
-    $self->{y} = $self->y_int() / 100000.0;
-    return $self->{y};
-}
-
-sub x_int {
-    my ($self) = @_;
-    return $self->{x_int};
-}
-
-sub y_int {
-    my ($self) = @_;
-    return $self->{y_int};
 }
 
 ########################################################################

@@ -124,7 +124,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.9
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -396,8 +396,11 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">bkgd_greyscale_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">bkgd_indexed_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">bkgd_truecolor_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">chrm_chromaticity_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">chrm_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">chunk_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">cicp_chunk_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">clli_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">compressed_text_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">evernote_skmf_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">evernote_skrf_chunk_t</span><span class="p">;</span>
@@ -405,10 +408,12 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">frame_data_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">gama_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">ihdr_chunk_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">international_text_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">international_text_chunk_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">mdcv_chromaticity_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">mdcv_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">phys_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">plte_chunk_t</span><span class="p">;</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">point_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">rgb_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">srgb_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">text_chunk_t</span><span class="p">;</span>
@@ -764,6 +769,46 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">bkgd_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">chrm_chromaticity_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">chrm_chromaticity_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">chrm_chromaticity_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_x</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_x</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_y</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_y</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_x_int</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_y_int</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">x_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_x_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">y_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_y_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * \sa https://www.w3.org/TR/png/#11cHRM Source</span>
 <span class="cm">     */</span>
@@ -782,18 +827,18 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="o">~</span><span class="n">chrm_chunk_t</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">point_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_white_point</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">point_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_red</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">point_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_green</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">point_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_blue</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">chrm_chromaticity_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_white_point</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">chrm_chromaticity_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_red</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">chrm_chromaticity_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_green</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">chrm_chromaticity_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_blue</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="n">point_t</span><span class="o">*</span><span class="w"> </span><span class="n">white_point</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_white_point</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">point_t</span><span class="o">*</span><span class="w"> </span><span class="n">red</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_red</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">point_t</span><span class="o">*</span><span class="w"> </span><span class="n">green</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_green</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">point_t</span><span class="o">*</span><span class="w"> </span><span class="n">blue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_blue</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrm_chromaticity_t</span><span class="o">*</span><span class="w"> </span><span class="n">white_point</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_white_point</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrm_chromaticity_t</span><span class="o">*</span><span class="w"> </span><span class="n">red</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_red</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrm_chromaticity_t</span><span class="o">*</span><span class="w"> </span><span class="n">green</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_green</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrm_chromaticity_t</span><span class="o">*</span><span class="w"> </span><span class="n">blue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_blue</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
@@ -836,6 +881,126 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \sa https://www.w3.org/TR/png/#cICP-chunk Source</span>
+<span class="cm">     * \sa https://w3c.github.io/png/Implementation_Report_3e/#cicp Source</span>
+<span class="cm">     */</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">cicp_chunk_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">cicp_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">cicp_chunk_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_color_primaries</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_transfer_function</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_matrix_coefficients</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_video_full_range_flag</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * values above 22 are reserved, see</span>
+<span class="cm">         * &lt;https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325&gt;</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">color_primaries</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_color_primaries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * values above 18 are reserved, see</span>
+<span class="cm">         * &lt;https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329&gt;</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">transfer_function</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_transfer_function</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * From the [official</span>
+<span class="cm">         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):</span>
+<span class="cm">         * </span>
+<span class="cm">         * &gt; RGB is currently the only supported color model in PNG, and as such</span>
+<span class="cm">         * &gt; `Matrix Coefficients` shall be set to `0`.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">matrix_coefficients</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_matrix_coefficients</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * From the [official</span>
+<span class="cm">         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):</span>
+<span class="cm">         * </span>
+<span class="cm">         * &gt; If `Video Full Range Flag` value is `1`, then the image is a</span>
+<span class="cm">         * &gt; full-range image. Typically, images in the RGB color representation</span>
+<span class="cm">         * &gt; are stored in the full-range signal quantization, therefore the vast</span>
+<span class="cm">         * &gt; majority of computer graphics and web images, including those used</span>
+<span class="cm">         * &gt; in traditional PNG workflows, are full-range images.</span>
+<span class="cm">         * </span>
+<span class="cm">         * &gt; If `Video Full Range Flag` value is `0`, then the image is a</span>
+<span class="cm">         * &gt; narrow-range image.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">video_full_range_flag</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_video_full_range_flag</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \sa https://www.w3.org/TR/png/#cLLI-chunk Source</span>
+<span class="cm">     * \sa https://w3c.github.io/png/Implementation_Report_3e/#light Source</span>
+<span class="cm">     */</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">clli_chunk_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">clli_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">clli_chunk_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_max_content_light_level</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_max_content_light_level</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Maximum Content Light Level (MaxCLL), in cd/m^2</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">max_content_light_level</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_max_frame_average_light_level</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_max_frame_average_light_level</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Maximum Frame Average Light Level (MaxFALL), in cd/m^2</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">max_frame_average_light_level</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_max_content_light_level_int</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_max_frame_average_light_level_int</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">max_content_light_level_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_content_light_level_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">max_frame_average_light_level_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_frame_average_light_level_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
@@ -1170,6 +1335,36 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">international_text_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">international_text_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">international_text_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Text contents (&quot;value&quot; of this key-value pair), written in</span>
+<span class="cm">         * language specified in `language_tag`. Line breaks are</span>
+<span class="cm">         * allowed.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">text</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * International text chunk effectively allows to store key-value string pairs in</span>
 <span class="cm">     * PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
@@ -1192,14 +1387,63 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="o">~</span><span class="n">international_text_chunk_t</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_text</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Text contents (&quot;value&quot; of this key-value pair), written in</span>
+<span class="cm">         * language specified in `language_tag`. Line breaks are</span>
+<span class="cm">         * allowed.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">text</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_keyword</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_compression_flag</span><span class="p">;</span>
 <span class="w">        </span><span class="n">compression_methods_t</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">;</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_language_tag</span><span class="p">;</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_translated_keyword</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">international_text_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_text_plain</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_text_plain</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_text_plain</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">text_plain</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_text_plain</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">international_text_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_text_zlib</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_text_zlib</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_text_zlib</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">text_zlib</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_text_zlib</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_text_plain</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n__raw_text_plain</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null__raw_text_plain</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_raw_text_plain</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n__raw_text_plain</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m__io__raw_text_plain</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_text_zlib</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n__raw_text_zlib</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null__raw_text_zlib</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_raw_text_zlib</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n__raw_text_zlib</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m__io__raw_text_zlib</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw__raw_text_zlib</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n__raw__raw_text_zlib</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null__raw__raw_text_zlib</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">_raw__raw_text_zlib</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n__raw__raw_text_zlib</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
@@ -1227,13 +1471,114 @@ and build them along with your project.</p>
 <span class="cm">         * `language_tag`. Line breaks are not allowed.</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">translated_keyword</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_translated_keyword</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">international_text_t</span><span class="o">*</span><span class="w"> </span><span class="n">text_plain</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_text_plain</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">international_text_t</span><span class="o">*</span><span class="w"> </span><span class="n">text_zlib</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_text_zlib</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_text_plain</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_text_plain</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_text_plain</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_text_plain</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_text_zlib</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_text_zlib</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_text_zlib</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_text_zlib</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw__raw_text_zlib</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw__raw_text_zlib</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">mdcv_chromaticity_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">mdcv_chromaticity_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">mdcv_chromaticity_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_x</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_x</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_y</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_y</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_x_int</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_y_int</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">x_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_x_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">y_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_y_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \sa https://www.w3.org/TR/png/#mDCV-chunk Source</span>
+<span class="cm">     * \sa https://w3c.github.io/png/Implementation_Report_3e/#mastering Source</span>
+<span class="cm">     */</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">mdcv_chunk_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">mdcv_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">mdcv_chunk_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_max_luminance</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_max_luminance</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="cm">         * language specified in `language_tag`. Line breaks are</span>
-<span class="cm">         * allowed.</span>
+<span class="cm">         * Maximum luminance in cd/m^2</span>
 <span class="cm">         */</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">text</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">max_luminance</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_min_luminance</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_min_luminance</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Minimum luminance in cd/m^2</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">min_luminance</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mdcv_chromaticity_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_red</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mdcv_chromaticity_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_green</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mdcv_chromaticity_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_blue</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mdcv_chromaticity_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_white_point</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_max_luminance_int</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_min_luminance_int</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="n">mdcv_chromaticity_t</span><span class="o">*</span><span class="w"> </span><span class="n">red</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_red</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">mdcv_chromaticity_t</span><span class="o">*</span><span class="w"> </span><span class="n">green</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_green</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">mdcv_chromaticity_t</span><span class="o">*</span><span class="w"> </span><span class="n">blue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_blue</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">mdcv_chromaticity_t</span><span class="o">*</span><span class="w"> </span><span class="n">white_point</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_white_point</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">max_luminance_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_luminance_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">min_luminance_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_min_luminance_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
@@ -1308,46 +1653,6 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">rgb_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">entries</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_entries</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">};</span>
-
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">point_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="n">point_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="o">~</span><span class="n">point_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_x</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_x</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_y</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_y</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_x_int</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_y_int</span><span class="p">;</span>
-<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
-<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">x_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_x_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">y_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_y_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">rgb_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
@@ -1677,8 +1982,8 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">m_compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">atch_chunk_t</span><span class="o">::</span><span class="n">compression_attach_methods_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">m_compression</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">atch_chunk_t</span><span class="o">::</span><span class="n">COMPRESSION_ATTACH_METHODS_NONE</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">m_compression</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">atch_chunk_t</span><span class="o">::</span><span class="n">COMPRESSION_ATTACH_METHODS_ZLIB</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_any_of_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">atch_chunk_t</span><span class="o">::</span><span class="n">compression_attach_methods_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_compression</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/atch_chunk/seq/1&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">png_t</span><span class="o">::</span><span class="n">atch_chunk_t</span><span class="o">::</span><span class="n">_is_defined_compression_attach_methods_t</span><span class="p">(</span><span class="n">m_compression</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_in_enum_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">atch_chunk_t</span><span class="o">::</span><span class="n">compression_attach_methods_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_compression</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/atch_chunk/seq/1&quot;</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">n_data_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">compression</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">atch_chunk_t</span><span class="o">::</span><span class="n">COMPRESSION_ATTACH_METHODS_NONE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -1811,6 +2116,42 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">bkgd_truecolor_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 
+<span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chromaticity_t</span><span class="o">::</span><span class="n">chrm_chromaticity_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chromaticity_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chromaticity_t</span><span class="o">::~</span><span class="n">chrm_chromaticity_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chromaticity_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chromaticity_t</span><span class="o">::</span><span class="n">x</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_x</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_x</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x_int</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chromaticity_t</span><span class="o">::</span><span class="n">y</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_y</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_y</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y_int</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_y</span><span class="p">;</span>
+<span class="p">}</span>
+
 <span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
@@ -1822,10 +2163,10 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_white_point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">point_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">point_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
-<span class="w">    </span><span class="n">m_red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">point_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">point_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
-<span class="w">    </span><span class="n">m_green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">point_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">point_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
-<span class="w">    </span><span class="n">m_blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">point_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">point_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_white_point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">chrm_chromaticity_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">chrm_chromaticity_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">chrm_chromaticity_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">chrm_chromaticity_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">chrm_chromaticity_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">chrm_chromaticity_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">chrm_chromaticity_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">chrm_chromaticity_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">::~</span><span class="n">chrm_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -1884,6 +2225,18 @@ and build them along with your project.</p>
 <span class="w">            </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
 <span class="w">            </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">chrm_chunk_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">chrm_chunk_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
 <span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;cICP&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+<span class="w">            </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+<span class="w">            </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">cicp_chunk_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">cicp_chunk_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;cLLI&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+<span class="w">            </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+<span class="w">            </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">clli_chunk_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">clli_chunk_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;fcTL&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">m__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
@@ -1907,6 +2260,12 @@ and build them along with your project.</p>
 <span class="w">            </span><span class="n">m__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
 <span class="w">            </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
 <span class="w">            </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">international_text_chunk_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">international_text_chunk_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;mDCV&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+<span class="w">            </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+<span class="w">            </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mdcv_chunk_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">mdcv_chunk_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;mkBS&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
@@ -1982,6 +2341,68 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">cicp_chunk_t</span><span class="o">::</span><span class="n">cicp_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">cicp_chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_color_primaries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_transfer_function</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_matrix_coefficients</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">m_matrix_coefficients</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">m_matrix_coefficients</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/cicp_chunk/seq/2&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_video_full_range_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">m_video_full_range_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">m_video_full_range_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_any_of_error</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_video_full_range_flag</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/cicp_chunk/seq/3&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">cicp_chunk_t</span><span class="o">::~</span><span class="n">cicp_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">cicp_chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">clli_chunk_t</span><span class="o">::</span><span class="n">clli_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_max_content_light_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_max_frame_average_light_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">clli_chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_max_content_light_level_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_max_frame_average_light_level_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">clli_chunk_t</span><span class="o">::~</span><span class="n">clli_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">clli_chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">clli_chunk_t</span><span class="o">::</span><span class="n">max_content_light_level</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_max_content_light_level</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_content_light_level</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_max_content_light_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_max_content_light_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max_content_light_level_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_content_light_level</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">clli_chunk_t</span><span class="o">::</span><span class="n">max_frame_average_light_level</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_max_frame_average_light_level</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_frame_average_light_level</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_max_frame_average_light_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_max_frame_average_light_level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max_frame_average_light_level_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_frame_average_light_level</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -2151,6 +2572,9 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_less_than_error</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">m_height</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/ihdr_chunk/seq/1&quot;</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">m_bit_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">m_bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">m_bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">m_bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">m_bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">m_bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">16</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_any_of_error</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_bit_depth</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/ihdr_chunk/seq/2&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">m_color_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">color_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
 <span class="w">    </span><span class="n">m_compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
 <span class="w">    </span><span class="n">m_filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
@@ -2164,19 +2588,58 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">ihdr_chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 
+<span class="n">png_t</span><span class="o">::</span><span class="n">international_text_t</span><span class="o">::</span><span class="n">international_text_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">international_text_t</span><span class="o">::~</span><span class="n">international_text_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
 <span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__io__raw_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__io__raw_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">    </span><span class="n">_read</span><span class="p">();</span>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">m_compression_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">m_compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">m_compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_any_of_error</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_compression_flag</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/international_text_chunk/seq/1&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">m_compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">compression_methods_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
 <span class="w">    </span><span class="n">m_language_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">m_translated_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">n_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m__raw_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="w">        </span><span class="n">m__io__raw_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_text_plain</span><span class="p">));</span>
+<span class="w">        </span><span class="n">m_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">international_text_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">international_text_t</span><span class="p">(</span><span class="n">m__io__raw_text_plain</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">n_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m__raw__raw_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="w">        </span><span class="n">m__raw_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">process_zlib</span><span class="p">(</span><span class="n">m__raw__raw_text_zlib</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m__io__raw_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_text_zlib</span><span class="p">));</span>
+<span class="w">        </span><span class="n">m_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">international_text_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">international_text_t</span><span class="p">(</span><span class="n">m__io__raw_text_zlib</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">::~</span><span class="n">international_text_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -2184,6 +2647,98 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_text_plain</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_text_zlib</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">::</span><span class="n">text</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_text</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">text_plain</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">text_zlib</span><span class="p">()))</span><span class="o">-&gt;</span><span class="n">text</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chromaticity_t</span><span class="o">::</span><span class="n">mdcv_chromaticity_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chromaticity_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chromaticity_t</span><span class="o">::~</span><span class="n">mdcv_chromaticity_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chromaticity_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chromaticity_t</span><span class="o">::</span><span class="n">x</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_x</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_x</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.00002</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chromaticity_t</span><span class="o">::</span><span class="n">y</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_y</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_y</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.00002</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_y</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_white_point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_max_luminance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_min_luminance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mdcv_chromaticity_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">mdcv_chromaticity_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mdcv_chromaticity_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">mdcv_chromaticity_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mdcv_chromaticity_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">mdcv_chromaticity_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_white_point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mdcv_chromaticity_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">mdcv_chromaticity_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_max_luminance_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_min_luminance_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">::~</span><span class="n">mdcv_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">::</span><span class="n">max_luminance</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_max_luminance</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_luminance</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_max_luminance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_max_luminance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">max_luminance_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_luminance</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">mdcv_chunk_t</span><span class="o">::</span><span class="n">min_luminance</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_min_luminance</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_min_luminance</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_min_luminance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_min_luminance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min_luminance_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_min_luminance</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">phys_chunk_t</span><span class="o">::</span><span class="n">phys_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -2228,42 +2783,6 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">plte_chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="p">}</span>
-
-<span class="n">png_t</span><span class="o">::</span><span class="n">point_t</span><span class="o">::</span><span class="n">point_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chrm_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">f_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">    </span><span class="n">f_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">point_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="n">png_t</span><span class="o">::</span><span class="n">point_t</span><span class="o">::~</span><span class="n">point_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">point_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="p">}</span>
-
-<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">point_t</span><span class="o">::</span><span class="n">x</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_x</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_x</span><span class="p">;</span>
-<span class="w">    </span><span class="n">f_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x_int</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_x</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">point_t</span><span class="o">::</span><span class="n">y</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_y</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_y</span><span class="p">;</span>
-<span class="w">    </span><span class="n">f_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y_int</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_y</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">rgb_t</span><span class="o">::</span><span class="n">rgb_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">plte_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>

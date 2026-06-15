@@ -124,7 +124,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.9
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -730,6 +730,64 @@ section#format-index .row {
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Png::ChrmChromaticity</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">x</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">x_int</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">y</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">y_int</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">x_int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x_int</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">y_int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y_int</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
 <span class="k">package</span><span class="w"> </span><span class="nn">Png::ChrmChunk</span><span class="p">;</span>
 
 <span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
@@ -759,10 +817,10 @@ section#format-index .row {
 <span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">white_point</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::Point</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">red</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::Point</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">green</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::Point</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">blue</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::Point</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">white_point</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::ChrmChromaticity</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">red</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::ChrmChromaticity</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">green</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::ChrmChromaticity</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">blue</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::ChrmChromaticity</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="p">}</span>
 
 <span class="k">sub</span><span class="w"> </span><span class="nf">white_point</span><span class="w"> </span><span class="p">{</span>
@@ -846,6 +904,16 @@ section#format-index .row {
 <span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::ChrmChunk</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="ow">eq</span><span class="w"> </span><span class="s">&quot;cICP&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">());</span>
+<span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::CicpChunk</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="ow">eq</span><span class="w"> </span><span class="s">&quot;cLLI&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">());</span>
+<span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::ClliChunk</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="ow">eq</span><span class="w"> </span><span class="s">&quot;fcTL&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">());</span>
 <span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
@@ -865,6 +933,11 @@ section#format-index .row {
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">());</span>
 <span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::InternationalTextChunk</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="ow">eq</span><span class="w"> </span><span class="s">&quot;mDCV&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">());</span>
+<span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::MdcvChunk</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="ow">eq</span><span class="w"> </span><span class="s">&quot;mkBS&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">());</span>
@@ -945,6 +1018,120 @@ section#format-index .row {
 <span class="k">sub</span><span class="w"> </span><span class="nf">_raw_body</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Png::CicpChunk</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">color_primaries</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">transfer_function</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">matrix_coefficients</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">video_full_range_flag</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">color_primaries</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">color_primaries</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">transfer_function</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">transfer_function</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">matrix_coefficients</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">matrix_coefficients</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">video_full_range_flag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">video_full_range_flag</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Png::ClliChunk</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_content_light_level_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_frame_average_light_level_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">max_content_light_level</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_content_light_level</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_content_light_level</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_content_light_level</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">max_content_light_level_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_content_light_level</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">max_frame_average_light_level</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_frame_average_light_level</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_frame_average_light_level</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_frame_average_light_level</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">max_frame_average_light_level_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_frame_average_light_level</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">max_content_light_level_int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_content_light_level_int</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">max_frame_average_light_level_int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_frame_average_light_level_int</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
@@ -1342,6 +1529,44 @@ section#format-index .row {
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Png::InternationalText</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">text</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
 <span class="k">package</span><span class="w"> </span><span class="nn">Png::InternationalTextChunk</span><span class="p">;</span>
 
 <span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
@@ -1376,7 +1601,24 @@ section#format-index .row {
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">compression_method</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">language_tag</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">translated_keyword</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_text_plain</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_text_plain</span><span class="p">});</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text_plain</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::InternationalText</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_text_plain</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw__raw_text_zlib</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_text_zlib</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Compress::Zlib::</span><span class="n">uncompress</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw__raw_text_zlib</span><span class="p">});</span>
+<span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_text_zlib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_text_zlib</span><span class="p">});</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text_zlib</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::InternationalText</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_text_zlib</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">text</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">text_plain</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">text_zlib</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">text</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="k">sub</span><span class="w"> </span><span class="nf">keyword</span><span class="w"> </span><span class="p">{</span>
@@ -1404,9 +1646,169 @@ section#format-index .row {
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">translated_keyword</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span><span class="w"> </span><span class="nf">text</span><span class="w"> </span><span class="p">{</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">text_plain</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text</span><span class="p">};</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text_plain</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">text_zlib</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">text_zlib</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_raw_text_plain</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_text_plain</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_raw_text_zlib</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_text_zlib</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_raw__raw_text_zlib</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw__raw_text_zlib</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Png::MdcvChromaticity</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">x</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">x_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.00002</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">y</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">y_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.00002</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">x_int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x_int</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">y_int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y_int</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Png::MdcvChunk</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">red</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::MdcvChromaticity</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">green</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::MdcvChromaticity</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">blue</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::MdcvChromaticity</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">white_point</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Png::MdcvChromaticity</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_luminance_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_luminance_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">max_luminance</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_luminance</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_luminance</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_luminance</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">max_luminance_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_luminance</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">min_luminance</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_luminance</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_luminance</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_luminance</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">min_luminance_int</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_luminance</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">red</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">red</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">green</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">green</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">blue</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">blue</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">white_point</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">white_point</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">max_luminance_int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_luminance_int</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">min_luminance_int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_luminance_int</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
@@ -1498,64 +1900,6 @@ section#format-index .row {
 <span class="k">sub</span><span class="w"> </span><span class="nf">entries</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">entries</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span><span class="w"> </span><span class="nn">Png::Point</span><span class="p">;</span>
-
-<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
-<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y_int</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">x</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">});</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">x_int</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">y</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">});</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">y_int</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">x_int</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x_int</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">y_int</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y_int</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>

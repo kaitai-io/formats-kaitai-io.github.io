@@ -44,7 +44,7 @@ digraph {
 				<TR><TD PORT="file_name_pos">0</TD><TD PORT="file_name_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="file_name_type">file_name</TD></TR>
 				<TR><TD COLSPAN="4" PORT="file_name__valid">must satisfy  ((_.size != 0) &amp;&amp; (_[0...1] != &quot;.&quot;)) </TD></TR>
 				<TR><TD PORT="compression_pos">...</TD><TD PORT="compression_size">1</TD><TD>u1→CompressionAttachMethods</TD><TD PORT="compression_type">compression</TD></TR>
-				<TR><TD COLSPAN="4" PORT="compression__valid">must be any of :compression_attach_methods_none, :compression_attach_methods_zlib</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression__valid">must be defined in the enum</TD></TR>
 				<TR><TD PORT="data_plain_pos">...</TD><TD PORT="data_plain_size">⇲</TD><TD></TD><TD PORT="data_plain_type">data_plain</TD></TR>
 				<TR><TD COLSPAN="4" PORT="data_plain__if">if compression == :compression_attach_methods_none</TD></TR>
 				<TR><TD PORT="data_zlib_pos">...</TD><TD PORT="data_zlib_size">⇲</TD><TD></TD><TD PORT="data_zlib_type">data_zlib</TD></TR>
@@ -101,16 +101,34 @@ bkgd_chunk__seq_bkgd_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD PORT="blue_pos">4</TD><TD PORT="blue_size">2</TD><TD>u2be</TD><TD PORT="blue_type">blue</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__chrm_chromaticity {
+			label="Png::ChrmChromaticity";
+			graph[style=dotted];
+
+			chrm_chromaticity__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_int_pos">0</TD><TD PORT="x_int_size">4</TD><TD>u4be</TD><TD PORT="x_int_type">x_int</TD></TR>
+				<TR><TD PORT="y_int_pos">4</TD><TD PORT="y_int_size">4</TD><TD>u4be</TD><TD PORT="y_int_type">y_int</TD></TR>
+			</TABLE>>];
+			chrm_chromaticity__inst__x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>x</TD><TD>x_int / 100000.0</TD></TR>
+			</TABLE>>];
+			chrm_chromaticity__inst__y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>y</TD><TD>y_int / 100000.0</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__chrm_chunk {
 			label="Png::ChrmChunk";
 			graph[style=dotted];
 
 			chrm_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="white_point_pos">0</TD><TD PORT="white_point_size">8</TD><TD>Point</TD><TD PORT="white_point_type">white_point</TD></TR>
-				<TR><TD PORT="red_pos">8</TD><TD PORT="red_size">8</TD><TD>Point</TD><TD PORT="red_type">red</TD></TR>
-				<TR><TD PORT="green_pos">16</TD><TD PORT="green_size">8</TD><TD>Point</TD><TD PORT="green_type">green</TD></TR>
-				<TR><TD PORT="blue_pos">24</TD><TD PORT="blue_size">8</TD><TD>Point</TD><TD PORT="blue_type">blue</TD></TR>
+				<TR><TD PORT="white_point_pos">0</TD><TD PORT="white_point_size">8</TD><TD>ChrmChromaticity</TD><TD PORT="white_point_type">white_point</TD></TR>
+				<TR><TD PORT="red_pos">8</TD><TD PORT="red_size">8</TD><TD>ChrmChromaticity</TD><TD PORT="red_type">red</TD></TR>
+				<TR><TD PORT="green_pos">16</TD><TD PORT="green_size">8</TD><TD>ChrmChromaticity</TD><TD PORT="green_type">green</TD></TR>
+				<TR><TD PORT="blue_pos">24</TD><TD PORT="blue_size">8</TD><TD>ChrmChromaticity</TD><TD PORT="blue_type">blue</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__chunk {
@@ -132,21 +150,56 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD>&quot;atCh&quot;</TD><TD PORT="case2">AtchChunk</TD></TR>
 	<TR><TD>&quot;bKGD&quot;</TD><TD PORT="case3">BkgdChunk</TD></TR>
 	<TR><TD>&quot;cHRM&quot;</TD><TD PORT="case4">ChrmChunk</TD></TR>
-	<TR><TD>&quot;fcTL&quot;</TD><TD PORT="case5">FrameControlChunk</TD></TR>
-	<TR><TD>&quot;fdAT&quot;</TD><TD PORT="case6">FrameDataChunk</TD></TR>
-	<TR><TD>&quot;gAMA&quot;</TD><TD PORT="case7">GamaChunk</TD></TR>
-	<TR><TD>&quot;iTXt&quot;</TD><TD PORT="case8">InternationalTextChunk</TD></TR>
-	<TR><TD>&quot;mkBS&quot;</TD><TD PORT="case9">AdobeFireworksChunk</TD></TR>
-	<TR><TD>&quot;mkTS&quot;</TD><TD PORT="case10">AdobeFireworksChunk</TD></TR>
-	<TR><TD>&quot;pHYs&quot;</TD><TD PORT="case11">PhysChunk</TD></TR>
-	<TR><TD>&quot;prVW&quot;</TD><TD PORT="case12">AdobeFireworksChunk</TD></TR>
-	<TR><TD>&quot;sRGB&quot;</TD><TD PORT="case13">SrgbChunk</TD></TR>
-	<TR><TD>&quot;skMf&quot;</TD><TD PORT="case14">EvernoteSkmfChunk</TD></TR>
-	<TR><TD>&quot;skRf&quot;</TD><TD PORT="case15">EvernoteSkrfChunk</TD></TR>
-	<TR><TD>&quot;tEXt&quot;</TD><TD PORT="case16">TextChunk</TD></TR>
-	<TR><TD>&quot;tIME&quot;</TD><TD PORT="case17">TimeChunk</TD></TR>
-	<TR><TD>&quot;zTXt&quot;</TD><TD PORT="case18">CompressedTextChunk</TD></TR>
+	<TR><TD>&quot;cICP&quot;</TD><TD PORT="case5">CicpChunk</TD></TR>
+	<TR><TD>&quot;cLLI&quot;</TD><TD PORT="case6">ClliChunk</TD></TR>
+	<TR><TD>&quot;fcTL&quot;</TD><TD PORT="case7">FrameControlChunk</TD></TR>
+	<TR><TD>&quot;fdAT&quot;</TD><TD PORT="case8">FrameDataChunk</TD></TR>
+	<TR><TD>&quot;gAMA&quot;</TD><TD PORT="case9">GamaChunk</TD></TR>
+	<TR><TD>&quot;iTXt&quot;</TD><TD PORT="case10">InternationalTextChunk</TD></TR>
+	<TR><TD>&quot;mDCV&quot;</TD><TD PORT="case11">MdcvChunk</TD></TR>
+	<TR><TD>&quot;mkBS&quot;</TD><TD PORT="case12">AdobeFireworksChunk</TD></TR>
+	<TR><TD>&quot;mkTS&quot;</TD><TD PORT="case13">AdobeFireworksChunk</TD></TR>
+	<TR><TD>&quot;pHYs&quot;</TD><TD PORT="case14">PhysChunk</TD></TR>
+	<TR><TD>&quot;prVW&quot;</TD><TD PORT="case15">AdobeFireworksChunk</TD></TR>
+	<TR><TD>&quot;sRGB&quot;</TD><TD PORT="case16">SrgbChunk</TD></TR>
+	<TR><TD>&quot;skMf&quot;</TD><TD PORT="case17">EvernoteSkmfChunk</TD></TR>
+	<TR><TD>&quot;skRf&quot;</TD><TD PORT="case18">EvernoteSkrfChunk</TD></TR>
+	<TR><TD>&quot;tEXt&quot;</TD><TD PORT="case19">TextChunk</TD></TR>
+	<TR><TD>&quot;tIME&quot;</TD><TD PORT="case20">TimeChunk</TD></TR>
+	<TR><TD>&quot;zTXt&quot;</TD><TD PORT="case21">CompressedTextChunk</TD></TR>
 </TABLE>>];
+		}
+		subgraph cluster__cicp_chunk {
+			label="Png::CicpChunk";
+			graph[style=dotted];
+
+			cicp_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="color_primaries_pos">0</TD><TD PORT="color_primaries_size">1</TD><TD>u1</TD><TD PORT="color_primaries_type">color_primaries</TD></TR>
+				<TR><TD PORT="transfer_function_pos">1</TD><TD PORT="transfer_function_size">1</TD><TD>u1</TD><TD PORT="transfer_function_type">transfer_function</TD></TR>
+				<TR><TD PORT="matrix_coefficients_pos">2</TD><TD PORT="matrix_coefficients_size">1</TD><TD>u1</TD><TD PORT="matrix_coefficients_type">matrix_coefficients</TD></TR>
+				<TR><TD COLSPAN="4" PORT="matrix_coefficients__valid">must be equal to 0</TD></TR>
+				<TR><TD PORT="video_full_range_flag_pos">3</TD><TD PORT="video_full_range_flag_size">1</TD><TD>u1</TD><TD PORT="video_full_range_flag_type">video_full_range_flag</TD></TR>
+				<TR><TD COLSPAN="4" PORT="video_full_range_flag__valid">must be any of 0, 1</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__clli_chunk {
+			label="Png::ClliChunk";
+			graph[style=dotted];
+
+			clli_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="max_content_light_level_int_pos">0</TD><TD PORT="max_content_light_level_int_size">4</TD><TD>u4be</TD><TD PORT="max_content_light_level_int_type">max_content_light_level_int</TD></TR>
+				<TR><TD PORT="max_frame_average_light_level_int_pos">4</TD><TD PORT="max_frame_average_light_level_int_size">4</TD><TD>u4be</TD><TD PORT="max_frame_average_light_level_int_type">max_frame_average_light_level_int</TD></TR>
+			</TABLE>>];
+			clli_chunk__inst__max_content_light_level [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>max_content_light_level</TD><TD>max_content_light_level_int * 0.0001</TD></TR>
+			</TABLE>>];
+			clli_chunk__inst__max_frame_average_light_level [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>max_frame_average_light_level</TD><TD>max_frame_average_light_level_int * 0.0001</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__compressed_text_chunk {
 			label="Png::CompressedTextChunk";
@@ -237,10 +290,20 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD PORT="height_pos">4</TD><TD PORT="height_size">4</TD><TD>u4be</TD><TD PORT="height_type">height</TD></TR>
 				<TR><TD COLSPAN="4" PORT="height__valid">must be at least 1</TD></TR>
 				<TR><TD PORT="bit_depth_pos">8</TD><TD PORT="bit_depth_size">1</TD><TD>u1</TD><TD PORT="bit_depth_type">bit_depth</TD></TR>
+				<TR><TD COLSPAN="4" PORT="bit_depth__valid">must be any of 1, 2, 4, 8, 16</TD></TR>
 				<TR><TD PORT="color_type_pos">9</TD><TD PORT="color_type_size">1</TD><TD>u1→ColorType</TD><TD PORT="color_type_type">color_type</TD></TR>
 				<TR><TD PORT="compression_method_pos">10</TD><TD PORT="compression_method_size">1</TD><TD>u1</TD><TD PORT="compression_method_type">compression_method</TD></TR>
 				<TR><TD PORT="filter_method_pos">11</TD><TD PORT="filter_method_size">1</TD><TD>u1</TD><TD PORT="filter_method_type">filter_method</TD></TR>
 				<TR><TD PORT="interlace_method_pos">12</TD><TD PORT="interlace_method_size">1</TD><TD>u1</TD><TD PORT="interlace_method_type">interlace_method</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__international_text {
+			label="Png::InternationalText";
+			graph[style=dotted];
+
+			international_text__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="text_pos">0</TD><TD PORT="text_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="text_type">text</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__international_text_chunk {
@@ -251,10 +314,58 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="keyword_pos">0</TD><TD PORT="keyword_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="keyword_type">keyword</TD></TR>
 				<TR><TD PORT="compression_flag_pos">...</TD><TD PORT="compression_flag_size">1</TD><TD>u1</TD><TD PORT="compression_flag_type">compression_flag</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression_flag__valid">must be any of 0, 1</TD></TR>
 				<TR><TD PORT="compression_method_pos">...</TD><TD PORT="compression_method_size">1</TD><TD>u1→CompressionMethods</TD><TD PORT="compression_method_type">compression_method</TD></TR>
 				<TR><TD PORT="language_tag_pos">...</TD><TD PORT="language_tag_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="language_tag_type">language_tag</TD></TR>
 				<TR><TD PORT="translated_keyword_pos">...</TD><TD PORT="translated_keyword_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="translated_keyword_type">translated_keyword</TD></TR>
-				<TR><TD PORT="text_pos">...</TD><TD PORT="text_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="text_type">text</TD></TR>
+				<TR><TD PORT="text_plain_pos">...</TD><TD PORT="text_plain_size">⇲</TD><TD>InternationalText</TD><TD PORT="text_plain_type">text_plain</TD></TR>
+				<TR><TD COLSPAN="4" PORT="text_plain__if">if compression_flag == 0</TD></TR>
+				<TR><TD PORT="text_zlib_pos">...</TD><TD PORT="text_zlib_size">⇲</TD><TD>InternationalText</TD><TD PORT="text_zlib_type">text_zlib</TD></TR>
+				<TR><TD COLSPAN="4" PORT="text_zlib__if">if compression_flag == 1</TD></TR>
+			</TABLE>>];
+			international_text_chunk__inst__text [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>text</TD><TD>(compression_flag == 0 ? text_plain : text_zlib).text</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__mdcv_chromaticity {
+			label="Png::MdcvChromaticity";
+			graph[style=dotted];
+
+			mdcv_chromaticity__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_int_pos">0</TD><TD PORT="x_int_size">2</TD><TD>u2be</TD><TD PORT="x_int_type">x_int</TD></TR>
+				<TR><TD PORT="y_int_pos">2</TD><TD PORT="y_int_size">2</TD><TD>u2be</TD><TD PORT="y_int_type">y_int</TD></TR>
+			</TABLE>>];
+			mdcv_chromaticity__inst__x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>x</TD><TD>x_int * 0.00002</TD></TR>
+			</TABLE>>];
+			mdcv_chromaticity__inst__y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>y</TD><TD>y_int * 0.00002</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__mdcv_chunk {
+			label="Png::MdcvChunk";
+			graph[style=dotted];
+
+			mdcv_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="red_pos">0</TD><TD PORT="red_size">4</TD><TD>MdcvChromaticity</TD><TD PORT="red_type">red</TD></TR>
+				<TR><TD PORT="green_pos">4</TD><TD PORT="green_size">4</TD><TD>MdcvChromaticity</TD><TD PORT="green_type">green</TD></TR>
+				<TR><TD PORT="blue_pos">8</TD><TD PORT="blue_size">4</TD><TD>MdcvChromaticity</TD><TD PORT="blue_type">blue</TD></TR>
+				<TR><TD PORT="white_point_pos">12</TD><TD PORT="white_point_size">4</TD><TD>MdcvChromaticity</TD><TD PORT="white_point_type">white_point</TD></TR>
+				<TR><TD PORT="max_luminance_int_pos">16</TD><TD PORT="max_luminance_int_size">4</TD><TD>u4be</TD><TD PORT="max_luminance_int_type">max_luminance_int</TD></TR>
+				<TR><TD PORT="min_luminance_int_pos">20</TD><TD PORT="min_luminance_int_size">4</TD><TD>u4be</TD><TD PORT="min_luminance_int_type">min_luminance_int</TD></TR>
+			</TABLE>>];
+			mdcv_chunk__inst__max_luminance [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>max_luminance</TD><TD>max_luminance_int * 0.0001</TD></TR>
+			</TABLE>>];
+			mdcv_chunk__inst__min_luminance [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>min_luminance</TD><TD>min_luminance_int * 0.0001</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__phys_chunk {
@@ -276,24 +387,6 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">3</TD><TD>Rgb</TD><TD PORT="entries_type">entries</TD></TR>
 				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__point {
-			label="Png::Point";
-			graph[style=dotted];
-
-			point__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="x_int_pos">0</TD><TD PORT="x_int_size">4</TD><TD>u4be</TD><TD PORT="x_int_type">x_int</TD></TR>
-				<TR><TD PORT="y_int_pos">4</TD><TD PORT="y_int_size">4</TD><TD>u4be</TD><TD PORT="y_int_type">y_int</TD></TR>
-			</TABLE>>];
-			point__inst__x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>x</TD><TD>x_int / 100000.0</TD></TR>
-			</TABLE>>];
-			point__inst__y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>y</TD><TD>y_int / 100000.0</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__rgb {
@@ -356,10 +449,12 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	bkgd_chunk__seq_bkgd_switch:case3 -> bkgd_truecolor__seq [style=bold];
 	bkgd_chunk__seq_bkgd_switch:case4 -> bkgd_truecolor__seq [style=bold];
 	ihdr_chunk__seq:color_type_type -> bkgd_chunk__seq:bkgd_type [color="#404040"];
-	chrm_chunk__seq:white_point_type -> point__seq [style=bold];
-	chrm_chunk__seq:red_type -> point__seq [style=bold];
-	chrm_chunk__seq:green_type -> point__seq [style=bold];
-	chrm_chunk__seq:blue_type -> point__seq [style=bold];
+	chrm_chromaticity__seq:x_int_type -> chrm_chromaticity__inst__x [color="#404040"];
+	chrm_chromaticity__seq:y_int_type -> chrm_chromaticity__inst__y [color="#404040"];
+	chrm_chunk__seq:white_point_type -> chrm_chromaticity__seq [style=bold];
+	chrm_chunk__seq:red_type -> chrm_chromaticity__seq [style=bold];
+	chrm_chunk__seq:green_type -> chrm_chromaticity__seq [style=bold];
+	chrm_chunk__seq:blue_type -> chrm_chromaticity__seq [style=bold];
 	chunk__seq:type_type -> chunk__seq:type__valid [color="#404040"];
 	chunk__seq:body_type -> chunk__seq_body_switch [style=bold];
 	chunk__seq_body_switch:case0 -> plte_chunk__seq [style=bold];
@@ -367,21 +462,26 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	chunk__seq_body_switch:case2 -> atch_chunk__seq [style=bold];
 	chunk__seq_body_switch:case3 -> bkgd_chunk__seq [style=bold];
 	chunk__seq_body_switch:case4 -> chrm_chunk__seq [style=bold];
-	chunk__seq_body_switch:case5 -> frame_control_chunk__seq [style=bold];
-	chunk__seq_body_switch:case6 -> frame_data_chunk__seq [style=bold];
-	chunk__seq_body_switch:case7 -> gama_chunk__seq [style=bold];
-	chunk__seq_body_switch:case8 -> international_text_chunk__seq [style=bold];
-	chunk__seq_body_switch:case9 -> adobe_fireworks_chunk__seq [style=bold];
-	chunk__seq_body_switch:case10 -> adobe_fireworks_chunk__seq [style=bold];
-	chunk__seq_body_switch:case11 -> phys_chunk__seq [style=bold];
+	chunk__seq_body_switch:case5 -> cicp_chunk__seq [style=bold];
+	chunk__seq_body_switch:case6 -> clli_chunk__seq [style=bold];
+	chunk__seq_body_switch:case7 -> frame_control_chunk__seq [style=bold];
+	chunk__seq_body_switch:case8 -> frame_data_chunk__seq [style=bold];
+	chunk__seq_body_switch:case9 -> gama_chunk__seq [style=bold];
+	chunk__seq_body_switch:case10 -> international_text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case11 -> mdcv_chunk__seq [style=bold];
 	chunk__seq_body_switch:case12 -> adobe_fireworks_chunk__seq [style=bold];
-	chunk__seq_body_switch:case13 -> srgb_chunk__seq [style=bold];
-	chunk__seq_body_switch:case14 -> evernote_skmf_chunk__seq [style=bold];
-	chunk__seq_body_switch:case15 -> evernote_skrf_chunk__seq [style=bold];
-	chunk__seq_body_switch:case16 -> text_chunk__seq [style=bold];
-	chunk__seq_body_switch:case17 -> time_chunk__seq [style=bold];
-	chunk__seq_body_switch:case18 -> compressed_text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case13 -> adobe_fireworks_chunk__seq [style=bold];
+	chunk__seq_body_switch:case14 -> phys_chunk__seq [style=bold];
+	chunk__seq_body_switch:case15 -> adobe_fireworks_chunk__seq [style=bold];
+	chunk__seq_body_switch:case16 -> srgb_chunk__seq [style=bold];
+	chunk__seq_body_switch:case17 -> evernote_skmf_chunk__seq [style=bold];
+	chunk__seq_body_switch:case18 -> evernote_skrf_chunk__seq [style=bold];
+	chunk__seq_body_switch:case19 -> text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case20 -> time_chunk__seq [style=bold];
+	chunk__seq_body_switch:case21 -> compressed_text_chunk__seq [style=bold];
 	chunk__seq:type_type -> chunk__seq:body_type [color="#404040"];
+	clli_chunk__seq:max_content_light_level_int_type -> clli_chunk__inst__max_content_light_level [color="#404040"];
+	clli_chunk__seq:max_frame_average_light_level_int_type -> clli_chunk__inst__max_frame_average_light_level [color="#404040"];
 	ihdr_chunk__seq:width_type -> frame_control_chunk__seq:width__valid [color="#404040"];
 	ihdr_chunk__seq:height_type -> frame_control_chunk__seq:height__valid [color="#404040"];
 	ihdr_chunk__seq:width_type -> frame_control_chunk__seq:x_offset__valid [color="#404040"];
@@ -391,7 +491,18 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	frame_control_chunk__seq:delay_num_type -> frame_control_chunk__inst__delay [color="#404040"];
 	frame_control_chunk__seq:delay_den_type -> frame_control_chunk__inst__delay [color="#404040"];
 	gama_chunk__seq:gamma_int_type -> gama_chunk__inst__gamma_ratio [color="#404040"];
+	international_text_chunk__seq:text_plain_type -> international_text__seq [style=bold];
+	international_text_chunk__seq:compression_flag_type -> international_text_chunk__seq:text_plain__if [color="#404040"];
+	international_text_chunk__seq:text_zlib_type -> international_text__seq [style=bold];
+	international_text_chunk__seq:compression_flag_type -> international_text_chunk__seq:text_zlib__if [color="#404040"];
+	international_text__seq:text_type -> international_text_chunk__inst__text [color="#404040"];
+	mdcv_chromaticity__seq:x_int_type -> mdcv_chromaticity__inst__x [color="#404040"];
+	mdcv_chromaticity__seq:y_int_type -> mdcv_chromaticity__inst__y [color="#404040"];
+	mdcv_chunk__seq:red_type -> mdcv_chromaticity__seq [style=bold];
+	mdcv_chunk__seq:green_type -> mdcv_chromaticity__seq [style=bold];
+	mdcv_chunk__seq:blue_type -> mdcv_chromaticity__seq [style=bold];
+	mdcv_chunk__seq:white_point_type -> mdcv_chromaticity__seq [style=bold];
+	mdcv_chunk__seq:max_luminance_int_type -> mdcv_chunk__inst__max_luminance [color="#404040"];
+	mdcv_chunk__seq:min_luminance_int_type -> mdcv_chunk__inst__min_luminance [color="#404040"];
 	plte_chunk__seq:entries_type -> rgb__seq [style=bold];
-	point__seq:x_int_type -> point__inst__x [color="#404040"];
-	point__seq:y_int_type -> point__inst__y [color="#404040"];
 }

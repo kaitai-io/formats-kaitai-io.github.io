@@ -193,8 +193,8 @@ void png_t::atch_chunk_t::_read() {
         }
     }
     m_compression = static_cast<png_t::atch_chunk_t::compression_attach_methods_t>(m__io->read_u1());
-    if (!( ((m_compression == png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_NONE) || (m_compression == png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_ZLIB)) )) {
-        throw kaitai::validation_not_any_of_error<png_t::atch_chunk_t::compression_attach_methods_t>(m_compression, m__io, std::string("/types/atch_chunk/seq/1"));
+    if (!png_t::atch_chunk_t::_is_defined_compression_attach_methods_t(m_compression)) {
+        throw kaitai::validation_not_in_enum_error<png_t::atch_chunk_t::compression_attach_methods_t>(m_compression, m__io, std::string("/types/atch_chunk/seq/1"));
     }
     n_data_plain = true;
     if (compression() == png_t::atch_chunk_t::COMPRESSION_ATTACH_METHODS_NONE) {
@@ -354,6 +354,48 @@ png_t::bkgd_truecolor_t::~bkgd_truecolor_t() {
 void png_t::bkgd_truecolor_t::_clean_up() {
 }
 
+png_t::chrm_chromaticity_t::chrm_chromaticity_t(kaitai::kstream* p__io, png_t::chrm_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_x = false;
+    f_y = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void png_t::chrm_chromaticity_t::_read() {
+    m_x_int = m__io->read_u4be();
+    m_y_int = m__io->read_u4be();
+}
+
+png_t::chrm_chromaticity_t::~chrm_chromaticity_t() {
+    _clean_up();
+}
+
+void png_t::chrm_chromaticity_t::_clean_up() {
+}
+
+double png_t::chrm_chromaticity_t::x() {
+    if (f_x)
+        return m_x;
+    f_x = true;
+    m_x = x_int() / 100000.0;
+    return m_x;
+}
+
+double png_t::chrm_chromaticity_t::y() {
+    if (f_y)
+        return m_y;
+    f_y = true;
+    m_y = y_int() / 100000.0;
+    return m_y;
+}
+
 png_t::chrm_chunk_t::chrm_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -371,10 +413,10 @@ png_t::chrm_chunk_t::chrm_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__par
 }
 
 void png_t::chrm_chunk_t::_read() {
-    m_white_point = new point_t(m__io, this, m__root);
-    m_red = new point_t(m__io, this, m__root);
-    m_green = new point_t(m__io, this, m__root);
-    m_blue = new point_t(m__io, this, m__root);
+    m_white_point = new chrm_chromaticity_t(m__io, this, m__root);
+    m_red = new chrm_chromaticity_t(m__io, this, m__root);
+    m_green = new chrm_chromaticity_t(m__io, this, m__root);
+    m_blue = new chrm_chromaticity_t(m__io, this, m__root);
 }
 
 png_t::chrm_chunk_t::~chrm_chunk_t() {
@@ -451,6 +493,18 @@ void png_t::chunk_t::_read() {
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new chrm_chunk_t(m__io__raw_body, this, m__root);
         }
+        else if (on == std::string("cICP")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = new kaitai::kstream(m__raw_body);
+            m_body = new cicp_chunk_t(m__io__raw_body, this, m__root);
+        }
+        else if (on == std::string("cLLI")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = new kaitai::kstream(m__raw_body);
+            m_body = new clli_chunk_t(m__io__raw_body, this, m__root);
+        }
         else if (on == std::string("fcTL")) {
             n_body = false;
             m__raw_body = m__io->read_bytes(len());
@@ -474,6 +528,12 @@ void png_t::chunk_t::_read() {
             m__raw_body = m__io->read_bytes(len());
             m__io__raw_body = new kaitai::kstream(m__raw_body);
             m_body = new international_text_chunk_t(m__io__raw_body, this, m__root);
+        }
+        else if (on == std::string("mDCV")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = new kaitai::kstream(m__raw_body);
+            m_body = new mdcv_chunk_t(m__io__raw_body, this, m__root);
         }
         else if (on == std::string("mkBS")) {
             n_body = false;
@@ -555,6 +615,80 @@ void png_t::chunk_t::_clean_up() {
             delete m_body; m_body = 0;
         }
     }
+}
+
+png_t::cicp_chunk_t::cicp_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void png_t::cicp_chunk_t::_read() {
+    m_color_primaries = m__io->read_u1();
+    m_transfer_function = m__io->read_u1();
+    m_matrix_coefficients = m__io->read_u1();
+    if (!(m_matrix_coefficients == 0)) {
+        throw kaitai::validation_not_equal_error<uint8_t>(0, m_matrix_coefficients, m__io, std::string("/types/cicp_chunk/seq/2"));
+    }
+    m_video_full_range_flag = m__io->read_u1();
+    if (!( ((m_video_full_range_flag == 0) || (m_video_full_range_flag == 1)) )) {
+        throw kaitai::validation_not_any_of_error<uint8_t>(m_video_full_range_flag, m__io, std::string("/types/cicp_chunk/seq/3"));
+    }
+}
+
+png_t::cicp_chunk_t::~cicp_chunk_t() {
+    _clean_up();
+}
+
+void png_t::cicp_chunk_t::_clean_up() {
+}
+
+png_t::clli_chunk_t::clli_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_max_content_light_level = false;
+    f_max_frame_average_light_level = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void png_t::clli_chunk_t::_read() {
+    m_max_content_light_level_int = m__io->read_u4be();
+    m_max_frame_average_light_level_int = m__io->read_u4be();
+}
+
+png_t::clli_chunk_t::~clli_chunk_t() {
+    _clean_up();
+}
+
+void png_t::clli_chunk_t::_clean_up() {
+}
+
+double png_t::clli_chunk_t::max_content_light_level() {
+    if (f_max_content_light_level)
+        return m_max_content_light_level;
+    f_max_content_light_level = true;
+    m_max_content_light_level = max_content_light_level_int() * 0.0001;
+    return m_max_content_light_level;
+}
+
+double png_t::clli_chunk_t::max_frame_average_light_level() {
+    if (f_max_frame_average_light_level)
+        return m_max_frame_average_light_level;
+    f_max_frame_average_light_level = true;
+    m_max_frame_average_light_level = max_frame_average_light_level_int() * 0.0001;
+    return m_max_frame_average_light_level;
 }
 
 png_t::compressed_text_chunk_t::compressed_text_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
@@ -766,6 +900,9 @@ void png_t::ihdr_chunk_t::_read() {
         throw kaitai::validation_less_than_error<uint32_t>(1, m_height, m__io, std::string("/types/ihdr_chunk/seq/1"));
     }
     m_bit_depth = m__io->read_u1();
+    if (!( ((m_bit_depth == 1) || (m_bit_depth == 2) || (m_bit_depth == 4) || (m_bit_depth == 8) || (m_bit_depth == 16)) )) {
+        throw kaitai::validation_not_any_of_error<uint8_t>(m_bit_depth, m__io, std::string("/types/ihdr_chunk/seq/2"));
+    }
     m_color_type = static_cast<png_t::color_type_t>(m__io->read_u1());
     m_compression_method = m__io->read_u1();
     m_filter_method = m__io->read_u1();
@@ -779,9 +916,37 @@ png_t::ihdr_chunk_t::~ihdr_chunk_t() {
 void png_t::ihdr_chunk_t::_clean_up() {
 }
 
+png_t::international_text_t::international_text_t(kaitai::kstream* p__io, png_t::international_text_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void png_t::international_text_t::_read() {
+    m_text = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), "UTF-8");
+}
+
+png_t::international_text_t::~international_text_t() {
+    _clean_up();
+}
+
+void png_t::international_text_t::_clean_up() {
+}
+
 png_t::international_text_chunk_t::international_text_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m_text_plain = 0;
+    m__io__raw_text_plain = 0;
+    m_text_zlib = 0;
+    m__io__raw_text_zlib = 0;
+    f_text = false;
 
     try {
         _read();
@@ -794,10 +959,27 @@ png_t::international_text_chunk_t::international_text_chunk_t(kaitai::kstream* p
 void png_t::international_text_chunk_t::_read() {
     m_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "UTF-8");
     m_compression_flag = m__io->read_u1();
+    if (!( ((m_compression_flag == 0) || (m_compression_flag == 1)) )) {
+        throw kaitai::validation_not_any_of_error<uint8_t>(m_compression_flag, m__io, std::string("/types/international_text_chunk/seq/1"));
+    }
     m_compression_method = static_cast<png_t::compression_methods_t>(m__io->read_u1());
     m_language_tag = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ASCII");
     m_translated_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "UTF-8");
-    m_text = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), "UTF-8");
+    n_text_plain = true;
+    if (compression_flag() == 0) {
+        n_text_plain = false;
+        m__raw_text_plain = m__io->read_bytes_full();
+        m__io__raw_text_plain = new kaitai::kstream(m__raw_text_plain);
+        m_text_plain = new international_text_t(m__io__raw_text_plain, this, m__root);
+    }
+    n_text_zlib = true;
+    if (compression_flag() == 1) {
+        n_text_zlib = false;
+        m__raw__raw_text_zlib = m__io->read_bytes_full();
+        m__raw_text_zlib = kaitai::kstream::process_zlib(m__raw__raw_text_zlib);
+        m__io__raw_text_zlib = new kaitai::kstream(m__raw_text_zlib);
+        m_text_zlib = new international_text_t(m__io__raw_text_zlib, this, m__root);
+    }
 }
 
 png_t::international_text_chunk_t::~international_text_chunk_t() {
@@ -805,6 +987,134 @@ png_t::international_text_chunk_t::~international_text_chunk_t() {
 }
 
 void png_t::international_text_chunk_t::_clean_up() {
+    if (!n_text_plain) {
+        if (m__io__raw_text_plain) {
+            delete m__io__raw_text_plain; m__io__raw_text_plain = 0;
+        }
+        if (m_text_plain) {
+            delete m_text_plain; m_text_plain = 0;
+        }
+    }
+    if (!n_text_zlib) {
+        if (m__io__raw_text_zlib) {
+            delete m__io__raw_text_zlib; m__io__raw_text_zlib = 0;
+        }
+        if (m_text_zlib) {
+            delete m_text_zlib; m_text_zlib = 0;
+        }
+    }
+}
+
+std::string png_t::international_text_chunk_t::text() {
+    if (f_text)
+        return m_text;
+    f_text = true;
+    m_text = ((compression_flag() == 0) ? (text_plain()) : (text_zlib()))->text();
+    return m_text;
+}
+
+png_t::mdcv_chromaticity_t::mdcv_chromaticity_t(kaitai::kstream* p__io, png_t::mdcv_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_x = false;
+    f_y = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void png_t::mdcv_chromaticity_t::_read() {
+    m_x_int = m__io->read_u2be();
+    m_y_int = m__io->read_u2be();
+}
+
+png_t::mdcv_chromaticity_t::~mdcv_chromaticity_t() {
+    _clean_up();
+}
+
+void png_t::mdcv_chromaticity_t::_clean_up() {
+}
+
+double png_t::mdcv_chromaticity_t::x() {
+    if (f_x)
+        return m_x;
+    f_x = true;
+    m_x = x_int() * 0.00002;
+    return m_x;
+}
+
+double png_t::mdcv_chromaticity_t::y() {
+    if (f_y)
+        return m_y;
+    f_y = true;
+    m_y = y_int() * 0.00002;
+    return m_y;
+}
+
+png_t::mdcv_chunk_t::mdcv_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_red = 0;
+    m_green = 0;
+    m_blue = 0;
+    m_white_point = 0;
+    f_max_luminance = false;
+    f_min_luminance = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void png_t::mdcv_chunk_t::_read() {
+    m_red = new mdcv_chromaticity_t(m__io, this, m__root);
+    m_green = new mdcv_chromaticity_t(m__io, this, m__root);
+    m_blue = new mdcv_chromaticity_t(m__io, this, m__root);
+    m_white_point = new mdcv_chromaticity_t(m__io, this, m__root);
+    m_max_luminance_int = m__io->read_u4be();
+    m_min_luminance_int = m__io->read_u4be();
+}
+
+png_t::mdcv_chunk_t::~mdcv_chunk_t() {
+    _clean_up();
+}
+
+void png_t::mdcv_chunk_t::_clean_up() {
+    if (m_red) {
+        delete m_red; m_red = 0;
+    }
+    if (m_green) {
+        delete m_green; m_green = 0;
+    }
+    if (m_blue) {
+        delete m_blue; m_blue = 0;
+    }
+    if (m_white_point) {
+        delete m_white_point; m_white_point = 0;
+    }
+}
+
+double png_t::mdcv_chunk_t::max_luminance() {
+    if (f_max_luminance)
+        return m_max_luminance;
+    f_max_luminance = true;
+    m_max_luminance = max_luminance_int() * 0.0001;
+    return m_max_luminance;
+}
+
+double png_t::mdcv_chunk_t::min_luminance() {
+    if (f_min_luminance)
+        return m_min_luminance;
+    f_min_luminance = true;
+    m_min_luminance = min_luminance_int() * 0.0001;
+    return m_min_luminance;
 }
 
 png_t::phys_chunk_t::phys_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
@@ -867,48 +1177,6 @@ void png_t::plte_chunk_t::_clean_up() {
         }
         delete m_entries; m_entries = 0;
     }
-}
-
-png_t::point_t::point_t(kaitai::kstream* p__io, png_t::chrm_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_x = false;
-    f_y = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void png_t::point_t::_read() {
-    m_x_int = m__io->read_u4be();
-    m_y_int = m__io->read_u4be();
-}
-
-png_t::point_t::~point_t() {
-    _clean_up();
-}
-
-void png_t::point_t::_clean_up() {
-}
-
-double png_t::point_t::x() {
-    if (f_x)
-        return m_x;
-    f_x = true;
-    m_x = x_int() / 100000.0;
-    return m_x;
-}
-
-double png_t::point_t::y() {
-    if (f_y)
-        return m_y;
-    f_y = true;
-    m_y = y_int() / 100000.0;
-    return m_y;
 }
 
 png_t::rgb_t::rgb_t(kaitai::kstream* p__io, png_t::plte_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {

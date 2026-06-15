@@ -124,7 +124,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.9
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -470,8 +470,8 @@ section#format-index .row {
             <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="sa">u</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="p">:</span>
                 <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/atch_chunk/seq/0&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">AtchChunk</span><span class="o">.</span><span class="n">CompressionAttachMethods</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
-            <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Png</span><span class="o">.</span><span class="n">AtchChunk</span><span class="o">.</span><span class="n">CompressionAttachMethods</span><span class="o">.</span><span class="n">none</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Png</span><span class="o">.</span><span class="n">AtchChunk</span><span class="o">.</span><span class="n">CompressionAttachMethods</span><span class="o">.</span><span class="n">zlib</span><span class="p">))</span> <span class="p">:</span>
-                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotAnyOfError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compression</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/atch_chunk/seq/1&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compression</span><span class="p">,</span> <span class="n">Png</span><span class="o">.</span><span class="n">AtchChunk</span><span class="o">.</span><span class="n">CompressionAttachMethods</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotInEnumError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compression</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/atch_chunk/seq/1&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Png</span><span class="o">.</span><span class="n">AtchChunk</span><span class="o">.</span><span class="n">CompressionAttachMethods</span><span class="o">.</span><span class="n">none</span><span class="p">:</span>
                 <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">data_plain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">()</span>
@@ -603,6 +603,38 @@ section#format-index .row {
             <span class="k">pass</span>
 
 
+    <span class="k">class</span><span class="w"> </span><span class="nc">ChrmChromaticity</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">ChrmChromaticity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_x&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_x</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_int</span> <span class="o">/</span> <span class="mf">100000.0</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_x&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_y&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_y</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_int</span> <span class="o">/</span> <span class="mf">100000.0</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_y&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">ChrmChunk</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        .. seealso::</span>
@@ -615,10 +647,10 @@ section#format-index .row {
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">white_point</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">red</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">green</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">blue</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">white_point</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">ChrmChromaticity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">red</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">ChrmChromaticity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">green</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">ChrmChromaticity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blue</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">ChrmChromaticity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -668,6 +700,16 @@ section#format-index .row {
                 <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
                 <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">ChrmChunk</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;cICP&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">CicpChunk</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;cLLI&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">ClliChunk</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;fcTL&quot;</span><span class="p">:</span>
                 <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
@@ -688,6 +730,11 @@ section#format-index .row {
                 <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
                 <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">InternationalTextChunk</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;mDCV&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">MdcvChunk</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;mkBS&quot;</span><span class="p">:</span>
                 <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
@@ -762,6 +809,12 @@ section#format-index .row {
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;cHRM&quot;</span><span class="p">:</span>
                 <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;cICP&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;cLLI&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;fcTL&quot;</span><span class="p">:</span>
                 <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
@@ -772,6 +825,9 @@ section#format-index .row {
                 <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;iTXt&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;mDCV&quot;</span><span class="p">:</span>
                 <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="sa">u</span><span class="s2">&quot;mkBS&quot;</span><span class="p">:</span>
@@ -806,6 +862,78 @@ section#format-index .row {
                 <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">pass</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">CicpChunk</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.w3.org/TR/png/#cICP-chunk</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://w3c.github.io/png/Implementation_Report_3e/#cicp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">CicpChunk</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">color_primaries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transfer_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matrix_coefficients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_coefficients</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_coefficients</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/cicp_chunk/seq/2&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">video_full_range_flag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">video_full_range_flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video_full_range_flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotAnyOfError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video_full_range_flag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/cicp_chunk/seq/3&quot;</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ClliChunk</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.w3.org/TR/png/#cLLI-chunk</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://w3c.github.io/png/Implementation_Report_3e/#light</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">ClliChunk</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_content_light_level_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_frame_average_light_level_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">max_content_light_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Maximum Content Light Level (MaxCLL), in cd/m^2.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_max_content_light_level&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_max_content_light_level</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_max_content_light_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_content_light_level_int</span> <span class="o">*</span> <span class="mf">0.0001</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_max_content_light_level&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">max_frame_average_light_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Maximum Frame Average Light Level (MaxFALL), in cd/m^2.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_max_frame_average_light_level&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_max_frame_average_light_level</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_max_frame_average_light_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_frame_average_light_level_int</span> <span class="o">*</span> <span class="mf">0.0001</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_max_frame_average_light_level&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
     <span class="k">class</span><span class="w"> </span><span class="nc">CompressedTextChunk</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -986,10 +1114,27 @@ section#format-index .row {
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationLessThanError</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/ihdr_chunk/seq/1&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bit_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">bit_depth</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bit_depth</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bit_depth</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bit_depth</span> <span class="o">==</span> <span class="mi">8</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bit_depth</span> <span class="o">==</span> <span class="mi">16</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotAnyOfError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bit_depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/ihdr_chunk/seq/2&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">color_type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">ColorType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compression_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">filter_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">interlace_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">InternationalText</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">InternationalText</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1014,14 +1159,130 @@ section#format-index .row {
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compression_flag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">compression_flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compression_flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotAnyOfError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compression_flag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/international_text_chunk/seq/1&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compression_method</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">CompressionMethods</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">language_tag</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">translated_keyword</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression_flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_text_plain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">()</span>
+                <span class="n">_io__raw_text_plain</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_text_plain</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">text_plain</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">InternationalText</span><span class="p">(</span><span class="n">_io__raw_text_plain</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression_flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__raw_text_zlib</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_text_zlib</span> <span class="o">=</span> <span class="n">zlib</span><span class="o">.</span><span class="n">decompress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__raw_text_zlib</span><span class="p">)</span>
+                <span class="n">_io__raw_text_zlib</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_text_zlib</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">text_zlib</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">InternationalText</span><span class="p">(</span><span class="n">_io__raw_text_zlib</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
 
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression_flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">text_plain</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression_flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">text_zlib</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Text contents (&quot;value&quot; of this key-value pair), written in</span>
+<span class="sd">            language specified in `language_tag`. Line breaks are</span>
+<span class="sd">            allowed.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_text&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_text</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_text</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text_plain</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression_flag</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_zlib</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_text&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">MdcvChromaticity</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">MdcvChromaticity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_x&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_x</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_int</span> <span class="o">*</span> <span class="mf">0.00002</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_x&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_y&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_y</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_int</span> <span class="o">*</span> <span class="mf">0.00002</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_y&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">MdcvChunk</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.w3.org/TR/png/#mDCV-chunk</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://w3c.github.io/png/Implementation_Report_3e/#mastering</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">MdcvChunk</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">red</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">MdcvChromaticity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">green</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">MdcvChromaticity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blue</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">MdcvChromaticity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">white_point</span> <span class="o">=</span> <span class="n">Png</span><span class="o">.</span><span class="n">MdcvChromaticity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_luminance_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_luminance_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">red</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">green</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blue</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">white_point</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">max_luminance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Maximum luminance in cd/m^2.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_max_luminance&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_max_luminance</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_max_luminance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_luminance_int</span> <span class="o">*</span> <span class="mf">0.0001</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_max_luminance&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">min_luminance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Minimum luminance in cd/m^2.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_min_luminance&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_min_luminance</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_min_luminance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_luminance_int</span> <span class="o">*</span> <span class="mf">0.0001</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_min_luminance&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
     <span class="k">class</span><span class="w"> </span><span class="nc">PhysChunk</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -1073,38 +1334,6 @@ section#format-index .row {
                 <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
 
-
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">Point</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">Png</span><span class="o">.</span><span class="n">Point</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">x_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
-
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">pass</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_x&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_x</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_int</span> <span class="o">/</span> <span class="mf">100000.0</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_x&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_y&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_y</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_int</span> <span class="o">/</span> <span class="mf">100000.0</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_y&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Rgb</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>

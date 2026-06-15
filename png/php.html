@@ -124,7 +124,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.9
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -395,8 +395,8 @@ section#format-index .row {
                 <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationExprError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileName</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/atch_chunk/seq/0&quot;</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span> <span class="o">==</span> <span class="nx">\Png\AtchChunk\CompressionAttachMethods</span><span class="o">::</span><span class="na">NONE</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span> <span class="o">==</span> <span class="nx">\Png\AtchChunk\CompressionAttachMethods</span><span class="o">::</span><span class="na">ZLIB</span><span class="p">))</span> <span class="p">))</span> <span class="p">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotAnyOfError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/atch_chunk/seq/1&quot;</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">\Png\AtchChunk\CompressionAttachMethods</span><span class="o">::</span><span class="na">isDefined</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotInEnumError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/atch_chunk/seq/1&quot;</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Png\AtchChunk\CompressionAttachMethods</span><span class="o">::</span><span class="na">NONE</span><span class="p">)</span> <span class="p">{</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataPlain</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
@@ -557,6 +557,38 @@ section#format-index .row {
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Png</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">ChrmChromaticity</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png\ChrmChunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">xInt</span><span class="p">()</span> <span class="o">/</span> <span class="mf">100000.0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">yInt</span><span class="p">()</span> <span class="o">/</span> <span class="mf">100000.0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_xInt</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_yInt</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">xInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xInt</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">yInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yInt</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Png</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ChrmChunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
         <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
@@ -564,10 +596,10 @@ section#format-index .row {
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_whitePoint</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_red</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_green</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_whitePoint</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\ChrmChromaticity</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_red</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\ChrmChromaticity</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_green</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\ChrmChromaticity</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\ChrmChromaticity</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_whitePoint</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_red</span><span class="p">;</span>
@@ -620,6 +652,16 @@ section#format-index .row {
                     <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\ChrmChunk</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;cICP&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\CicpChunk</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;cLLI&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\ClliChunk</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;fcTL&quot;</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
                     <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
@@ -639,6 +681,11 @@ section#format-index .row {
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
                     <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\InternationalTextChunk</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="s2">&quot;mDCV&quot;</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\MdcvChunk</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="s2">&quot;mkBS&quot;</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
@@ -706,6 +753,108 @@ section#format-index .row {
         <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">crc</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_crc</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Png</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">CicpChunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorPrimaries</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transferFunction</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_matrixCoefficients</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_matrixCoefficients</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_matrixCoefficients</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/cicp_chunk/seq/2&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_videoFullRangeFlag</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_videoFullRangeFlag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_videoFullRangeFlag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotAnyOfError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_videoFullRangeFlag</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/cicp_chunk/seq/3&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_colorPrimaries</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_transferFunction</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_matrixCoefficients</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_videoFullRangeFlag</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * values above 22 are reserved, see</span>
+<span class="sd">         * &lt;https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325&gt;</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">colorPrimaries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorPrimaries</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * values above 18 are reserved, see</span>
+<span class="sd">         * &lt;https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329&gt;</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">transferFunction</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transferFunction</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * From the [official</span>
+<span class="sd">         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):</span>
+<span class="sd">         * </span>
+<span class="sd">         * &gt; RGB is currently the only supported color model in PNG, and as such</span>
+<span class="sd">         * &gt; `Matrix Coefficients` shall be set to `0`.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">matrixCoefficients</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_matrixCoefficients</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * From the [official</span>
+<span class="sd">         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):</span>
+<span class="sd">         * </span>
+<span class="sd">         * &gt; If `Video Full Range Flag` value is `1`, then the image is a</span>
+<span class="sd">         * &gt; full-range image. Typically, images in the RGB color representation</span>
+<span class="sd">         * &gt; are stored in the full-range signal quantization, therefore the vast</span>
+<span class="sd">         * &gt; majority of computer graphics and web images, including those used</span>
+<span class="sd">         * &gt; in traditional PNG workflows, are full-range images.</span>
+<span class="sd">         * </span>
+<span class="sd">         * &gt; If `Video Full Range Flag` value is `0`, then the image is a</span>
+<span class="sd">         * &gt; narrow-range image.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">videoFullRangeFlag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_videoFullRangeFlag</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Png</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">ClliChunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxContentLightLevelInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxFrameAverageLightLevelInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_maxContentLightLevel</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Maximum Content Light Level (MaxCLL), in cd/m^2</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">maxContentLightLevel</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxContentLightLevel</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxContentLightLevel</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxContentLightLevel</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">maxContentLightLevelInt</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.0001</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxContentLightLevel</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_maxFrameAverageLightLevel</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Maximum Frame Average Light Level (MaxFALL), in cd/m^2</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">maxFrameAverageLightLevel</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxFrameAverageLightLevel</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxFrameAverageLightLevel</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxFrameAverageLightLevel</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">maxFrameAverageLightLevelInt</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.0001</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxFrameAverageLightLevel</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_maxContentLightLevelInt</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_maxFrameAverageLightLevelInt</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">maxContentLightLevelInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxContentLightLevelInt</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">maxFrameAverageLightLevelInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxFrameAverageLightLevelInt</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -974,6 +1123,9 @@ section#format-index .row {
                 <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationLessThanError</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_height</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/ihdr_chunk/seq/1&quot;</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitDepth</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitDepth</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitDepth</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitDepth</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitDepth</span> <span class="o">==</span> <span class="mi">8</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitDepth</span> <span class="o">==</span> <span class="mi">16</span><span class="p">))</span> <span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotAnyOfError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitDepth</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/ihdr_chunk/seq/2&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionMethod</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_filterMethod</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
@@ -996,6 +1148,27 @@ section#format-index .row {
     <span class="p">}</span>
 <span class="p">}</span>
 
+<span class="k">namespace</span> <span class="nx">Png</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">InternationalText</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png\InternationalTextChunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_text</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">(),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_text</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Text contents (&quot;value&quot; of this key-value pair), written in</span>
+<span class="sd">         * language specified in `language_tag`. Line breaks are</span>
+<span class="sd">         * allowed.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">text</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_text</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
 <span class="sd">/**</span>
 <span class="sd"> * International text chunk effectively allows to store key-value string pairs in</span>
 <span class="sd"> * PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
@@ -1013,17 +1186,47 @@ section#format-index .row {
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyword</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionFlag</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionFlag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionFlag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotAnyOfError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionFlag</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/international_text_chunk/seq/1&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionMethod</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_languageTag</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_translatedKeyword</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_text</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">(),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">compressionFlag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_textPlain</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+                <span class="nv">$_io__raw_textPlain</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_textPlain</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textPlain</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\InternationalText</span><span class="p">(</span><span class="nv">$_io__raw_textPlain</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">compressionFlag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw__raw_textZlib</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_textZlib</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">processZlib</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw__raw_textZlib</span><span class="p">);</span>
+                <span class="nv">$_io__raw_textZlib</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_textZlib</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textZlib</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\InternationalText</span><span class="p">(</span><span class="nv">$_io__raw_textZlib</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_text</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Text contents (&quot;value&quot; of this key-value pair), written in</span>
+<span class="sd">         * language specified in `language_tag`. Line breaks are</span>
+<span class="sd">         * allowed.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">text</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_text</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_text</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_text</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">compressionFlag</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">textPlain</span><span class="p">()</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">textZlib</span><span class="p">())</span><span class="o">-&gt;</span><span class="na">text</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_text</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_keyword</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_compressionFlag</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_compressionMethod</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_languageTag</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_translatedKeyword</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_text</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_textPlain</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_textZlib</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_textPlain</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_textZlib</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw__raw_textZlib</span><span class="p">;</span>
 
         <span class="sd">/**</span>
 <span class="sd">         * Indicates purpose of the following text data.</span>
@@ -1049,13 +1252,95 @@ section#format-index .row {
 <span class="sd">         * `language_tag`. Line breaks are not allowed.</span>
 <span class="sd">         */</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">translatedKeyword</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_translatedKeyword</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">textPlain</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textPlain</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">textZlib</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textZlib</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_textPlain</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_textPlain</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_textZlib</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_textZlib</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw__raw_textZlib</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw__raw_textZlib</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Png</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">MdcvChromaticity</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png\MdcvChunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">xInt</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.00002</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">yInt</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.00002</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_xInt</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_yInt</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">xInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xInt</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">yInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yInt</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Png</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">MdcvChunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_red</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\MdcvChromaticity</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_green</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\MdcvChromaticity</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\MdcvChromaticity</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_whitePoint</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Png\MdcvChromaticity</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxLuminanceInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minLuminanceInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_maxLuminance</span><span class="p">;</span>
 
         <span class="sd">/**</span>
-<span class="sd">         * Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="sd">         * language specified in `language_tag`. Line breaks are</span>
-<span class="sd">         * allowed.</span>
+<span class="sd">         * Maximum luminance in cd/m^2</span>
 <span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">text</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_text</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">maxLuminance</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxLuminance</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxLuminance</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxLuminance</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">maxLuminanceInt</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.0001</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxLuminance</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_minLuminance</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Minimum luminance in cd/m^2</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">minLuminance</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minLuminance</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minLuminance</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minLuminance</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">minLuminanceInt</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.0001</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minLuminance</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_red</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_green</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_blue</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_whitePoint</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_maxLuminanceInt</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_minLuminanceInt</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">red</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_red</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">green</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_green</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">blue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blue</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">whitePoint</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_whitePoint</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">maxLuminanceInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxLuminanceInt</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">minLuminanceInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minLuminanceInt</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -1112,38 +1397,6 @@ section#format-index .row {
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Png</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">Point</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png\ChrmChunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Png</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">xInt</span><span class="p">()</span> <span class="o">/</span> <span class="mf">100000.0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">yInt</span><span class="p">()</span> <span class="o">/</span> <span class="mf">100000.0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_xInt</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_yInt</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">xInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xInt</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">yInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yInt</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 

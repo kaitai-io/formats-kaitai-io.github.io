@@ -1,6 +1,7 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 using System.Collections.Generic;
+using System;
 
 namespace Kaitai
 {
@@ -195,9 +196,9 @@ namespace Kaitai
                     }
                 }
                 _compression = ((CompressionAttachMethods) m_io.ReadU1());
-                if (!( ((_compression == CompressionAttachMethods.None) || (_compression == CompressionAttachMethods.Zlib)) ))
+                if (!Enum.IsDefined(typeof(CompressionAttachMethods), _compression))
                 {
-                    throw new ValidationNotAnyOfError(_compression, m_io, "/types/atch_chunk/seq/1");
+                    throw new ValidationNotInEnumError(_compression, m_io, "/types/atch_chunk/seq/1");
                 }
                 if (Compression == CompressionAttachMethods.None) {
                     _dataPlain = m_io.ReadBytesFull();
@@ -396,6 +397,61 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.BkgdChunk M_Parent { get { return m_parent; } }
         }
+        public partial class ChrmChromaticity : KaitaiStruct
+        {
+            public static ChrmChromaticity FromFile(string fileName)
+            {
+                return new ChrmChromaticity(new KaitaiStream(fileName));
+            }
+
+            public ChrmChromaticity(KaitaiStream p__io, Png.ChrmChunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_x = false;
+                f_y = false;
+                _read();
+            }
+            private void _read()
+            {
+                _xInt = m_io.ReadU4be();
+                _yInt = m_io.ReadU4be();
+            }
+            private bool f_x;
+            private double _x;
+            public double X
+            {
+                get
+                {
+                    if (f_x)
+                        return _x;
+                    f_x = true;
+                    _x = (double) (XInt / 100000.0);
+                    return _x;
+                }
+            }
+            private bool f_y;
+            private double _y;
+            public double Y
+            {
+                get
+                {
+                    if (f_y)
+                        return _y;
+                    f_y = true;
+                    _y = (double) (YInt / 100000.0);
+                    return _y;
+                }
+            }
+            private uint _xInt;
+            private uint _yInt;
+            private Png m_root;
+            private Png.ChrmChunk m_parent;
+            public uint XInt { get { return _xInt; } }
+            public uint YInt { get { return _yInt; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.ChrmChunk M_Parent { get { return m_parent; } }
+        }
 
         /// <remarks>
         /// Reference: <a href="https://www.w3.org/TR/png/#11cHRM">Source</a>
@@ -415,21 +471,21 @@ namespace Kaitai
             }
             private void _read()
             {
-                _whitePoint = new Point(m_io, this, m_root);
-                _red = new Point(m_io, this, m_root);
-                _green = new Point(m_io, this, m_root);
-                _blue = new Point(m_io, this, m_root);
+                _whitePoint = new ChrmChromaticity(m_io, this, m_root);
+                _red = new ChrmChromaticity(m_io, this, m_root);
+                _green = new ChrmChromaticity(m_io, this, m_root);
+                _blue = new ChrmChromaticity(m_io, this, m_root);
             }
-            private Point _whitePoint;
-            private Point _red;
-            private Point _green;
-            private Point _blue;
+            private ChrmChromaticity _whitePoint;
+            private ChrmChromaticity _red;
+            private ChrmChromaticity _green;
+            private ChrmChromaticity _blue;
             private Png m_root;
             private Png.Chunk m_parent;
-            public Point WhitePoint { get { return _whitePoint; } }
-            public Point Red { get { return _red; } }
-            public Point Green { get { return _green; } }
-            public Point Blue { get { return _blue; } }
+            public ChrmChromaticity WhitePoint { get { return _whitePoint; } }
+            public ChrmChromaticity Red { get { return _red; } }
+            public ChrmChromaticity Green { get { return _green; } }
+            public ChrmChromaticity Blue { get { return _blue; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
@@ -488,6 +544,18 @@ namespace Kaitai
                     _body = new ChrmChunk(io___raw_body, this, m_root);
                     break;
                 }
+                case "cICP": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new CicpChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "cLLI": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new ClliChunk(io___raw_body, this, m_root);
+                    break;
+                }
                 case "fcTL": {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -510,6 +578,12 @@ namespace Kaitai
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new InternationalTextChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "mDCV": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new MdcvChunk(io___raw_body, this, m_root);
                     break;
                 }
                 case "mkBS": {
@@ -593,6 +667,156 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#cICP-chunk">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://w3c.github.io/png/Implementation_Report_3e/#cicp">Source</a>
+        /// </remarks>
+        public partial class CicpChunk : KaitaiStruct
+        {
+            public static CicpChunk FromFile(string fileName)
+            {
+                return new CicpChunk(new KaitaiStream(fileName));
+            }
+
+            public CicpChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _colorPrimaries = m_io.ReadU1();
+                _transferFunction = m_io.ReadU1();
+                _matrixCoefficients = m_io.ReadU1();
+                if (!(_matrixCoefficients == 0))
+                {
+                    throw new ValidationNotEqualError(0, _matrixCoefficients, m_io, "/types/cicp_chunk/seq/2");
+                }
+                _videoFullRangeFlag = m_io.ReadU1();
+                if (!( ((_videoFullRangeFlag == 0) || (_videoFullRangeFlag == 1)) ))
+                {
+                    throw new ValidationNotAnyOfError(_videoFullRangeFlag, m_io, "/types/cicp_chunk/seq/3");
+                }
+            }
+            private byte _colorPrimaries;
+            private byte _transferFunction;
+            private byte _matrixCoefficients;
+            private byte _videoFullRangeFlag;
+            private Png m_root;
+            private Png.Chunk m_parent;
+
+            /// <summary>
+            /// values above 22 are reserved, see
+            /// &lt;https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325&gt;
+            /// </summary>
+            public byte ColorPrimaries { get { return _colorPrimaries; } }
+
+            /// <summary>
+            /// values above 18 are reserved, see
+            /// &lt;https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329&gt;
+            /// </summary>
+            public byte TransferFunction { get { return _transferFunction; } }
+
+            /// <summary>
+            /// From the [official
+            /// specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+            /// 
+            /// &gt; RGB is currently the only supported color model in PNG, and as such
+            /// &gt; `Matrix Coefficients` shall be set to `0`.
+            /// </summary>
+            public byte MatrixCoefficients { get { return _matrixCoefficients; } }
+
+            /// <summary>
+            /// From the [official
+            /// specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+            /// 
+            /// &gt; If `Video Full Range Flag` value is `1`, then the image is a
+            /// &gt; full-range image. Typically, images in the RGB color representation
+            /// &gt; are stored in the full-range signal quantization, therefore the vast
+            /// &gt; majority of computer graphics and web images, including those used
+            /// &gt; in traditional PNG workflows, are full-range images.
+            /// 
+            /// &gt; If `Video Full Range Flag` value is `0`, then the image is a
+            /// &gt; narrow-range image.
+            /// </summary>
+            public byte VideoFullRangeFlag { get { return _videoFullRangeFlag; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#cLLI-chunk">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://w3c.github.io/png/Implementation_Report_3e/#light">Source</a>
+        /// </remarks>
+        public partial class ClliChunk : KaitaiStruct
+        {
+            public static ClliChunk FromFile(string fileName)
+            {
+                return new ClliChunk(new KaitaiStream(fileName));
+            }
+
+            public ClliChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_maxContentLightLevel = false;
+                f_maxFrameAverageLightLevel = false;
+                _read();
+            }
+            private void _read()
+            {
+                _maxContentLightLevelInt = m_io.ReadU4be();
+                _maxFrameAverageLightLevelInt = m_io.ReadU4be();
+            }
+            private bool f_maxContentLightLevel;
+            private double _maxContentLightLevel;
+
+            /// <summary>
+            /// Maximum Content Light Level (MaxCLL), in cd/m^2
+            /// </summary>
+            public double MaxContentLightLevel
+            {
+                get
+                {
+                    if (f_maxContentLightLevel)
+                        return _maxContentLightLevel;
+                    f_maxContentLightLevel = true;
+                    _maxContentLightLevel = (double) (MaxContentLightLevelInt * 0.0001);
+                    return _maxContentLightLevel;
+                }
+            }
+            private bool f_maxFrameAverageLightLevel;
+            private double _maxFrameAverageLightLevel;
+
+            /// <summary>
+            /// Maximum Frame Average Light Level (MaxFALL), in cd/m^2
+            /// </summary>
+            public double MaxFrameAverageLightLevel
+            {
+                get
+                {
+                    if (f_maxFrameAverageLightLevel)
+                        return _maxFrameAverageLightLevel;
+                    f_maxFrameAverageLightLevel = true;
+                    _maxFrameAverageLightLevel = (double) (MaxFrameAverageLightLevelInt * 0.0001);
+                    return _maxFrameAverageLightLevel;
+                }
+            }
+            private uint _maxContentLightLevelInt;
+            private uint _maxFrameAverageLightLevelInt;
+            private Png m_root;
+            private Png.Chunk m_parent;
+            public uint MaxContentLightLevelInt { get { return _maxContentLightLevelInt; } }
+            public uint MaxFrameAverageLightLevelInt { get { return _maxFrameAverageLightLevelInt; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -969,6 +1193,10 @@ namespace Kaitai
                     throw new ValidationLessThanError(1, _height, m_io, "/types/ihdr_chunk/seq/1");
                 }
                 _bitDepth = m_io.ReadU1();
+                if (!( ((_bitDepth == 1) || (_bitDepth == 2) || (_bitDepth == 4) || (_bitDepth == 8) || (_bitDepth == 16)) ))
+                {
+                    throw new ValidationNotAnyOfError(_bitDepth, m_io, "/types/ihdr_chunk/seq/2");
+                }
                 _colorType = ((Png.ColorType) m_io.ReadU1());
                 _compressionMethod = m_io.ReadU1();
                 _filterMethod = m_io.ReadU1();
@@ -993,6 +1221,36 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png M_Parent { get { return m_parent; } }
         }
+        public partial class InternationalText : KaitaiStruct
+        {
+            public static InternationalText FromFile(string fileName)
+            {
+                return new InternationalText(new KaitaiStream(fileName));
+            }
+
+            public InternationalText(KaitaiStream p__io, Png.InternationalTextChunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _text = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
+            }
+            private string _text;
+            private Png m_root;
+            private Png.InternationalTextChunk m_parent;
+
+            /// <summary>
+            /// Text contents (&quot;value&quot; of this key-value pair), written in
+            /// language specified in `language_tag`. Line breaks are
+            /// allowed.
+            /// </summary>
+            public string Text { get { return _text; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.InternationalTextChunk M_Parent { get { return m_parent; } }
+        }
 
         /// <summary>
         /// International text chunk effectively allows to store key-value string pairs in
@@ -1014,25 +1272,63 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_text = false;
                 _read();
             }
             private void _read()
             {
                 _keyword = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _compressionFlag = m_io.ReadU1();
+                if (!( ((_compressionFlag == 0) || (_compressionFlag == 1)) ))
+                {
+                    throw new ValidationNotAnyOfError(_compressionFlag, m_io, "/types/international_text_chunk/seq/1");
+                }
                 _compressionMethod = ((Png.CompressionMethods) m_io.ReadU1());
                 _languageTag = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _translatedKeyword = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
-                _text = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
+                if (CompressionFlag == 0) {
+                    __raw_textPlain = m_io.ReadBytesFull();
+                    var io___raw_textPlain = new KaitaiStream(__raw_textPlain);
+                    _textPlain = new InternationalText(io___raw_textPlain, this, m_root);
+                }
+                if (CompressionFlag == 1) {
+                    __raw__raw_textZlib = m_io.ReadBytesFull();
+                    __raw_textZlib = m_io.ProcessZlib(__raw__raw_textZlib);
+                    var io___raw_textZlib = new KaitaiStream(__raw_textZlib);
+                    _textZlib = new InternationalText(io___raw_textZlib, this, m_root);
+                }
+            }
+            private bool f_text;
+            private string _text;
+
+            /// <summary>
+            /// Text contents (&quot;value&quot; of this key-value pair), written in
+            /// language specified in `language_tag`. Line breaks are
+            /// allowed.
+            /// </summary>
+            public string Text
+            {
+                get
+                {
+                    if (f_text)
+                        return _text;
+                    f_text = true;
+                    _text = (string) ((CompressionFlag == 0 ? TextPlain : TextZlib).Text);
+                    return _text;
+                }
             }
             private string _keyword;
             private byte _compressionFlag;
             private CompressionMethods _compressionMethod;
             private string _languageTag;
             private string _translatedKeyword;
-            private string _text;
+            private InternationalText _textPlain;
+            private InternationalText _textZlib;
             private Png m_root;
             private Png.Chunk m_parent;
+            private byte[] __raw_textPlain;
+            private byte[] __raw_textZlib;
+            private byte[] __raw__raw_textZlib;
 
             /// <summary>
             /// Indicates purpose of the following text data.
@@ -1058,13 +1354,148 @@ namespace Kaitai
             /// `language_tag`. Line breaks are not allowed.
             /// </summary>
             public string TranslatedKeyword { get { return _translatedKeyword; } }
+            public InternationalText TextPlain { get { return _textPlain; } }
+            public InternationalText TextZlib { get { return _textZlib; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+            public byte[] M_RawTextPlain { get { return __raw_textPlain; } }
+            public byte[] M_RawTextZlib { get { return __raw_textZlib; } }
+            public byte[] M_RawM_RawTextZlib { get { return __raw__raw_textZlib; } }
+        }
+        public partial class MdcvChromaticity : KaitaiStruct
+        {
+            public static MdcvChromaticity FromFile(string fileName)
+            {
+                return new MdcvChromaticity(new KaitaiStream(fileName));
+            }
+
+            public MdcvChromaticity(KaitaiStream p__io, Png.MdcvChunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_x = false;
+                f_y = false;
+                _read();
+            }
+            private void _read()
+            {
+                _xInt = m_io.ReadU2be();
+                _yInt = m_io.ReadU2be();
+            }
+            private bool f_x;
+            private double _x;
+            public double X
+            {
+                get
+                {
+                    if (f_x)
+                        return _x;
+                    f_x = true;
+                    _x = (double) (XInt * 0.00002);
+                    return _x;
+                }
+            }
+            private bool f_y;
+            private double _y;
+            public double Y
+            {
+                get
+                {
+                    if (f_y)
+                        return _y;
+                    f_y = true;
+                    _y = (double) (YInt * 0.00002);
+                    return _y;
+                }
+            }
+            private ushort _xInt;
+            private ushort _yInt;
+            private Png m_root;
+            private Png.MdcvChunk m_parent;
+            public ushort XInt { get { return _xInt; } }
+            public ushort YInt { get { return _yInt; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.MdcvChunk M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#mDCV-chunk">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://w3c.github.io/png/Implementation_Report_3e/#mastering">Source</a>
+        /// </remarks>
+        public partial class MdcvChunk : KaitaiStruct
+        {
+            public static MdcvChunk FromFile(string fileName)
+            {
+                return new MdcvChunk(new KaitaiStream(fileName));
+            }
+
+            public MdcvChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_maxLuminance = false;
+                f_minLuminance = false;
+                _read();
+            }
+            private void _read()
+            {
+                _red = new MdcvChromaticity(m_io, this, m_root);
+                _green = new MdcvChromaticity(m_io, this, m_root);
+                _blue = new MdcvChromaticity(m_io, this, m_root);
+                _whitePoint = new MdcvChromaticity(m_io, this, m_root);
+                _maxLuminanceInt = m_io.ReadU4be();
+                _minLuminanceInt = m_io.ReadU4be();
+            }
+            private bool f_maxLuminance;
+            private double _maxLuminance;
 
             /// <summary>
-            /// Text contents (&quot;value&quot; of this key-value pair), written in
-            /// language specified in `language_tag`. Line breaks are
-            /// allowed.
+            /// Maximum luminance in cd/m^2
             /// </summary>
-            public string Text { get { return _text; } }
+            public double MaxLuminance
+            {
+                get
+                {
+                    if (f_maxLuminance)
+                        return _maxLuminance;
+                    f_maxLuminance = true;
+                    _maxLuminance = (double) (MaxLuminanceInt * 0.0001);
+                    return _maxLuminance;
+                }
+            }
+            private bool f_minLuminance;
+            private double _minLuminance;
+
+            /// <summary>
+            /// Minimum luminance in cd/m^2
+            /// </summary>
+            public double MinLuminance
+            {
+                get
+                {
+                    if (f_minLuminance)
+                        return _minLuminance;
+                    f_minLuminance = true;
+                    _minLuminance = (double) (MinLuminanceInt * 0.0001);
+                    return _minLuminance;
+                }
+            }
+            private MdcvChromaticity _red;
+            private MdcvChromaticity _green;
+            private MdcvChromaticity _blue;
+            private MdcvChromaticity _whitePoint;
+            private uint _maxLuminanceInt;
+            private uint _minLuminanceInt;
+            private Png m_root;
+            private Png.Chunk m_parent;
+            public MdcvChromaticity Red { get { return _red; } }
+            public MdcvChromaticity Green { get { return _green; } }
+            public MdcvChromaticity Blue { get { return _blue; } }
+            public MdcvChromaticity WhitePoint { get { return _whitePoint; } }
+            public uint MaxLuminanceInt { get { return _maxLuminanceInt; } }
+            public uint MinLuminanceInt { get { return _minLuminanceInt; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
@@ -1150,61 +1581,6 @@ namespace Kaitai
             public List<Rgb> Entries { get { return _entries; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
-        }
-        public partial class Point : KaitaiStruct
-        {
-            public static Point FromFile(string fileName)
-            {
-                return new Point(new KaitaiStream(fileName));
-            }
-
-            public Point(KaitaiStream p__io, Png.ChrmChunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_x = false;
-                f_y = false;
-                _read();
-            }
-            private void _read()
-            {
-                _xInt = m_io.ReadU4be();
-                _yInt = m_io.ReadU4be();
-            }
-            private bool f_x;
-            private double _x;
-            public double X
-            {
-                get
-                {
-                    if (f_x)
-                        return _x;
-                    f_x = true;
-                    _x = (double) (XInt / 100000.0);
-                    return _x;
-                }
-            }
-            private bool f_y;
-            private double _y;
-            public double Y
-            {
-                get
-                {
-                    if (f_y)
-                        return _y;
-                    f_y = true;
-                    _y = (double) (YInt / 100000.0);
-                    return _y;
-                }
-            }
-            private uint _xInt;
-            private uint _yInt;
-            private Png m_root;
-            private Png.ChrmChunk m_parent;
-            public uint XInt { get { return _xInt; } }
-            public uint YInt { get { return _yInt; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.ChrmChunk M_Parent { get { return m_parent; } }
         }
         public partial class Rgb : KaitaiStruct
         {

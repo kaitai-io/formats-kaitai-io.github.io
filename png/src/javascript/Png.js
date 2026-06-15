@@ -170,8 +170,8 @@ var Png = (function() {
         throw new KaitaiStream.ValidationExprError(this.fileName, this._io, "/types/atch_chunk/seq/0");
       }
       this.compression = this._io.readU1();
-      if (!( ((this.compression == Png.AtchChunk.CompressionAttachMethods.NONE) || (this.compression == Png.AtchChunk.CompressionAttachMethods.ZLIB)) )) {
-        throw new KaitaiStream.ValidationNotAnyOfError(this.compression, this._io, "/types/atch_chunk/seq/1");
+      if (!Object.prototype.hasOwnProperty.call(Png.AtchChunk.CompressionAttachMethods, this.compression)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.compression, this._io, "/types/atch_chunk/seq/1");
       }
       if (this.compression == Png.AtchChunk.CompressionAttachMethods.NONE) {
         this.dataPlain = this._io.readBytesFull();
@@ -307,6 +307,38 @@ var Png = (function() {
     return BkgdTruecolor;
   })();
 
+  var ChrmChromaticity = Png.ChrmChromaticity = (function() {
+    function ChrmChromaticity(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ChrmChromaticity.prototype._read = function() {
+      this.xInt = this._io.readU4be();
+      this.yInt = this._io.readU4be();
+    }
+    Object.defineProperty(ChrmChromaticity.prototype, 'x', {
+      get: function() {
+        if (this._m_x !== undefined)
+          return this._m_x;
+        this._m_x = this.xInt / 100000.0;
+        return this._m_x;
+      }
+    });
+    Object.defineProperty(ChrmChromaticity.prototype, 'y', {
+      get: function() {
+        if (this._m_y !== undefined)
+          return this._m_y;
+        this._m_y = this.yInt / 100000.0;
+        return this._m_y;
+      }
+    });
+
+    return ChrmChromaticity;
+  })();
+
   /**
    * @see {@link https://www.w3.org/TR/png/#11cHRM|Source}
    */
@@ -320,10 +352,10 @@ var Png = (function() {
       this._read();
     }
     ChrmChunk.prototype._read = function() {
-      this.whitePoint = new Point(this._io, this, this._root);
-      this.red = new Point(this._io, this, this._root);
-      this.green = new Point(this._io, this, this._root);
-      this.blue = new Point(this._io, this, this._root);
+      this.whitePoint = new ChrmChromaticity(this._io, this, this._root);
+      this.red = new ChrmChromaticity(this._io, this, this._root);
+      this.green = new ChrmChromaticity(this._io, this, this._root);
+      this.blue = new ChrmChromaticity(this._io, this, this._root);
     }
 
     return ChrmChunk;
@@ -370,6 +402,16 @@ var Png = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new ChrmChunk(_io__raw_body, this, this._root);
         break;
+      case "cICP":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new CicpChunk(_io__raw_body, this, this._root);
+        break;
+      case "cLLI":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new ClliChunk(_io__raw_body, this, this._root);
+        break;
       case "fcTL":
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -389,6 +431,11 @@ var Png = (function() {
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new InternationalTextChunk(_io__raw_body, this, this._root);
+        break;
+      case "mDCV":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new MdcvChunk(_io__raw_body, this, this._root);
         break;
       case "mkBS":
         this._raw_body = this._io.readBytes(this.len);
@@ -448,6 +495,112 @@ var Png = (function() {
     }
 
     return Chunk;
+  })();
+
+  /**
+   * @see {@link https://www.w3.org/TR/png/#cICP-chunk|Source}
+   * @see {@link https://w3c.github.io/png/Implementation_Report_3e/#cicp|Source}
+   */
+
+  var CicpChunk = Png.CicpChunk = (function() {
+    function CicpChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CicpChunk.prototype._read = function() {
+      this.colorPrimaries = this._io.readU1();
+      this.transferFunction = this._io.readU1();
+      this.matrixCoefficients = this._io.readU1();
+      if (!(this.matrixCoefficients == 0)) {
+        throw new KaitaiStream.ValidationNotEqualError(0, this.matrixCoefficients, this._io, "/types/cicp_chunk/seq/2");
+      }
+      this.videoFullRangeFlag = this._io.readU1();
+      if (!( ((this.videoFullRangeFlag == 0) || (this.videoFullRangeFlag == 1)) )) {
+        throw new KaitaiStream.ValidationNotAnyOfError(this.videoFullRangeFlag, this._io, "/types/cicp_chunk/seq/3");
+      }
+    }
+
+    /**
+     * values above 22 are reserved, see
+     * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325>
+     */
+
+    /**
+     * values above 18 are reserved, see
+     * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329>
+     */
+
+    /**
+     * From the [official
+     * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+     * 
+     * > RGB is currently the only supported color model in PNG, and as such
+     * > `Matrix Coefficients` shall be set to `0`.
+     */
+
+    /**
+     * From the [official
+     * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+     * 
+     * > If `Video Full Range Flag` value is `1`, then the image is a
+     * > full-range image. Typically, images in the RGB color representation
+     * > are stored in the full-range signal quantization, therefore the vast
+     * > majority of computer graphics and web images, including those used
+     * > in traditional PNG workflows, are full-range images.
+     * 
+     * > If `Video Full Range Flag` value is `0`, then the image is a
+     * > narrow-range image.
+     */
+
+    return CicpChunk;
+  })();
+
+  /**
+   * @see {@link https://www.w3.org/TR/png/#cLLI-chunk|Source}
+   * @see {@link https://w3c.github.io/png/Implementation_Report_3e/#light|Source}
+   */
+
+  var ClliChunk = Png.ClliChunk = (function() {
+    function ClliChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ClliChunk.prototype._read = function() {
+      this.maxContentLightLevelInt = this._io.readU4be();
+      this.maxFrameAverageLightLevelInt = this._io.readU4be();
+    }
+
+    /**
+     * Maximum Content Light Level (MaxCLL), in cd/m^2
+     */
+    Object.defineProperty(ClliChunk.prototype, 'maxContentLightLevel', {
+      get: function() {
+        if (this._m_maxContentLightLevel !== undefined)
+          return this._m_maxContentLightLevel;
+        this._m_maxContentLightLevel = this.maxContentLightLevelInt * 0.0001;
+        return this._m_maxContentLightLevel;
+      }
+    });
+
+    /**
+     * Maximum Frame Average Light Level (MaxFALL), in cd/m^2
+     */
+    Object.defineProperty(ClliChunk.prototype, 'maxFrameAverageLightLevel', {
+      get: function() {
+        if (this._m_maxFrameAverageLightLevel !== undefined)
+          return this._m_maxFrameAverageLightLevel;
+        this._m_maxFrameAverageLightLevel = this.maxFrameAverageLightLevelInt * 0.0001;
+        return this._m_maxFrameAverageLightLevel;
+      }
+    });
+
+    return ClliChunk;
   })();
 
   /**
@@ -717,6 +870,9 @@ var Png = (function() {
         throw new KaitaiStream.ValidationLessThanError(1, this.height, this._io, "/types/ihdr_chunk/seq/1");
       }
       this.bitDepth = this._io.readU1();
+      if (!( ((this.bitDepth == 1) || (this.bitDepth == 2) || (this.bitDepth == 4) || (this.bitDepth == 8) || (this.bitDepth == 16)) )) {
+        throw new KaitaiStream.ValidationNotAnyOfError(this.bitDepth, this._io, "/types/ihdr_chunk/seq/2");
+      }
       this.colorType = this._io.readU1();
       this.compressionMethod = this._io.readU1();
       this.filterMethod = this._io.readU1();
@@ -724,6 +880,27 @@ var Png = (function() {
     }
 
     return IhdrChunk;
+  })();
+
+  var InternationalText = Png.InternationalText = (function() {
+    function InternationalText(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    InternationalText.prototype._read = function() {
+      this.text = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+    }
+
+    /**
+     * Text contents ("value" of this key-value pair), written in
+     * language specified in `language_tag`. Line breaks are
+     * allowed.
+     */
+
+    return InternationalText;
   })();
 
   /**
@@ -745,11 +922,38 @@ var Png = (function() {
     InternationalTextChunk.prototype._read = function() {
       this.keyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
       this.compressionFlag = this._io.readU1();
+      if (!( ((this.compressionFlag == 0) || (this.compressionFlag == 1)) )) {
+        throw new KaitaiStream.ValidationNotAnyOfError(this.compressionFlag, this._io, "/types/international_text_chunk/seq/1");
+      }
       this.compressionMethod = this._io.readU1();
       this.languageTag = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
       this.translatedKeyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
-      this.text = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+      if (this.compressionFlag == 0) {
+        this._raw_textPlain = this._io.readBytesFull();
+        var _io__raw_textPlain = new KaitaiStream(this._raw_textPlain);
+        this.textPlain = new InternationalText(_io__raw_textPlain, this, this._root);
+      }
+      if (this.compressionFlag == 1) {
+        this._raw__raw_textZlib = this._io.readBytesFull();
+        this._raw_textZlib = KaitaiStream.processZlib(this._raw__raw_textZlib);
+        var _io__raw_textZlib = new KaitaiStream(this._raw_textZlib);
+        this.textZlib = new InternationalText(_io__raw_textZlib, this, this._root);
+      }
     }
+
+    /**
+     * Text contents ("value" of this key-value pair), written in
+     * language specified in `language_tag`. Line breaks are
+     * allowed.
+     */
+    Object.defineProperty(InternationalTextChunk.prototype, 'text', {
+      get: function() {
+        if (this._m_text !== undefined)
+          return this._m_text;
+        this._m_text = (this.compressionFlag == 0 ? this.textPlain : this.textZlib).text;
+        return this._m_text;
+      }
+    });
 
     /**
      * Indicates purpose of the following text data.
@@ -771,13 +975,88 @@ var Png = (function() {
      * `language_tag`. Line breaks are not allowed.
      */
 
-    /**
-     * Text contents ("value" of this key-value pair), written in
-     * language specified in `language_tag`. Line breaks are
-     * allowed.
-     */
-
     return InternationalTextChunk;
+  })();
+
+  var MdcvChromaticity = Png.MdcvChromaticity = (function() {
+    function MdcvChromaticity(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MdcvChromaticity.prototype._read = function() {
+      this.xInt = this._io.readU2be();
+      this.yInt = this._io.readU2be();
+    }
+    Object.defineProperty(MdcvChromaticity.prototype, 'x', {
+      get: function() {
+        if (this._m_x !== undefined)
+          return this._m_x;
+        this._m_x = this.xInt * 0.00002;
+        return this._m_x;
+      }
+    });
+    Object.defineProperty(MdcvChromaticity.prototype, 'y', {
+      get: function() {
+        if (this._m_y !== undefined)
+          return this._m_y;
+        this._m_y = this.yInt * 0.00002;
+        return this._m_y;
+      }
+    });
+
+    return MdcvChromaticity;
+  })();
+
+  /**
+   * @see {@link https://www.w3.org/TR/png/#mDCV-chunk|Source}
+   * @see {@link https://w3c.github.io/png/Implementation_Report_3e/#mastering|Source}
+   */
+
+  var MdcvChunk = Png.MdcvChunk = (function() {
+    function MdcvChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MdcvChunk.prototype._read = function() {
+      this.red = new MdcvChromaticity(this._io, this, this._root);
+      this.green = new MdcvChromaticity(this._io, this, this._root);
+      this.blue = new MdcvChromaticity(this._io, this, this._root);
+      this.whitePoint = new MdcvChromaticity(this._io, this, this._root);
+      this.maxLuminanceInt = this._io.readU4be();
+      this.minLuminanceInt = this._io.readU4be();
+    }
+
+    /**
+     * Maximum luminance in cd/m^2
+     */
+    Object.defineProperty(MdcvChunk.prototype, 'maxLuminance', {
+      get: function() {
+        if (this._m_maxLuminance !== undefined)
+          return this._m_maxLuminance;
+        this._m_maxLuminance = this.maxLuminanceInt * 0.0001;
+        return this._m_maxLuminance;
+      }
+    });
+
+    /**
+     * Minimum luminance in cd/m^2
+     */
+    Object.defineProperty(MdcvChunk.prototype, 'minLuminance', {
+      get: function() {
+        if (this._m_minLuminance !== undefined)
+          return this._m_minLuminance;
+        this._m_minLuminance = this.minLuminanceInt * 0.0001;
+        return this._m_minLuminance;
+      }
+    });
+
+    return MdcvChunk;
   })();
 
   /**
@@ -835,38 +1114,6 @@ var Png = (function() {
     }
 
     return PlteChunk;
-  })();
-
-  var Point = Png.Point = (function() {
-    function Point(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root;
-
-      this._read();
-    }
-    Point.prototype._read = function() {
-      this.xInt = this._io.readU4be();
-      this.yInt = this._io.readU4be();
-    }
-    Object.defineProperty(Point.prototype, 'x', {
-      get: function() {
-        if (this._m_x !== undefined)
-          return this._m_x;
-        this._m_x = this.xInt / 100000.0;
-        return this._m_x;
-      }
-    });
-    Object.defineProperty(Point.prototype, 'y', {
-      get: function() {
-        if (this._m_y !== undefined)
-          return this._m_y;
-        this._m_y = this.yInt / 100000.0;
-        return this._m_y;
-      }
-    });
-
-    return Point;
   })();
 
   var Rgb = Png.Rgb = (function() {

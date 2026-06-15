@@ -282,8 +282,8 @@ public class Png extends KaitaiStruct {
                 }
             }
             this.compression = CompressionAttachMethods.byId(this._io.readU1());
-            if (!( ((this.compression == CompressionAttachMethods.NONE) || (this.compression == CompressionAttachMethods.ZLIB)) )) {
-                throw new KaitaiStream.ValidationNotAnyOfError(this.compression, this._io, "/types/atch_chunk/seq/1");
+            if (this.compression == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.compression, this._io, "/types/atch_chunk/seq/1");
             }
             if (compression() == CompressionAttachMethods.NONE) {
                 this.dataPlain = this._io.readBytesFull();
@@ -545,6 +545,55 @@ public class Png extends KaitaiStruct {
         public Png _root() { return _root; }
         public Png.BkgdChunk _parent() { return _parent; }
     }
+    public static class ChrmChromaticity extends KaitaiStruct {
+        public static ChrmChromaticity fromFile(String fileName) throws IOException {
+            return new ChrmChromaticity(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ChrmChromaticity(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ChrmChromaticity(KaitaiStream _io, Png.ChrmChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ChrmChromaticity(KaitaiStream _io, Png.ChrmChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.xInt = this._io.readU4be();
+            this.yInt = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double x;
+        public Double x() {
+            if (this.x != null)
+                return this.x;
+            this.x = ((Number) (xInt() / 100000.0)).doubleValue();
+            return this.x;
+        }
+        private Double y;
+        public Double y() {
+            if (this.y != null)
+                return this.y;
+            this.y = ((Number) (yInt() / 100000.0)).doubleValue();
+            return this.y;
+        }
+        private long xInt;
+        private long yInt;
+        private Png _root;
+        private Png.ChrmChunk _parent;
+        public long xInt() { return xInt; }
+        public long yInt() { return yInt; }
+        public Png _root() { return _root; }
+        public Png.ChrmChunk _parent() { return _parent; }
+    }
 
     /**
      * @see <a href="https://www.w3.org/TR/png/#11cHRM">Source</a>
@@ -569,10 +618,10 @@ public class Png extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.whitePoint = new Point(this._io, this, _root);
-            this.red = new Point(this._io, this, _root);
-            this.green = new Point(this._io, this, _root);
-            this.blue = new Point(this._io, this, _root);
+            this.whitePoint = new ChrmChromaticity(this._io, this, _root);
+            this.red = new ChrmChromaticity(this._io, this, _root);
+            this.green = new ChrmChromaticity(this._io, this, _root);
+            this.blue = new ChrmChromaticity(this._io, this, _root);
         }
 
         public void _fetchInstances() {
@@ -581,16 +630,16 @@ public class Png extends KaitaiStruct {
             this.green._fetchInstances();
             this.blue._fetchInstances();
         }
-        private Point whitePoint;
-        private Point red;
-        private Point green;
-        private Point blue;
+        private ChrmChromaticity whitePoint;
+        private ChrmChromaticity red;
+        private ChrmChromaticity green;
+        private ChrmChromaticity blue;
         private Png _root;
         private Png.Chunk _parent;
-        public Point whitePoint() { return whitePoint; }
-        public Point red() { return red; }
-        public Point green() { return green; }
-        public Point blue() { return blue; }
+        public ChrmChromaticity whitePoint() { return whitePoint; }
+        public ChrmChromaticity red() { return red; }
+        public ChrmChromaticity green() { return green; }
+        public ChrmChromaticity blue() { return blue; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
@@ -648,6 +697,16 @@ public class Png extends KaitaiStruct {
                 this.body = new ChrmChunk(_io_body, this, _root);
                 break;
             }
+            case "cICP": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new CicpChunk(_io_body, this, _root);
+                break;
+            }
+            case "cLLI": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new ClliChunk(_io_body, this, _root);
+                break;
+            }
             case "fcTL": {
                 KaitaiStream _io_body = this._io.substream(len());
                 this.body = new FrameControlChunk(_io_body, this, _root);
@@ -666,6 +725,11 @@ public class Png extends KaitaiStruct {
             case "iTXt": {
                 KaitaiStream _io_body = this._io.substream(len());
                 this.body = new InternationalTextChunk(_io_body, this, _root);
+                break;
+            }
+            case "mDCV": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new MdcvChunk(_io_body, this, _root);
                 break;
             }
             case "mkBS": {
@@ -748,6 +812,14 @@ public class Png extends KaitaiStruct {
                 ((ChrmChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "cICP": {
+                ((CicpChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "cLLI": {
+                ((ClliChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "fcTL": {
                 ((FrameControlChunk) (this.body))._fetchInstances();
                 break;
@@ -762,6 +834,10 @@ public class Png extends KaitaiStruct {
             }
             case "iTXt": {
                 ((InternationalTextChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "mDCV": {
+                ((MdcvChunk) (this.body))._fetchInstances();
                 break;
             }
             case "mkBS": {
@@ -821,6 +897,152 @@ public class Png extends KaitaiStruct {
         public byte[] crc() { return crc; }
         public Png _root() { return _root; }
         public Png _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/png/#cICP-chunk">Source</a>
+     * @see <a href="https://w3c.github.io/png/Implementation_Report_3e/#cicp">Source</a>
+     */
+    public static class CicpChunk extends KaitaiStruct {
+        public static CicpChunk fromFile(String fileName) throws IOException {
+            return new CicpChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public CicpChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CicpChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CicpChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.colorPrimaries = this._io.readU1();
+            this.transferFunction = this._io.readU1();
+            this.matrixCoefficients = this._io.readU1();
+            if (!(this.matrixCoefficients == 0)) {
+                throw new KaitaiStream.ValidationNotEqualError(0, this.matrixCoefficients, this._io, "/types/cicp_chunk/seq/2");
+            }
+            this.videoFullRangeFlag = this._io.readU1();
+            if (!( ((this.videoFullRangeFlag == 0) || (this.videoFullRangeFlag == 1)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.videoFullRangeFlag, this._io, "/types/cicp_chunk/seq/3");
+            }
+        }
+
+        public void _fetchInstances() {
+        }
+        private int colorPrimaries;
+        private int transferFunction;
+        private int matrixCoefficients;
+        private int videoFullRangeFlag;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * values above 22 are reserved, see
+         * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325>
+         */
+        public int colorPrimaries() { return colorPrimaries; }
+
+        /**
+         * values above 18 are reserved, see
+         * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329>
+         */
+        public int transferFunction() { return transferFunction; }
+
+        /**
+         * From the [official
+         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+         * 
+         * > RGB is currently the only supported color model in PNG, and as such
+         * > `Matrix Coefficients` shall be set to `0`.
+         */
+        public int matrixCoefficients() { return matrixCoefficients; }
+
+        /**
+         * From the [official
+         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+         * 
+         * > If `Video Full Range Flag` value is `1`, then the image is a
+         * > full-range image. Typically, images in the RGB color representation
+         * > are stored in the full-range signal quantization, therefore the vast
+         * > majority of computer graphics and web images, including those used
+         * > in traditional PNG workflows, are full-range images.
+         * 
+         * > If `Video Full Range Flag` value is `0`, then the image is a
+         * > narrow-range image.
+         */
+        public int videoFullRangeFlag() { return videoFullRangeFlag; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/png/#cLLI-chunk">Source</a>
+     * @see <a href="https://w3c.github.io/png/Implementation_Report_3e/#light">Source</a>
+     */
+    public static class ClliChunk extends KaitaiStruct {
+        public static ClliChunk fromFile(String fileName) throws IOException {
+            return new ClliChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ClliChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ClliChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ClliChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.maxContentLightLevelInt = this._io.readU4be();
+            this.maxFrameAverageLightLevelInt = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double maxContentLightLevel;
+
+        /**
+         * Maximum Content Light Level (MaxCLL), in cd/m^2
+         */
+        public Double maxContentLightLevel() {
+            if (this.maxContentLightLevel != null)
+                return this.maxContentLightLevel;
+            this.maxContentLightLevel = ((Number) (maxContentLightLevelInt() * 0.0001)).doubleValue();
+            return this.maxContentLightLevel;
+        }
+        private Double maxFrameAverageLightLevel;
+
+        /**
+         * Maximum Frame Average Light Level (MaxFALL), in cd/m^2
+         */
+        public Double maxFrameAverageLightLevel() {
+            if (this.maxFrameAverageLightLevel != null)
+                return this.maxFrameAverageLightLevel;
+            this.maxFrameAverageLightLevel = ((Number) (maxFrameAverageLightLevelInt() * 0.0001)).doubleValue();
+            return this.maxFrameAverageLightLevel;
+        }
+        private long maxContentLightLevelInt;
+        private long maxFrameAverageLightLevelInt;
+        private Png _root;
+        private Png.Chunk _parent;
+        public long maxContentLightLevelInt() { return maxContentLightLevelInt; }
+        public long maxFrameAverageLightLevelInt() { return maxFrameAverageLightLevelInt; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
     }
 
     /**
@@ -1226,6 +1448,9 @@ public class Png extends KaitaiStruct {
                 throw new KaitaiStream.ValidationLessThanError(1, this.height, this._io, "/types/ihdr_chunk/seq/1");
             }
             this.bitDepth = this._io.readU1();
+            if (!( ((this.bitDepth == 1) || (this.bitDepth == 2) || (this.bitDepth == 4) || (this.bitDepth == 8) || (this.bitDepth == 16)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.bitDepth, this._io, "/types/ihdr_chunk/seq/2");
+            }
             this.colorType = Png.ColorType.byId(this._io.readU1());
             this.compressionMethod = this._io.readU1();
             this.filterMethod = this._io.readU1();
@@ -1252,6 +1477,44 @@ public class Png extends KaitaiStruct {
         public int interlaceMethod() { return interlaceMethod; }
         public Png _root() { return _root; }
         public Png _parent() { return _parent; }
+    }
+    public static class InternationalText extends KaitaiStruct {
+        public static InternationalText fromFile(String fileName) throws IOException {
+            return new InternationalText(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public InternationalText(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public InternationalText(KaitaiStream _io, Png.InternationalTextChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public InternationalText(KaitaiStream _io, Png.InternationalTextChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.text = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
+        }
+        private String text;
+        private Png _root;
+        private Png.InternationalTextChunk _parent;
+
+        /**
+         * Text contents ("value" of this key-value pair), written in
+         * language specified in `language_tag`. Line breaks are
+         * allowed.
+         */
+        public String text() { return text; }
+        public Png _root() { return _root; }
+        public Png.InternationalTextChunk _parent() { return _parent; }
     }
 
     /**
@@ -1283,22 +1546,58 @@ public class Png extends KaitaiStruct {
         private void _read() {
             this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
             this.compressionFlag = this._io.readU1();
+            if (!( ((this.compressionFlag == 0) || (this.compressionFlag == 1)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.compressionFlag, this._io, "/types/international_text_chunk/seq/1");
+            }
             this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
             this.languageTag = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
             this.translatedKeyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
-            this.text = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+            if (compressionFlag() == 0) {
+                this._raw_textPlain = this._io.readBytesFull();
+                KaitaiStream _io__raw_textPlain = new ByteBufferKaitaiStream(this._raw_textPlain);
+                this.textPlain = new InternationalText(_io__raw_textPlain, this, _root);
+            }
+            if (compressionFlag() == 1) {
+                this._raw__raw_textZlib = this._io.readBytesFull();
+                this._raw_textZlib = KaitaiStream.processZlib(this._raw__raw_textZlib);
+                KaitaiStream _io__raw_textZlib = new ByteBufferKaitaiStream(this._raw_textZlib);
+                this.textZlib = new InternationalText(_io__raw_textZlib, this, _root);
+            }
         }
 
         public void _fetchInstances() {
+            if (compressionFlag() == 0) {
+                this.textPlain._fetchInstances();
+            }
+            if (compressionFlag() == 1) {
+                this.textZlib._fetchInstances();
+            }
+        }
+        private String text;
+
+        /**
+         * Text contents ("value" of this key-value pair), written in
+         * language specified in `language_tag`. Line breaks are
+         * allowed.
+         */
+        public String text() {
+            if (this.text != null)
+                return this.text;
+            this.text = (compressionFlag() == 0 ? textPlain() : textZlib()).text();
+            return this.text;
         }
         private String keyword;
         private int compressionFlag;
         private CompressionMethods compressionMethod;
         private String languageTag;
         private String translatedKeyword;
-        private String text;
+        private InternationalText textPlain;
+        private InternationalText textZlib;
         private Png _root;
         private Png.Chunk _parent;
+        private byte[] _raw_textPlain;
+        private byte[] _raw_textZlib;
+        private byte[] _raw__raw_textZlib;
 
         /**
          * Indicates purpose of the following text data.
@@ -1324,13 +1623,138 @@ public class Png extends KaitaiStruct {
          * `language_tag`. Line breaks are not allowed.
          */
         public String translatedKeyword() { return translatedKeyword; }
+        public InternationalText textPlain() { return textPlain; }
+        public InternationalText textZlib() { return textZlib; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+        public byte[] _raw_textPlain() { return _raw_textPlain; }
+        public byte[] _raw_textZlib() { return _raw_textZlib; }
+        public byte[] _raw__raw_textZlib() { return _raw__raw_textZlib; }
+    }
+    public static class MdcvChromaticity extends KaitaiStruct {
+        public static MdcvChromaticity fromFile(String fileName) throws IOException {
+            return new MdcvChromaticity(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MdcvChromaticity(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MdcvChromaticity(KaitaiStream _io, Png.MdcvChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MdcvChromaticity(KaitaiStream _io, Png.MdcvChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.xInt = this._io.readU2be();
+            this.yInt = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double x;
+        public Double x() {
+            if (this.x != null)
+                return this.x;
+            this.x = ((Number) (xInt() * 0.00002)).doubleValue();
+            return this.x;
+        }
+        private Double y;
+        public Double y() {
+            if (this.y != null)
+                return this.y;
+            this.y = ((Number) (yInt() * 0.00002)).doubleValue();
+            return this.y;
+        }
+        private int xInt;
+        private int yInt;
+        private Png _root;
+        private Png.MdcvChunk _parent;
+        public int xInt() { return xInt; }
+        public int yInt() { return yInt; }
+        public Png _root() { return _root; }
+        public Png.MdcvChunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/png/#mDCV-chunk">Source</a>
+     * @see <a href="https://w3c.github.io/png/Implementation_Report_3e/#mastering">Source</a>
+     */
+    public static class MdcvChunk extends KaitaiStruct {
+        public static MdcvChunk fromFile(String fileName) throws IOException {
+            return new MdcvChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MdcvChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MdcvChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MdcvChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.red = new MdcvChromaticity(this._io, this, _root);
+            this.green = new MdcvChromaticity(this._io, this, _root);
+            this.blue = new MdcvChromaticity(this._io, this, _root);
+            this.whitePoint = new MdcvChromaticity(this._io, this, _root);
+            this.maxLuminanceInt = this._io.readU4be();
+            this.minLuminanceInt = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+            this.red._fetchInstances();
+            this.green._fetchInstances();
+            this.blue._fetchInstances();
+            this.whitePoint._fetchInstances();
+        }
+        private Double maxLuminance;
 
         /**
-         * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Line breaks are
-         * allowed.
+         * Maximum luminance in cd/m^2
          */
-        public String text() { return text; }
+        public Double maxLuminance() {
+            if (this.maxLuminance != null)
+                return this.maxLuminance;
+            this.maxLuminance = ((Number) (maxLuminanceInt() * 0.0001)).doubleValue();
+            return this.maxLuminance;
+        }
+        private Double minLuminance;
+
+        /**
+         * Minimum luminance in cd/m^2
+         */
+        public Double minLuminance() {
+            if (this.minLuminance != null)
+                return this.minLuminance;
+            this.minLuminance = ((Number) (minLuminanceInt() * 0.0001)).doubleValue();
+            return this.minLuminance;
+        }
+        private MdcvChromaticity red;
+        private MdcvChromaticity green;
+        private MdcvChromaticity blue;
+        private MdcvChromaticity whitePoint;
+        private long maxLuminanceInt;
+        private long minLuminanceInt;
+        private Png _root;
+        private Png.Chunk _parent;
+        public MdcvChromaticity red() { return red; }
+        public MdcvChromaticity green() { return green; }
+        public MdcvChromaticity blue() { return blue; }
+        public MdcvChromaticity whitePoint() { return whitePoint; }
+        public long maxLuminanceInt() { return maxLuminanceInt; }
+        public long minLuminanceInt() { return minLuminanceInt; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
@@ -1433,55 +1857,6 @@ public class Png extends KaitaiStruct {
         public List<Rgb> entries() { return entries; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
-    }
-    public static class Point extends KaitaiStruct {
-        public static Point fromFile(String fileName) throws IOException {
-            return new Point(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Point(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Point(KaitaiStream _io, Png.ChrmChunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Point(KaitaiStream _io, Png.ChrmChunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.xInt = this._io.readU4be();
-            this.yInt = this._io.readU4be();
-        }
-
-        public void _fetchInstances() {
-        }
-        private Double x;
-        public Double x() {
-            if (this.x != null)
-                return this.x;
-            this.x = ((Number) (xInt() / 100000.0)).doubleValue();
-            return this.x;
-        }
-        private Double y;
-        public Double y() {
-            if (this.y != null)
-                return this.y;
-            this.y = ((Number) (yInt() / 100000.0)).doubleValue();
-            return this.y;
-        }
-        private long xInt;
-        private long yInt;
-        private Png _root;
-        private Png.ChrmChunk _parent;
-        public long xInt() { return xInt; }
-        public long yInt() { return yInt; }
-        public Png _root() { return _root; }
-        public Png.ChrmChunk _parent() { return _parent; }
     }
     public static class Rgb extends KaitaiStruct {
         public static Rgb fromFile(String fileName) throws IOException {

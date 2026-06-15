@@ -131,7 +131,7 @@ class Png < Kaitai::Struct::Struct
       _ = @file_name
       raise Kaitai::Struct::ValidationExprError.new(@file_name, @_io, "/types/atch_chunk/seq/0") if not  ((_.size != 0) && (_[0...1] != ".")) 
       @compression = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_ATTACH_METHODS, @_io.read_u1)
-      raise Kaitai::Struct::ValidationNotAnyOfError.new(@compression, @_io, "/types/atch_chunk/seq/1") if not  ((@compression == :compression_attach_methods_none) || (@compression == :compression_attach_methods_zlib)) 
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@compression, @_io, "/types/atch_chunk/seq/1") if not I__COMPRESSION_ATTACH_METHODS.key?(@compression)
       if compression == :compression_attach_methods_none
         @data_plain = @_io.read_bytes_full
       end
@@ -246,6 +246,30 @@ class Png < Kaitai::Struct::Struct
     attr_reader :green
     attr_reader :blue
   end
+  class ChrmChromaticity < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x_int = @_io.read_u4be
+      @y_int = @_io.read_u4be
+      self
+    end
+    def x
+      return @x unless @x.nil?
+      @x = x_int / 100000.0
+      @x
+    end
+    def y
+      return @y unless @y.nil?
+      @y = y_int / 100000.0
+      @y
+    end
+    attr_reader :x_int
+    attr_reader :y_int
+  end
 
   ##
   # @see https://www.w3.org/TR/png/#11cHRM Source
@@ -256,10 +280,10 @@ class Png < Kaitai::Struct::Struct
     end
 
     def _read
-      @white_point = Point.new(@_io, self, @_root)
-      @red = Point.new(@_io, self, @_root)
-      @green = Point.new(@_io, self, @_root)
-      @blue = Point.new(@_io, self, @_root)
+      @white_point = ChrmChromaticity.new(@_io, self, @_root)
+      @red = ChrmChromaticity.new(@_io, self, @_root)
+      @green = ChrmChromaticity.new(@_io, self, @_root)
+      @blue = ChrmChromaticity.new(@_io, self, @_root)
       self
     end
     attr_reader :white_point
@@ -294,6 +318,12 @@ class Png < Kaitai::Struct::Struct
       when "cHRM"
         _io_body = @_io.substream(len)
         @body = ChrmChunk.new(_io_body, self, @_root)
+      when "cICP"
+        _io_body = @_io.substream(len)
+        @body = CicpChunk.new(_io_body, self, @_root)
+      when "cLLI"
+        _io_body = @_io.substream(len)
+        @body = ClliChunk.new(_io_body, self, @_root)
       when "fcTL"
         _io_body = @_io.substream(len)
         @body = FrameControlChunk.new(_io_body, self, @_root)
@@ -306,6 +336,9 @@ class Png < Kaitai::Struct::Struct
       when "iTXt"
         _io_body = @_io.substream(len)
         @body = InternationalTextChunk.new(_io_body, self, @_root)
+      when "mDCV"
+        _io_body = @_io.substream(len)
+        @body = MdcvChunk.new(_io_body, self, @_root)
       when "mkBS"
         _io_body = @_io.substream(len)
         @body = AdobeFireworksChunk.new(_io_body, self, @_root)
@@ -347,6 +380,92 @@ class Png < Kaitai::Struct::Struct
     attr_reader :body
     attr_reader :crc
     attr_reader :_raw_body
+  end
+
+  ##
+  # @see https://www.w3.org/TR/png/#cICP-chunk Source
+  # @see https://w3c.github.io/png/Implementation_Report_3e/#cicp Source
+  class CicpChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @color_primaries = @_io.read_u1
+      @transfer_function = @_io.read_u1
+      @matrix_coefficients = @_io.read_u1
+      raise Kaitai::Struct::ValidationNotEqualError.new(0, @matrix_coefficients, @_io, "/types/cicp_chunk/seq/2") if not @matrix_coefficients == 0
+      @video_full_range_flag = @_io.read_u1
+      raise Kaitai::Struct::ValidationNotAnyOfError.new(@video_full_range_flag, @_io, "/types/cicp_chunk/seq/3") if not  ((@video_full_range_flag == 0) || (@video_full_range_flag == 1)) 
+      self
+    end
+
+    ##
+    # values above 22 are reserved, see
+    # <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325>
+    attr_reader :color_primaries
+
+    ##
+    # values above 18 are reserved, see
+    # <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329>
+    attr_reader :transfer_function
+
+    ##
+    # From the [official
+    # specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+    # 
+    # > RGB is currently the only supported color model in PNG, and as such
+    # > `Matrix Coefficients` shall be set to `0`.
+    attr_reader :matrix_coefficients
+
+    ##
+    # From the [official
+    # specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+    # 
+    # > If `Video Full Range Flag` value is `1`, then the image is a
+    # > full-range image. Typically, images in the RGB color representation
+    # > are stored in the full-range signal quantization, therefore the vast
+    # > majority of computer graphics and web images, including those used
+    # > in traditional PNG workflows, are full-range images.
+    # 
+    # > If `Video Full Range Flag` value is `0`, then the image is a
+    # > narrow-range image.
+    attr_reader :video_full_range_flag
+  end
+
+  ##
+  # @see https://www.w3.org/TR/png/#cLLI-chunk Source
+  # @see https://w3c.github.io/png/Implementation_Report_3e/#light Source
+  class ClliChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @max_content_light_level_int = @_io.read_u4be
+      @max_frame_average_light_level_int = @_io.read_u4be
+      self
+    end
+
+    ##
+    # Maximum Content Light Level (MaxCLL), in cd/m^2
+    def max_content_light_level
+      return @max_content_light_level unless @max_content_light_level.nil?
+      @max_content_light_level = max_content_light_level_int * 0.0001
+      @max_content_light_level
+    end
+
+    ##
+    # Maximum Frame Average Light Level (MaxFALL), in cd/m^2
+    def max_frame_average_light_level
+      return @max_frame_average_light_level unless @max_frame_average_light_level.nil?
+      @max_frame_average_light_level = max_frame_average_light_level_int * 0.0001
+      @max_frame_average_light_level
+    end
+    attr_reader :max_content_light_level_int
+    attr_reader :max_frame_average_light_level_int
   end
 
   ##
@@ -563,6 +682,7 @@ class Png < Kaitai::Struct::Struct
       @height = @_io.read_u4be
       raise Kaitai::Struct::ValidationLessThanError.new(1, @height, @_io, "/types/ihdr_chunk/seq/1") if not @height >= 1
       @bit_depth = @_io.read_u1
+      raise Kaitai::Struct::ValidationNotAnyOfError.new(@bit_depth, @_io, "/types/ihdr_chunk/seq/2") if not  ((@bit_depth == 1) || (@bit_depth == 2) || (@bit_depth == 4) || (@bit_depth == 8) || (@bit_depth == 16)) 
       @color_type = Kaitai::Struct::Stream::resolve_enum(Png::COLOR_TYPE, @_io.read_u1)
       @compression_method = @_io.read_u1
       @filter_method = @_io.read_u1
@@ -576,6 +696,23 @@ class Png < Kaitai::Struct::Struct
     attr_reader :compression_method
     attr_reader :filter_method
     attr_reader :interlace_method
+  end
+  class InternationalText < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @text = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+
+    ##
+    # Text contents ("value" of this key-value pair), written in
+    # language specified in `language_tag`. Line breaks are
+    # allowed.
+    attr_reader :text
   end
 
   ##
@@ -593,11 +730,32 @@ class Png < Kaitai::Struct::Struct
     def _read
       @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       @compression_flag = @_io.read_u1
+      raise Kaitai::Struct::ValidationNotAnyOfError.new(@compression_flag, @_io, "/types/international_text_chunk/seq/1") if not  ((@compression_flag == 0) || (@compression_flag == 1)) 
       @compression_method = Kaitai::Struct::Stream::resolve_enum(Png::COMPRESSION_METHODS, @_io.read_u1)
       @language_tag = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
       @translated_keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
-      @text = (@_io.read_bytes_full).force_encoding("UTF-8")
+      if compression_flag == 0
+        @_raw_text_plain = @_io.read_bytes_full
+        _io__raw_text_plain = Kaitai::Struct::Stream.new(@_raw_text_plain)
+        @text_plain = InternationalText.new(_io__raw_text_plain, self, @_root)
+      end
+      if compression_flag == 1
+        @_raw__raw_text_zlib = @_io.read_bytes_full
+        @_raw_text_zlib = Zlib::Inflate.inflate(@_raw__raw_text_zlib)
+        _io__raw_text_zlib = Kaitai::Struct::Stream.new(@_raw_text_zlib)
+        @text_zlib = InternationalText.new(_io__raw_text_zlib, self, @_root)
+      end
       self
+    end
+
+    ##
+    # Text contents ("value" of this key-value pair), written in
+    # language specified in `language_tag`. Line breaks are
+    # allowed.
+    def text
+      return @text unless @text.nil?
+      @text = (compression_flag == 0 ? text_plain : text_zlib).text
+      @text
     end
 
     ##
@@ -620,12 +778,77 @@ class Png < Kaitai::Struct::Struct
     # Keyword translated into language specified in
     # `language_tag`. Line breaks are not allowed.
     attr_reader :translated_keyword
+    attr_reader :text_plain
+    attr_reader :text_zlib
+    attr_reader :_raw_text_plain
+    attr_reader :_raw_text_zlib
+    attr_reader :_raw__raw_text_zlib
+  end
+  class MdcvChromaticity < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x_int = @_io.read_u2be
+      @y_int = @_io.read_u2be
+      self
+    end
+    def x
+      return @x unless @x.nil?
+      @x = x_int * 0.00002
+      @x
+    end
+    def y
+      return @y unless @y.nil?
+      @y = y_int * 0.00002
+      @y
+    end
+    attr_reader :x_int
+    attr_reader :y_int
+  end
+
+  ##
+  # @see https://www.w3.org/TR/png/#mDCV-chunk Source
+  # @see https://w3c.github.io/png/Implementation_Report_3e/#mastering Source
+  class MdcvChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @red = MdcvChromaticity.new(@_io, self, @_root)
+      @green = MdcvChromaticity.new(@_io, self, @_root)
+      @blue = MdcvChromaticity.new(@_io, self, @_root)
+      @white_point = MdcvChromaticity.new(@_io, self, @_root)
+      @max_luminance_int = @_io.read_u4be
+      @min_luminance_int = @_io.read_u4be
+      self
+    end
 
     ##
-    # Text contents ("value" of this key-value pair), written in
-    # language specified in `language_tag`. Line breaks are
-    # allowed.
-    attr_reader :text
+    # Maximum luminance in cd/m^2
+    def max_luminance
+      return @max_luminance unless @max_luminance.nil?
+      @max_luminance = max_luminance_int * 0.0001
+      @max_luminance
+    end
+
+    ##
+    # Minimum luminance in cd/m^2
+    def min_luminance
+      return @min_luminance unless @min_luminance.nil?
+      @min_luminance = min_luminance_int * 0.0001
+      @min_luminance
+    end
+    attr_reader :red
+    attr_reader :green
+    attr_reader :blue
+    attr_reader :white_point
+    attr_reader :max_luminance_int
+    attr_reader :min_luminance_int
   end
 
   ##
@@ -675,30 +898,6 @@ class Png < Kaitai::Struct::Struct
       self
     end
     attr_reader :entries
-  end
-  class Point < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = nil)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @x_int = @_io.read_u4be
-      @y_int = @_io.read_u4be
-      self
-    end
-    def x
-      return @x unless @x.nil?
-      @x = x_int / 100000.0
-      @x
-    end
-    def y
-      return @y unless @y.nil?
-      @y = y_int / 100000.0
-      @y
-    end
-    attr_reader :x_int
-    attr_reader :y_int
   end
   class Rgb < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)

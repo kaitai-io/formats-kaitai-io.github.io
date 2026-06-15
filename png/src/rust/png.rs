@@ -470,9 +470,6 @@ impl KStruct for Png_AtchChunk {
             return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/atch_chunk/seq/0".to_string() }));
         }
         *self_rc.compression.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
-        if !( ((*self_rc.compression() == Png_AtchChunk_CompressionAttachMethods::None) || (*self_rc.compression() == Png_AtchChunk_CompressionAttachMethods::Zlib)) ) {
-            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotAnyOf, src_path: "/types/atch_chunk/seq/1".to_string() }));
-        }
         if *self_rc.compression() == Png_AtchChunk_CompressionAttachMethods::None {
             *self_rc.data_plain.borrow_mut() = _io.read_bytes_full()?.into();
         }
@@ -847,6 +844,87 @@ impl Png_BkgdTruecolor {
     }
 }
 
+#[derive(Default, Debug, Clone)]
+pub struct Png_ChrmChromaticity {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_ChrmChunk>,
+    pub _self: SharedType<Self>,
+    x_int: RefCell<u32>,
+    y_int: RefCell<u32>,
+    _io: RefCell<BytesReader>,
+    f_x: Cell<bool>,
+    x: RefCell<f64>,
+    f_y: Cell<bool>,
+    y: RefCell<f64>,
+}
+impl KStruct for Png_ChrmChromaticity {
+    type Root = Png;
+    type Parent = Png_ChrmChunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.x_int.borrow_mut() = _io.read_u4be()?.into();
+        *self_rc.y_int.borrow_mut() = _io.read_u4be()?.into();
+        Ok(())
+    }
+}
+impl Png_ChrmChromaticity {
+    pub fn x(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_x.get() {
+            return Ok(self.x.borrow());
+        }
+        self.f_x.set(true);
+        *self.x.borrow_mut() = (((*self.x_int() as f64) / (100000.0 as f64))) as f64;
+        Ok(self.x.borrow())
+    }
+    pub fn y(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_y.get() {
+            return Ok(self.y.borrow());
+        }
+        self.f_y.set(true);
+        *self.y.borrow_mut() = (((*self.y_int() as f64) / (100000.0 as f64))) as f64;
+        Ok(self.y.borrow())
+    }
+}
+impl Png_ChrmChromaticity {
+    pub fn x_int(&self) -> Ref<'_, u32> {
+        self.x_int.borrow()
+    }
+}
+impl Png_ChrmChromaticity {
+    pub fn y_int(&self) -> Ref<'_, u32> {
+        self.y_int.borrow()
+    }
+}
+impl Png_ChrmChromaticity {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
 /**
  * \sa https://www.w3.org/TR/png/#11cHRM Source
  */
@@ -856,10 +934,10 @@ pub struct Png_ChrmChunk {
     pub _root: SharedType<Png>,
     pub _parent: SharedType<Png_Chunk>,
     pub _self: SharedType<Self>,
-    white_point: RefCell<OptRc<Png_Point>>,
-    red: RefCell<OptRc<Png_Point>>,
-    green: RefCell<OptRc<Png_Point>>,
-    blue: RefCell<OptRc<Png_Point>>,
+    white_point: RefCell<OptRc<Png_ChrmChromaticity>>,
+    red: RefCell<OptRc<Png_ChrmChromaticity>>,
+    green: RefCell<OptRc<Png_ChrmChromaticity>>,
+    blue: RefCell<OptRc<Png_ChrmChromaticity>>,
     _io: RefCell<BytesReader>,
 }
 impl KStruct for Png_ChrmChunk {
@@ -879,13 +957,13 @@ impl KStruct for Png_ChrmChunk {
         let _rrc = self_rc._root.get_value().borrow().upgrade();
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        let t = Self::read_into::<_, Png_Point>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+        let t = Self::read_into::<_, Png_ChrmChromaticity>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
         *self_rc.white_point.borrow_mut() = t;
-        let t = Self::read_into::<_, Png_Point>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+        let t = Self::read_into::<_, Png_ChrmChromaticity>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
         *self_rc.red.borrow_mut() = t;
-        let t = Self::read_into::<_, Png_Point>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+        let t = Self::read_into::<_, Png_ChrmChromaticity>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
         *self_rc.green.borrow_mut() = t;
-        let t = Self::read_into::<_, Png_Point>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+        let t = Self::read_into::<_, Png_ChrmChromaticity>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
         *self_rc.blue.borrow_mut() = t;
         Ok(())
     }
@@ -893,22 +971,22 @@ impl KStruct for Png_ChrmChunk {
 impl Png_ChrmChunk {
 }
 impl Png_ChrmChunk {
-    pub fn white_point(&self) -> Ref<'_, OptRc<Png_Point>> {
+    pub fn white_point(&self) -> Ref<'_, OptRc<Png_ChrmChromaticity>> {
         self.white_point.borrow()
     }
 }
 impl Png_ChrmChunk {
-    pub fn red(&self) -> Ref<'_, OptRc<Png_Point>> {
+    pub fn red(&self) -> Ref<'_, OptRc<Png_ChrmChromaticity>> {
         self.red.borrow()
     }
 }
 impl Png_ChrmChunk {
-    pub fn green(&self) -> Ref<'_, OptRc<Png_Point>> {
+    pub fn green(&self) -> Ref<'_, OptRc<Png_ChrmChromaticity>> {
         self.green.borrow()
     }
 }
 impl Png_ChrmChunk {
-    pub fn blue(&self) -> Ref<'_, OptRc<Png_Point>> {
+    pub fn blue(&self) -> Ref<'_, OptRc<Png_ChrmChromaticity>> {
         self.blue.borrow()
     }
 }
@@ -932,24 +1010,40 @@ pub struct Png_Chunk {
 }
 #[derive(Debug, Clone)]
 pub enum Png_Chunk_Body {
+    Png_MdcvChunk(OptRc<Png_MdcvChunk>),
     Png_SrgbChunk(OptRc<Png_SrgbChunk>),
     Png_FrameControlChunk(OptRc<Png_FrameControlChunk>),
-    Png_PhysChunk(OptRc<Png_PhysChunk>),
     Png_ChrmChunk(OptRc<Png_ChrmChunk>),
     Png_EvernoteSkmfChunk(OptRc<Png_EvernoteSkmfChunk>),
     Png_TimeChunk(OptRc<Png_TimeChunk>),
     Png_AnimationControlChunk(OptRc<Png_AnimationControlChunk>),
     Png_CompressedTextChunk(OptRc<Png_CompressedTextChunk>),
-    Png_InternationalTextChunk(OptRc<Png_InternationalTextChunk>),
     Png_GamaChunk(OptRc<Png_GamaChunk>),
     Png_AdobeFireworksChunk(OptRc<Png_AdobeFireworksChunk>),
     Png_AtchChunk(OptRc<Png_AtchChunk>),
+    Png_PhysChunk(OptRc<Png_PhysChunk>),
+    Png_CicpChunk(OptRc<Png_CicpChunk>),
     Png_FrameDataChunk(OptRc<Png_FrameDataChunk>),
     Png_TextChunk(OptRc<Png_TextChunk>),
     Png_EvernoteSkrfChunk(OptRc<Png_EvernoteSkrfChunk>),
     Bytes(Vec<u8>),
     Png_PlteChunk(OptRc<Png_PlteChunk>),
     Png_BkgdChunk(OptRc<Png_BkgdChunk>),
+    Png_ClliChunk(OptRc<Png_ClliChunk>),
+    Png_InternationalTextChunk(OptRc<Png_InternationalTextChunk>),
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_MdcvChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_MdcvChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_MdcvChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_MdcvChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_MdcvChunk>) -> Self {
+        Self::Png_MdcvChunk(v)
+    }
 }
 impl From<&Png_Chunk_Body> for OptRc<Png_SrgbChunk> {
     fn from(v: &Png_Chunk_Body) -> Self {
@@ -975,19 +1069,6 @@ impl From<&Png_Chunk_Body> for OptRc<Png_FrameControlChunk> {
 impl From<OptRc<Png_FrameControlChunk>> for Png_Chunk_Body {
     fn from(v: OptRc<Png_FrameControlChunk>) -> Self {
         Self::Png_FrameControlChunk(v)
-    }
-}
-impl From<&Png_Chunk_Body> for OptRc<Png_PhysChunk> {
-    fn from(v: &Png_Chunk_Body) -> Self {
-        if let Png_Chunk_Body::Png_PhysChunk(x) = v {
-            return x.clone();
-        }
-        panic!("expected Png_Chunk_Body::Png_PhysChunk, got {:?}", v)
-    }
-}
-impl From<OptRc<Png_PhysChunk>> for Png_Chunk_Body {
-    fn from(v: OptRc<Png_PhysChunk>) -> Self {
-        Self::Png_PhysChunk(v)
     }
 }
 impl From<&Png_Chunk_Body> for OptRc<Png_ChrmChunk> {
@@ -1055,19 +1136,6 @@ impl From<OptRc<Png_CompressedTextChunk>> for Png_Chunk_Body {
         Self::Png_CompressedTextChunk(v)
     }
 }
-impl From<&Png_Chunk_Body> for OptRc<Png_InternationalTextChunk> {
-    fn from(v: &Png_Chunk_Body) -> Self {
-        if let Png_Chunk_Body::Png_InternationalTextChunk(x) = v {
-            return x.clone();
-        }
-        panic!("expected Png_Chunk_Body::Png_InternationalTextChunk, got {:?}", v)
-    }
-}
-impl From<OptRc<Png_InternationalTextChunk>> for Png_Chunk_Body {
-    fn from(v: OptRc<Png_InternationalTextChunk>) -> Self {
-        Self::Png_InternationalTextChunk(v)
-    }
-}
 impl From<&Png_Chunk_Body> for OptRc<Png_GamaChunk> {
     fn from(v: &Png_Chunk_Body) -> Self {
         if let Png_Chunk_Body::Png_GamaChunk(x) = v {
@@ -1105,6 +1173,32 @@ impl From<&Png_Chunk_Body> for OptRc<Png_AtchChunk> {
 impl From<OptRc<Png_AtchChunk>> for Png_Chunk_Body {
     fn from(v: OptRc<Png_AtchChunk>) -> Self {
         Self::Png_AtchChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_PhysChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_PhysChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_PhysChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_PhysChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_PhysChunk>) -> Self {
+        Self::Png_PhysChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_CicpChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_CicpChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_CicpChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_CicpChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_CicpChunk>) -> Self {
+        Self::Png_CicpChunk(v)
     }
 }
 impl From<&Png_Chunk_Body> for OptRc<Png_FrameDataChunk> {
@@ -1185,6 +1279,32 @@ impl From<OptRc<Png_BkgdChunk>> for Png_Chunk_Body {
         Self::Png_BkgdChunk(v)
     }
 }
+impl From<&Png_Chunk_Body> for OptRc<Png_ClliChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_ClliChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_ClliChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_ClliChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_ClliChunk>) -> Self {
+        Self::Png_ClliChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_InternationalTextChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_InternationalTextChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_InternationalTextChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_InternationalTextChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_InternationalTextChunk>) -> Self {
+        Self::Png_InternationalTextChunk(v)
+    }
+}
 impl KStruct for Png_Chunk {
     type Root = Png;
     type Parent = Png;
@@ -1245,6 +1365,20 @@ impl KStruct for Png_Chunk {
                 let t = Self::read_into::<BytesReader, Png_ChrmChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
+            else if *on == "cICP" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_CicpChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "cLLI" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_ClliChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
             else if *on == "fcTL" {
                 *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
                 let body_raw = self_rc.body_raw.borrow();
@@ -1271,6 +1405,13 @@ impl KStruct for Png_Chunk {
                 let body_raw = self_rc.body_raw.borrow();
                 let _t_body_raw_io = BytesReader::from(body_raw.clone());
                 let t = Self::read_into::<BytesReader, Png_InternationalTextChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "mDCV" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_MdcvChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
             else if *on == "mkBS" {
@@ -1381,6 +1522,206 @@ impl Png_Chunk {
 impl Png_Chunk {
     pub fn body_raw(&self) -> Ref<'_, Vec<u8>> {
         self.body_raw.borrow()
+    }
+}
+
+/**
+ * \sa https://www.w3.org/TR/png/#cICP-chunk Source
+ * \sa https://w3c.github.io/png/Implementation_Report_3e/#cicp Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_CicpChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    color_primaries: RefCell<u8>,
+    transfer_function: RefCell<u8>,
+    matrix_coefficients: RefCell<u8>,
+    video_full_range_flag: RefCell<u8>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_CicpChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.color_primaries.borrow_mut() = _io.read_u1()?.into();
+        *self_rc.transfer_function.borrow_mut() = _io.read_u1()?.into();
+        *self_rc.matrix_coefficients.borrow_mut() = _io.read_u1()?.into();
+        if !(((*self_rc.matrix_coefficients() as u8) == (0 as u8))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotEqual, src_path: "/types/cicp_chunk/seq/2".to_string() }));
+        }
+        *self_rc.video_full_range_flag.borrow_mut() = _io.read_u1()?.into();
+        if !( ((((*self_rc.video_full_range_flag() as u8) == (0 as u8))) || (((*self_rc.video_full_range_flag() as u8) == (1 as u8)))) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotAnyOf, src_path: "/types/cicp_chunk/seq/3".to_string() }));
+        }
+        Ok(())
+    }
+}
+impl Png_CicpChunk {
+}
+
+/**
+ * values above 22 are reserved, see
+ * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325>
+ */
+impl Png_CicpChunk {
+    pub fn color_primaries(&self) -> Ref<'_, u8> {
+        self.color_primaries.borrow()
+    }
+}
+
+/**
+ * values above 18 are reserved, see
+ * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329>
+ */
+impl Png_CicpChunk {
+    pub fn transfer_function(&self) -> Ref<'_, u8> {
+        self.transfer_function.borrow()
+    }
+}
+
+/**
+ * From the [official
+ * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+ * 
+ * > RGB is currently the only supported color model in PNG, and as such
+ * > `Matrix Coefficients` shall be set to `0`.
+ */
+impl Png_CicpChunk {
+    pub fn matrix_coefficients(&self) -> Ref<'_, u8> {
+        self.matrix_coefficients.borrow()
+    }
+}
+
+/**
+ * From the [official
+ * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+ * 
+ * > If `Video Full Range Flag` value is `1`, then the image is a
+ * > full-range image. Typically, images in the RGB color representation
+ * > are stored in the full-range signal quantization, therefore the vast
+ * > majority of computer graphics and web images, including those used
+ * > in traditional PNG workflows, are full-range images.
+ * 
+ * > If `Video Full Range Flag` value is `0`, then the image is a
+ * > narrow-range image.
+ */
+impl Png_CicpChunk {
+    pub fn video_full_range_flag(&self) -> Ref<'_, u8> {
+        self.video_full_range_flag.borrow()
+    }
+}
+impl Png_CicpChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * \sa https://www.w3.org/TR/png/#cLLI-chunk Source
+ * \sa https://w3c.github.io/png/Implementation_Report_3e/#light Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_ClliChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    max_content_light_level_int: RefCell<u32>,
+    max_frame_average_light_level_int: RefCell<u32>,
+    _io: RefCell<BytesReader>,
+    f_max_content_light_level: Cell<bool>,
+    max_content_light_level: RefCell<f64>,
+    f_max_frame_average_light_level: Cell<bool>,
+    max_frame_average_light_level: RefCell<f64>,
+}
+impl KStruct for Png_ClliChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.max_content_light_level_int.borrow_mut() = _io.read_u4be()?.into();
+        *self_rc.max_frame_average_light_level_int.borrow_mut() = _io.read_u4be()?.into();
+        Ok(())
+    }
+}
+impl Png_ClliChunk {
+
+    /**
+     * Maximum Content Light Level (MaxCLL), in cd/m^2
+     */
+    pub fn max_content_light_level(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_max_content_light_level.get() {
+            return Ok(self.max_content_light_level.borrow());
+        }
+        self.f_max_content_light_level.set(true);
+        *self.max_content_light_level.borrow_mut() = (((*self.max_content_light_level_int() as f64) * (0.0001 as f64))) as f64;
+        Ok(self.max_content_light_level.borrow())
+    }
+
+    /**
+     * Maximum Frame Average Light Level (MaxFALL), in cd/m^2
+     */
+    pub fn max_frame_average_light_level(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_max_frame_average_light_level.get() {
+            return Ok(self.max_frame_average_light_level.borrow());
+        }
+        self.f_max_frame_average_light_level.set(true);
+        *self.max_frame_average_light_level.borrow_mut() = (((*self.max_frame_average_light_level_int() as f64) * (0.0001 as f64))) as f64;
+        Ok(self.max_frame_average_light_level.borrow())
+    }
+}
+impl Png_ClliChunk {
+    pub fn max_content_light_level_int(&self) -> Ref<'_, u32> {
+        self.max_content_light_level_int.borrow()
+    }
+}
+impl Png_ClliChunk {
+    pub fn max_frame_average_light_level_int(&self) -> Ref<'_, u32> {
+        self.max_frame_average_light_level_int.borrow()
+    }
+}
+impl Png_ClliChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
     }
 }
 
@@ -1929,6 +2270,9 @@ impl KStruct for Png_IhdrChunk {
             return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/ihdr_chunk/seq/1".to_string() }));
         }
         *self_rc.bit_depth.borrow_mut() = _io.read_u1()?.into();
+        if !( ((((*self_rc.bit_depth() as u8) == (1 as u8))) || (((*self_rc.bit_depth() as u8) == (2 as u8))) || (((*self_rc.bit_depth() as u8) == (4 as u8))) || (((*self_rc.bit_depth() as u8) == (8 as u8))) || (((*self_rc.bit_depth() as u8) == (16 as u8)))) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotAnyOf, src_path: "/types/ihdr_chunk/seq/2".to_string() }));
+        }
         *self_rc.color_type.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
         *self_rc.compression_method.borrow_mut() = _io.read_u1()?.into();
         *self_rc.filter_method.borrow_mut() = _io.read_u1()?.into();
@@ -1979,6 +2323,54 @@ impl Png_IhdrChunk {
     }
 }
 
+#[derive(Default, Debug, Clone)]
+pub struct Png_InternationalText {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_InternationalTextChunk>,
+    pub _self: SharedType<Self>,
+    text: RefCell<String>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_InternationalText {
+    type Root = Png;
+    type Parent = Png_InternationalTextChunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.text.borrow_mut() = bytes_to_str(&_io.read_bytes_full()?.into(), "UTF-8")?;
+        Ok(())
+    }
+}
+impl Png_InternationalText {
+}
+
+/**
+ * Text contents ("value" of this key-value pair), written in
+ * language specified in `language_tag`. Line breaks are
+ * allowed.
+ */
+impl Png_InternationalText {
+    pub fn text(&self) -> Ref<'_, String> {
+        self.text.borrow()
+    }
+}
+impl Png_InternationalText {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
 /**
  * International text chunk effectively allows to store key-value string pairs in
  * PNG container. Both "key" (keyword) and "value" (text) parts are
@@ -1997,8 +2389,14 @@ pub struct Png_InternationalTextChunk {
     compression_method: RefCell<Png_CompressionMethods>,
     language_tag: RefCell<String>,
     translated_keyword: RefCell<String>,
-    text: RefCell<String>,
+    text_plain: RefCell<OptRc<Png_InternationalText>>,
+    text_zlib: RefCell<OptRc<Png_InternationalText>>,
     _io: RefCell<BytesReader>,
+    text_plain_raw: RefCell<Vec<u8>>,
+    text_zlib_raw: RefCell<Vec<u8>>,
+    text_zlib_raw_raw: RefCell<Vec<u8>>,
+    f_text: Cell<bool>,
+    text: RefCell<String>,
 }
 impl KStruct for Png_InternationalTextChunk {
     type Root = Png;
@@ -2019,14 +2417,51 @@ impl KStruct for Png_InternationalTextChunk {
         let _r = _rrc.as_ref().unwrap();
         *self_rc.keyword.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "UTF-8")?;
         *self_rc.compression_flag.borrow_mut() = _io.read_u1()?.into();
+        if !( ((((*self_rc.compression_flag() as u8) == (0 as u8))) || (((*self_rc.compression_flag() as u8) == (1 as u8)))) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotAnyOf, src_path: "/types/international_text_chunk/seq/1".to_string() }));
+        }
         *self_rc.compression_method.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
         *self_rc.language_tag.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "ASCII")?;
         *self_rc.translated_keyword.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "UTF-8")?;
-        *self_rc.text.borrow_mut() = bytes_to_str(&_io.read_bytes_full()?.into(), "UTF-8")?;
+        if ((*self_rc.compression_flag() as u8) == (0 as u8)) {
+            *self_rc.text_plain_raw.borrow_mut() = _io.read_bytes_full()?.into();
+            let text_plain_raw = self_rc.text_plain_raw.borrow();
+            let _t_text_plain_raw_io = BytesReader::from(text_plain_raw.clone());
+            let t = Self::read_into::<BytesReader, Png_InternationalText>(&_t_text_plain_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+            *self_rc.text_plain.borrow_mut() = t;
+        }
+        if ((*self_rc.compression_flag() as u8) == (1 as u8)) {
+            *self_rc.text_zlib_raw_raw.borrow_mut() = _io.read_bytes_full()?.into();
+            *self_rc.text_zlib_raw.borrow_mut() = process_zlib(&self_rc.text_zlib_raw_raw.borrow()).map_err(|msg| KError::BytesDecodingError { msg })?;
+            let text_zlib_raw = self_rc.text_zlib_raw.borrow();
+            let _t_text_zlib_raw_io = BytesReader::from(text_zlib_raw.clone());
+            let t = Self::read_into::<BytesReader, Png_InternationalText>(&_t_text_zlib_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+            *self_rc.text_zlib.borrow_mut() = t;
+        }
         Ok(())
     }
 }
 impl Png_InternationalTextChunk {
+
+    /**
+     * Text contents ("value" of this key-value pair), written in
+     * language specified in `language_tag`. Line breaks are
+     * allowed.
+     */
+    pub fn text(
+        &self
+    ) -> KResult<Ref<'_, String>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_text.get() {
+            return Ok(self.text.borrow());
+        }
+        self.f_text.set(true);
+        *self.text.borrow_mut() = if ((*self.compression_flag() as u8) == (0 as u8)) { self.text_plain().clone() } else { self.text_zlib().clone() }.text().to_string();
+        Ok(self.text.borrow())
+    }
 }
 
 /**
@@ -2073,18 +2508,239 @@ impl Png_InternationalTextChunk {
         self.translated_keyword.borrow()
     }
 }
-
-/**
- * Text contents ("value" of this key-value pair), written in
- * language specified in `language_tag`. Line breaks are
- * allowed.
- */
 impl Png_InternationalTextChunk {
-    pub fn text(&self) -> Ref<'_, String> {
-        self.text.borrow()
+    pub fn text_plain(&self) -> Ref<'_, OptRc<Png_InternationalText>> {
+        self.text_plain.borrow()
     }
 }
 impl Png_InternationalTextChunk {
+    pub fn text_zlib(&self) -> Ref<'_, OptRc<Png_InternationalText>> {
+        self.text_zlib.borrow()
+    }
+}
+impl Png_InternationalTextChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+impl Png_InternationalTextChunk {
+    pub fn text_plain_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.text_plain_raw.borrow()
+    }
+}
+impl Png_InternationalTextChunk {
+    pub fn text_zlib_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.text_zlib_raw.borrow()
+    }
+}
+impl Png_InternationalTextChunk {
+    pub fn text_zlib_raw_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.text_zlib_raw_raw.borrow()
+    }
+}
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_MdcvChromaticity {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_MdcvChunk>,
+    pub _self: SharedType<Self>,
+    x_int: RefCell<u16>,
+    y_int: RefCell<u16>,
+    _io: RefCell<BytesReader>,
+    f_x: Cell<bool>,
+    x: RefCell<f64>,
+    f_y: Cell<bool>,
+    y: RefCell<f64>,
+}
+impl KStruct for Png_MdcvChromaticity {
+    type Root = Png;
+    type Parent = Png_MdcvChunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.x_int.borrow_mut() = _io.read_u2be()?.into();
+        *self_rc.y_int.borrow_mut() = _io.read_u2be()?.into();
+        Ok(())
+    }
+}
+impl Png_MdcvChromaticity {
+    pub fn x(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_x.get() {
+            return Ok(self.x.borrow());
+        }
+        self.f_x.set(true);
+        *self.x.borrow_mut() = (((*self.x_int() as f64) * (0.00002 as f64))) as f64;
+        Ok(self.x.borrow())
+    }
+    pub fn y(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_y.get() {
+            return Ok(self.y.borrow());
+        }
+        self.f_y.set(true);
+        *self.y.borrow_mut() = (((*self.y_int() as f64) * (0.00002 as f64))) as f64;
+        Ok(self.y.borrow())
+    }
+}
+impl Png_MdcvChromaticity {
+    pub fn x_int(&self) -> Ref<'_, u16> {
+        self.x_int.borrow()
+    }
+}
+impl Png_MdcvChromaticity {
+    pub fn y_int(&self) -> Ref<'_, u16> {
+        self.y_int.borrow()
+    }
+}
+impl Png_MdcvChromaticity {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * \sa https://www.w3.org/TR/png/#mDCV-chunk Source
+ * \sa https://w3c.github.io/png/Implementation_Report_3e/#mastering Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_MdcvChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    red: RefCell<OptRc<Png_MdcvChromaticity>>,
+    green: RefCell<OptRc<Png_MdcvChromaticity>>,
+    blue: RefCell<OptRc<Png_MdcvChromaticity>>,
+    white_point: RefCell<OptRc<Png_MdcvChromaticity>>,
+    max_luminance_int: RefCell<u32>,
+    min_luminance_int: RefCell<u32>,
+    _io: RefCell<BytesReader>,
+    f_max_luminance: Cell<bool>,
+    max_luminance: RefCell<f64>,
+    f_min_luminance: Cell<bool>,
+    min_luminance: RefCell<f64>,
+}
+impl KStruct for Png_MdcvChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        let t = Self::read_into::<_, Png_MdcvChromaticity>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+        *self_rc.red.borrow_mut() = t;
+        let t = Self::read_into::<_, Png_MdcvChromaticity>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+        *self_rc.green.borrow_mut() = t;
+        let t = Self::read_into::<_, Png_MdcvChromaticity>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+        *self_rc.blue.borrow_mut() = t;
+        let t = Self::read_into::<_, Png_MdcvChromaticity>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+        *self_rc.white_point.borrow_mut() = t;
+        *self_rc.max_luminance_int.borrow_mut() = _io.read_u4be()?.into();
+        *self_rc.min_luminance_int.borrow_mut() = _io.read_u4be()?.into();
+        Ok(())
+    }
+}
+impl Png_MdcvChunk {
+
+    /**
+     * Maximum luminance in cd/m^2
+     */
+    pub fn max_luminance(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_max_luminance.get() {
+            return Ok(self.max_luminance.borrow());
+        }
+        self.f_max_luminance.set(true);
+        *self.max_luminance.borrow_mut() = (((*self.max_luminance_int() as f64) * (0.0001 as f64))) as f64;
+        Ok(self.max_luminance.borrow())
+    }
+
+    /**
+     * Minimum luminance in cd/m^2
+     */
+    pub fn min_luminance(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_min_luminance.get() {
+            return Ok(self.min_luminance.borrow());
+        }
+        self.f_min_luminance.set(true);
+        *self.min_luminance.borrow_mut() = (((*self.min_luminance_int() as f64) * (0.0001 as f64))) as f64;
+        Ok(self.min_luminance.borrow())
+    }
+}
+impl Png_MdcvChunk {
+    pub fn red(&self) -> Ref<'_, OptRc<Png_MdcvChromaticity>> {
+        self.red.borrow()
+    }
+}
+impl Png_MdcvChunk {
+    pub fn green(&self) -> Ref<'_, OptRc<Png_MdcvChromaticity>> {
+        self.green.borrow()
+    }
+}
+impl Png_MdcvChunk {
+    pub fn blue(&self) -> Ref<'_, OptRc<Png_MdcvChromaticity>> {
+        self.blue.borrow()
+    }
+}
+impl Png_MdcvChunk {
+    pub fn white_point(&self) -> Ref<'_, OptRc<Png_MdcvChromaticity>> {
+        self.white_point.borrow()
+    }
+}
+impl Png_MdcvChunk {
+    pub fn max_luminance_int(&self) -> Ref<'_, u32> {
+        self.max_luminance_int.borrow()
+    }
+}
+impl Png_MdcvChunk {
+    pub fn min_luminance_int(&self) -> Ref<'_, u32> {
+        self.min_luminance_int.borrow()
+    }
+}
+impl Png_MdcvChunk {
     pub fn _io(&self) -> Ref<'_, BytesReader> {
         self._io.borrow()
     }
@@ -2211,87 +2867,6 @@ impl Png_PlteChunk {
     }
 }
 impl Png_PlteChunk {
-    pub fn _io(&self) -> Ref<'_, BytesReader> {
-        self._io.borrow()
-    }
-}
-
-#[derive(Default, Debug, Clone)]
-pub struct Png_Point {
-    pub _root: SharedType<Png>,
-    pub _parent: SharedType<Png_ChrmChunk>,
-    pub _self: SharedType<Self>,
-    x_int: RefCell<u32>,
-    y_int: RefCell<u32>,
-    _io: RefCell<BytesReader>,
-    f_x: Cell<bool>,
-    x: RefCell<f64>,
-    f_y: Cell<bool>,
-    y: RefCell<f64>,
-}
-impl KStruct for Png_Point {
-    type Root = Png;
-    type Parent = Png_ChrmChunk;
-
-    fn read<S: KStream>(
-        self_rc: &OptRc<Self>,
-        _io: &S,
-        _root: SharedType<Self::Root>,
-        _parent: SharedType<Self::Parent>,
-    ) -> KResult<()> {
-        *self_rc._io.borrow_mut() = _io.clone();
-        self_rc._root.set(_root.get());
-        self_rc._parent.set(_parent.get());
-        self_rc._self.set(Ok(self_rc.clone()));
-        let _rrc = self_rc._root.get_value().borrow().upgrade();
-        let _prc = self_rc._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        *self_rc.x_int.borrow_mut() = _io.read_u4be()?.into();
-        *self_rc.y_int.borrow_mut() = _io.read_u4be()?.into();
-        Ok(())
-    }
-}
-impl Png_Point {
-    pub fn x(
-        &self
-    ) -> KResult<Ref<'_, f64>> {
-        let _io = self._io.borrow();
-        let _rrc = self._root.get_value().borrow().upgrade();
-        let _prc = self._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        if self.f_x.get() {
-            return Ok(self.x.borrow());
-        }
-        self.f_x.set(true);
-        *self.x.borrow_mut() = (((*self.x_int() as f64) / (100000.0 as f64))) as f64;
-        Ok(self.x.borrow())
-    }
-    pub fn y(
-        &self
-    ) -> KResult<Ref<'_, f64>> {
-        let _io = self._io.borrow();
-        let _rrc = self._root.get_value().borrow().upgrade();
-        let _prc = self._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        if self.f_y.get() {
-            return Ok(self.y.borrow());
-        }
-        self.f_y.set(true);
-        *self.y.borrow_mut() = (((*self.y_int() as f64) / (100000.0 as f64))) as f64;
-        Ok(self.y.borrow())
-    }
-}
-impl Png_Point {
-    pub fn x_int(&self) -> Ref<'_, u32> {
-        self.x_int.borrow()
-    }
-}
-impl Png_Point {
-    pub fn y_int(&self) -> Ref<'_, u32> {
-        self.y_int.borrow()
-    }
-}
-impl Png_Point {
     pub fn _io(&self) -> Ref<'_, BytesReader> {
         self._io.borrow()
     }

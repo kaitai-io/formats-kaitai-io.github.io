@@ -31,8 +31,11 @@ public:
     class bkgd_greyscale_t;
     class bkgd_indexed_t;
     class bkgd_truecolor_t;
+    class chrm_chromaticity_t;
     class chrm_chunk_t;
     class chunk_t;
+    class cicp_chunk_t;
+    class clli_chunk_t;
     class compressed_text_chunk_t;
     class evernote_skmf_chunk_t;
     class evernote_skrf_chunk_t;
@@ -40,10 +43,12 @@ public:
     class frame_data_chunk_t;
     class gama_chunk_t;
     class ihdr_chunk_t;
+    class international_text_t;
     class international_text_chunk_t;
+    class mdcv_chromaticity_t;
+    class mdcv_chunk_t;
     class phys_chunk_t;
     class plte_chunk_t;
-    class point_t;
     class rgb_t;
     class srgb_chunk_t;
     class text_chunk_t;
@@ -405,6 +410,46 @@ public:
         png_t::bkgd_chunk_t* _parent() const { return m__parent; }
     };
 
+    class chrm_chromaticity_t : public kaitai::kstruct {
+
+    public:
+
+        chrm_chromaticity_t(kaitai::kstream* p__io, png_t::chrm_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~chrm_chromaticity_t();
+
+    private:
+        bool f_x;
+        double m_x;
+
+    public:
+        double x();
+
+    private:
+        bool f_y;
+        double m_y;
+
+    public:
+        double y();
+
+    private:
+        uint32_t m_x_int;
+        uint32_t m_y_int;
+        png_t* m__root;
+        png_t::chrm_chunk_t* m__parent;
+
+    public:
+        uint32_t x_int() const { return m_x_int; }
+        uint32_t y_int() const { return m_y_int; }
+        png_t* _root() const { return m__root; }
+        png_t::chrm_chunk_t* _parent() const { return m__parent; }
+    };
+
     /**
      * \sa https://www.w3.org/TR/png/#11cHRM Source
      */
@@ -423,18 +468,18 @@ public:
         ~chrm_chunk_t();
 
     private:
-        point_t* m_white_point;
-        point_t* m_red;
-        point_t* m_green;
-        point_t* m_blue;
+        chrm_chromaticity_t* m_white_point;
+        chrm_chromaticity_t* m_red;
+        chrm_chromaticity_t* m_green;
+        chrm_chromaticity_t* m_blue;
         png_t* m__root;
         png_t::chunk_t* m__parent;
 
     public:
-        point_t* white_point() const { return m_white_point; }
-        point_t* red() const { return m_red; }
-        point_t* green() const { return m_green; }
-        point_t* blue() const { return m_blue; }
+        chrm_chromaticity_t* white_point() const { return m_white_point; }
+        chrm_chromaticity_t* red() const { return m_red; }
+        chrm_chromaticity_t* green() const { return m_green; }
+        chrm_chromaticity_t* blue() const { return m_blue; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };
@@ -477,6 +522,126 @@ public:
         png_t* _parent() const { return m__parent; }
         std::string _raw_body() const { return m__raw_body; }
         kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
+    };
+
+    /**
+     * \sa https://www.w3.org/TR/png/#cICP-chunk Source
+     * \sa https://w3c.github.io/png/Implementation_Report_3e/#cicp Source
+     */
+
+    class cicp_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        cicp_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~cicp_chunk_t();
+
+    private:
+        uint8_t m_color_primaries;
+        uint8_t m_transfer_function;
+        uint8_t m_matrix_coefficients;
+        uint8_t m_video_full_range_flag;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * values above 22 are reserved, see
+         * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3322-L3325>
+         */
+        uint8_t color_primaries() const { return m_color_primaries; }
+
+        /**
+         * values above 18 are reserved, see
+         * <https://github.com/pnggroup/pngcheck/blob/bd33ad6490269df07cac81e5305f4ebf56c2b637/pngcheck.c#L3326-L3329>
+         */
+        uint8_t transfer_function() const { return m_transfer_function; }
+
+        /**
+         * From the [official
+         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+         * 
+         * > RGB is currently the only supported color model in PNG, and as such
+         * > `Matrix Coefficients` shall be set to `0`.
+         */
+        uint8_t matrix_coefficients() const { return m_matrix_coefficients; }
+
+        /**
+         * From the [official
+         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#cICP-chunk):
+         * 
+         * > If `Video Full Range Flag` value is `1`, then the image is a
+         * > full-range image. Typically, images in the RGB color representation
+         * > are stored in the full-range signal quantization, therefore the vast
+         * > majority of computer graphics and web images, including those used
+         * > in traditional PNG workflows, are full-range images.
+         * 
+         * > If `Video Full Range Flag` value is `0`, then the image is a
+         * > narrow-range image.
+         */
+        uint8_t video_full_range_flag() const { return m_video_full_range_flag; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.w3.org/TR/png/#cLLI-chunk Source
+     * \sa https://w3c.github.io/png/Implementation_Report_3e/#light Source
+     */
+
+    class clli_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        clli_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~clli_chunk_t();
+
+    private:
+        bool f_max_content_light_level;
+        double m_max_content_light_level;
+
+    public:
+
+        /**
+         * Maximum Content Light Level (MaxCLL), in cd/m^2
+         */
+        double max_content_light_level();
+
+    private:
+        bool f_max_frame_average_light_level;
+        double m_max_frame_average_light_level;
+
+    public:
+
+        /**
+         * Maximum Frame Average Light Level (MaxFALL), in cd/m^2
+         */
+        double max_frame_average_light_level();
+
+    private:
+        uint32_t m_max_content_light_level_int;
+        uint32_t m_max_frame_average_light_level_int;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+        uint32_t max_content_light_level_int() const { return m_max_content_light_level_int; }
+        uint32_t max_frame_average_light_level_int() const { return m_max_frame_average_light_level_int; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -811,6 +976,36 @@ public:
         png_t* _parent() const { return m__parent; }
     };
 
+    class international_text_t : public kaitai::kstruct {
+
+    public:
+
+        international_text_t(kaitai::kstream* p__io, png_t::international_text_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~international_text_t();
+
+    private:
+        std::string m_text;
+        png_t* m__root;
+        png_t::international_text_chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Text contents ("value" of this key-value pair), written in
+         * language specified in `language_tag`. Line breaks are
+         * allowed.
+         */
+        std::string text() const { return m_text; }
+        png_t* _root() const { return m__root; }
+        png_t::international_text_chunk_t* _parent() const { return m__parent; }
+    };
+
     /**
      * International text chunk effectively allows to store key-value string pairs in
      * PNG container. Both "key" (keyword) and "value" (text) parts are
@@ -833,14 +1028,63 @@ public:
         ~international_text_chunk_t();
 
     private:
+        bool f_text;
+        std::string m_text;
+
+    public:
+
+        /**
+         * Text contents ("value" of this key-value pair), written in
+         * language specified in `language_tag`. Line breaks are
+         * allowed.
+         */
+        std::string text();
+
+    private:
         std::string m_keyword;
         uint8_t m_compression_flag;
         compression_methods_t m_compression_method;
         std::string m_language_tag;
         std::string m_translated_keyword;
-        std::string m_text;
+        international_text_t* m_text_plain;
+        bool n_text_plain;
+
+    public:
+        bool _is_null_text_plain() { text_plain(); return n_text_plain; };
+
+    private:
+        international_text_t* m_text_zlib;
+        bool n_text_zlib;
+
+    public:
+        bool _is_null_text_zlib() { text_zlib(); return n_text_zlib; };
+
+    private:
         png_t* m__root;
         png_t::chunk_t* m__parent;
+        std::string m__raw_text_plain;
+        bool n__raw_text_plain;
+
+    public:
+        bool _is_null__raw_text_plain() { _raw_text_plain(); return n__raw_text_plain; };
+
+    private:
+        kaitai::kstream* m__io__raw_text_plain;
+        std::string m__raw_text_zlib;
+        bool n__raw_text_zlib;
+
+    public:
+        bool _is_null__raw_text_zlib() { _raw_text_zlib(); return n__raw_text_zlib; };
+
+    private:
+        kaitai::kstream* m__io__raw_text_zlib;
+        std::string m__raw__raw_text_zlib;
+        bool n__raw__raw_text_zlib;
+
+    public:
+        bool _is_null__raw__raw_text_zlib() { _raw__raw_text_zlib(); return n__raw__raw_text_zlib; };
+
+    private:
 
     public:
 
@@ -868,13 +1112,114 @@ public:
          * `language_tag`. Line breaks are not allowed.
          */
         std::string translated_keyword() const { return m_translated_keyword; }
+        international_text_t* text_plain() const { return m_text_plain; }
+        international_text_t* text_zlib() const { return m_text_zlib; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+        std::string _raw_text_plain() const { return m__raw_text_plain; }
+        kaitai::kstream* _io__raw_text_plain() const { return m__io__raw_text_plain; }
+        std::string _raw_text_zlib() const { return m__raw_text_zlib; }
+        kaitai::kstream* _io__raw_text_zlib() const { return m__io__raw_text_zlib; }
+        std::string _raw__raw_text_zlib() const { return m__raw__raw_text_zlib; }
+    };
+
+    class mdcv_chromaticity_t : public kaitai::kstruct {
+
+    public:
+
+        mdcv_chromaticity_t(kaitai::kstream* p__io, png_t::mdcv_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~mdcv_chromaticity_t();
+
+    private:
+        bool f_x;
+        double m_x;
+
+    public:
+        double x();
+
+    private:
+        bool f_y;
+        double m_y;
+
+    public:
+        double y();
+
+    private:
+        uint16_t m_x_int;
+        uint16_t m_y_int;
+        png_t* m__root;
+        png_t::mdcv_chunk_t* m__parent;
+
+    public:
+        uint16_t x_int() const { return m_x_int; }
+        uint16_t y_int() const { return m_y_int; }
+        png_t* _root() const { return m__root; }
+        png_t::mdcv_chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.w3.org/TR/png/#mDCV-chunk Source
+     * \sa https://w3c.github.io/png/Implementation_Report_3e/#mastering Source
+     */
+
+    class mdcv_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        mdcv_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~mdcv_chunk_t();
+
+    private:
+        bool f_max_luminance;
+        double m_max_luminance;
+
+    public:
 
         /**
-         * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Line breaks are
-         * allowed.
+         * Maximum luminance in cd/m^2
          */
-        std::string text() const { return m_text; }
+        double max_luminance();
+
+    private:
+        bool f_min_luminance;
+        double m_min_luminance;
+
+    public:
+
+        /**
+         * Minimum luminance in cd/m^2
+         */
+        double min_luminance();
+
+    private:
+        mdcv_chromaticity_t* m_red;
+        mdcv_chromaticity_t* m_green;
+        mdcv_chromaticity_t* m_blue;
+        mdcv_chromaticity_t* m_white_point;
+        uint32_t m_max_luminance_int;
+        uint32_t m_min_luminance_int;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+        mdcv_chromaticity_t* red() const { return m_red; }
+        mdcv_chromaticity_t* green() const { return m_green; }
+        mdcv_chromaticity_t* blue() const { return m_blue; }
+        mdcv_chromaticity_t* white_point() const { return m_white_point; }
+        uint32_t max_luminance_int() const { return m_max_luminance_int; }
+        uint32_t min_luminance_int() const { return m_min_luminance_int; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };
@@ -949,46 +1294,6 @@ public:
         std::vector<rgb_t*>* entries() const { return m_entries; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    class point_t : public kaitai::kstruct {
-
-    public:
-
-        point_t(kaitai::kstream* p__io, png_t::chrm_chunk_t* p__parent = 0, png_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~point_t();
-
-    private:
-        bool f_x;
-        double m_x;
-
-    public:
-        double x();
-
-    private:
-        bool f_y;
-        double m_y;
-
-    public:
-        double y();
-
-    private:
-        uint32_t m_x_int;
-        uint32_t m_y_int;
-        png_t* m__root;
-        png_t::chrm_chunk_t* m__parent;
-
-    public:
-        uint32_t x_int() const { return m_x_int; }
-        uint32_t y_int() const { return m_y_int; }
-        png_t* _root() const { return m__root; }
-        png_t::chrm_chunk_t* _parent() const { return m__parent; }
     };
 
     class rgb_t : public kaitai::kstruct {
