@@ -29,7 +29,7 @@ namespace {
                 throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x49\x48\x44\x52", $this->_m_ihdrType, $this->_io, "/seq/2");
             }
             $this->_m_ihdr = new \Png\IhdrChunk($this->_io, $this, $this->_root);
-            $this->_m_ihdrCrc = $this->_io->readBytes(4);
+            $this->_m_ihdrCrc = $this->_io->readU4be();
             $this->_m_chunks = [];
             $i = 0;
             do {
@@ -86,7 +86,8 @@ namespace Png {
         protected $_m_numPlays;
 
         /**
-         * Number of frames, must be equal to the number of `frame_control_chunk`s
+         * Number of frames, must be equal to the number of `fcTL` chunks (i.e.
+         * `frame_control_chunk` objects)
          */
         public function numFrames() { return $this->_m_numFrames; }
 
@@ -337,10 +338,10 @@ namespace Png {
 
         private function _read() {
             $this->_m_len = $this->_io->readU4be();
-            $this->_m_type = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "UTF-8");
-            $_ = $this->_m_type;
-            if (!($this->type() != "\000\000\000\000")) {
-                throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_type, $this->_io, "/types/chunk/seq/1");
+            $this->_m_typeRaw = $this->_io->readBytes(4);
+            $_ = $this->_m_typeRaw;
+            if (!( (( (( ((ord($_[0]) >= 65) && (ord($_[0]) <= 90)) ) || ( ((ord($_[0]) >= 97) && (ord($_[0]) <= 122)) )) ) && ( (( ((ord($_[1]) >= 65) && (ord($_[1]) <= 90)) ) || ( ((ord($_[1]) >= 97) && (ord($_[1]) <= 122)) )) ) && ( (( ((ord($_[2]) >= 65) && (ord($_[2]) <= 90)) ) || ( ((ord($_[2]) >= 97) && (ord($_[2]) <= 122)) )) ) && ( (( ((ord($_[3]) >= 65) && (ord($_[3]) <= 90)) ) || ( ((ord($_[3]) >= 97) && (ord($_[3]) <= 122)) )) )) )) {
+                throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_typeRaw, $this->_io, "/types/chunk/seq/1");
             }
             switch ($this->type()) {
                 case "PLTE":
@@ -457,15 +458,79 @@ namespace Png {
                     $this->_m_body = $this->_io->readBytes($this->len());
                     break;
             }
-            $this->_m_crc = $this->_io->readBytes(4);
+            $this->_m_crc = $this->_io->readU4be();
+        }
+        protected $_m_isAncillary;
+
+        /**
+         * false = critical chunk, true = ancillary chunk
+         */
+        public function isAncillary() {
+            if ($this->_m_isAncillary !== null)
+                return $this->_m_isAncillary;
+            $this->_m_isAncillary = (ord($this->typeRaw()[0]) & 32) != 0;
+            return $this->_m_isAncillary;
+        }
+        protected $_m_isPrivate;
+
+        /**
+         * false = public chunk (defined by the W3C), true = private chunk (can
+         * be defined by anyone)
+         */
+        public function isPrivate() {
+            if ($this->_m_isPrivate !== null)
+                return $this->_m_isPrivate;
+            $this->_m_isPrivate = (ord($this->typeRaw()[1]) & 32) != 0;
+            return $this->_m_isPrivate;
+        }
+        protected $_m_isSafeToCopy;
+
+        /**
+         * Defines whether the chunk may be copied if the image data (i.e.
+         * pixels) is modified. This tells PNG editors how to handle unknown
+         * chunks - see section [14.2 Behavior of PNG
+         * editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in
+         * the official specification.
+         */
+        public function isSafeToCopy() {
+            if ($this->_m_isSafeToCopy !== null)
+                return $this->_m_isSafeToCopy;
+            $this->_m_isSafeToCopy = (ord($this->typeRaw()[3]) & 32) != 0;
+            return $this->_m_isSafeToCopy;
+        }
+        protected $_m_reservedBit;
+
+        /**
+         * Should be `false`, i.e. all chunk types should have uppercase third
+         * letters (the lowercase third letter is reserved for possible future
+         * extensions to the PNG standard)
+         */
+        public function reservedBit() {
+            if ($this->_m_reservedBit !== null)
+                return $this->_m_reservedBit;
+            $this->_m_reservedBit = (ord($this->typeRaw()[2]) & 32) != 0;
+            return $this->_m_reservedBit;
+        }
+        protected $_m_type;
+        public function type() {
+            if ($this->_m_type !== null)
+                return $this->_m_type;
+            $this->_m_type = \Kaitai\Struct\Stream::bytesToStr($this->typeRaw(), "ASCII");
+            return $this->_m_type;
         }
         protected $_m_len;
-        protected $_m_type;
+        protected $_m_typeRaw;
         protected $_m_body;
         protected $_m_crc;
         protected $_m__raw_body;
         public function len() { return $this->_m_len; }
-        public function type() { return $this->_m_type; }
+
+        /**
+         * Each byte of a chunk type is restricted to the hexadecimal values
+         * 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters
+         * (`A-Z` and `a-z`).
+         */
+        public function typeRaw() { return $this->_m_typeRaw; }
         public function body() { return $this->_m_body; }
         public function crc() { return $this->_m_crc; }
         public function _raw_body() { return $this->_m__raw_body; }
@@ -574,10 +639,38 @@ namespace Png {
     }
 }
 
+namespace Png {
+    class CompressedText extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\CompressedTextChunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_value = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "ISO-8859-1");
+        }
+        protected $_m_value;
+
+        /**
+         * Text string (the "value" of this key-value pair).
+         * 
+         * Although it is not null-terminated (unlike the keyword), it must not
+         * contain a zero byte (U+0000 NULL character). A newline should be
+         * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+         * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+         * U+007F..U+009F) are discouraged.
+         */
+        public function value() { return $this->_m_value; }
+    }
+}
+
 /**
- * Compressed text chunk effectively allows to store key-value
- * string pairs in PNG container, compressing "value" part (which
- * can be quite lengthy) with zlib compression.
+ * Compressed textual data (`zTXt`) chunk effectively allows you to store
+ * key-value string pairs in the PNG container, compressing the "value" part
+ * (which can be quite lengthy) with zlib compression.
+ * 
+ * The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`
+ * chunk is recommended for storing large blocks of text.
  */
 
 namespace Png {
@@ -588,23 +681,36 @@ namespace Png {
         }
 
         private function _read() {
-            $this->_m_keyword = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
+            $this->_m_keyword = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ISO-8859-1");
             $this->_m_compressionMethod = $this->_io->readU1();
-            $this->_m__raw_textDatastream = $this->_io->readBytesFull();
-            $this->_m_textDatastream = \Kaitai\Struct\Stream::processZlib($this->_m__raw_textDatastream);
+            if (!($this->_m_compressionMethod == \Png\CompressionMethods::ZLIB)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(\Png\CompressionMethods::ZLIB, $this->_m_compressionMethod, $this->_io, "/types/compressed_text_chunk/seq/1");
+            }
+            $this->_m__raw__raw_text = $this->_io->readBytesFull();
+            $this->_m__raw_text = \Kaitai\Struct\Stream::processZlib($this->_m__raw__raw_text);
+            $_io__raw_text = new \Kaitai\Struct\Stream($this->_m__raw_text);
+            $this->_m_text = new \Png\CompressedText($_io__raw_text, $this, $this->_root);
         }
         protected $_m_keyword;
         protected $_m_compressionMethod;
-        protected $_m_textDatastream;
-        protected $_m__raw_textDatastream;
+        protected $_m_text;
+        protected $_m__raw_text;
+        protected $_m__raw__raw_text;
 
         /**
-         * Indicates purpose of the following text data.
+         * Indicates the type of information represented by the text string.
+         * 
+         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+         * keyword, leading spaces, trailing spaces, and consecutive spaces are
+         * not permitted.
          */
         public function keyword() { return $this->_m_keyword; }
         public function compressionMethod() { return $this->_m_compressionMethod; }
-        public function textDatastream() { return $this->_m_textDatastream; }
-        public function _raw_textDatastream() { return $this->_m__raw_textDatastream; }
+        public function text() { return $this->_m_text; }
+        public function _raw_text() { return $this->_m__raw_text; }
+        public function _raw__raw_text() { return $this->_m__raw__raw_text; }
     }
 }
 
@@ -698,7 +804,13 @@ namespace Png {
             $this->_m_delayNum = $this->_io->readU2be();
             $this->_m_delayDen = $this->_io->readU2be();
             $this->_m_disposeOp = $this->_io->readU1();
+            if (!\Png\DisposeOpValues::isDefined($this->_m_disposeOp)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_disposeOp, $this->_io, "/types/frame_control_chunk/seq/7");
+            }
             $this->_m_blendOp = $this->_io->readU1();
+            if (!\Png\BlendOpValues::isDefined($this->_m_blendOp)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_blendOp, $this->_io, "/types/frame_control_chunk/seq/8");
+            }
         }
         protected $_m_delay;
 
@@ -722,7 +834,19 @@ namespace Png {
         protected $_m_blendOp;
 
         /**
-         * Sequence number of the animation chunk
+         * Sequence number of the animation chunk, starting from 0.
+         * 
+         * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+         * types share the sequence. The purpose of this number is to detect (and
+         * optionally correct) sequence errors in an Animated PNG, since the PNG
+         * specification does not impose ordering restrictions on ancillary
+         * chunks (which means that a PNG editor is technically allowed to
+         * reorder them arbitrarily, see [14.2 Behavior of PNG
+         * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+         * 
+         * The first `fcTL` chunk must contain sequence number 0, and the
+         * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+         * ascending order, with no gaps or duplicates.
          */
         public function sequenceNumber() { return $this->_m_sequenceNumber; }
 
@@ -783,18 +907,28 @@ namespace Png {
         protected $_m_frameData;
 
         /**
-         * Sequence number of the animation chunk. The fcTL and fdAT chunks
-         * have a 4 byte sequence number. Both chunk types share the sequence.
-         * The first fcTL chunk must contain sequence number 0, and the sequence
-         * numbers in the remaining fcTL and fdAT chunks must be in order, with
-         * no gaps or duplicates.
+         * Sequence number of the animation chunk, starting from 0.
+         * 
+         * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+         * types share the sequence. The purpose of this number is to detect (and
+         * optionally correct) sequence errors in an Animated PNG, since the PNG
+         * specification does not impose ordering restrictions on ancillary
+         * chunks (which means that a PNG editor is technically allowed to
+         * reorder them arbitrarily, see [14.2 Behavior of PNG
+         * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+         * 
+         * The first `fcTL` chunk must contain sequence number 0, and the
+         * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+         * ascending order, with no gaps or duplicates.
          */
         public function sequenceNumber() { return $this->_m_sequenceNumber; }
 
         /**
-         * Frame data for the frame. At least one fdAT chunk is required for
-         * each frame. The compressed datastream is the concatenation of the
-         * contents of the data fields of all the fdAT chunks within a frame.
+         * Frame data for the frame. At least one `fdAT` chunk is required for
+         * each frame, except for the first frame, if that frame is represented
+         * by an `IDAT` chunk. The compressed datastream for each frame is the
+         * concatenation of the contents of the data fields of all the `fdAT`
+         * chunks within a frame.
          */
         public function frameData() { return $this->_m_frameData; }
     }
@@ -809,15 +943,40 @@ namespace Png {
 
         private function _read() {
             $this->_m_gammaInt = $this->_io->readU4be();
+            $_ = $this->_m_gammaInt;
+            if (!($_ != 0)) {
+                throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_gammaInt, $this->_io, "/types/gama_chunk/seq/0");
+            }
         }
-        protected $_m_gammaRatio;
-        public function gammaRatio() {
-            if ($this->_m_gammaRatio !== null)
-                return $this->_m_gammaRatio;
-            $this->_m_gammaRatio = 100000.0 / $this->gammaInt();
-            return $this->_m_gammaRatio;
+        protected $_m_gamma;
+
+        /**
+         * Image gamma, typically 0.45455 = 1/2.2
+         */
+        public function gamma() {
+            if ($this->_m_gamma !== null)
+                return $this->_m_gamma;
+            $this->_m_gamma = $this->gammaInt() / 100000.0;
+            return $this->_m_gamma;
+        }
+        protected $_m_invGamma;
+
+        /**
+         * Inverse of the image gamma (1 / gamma), typically 2.2 (not considering
+         * rounding)
+         */
+        public function invGamma() {
+            if ($this->_m_invGamma !== null)
+                return $this->_m_invGamma;
+            $this->_m_invGamma = 100000.0 / $this->gammaInt();
+            return $this->_m_invGamma;
         }
         protected $_m_gammaInt;
+
+        /**
+         * Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
+         * 45455)
+         */
         public function gammaInt() { return $this->_m_gammaInt; }
     }
 }
@@ -843,9 +1002,21 @@ namespace Png {
                 throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_bitDepth, $this->_io, "/types/ihdr_chunk/seq/2");
             }
             $this->_m_colorType = $this->_io->readU1();
+            if (!\Png\ColorType::isDefined($this->_m_colorType)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_colorType, $this->_io, "/types/ihdr_chunk/seq/3");
+            }
             $this->_m_compressionMethod = $this->_io->readU1();
+            if (!\Png\CompressionMethods::isDefined($this->_m_compressionMethod)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_compressionMethod, $this->_io, "/types/ihdr_chunk/seq/4");
+            }
             $this->_m_filterMethod = $this->_io->readU1();
+            if (!\Png\FilterMethod::isDefined($this->_m_filterMethod)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_filterMethod, $this->_io, "/types/ihdr_chunk/seq/5");
+            }
             $this->_m_interlaceMethod = $this->_io->readU1();
+            if (!\Png\InterlaceMethod::isDefined($this->_m_interlaceMethod)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_interlaceMethod, $this->_io, "/types/ihdr_chunk/seq/6");
+            }
         }
         protected $_m_width;
         protected $_m_height;
@@ -872,24 +1043,33 @@ namespace Png {
         }
 
         private function _read() {
-            $this->_m_text = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
+            $this->_m_value = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
         }
-        protected $_m_text;
+        protected $_m_value;
 
         /**
-         * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Line breaks are
-         * allowed.
+         * Text string (the "value" of this key-value pair), written in language
+         * specified in `_parent.language_tag`.
+         * 
+         * Although it is not null-terminated (unlike other textual data in the
+         * `iTXt` chunk), it must not contain a zero byte
+         * (U+0000 NULL character). A newline should be represented by a single
+         * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+         * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+         * discouraged.
          */
-        public function text() { return $this->_m_text; }
+        public function value() { return $this->_m_value; }
     }
 }
 
 /**
- * International text chunk effectively allows to store key-value string pairs in
- * PNG container. Both "key" (keyword) and "value" (text) parts are
- * given in pre-defined subset of iso8859-1 without control
- * characters.
+ * International textual data (`iTXt`) chunk effectively allows you to store
+ * key-value string pairs in the PNG container.
+ * 
+ * The "key" part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)
+ * characters and spaces. The translated keyword and the "value" part
+ * (`text`) are stored in UTF-8 and thus can store text in any language -
+ * this language can be indicated via the language tag (`language_tag`).
  */
 
 namespace Png {
@@ -900,12 +1080,15 @@ namespace Png {
         }
 
         private function _read() {
-            $this->_m_keyword = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
+            $this->_m_keyword = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ISO-8859-1");
             $this->_m_compressionFlag = $this->_io->readU1();
             if (!( (($this->_m_compressionFlag == 0) || ($this->_m_compressionFlag == 1)) )) {
                 throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_compressionFlag, $this->_io, "/types/international_text_chunk/seq/1");
             }
             $this->_m_compressionMethod = $this->_io->readU1();
+            if (!($this->_m_compressionMethod == ($this->compressionFlag() == 1 ? \Png\CompressionMethods::ZLIB : $this->compressionMethod()))) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(($this->compressionFlag() == 1 ? \Png\CompressionMethods::ZLIB : $this->compressionMethod()), $this->_m_compressionMethod, $this->_io, "/types/international_text_chunk/seq/2");
+            }
             $this->_m_languageTag = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
             $this->_m_translatedKeyword = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "UTF-8");
             if ($this->compressionFlag() == 0) {
@@ -923,14 +1106,20 @@ namespace Png {
         protected $_m_text;
 
         /**
-         * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Line breaks are
-         * allowed.
+         * Text string (the "value" of this key-value pair), written in language
+         * specified in `language_tag`.
+         * 
+         * Although it is not null-terminated (unlike other textual data in the
+         * `iTXt` chunk), it must not contain a zero byte
+         * (U+0000 NULL character). A newline should be represented by a single
+         * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+         * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+         * discouraged.
          */
         public function text() {
             if ($this->_m_text !== null)
                 return $this->_m_text;
-            $this->_m_text = ($this->compressionFlag() == 0 ? $this->textPlain() : $this->textZlib())->text();
+            $this->_m_text = ($this->compressionFlag() == 0 ? $this->textPlain() : $this->textZlib())->value();
             return $this->_m_text;
         }
         protected $_m_keyword;
@@ -945,7 +1134,13 @@ namespace Png {
         protected $_m__raw__raw_textZlib;
 
         /**
-         * Indicates purpose of the following text data.
+         * Indicates the type of information represented by the text string.
+         * 
+         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+         * keyword, leading spaces, trailing spaces, and consecutive spaces are
+         * not permitted.
          */
         public function keyword() { return $this->_m_keyword; }
 
@@ -957,15 +1152,30 @@ namespace Png {
         public function compressionMethod() { return $this->_m_compressionMethod; }
 
         /**
-         * Human language used in `translated_keyword` and `text`
-         * attributes - should be a language code conforming to ISO
-         * 646.IRV:1991.
+         * Human language used in the `translated_keyword` and `text` fields.
+         * 
+         * From the [official
+         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):
+         * 
+         * > The language tag is a well-formed language tag defined by [RFC 5646:
+         * > BCP 47: Tags for Identifying
+         * > Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the
+         * > keyword, the language tag is case-insensitive. Subtags must appear
+         * > in the [IANA language subtag
+         * > registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+         * > If the language tag is empty, the language is unspecified. Examples
+         * > of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,
+         * > `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.
          */
         public function languageTag() { return $this->_m_languageTag; }
 
         /**
-         * Keyword translated into language specified in
-         * `language_tag`. Line breaks are not allowed.
+         * The keyword (`keyword`) translated into the language specified in
+         * `language_tag`.
+         * 
+         * It must not contain a zero byte (U+0000 NULL character). Line breaks
+         * should not appear. The remaining control characters (U+0001..U+0009,
+         * U+000B..0+001F, U+007F..U+009F) are discouraged.
          */
         public function translatedKeyword() { return $this->_m_translatedKeyword; }
         public function textPlain() { return $this->_m_textPlain; }
@@ -1061,8 +1271,9 @@ namespace Png {
 }
 
 /**
- * "Physical size" chunk stores data that allows to translate
- * logical pixels into physical units (meters, etc) and vice-versa.
+ * Physical pixel dimensions (`pHYs`) chunk specifies the intended physical
+ * size of the pixels (in meters) or pixel aspect ratio for display of the
+ * image.
  */
 
 namespace Png {
@@ -1076,6 +1287,35 @@ namespace Png {
             $this->_m_pixelsPerUnitX = $this->_io->readU4be();
             $this->_m_pixelsPerUnitY = $this->_io->readU4be();
             $this->_m_unit = $this->_io->readU1();
+            if (!\Png\PhysUnit::isDefined($this->_m_unit)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_unit, $this->_io, "/types/phys_chunk/seq/2");
+            }
+        }
+        protected $_m_dotsPerInchX;
+
+        /**
+         * Horizontal resolution (DPI)
+         */
+        public function dotsPerInchX() {
+            if ($this->_m_dotsPerInchX !== null)
+                return $this->_m_dotsPerInchX;
+            if ($this->unit() == \Png\PhysUnit::METER) {
+                $this->_m_dotsPerInchX = $this->pixelsPerUnitX() * 0.0254;
+            }
+            return $this->_m_dotsPerInchX;
+        }
+        protected $_m_dotsPerInchY;
+
+        /**
+         * Vertical resolution (DPI)
+         */
+        public function dotsPerInchY() {
+            if ($this->_m_dotsPerInchY !== null)
+                return $this->_m_dotsPerInchY;
+            if ($this->unit() == \Png\PhysUnit::METER) {
+                $this->_m_dotsPerInchY = $this->pixelsPerUnitY() * 0.0254;
+            }
+            return $this->_m_dotsPerInchY;
         }
         protected $_m_pixelsPerUnitX;
         protected $_m_pixelsPerUnitY;
@@ -1146,6 +1386,9 @@ namespace Png {
 
         private function _read() {
             $this->_m_renderIntent = $this->_io->readU1();
+            if (!\Png\SrgbChunk\Intent::isDefined($this->_m_renderIntent)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_renderIntent, $this->_io, "/types/srgb_chunk/seq/0");
+            }
         }
         protected $_m_renderIntent;
         public function renderIntent() { return $this->_m_renderIntent; }
@@ -1168,10 +1411,13 @@ namespace Png\SrgbChunk {
 }
 
 /**
- * Text chunk effectively allows to store key-value string pairs in
- * PNG container. Both "key" (keyword) and "value" (text) parts are
- * given in pre-defined subset of iso8859-1 without control
- * characters.
+ * Textual data (`tEXt`) chunk effectively allows you to store key-value
+ * string pairs in the PNG container.
+ * 
+ * Both the "key" (`keyword`) and "value" (`text`) parts are restricted to
+ * printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the
+ * exception that `text` can also contain newlines (U+000A LINE FEED (LF)
+ * characters) and U+00A0 NON-BREAKING SPACE characters.
  */
 
 namespace Png {
@@ -1189,9 +1435,25 @@ namespace Png {
         protected $_m_text;
 
         /**
-         * Indicates purpose of the following text data.
+         * Indicates the type of information represented by the text string.
+         * 
+         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+         * keyword, leading spaces, trailing spaces, and consecutive spaces are
+         * not permitted.
          */
         public function keyword() { return $this->_m_keyword; }
+
+        /**
+         * Text string (the "value" of this key-value pair).
+         * 
+         * Although it is not null-terminated (unlike the keyword), it must not
+         * contain a zero byte (U+0000 NULL character). A newline should be
+         * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+         * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+         * U+007F..U+009F) are discouraged.
+         */
         public function text() { return $this->_m_text; }
     }
 }
@@ -1241,7 +1503,9 @@ namespace Png {
         const SOURCE = 0;
 
         /**
-         * The frame is composited onto the output buffer based on its alpha
+         * The frame is composited onto the output buffer based on its alpha, using
+         * a simple OVER operation as described in [Alpha Channel
+         * Processing](https://www.w3.org/TR/png/#13Alpha-channel-processing).
          */
         const OVER = 1;
 
@@ -1303,6 +1567,35 @@ namespace Png {
         const PREVIOUS = 2;
 
         private const _VALUES = [0 => true, 1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Png {
+    class FilterMethod {
+
+        /**
+         * Single row per-byte filtering
+         */
+        const BASE = 0;
+
+        private const _VALUES = [0 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Png {
+    class InterlaceMethod {
+        const NONE = 0;
+        const ADAM7 = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);

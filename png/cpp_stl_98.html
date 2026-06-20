@@ -401,6 +401,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">cicp_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">clli_chunk_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">compressed_text_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">compressed_text_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">evernote_skmf_chunk_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">evernote_skrf_chunk_t</span><span class="p">;</span>
@@ -470,6 +471,29 @@ and build them along with your project.</p>
 
 <span class="k">public</span><span class="o">:</span>
 
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">filter_method_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">FILTER_METHOD_BASE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_filter_method_t</span><span class="p">(</span><span class="n">filter_method_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">filter_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_filter_method_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">filter_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_build_values_filter_method_t</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">interlace_method_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">INTERLACE_METHOD_NONE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">INTERLACE_METHOD_ADAM7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_interlace_method_t</span><span class="p">(</span><span class="n">interlace_method_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">interlace_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_interlace_method_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">interlace_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_build_values_interlace_method_t</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+
 <span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">phys_unit_t</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">PHYS_UNIT_UNKNOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">        </span><span class="n">PHYS_UNIT_METER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
@@ -522,7 +546,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * \sa https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source</span>
+<span class="cm">     * \sa https://www.w3.org/TR/png/#acTL-chunk Source</span>
 <span class="cm">     */</span>
 
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">animation_control_chunk_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
@@ -547,7 +571,8 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Number of frames, must be equal to the number of `frame_control_chunk`s</span>
+<span class="cm">         * Number of frames, must be equal to the number of `fcTL` chunks (i.e.</span>
+<span class="cm">         * `frame_control_chunk` objects)</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">num_frames</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_frames</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
@@ -863,8 +888,66 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="o">~</span><span class="n">chunk_t</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_len</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_is_ancillary</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_is_ancillary</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * false = critical chunk, true = ancillary chunk</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_ancillary</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_is_private</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_is_private</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * false = public chunk (defined by the W3C), true = private chunk (can</span>
+<span class="cm">         * be defined by anyone)</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_private</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_is_safe_to_copy</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_is_safe_to_copy</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Defines whether the chunk may be copied if the image data (i.e.</span>
+<span class="cm">         * pixels) is modified. This tells PNG editors how to handle unknown</span>
+<span class="cm">         * chunks - see section [14.2 Behavior of PNG</span>
+<span class="cm">         * editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in</span>
+<span class="cm">         * the official specification.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_safe_to_copy</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_reserved_bit</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_reserved_bit</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Should be `false`, i.e. all chunk types should have uppercase third</span>
+<span class="cm">         * letters (the lowercase third letter is reserved for possible future</span>
+<span class="cm">         * extensions to the PNG standard)</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">reserved_bit</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_type</span><span class="p">;</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_type</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">type</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_len</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_type_raw</span><span class="p">;</span>
 <span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span>
 
@@ -872,7 +955,7 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_crc</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_crc</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_body</span><span class="p">;</span>
@@ -880,9 +963,16 @@ and build them along with your project.</p>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Each byte of a chunk type is restricted to the hexadecimal values</span>
+<span class="cm">         * 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters</span>
+<span class="cm">         * (`A-Z` and `a-z`).</span>
+<span class="cm">         * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#table51 Source</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">type_raw</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_type_raw</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">crc</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_crc</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">crc</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_crc</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
@@ -1009,10 +1099,47 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">compressed_text_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">compressed_text_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">compressed_text_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Text string (the &quot;value&quot; of this key-value pair).</span>
+<span class="cm">         * </span>
+<span class="cm">         * Although it is not null-terminated (unlike the keyword), it must not</span>
+<span class="cm">         * contain a zero byte (U+0000 NULL character). A newline should be</span>
+<span class="cm">         * represented by a single U+000A LINE FEED (LF) character (aka `\n`).</span>
+<span class="cm">         * The remaining control characters (U+0001..U+0009, U+000B..0+001F,</span>
+<span class="cm">         * U+007F..U+009F) are discouraged.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
 <span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * Compressed text chunk effectively allows to store key-value</span>
-<span class="cm">     * string pairs in PNG container, compressing &quot;value&quot; part (which</span>
-<span class="cm">     * can be quite lengthy) with zlib compression.</span>
+<span class="cm">     * Compressed textual data (`zTXt`) chunk effectively allows you to store</span>
+<span class="cm">     * key-value string pairs in the PNG container, compressing the &quot;value&quot; part</span>
+<span class="cm">     * (which can be quite lengthy) with zlib compression.</span>
+<span class="cm">     * </span>
+<span class="cm">     * The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`</span>
+<span class="cm">     * chunk is recommended for storing large blocks of text.</span>
 <span class="cm">     * \sa https://www.w3.org/TR/png/#11zTXt Source</span>
 <span class="cm">     */</span>
 
@@ -1032,22 +1159,33 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_keyword</span><span class="p">;</span>
 <span class="w">        </span><span class="n">compression_methods_t</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_text_datastream</span><span class="p">;</span>
+<span class="w">        </span><span class="n">compressed_text_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_text_datastream</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_text</span><span class="p">;</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">m__io__raw_text</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw__raw_text</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Indicates purpose of the following text data.</span>
+<span class="cm">         * Indicates the type of information represented by the text string.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="cm">         * characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="cm">         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="cm">         * keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="cm">         * not permitted.</span>
+<span class="cm">         * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_keyword</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">compression_methods_t</span><span class="w"> </span><span class="n">compression_method</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">text_datastream</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_text_datastream</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">compressed_text_t</span><span class="o">*</span><span class="w"> </span><span class="n">text</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_text_datastream</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_text_datastream</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_text</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_text</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_text</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_text</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw__raw_text</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw__raw_text</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
@@ -1132,7 +1270,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * \sa https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source</span>
+<span class="cm">     * \sa https://www.w3.org/TR/png/#fcTL-chunk Source</span>
 <span class="cm">     */</span>
 
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">frame_control_chunk_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
@@ -1175,7 +1313,19 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Sequence number of the animation chunk</span>
+<span class="cm">         * Sequence number of the animation chunk, starting from 0.</span>
+<span class="cm">         * </span>
+<span class="cm">         * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk</span>
+<span class="cm">         * types share the sequence. The purpose of this number is to detect (and</span>
+<span class="cm">         * optionally correct) sequence errors in an Animated PNG, since the PNG</span>
+<span class="cm">         * specification does not impose ordering restrictions on ancillary</span>
+<span class="cm">         * chunks (which means that a PNG editor is technically allowed to</span>
+<span class="cm">         * reorder them arbitrarily, see [14.2 Behavior of PNG</span>
+<span class="cm">         * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).</span>
+<span class="cm">         * </span>
+<span class="cm">         * The first `fcTL` chunk must contain sequence number 0, and the</span>
+<span class="cm">         * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in</span>
+<span class="cm">         * ascending order, with no gaps or duplicates.</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sequence_number</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_sequence_number</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
@@ -1223,7 +1373,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * \sa https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source</span>
+<span class="cm">     * \sa https://www.w3.org/TR/png/#fdAT-chunk Source</span>
 <span class="cm">     */</span>
 
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">frame_data_chunk_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
@@ -1248,18 +1398,28 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Sequence number of the animation chunk. The fcTL and fdAT chunks</span>
-<span class="cm">         * have a 4 byte sequence number. Both chunk types share the sequence.</span>
-<span class="cm">         * The first fcTL chunk must contain sequence number 0, and the sequence</span>
-<span class="cm">         * numbers in the remaining fcTL and fdAT chunks must be in order, with</span>
-<span class="cm">         * no gaps or duplicates.</span>
+<span class="cm">         * Sequence number of the animation chunk, starting from 0.</span>
+<span class="cm">         * </span>
+<span class="cm">         * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk</span>
+<span class="cm">         * types share the sequence. The purpose of this number is to detect (and</span>
+<span class="cm">         * optionally correct) sequence errors in an Animated PNG, since the PNG</span>
+<span class="cm">         * specification does not impose ordering restrictions on ancillary</span>
+<span class="cm">         * chunks (which means that a PNG editor is technically allowed to</span>
+<span class="cm">         * reorder them arbitrarily, see [14.2 Behavior of PNG</span>
+<span class="cm">         * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).</span>
+<span class="cm">         * </span>
+<span class="cm">         * The first `fcTL` chunk must contain sequence number 0, and the</span>
+<span class="cm">         * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in</span>
+<span class="cm">         * ascending order, with no gaps or duplicates.</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sequence_number</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_sequence_number</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Frame data for the frame. At least one fdAT chunk is required for</span>
-<span class="cm">         * each frame. The compressed datastream is the concatenation of the</span>
-<span class="cm">         * contents of the data fields of all the fdAT chunks within a frame.</span>
+<span class="cm">         * Frame data for the frame. At least one `fdAT` chunk is required for</span>
+<span class="cm">         * each frame, except for the first frame, if that frame is represented</span>
+<span class="cm">         * by an `IDAT` chunk. The compressed datastream for each frame is the</span>
+<span class="cm">         * concatenation of the contents of the data fields of all the `fdAT`</span>
+<span class="cm">         * chunks within a frame.</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">frame_data</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_frame_data</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
@@ -1284,11 +1444,27 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="o">~</span><span class="n">gama_chunk_t</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_gamma_ratio</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_gamma_ratio</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_gamma</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_gamma</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">gamma_ratio</span><span class="p">();</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Image gamma, typically 0.45455 = 1/2.2</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">gamma</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_inv_gamma</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_inv_gamma</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Inverse of the image gamma (1 / gamma), typically 2.2 (not considering</span>
+<span class="cm">         * rounding)</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">inv_gamma</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_gamma_int</span><span class="p">;</span>
@@ -1296,6 +1472,11 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as</span>
+<span class="cm">         * 45455)</span>
+<span class="cm">         */</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">gamma_int</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_gamma_int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
@@ -1323,9 +1504,9 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_height</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_bit_depth</span><span class="p">;</span>
 <span class="w">        </span><span class="n">color_type_t</span><span class="w"> </span><span class="n">m_color_type</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_filter_method</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_interlace_method</span><span class="p">;</span>
+<span class="w">        </span><span class="n">compression_methods_t</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">;</span>
+<span class="w">        </span><span class="n">filter_method_t</span><span class="w"> </span><span class="n">m_filter_method</span><span class="p">;</span>
+<span class="w">        </span><span class="n">interlace_method_t</span><span class="w"> </span><span class="n">m_interlace_method</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
@@ -1334,9 +1515,9 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">height</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_height</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">bit_depth</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_bit_depth</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">color_type_t</span><span class="w"> </span><span class="n">color_type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_color_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">compression_method</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">filter_method</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_filter_method</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">interlace_method</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_interlace_method</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">compression_methods_t</span><span class="w"> </span><span class="n">compression_method</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">filter_method_t</span><span class="w"> </span><span class="n">filter_method</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_filter_method</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">interlace_method_t</span><span class="w"> </span><span class="n">interlace_method</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_interlace_method</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
@@ -1355,27 +1536,36 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="o">~</span><span class="n">international_text_t</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="cm">         * language specified in `language_tag`. Line breaks are</span>
-<span class="cm">         * allowed.</span>
+<span class="cm">         * Text string (the &quot;value&quot; of this key-value pair), written in language</span>
+<span class="cm">         * specified in `_parent.language_tag`.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Although it is not null-terminated (unlike other textual data in the</span>
+<span class="cm">         * `iTXt` chunk), it must not contain a zero byte</span>
+<span class="cm">         * (U+0000 NULL character). A newline should be represented by a single</span>
+<span class="cm">         * U+000A LINE FEED (LF) character (aka `\n`). The remaining control</span>
+<span class="cm">         * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are</span>
+<span class="cm">         * discouraged.</span>
 <span class="cm">         */</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">text</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * International text chunk effectively allows to store key-value string pairs in</span>
-<span class="cm">     * PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
-<span class="cm">     * given in pre-defined subset of iso8859-1 without control</span>
-<span class="cm">     * characters.</span>
+<span class="cm">     * International textual data (`iTXt`) chunk effectively allows you to store</span>
+<span class="cm">     * key-value string pairs in the PNG container.</span>
+<span class="cm">     * </span>
+<span class="cm">     * The &quot;key&quot; part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)</span>
+<span class="cm">     * characters and spaces. The translated keyword and the &quot;value&quot; part</span>
+<span class="cm">     * (`text`) are stored in UTF-8 and thus can store text in any language -</span>
+<span class="cm">     * this language can be indicated via the language tag (`language_tag`).</span>
 <span class="cm">     * \sa https://www.w3.org/TR/png/#11iTXt Source</span>
 <span class="cm">     */</span>
 
@@ -1399,9 +1589,15 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="cm">         * language specified in `language_tag`. Line breaks are</span>
-<span class="cm">         * allowed.</span>
+<span class="cm">         * Text string (the &quot;value&quot; of this key-value pair), written in language</span>
+<span class="cm">         * specified in `language_tag`.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Although it is not null-terminated (unlike other textual data in the</span>
+<span class="cm">         * `iTXt` chunk), it must not contain a zero byte</span>
+<span class="cm">         * (U+0000 NULL character). A newline should be represented by a single</span>
+<span class="cm">         * U+000A LINE FEED (LF) character (aka `\n`). The remaining control</span>
+<span class="cm">         * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are</span>
+<span class="cm">         * discouraged.</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">text</span><span class="p">();</span>
 
@@ -1454,7 +1650,14 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Indicates purpose of the following text data.</span>
+<span class="cm">         * Indicates the type of information represented by the text string.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="cm">         * characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="cm">         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="cm">         * keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="cm">         * not permitted.</span>
+<span class="cm">         * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_keyword</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
@@ -1466,15 +1669,30 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">compression_methods_t</span><span class="w"> </span><span class="n">compression_method</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Human language used in `translated_keyword` and `text`</span>
-<span class="cm">         * attributes - should be a language code conforming to ISO</span>
-<span class="cm">         * 646.IRV:1991.</span>
+<span class="cm">         * Human language used in the `translated_keyword` and `text` fields.</span>
+<span class="cm">         * </span>
+<span class="cm">         * From the [official</span>
+<span class="cm">         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):</span>
+<span class="cm">         * </span>
+<span class="cm">         * &gt; The language tag is a well-formed language tag defined by [RFC 5646:</span>
+<span class="cm">         * &gt; BCP 47: Tags for Identifying</span>
+<span class="cm">         * &gt; Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the</span>
+<span class="cm">         * &gt; keyword, the language tag is case-insensitive. Subtags must appear</span>
+<span class="cm">         * &gt; in the [IANA language subtag</span>
+<span class="cm">         * &gt; registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).</span>
+<span class="cm">         * &gt; If the language tag is empty, the language is unspecified. Examples</span>
+<span class="cm">         * &gt; of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,</span>
+<span class="cm">         * &gt; `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">language_tag</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_language_tag</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Keyword translated into language specified in</span>
-<span class="cm">         * `language_tag`. Line breaks are not allowed.</span>
+<span class="cm">         * The keyword (`keyword`) translated into the language specified in</span>
+<span class="cm">         * `language_tag`.</span>
+<span class="cm">         * </span>
+<span class="cm">         * It must not contain a zero byte (U+0000 NULL character). Line breaks</span>
+<span class="cm">         * should not appear. The remaining control characters (U+0001..U+0009,</span>
+<span class="cm">         * U+000B..0+001F, U+007F..U+009F) are discouraged.</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">translated_keyword</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_translated_keyword</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">international_text_t</span><span class="o">*</span><span class="w"> </span><span class="n">text_plain</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_text_plain</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
@@ -1590,8 +1808,9 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * &quot;Physical size&quot; chunk stores data that allows to translate</span>
-<span class="cm">     * logical pixels into physical units (meters, etc) and vice-versa.</span>
+<span class="cm">     * Physical pixel dimensions (`pHYs`) chunk specifies the intended physical</span>
+<span class="cm">     * size of the pixels (in meters) or pixel aspect ratio for display of the</span>
+<span class="cm">     * image.</span>
 <span class="cm">     * \sa https://www.w3.org/TR/png/#11pHYs Source</span>
 <span class="cm">     */</span>
 
@@ -1607,6 +1826,40 @@ and build them along with your project.</p>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 <span class="w">        </span><span class="o">~</span><span class="n">phys_chunk_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_dots_per_inch_x</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_dots_per_inch_x</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_dots_per_inch_x</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_dots_per_inch_x</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">dots_per_inch_x</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_dots_per_inch_x</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Horizontal resolution (DPI)</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dots_per_inch_x</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_dots_per_inch_y</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">m_dots_per_inch_y</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_dots_per_inch_y</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_dots_per_inch_y</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">dots_per_inch_y</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_dots_per_inch_y</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Vertical resolution (DPI)</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">dots_per_inch_y</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_pixels_per_unit_x</span><span class="p">;</span>
@@ -1732,10 +1985,13 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * Text chunk effectively allows to store key-value string pairs in</span>
-<span class="cm">     * PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
-<span class="cm">     * given in pre-defined subset of iso8859-1 without control</span>
-<span class="cm">     * characters.</span>
+<span class="cm">     * Textual data (`tEXt`) chunk effectively allows you to store key-value</span>
+<span class="cm">     * string pairs in the PNG container.</span>
+<span class="cm">     * </span>
+<span class="cm">     * Both the &quot;key&quot; (`keyword`) and &quot;value&quot; (`text`) parts are restricted to</span>
+<span class="cm">     * printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the</span>
+<span class="cm">     * exception that `text` can also contain newlines (U+000A LINE FEED (LF)</span>
+<span class="cm">     * characters) and U+00A0 NON-BREAKING SPACE characters.</span>
 <span class="cm">     * \sa https://www.w3.org/TR/png/#11tEXt Source</span>
 <span class="cm">     */</span>
 
@@ -1761,9 +2017,26 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Indicates purpose of the following text data.</span>
+<span class="cm">         * Indicates the type of information represented by the text string.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="cm">         * characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="cm">         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="cm">         * keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="cm">         * not permitted.</span>
+<span class="cm">         * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source</span>
 <span class="cm">         */</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">keyword</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_keyword</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Text string (the &quot;value&quot; of this key-value pair).</span>
+<span class="cm">         * </span>
+<span class="cm">         * Although it is not null-terminated (unlike the keyword), it must not</span>
+<span class="cm">         * contain a zero byte (U+0000 NULL character). A newline should be</span>
+<span class="cm">         * represented by a single U+000A LINE FEED (LF) character (aka `\n`).</span>
+<span class="cm">         * The remaining control characters (U+0001..U+0009, U+000B..0+001F,</span>
+<span class="cm">         * U+007F..U+009F) are discouraged.</span>
+<span class="cm">         */</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">text</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
@@ -1814,7 +2087,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ihdr_len</span><span class="p">;</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_ihdr_type</span><span class="p">;</span>
 <span class="w">    </span><span class="n">ihdr_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_ihdr</span><span class="p">;</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_ihdr_crc</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ihdr_crc</span><span class="p">;</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">chunk_t</span><span class="o">*&gt;*</span><span class="w"> </span><span class="n">m_chunks</span><span class="p">;</span>
 <span class="w">    </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
 <span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
@@ -1824,7 +2097,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ihdr_len</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ihdr_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">ihdr_type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ihdr_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="n">ihdr_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">ihdr</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ihdr</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">ihdr_crc</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ihdr_crc</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ihdr_crc</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ihdr_crc</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">chunk_t</span><span class="o">*&gt;*</span><span class="w"> </span><span class="n">chunks</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_chunks</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
@@ -1894,6 +2167,25 @@ and build them along with your project.</p>
 <span class="kt">bool</span><span class="w"> </span><span class="nf">png_t::_is_defined_dispose_op_values_t</span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">dispose_op_values_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_values_dispose_op_values_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_values_dispose_op_values_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
 <span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">filter_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_build_values_filter_method_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">filter_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">FILTER_METHOD_BASE</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">filter_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_values_filter_method_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_build_values_filter_method_t</span><span class="p">();</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">png_t::_is_defined_filter_method_t</span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">filter_method_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_values_filter_method_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_values_filter_method_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">interlace_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_build_values_interlace_method_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">interlace_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">INTERLACE_METHOD_NONE</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">INTERLACE_METHOD_ADAM7</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">interlace_method_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_values_interlace_method_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_build_values_interlace_method_t</span><span class="p">();</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">png_t::_is_defined_interlace_method_t</span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">interlace_method_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_values_interlace_method_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_values_interlace_method_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
 <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">phys_unit_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">_build_values_phys_unit_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">phys_unit_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
 <span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">PHYS_UNIT_UNKNOWN</span><span class="p">);</span>
@@ -1933,7 +2225,7 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x49\x48\x44\x52</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">m_ihdr_type</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/seq/2&quot;</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">m_ihdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ihdr_chunk_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span>
-<span class="w">    </span><span class="n">m_ihdr_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_ihdr_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
 <span class="w">    </span><span class="n">m_chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">chunk_t</span><span class="o">*&gt;</span><span class="p">();</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
@@ -2291,6 +2583,11 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_ancillary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_private</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_safe_to_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_reserved_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">_read</span><span class="p">();</span>
@@ -2302,11 +2599,11 @@ and build them along with your project.</p>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_type_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_type</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">type</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\000\000\000\000</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_expr_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_type</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/chunk/seq/1&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_type_raw</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_expr_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_type_raw</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/chunk/seq/1&quot;</span><span class="p">));</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
@@ -2448,7 +2745,7 @@ and build them along with your project.</p>
 <span class="w">            </span><span class="n">m__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">m_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">::~</span><span class="n">chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -2464,6 +2761,46 @@ and build them along with your project.</p>
 <span class="w">            </span><span class="k">delete</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span><span class="w"> </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">::</span><span class="n">is_ancillary</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_is_ancillary</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_ancillary</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_ancillary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_is_ancillary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">type_raw</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_ancillary</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">::</span><span class="n">is_private</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_is_private</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_private</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_private</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_is_private</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">type_raw</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_private</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">::</span><span class="n">is_safe_to_copy</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_is_safe_to_copy</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_safe_to_copy</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_safe_to_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_is_safe_to_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">type_raw</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_safe_to_copy</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">::</span><span class="n">reserved_bit</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_reserved_bit</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_reserved_bit</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_reserved_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_reserved_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">type_raw</span><span class="p">().</span><span class="n">at</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_reserved_bit</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">::</span><span class="n">type</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_type</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_type</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">type_raw</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_type</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">cicp_chunk_t</span><span class="o">::</span><span class="n">cicp_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -2540,7 +2877,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_max_frame_average_light_level</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_t</span><span class="o">::</span><span class="n">compressed_text_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
 
@@ -2552,11 +2889,41 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;ISO-8859-1&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_t</span><span class="o">::~</span><span class="n">compressed_text_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__io__raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ISO-8859-1&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">m_compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">compression_methods_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
-<span class="w">    </span><span class="n">m__raw_text_datastream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_text_datastream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">process_zlib</span><span class="p">(</span><span class="n">m__raw_text_datastream</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">m_compression_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">COMPRESSION_METHODS_ZLIB</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">compression_methods_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">COMPRESSION_METHODS_ZLIB</span><span class="p">,</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/compressed_text_chunk/seq/1&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m__raw__raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m__raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">process_zlib</span><span class="p">(</span><span class="n">m__raw__raw_text</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m__io__raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_text</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">compressed_text_t</span><span class="p">(</span><span class="n">m__io__raw_text</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">::~</span><span class="n">compressed_text_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -2564,6 +2931,12 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">compressed_text_chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__io__raw_text</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__io__raw_text</span><span class="p">;</span><span class="w"> </span><span class="n">m__io__raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_text</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span><span class="w"> </span><span class="n">m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">evernote_skmf_chunk_t</span><span class="o">::</span><span class="n">evernote_skmf_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -2653,7 +3026,13 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="n">m_delay_num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
 <span class="w">    </span><span class="n">m_delay_den</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
 <span class="w">    </span><span class="n">m_dispose_op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">dispose_op_values_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">png_t</span><span class="o">::</span><span class="n">_is_defined_dispose_op_values_t</span><span class="p">(</span><span class="n">m_dispose_op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_in_enum_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">dispose_op_values_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_dispose_op</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/frame_control_chunk/seq/7&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">m_blend_op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">blend_op_values_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">png_t</span><span class="o">::</span><span class="n">_is_defined_blend_op_values_t</span><span class="p">(</span><span class="n">m_blend_op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_in_enum_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">blend_op_values_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_blend_op</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/frame_control_chunk/seq/8&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">frame_control_chunk_t</span><span class="o">::~</span><span class="n">frame_control_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -2698,7 +3077,8 @@ and build them along with your project.</p>
 <span class="n">png_t</span><span class="o">::</span><span class="n">gama_chunk_t</span><span class="o">::</span><span class="n">gama_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">f_gamma_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_inv_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">_read</span><span class="p">();</span>
@@ -2710,6 +3090,12 @@ and build them along with your project.</p>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">gama_chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m_gamma_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_gamma_int</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_expr_error</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_gamma_int</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/gama_chunk/seq/0&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">gama_chunk_t</span><span class="o">::~</span><span class="n">gama_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -2719,12 +3105,20 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">gama_chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 
-<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">gama_chunk_t</span><span class="o">::</span><span class="n">gamma_ratio</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_gamma_ratio</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_gamma_ratio</span><span class="p">;</span>
-<span class="w">    </span><span class="n">f_gamma_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_gamma_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">100000.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gamma_int</span><span class="p">();</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_gamma_ratio</span><span class="p">;</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">gama_chunk_t</span><span class="o">::</span><span class="n">gamma</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_gamma</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_gamma</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gamma_int</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_gamma</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">gama_chunk_t</span><span class="o">::</span><span class="n">inv_gamma</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_inv_gamma</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_inv_gamma</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_inv_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_inv_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">100000.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gamma_int</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_inv_gamma</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">ihdr_chunk_t</span><span class="o">::</span><span class="n">ihdr_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -2753,9 +3147,21 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_any_of_error</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_bit_depth</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/ihdr_chunk/seq/2&quot;</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">m_color_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">color_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
-<span class="w">    </span><span class="n">m_compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_interlace_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">png_t</span><span class="o">::</span><span class="n">_is_defined_color_type_t</span><span class="p">(</span><span class="n">m_color_type</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_in_enum_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">color_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_color_type</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/ihdr_chunk/seq/3&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">compression_methods_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">png_t</span><span class="o">::</span><span class="n">_is_defined_compression_methods_t</span><span class="p">(</span><span class="n">m_compression_method</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_in_enum_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">compression_methods_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_compression_method</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/ihdr_chunk/seq/4&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">filter_method_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">png_t</span><span class="o">::</span><span class="n">_is_defined_filter_method_t</span><span class="p">(</span><span class="n">m_filter_method</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_in_enum_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">filter_method_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_filter_method</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/ihdr_chunk/seq/5&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_interlace_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">interlace_method_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">png_t</span><span class="o">::</span><span class="n">_is_defined_interlace_method_t</span><span class="p">(</span><span class="n">m_interlace_method</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_in_enum_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">interlace_method_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_interlace_method</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/ihdr_chunk/seq/6&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">ihdr_chunk_t</span><span class="o">::~</span><span class="n">ihdr_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -2778,7 +3184,7 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">international_text_t</span><span class="o">::~</span><span class="n">international_text_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -2806,12 +3212,15 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">international_text_chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ISO-8859-1&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">m_compression_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">m_compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">m_compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_any_of_error</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_compression_flag</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/international_text_chunk/seq/1&quot;</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">m_compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">compression_methods_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">m_compression_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">((</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">COMPRESSION_METHODS_ZLIB</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">compression_method</span><span class="p">()))))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">compression_methods_t</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">png_t</span><span class="o">::</span><span class="n">COMPRESSION_METHODS_ZLIB</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">compression_method</span><span class="p">())),</span><span class="w"> </span><span class="n">m_compression_method</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/international_text_chunk/seq/2&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="n">m_language_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">m_translated_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">n_text_plain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
@@ -2858,7 +3267,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_text</span><span class="p">)</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span>
 <span class="w">    </span><span class="n">f_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">text_plain</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">text_zlib</span><span class="p">()))</span><span class="o">-&gt;</span><span class="n">text</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">compression_flag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">text_plain</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">text_zlib</span><span class="p">()))</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">();</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_text</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -2969,6 +3378,8 @@ and build them along with your project.</p>
 <span class="n">png_t</span><span class="o">::</span><span class="n">phys_chunk_t</span><span class="o">::</span><span class="n">phys_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_dots_per_inch_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_dots_per_inch_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">_read</span><span class="p">();</span>
@@ -2982,6 +3393,9 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="n">m_pixels_per_unit_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
 <span class="w">    </span><span class="n">m_pixels_per_unit_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
 <span class="w">    </span><span class="n">m_unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">phys_unit_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">png_t</span><span class="o">::</span><span class="n">_is_defined_phys_unit_t</span><span class="p">(</span><span class="n">m_unit</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_in_enum_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">phys_unit_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_unit</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/phys_chunk/seq/2&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">phys_chunk_t</span><span class="o">::~</span><span class="n">phys_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -2989,6 +3403,30 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">phys_chunk_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">phys_chunk_t</span><span class="o">::</span><span class="n">dots_per_inch_x</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_dots_per_inch_x</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_dots_per_inch_x</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_dots_per_inch_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">n_dots_per_inch_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">unit</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">PHYS_UNIT_METER</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_dots_per_inch_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_dots_per_inch_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pixels_per_unit_x</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0254</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_dots_per_inch_x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">double</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">phys_chunk_t</span><span class="o">::</span><span class="n">dots_per_inch_y</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_dots_per_inch_y</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_dots_per_inch_y</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_dots_per_inch_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">n_dots_per_inch_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">unit</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">PHYS_UNIT_METER</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_dots_per_inch_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_dots_per_inch_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pixels_per_unit_y</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0254</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_dots_per_inch_y</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">plte_chunk_t</span><span class="o">::</span><span class="n">plte_chunk_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">chunk_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">png_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -3079,6 +3517,9 @@ and build them along with your project.</p>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">png_t</span><span class="o">::</span><span class="n">srgb_chunk_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m_render_intent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">srgb_chunk_t</span><span class="o">::</span><span class="n">intent_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">png_t</span><span class="o">::</span><span class="n">srgb_chunk_t</span><span class="o">::</span><span class="n">_is_defined_intent_t</span><span class="p">(</span><span class="n">m_render_intent</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_in_enum_error</span><span class="o">&lt;</span><span class="n">png_t</span><span class="o">::</span><span class="n">srgb_chunk_t</span><span class="o">::</span><span class="n">intent_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_render_intent</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/srgb_chunk/seq/0&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">png_t</span><span class="o">::</span><span class="n">srgb_chunk_t</span><span class="o">::~</span><span class="n">srgb_chunk_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>

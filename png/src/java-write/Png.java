@@ -89,6 +89,35 @@ public class Png extends KaitaiStruct.ReadWrite {
         public static DisposeOpValues byId(long id) { return byId.get(id); }
     }
 
+    public enum FilterMethod {
+        BASE(0);
+
+        private final long id;
+        FilterMethod(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, FilterMethod> byId = new HashMap<Long, FilterMethod>(1);
+        static {
+            for (FilterMethod e : FilterMethod.values())
+                byId.put(e.id(), e);
+        }
+        public static FilterMethod byId(long id) { return byId.get(id); }
+    }
+
+    public enum InterlaceMethod {
+        NONE(0),
+        ADAM7(1);
+
+        private final long id;
+        InterlaceMethod(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, InterlaceMethod> byId = new HashMap<Long, InterlaceMethod>(2);
+        static {
+            for (InterlaceMethod e : InterlaceMethod.values())
+                byId.put(e.id(), e);
+        }
+        public static InterlaceMethod byId(long id) { return byId.get(id); }
+    }
+
     public enum PhysUnit {
         UNKNOWN(0),
         METER(1);
@@ -135,7 +164,7 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
         this.ihdr = new IhdrChunk(this._io, this, _root);
         this.ihdr._read();
-        this.ihdrCrc = this._io.readBytes(4);
+        this.ihdrCrc = this._io.readU4be();
         this.chunks = new ArrayList<Chunk>();
         {
             Chunk _it;
@@ -167,7 +196,7 @@ public class Png extends KaitaiStruct.ReadWrite {
         this._io.writeU4be(this.ihdrLen);
         this._io.writeBytes(this.ihdrType);
         this.ihdr._write_Seq(this._io);
-        this._io.writeBytes(this.ihdrCrc);
+        this._io.writeU4be(this.ihdrCrc);
         for (int i = 0; i < this.chunks.size(); i++) {
             this.chunks.get(((Number) (i)).intValue())._write_Seq(this._io);
             {
@@ -196,8 +225,6 @@ public class Png extends KaitaiStruct.ReadWrite {
             throw new ConsistencyError("ihdr", _root(), this.ihdr._root());
         if (!Objects.equals(this.ihdr._parent(), this))
             throw new ConsistencyError("ihdr", this, this.ihdr._parent());
-        if (this.ihdrCrc.length != 4)
-            throw new ConsistencyError("ihdr_crc", 4, this.ihdrCrc.length);
         if (this.chunks.size() == 0)
             throw new ConsistencyError("chunks", 0, this.chunks.size());
         for (int i = 0; i < this.chunks.size(); i++) {
@@ -268,7 +295,7 @@ public class Png extends KaitaiStruct.ReadWrite {
     }
 
     /**
-     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#acTL-chunk">Source</a>
      */
     public static class AnimationControlChunk extends KaitaiStruct.ReadWrite {
         public static AnimationControlChunk fromFile(String fileName) throws IOException {
@@ -315,7 +342,8 @@ public class Png extends KaitaiStruct.ReadWrite {
         private Png.Chunk _parent;
 
         /**
-         * Number of frames, must be equal to the number of `frame_control_chunk`s
+         * Number of frames, must be equal to the number of `fcTL` chunks (i.e.
+         * `frame_control_chunk` objects)
          */
         public long numFrames() { return numFrames; }
         public void setNumFrames(long _v) { _dirty = true; numFrames = _v; }
@@ -1007,11 +1035,11 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
         public void _read() {
             this.len = this._io.readU4be();
-            this.type = new String(this._io.readBytes(4), StandardCharsets.UTF_8);
+            this.typeRaw = this._io.readBytes(4);
             {
-                String _it = this.type;
-                if (!(!type().equals("\000\000\000\000"))) {
-                    throw new KaitaiStream.ValidationExprError(this.type, this._io, "/types/chunk/seq/1");
+                byte[] _it = this.typeRaw;
+                if (!( (( (( (((_it[((int) 0)] & 0xff) >= 65) && ((_it[((int) 0)] & 0xff) <= 90)) ) || ( (((_it[((int) 0)] & 0xff) >= 97) && ((_it[((int) 0)] & 0xff) <= 122)) )) ) && ( (( (((_it[((int) 1)] & 0xff) >= 65) && ((_it[((int) 1)] & 0xff) <= 90)) ) || ( (((_it[((int) 1)] & 0xff) >= 97) && ((_it[((int) 1)] & 0xff) <= 122)) )) ) && ( (( (((_it[((int) 2)] & 0xff) >= 65) && ((_it[((int) 2)] & 0xff) <= 90)) ) || ( (((_it[((int) 2)] & 0xff) >= 97) && ((_it[((int) 2)] & 0xff) <= 122)) )) ) && ( (( (((_it[((int) 3)] & 0xff) >= 65) && ((_it[((int) 3)] & 0xff) <= 90)) ) || ( (((_it[((int) 3)] & 0xff) >= 97) && ((_it[((int) 3)] & 0xff) <= 122)) )) )) )) {
+                    throw new KaitaiStream.ValidationExprError(this.typeRaw, this._io, "/types/chunk/seq/1");
                 }
             }
             switch (type()) {
@@ -1174,7 +1202,7 @@ public class Png extends KaitaiStruct.ReadWrite {
                 break;
             }
             }
-            this.crc = this._io.readBytes(4);
+            this.crc = this._io.readU4be();
             _dirty = false;
         }
 
@@ -1277,7 +1305,7 @@ public class Png extends KaitaiStruct.ReadWrite {
         public void _write_Seq() {
             _assertNotDirty();
             this._io.writeU4be(this.len);
-            this._io.writeBytes((this.type).getBytes(Charset.forName("UTF-8")));
+            this._io.writeBytes(this.typeRaw);
             switch (type()) {
             case "PLTE": {
                 final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
@@ -1724,16 +1752,16 @@ public class Png extends KaitaiStruct.ReadWrite {
                 break;
             }
             }
-            this._io.writeBytes(this.crc);
+            this._io.writeU4be(this.crc);
         }
 
         public void _check() {
-            if ((this.type).getBytes(Charset.forName("UTF-8")).length != 4)
-                throw new ConsistencyError("type", 4, (this.type).getBytes(Charset.forName("UTF-8")).length);
+            if (this.typeRaw.length != 4)
+                throw new ConsistencyError("type_raw", 4, this.typeRaw.length);
             {
-                String _it = this.type;
-                if (!(!type().equals("\000\000\000\000"))) {
-                    throw new KaitaiStream.ValidationExprError(this.type, null, "/types/chunk/seq/1");
+                byte[] _it = this.typeRaw;
+                if (!( (( (( (((_it[((int) 0)] & 0xff) >= 65) && ((_it[((int) 0)] & 0xff) <= 90)) ) || ( (((_it[((int) 0)] & 0xff) >= 97) && ((_it[((int) 0)] & 0xff) <= 122)) )) ) && ( (( (((_it[((int) 1)] & 0xff) >= 65) && ((_it[((int) 1)] & 0xff) <= 90)) ) || ( (((_it[((int) 1)] & 0xff) >= 97) && ((_it[((int) 1)] & 0xff) <= 122)) )) ) && ( (( (((_it[((int) 2)] & 0xff) >= 65) && ((_it[((int) 2)] & 0xff) <= 90)) ) || ( (((_it[((int) 2)] & 0xff) >= 97) && ((_it[((int) 2)] & 0xff) <= 122)) )) ) && ( (( (((_it[((int) 3)] & 0xff) >= 65) && ((_it[((int) 3)] & 0xff) <= 90)) ) || ( (((_it[((int) 3)] & 0xff) >= 97) && ((_it[((int) 3)] & 0xff) <= 122)) )) )) )) {
+                    throw new KaitaiStream.ValidationExprError(this.typeRaw, null, "/types/chunk/seq/1");
                 }
             }
             switch (type()) {
@@ -1897,25 +1925,93 @@ public class Png extends KaitaiStruct.ReadWrite {
                 break;
             }
             }
-            if (this.crc.length != 4)
-                throw new ConsistencyError("crc", 4, this.crc.length);
             _dirty = false;
         }
-        private long len;
+        private Boolean isAncillary;
+
+        /**
+         * false = critical chunk, true = ancillary chunk
+         */
+        public Boolean isAncillary() {
+            if (this.isAncillary != null)
+                return this.isAncillary;
+            this.isAncillary = ((typeRaw()[((int) 0)] & 0xff) & 32) != 0;
+            return this.isAncillary;
+        }
+        public void _invalidateIsAncillary() { this.isAncillary = null; }
+        private Boolean isPrivate;
+
+        /**
+         * false = public chunk (defined by the W3C), true = private chunk (can
+         * be defined by anyone)
+         */
+        public Boolean isPrivate() {
+            if (this.isPrivate != null)
+                return this.isPrivate;
+            this.isPrivate = ((typeRaw()[((int) 1)] & 0xff) & 32) != 0;
+            return this.isPrivate;
+        }
+        public void _invalidateIsPrivate() { this.isPrivate = null; }
+        private Boolean isSafeToCopy;
+
+        /**
+         * Defines whether the chunk may be copied if the image data (i.e.
+         * pixels) is modified. This tells PNG editors how to handle unknown
+         * chunks - see section [14.2 Behavior of PNG
+         * editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in
+         * the official specification.
+         */
+        public Boolean isSafeToCopy() {
+            if (this.isSafeToCopy != null)
+                return this.isSafeToCopy;
+            this.isSafeToCopy = ((typeRaw()[((int) 3)] & 0xff) & 32) != 0;
+            return this.isSafeToCopy;
+        }
+        public void _invalidateIsSafeToCopy() { this.isSafeToCopy = null; }
+        private Boolean reservedBit;
+
+        /**
+         * Should be `false`, i.e. all chunk types should have uppercase third
+         * letters (the lowercase third letter is reserved for possible future
+         * extensions to the PNG standard)
+         */
+        public Boolean reservedBit() {
+            if (this.reservedBit != null)
+                return this.reservedBit;
+            this.reservedBit = ((typeRaw()[((int) 2)] & 0xff) & 32) != 0;
+            return this.reservedBit;
+        }
+        public void _invalidateReservedBit() { this.reservedBit = null; }
         private String type;
+        public String type() {
+            if (this.type != null)
+                return this.type;
+            this.type = new String(typeRaw(), StandardCharsets.US_ASCII);
+            return this.type;
+        }
+        public void _invalidateType() { this.type = null; }
+        private long len;
+        private byte[] typeRaw;
         private Object body;
-        private byte[] crc;
+        private long crc;
         private Png _root;
         private Png _parent;
         private byte[] _raw_body;
         public long len() { return len; }
         public void setLen(long _v) { _dirty = true; len = _v; }
-        public String type() { return type; }
-        public void setType(String _v) { _dirty = true; type = _v; }
+
+        /**
+         * Each byte of a chunk type is restricted to the hexadecimal values
+         * 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters
+         * (`A-Z` and `a-z`).
+         * @see <a href="https://www.w3.org/TR/2025/REC-png-3-20250624/#table51">Source</a>
+         */
+        public byte[] typeRaw() { return typeRaw; }
+        public void setTypeRaw(byte[] _v) { _dirty = true; typeRaw = _v; }
         public Object body() { return body; }
         public void setBody(Object _v) { _dirty = true; body = _v; }
-        public byte[] crc() { return crc; }
-        public void setCrc(byte[] _v) { _dirty = true; crc = _v; }
+        public long crc() { return crc; }
+        public void setCrc(long _v) { _dirty = true; crc = _v; }
         public Png _root() { return _root; }
         public void set_root(Png _v) { _dirty = true; _root = _v; }
         public Png _parent() { return _parent; }
@@ -2115,11 +2211,73 @@ public class Png extends KaitaiStruct.ReadWrite {
         public Png.Chunk _parent() { return _parent; }
         public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
     }
+    public static class CompressedText extends KaitaiStruct.ReadWrite {
+        public static CompressedText fromFile(String fileName) throws IOException {
+            return new CompressedText(new ByteBufferKaitaiStream(fileName));
+        }
+        public CompressedText() {
+            this(null, null, null);
+        }
+
+        public CompressedText(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CompressedText(KaitaiStream _io, Png.CompressedTextChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CompressedText(KaitaiStream _io, Png.CompressedTextChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.value = new String(this._io.readBytesFull(), StandardCharsets.ISO_8859_1);
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeBytes((this.value).getBytes(Charset.forName("ISO-8859-1")));
+            if (!(this._io.isEof()))
+                throw new ConsistencyError("value", 0, this._io.size() - this._io.pos());
+        }
+
+        public void _check() {
+            _dirty = false;
+        }
+        private String value;
+        private Png _root;
+        private Png.CompressedTextChunk _parent;
+
+        /**
+         * Text string (the "value" of this key-value pair).
+         * 
+         * Although it is not null-terminated (unlike the keyword), it must not
+         * contain a zero byte (U+0000 NULL character). A newline should be
+         * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+         * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+         * U+007F..U+009F) are discouraged.
+         */
+        public String value() { return value; }
+        public void setValue(String _v) { _dirty = true; value = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.CompressedTextChunk _parent() { return _parent; }
+        public void set_parent(Png.CompressedTextChunk _v) { _dirty = true; _parent = _v; }
+    }
 
     /**
-     * Compressed text chunk effectively allows to store key-value
-     * string pairs in PNG container, compressing "value" part (which
-     * can be quite lengthy) with zlib compression.
+     * Compressed textual data (`zTXt`) chunk effectively allows you to store
+     * key-value string pairs in the PNG container, compressing the "value" part
+     * (which can be quite lengthy) with zlib compression.
+     * 
+     * The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`
+     * chunk is recommended for storing large blocks of text.
      * @see <a href="https://www.w3.org/TR/png/#11zTXt">Source</a>
      */
     public static class CompressedTextChunk extends KaitaiStruct.ReadWrite {
@@ -2144,54 +2302,96 @@ public class Png extends KaitaiStruct.ReadWrite {
             this._root = _root;
         }
         public void _read() {
-            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.ISO_8859_1);
             this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
-            this._raw_textDatastream = this._io.readBytesFull();
-            this.textDatastream = KaitaiStream.processZlib(this._raw_textDatastream);
+            if (!(this.compressionMethod == Png.CompressionMethods.ZLIB)) {
+                throw new KaitaiStream.ValidationNotEqualError(Png.CompressionMethods.ZLIB, this.compressionMethod, this._io, "/types/compressed_text_chunk/seq/1");
+            }
+            this._raw__raw_text = this._io.readBytesFull();
+            this._raw_text = KaitaiStream.processZlib(this._raw__raw_text);
+            this.text_InnerSize = this._raw_text.length;
+            KaitaiStream _io__raw_text = new ByteBufferKaitaiStream(this._raw_text);
+            this.text = new CompressedText(_io__raw_text, this, _root);
+            this.text._read();
             _dirty = false;
         }
 
         public void _fetchInstances() {
+            this.text._fetchInstances();
         }
 
         public void _write_Seq() {
             _assertNotDirty();
-            this._io.writeBytes((this.keyword).getBytes(Charset.forName("UTF-8")));
+            this._io.writeBytes((this.keyword).getBytes(Charset.forName("ISO-8859-1")));
             this._io.writeU1(0);
             this._io.writeU1(((Number) (this.compressionMethod.id())).intValue());
-            this._raw_textDatastream = KaitaiStream.unprocessZlib(this.textDatastream);
-            this._io.writeBytes(this._raw_textDatastream);
-            if (!(this._io.isEof()))
-                throw new ConsistencyError("text_datastream", 0, this._io.size() - this._io.pos());
+            final KaitaiStream _io__raw_text = new ByteBufferKaitaiStream(this.text_InnerSize);
+            this._io.addChildStream(_io__raw_text);
+            {
+                long _pos2 = this._io.pos();
+                this._io.seek(this._io.pos() + (this._io.size() - this._io.pos()));
+                final CompressedTextChunk _this = this;
+                _io__raw_text.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                    @Override
+                    protected void write(KaitaiStream parent) {
+                        _this._raw_text = _io__raw_text.toByteArray();
+                        _this._raw__raw_text = KaitaiStream.unprocessZlib(_this._raw_text);
+                        parent.writeBytes(_this._raw__raw_text);
+                        if (!(parent.isEof()))
+                            throw new ConsistencyError("raw(text)", 0, parent.size() - parent.pos());
+                    }
+                });
+            }
+            this.text._write_Seq(_io__raw_text);
         }
 
         public void _check() {
-            if (KaitaiStream.byteArrayIndexOf((this.keyword).getBytes(Charset.forName("UTF-8")), ((byte) 0)) != -1)
-                throw new ConsistencyError("keyword", -1, KaitaiStream.byteArrayIndexOf((this.keyword).getBytes(Charset.forName("UTF-8")), ((byte) 0)));
+            if (KaitaiStream.byteArrayIndexOf((this.keyword).getBytes(Charset.forName("ISO-8859-1")), ((byte) 0)) != -1)
+                throw new ConsistencyError("keyword", -1, KaitaiStream.byteArrayIndexOf((this.keyword).getBytes(Charset.forName("ISO-8859-1")), ((byte) 0)));
+            if (!(this.compressionMethod == Png.CompressionMethods.ZLIB)) {
+                throw new KaitaiStream.ValidationNotEqualError(Png.CompressionMethods.ZLIB, this.compressionMethod, null, "/types/compressed_text_chunk/seq/1");
+            }
+            if (!Objects.equals(this.text._root(), _root()))
+                throw new ConsistencyError("text", _root(), this.text._root());
+            if (!Objects.equals(this.text._parent(), this))
+                throw new ConsistencyError("text", this, this.text._parent());
             _dirty = false;
         }
         private String keyword;
         private CompressionMethods compressionMethod;
-        private byte[] textDatastream;
+        private CompressedText text;
         private Png _root;
         private Png.Chunk _parent;
-        private byte[] _raw_textDatastream;
+        private byte[] _raw_text;
+        private int text_InnerSize;
+        private byte[] _raw__raw_text;
 
         /**
-         * Indicates purpose of the following text data.
+         * Indicates the type of information represented by the text string.
+         * 
+         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+         * keyword, leading spaces, trailing spaces, and consecutive spaces are
+         * not permitted.
+         * @see <a href="https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords">Source</a>
          */
         public String keyword() { return keyword; }
         public void setKeyword(String _v) { _dirty = true; keyword = _v; }
         public CompressionMethods compressionMethod() { return compressionMethod; }
         public void setCompressionMethod(CompressionMethods _v) { _dirty = true; compressionMethod = _v; }
-        public byte[] textDatastream() { return textDatastream; }
-        public void setTextDatastream(byte[] _v) { _dirty = true; textDatastream = _v; }
+        public CompressedText text() { return text; }
+        public void setText(CompressedText _v) { _dirty = true; text = _v; }
         public Png _root() { return _root; }
         public void set_root(Png _v) { _dirty = true; _root = _v; }
         public Png.Chunk _parent() { return _parent; }
         public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
-        public byte[] _raw_textDatastream() { return _raw_textDatastream; }
-        public void set_raw_TextDatastream(byte[] _v) { _dirty = true; _raw_textDatastream = _v; }
+        public byte[] _raw_text() { return _raw_text; }
+        public void set_raw_Text(byte[] _v) { _dirty = true; _raw_text = _v; }
+        public int text_InnerSize() { return text_InnerSize; }
+        public void setText_InnerSize(int _v) { _dirty = true; text_InnerSize = _v; }
+        public byte[] _raw__raw_text() { return _raw__raw_text; }
+        public void set_raw__raw_Text(byte[] _v) { _dirty = true; _raw__raw_text = _v; }
     }
 
     /**
@@ -2331,7 +2531,7 @@ public class Png extends KaitaiStruct.ReadWrite {
     }
 
     /**
-     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#fcTL-chunk">Source</a>
      */
     public static class FrameControlChunk extends KaitaiStruct.ReadWrite {
         public static FrameControlChunk fromFile(String fileName) throws IOException {
@@ -2381,7 +2581,13 @@ public class Png extends KaitaiStruct.ReadWrite {
             this.delayNum = this._io.readU2be();
             this.delayDen = this._io.readU2be();
             this.disposeOp = Png.DisposeOpValues.byId(this._io.readU1());
+            if (this.disposeOp == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.disposeOp, this._io, "/types/frame_control_chunk/seq/7");
+            }
             this.blendOp = Png.BlendOpValues.byId(this._io.readU1());
+            if (this.blendOp == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.blendOp, this._io, "/types/frame_control_chunk/seq/8");
+            }
             _dirty = false;
         }
 
@@ -2420,6 +2626,12 @@ public class Png extends KaitaiStruct.ReadWrite {
             if (!(this.yOffset <= _root().ihdr().height() - height())) {
                 throw new KaitaiStream.ValidationGreaterThanError(_root().ihdr().height() - height(), this.yOffset, null, "/types/frame_control_chunk/seq/4");
             }
+            if (this.disposeOp == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.disposeOp, null, "/types/frame_control_chunk/seq/7");
+            }
+            if (this.blendOp == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.blendOp, null, "/types/frame_control_chunk/seq/8");
+            }
             _dirty = false;
         }
         private Double delay;
@@ -2447,7 +2659,19 @@ public class Png extends KaitaiStruct.ReadWrite {
         private Png.Chunk _parent;
 
         /**
-         * Sequence number of the animation chunk
+         * Sequence number of the animation chunk, starting from 0.
+         * 
+         * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+         * types share the sequence. The purpose of this number is to detect (and
+         * optionally correct) sequence errors in an Animated PNG, since the PNG
+         * specification does not impose ordering restrictions on ancillary
+         * chunks (which means that a PNG editor is technically allowed to
+         * reorder them arbitrarily, see [14.2 Behavior of PNG
+         * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+         * 
+         * The first `fcTL` chunk must contain sequence number 0, and the
+         * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+         * ascending order, with no gaps or duplicates.
          */
         public long sequenceNumber() { return sequenceNumber; }
         public void setSequenceNumber(long _v) { _dirty = true; sequenceNumber = _v; }
@@ -2506,7 +2730,7 @@ public class Png extends KaitaiStruct.ReadWrite {
     }
 
     /**
-     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#fdAT-chunk">Source</a>
      */
     public static class FrameDataChunk extends KaitaiStruct.ReadWrite {
         public static FrameDataChunk fromFile(String fileName) throws IOException {
@@ -2555,19 +2779,29 @@ public class Png extends KaitaiStruct.ReadWrite {
         private Png.Chunk _parent;
 
         /**
-         * Sequence number of the animation chunk. The fcTL and fdAT chunks
-         * have a 4 byte sequence number. Both chunk types share the sequence.
-         * The first fcTL chunk must contain sequence number 0, and the sequence
-         * numbers in the remaining fcTL and fdAT chunks must be in order, with
-         * no gaps or duplicates.
+         * Sequence number of the animation chunk, starting from 0.
+         * 
+         * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+         * types share the sequence. The purpose of this number is to detect (and
+         * optionally correct) sequence errors in an Animated PNG, since the PNG
+         * specification does not impose ordering restrictions on ancillary
+         * chunks (which means that a PNG editor is technically allowed to
+         * reorder them arbitrarily, see [14.2 Behavior of PNG
+         * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+         * 
+         * The first `fcTL` chunk must contain sequence number 0, and the
+         * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+         * ascending order, with no gaps or duplicates.
          */
         public long sequenceNumber() { return sequenceNumber; }
         public void setSequenceNumber(long _v) { _dirty = true; sequenceNumber = _v; }
 
         /**
-         * Frame data for the frame. At least one fdAT chunk is required for
-         * each frame. The compressed datastream is the concatenation of the
-         * contents of the data fields of all the fdAT chunks within a frame.
+         * Frame data for the frame. At least one `fdAT` chunk is required for
+         * each frame, except for the first frame, if that frame is represented
+         * by an `IDAT` chunk. The compressed datastream for each frame is the
+         * concatenation of the contents of the data fields of all the `fdAT`
+         * chunks within a frame.
          */
         public byte[] frameData() { return frameData; }
         public void setFrameData(byte[] _v) { _dirty = true; frameData = _v; }
@@ -2603,6 +2837,12 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
         public void _read() {
             this.gammaInt = this._io.readU4be();
+            {
+                long _it = this.gammaInt;
+                if (!(_it != 0)) {
+                    throw new KaitaiStream.ValidationExprError(this.gammaInt, this._io, "/types/gama_chunk/seq/0");
+                }
+            }
             _dirty = false;
         }
 
@@ -2615,19 +2855,47 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
 
         public void _check() {
+            {
+                long _it = this.gammaInt;
+                if (!(_it != 0)) {
+                    throw new KaitaiStream.ValidationExprError(this.gammaInt, null, "/types/gama_chunk/seq/0");
+                }
+            }
             _dirty = false;
         }
-        private Double gammaRatio;
-        public Double gammaRatio() {
-            if (this.gammaRatio != null)
-                return this.gammaRatio;
-            this.gammaRatio = ((Number) (100000.0 / gammaInt())).doubleValue();
-            return this.gammaRatio;
+        private Double gamma;
+
+        /**
+         * Image gamma, typically 0.45455 = 1/2.2
+         */
+        public Double gamma() {
+            if (this.gamma != null)
+                return this.gamma;
+            this.gamma = ((Number) (gammaInt() / 100000.0)).doubleValue();
+            return this.gamma;
         }
-        public void _invalidateGammaRatio() { this.gammaRatio = null; }
+        public void _invalidateGamma() { this.gamma = null; }
+        private Double invGamma;
+
+        /**
+         * Inverse of the image gamma (1 / gamma), typically 2.2 (not considering
+         * rounding)
+         */
+        public Double invGamma() {
+            if (this.invGamma != null)
+                return this.invGamma;
+            this.invGamma = ((Number) (100000.0 / gammaInt())).doubleValue();
+            return this.invGamma;
+        }
+        public void _invalidateInvGamma() { this.invGamma = null; }
         private long gammaInt;
         private Png _root;
         private Png.Chunk _parent;
+
+        /**
+         * Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
+         * 45455)
+         */
         public long gammaInt() { return gammaInt; }
         public void setGammaInt(long _v) { _dirty = true; gammaInt = _v; }
         public Png _root() { return _root; }
@@ -2674,9 +2942,21 @@ public class Png extends KaitaiStruct.ReadWrite {
                 throw new KaitaiStream.ValidationNotAnyOfError(this.bitDepth, this._io, "/types/ihdr_chunk/seq/2");
             }
             this.colorType = Png.ColorType.byId(this._io.readU1());
-            this.compressionMethod = this._io.readU1();
-            this.filterMethod = this._io.readU1();
-            this.interlaceMethod = this._io.readU1();
+            if (this.colorType == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.colorType, this._io, "/types/ihdr_chunk/seq/3");
+            }
+            this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
+            if (this.compressionMethod == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.compressionMethod, this._io, "/types/ihdr_chunk/seq/4");
+            }
+            this.filterMethod = Png.FilterMethod.byId(this._io.readU1());
+            if (this.filterMethod == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.filterMethod, this._io, "/types/ihdr_chunk/seq/5");
+            }
+            this.interlaceMethod = Png.InterlaceMethod.byId(this._io.readU1());
+            if (this.interlaceMethod == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.interlaceMethod, this._io, "/types/ihdr_chunk/seq/6");
+            }
             _dirty = false;
         }
 
@@ -2689,9 +2969,9 @@ public class Png extends KaitaiStruct.ReadWrite {
             this._io.writeU4be(this.height);
             this._io.writeU1(this.bitDepth);
             this._io.writeU1(((Number) (this.colorType.id())).intValue());
-            this._io.writeU1(this.compressionMethod);
-            this._io.writeU1(this.filterMethod);
-            this._io.writeU1(this.interlaceMethod);
+            this._io.writeU1(((Number) (this.compressionMethod.id())).intValue());
+            this._io.writeU1(((Number) (this.filterMethod.id())).intValue());
+            this._io.writeU1(((Number) (this.interlaceMethod.id())).intValue());
         }
 
         public void _check() {
@@ -2704,15 +2984,27 @@ public class Png extends KaitaiStruct.ReadWrite {
             if (!( ((this.bitDepth == 1) || (this.bitDepth == 2) || (this.bitDepth == 4) || (this.bitDepth == 8) || (this.bitDepth == 16)) )) {
                 throw new KaitaiStream.ValidationNotAnyOfError(this.bitDepth, null, "/types/ihdr_chunk/seq/2");
             }
+            if (this.colorType == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.colorType, null, "/types/ihdr_chunk/seq/3");
+            }
+            if (this.compressionMethod == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.compressionMethod, null, "/types/ihdr_chunk/seq/4");
+            }
+            if (this.filterMethod == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.filterMethod, null, "/types/ihdr_chunk/seq/5");
+            }
+            if (this.interlaceMethod == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.interlaceMethod, null, "/types/ihdr_chunk/seq/6");
+            }
             _dirty = false;
         }
         private long width;
         private long height;
         private int bitDepth;
         private ColorType colorType;
-        private int compressionMethod;
-        private int filterMethod;
-        private int interlaceMethod;
+        private CompressionMethods compressionMethod;
+        private FilterMethod filterMethod;
+        private InterlaceMethod interlaceMethod;
         private Png _root;
         private Png _parent;
         public long width() { return width; }
@@ -2723,12 +3015,12 @@ public class Png extends KaitaiStruct.ReadWrite {
         public void setBitDepth(int _v) { _dirty = true; bitDepth = _v; }
         public ColorType colorType() { return colorType; }
         public void setColorType(ColorType _v) { _dirty = true; colorType = _v; }
-        public int compressionMethod() { return compressionMethod; }
-        public void setCompressionMethod(int _v) { _dirty = true; compressionMethod = _v; }
-        public int filterMethod() { return filterMethod; }
-        public void setFilterMethod(int _v) { _dirty = true; filterMethod = _v; }
-        public int interlaceMethod() { return interlaceMethod; }
-        public void setInterlaceMethod(int _v) { _dirty = true; interlaceMethod = _v; }
+        public CompressionMethods compressionMethod() { return compressionMethod; }
+        public void setCompressionMethod(CompressionMethods _v) { _dirty = true; compressionMethod = _v; }
+        public FilterMethod filterMethod() { return filterMethod; }
+        public void setFilterMethod(FilterMethod _v) { _dirty = true; filterMethod = _v; }
+        public InterlaceMethod interlaceMethod() { return interlaceMethod; }
+        public void setInterlaceMethod(InterlaceMethod _v) { _dirty = true; interlaceMethod = _v; }
         public Png _root() { return _root; }
         public void set_root(Png _v) { _dirty = true; _root = _v; }
         public Png _parent() { return _parent; }
@@ -2756,7 +3048,7 @@ public class Png extends KaitaiStruct.ReadWrite {
             this._root = _root;
         }
         public void _read() {
-            this.text = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+            this.value = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
             _dirty = false;
         }
 
@@ -2765,25 +3057,31 @@ public class Png extends KaitaiStruct.ReadWrite {
 
         public void _write_Seq() {
             _assertNotDirty();
-            this._io.writeBytes((this.text).getBytes(Charset.forName("UTF-8")));
+            this._io.writeBytes((this.value).getBytes(Charset.forName("UTF-8")));
             if (!(this._io.isEof()))
-                throw new ConsistencyError("text", 0, this._io.size() - this._io.pos());
+                throw new ConsistencyError("value", 0, this._io.size() - this._io.pos());
         }
 
         public void _check() {
             _dirty = false;
         }
-        private String text;
+        private String value;
         private Png _root;
         private Png.InternationalTextChunk _parent;
 
         /**
-         * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Line breaks are
-         * allowed.
+         * Text string (the "value" of this key-value pair), written in language
+         * specified in `_parent.language_tag`.
+         * 
+         * Although it is not null-terminated (unlike other textual data in the
+         * `iTXt` chunk), it must not contain a zero byte
+         * (U+0000 NULL character). A newline should be represented by a single
+         * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+         * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+         * discouraged.
          */
-        public String text() { return text; }
-        public void setText(String _v) { _dirty = true; text = _v; }
+        public String value() { return value; }
+        public void setValue(String _v) { _dirty = true; value = _v; }
         public Png _root() { return _root; }
         public void set_root(Png _v) { _dirty = true; _root = _v; }
         public Png.InternationalTextChunk _parent() { return _parent; }
@@ -2791,10 +3089,13 @@ public class Png extends KaitaiStruct.ReadWrite {
     }
 
     /**
-     * International text chunk effectively allows to store key-value string pairs in
-     * PNG container. Both "key" (keyword) and "value" (text) parts are
-     * given in pre-defined subset of iso8859-1 without control
-     * characters.
+     * International textual data (`iTXt`) chunk effectively allows you to store
+     * key-value string pairs in the PNG container.
+     * 
+     * The "key" part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)
+     * characters and spaces. The translated keyword and the "value" part
+     * (`text`) are stored in UTF-8 and thus can store text in any language -
+     * this language can be indicated via the language tag (`language_tag`).
      * @see <a href="https://www.w3.org/TR/png/#11iTXt">Source</a>
      */
     public static class InternationalTextChunk extends KaitaiStruct.ReadWrite {
@@ -2819,12 +3120,15 @@ public class Png extends KaitaiStruct.ReadWrite {
             this._root = _root;
         }
         public void _read() {
-            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.ISO_8859_1);
             this.compressionFlag = this._io.readU1();
             if (!( ((this.compressionFlag == 0) || (this.compressionFlag == 1)) )) {
                 throw new KaitaiStream.ValidationNotAnyOfError(this.compressionFlag, this._io, "/types/international_text_chunk/seq/1");
             }
             this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
+            if (!(this.compressionMethod == (compressionFlag() == 1 ? Png.CompressionMethods.ZLIB : compressionMethod()))) {
+                throw new KaitaiStream.ValidationNotEqualError((compressionFlag() == 1 ? Png.CompressionMethods.ZLIB : compressionMethod()), this.compressionMethod, this._io, "/types/international_text_chunk/seq/2");
+            }
             this.languageTag = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
             this.translatedKeyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
             if (compressionFlag() == 0) {
@@ -2855,7 +3159,7 @@ public class Png extends KaitaiStruct.ReadWrite {
 
         public void _write_Seq() {
             _assertNotDirty();
-            this._io.writeBytes((this.keyword).getBytes(Charset.forName("UTF-8")));
+            this._io.writeBytes((this.keyword).getBytes(Charset.forName("ISO-8859-1")));
             this._io.writeU1(0);
             this._io.writeU1(this.compressionFlag);
             this._io.writeU1(((Number) (this.compressionMethod.id())).intValue());
@@ -2905,10 +3209,13 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
 
         public void _check() {
-            if (KaitaiStream.byteArrayIndexOf((this.keyword).getBytes(Charset.forName("UTF-8")), ((byte) 0)) != -1)
-                throw new ConsistencyError("keyword", -1, KaitaiStream.byteArrayIndexOf((this.keyword).getBytes(Charset.forName("UTF-8")), ((byte) 0)));
+            if (KaitaiStream.byteArrayIndexOf((this.keyword).getBytes(Charset.forName("ISO-8859-1")), ((byte) 0)) != -1)
+                throw new ConsistencyError("keyword", -1, KaitaiStream.byteArrayIndexOf((this.keyword).getBytes(Charset.forName("ISO-8859-1")), ((byte) 0)));
             if (!( ((this.compressionFlag == 0) || (this.compressionFlag == 1)) )) {
                 throw new KaitaiStream.ValidationNotAnyOfError(this.compressionFlag, null, "/types/international_text_chunk/seq/1");
+            }
+            if (!(this.compressionMethod == (compressionFlag() == 1 ? Png.CompressionMethods.ZLIB : compressionMethod()))) {
+                throw new KaitaiStream.ValidationNotEqualError((compressionFlag() == 1 ? Png.CompressionMethods.ZLIB : compressionMethod()), this.compressionMethod, null, "/types/international_text_chunk/seq/2");
             }
             if (KaitaiStream.byteArrayIndexOf((this.languageTag).getBytes(Charset.forName("ASCII")), ((byte) 0)) != -1)
                 throw new ConsistencyError("language_tag", -1, KaitaiStream.byteArrayIndexOf((this.languageTag).getBytes(Charset.forName("ASCII")), ((byte) 0)));
@@ -2931,14 +3238,20 @@ public class Png extends KaitaiStruct.ReadWrite {
         private String text;
 
         /**
-         * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Line breaks are
-         * allowed.
+         * Text string (the "value" of this key-value pair), written in language
+         * specified in `language_tag`.
+         * 
+         * Although it is not null-terminated (unlike other textual data in the
+         * `iTXt` chunk), it must not contain a zero byte
+         * (U+0000 NULL character). A newline should be represented by a single
+         * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+         * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+         * discouraged.
          */
         public String text() {
             if (this.text != null)
                 return this.text;
-            this.text = (compressionFlag() == 0 ? textPlain() : textZlib()).text();
+            this.text = (compressionFlag() == 0 ? textPlain() : textZlib()).value();
             return this.text;
         }
         public void _invalidateText() { this.text = null; }
@@ -2957,7 +3270,14 @@ public class Png extends KaitaiStruct.ReadWrite {
         private byte[] _raw__raw_textZlib;
 
         /**
-         * Indicates purpose of the following text data.
+         * Indicates the type of information represented by the text string.
+         * 
+         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+         * keyword, leading spaces, trailing spaces, and consecutive spaces are
+         * not permitted.
+         * @see <a href="https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords">Source</a>
          */
         public String keyword() { return keyword; }
         public void setKeyword(String _v) { _dirty = true; keyword = _v; }
@@ -2972,16 +3292,31 @@ public class Png extends KaitaiStruct.ReadWrite {
         public void setCompressionMethod(CompressionMethods _v) { _dirty = true; compressionMethod = _v; }
 
         /**
-         * Human language used in `translated_keyword` and `text`
-         * attributes - should be a language code conforming to ISO
-         * 646.IRV:1991.
+         * Human language used in the `translated_keyword` and `text` fields.
+         * 
+         * From the [official
+         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):
+         * 
+         * > The language tag is a well-formed language tag defined by [RFC 5646:
+         * > BCP 47: Tags for Identifying
+         * > Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the
+         * > keyword, the language tag is case-insensitive. Subtags must appear
+         * > in the [IANA language subtag
+         * > registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+         * > If the language tag is empty, the language is unspecified. Examples
+         * > of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,
+         * > `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.
          */
         public String languageTag() { return languageTag; }
         public void setLanguageTag(String _v) { _dirty = true; languageTag = _v; }
 
         /**
-         * Keyword translated into language specified in
-         * `language_tag`. Line breaks are not allowed.
+         * The keyword (`keyword`) translated into the language specified in
+         * `language_tag`.
+         * 
+         * It must not contain a zero byte (U+0000 NULL character). Line breaks
+         * should not appear. The remaining control characters (U+0001..U+0009,
+         * U+000B..0+001F, U+007F..U+009F) are discouraged.
          */
         public String translatedKeyword() { return translatedKeyword; }
         public void setTranslatedKeyword(String _v) { _dirty = true; translatedKeyword = _v; }
@@ -3197,8 +3532,9 @@ public class Png extends KaitaiStruct.ReadWrite {
     }
 
     /**
-     * "Physical size" chunk stores data that allows to translate
-     * logical pixels into physical units (meters, etc) and vice-versa.
+     * Physical pixel dimensions (`pHYs`) chunk specifies the intended physical
+     * size of the pixels (in meters) or pixel aspect ratio for display of the
+     * image.
      * @see <a href="https://www.w3.org/TR/png/#11pHYs">Source</a>
      */
     public static class PhysChunk extends KaitaiStruct.ReadWrite {
@@ -3226,6 +3562,9 @@ public class Png extends KaitaiStruct.ReadWrite {
             this.pixelsPerUnitX = this._io.readU4be();
             this.pixelsPerUnitY = this._io.readU4be();
             this.unit = Png.PhysUnit.byId(this._io.readU1());
+            if (this.unit == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.unit, this._io, "/types/phys_chunk/seq/2");
+            }
             _dirty = false;
         }
 
@@ -3240,8 +3579,39 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
 
         public void _check() {
+            if (this.unit == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.unit, null, "/types/phys_chunk/seq/2");
+            }
             _dirty = false;
         }
+        private Double dotsPerInchX;
+
+        /**
+         * Horizontal resolution (DPI)
+         */
+        public Double dotsPerInchX() {
+            if (this.dotsPerInchX != null)
+                return this.dotsPerInchX;
+            if (unit() == Png.PhysUnit.METER) {
+                this.dotsPerInchX = ((Number) (pixelsPerUnitX() * 0.0254)).doubleValue();
+            }
+            return this.dotsPerInchX;
+        }
+        public void _invalidateDotsPerInchX() { this.dotsPerInchX = null; }
+        private Double dotsPerInchY;
+
+        /**
+         * Vertical resolution (DPI)
+         */
+        public Double dotsPerInchY() {
+            if (this.dotsPerInchY != null)
+                return this.dotsPerInchY;
+            if (unit() == Png.PhysUnit.METER) {
+                this.dotsPerInchY = ((Number) (pixelsPerUnitY() * 0.0254)).doubleValue();
+            }
+            return this.dotsPerInchY;
+        }
+        public void _invalidateDotsPerInchY() { this.dotsPerInchY = null; }
         private long pixelsPerUnitX;
         private long pixelsPerUnitY;
         private PhysUnit unit;
@@ -3447,6 +3817,9 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
         public void _read() {
             this.renderIntent = Intent.byId(this._io.readU1());
+            if (this.renderIntent == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.renderIntent, this._io, "/types/srgb_chunk/seq/0");
+            }
             _dirty = false;
         }
 
@@ -3459,6 +3832,9 @@ public class Png extends KaitaiStruct.ReadWrite {
         }
 
         public void _check() {
+            if (this.renderIntent == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.renderIntent, null, "/types/srgb_chunk/seq/0");
+            }
             _dirty = false;
         }
         private Intent renderIntent;
@@ -3473,10 +3849,13 @@ public class Png extends KaitaiStruct.ReadWrite {
     }
 
     /**
-     * Text chunk effectively allows to store key-value string pairs in
-     * PNG container. Both "key" (keyword) and "value" (text) parts are
-     * given in pre-defined subset of iso8859-1 without control
-     * characters.
+     * Textual data (`tEXt`) chunk effectively allows you to store key-value
+     * string pairs in the PNG container.
+     * 
+     * Both the "key" (`keyword`) and "value" (`text`) parts are restricted to
+     * printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the
+     * exception that `text` can also contain newlines (U+000A LINE FEED (LF)
+     * characters) and U+00A0 NON-BREAKING SPACE characters.
      * @see <a href="https://www.w3.org/TR/png/#11tEXt">Source</a>
      */
     public static class TextChunk extends KaitaiStruct.ReadWrite {
@@ -3529,10 +3908,27 @@ public class Png extends KaitaiStruct.ReadWrite {
         private Png.Chunk _parent;
 
         /**
-         * Indicates purpose of the following text data.
+         * Indicates the type of information represented by the text string.
+         * 
+         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+         * keyword, leading spaces, trailing spaces, and consecutive spaces are
+         * not permitted.
+         * @see <a href="https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords">Source</a>
          */
         public String keyword() { return keyword; }
         public void setKeyword(String _v) { _dirty = true; keyword = _v; }
+
+        /**
+         * Text string (the "value" of this key-value pair).
+         * 
+         * Although it is not null-terminated (unlike the keyword), it must not
+         * contain a zero byte (U+0000 NULL character). A newline should be
+         * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+         * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+         * U+007F..U+009F) are discouraged.
+         */
         public String text() { return text; }
         public void setText(String _v) { _dirty = true; text = _v; }
         public Png _root() { return _root; }
@@ -3622,7 +4018,7 @@ public class Png extends KaitaiStruct.ReadWrite {
     private long ihdrLen;
     private byte[] ihdrType;
     private IhdrChunk ihdr;
-    private byte[] ihdrCrc;
+    private long ihdrCrc;
     private List<Chunk> chunks;
     private Png _root;
     private KaitaiStruct.ReadWrite _parent;
@@ -3634,8 +4030,8 @@ public class Png extends KaitaiStruct.ReadWrite {
     public void setIhdrType(byte[] _v) { _dirty = true; ihdrType = _v; }
     public IhdrChunk ihdr() { return ihdr; }
     public void setIhdr(IhdrChunk _v) { _dirty = true; ihdr = _v; }
-    public byte[] ihdrCrc() { return ihdrCrc; }
-    public void setIhdrCrc(byte[] _v) { _dirty = true; ihdrCrc = _v; }
+    public long ihdrCrc() { return ihdrCrc; }
+    public void setIhdrCrc(long _v) { _dirty = true; ihdrCrc = _v; }
     public List<Chunk> chunks() { return chunks; }
     public void setChunks(List<Chunk> _v) { _dirty = true; chunks = _v; }
     public Png _root() { return _root; }

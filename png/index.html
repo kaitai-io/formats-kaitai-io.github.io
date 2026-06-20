@@ -321,7 +321,7 @@ section#format-index .row {
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ihdr</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ihdr_chunk</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ihdr_crc</span>
-<span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
 <span class="w">  </span><span class="c1"># The rest of the chunks</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chunks</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chunk</span>
@@ -333,12 +333,28 @@ section#format-index .row {
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type_raw</span>
 <span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
 <span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type != &quot;\0\0\0\0&quot;</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">(</span>
+<span class="w">              </span><span class="no">(_[0] &gt;= 0x41 and _[0] &lt;= 0x5a) or</span>
+<span class="w">              </span><span class="no">(_[0] &gt;= 0x61 and _[0] &lt;= 0x7a)</span>
+<span class="w">            </span><span class="no">) and (</span>
+<span class="w">              </span><span class="no">(_[1] &gt;= 0x41 and _[1] &lt;= 0x5a) or</span>
+<span class="w">              </span><span class="no">(_[1] &gt;= 0x61 and _[1] &lt;= 0x7a)</span>
+<span class="w">            </span><span class="no">) and (</span>
+<span class="w">              </span><span class="no">(_[2] &gt;= 0x41 and _[2] &lt;= 0x5a) or</span>
+<span class="w">              </span><span class="no">(_[2] &gt;= 0x61 and _[2] &lt;= 0x7a)</span>
+<span class="w">            </span><span class="no">) and (</span>
+<span class="w">              </span><span class="no">(_[3] &gt;= 0x41 and _[3] &lt;= 0x5a) or</span>
+<span class="w">              </span><span class="no">(_[3] &gt;= 0x61 and _[3] &lt;= 0x7a)</span>
+<span class="w">            </span><span class="no">)</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Each byte of a chunk type is restricted to the hexadecimal values</span>
+<span class="w">          </span><span class="no">0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters</span>
+<span class="w">          </span><span class="no">(`A-Z` and `a-z`).</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/2025/REC-png-3-20250624/#table51</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">body</span>
 <span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span>
@@ -390,7 +406,33 @@ section#format-index .row {
 <span class="w">            </span><span class="c1"># https://github.com/hackerfactor/SEAL/blob/master/FORMATS.md#png</span>
 <span class="w">            </span><span class="c1"># seAl</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">crc</span>
-<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type_raw.to_s(&#39;ASCII&#39;)</span>
+<span class="w">      </span><span class="nt">is_ancillary</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type_raw[0] &amp; 0x20 != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">false = critical chunk, true = ancillary chunk</span>
+<span class="w">      </span><span class="nt">is_private</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type_raw[1] &amp; 0x20 != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">false = public chunk (defined by the W3C), true = private chunk (can</span>
+<span class="w">          </span><span class="no">be defined by anyone)</span>
+<span class="w">      </span><span class="nt">reserved_bit</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type_raw[2] &amp; 0x20 != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Should be `false`, i.e. all chunk types should have uppercase third</span>
+<span class="w">          </span><span class="no">letters (the lowercase third letter is reserved for possible future</span>
+<span class="w">          </span><span class="no">extensions to the PNG standard)</span>
+<span class="w">      </span><span class="nt">is_safe_to_copy</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type_raw[3] &amp; 0x20 != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Defines whether the chunk may be copied if the image data (i.e.</span>
+<span class="w">          </span><span class="no">pixels) is modified. This tells PNG editors how to handle unknown</span>
+<span class="w">          </span><span class="no">chunks - see section [14.2 Behavior of PNG</span>
+<span class="w">          </span><span class="no">editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in</span>
+<span class="w">          </span><span class="no">the official specification.</span>
 <span class="w">  </span><span class="nt">ihdr_chunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#11IHDR</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
@@ -409,12 +451,23 @@ section#format-index .row {
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">color_type</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">color_type</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compression_method</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compression_methods</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">filter_method</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">filter_method</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">interlace_method</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">interlace_method</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">plte_chunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#11PLTE</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
@@ -512,13 +565,25 @@ section#format-index .row {
 <span class="w">      </span><span class="nt">y</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">y_int / 100000.0</span>
 <span class="w">  </span><span class="nt">gama_chunk</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{gamma:dec}</span><span class="nv"> </span><span class="s">(=</span><span class="nv"> </span><span class="s">1/{inv_gamma:dec})&#39;</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#11gAMA</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gamma_int</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_ != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as</span>
+<span class="w">          </span><span class="no">45455)</span>
 <span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">gamma_ratio</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">gamma</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gamma_int / 100000.0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Image gamma, typically 0.45455 = 1/2.2</span>
+<span class="w">      </span><span class="nt">inv_gamma</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100000.0 / gamma_int</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Inverse of the image gamma (1 / gamma), typically 2.2 (not considering</span>
+<span class="w">          </span><span class="no">rounding)</span>
 <span class="w">  </span><span class="nt">mdcv_chunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#mDCV-chunk</span>
@@ -561,6 +626,8 @@ section#format-index .row {
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">render_intent</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intent</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">enums</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">intent</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">perceptual</span>
@@ -603,8 +670,9 @@ section#format-index .row {
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">  </span><span class="nt">phys_chunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">&quot;Physical size&quot; chunk stores data that allows to translate</span>
-<span class="w">      </span><span class="no">logical pixels into physical units (meters, etc) and vice-versa.</span>
+<span class="w">      </span><span class="no">Physical pixel dimensions (`pHYs`) chunk specifies the intended physical</span>
+<span class="w">      </span><span class="no">size of the pixels (in meters) or pixel aspect ratio for display of the</span>
+<span class="w">      </span><span class="no">image.</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#11pHYs</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pixels_per_unit_x</span>
@@ -620,6 +688,17 @@ section#format-index .row {
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unit</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phys_unit</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">dots_per_inch_x</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pixels_per_unit_x * 0.0254</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unit == phys_unit::meter</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Horizontal resolution (DPI)</span>
+<span class="w">      </span><span class="nt">dots_per_inch_y</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pixels_per_unit_y * 0.0254</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unit == phys_unit::meter</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vertical resolution (DPI)</span>
 <span class="w">  </span><span class="nt">time_chunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">Time chunk stores time stamp of last modification of this image,</span>
@@ -639,17 +718,29 @@ section#format-index .row {
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">second</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">  </span><span class="nt">international_text_chunk</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{keyword}&#39;</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">International text chunk effectively allows to store key-value string pairs in</span>
-<span class="w">      </span><span class="no">PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
-<span class="w">      </span><span class="no">given in pre-defined subset of iso8859-1 without control</span>
-<span class="w">      </span><span class="no">characters.</span>
+<span class="w">      </span><span class="no">International textual data (`iTXt`) chunk effectively allows you to store</span>
+<span class="w">      </span><span class="no">key-value string pairs in the PNG container.</span>
+
+<span class="w">      </span><span class="no">The &quot;key&quot; part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)</span>
+<span class="w">      </span><span class="no">characters and spaces. The translated keyword and the &quot;value&quot; part</span>
+<span class="w">      </span><span class="no">(`text`) are stored in UTF-8 and thus can store text in any language -</span>
+<span class="w">      </span><span class="no">this language can be indicated via the language tag (`language_tag`).</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#11iTXt</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keyword</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
-<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Indicates purpose of the following text data.</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ISO-8859-1</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Indicates the type of information represented by the text string.</span>
+
+<span class="w">          </span><span class="no">Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="w">          </span><span class="no">characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="w">          </span><span class="no">0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="w">          </span><span class="no">keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="w">          </span><span class="no">not permitted.</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compression_flag</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
@@ -660,19 +751,43 @@ section#format-index .row {
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compression_method</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compression_methods</span>
+<span class="w">        </span><span class="c1"># The [specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt)</span>
+<span class="w">        </span><span class="c1"># says that for uncompressed text (i.e. when `compression_flag == 0`),</span>
+<span class="w">        </span><span class="c1"># decoders must ignore the compression method.</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="c1"># We reflect this in the validation check: we require that the</span>
+<span class="w">        </span><span class="c1"># compression method be 0 (zlib) only if `compression_flag == 1`;</span>
+<span class="w">        </span><span class="c1"># otherwise, we disable the check by turning it into the tautology</span>
+<span class="w">        </span><span class="c1"># `compression_method == compression_method` (which is always true).</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;compression_flag</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">compression_methods::zlib</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">compression_method&#39;</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language_tag</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
 <span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ASCII</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">Human language used in `translated_keyword` and `text`</span>
-<span class="w">          </span><span class="no">attributes - should be a language code conforming to ISO</span>
-<span class="w">          </span><span class="no">646.IRV:1991.</span>
+<span class="w">          </span><span class="no">Human language used in the `translated_keyword` and `text` fields.</span>
+
+<span class="w">          </span><span class="no">From the [official</span>
+<span class="w">          </span><span class="no">specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):</span>
+
+<span class="w">          </span><span class="no">&gt; The language tag is a well-formed language tag defined by [RFC 5646:</span>
+<span class="w">          </span><span class="no">&gt; BCP 47: Tags for Identifying</span>
+<span class="w">          </span><span class="no">&gt; Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the</span>
+<span class="w">          </span><span class="no">&gt; keyword, the language tag is case-insensitive. Subtags must appear</span>
+<span class="w">          </span><span class="no">&gt; in the [IANA language subtag</span>
+<span class="w">          </span><span class="no">&gt; registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).</span>
+<span class="w">          </span><span class="no">&gt; If the language tag is empty, the language is unspecified. Examples</span>
+<span class="w">          </span><span class="no">&gt; of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,</span>
+<span class="w">          </span><span class="no">&gt; `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">translated_keyword</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
 <span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">Keyword translated into language specified in</span>
-<span class="w">          </span><span class="no">`language_tag`. Line breaks are not allowed.</span>
+<span class="w">          </span><span class="no">The keyword (`keyword`) translated into the language specified in</span>
+<span class="w">          </span><span class="no">`language_tag`.</span>
+
+<span class="w">          </span><span class="no">It must not contain a zero byte (U+0000 NULL character). Line breaks</span>
+<span class="w">          </span><span class="no">should not appear. The remaining control characters (U+0001..U+0009,</span>
+<span class="w">          </span><span class="no">U+000B..0+001F, U+007F..U+009F) are discouraged.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text_plain</span>
 <span class="w">        </span><span class="nt">size-eos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">international_text</span>
@@ -687,69 +802,147 @@ section#format-index .row {
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">706</span><span class="w"> </span><span class="c1"># `process` does not work with `type: str`</span>
 <span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">text</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(compression_flag</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">text_plain</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">text_zlib).text&#39;</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(compression_flag</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">text_plain</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">text_zlib).value&#39;</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="w">          </span><span class="no">language specified in `language_tag`. Line breaks are</span>
-<span class="w">          </span><span class="no">allowed.</span>
+<span class="w">          </span><span class="no">Text string (the &quot;value&quot; of this key-value pair), written in language</span>
+<span class="w">          </span><span class="no">specified in `language_tag`.</span>
+
+<span class="w">          </span><span class="no">Although it is not null-terminated (unlike other textual data in the</span>
+<span class="w">          </span><span class="no">`iTXt` chunk), it must not contain a zero byte</span>
+<span class="w">          </span><span class="no">(U+0000 NULL character). A newline should be represented by a single</span>
+<span class="w">          </span><span class="no">U+000A LINE FEED (LF) character (aka `\n`). The remaining control</span>
+<span class="w">          </span><span class="no">characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are</span>
+<span class="w">          </span><span class="no">discouraged.</span>
 <span class="w">  </span><span class="nt">international_text</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
 <span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
 <span class="w">        </span><span class="nt">size-eos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="w">          </span><span class="no">language specified in `language_tag`. Line breaks are</span>
-<span class="w">          </span><span class="no">allowed.</span>
+<span class="w">          </span><span class="no">Text string (the &quot;value&quot; of this key-value pair), written in language</span>
+<span class="w">          </span><span class="no">specified in `_parent.language_tag`.</span>
+
+<span class="w">          </span><span class="no">Although it is not null-terminated (unlike other textual data in the</span>
+<span class="w">          </span><span class="no">`iTXt` chunk), it must not contain a zero byte</span>
+<span class="w">          </span><span class="no">(U+0000 NULL character). A newline should be represented by a single</span>
+<span class="w">          </span><span class="no">U+000A LINE FEED (LF) character (aka `\n`). The remaining control</span>
+<span class="w">          </span><span class="no">characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are</span>
+<span class="w">          </span><span class="no">discouraged.</span>
 <span class="w">  </span><span class="nt">text_chunk</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{keyword}&#39;</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">Text chunk effectively allows to store key-value string pairs in</span>
-<span class="w">      </span><span class="no">PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
-<span class="w">      </span><span class="no">given in pre-defined subset of iso8859-1 without control</span>
-<span class="w">      </span><span class="no">characters.</span>
+<span class="w">      </span><span class="no">Textual data (`tEXt`) chunk effectively allows you to store key-value</span>
+<span class="w">      </span><span class="no">string pairs in the PNG container.</span>
+
+<span class="w">      </span><span class="no">Both the &quot;key&quot; (`keyword`) and &quot;value&quot; (`text`) parts are restricted to</span>
+<span class="w">      </span><span class="no">printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the</span>
+<span class="w">      </span><span class="no">exception that `text` can also contain newlines (U+000A LINE FEED (LF)</span>
+<span class="w">      </span><span class="no">characters) and U+00A0 NON-BREAKING SPACE characters.</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#11tEXt</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keyword</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iso8859-1</span>
-<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Indicates purpose of the following text data.</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ISO-8859-1</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Indicates the type of information represented by the text string.</span>
+
+<span class="w">          </span><span class="no">Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="w">          </span><span class="no">characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="w">          </span><span class="no">0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="w">          </span><span class="no">keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="w">          </span><span class="no">not permitted.</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
 <span class="w">        </span><span class="nt">size-eos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iso8859-1</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ISO-8859-1</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Text string (the &quot;value&quot; of this key-value pair).</span>
+
+<span class="w">          </span><span class="no">Although it is not null-terminated (unlike the keyword), it must not</span>
+<span class="w">          </span><span class="no">contain a zero byte (U+0000 NULL character). A newline should be</span>
+<span class="w">          </span><span class="no">represented by a single U+000A LINE FEED (LF) character (aka `\n`).</span>
+<span class="w">          </span><span class="no">The remaining control characters (U+0001..U+0009, U+000B..0+001F,</span>
+<span class="w">          </span><span class="no">U+007F..U+009F) are discouraged.</span>
 <span class="w">  </span><span class="nt">compressed_text_chunk</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{keyword}&#39;</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">Compressed text chunk effectively allows to store key-value</span>
-<span class="w">      </span><span class="no">string pairs in PNG container, compressing &quot;value&quot; part (which</span>
-<span class="w">      </span><span class="no">can be quite lengthy) with zlib compression.</span>
+<span class="w">      </span><span class="no">Compressed textual data (`zTXt`) chunk effectively allows you to store</span>
+<span class="w">      </span><span class="no">key-value string pairs in the PNG container, compressing the &quot;value&quot; part</span>
+<span class="w">      </span><span class="no">(which can be quite lengthy) with zlib compression.</span>
+
+<span class="w">      </span><span class="no">The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`</span>
+<span class="w">      </span><span class="no">chunk is recommended for storing large blocks of text.</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#11zTXt</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keyword</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
-<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Indicates purpose of the following text data.</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ISO-8859-1</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Indicates the type of information represented by the text string.</span>
+
+<span class="w">          </span><span class="no">Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="w">          </span><span class="no">characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="w">          </span><span class="no">0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="w">          </span><span class="no">keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="w">          </span><span class="no">not permitted.</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compression_method</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compression_methods</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text_datastream</span>
-<span class="w">        </span><span class="nt">process</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zlib</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compression_methods::zlib</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
 <span class="w">        </span><span class="nt">size-eos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">process</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zlib</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compressed_text</span>
+<span class="w">        </span><span class="nt">-affected-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">706</span><span class="w"> </span><span class="c1"># `process` does not work with `type: str`</span>
+<span class="w">  </span><span class="nt">compressed_text</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ISO-8859-1</span>
+<span class="w">        </span><span class="nt">size-eos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Text string (the &quot;value&quot; of this key-value pair).</span>
+
+<span class="w">          </span><span class="no">Although it is not null-terminated (unlike the keyword), it must not</span>
+<span class="w">          </span><span class="no">contain a zero byte (U+0000 NULL character). A newline should be</span>
+<span class="w">          </span><span class="no">represented by a single U+000A LINE FEED (LF) character (aka `\n`).</span>
+<span class="w">          </span><span class="no">The remaining control characters (U+0001..U+0009, U+000B..0+001F,</span>
+<span class="w">          </span><span class="no">U+007F..U+009F) are discouraged.</span>
 <span class="w">  </span><span class="nt">animation_control_chunk</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#acTL-chunk</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_frames</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
-<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Number of frames, must be equal to the number of `frame_control_chunk`s</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Number of frames, must be equal to the number of `fcTL` chunks (i.e.</span>
+<span class="w">          </span><span class="no">`frame_control_chunk` objects)</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_plays</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Number of times to loop, 0 indicates infinite looping.</span>
 <span class="w">  </span><span class="nt">frame_control_chunk</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#fcTL-chunk</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sequence_number</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
-<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sequence number of the animation chunk</span>
+<span class="w">        </span><span class="c1"># NOTE: whenever you update this `doc`, be sure to also update its copy</span>
+<span class="w">        </span><span class="c1"># in `frame_data_chunk`</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Sequence number of the animation chunk, starting from 0.</span>
+
+<span class="w">          </span><span class="no">The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk</span>
+<span class="w">          </span><span class="no">types share the sequence. The purpose of this number is to detect (and</span>
+<span class="w">          </span><span class="no">optionally correct) sequence errors in an Animated PNG, since the PNG</span>
+<span class="w">          </span><span class="no">specification does not impose ordering restrictions on ancillary</span>
+<span class="w">          </span><span class="no">chunks (which means that a PNG editor is technically allowed to</span>
+<span class="w">          </span><span class="no">reorder them arbitrarily, see [14.2 Behavior of PNG</span>
+<span class="w">          </span><span class="no">editors](https://www.w3.org/TR/png/#14Ordering) in the spec).</span>
+
+<span class="w">          </span><span class="no">The first `fcTL` chunk must contain sequence number 0, and the</span>
+<span class="w">          </span><span class="no">sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in</span>
+<span class="w">          </span><span class="no">ascending order, with no gaps or duplicates.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">width</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
 <span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
@@ -781,32 +974,48 @@ section#format-index .row {
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dispose_op</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dispose_op_values</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Type of frame area disposal to be done after rendering this frame</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blend_op</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blend_op_values</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Type of frame area rendering for this frame</span>
 <span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">delay</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;delay_num</span><span class="nv"> </span><span class="s">/</span><span class="nv"> </span><span class="s">(delay_den</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">100.0</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">delay_den)&#39;</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Time to display this frame, in seconds</span>
 <span class="w">  </span><span class="nt">frame_data_chunk</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#fdAT-chunk</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sequence_number</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="c1"># NOTE: whenever you update this `doc`, be sure to also update its copy</span>
+<span class="w">        </span><span class="c1"># in `frame_control_chunk`</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">Sequence number of the animation chunk. The fcTL and fdAT chunks</span>
-<span class="w">          </span><span class="no">have a 4 byte sequence number. Both chunk types share the sequence.</span>
-<span class="w">          </span><span class="no">The first fcTL chunk must contain sequence number 0, and the sequence</span>
-<span class="w">          </span><span class="no">numbers in the remaining fcTL and fdAT chunks must be in order, with</span>
-<span class="w">          </span><span class="no">no gaps or duplicates.</span>
+<span class="w">          </span><span class="no">Sequence number of the animation chunk, starting from 0.</span>
+
+<span class="w">          </span><span class="no">The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk</span>
+<span class="w">          </span><span class="no">types share the sequence. The purpose of this number is to detect (and</span>
+<span class="w">          </span><span class="no">optionally correct) sequence errors in an Animated PNG, since the PNG</span>
+<span class="w">          </span><span class="no">specification does not impose ordering restrictions on ancillary</span>
+<span class="w">          </span><span class="no">chunks (which means that a PNG editor is technically allowed to</span>
+<span class="w">          </span><span class="no">reorder them arbitrarily, see [14.2 Behavior of PNG</span>
+<span class="w">          </span><span class="no">editors](https://www.w3.org/TR/png/#14Ordering) in the spec).</span>
+
+<span class="w">          </span><span class="no">The first `fcTL` chunk must contain sequence number 0, and the</span>
+<span class="w">          </span><span class="no">sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in</span>
+<span class="w">          </span><span class="no">ascending order, with no gaps or duplicates.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frame_data</span>
 <span class="w">        </span><span class="nt">size-eos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">Frame data for the frame. At least one fdAT chunk is required for</span>
-<span class="w">          </span><span class="no">each frame. The compressed datastream is the concatenation of the</span>
-<span class="w">          </span><span class="no">contents of the data fields of all the fdAT chunks within a frame.</span>
+<span class="w">          </span><span class="no">Frame data for the frame. At least one `fdAT` chunk is required for</span>
+<span class="w">          </span><span class="no">each frame, except for the first frame, if that frame is represented</span>
+<span class="w">          </span><span class="no">by an `IDAT` chunk. The compressed datastream for each frame is the</span>
+<span class="w">          </span><span class="no">concatenation of the contents of the data fields of all the `fdAT`</span>
+<span class="w">          </span><span class="no">chunks within a frame.</span>
 <span class="w">  </span><span class="nt">adobe_fireworks_chunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://stackoverflow.com/questions/4242402/the-fireworks-png-format-any-insight-any-libs/51683285#51683285</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
@@ -852,7 +1061,7 @@ section#format-index .row {
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_name</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf-8</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
 <span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
 <span class="w">          </span><span class="c1"># See https://github.com/skeeto/scratch/blob/58470254f4a95cdf7a53888e405c851c21eb2cae/pngattach/pngattach.c#L466-L468</span>
 <span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_.length != 0 and _.substring(0, 1) != &quot;.&quot;</span>
@@ -906,32 +1115,54 @@ section#format-index .row {
 <span class="w">  </span><span class="nt">dispose_op_values</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">0</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">APNG_DISPOSE_OP_NONE</span>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">        </span><span class="no">No disposal is done on this frame before rendering the next;</span>
 <span class="w">        </span><span class="no">the contents of the output buffer are left as is.</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#fcTL-chunk</span>
 <span class="w">    </span><span class="nt">1</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">background</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">APNG_DISPOSE_OP_BACKGROUND</span>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">        </span><span class="no">The frame&#39;s region of the output buffer is to be cleared to</span>
 <span class="w">        </span><span class="no">fully transparent black before rendering the next frame.</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#fcTL-chunk</span>
 <span class="w">    </span><span class="nt">2</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">previous</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">APNG_DISPOSE_OP_PREVIOUS</span>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">        </span><span class="no">The frame&#39;s region of the output buffer is to be reverted</span>
 <span class="w">        </span><span class="no">to the previous contents before rendering the next frame.</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#fcTL-chunk</span>
 <span class="w">  </span><span class="nt">blend_op_values</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">0</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">APNG_BLEND_OP_SOURCE</span>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">        </span><span class="no">All color components of the frame, including alpha,</span>
 <span class="w">        </span><span class="no">overwrite the current contents of the frame&#39;s output buffer region.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#fcTL-chunk</span>
 <span class="w">    </span><span class="nt">1</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">over</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">APNG_BLEND_OP_OVER</span>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">The frame is composited onto the output buffer based on its alpha</span>
+<span class="w">        </span><span class="no">The frame is composited onto the output buffer based on its alpha, using</span>
+<span class="w">        </span><span class="no">a simple OVER operation as described in [Alpha Channel</span>
+<span class="w">        </span><span class="no">Processing](https://www.w3.org/TR/png/#13Alpha-channel-processing).</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#fcTL-chunk</span>
+<span class="w">  </span><span class="c1"># https://www.w3.org/TR/png/#9Filters</span>
+<span class="w">  </span><span class="nt">filter_method</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PNG_FILTER_TYPE_BASE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Single row per-byte filtering</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pnggroup/libpng/blob/dd5d363ae1fc7778f2734bf51b10d3fe65028671/png.h#L599</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/png/#9Filter-types</span>
+<span class="w">  </span><span class="c1"># https://www.w3.org/TR/png/#8InterlaceMethods</span>
+<span class="w">  </span><span class="nt">interlace_method</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
+<span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adam7</span>
 </pre></div>
     </div>
 </section>

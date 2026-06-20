@@ -39,6 +39,15 @@ Png.DisposeOpValues = enum.Enum {
   previous = 2,
 }
 
+Png.FilterMethod = enum.Enum {
+  base = 0,
+}
+
+Png.InterlaceMethod = enum.Enum {
+  none = 0,
+  adam7 = 1,
+}
+
 Png.PhysUnit = enum.Enum {
   unknown = 0,
   meter = 1,
@@ -65,7 +74,7 @@ function Png:_read()
     error("not equal, expected " .. "\073\072\068\082" .. ", but got " .. self.ihdr_type)
   end
   self.ihdr = Png.IhdrChunk(self._io, self, self._root)
-  self.ihdr_crc = self._io:read_bytes(4)
+  self.ihdr_crc = self._io:read_u4be()
   self.chunks = {}
   local i = 0
   while true do
@@ -97,7 +106,7 @@ end
 
 
 -- 
--- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk)
+-- See also: Source (https://www.w3.org/TR/png/#acTL-chunk)
 Png.AnimationControlChunk = class.class(KaitaiStruct)
 
 function Png.AnimationControlChunk:_init(io, parent, root)
@@ -113,7 +122,8 @@ function Png.AnimationControlChunk:_read()
 end
 
 -- 
--- Number of frames, must be equal to the number of `frame_control_chunk`s.
+-- Number of frames, must be equal to the number of `fcTL` chunks (i.e.
+-- `frame_control_chunk` objects)
 -- 
 -- Number of times to loop, 0 indicates infinite looping.
 
@@ -324,9 +334,9 @@ end
 
 function Png.Chunk:_read()
   self.len = self._io:read_u4be()
-  self.type = str_decode.decode(self._io:read_bytes(4), "UTF-8")
-  local _ = self.type
-  if not(self.type ~= "\000\000\000\000") then
+  self.type_raw = self._io:read_bytes(4)
+  local _ = self.type_raw
+  if not( (( (( ((string.byte(_, 0 + 1) >= 65) and (string.byte(_, 0 + 1) <= 90)) ) or ( ((string.byte(_, 0 + 1) >= 97) and (string.byte(_, 0 + 1) <= 122)) )) ) and ( (( ((string.byte(_, 1 + 1) >= 65) and (string.byte(_, 1 + 1) <= 90)) ) or ( ((string.byte(_, 1 + 1) >= 97) and (string.byte(_, 1 + 1) <= 122)) )) ) and ( (( ((string.byte(_, 2 + 1) >= 65) and (string.byte(_, 2 + 1) <= 90)) ) or ( ((string.byte(_, 2 + 1) >= 97) and (string.byte(_, 2 + 1) <= 122)) )) ) and ( (( ((string.byte(_, 3 + 1) >= 65) and (string.byte(_, 3 + 1) <= 90)) ) or ( ((string.byte(_, 3 + 1) >= 97) and (string.byte(_, 3 + 1) <= 122)) )) )) ) then
     error("ValidationExprError")
   end
   local _on = self.type
@@ -421,9 +431,79 @@ function Png.Chunk:_read()
   else
     self.body = self._io:read_bytes(self.len)
   end
-  self.crc = self._io:read_bytes(4)
+  self.crc = self._io:read_u4be()
 end
 
+-- 
+-- false = critical chunk, true = ancillary chunk
+Png.Chunk.property.is_ancillary = {}
+function Png.Chunk.property.is_ancillary:get()
+  if self._m_is_ancillary ~= nil then
+    return self._m_is_ancillary
+  end
+
+  self._m_is_ancillary = string.byte(self.type_raw, 0 + 1) & 32 ~= 0
+  return self._m_is_ancillary
+end
+
+-- 
+-- false = public chunk (defined by the W3C), true = private chunk (can
+-- be defined by anyone)
+Png.Chunk.property.is_private = {}
+function Png.Chunk.property.is_private:get()
+  if self._m_is_private ~= nil then
+    return self._m_is_private
+  end
+
+  self._m_is_private = string.byte(self.type_raw, 1 + 1) & 32 ~= 0
+  return self._m_is_private
+end
+
+-- 
+-- Defines whether the chunk may be copied if the image data (i.e.
+-- pixels) is modified. This tells PNG editors how to handle unknown
+-- chunks - see section [14.2 Behavior of PNG
+-- editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in
+-- the official specification.
+Png.Chunk.property.is_safe_to_copy = {}
+function Png.Chunk.property.is_safe_to_copy:get()
+  if self._m_is_safe_to_copy ~= nil then
+    return self._m_is_safe_to_copy
+  end
+
+  self._m_is_safe_to_copy = string.byte(self.type_raw, 3 + 1) & 32 ~= 0
+  return self._m_is_safe_to_copy
+end
+
+-- 
+-- Should be `false`, i.e. all chunk types should have uppercase third
+-- letters (the lowercase third letter is reserved for possible future
+-- extensions to the PNG standard)
+Png.Chunk.property.reserved_bit = {}
+function Png.Chunk.property.reserved_bit:get()
+  if self._m_reserved_bit ~= nil then
+    return self._m_reserved_bit
+  end
+
+  self._m_reserved_bit = string.byte(self.type_raw, 2 + 1) & 32 ~= 0
+  return self._m_reserved_bit
+end
+
+Png.Chunk.property.type = {}
+function Png.Chunk.property.type:get()
+  if self._m_type ~= nil then
+    return self._m_type
+  end
+
+  self._m_type = str_decode.decode(self.type_raw, "ASCII")
+  return self._m_type
+end
+
+-- 
+-- Each byte of a chunk type is restricted to the hexadecimal values
+-- 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters
+-- (`A-Z` and `a-z`).
+-- See also: Source (https://www.w3.org/TR/2025/REC-png-3-20250624/#table51)
 
 -- 
 -- See also: Source (https://www.w3.org/TR/png/#cICP-chunk)
@@ -517,10 +597,35 @@ function Png.ClliChunk.property.max_frame_average_light_level:get()
 end
 
 
+Png.CompressedText = class.class(KaitaiStruct)
+
+function Png.CompressedText:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.CompressedText:_read()
+  self.value = str_decode.decode(self._io:read_bytes_full(), "ISO-8859-1")
+end
+
 -- 
--- Compressed text chunk effectively allows to store key-value
--- string pairs in PNG container, compressing "value" part (which
--- can be quite lengthy) with zlib compression.
+-- Text string (the "value" of this key-value pair).
+-- 
+-- Although it is not null-terminated (unlike the keyword), it must not
+-- contain a zero byte (U+0000 NULL character). A newline should be
+-- represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+-- The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+-- U+007F..U+009F) are discouraged.
+
+-- 
+-- Compressed textual data (`zTXt`) chunk effectively allows you to store
+-- key-value string pairs in the PNG container, compressing the "value" part
+-- (which can be quite lengthy) with zlib compression.
+-- 
+-- The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`
+-- chunk is recommended for storing large blocks of text.
 -- See also: Source (https://www.w3.org/TR/png/#11zTXt)
 Png.CompressedTextChunk = class.class(KaitaiStruct)
 
@@ -532,14 +637,26 @@ function Png.CompressedTextChunk:_init(io, parent, root)
 end
 
 function Png.CompressedTextChunk:_read()
-  self.keyword = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
+  self.keyword = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ISO-8859-1")
   self.compression_method = Png.CompressionMethods(self._io:read_u1())
-  self._raw_text_datastream = self._io:read_bytes_full()
-  self.text_datastream = KaitaiStream.process_zlib(self._raw_text_datastream)
+  if not(self.compression_method == Png.CompressionMethods.zlib) then
+    error("not equal, expected " .. Png.CompressionMethods.zlib .. ", but got " .. self.compression_method)
+  end
+  self._raw__raw_text = self._io:read_bytes_full()
+  self._raw_text = KaitaiStream.process_zlib(self._raw__raw_text)
+  local _io = KaitaiStream(stringstream(self._raw_text))
+  self.text = Png.CompressedText(_io, self, self._root)
 end
 
 -- 
--- Indicates purpose of the following text data.
+-- Indicates the type of information represented by the text string.
+-- 
+-- Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+-- characters and spaces; that is, only code points 0x20-0x7E and
+-- 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+-- keyword, leading spaces, trailing spaces, and consecutive spaces are
+-- not permitted.
+-- See also: Source (https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords)
 
 -- 
 -- See also: Source (https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501)
@@ -592,7 +709,7 @@ end
 -- image as well, but it can also be a JPEG or possibly other formats.
 
 -- 
--- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk)
+-- See also: Source (https://www.w3.org/TR/png/#fcTL-chunk)
 Png.FrameControlChunk = class.class(KaitaiStruct)
 
 function Png.FrameControlChunk:_init(io, parent, root)
@@ -629,7 +746,13 @@ function Png.FrameControlChunk:_read()
   self.delay_num = self._io:read_u2be()
   self.delay_den = self._io:read_u2be()
   self.dispose_op = Png.DisposeOpValues(self._io:read_u1())
+  if self.dispose_op == nil then
+    error("ValidationNotInEnumError")
+  end
   self.blend_op = Png.BlendOpValues(self._io:read_u1())
+  if self.blend_op == nil then
+    error("ValidationNotInEnumError")
+  end
 end
 
 -- 
@@ -645,7 +768,19 @@ function Png.FrameControlChunk.property.delay:get()
 end
 
 -- 
--- Sequence number of the animation chunk.
+-- Sequence number of the animation chunk, starting from 0.
+-- 
+-- The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+-- types share the sequence. The purpose of this number is to detect (and
+-- optionally correct) sequence errors in an Animated PNG, since the PNG
+-- specification does not impose ordering restrictions on ancillary
+-- chunks (which means that a PNG editor is technically allowed to
+-- reorder them arbitrarily, see [14.2 Behavior of PNG
+-- editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+-- 
+-- The first `fcTL` chunk must contain sequence number 0, and the
+-- sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+-- ascending order, with no gaps or duplicates.
 -- 
 -- Width of the following frame.
 -- 
@@ -664,7 +799,7 @@ end
 -- Type of frame area rendering for this frame.
 
 -- 
--- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk)
+-- See also: Source (https://www.w3.org/TR/png/#fdAT-chunk)
 Png.FrameDataChunk = class.class(KaitaiStruct)
 
 function Png.FrameDataChunk:_init(io, parent, root)
@@ -680,15 +815,25 @@ function Png.FrameDataChunk:_read()
 end
 
 -- 
--- Sequence number of the animation chunk. The fcTL and fdAT chunks
--- have a 4 byte sequence number. Both chunk types share the sequence.
--- The first fcTL chunk must contain sequence number 0, and the sequence
--- numbers in the remaining fcTL and fdAT chunks must be in order, with
--- no gaps or duplicates.
+-- Sequence number of the animation chunk, starting from 0.
 -- 
--- Frame data for the frame. At least one fdAT chunk is required for
--- each frame. The compressed datastream is the concatenation of the
--- contents of the data fields of all the fdAT chunks within a frame.
+-- The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+-- types share the sequence. The purpose of this number is to detect (and
+-- optionally correct) sequence errors in an Animated PNG, since the PNG
+-- specification does not impose ordering restrictions on ancillary
+-- chunks (which means that a PNG editor is technically allowed to
+-- reorder them arbitrarily, see [14.2 Behavior of PNG
+-- editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+-- 
+-- The first `fcTL` chunk must contain sequence number 0, and the
+-- sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+-- ascending order, with no gaps or duplicates.
+-- 
+-- Frame data for the frame. At least one `fdAT` chunk is required for
+-- each frame, except for the first frame, if that frame is represented
+-- by an `IDAT` chunk. The compressed datastream for each frame is the
+-- concatenation of the contents of the data fields of all the `fdAT`
+-- chunks within a frame.
 
 -- 
 -- See also: Source (https://www.w3.org/TR/png/#11gAMA)
@@ -703,18 +848,40 @@ end
 
 function Png.GamaChunk:_read()
   self.gamma_int = self._io:read_u4be()
+  local _ = self.gamma_int
+  if not(_ ~= 0) then
+    error("ValidationExprError")
+  end
 end
 
-Png.GamaChunk.property.gamma_ratio = {}
-function Png.GamaChunk.property.gamma_ratio:get()
-  if self._m_gamma_ratio ~= nil then
-    return self._m_gamma_ratio
+-- 
+-- Image gamma, typically 0.45455 = 1/2.2.
+Png.GamaChunk.property.gamma = {}
+function Png.GamaChunk.property.gamma:get()
+  if self._m_gamma ~= nil then
+    return self._m_gamma
   end
 
-  self._m_gamma_ratio = 100000.0 / self.gamma_int
-  return self._m_gamma_ratio
+  self._m_gamma = self.gamma_int / 100000.0
+  return self._m_gamma
 end
 
+-- 
+-- Inverse of the image gamma (1 / gamma), typically 2.2 (not considering
+-- rounding)
+Png.GamaChunk.property.inv_gamma = {}
+function Png.GamaChunk.property.inv_gamma:get()
+  if self._m_inv_gamma ~= nil then
+    return self._m_inv_gamma
+  end
+
+  self._m_inv_gamma = 100000.0 / self.gamma_int
+  return self._m_inv_gamma
+end
+
+-- 
+-- Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
+-- 45455)
 
 -- 
 -- See also: Source (https://www.w3.org/TR/png/#11IHDR)
@@ -741,9 +908,21 @@ function Png.IhdrChunk:_read()
     error("ValidationNotAnyOfError")
   end
   self.color_type = Png.ColorType(self._io:read_u1())
-  self.compression_method = self._io:read_u1()
-  self.filter_method = self._io:read_u1()
-  self.interlace_method = self._io:read_u1()
+  if self.color_type == nil then
+    error("ValidationNotInEnumError")
+  end
+  self.compression_method = Png.CompressionMethods(self._io:read_u1())
+  if self.compression_method == nil then
+    error("ValidationNotInEnumError")
+  end
+  self.filter_method = Png.FilterMethod(self._io:read_u1())
+  if self.filter_method == nil then
+    error("ValidationNotInEnumError")
+  end
+  self.interlace_method = Png.InterlaceMethod(self._io:read_u1())
+  if self.interlace_method == nil then
+    error("ValidationNotInEnumError")
+  end
 end
 
 
@@ -757,19 +936,28 @@ function Png.InternationalText:_init(io, parent, root)
 end
 
 function Png.InternationalText:_read()
-  self.text = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
+  self.value = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
 end
 
 -- 
--- Text contents ("value" of this key-value pair), written in
--- language specified in `language_tag`. Line breaks are
--- allowed.
+-- Text string (the "value" of this key-value pair), written in language
+-- specified in `_parent.language_tag`.
+-- 
+-- Although it is not null-terminated (unlike other textual data in the
+-- `iTXt` chunk), it must not contain a zero byte
+-- (U+0000 NULL character). A newline should be represented by a single
+-- U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+-- characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+-- discouraged.
 
 -- 
--- International text chunk effectively allows to store key-value string pairs in
--- PNG container. Both "key" (keyword) and "value" (text) parts are
--- given in pre-defined subset of iso8859-1 without control
--- characters.
+-- International textual data (`iTXt`) chunk effectively allows you to store
+-- key-value string pairs in the PNG container.
+-- 
+-- The "key" part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)
+-- characters and spaces. The translated keyword and the "value" part
+-- (`text`) are stored in UTF-8 and thus can store text in any language -
+-- this language can be indicated via the language tag (`language_tag`).
 -- See also: Source (https://www.w3.org/TR/png/#11iTXt)
 Png.InternationalTextChunk = class.class(KaitaiStruct)
 
@@ -781,12 +969,15 @@ function Png.InternationalTextChunk:_init(io, parent, root)
 end
 
 function Png.InternationalTextChunk:_read()
-  self.keyword = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
+  self.keyword = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ISO-8859-1")
   self.compression_flag = self._io:read_u1()
   if not( ((self.compression_flag == 0) or (self.compression_flag == 1)) ) then
     error("ValidationNotAnyOfError")
   end
   self.compression_method = Png.CompressionMethods(self._io:read_u1())
+  if not(self.compression_method == utils.box_unwrap((self.compression_flag == 1) and utils.box_wrap(Png.CompressionMethods.zlib) or (self.compression_method))) then
+    error("not equal, expected " .. utils.box_unwrap((self.compression_flag == 1) and utils.box_wrap(Png.CompressionMethods.zlib) or (self.compression_method)) .. ", but got " .. self.compression_method)
+  end
   self.language_tag = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
   self.translated_keyword = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
   if self.compression_flag == 0 then
@@ -803,31 +994,59 @@ function Png.InternationalTextChunk:_read()
 end
 
 -- 
--- Text contents ("value" of this key-value pair), written in
--- language specified in `language_tag`. Line breaks are
--- allowed.
+-- Text string (the "value" of this key-value pair), written in language
+-- specified in `language_tag`.
+-- 
+-- Although it is not null-terminated (unlike other textual data in the
+-- `iTXt` chunk), it must not contain a zero byte
+-- (U+0000 NULL character). A newline should be represented by a single
+-- U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+-- characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+-- discouraged.
 Png.InternationalTextChunk.property.text = {}
 function Png.InternationalTextChunk.property.text:get()
   if self._m_text ~= nil then
     return self._m_text
   end
 
-  self._m_text = utils.box_unwrap((self.compression_flag == 0) and utils.box_wrap(self.text_plain) or (self.text_zlib)).text
+  self._m_text = utils.box_unwrap((self.compression_flag == 0) and utils.box_wrap(self.text_plain) or (self.text_zlib)).value
   return self._m_text
 end
 
 -- 
--- Indicates purpose of the following text data.
+-- Indicates the type of information represented by the text string.
+-- 
+-- Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+-- characters and spaces; that is, only code points 0x20-0x7E and
+-- 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+-- keyword, leading spaces, trailing spaces, and consecutive spaces are
+-- not permitted.
+-- See also: Source (https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords)
 -- 
 -- 0 = text is uncompressed, 1 = text is compressed with a
 -- method specified in `compression_method`.
 -- 
--- Human language used in `translated_keyword` and `text`
--- attributes - should be a language code conforming to ISO
--- 646.IRV:1991.
+-- Human language used in the `translated_keyword` and `text` fields.
 -- 
--- Keyword translated into language specified in
--- `language_tag`. Line breaks are not allowed.
+-- From the [official
+-- specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):
+-- 
+-- > The language tag is a well-formed language tag defined by [RFC 5646:
+-- > BCP 47: Tags for Identifying
+-- > Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the
+-- > keyword, the language tag is case-insensitive. Subtags must appear
+-- > in the [IANA language subtag
+-- > registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+-- > If the language tag is empty, the language is unspecified. Examples
+-- > of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,
+-- > `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.
+-- 
+-- The keyword (`keyword`) translated into the language specified in
+-- `language_tag`.
+-- 
+-- It must not contain a zero byte (U+0000 NULL character). Line breaks
+-- should not appear. The remaining control characters (U+0001..U+0009,
+-- U+000B..0+001F, U+007F..U+009F) are discouraged.
 
 Png.MdcvChromaticity = class.class(KaitaiStruct)
 
@@ -911,8 +1130,9 @@ end
 
 
 -- 
--- "Physical size" chunk stores data that allows to translate
--- logical pixels into physical units (meters, etc) and vice-versa.
+-- Physical pixel dimensions (`pHYs`) chunk specifies the intended physical
+-- size of the pixels (in meters) or pixel aspect ratio for display of the
+-- image.
 -- See also: Source (https://www.w3.org/TR/png/#11pHYs)
 Png.PhysChunk = class.class(KaitaiStruct)
 
@@ -927,6 +1147,37 @@ function Png.PhysChunk:_read()
   self.pixels_per_unit_x = self._io:read_u4be()
   self.pixels_per_unit_y = self._io:read_u4be()
   self.unit = Png.PhysUnit(self._io:read_u1())
+  if self.unit == nil then
+    error("ValidationNotInEnumError")
+  end
+end
+
+-- 
+-- Horizontal resolution (DPI).
+Png.PhysChunk.property.dots_per_inch_x = {}
+function Png.PhysChunk.property.dots_per_inch_x:get()
+  if self._m_dots_per_inch_x ~= nil then
+    return self._m_dots_per_inch_x
+  end
+
+  if self.unit == Png.PhysUnit.meter then
+    self._m_dots_per_inch_x = self.pixels_per_unit_x * 0.0254
+  end
+  return self._m_dots_per_inch_x
+end
+
+-- 
+-- Vertical resolution (DPI).
+Png.PhysChunk.property.dots_per_inch_y = {}
+function Png.PhysChunk.property.dots_per_inch_y:get()
+  if self._m_dots_per_inch_y ~= nil then
+    return self._m_dots_per_inch_y
+  end
+
+  if self.unit == Png.PhysUnit.meter then
+    self._m_dots_per_inch_y = self.pixels_per_unit_y * 0.0254
+  end
+  return self._m_dots_per_inch_y
 end
 
 -- 
@@ -993,14 +1244,20 @@ end
 
 function Png.SrgbChunk:_read()
   self.render_intent = Png.SrgbChunk.Intent(self._io:read_u1())
+  if self.render_intent == nil then
+    error("ValidationNotInEnumError")
+  end
 end
 
 
 -- 
--- Text chunk effectively allows to store key-value string pairs in
--- PNG container. Both "key" (keyword) and "value" (text) parts are
--- given in pre-defined subset of iso8859-1 without control
--- characters.
+-- Textual data (`tEXt`) chunk effectively allows you to store key-value
+-- string pairs in the PNG container.
+-- 
+-- Both the "key" (`keyword`) and "value" (`text`) parts are restricted to
+-- printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the
+-- exception that `text` can also contain newlines (U+000A LINE FEED (LF)
+-- characters) and U+00A0 NON-BREAKING SPACE characters.
 -- See also: Source (https://www.w3.org/TR/png/#11tEXt)
 Png.TextChunk = class.class(KaitaiStruct)
 
@@ -1017,7 +1274,22 @@ function Png.TextChunk:_read()
 end
 
 -- 
--- Indicates purpose of the following text data.
+-- Indicates the type of information represented by the text string.
+-- 
+-- Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+-- characters and spaces; that is, only code points 0x20-0x7E and
+-- 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+-- keyword, leading spaces, trailing spaces, and consecutive spaces are
+-- not permitted.
+-- See also: Source (https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords)
+-- 
+-- Text string (the "value" of this key-value pair).
+-- 
+-- Although it is not null-terminated (unlike the keyword), it must not
+-- contain a zero byte (U+0000 NULL character). A newline should be
+-- represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+-- The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+-- U+007F..U+009F) are discouraged.
 
 -- 
 -- Time chunk stores time stamp of last modification of this image,

@@ -45,6 +45,25 @@ const std::set<png_t::dispose_op_values_t> png_t::_values_dispose_op_values_t = 
 bool png_t::_is_defined_dispose_op_values_t(png_t::dispose_op_values_t v) {
     return png_t::_values_dispose_op_values_t.find(v) != png_t::_values_dispose_op_values_t.end();
 }
+std::set<png_t::filter_method_t> png_t::_build_values_filter_method_t() {
+    std::set<png_t::filter_method_t> _t;
+    _t.insert(png_t::FILTER_METHOD_BASE);
+    return _t;
+}
+const std::set<png_t::filter_method_t> png_t::_values_filter_method_t = png_t::_build_values_filter_method_t();
+bool png_t::_is_defined_filter_method_t(png_t::filter_method_t v) {
+    return png_t::_values_filter_method_t.find(v) != png_t::_values_filter_method_t.end();
+}
+std::set<png_t::interlace_method_t> png_t::_build_values_interlace_method_t() {
+    std::set<png_t::interlace_method_t> _t;
+    _t.insert(png_t::INTERLACE_METHOD_NONE);
+    _t.insert(png_t::INTERLACE_METHOD_ADAM7);
+    return _t;
+}
+const std::set<png_t::interlace_method_t> png_t::_values_interlace_method_t = png_t::_build_values_interlace_method_t();
+bool png_t::_is_defined_interlace_method_t(png_t::interlace_method_t v) {
+    return png_t::_values_interlace_method_t.find(v) != png_t::_values_interlace_method_t.end();
+}
 std::set<png_t::phys_unit_t> png_t::_build_values_phys_unit_t() {
     std::set<png_t::phys_unit_t> _t;
     _t.insert(png_t::PHYS_UNIT_UNKNOWN);
@@ -84,7 +103,7 @@ void png_t::_read() {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x49\x48\x44\x52", 4), m_ihdr_type, m__io, std::string("/seq/2"));
     }
     m_ihdr = new ihdr_chunk_t(m__io, this, m__root);
-    m_ihdr_crc = m__io->read_bytes(4);
+    m_ihdr_crc = m__io->read_u4be();
     m_chunks = new std::vector<chunk_t*>();
     {
         int i = 0;
@@ -442,6 +461,11 @@ png_t::chunk_t::chunk_t(kaitai::kstream* p__io, png_t* p__parent, png_t* p__root
     m__parent = p__parent;
     m__root = p__root;
     m__io__raw_body = 0;
+    f_is_ancillary = false;
+    f_is_private = false;
+    f_is_safe_to_copy = false;
+    f_reserved_bit = false;
+    f_type = false;
 
     try {
         _read();
@@ -453,11 +477,11 @@ png_t::chunk_t::chunk_t(kaitai::kstream* p__io, png_t* p__parent, png_t* p__root
 
 void png_t::chunk_t::_read() {
     m_len = m__io->read_u4be();
-    m_type = kaitai::kstream::bytes_to_str(m__io->read_bytes(4), "UTF-8");
+    m_type_raw = m__io->read_bytes(4);
     {
-        std::string _ = m_type;
-        if (!(type() != std::string("\000\000\000\000", 4))) {
-            throw kaitai::validation_expr_error<std::string>(m_type, m__io, std::string("/types/chunk/seq/1"));
+        std::string _ = m_type_raw;
+        if (!( (( (( ((_.at(0) >= 65) && (_.at(0) <= 90)) ) || ( ((_.at(0) >= 97) && (_.at(0) <= 122)) )) ) && ( (( ((_.at(1) >= 65) && (_.at(1) <= 90)) ) || ( ((_.at(1) >= 97) && (_.at(1) <= 122)) )) ) && ( (( ((_.at(2) >= 65) && (_.at(2) <= 90)) ) || ( ((_.at(2) >= 97) && (_.at(2) <= 122)) )) ) && ( (( ((_.at(3) >= 65) && (_.at(3) <= 90)) ) || ( ((_.at(3) >= 97) && (_.at(3) <= 122)) )) )) )) {
+            throw kaitai::validation_expr_error<std::string>(m_type_raw, m__io, std::string("/types/chunk/seq/1"));
         }
     }
     n_body = true;
@@ -599,7 +623,7 @@ void png_t::chunk_t::_read() {
             m__raw_body = m__io->read_bytes(len());
         }
     }
-    m_crc = m__io->read_bytes(4);
+    m_crc = m__io->read_u4be();
 }
 
 png_t::chunk_t::~chunk_t() {
@@ -615,6 +639,46 @@ void png_t::chunk_t::_clean_up() {
             delete m_body; m_body = 0;
         }
     }
+}
+
+bool png_t::chunk_t::is_ancillary() {
+    if (f_is_ancillary)
+        return m_is_ancillary;
+    f_is_ancillary = true;
+    m_is_ancillary = (type_raw().at(0) & 32) != 0;
+    return m_is_ancillary;
+}
+
+bool png_t::chunk_t::is_private() {
+    if (f_is_private)
+        return m_is_private;
+    f_is_private = true;
+    m_is_private = (type_raw().at(1) & 32) != 0;
+    return m_is_private;
+}
+
+bool png_t::chunk_t::is_safe_to_copy() {
+    if (f_is_safe_to_copy)
+        return m_is_safe_to_copy;
+    f_is_safe_to_copy = true;
+    m_is_safe_to_copy = (type_raw().at(3) & 32) != 0;
+    return m_is_safe_to_copy;
+}
+
+bool png_t::chunk_t::reserved_bit() {
+    if (f_reserved_bit)
+        return m_reserved_bit;
+    f_reserved_bit = true;
+    m_reserved_bit = (type_raw().at(2) & 32) != 0;
+    return m_reserved_bit;
+}
+
+std::string png_t::chunk_t::type() {
+    if (f_type)
+        return m_type;
+    f_type = true;
+    m_type = kaitai::kstream::bytes_to_str(type_raw(), "ASCII");
+    return m_type;
 }
 
 png_t::cicp_chunk_t::cicp_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
@@ -691,7 +755,7 @@ double png_t::clli_chunk_t::max_frame_average_light_level() {
     return m_max_frame_average_light_level;
 }
 
-png_t::compressed_text_chunk_t::compressed_text_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+png_t::compressed_text_t::compressed_text_t(kaitai::kstream* p__io, png_t::compressed_text_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -703,11 +767,41 @@ png_t::compressed_text_chunk_t::compressed_text_chunk_t(kaitai::kstream* p__io, 
     }
 }
 
+void png_t::compressed_text_t::_read() {
+    m_value = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), "ISO-8859-1");
+}
+
+png_t::compressed_text_t::~compressed_text_t() {
+    _clean_up();
+}
+
+void png_t::compressed_text_t::_clean_up() {
+}
+
+png_t::compressed_text_chunk_t::compressed_text_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_text = 0;
+    m__io__raw_text = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
 void png_t::compressed_text_chunk_t::_read() {
-    m_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "UTF-8");
+    m_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ISO-8859-1");
     m_compression_method = static_cast<png_t::compression_methods_t>(m__io->read_u1());
-    m__raw_text_datastream = m__io->read_bytes_full();
-    m_text_datastream = kaitai::kstream::process_zlib(m__raw_text_datastream);
+    if (!(m_compression_method == png_t::COMPRESSION_METHODS_ZLIB)) {
+        throw kaitai::validation_not_equal_error<png_t::compression_methods_t>(png_t::COMPRESSION_METHODS_ZLIB, m_compression_method, m__io, std::string("/types/compressed_text_chunk/seq/1"));
+    }
+    m__raw__raw_text = m__io->read_bytes_full();
+    m__raw_text = kaitai::kstream::process_zlib(m__raw__raw_text);
+    m__io__raw_text = new kaitai::kstream(m__raw_text);
+    m_text = new compressed_text_t(m__io__raw_text, this, m__root);
 }
 
 png_t::compressed_text_chunk_t::~compressed_text_chunk_t() {
@@ -715,6 +809,12 @@ png_t::compressed_text_chunk_t::~compressed_text_chunk_t() {
 }
 
 void png_t::compressed_text_chunk_t::_clean_up() {
+    if (m__io__raw_text) {
+        delete m__io__raw_text; m__io__raw_text = 0;
+    }
+    if (m_text) {
+        delete m_text; m_text = 0;
+    }
 }
 
 png_t::evernote_skmf_chunk_t::evernote_skmf_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
@@ -804,7 +904,13 @@ void png_t::frame_control_chunk_t::_read() {
     m_delay_num = m__io->read_u2be();
     m_delay_den = m__io->read_u2be();
     m_dispose_op = static_cast<png_t::dispose_op_values_t>(m__io->read_u1());
+    if (!png_t::_is_defined_dispose_op_values_t(m_dispose_op)) {
+        throw kaitai::validation_not_in_enum_error<png_t::dispose_op_values_t>(m_dispose_op, m__io, std::string("/types/frame_control_chunk/seq/7"));
+    }
     m_blend_op = static_cast<png_t::blend_op_values_t>(m__io->read_u1());
+    if (!png_t::_is_defined_blend_op_values_t(m_blend_op)) {
+        throw kaitai::validation_not_in_enum_error<png_t::blend_op_values_t>(m_blend_op, m__io, std::string("/types/frame_control_chunk/seq/8"));
+    }
 }
 
 png_t::frame_control_chunk_t::~frame_control_chunk_t() {
@@ -849,7 +955,8 @@ void png_t::frame_data_chunk_t::_clean_up() {
 png_t::gama_chunk_t::gama_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    f_gamma_ratio = false;
+    f_gamma = false;
+    f_inv_gamma = false;
 
     try {
         _read();
@@ -861,6 +968,12 @@ png_t::gama_chunk_t::gama_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__par
 
 void png_t::gama_chunk_t::_read() {
     m_gamma_int = m__io->read_u4be();
+    {
+        uint32_t _ = m_gamma_int;
+        if (!(_ != 0)) {
+            throw kaitai::validation_expr_error<uint32_t>(m_gamma_int, m__io, std::string("/types/gama_chunk/seq/0"));
+        }
+    }
 }
 
 png_t::gama_chunk_t::~gama_chunk_t() {
@@ -870,12 +983,20 @@ png_t::gama_chunk_t::~gama_chunk_t() {
 void png_t::gama_chunk_t::_clean_up() {
 }
 
-double png_t::gama_chunk_t::gamma_ratio() {
-    if (f_gamma_ratio)
-        return m_gamma_ratio;
-    f_gamma_ratio = true;
-    m_gamma_ratio = 100000.0 / gamma_int();
-    return m_gamma_ratio;
+double png_t::gama_chunk_t::gamma() {
+    if (f_gamma)
+        return m_gamma;
+    f_gamma = true;
+    m_gamma = gamma_int() / 100000.0;
+    return m_gamma;
+}
+
+double png_t::gama_chunk_t::inv_gamma() {
+    if (f_inv_gamma)
+        return m_inv_gamma;
+    f_inv_gamma = true;
+    m_inv_gamma = 100000.0 / gamma_int();
+    return m_inv_gamma;
 }
 
 png_t::ihdr_chunk_t::ihdr_chunk_t(kaitai::kstream* p__io, png_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
@@ -904,9 +1025,21 @@ void png_t::ihdr_chunk_t::_read() {
         throw kaitai::validation_not_any_of_error<uint8_t>(m_bit_depth, m__io, std::string("/types/ihdr_chunk/seq/2"));
     }
     m_color_type = static_cast<png_t::color_type_t>(m__io->read_u1());
-    m_compression_method = m__io->read_u1();
-    m_filter_method = m__io->read_u1();
-    m_interlace_method = m__io->read_u1();
+    if (!png_t::_is_defined_color_type_t(m_color_type)) {
+        throw kaitai::validation_not_in_enum_error<png_t::color_type_t>(m_color_type, m__io, std::string("/types/ihdr_chunk/seq/3"));
+    }
+    m_compression_method = static_cast<png_t::compression_methods_t>(m__io->read_u1());
+    if (!png_t::_is_defined_compression_methods_t(m_compression_method)) {
+        throw kaitai::validation_not_in_enum_error<png_t::compression_methods_t>(m_compression_method, m__io, std::string("/types/ihdr_chunk/seq/4"));
+    }
+    m_filter_method = static_cast<png_t::filter_method_t>(m__io->read_u1());
+    if (!png_t::_is_defined_filter_method_t(m_filter_method)) {
+        throw kaitai::validation_not_in_enum_error<png_t::filter_method_t>(m_filter_method, m__io, std::string("/types/ihdr_chunk/seq/5"));
+    }
+    m_interlace_method = static_cast<png_t::interlace_method_t>(m__io->read_u1());
+    if (!png_t::_is_defined_interlace_method_t(m_interlace_method)) {
+        throw kaitai::validation_not_in_enum_error<png_t::interlace_method_t>(m_interlace_method, m__io, std::string("/types/ihdr_chunk/seq/6"));
+    }
 }
 
 png_t::ihdr_chunk_t::~ihdr_chunk_t() {
@@ -929,7 +1062,7 @@ png_t::international_text_t::international_text_t(kaitai::kstream* p__io, png_t:
 }
 
 void png_t::international_text_t::_read() {
-    m_text = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), "UTF-8");
+    m_value = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), "UTF-8");
 }
 
 png_t::international_text_t::~international_text_t() {
@@ -957,12 +1090,15 @@ png_t::international_text_chunk_t::international_text_chunk_t(kaitai::kstream* p
 }
 
 void png_t::international_text_chunk_t::_read() {
-    m_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "UTF-8");
+    m_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ISO-8859-1");
     m_compression_flag = m__io->read_u1();
     if (!( ((m_compression_flag == 0) || (m_compression_flag == 1)) )) {
         throw kaitai::validation_not_any_of_error<uint8_t>(m_compression_flag, m__io, std::string("/types/international_text_chunk/seq/1"));
     }
     m_compression_method = static_cast<png_t::compression_methods_t>(m__io->read_u1());
+    if (!(m_compression_method == ((compression_flag() == 1) ? (png_t::COMPRESSION_METHODS_ZLIB) : (compression_method())))) {
+        throw kaitai::validation_not_equal_error<png_t::compression_methods_t>(((compression_flag() == 1) ? (png_t::COMPRESSION_METHODS_ZLIB) : (compression_method())), m_compression_method, m__io, std::string("/types/international_text_chunk/seq/2"));
+    }
     m_language_tag = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ASCII");
     m_translated_keyword = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "UTF-8");
     n_text_plain = true;
@@ -1009,7 +1145,7 @@ std::string png_t::international_text_chunk_t::text() {
     if (f_text)
         return m_text;
     f_text = true;
-    m_text = ((compression_flag() == 0) ? (text_plain()) : (text_zlib()))->text();
+    m_text = ((compression_flag() == 0) ? (text_plain()) : (text_zlib()))->value();
     return m_text;
 }
 
@@ -1120,6 +1256,8 @@ double png_t::mdcv_chunk_t::min_luminance() {
 png_t::phys_chunk_t::phys_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_dots_per_inch_x = false;
+    f_dots_per_inch_y = false;
 
     try {
         _read();
@@ -1133,6 +1271,9 @@ void png_t::phys_chunk_t::_read() {
     m_pixels_per_unit_x = m__io->read_u4be();
     m_pixels_per_unit_y = m__io->read_u4be();
     m_unit = static_cast<png_t::phys_unit_t>(m__io->read_u1());
+    if (!png_t::_is_defined_phys_unit_t(m_unit)) {
+        throw kaitai::validation_not_in_enum_error<png_t::phys_unit_t>(m_unit, m__io, std::string("/types/phys_chunk/seq/2"));
+    }
 }
 
 png_t::phys_chunk_t::~phys_chunk_t() {
@@ -1140,6 +1281,30 @@ png_t::phys_chunk_t::~phys_chunk_t() {
 }
 
 void png_t::phys_chunk_t::_clean_up() {
+}
+
+double png_t::phys_chunk_t::dots_per_inch_x() {
+    if (f_dots_per_inch_x)
+        return m_dots_per_inch_x;
+    f_dots_per_inch_x = true;
+    n_dots_per_inch_x = true;
+    if (unit() == png_t::PHYS_UNIT_METER) {
+        n_dots_per_inch_x = false;
+        m_dots_per_inch_x = pixels_per_unit_x() * 0.0254;
+    }
+    return m_dots_per_inch_x;
+}
+
+double png_t::phys_chunk_t::dots_per_inch_y() {
+    if (f_dots_per_inch_y)
+        return m_dots_per_inch_y;
+    f_dots_per_inch_y = true;
+    n_dots_per_inch_y = true;
+    if (unit() == png_t::PHYS_UNIT_METER) {
+        n_dots_per_inch_y = false;
+        m_dots_per_inch_y = pixels_per_unit_y() * 0.0254;
+    }
+    return m_dots_per_inch_y;
 }
 
 png_t::plte_chunk_t::plte_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
@@ -1230,6 +1395,9 @@ png_t::srgb_chunk_t::srgb_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__par
 
 void png_t::srgb_chunk_t::_read() {
     m_render_intent = static_cast<png_t::srgb_chunk_t::intent_t>(m__io->read_u1());
+    if (!png_t::srgb_chunk_t::_is_defined_intent_t(m_render_intent)) {
+        throw kaitai::validation_not_in_enum_error<png_t::srgb_chunk_t::intent_t>(m_render_intent, m__io, std::string("/types/srgb_chunk/seq/0"));
+    }
 }
 
 png_t::srgb_chunk_t::~srgb_chunk_t() {

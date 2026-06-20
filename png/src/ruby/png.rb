@@ -42,6 +42,17 @@ class Png < Kaitai::Struct::Struct
   }
   I__DISPOSE_OP_VALUES = DISPOSE_OP_VALUES.invert
 
+  FILTER_METHOD = {
+    0 => :filter_method_base,
+  }
+  I__FILTER_METHOD = FILTER_METHOD.invert
+
+  INTERLACE_METHOD = {
+    0 => :interlace_method_none,
+    1 => :interlace_method_adam7,
+  }
+  I__INTERLACE_METHOD = INTERLACE_METHOD.invert
+
   PHYS_UNIT = {
     0 => :phys_unit_unknown,
     1 => :phys_unit_meter,
@@ -60,7 +71,7 @@ class Png < Kaitai::Struct::Struct
     @ihdr_type = @_io.read_bytes(4)
     raise Kaitai::Struct::ValidationNotEqualError.new([73, 72, 68, 82].pack('C*'), @ihdr_type, @_io, "/seq/2") if not @ihdr_type == [73, 72, 68, 82].pack('C*')
     @ihdr = IhdrChunk.new(@_io, self, @_root)
-    @ihdr_crc = @_io.read_bytes(4)
+    @ihdr_crc = @_io.read_u4be
     @chunks = []
     i = 0
     begin
@@ -89,7 +100,7 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
+  # @see https://www.w3.org/TR/png/#acTL-chunk Source
   class AnimationControlChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
@@ -103,7 +114,8 @@ class Png < Kaitai::Struct::Struct
     end
 
     ##
-    # Number of frames, must be equal to the number of `frame_control_chunk`s
+    # Number of frames, must be equal to the number of `fcTL` chunks (i.e.
+    # `frame_control_chunk` objects)
     attr_reader :num_frames
 
     ##
@@ -299,9 +311,9 @@ class Png < Kaitai::Struct::Struct
 
     def _read
       @len = @_io.read_u4be
-      @type = (@_io.read_bytes(4)).force_encoding("UTF-8")
-      _ = @type
-      raise Kaitai::Struct::ValidationExprError.new(@type, @_io, "/types/chunk/seq/1") if not type != "\000\000\000\000"
+      @type_raw = @_io.read_bytes(4)
+      _ = @type_raw
+      raise Kaitai::Struct::ValidationExprError.new(@type_raw, @_io, "/types/chunk/seq/1") if not  (( (( ((_[0].ord >= 65) && (_[0].ord <= 90)) ) || ( ((_[0].ord >= 97) && (_[0].ord <= 122)) )) ) && ( (( ((_[1].ord >= 65) && (_[1].ord <= 90)) ) || ( ((_[1].ord >= 97) && (_[1].ord <= 122)) )) ) && ( (( ((_[2].ord >= 65) && (_[2].ord <= 90)) ) || ( ((_[2].ord >= 97) && (_[2].ord <= 122)) )) ) && ( (( ((_[3].ord >= 65) && (_[3].ord <= 90)) ) || ( ((_[3].ord >= 97) && (_[3].ord <= 122)) )) )) 
       case type
       when "PLTE"
         _io_body = @_io.substream(len)
@@ -372,11 +384,61 @@ class Png < Kaitai::Struct::Struct
       else
         @body = @_io.read_bytes(len)
       end
-      @crc = @_io.read_bytes(4)
+      @crc = @_io.read_u4be
       self
     end
+
+    ##
+    # false = critical chunk, true = ancillary chunk
+    def is_ancillary
+      return @is_ancillary unless @is_ancillary.nil?
+      @is_ancillary = type_raw[0].ord & 32 != 0
+      @is_ancillary
+    end
+
+    ##
+    # false = public chunk (defined by the W3C), true = private chunk (can
+    # be defined by anyone)
+    def is_private
+      return @is_private unless @is_private.nil?
+      @is_private = type_raw[1].ord & 32 != 0
+      @is_private
+    end
+
+    ##
+    # Defines whether the chunk may be copied if the image data (i.e.
+    # pixels) is modified. This tells PNG editors how to handle unknown
+    # chunks - see section [14.2 Behavior of PNG
+    # editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in
+    # the official specification.
+    def is_safe_to_copy
+      return @is_safe_to_copy unless @is_safe_to_copy.nil?
+      @is_safe_to_copy = type_raw[3].ord & 32 != 0
+      @is_safe_to_copy
+    end
+
+    ##
+    # Should be `false`, i.e. all chunk types should have uppercase third
+    # letters (the lowercase third letter is reserved for possible future
+    # extensions to the PNG standard)
+    def reserved_bit
+      return @reserved_bit unless @reserved_bit.nil?
+      @reserved_bit = type_raw[2].ord & 32 != 0
+      @reserved_bit
+    end
+    def type
+      return @type unless @type.nil?
+      @type = (type_raw).force_encoding("ASCII").encode('UTF-8')
+      @type
+    end
     attr_reader :len
-    attr_reader :type
+
+    ##
+    # Each byte of a chunk type is restricted to the hexadecimal values
+    # 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters
+    # (`A-Z` and `a-z`).
+    # @see https://www.w3.org/TR/2025/REC-png-3-20250624/#table51 Source
+    attr_reader :type_raw
     attr_reader :body
     attr_reader :crc
     attr_reader :_raw_body
@@ -467,11 +529,35 @@ class Png < Kaitai::Struct::Struct
     attr_reader :max_content_light_level_int
     attr_reader :max_frame_average_light_level_int
   end
+  class CompressedText < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @value = (@_io.read_bytes_full).force_encoding("ISO-8859-1").encode('UTF-8')
+      self
+    end
+
+    ##
+    # Text string (the "value" of this key-value pair).
+    # 
+    # Although it is not null-terminated (unlike the keyword), it must not
+    # contain a zero byte (U+0000 NULL character). A newline should be
+    # represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+    # The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+    # U+007F..U+009F) are discouraged.
+    attr_reader :value
+  end
 
   ##
-  # Compressed text chunk effectively allows to store key-value
-  # string pairs in PNG container, compressing "value" part (which
-  # can be quite lengthy) with zlib compression.
+  # Compressed textual data (`zTXt`) chunk effectively allows you to store
+  # key-value string pairs in the PNG container, compressing the "value" part
+  # (which can be quite lengthy) with zlib compression.
+  # 
+  # The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`
+  # chunk is recommended for storing large blocks of text.
   # @see https://www.w3.org/TR/png/#11zTXt Source
   class CompressedTextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
@@ -480,19 +566,30 @@ class Png < Kaitai::Struct::Struct
     end
 
     def _read
-      @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+      @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ISO-8859-1").encode('UTF-8')
       @compression_method = Kaitai::Struct::Stream::resolve_enum(Png::COMPRESSION_METHODS, @_io.read_u1)
-      @_raw_text_datastream = @_io.read_bytes_full
-      @text_datastream = Zlib::Inflate.inflate(@_raw_text_datastream)
+      raise Kaitai::Struct::ValidationNotEqualError.new(:compression_methods_zlib, @compression_method, @_io, "/types/compressed_text_chunk/seq/1") if not @compression_method == :compression_methods_zlib
+      @_raw__raw_text = @_io.read_bytes_full
+      @_raw_text = Zlib::Inflate.inflate(@_raw__raw_text)
+      _io__raw_text = Kaitai::Struct::Stream.new(@_raw_text)
+      @text = CompressedText.new(_io__raw_text, self, @_root)
       self
     end
 
     ##
-    # Indicates purpose of the following text data.
+    # Indicates the type of information represented by the text string.
+    # 
+    # Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+    # characters and spaces; that is, only code points 0x20-0x7E and
+    # 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+    # keyword, leading spaces, trailing spaces, and consecutive spaces are
+    # not permitted.
+    # @see https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source
     attr_reader :keyword
     attr_reader :compression_method
-    attr_reader :text_datastream
-    attr_reader :_raw_text_datastream
+    attr_reader :text
+    attr_reader :_raw_text
+    attr_reader :_raw__raw_text
   end
 
   ##
@@ -548,7 +645,7 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source
+  # @see https://www.w3.org/TR/png/#fcTL-chunk Source
   class FrameControlChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
@@ -570,7 +667,9 @@ class Png < Kaitai::Struct::Struct
       @delay_num = @_io.read_u2be
       @delay_den = @_io.read_u2be
       @dispose_op = Kaitai::Struct::Stream::resolve_enum(Png::DISPOSE_OP_VALUES, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@dispose_op, @_io, "/types/frame_control_chunk/seq/7") if not Png::I__DISPOSE_OP_VALUES.key?(@dispose_op)
       @blend_op = Kaitai::Struct::Stream::resolve_enum(Png::BLEND_OP_VALUES, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@blend_op, @_io, "/types/frame_control_chunk/seq/8") if not Png::I__BLEND_OP_VALUES.key?(@blend_op)
       self
     end
 
@@ -583,7 +682,19 @@ class Png < Kaitai::Struct::Struct
     end
 
     ##
-    # Sequence number of the animation chunk
+    # Sequence number of the animation chunk, starting from 0.
+    # 
+    # The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+    # types share the sequence. The purpose of this number is to detect (and
+    # optionally correct) sequence errors in an Animated PNG, since the PNG
+    # specification does not impose ordering restrictions on ancillary
+    # chunks (which means that a PNG editor is technically allowed to
+    # reorder them arbitrarily, see [14.2 Behavior of PNG
+    # editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+    # 
+    # The first `fcTL` chunk must contain sequence number 0, and the
+    # sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+    # ascending order, with no gaps or duplicates.
     attr_reader :sequence_number
 
     ##
@@ -620,7 +731,7 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source
+  # @see https://www.w3.org/TR/png/#fdAT-chunk Source
   class FrameDataChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
@@ -634,17 +745,27 @@ class Png < Kaitai::Struct::Struct
     end
 
     ##
-    # Sequence number of the animation chunk. The fcTL and fdAT chunks
-    # have a 4 byte sequence number. Both chunk types share the sequence.
-    # The first fcTL chunk must contain sequence number 0, and the sequence
-    # numbers in the remaining fcTL and fdAT chunks must be in order, with
-    # no gaps or duplicates.
+    # Sequence number of the animation chunk, starting from 0.
+    # 
+    # The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+    # types share the sequence. The purpose of this number is to detect (and
+    # optionally correct) sequence errors in an Animated PNG, since the PNG
+    # specification does not impose ordering restrictions on ancillary
+    # chunks (which means that a PNG editor is technically allowed to
+    # reorder them arbitrarily, see [14.2 Behavior of PNG
+    # editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+    # 
+    # The first `fcTL` chunk must contain sequence number 0, and the
+    # sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+    # ascending order, with no gaps or duplicates.
     attr_reader :sequence_number
 
     ##
-    # Frame data for the frame. At least one fdAT chunk is required for
-    # each frame. The compressed datastream is the concatenation of the
-    # contents of the data fields of all the fdAT chunks within a frame.
+    # Frame data for the frame. At least one `fdAT` chunk is required for
+    # each frame, except for the first frame, if that frame is represented
+    # by an `IDAT` chunk. The compressed datastream for each frame is the
+    # concatenation of the contents of the data fields of all the `fdAT`
+    # chunks within a frame.
     attr_reader :frame_data
   end
 
@@ -658,13 +779,31 @@ class Png < Kaitai::Struct::Struct
 
     def _read
       @gamma_int = @_io.read_u4be
+      _ = @gamma_int
+      raise Kaitai::Struct::ValidationExprError.new(@gamma_int, @_io, "/types/gama_chunk/seq/0") if not _ != 0
       self
     end
-    def gamma_ratio
-      return @gamma_ratio unless @gamma_ratio.nil?
-      @gamma_ratio = 100000.0 / gamma_int
-      @gamma_ratio
+
+    ##
+    # Image gamma, typically 0.45455 = 1/2.2
+    def gamma
+      return @gamma unless @gamma.nil?
+      @gamma = gamma_int / 100000.0
+      @gamma
     end
+
+    ##
+    # Inverse of the image gamma (1 / gamma), typically 2.2 (not considering
+    # rounding)
+    def inv_gamma
+      return @inv_gamma unless @inv_gamma.nil?
+      @inv_gamma = 100000.0 / gamma_int
+      @inv_gamma
+    end
+
+    ##
+    # Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
+    # 45455)
     attr_reader :gamma_int
   end
 
@@ -684,9 +823,13 @@ class Png < Kaitai::Struct::Struct
       @bit_depth = @_io.read_u1
       raise Kaitai::Struct::ValidationNotAnyOfError.new(@bit_depth, @_io, "/types/ihdr_chunk/seq/2") if not  ((@bit_depth == 1) || (@bit_depth == 2) || (@bit_depth == 4) || (@bit_depth == 8) || (@bit_depth == 16)) 
       @color_type = Kaitai::Struct::Stream::resolve_enum(Png::COLOR_TYPE, @_io.read_u1)
-      @compression_method = @_io.read_u1
-      @filter_method = @_io.read_u1
-      @interlace_method = @_io.read_u1
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@color_type, @_io, "/types/ihdr_chunk/seq/3") if not Png::I__COLOR_TYPE.key?(@color_type)
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(Png::COMPRESSION_METHODS, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@compression_method, @_io, "/types/ihdr_chunk/seq/4") if not Png::I__COMPRESSION_METHODS.key?(@compression_method)
+      @filter_method = Kaitai::Struct::Stream::resolve_enum(Png::FILTER_METHOD, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@filter_method, @_io, "/types/ihdr_chunk/seq/5") if not Png::I__FILTER_METHOD.key?(@filter_method)
+      @interlace_method = Kaitai::Struct::Stream::resolve_enum(Png::INTERLACE_METHOD, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@interlace_method, @_io, "/types/ihdr_chunk/seq/6") if not Png::I__INTERLACE_METHOD.key?(@interlace_method)
       self
     end
     attr_reader :width
@@ -704,22 +847,31 @@ class Png < Kaitai::Struct::Struct
     end
 
     def _read
-      @text = (@_io.read_bytes_full).force_encoding("UTF-8")
+      @value = (@_io.read_bytes_full).force_encoding("UTF-8")
       self
     end
 
     ##
-    # Text contents ("value" of this key-value pair), written in
-    # language specified in `language_tag`. Line breaks are
-    # allowed.
-    attr_reader :text
+    # Text string (the "value" of this key-value pair), written in language
+    # specified in `_parent.language_tag`.
+    # 
+    # Although it is not null-terminated (unlike other textual data in the
+    # `iTXt` chunk), it must not contain a zero byte
+    # (U+0000 NULL character). A newline should be represented by a single
+    # U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+    # characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+    # discouraged.
+    attr_reader :value
   end
 
   ##
-  # International text chunk effectively allows to store key-value string pairs in
-  # PNG container. Both "key" (keyword) and "value" (text) parts are
-  # given in pre-defined subset of iso8859-1 without control
-  # characters.
+  # International textual data (`iTXt`) chunk effectively allows you to store
+  # key-value string pairs in the PNG container.
+  # 
+  # The "key" part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)
+  # characters and spaces. The translated keyword and the "value" part
+  # (`text`) are stored in UTF-8 and thus can store text in any language -
+  # this language can be indicated via the language tag (`language_tag`).
   # @see https://www.w3.org/TR/png/#11iTXt Source
   class InternationalTextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
@@ -728,10 +880,11 @@ class Png < Kaitai::Struct::Struct
     end
 
     def _read
-      @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+      @keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ISO-8859-1").encode('UTF-8')
       @compression_flag = @_io.read_u1
       raise Kaitai::Struct::ValidationNotAnyOfError.new(@compression_flag, @_io, "/types/international_text_chunk/seq/1") if not  ((@compression_flag == 0) || (@compression_flag == 1)) 
       @compression_method = Kaitai::Struct::Stream::resolve_enum(Png::COMPRESSION_METHODS, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotEqualError.new((compression_flag == 1 ? :compression_methods_zlib : compression_method), @compression_method, @_io, "/types/international_text_chunk/seq/2") if not @compression_method == (compression_flag == 1 ? :compression_methods_zlib : compression_method)
       @language_tag = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
       @translated_keyword = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
       if compression_flag == 0
@@ -749,17 +902,30 @@ class Png < Kaitai::Struct::Struct
     end
 
     ##
-    # Text contents ("value" of this key-value pair), written in
-    # language specified in `language_tag`. Line breaks are
-    # allowed.
+    # Text string (the "value" of this key-value pair), written in language
+    # specified in `language_tag`.
+    # 
+    # Although it is not null-terminated (unlike other textual data in the
+    # `iTXt` chunk), it must not contain a zero byte
+    # (U+0000 NULL character). A newline should be represented by a single
+    # U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+    # characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+    # discouraged.
     def text
       return @text unless @text.nil?
-      @text = (compression_flag == 0 ? text_plain : text_zlib).text
+      @text = (compression_flag == 0 ? text_plain : text_zlib).value
       @text
     end
 
     ##
-    # Indicates purpose of the following text data.
+    # Indicates the type of information represented by the text string.
+    # 
+    # Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+    # characters and spaces; that is, only code points 0x20-0x7E and
+    # 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+    # keyword, leading spaces, trailing spaces, and consecutive spaces are
+    # not permitted.
+    # @see https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source
     attr_reader :keyword
 
     ##
@@ -769,14 +935,29 @@ class Png < Kaitai::Struct::Struct
     attr_reader :compression_method
 
     ##
-    # Human language used in `translated_keyword` and `text`
-    # attributes - should be a language code conforming to ISO
-    # 646.IRV:1991.
+    # Human language used in the `translated_keyword` and `text` fields.
+    # 
+    # From the [official
+    # specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):
+    # 
+    # > The language tag is a well-formed language tag defined by [RFC 5646:
+    # > BCP 47: Tags for Identifying
+    # > Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the
+    # > keyword, the language tag is case-insensitive. Subtags must appear
+    # > in the [IANA language subtag
+    # > registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+    # > If the language tag is empty, the language is unspecified. Examples
+    # > of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,
+    # > `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.
     attr_reader :language_tag
 
     ##
-    # Keyword translated into language specified in
-    # `language_tag`. Line breaks are not allowed.
+    # The keyword (`keyword`) translated into the language specified in
+    # `language_tag`.
+    # 
+    # It must not contain a zero byte (U+0000 NULL character). Line breaks
+    # should not appear. The remaining control characters (U+0001..U+0009,
+    # U+000B..0+001F, U+007F..U+009F) are discouraged.
     attr_reader :translated_keyword
     attr_reader :text_plain
     attr_reader :text_zlib
@@ -852,8 +1033,9 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
-  # "Physical size" chunk stores data that allows to translate
-  # logical pixels into physical units (meters, etc) and vice-versa.
+  # Physical pixel dimensions (`pHYs`) chunk specifies the intended physical
+  # size of the pixels (in meters) or pixel aspect ratio for display of the
+  # image.
   # @see https://www.w3.org/TR/png/#11pHYs Source
   class PhysChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
@@ -865,7 +1047,28 @@ class Png < Kaitai::Struct::Struct
       @pixels_per_unit_x = @_io.read_u4be
       @pixels_per_unit_y = @_io.read_u4be
       @unit = Kaitai::Struct::Stream::resolve_enum(Png::PHYS_UNIT, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@unit, @_io, "/types/phys_chunk/seq/2") if not Png::I__PHYS_UNIT.key?(@unit)
       self
+    end
+
+    ##
+    # Horizontal resolution (DPI)
+    def dots_per_inch_x
+      return @dots_per_inch_x unless @dots_per_inch_x.nil?
+      if unit == :phys_unit_meter
+        @dots_per_inch_x = pixels_per_unit_x * 0.0254
+      end
+      @dots_per_inch_x
+    end
+
+    ##
+    # Vertical resolution (DPI)
+    def dots_per_inch_y
+      return @dots_per_inch_y unless @dots_per_inch_y.nil?
+      if unit == :phys_unit_meter
+        @dots_per_inch_y = pixels_per_unit_y * 0.0254
+      end
+      @dots_per_inch_y
     end
 
     ##
@@ -934,16 +1137,20 @@ class Png < Kaitai::Struct::Struct
 
     def _read
       @render_intent = Kaitai::Struct::Stream::resolve_enum(INTENT, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@render_intent, @_io, "/types/srgb_chunk/seq/0") if not I__INTENT.key?(@render_intent)
       self
     end
     attr_reader :render_intent
   end
 
   ##
-  # Text chunk effectively allows to store key-value string pairs in
-  # PNG container. Both "key" (keyword) and "value" (text) parts are
-  # given in pre-defined subset of iso8859-1 without control
-  # characters.
+  # Textual data (`tEXt`) chunk effectively allows you to store key-value
+  # string pairs in the PNG container.
+  # 
+  # Both the "key" (`keyword`) and "value" (`text`) parts are restricted to
+  # printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the
+  # exception that `text` can also contain newlines (U+000A LINE FEED (LF)
+  # characters) and U+00A0 NON-BREAKING SPACE characters.
   # @see https://www.w3.org/TR/png/#11tEXt Source
   class TextChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
@@ -958,8 +1165,24 @@ class Png < Kaitai::Struct::Struct
     end
 
     ##
-    # Indicates purpose of the following text data.
+    # Indicates the type of information represented by the text string.
+    # 
+    # Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+    # characters and spaces; that is, only code points 0x20-0x7E and
+    # 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+    # keyword, leading spaces, trailing spaces, and consecutive spaces are
+    # not permitted.
+    # @see https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source
     attr_reader :keyword
+
+    ##
+    # Text string (the "value" of this key-value pair).
+    # 
+    # Although it is not null-terminated (unlike the keyword), it must not
+    # contain a zero byte (U+0000 NULL character). A newline should be
+    # represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+    # The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+    # U+007F..U+009F) are discouraged.
     attr_reader :text
   end
 

@@ -55,6 +55,20 @@ var Png = (function() {
     2: "PREVIOUS",
   });
 
+  Png.FilterMethod = Object.freeze({
+    BASE: 0,
+
+    0: "BASE",
+  });
+
+  Png.InterlaceMethod = Object.freeze({
+    NONE: 0,
+    ADAM7: 1,
+
+    0: "NONE",
+    1: "ADAM7",
+  });
+
   Png.PhysUnit = Object.freeze({
     UNKNOWN: 0,
     METER: 1,
@@ -84,7 +98,7 @@ var Png = (function() {
       throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([73, 72, 68, 82]), this.ihdrType, this._io, "/seq/2");
     }
     this.ihdr = new IhdrChunk(this._io, this, this._root);
-    this.ihdrCrc = this._io.readBytes(4);
+    this.ihdrCrc = this._io.readU4be();
     this.chunks = [];
     var i = 0;
     do {
@@ -115,7 +129,7 @@ var Png = (function() {
   })();
 
   /**
-   * @see {@link https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk|Source}
+   * @see {@link https://www.w3.org/TR/png/#acTL-chunk|Source}
    */
 
   var AnimationControlChunk = Png.AnimationControlChunk = (function() {
@@ -132,7 +146,8 @@ var Png = (function() {
     }
 
     /**
-     * Number of frames, must be equal to the number of `frame_control_chunk`s
+     * Number of frames, must be equal to the number of `fcTL` chunks (i.e.
+     * `frame_control_chunk` objects)
      */
 
     /**
@@ -371,10 +386,10 @@ var Png = (function() {
     }
     Chunk.prototype._read = function() {
       this.len = this._io.readU4be();
-      this.type = KaitaiStream.bytesToStr(this._io.readBytes(4), "UTF-8");
-      var _ = this.type;
-      if (!(this.type != "\x00\x00\x00\x00")) {
-        throw new KaitaiStream.ValidationExprError(this.type, this._io, "/types/chunk/seq/1");
+      this.typeRaw = this._io.readBytes(4);
+      var _ = this.typeRaw;
+      if (!( (( (( ((_[0] >= 65) && (_[0] <= 90)) ) || ( ((_[0] >= 97) && (_[0] <= 122)) )) ) && ( (( ((_[1] >= 65) && (_[1] <= 90)) ) || ( ((_[1] >= 97) && (_[1] <= 122)) )) ) && ( (( ((_[2] >= 65) && (_[2] <= 90)) ) || ( ((_[2] >= 97) && (_[2] <= 122)) )) ) && ( (( ((_[3] >= 65) && (_[3] <= 90)) ) || ( ((_[3] >= 97) && (_[3] <= 122)) )) )) )) {
+        throw new KaitaiStream.ValidationExprError(this.typeRaw, this._io, "/types/chunk/seq/1");
       }
       switch (this.type) {
       case "PLTE":
@@ -491,8 +506,78 @@ var Png = (function() {
         this.body = this._io.readBytes(this.len);
         break;
       }
-      this.crc = this._io.readBytes(4);
+      this.crc = this._io.readU4be();
     }
+
+    /**
+     * false = critical chunk, true = ancillary chunk
+     */
+    Object.defineProperty(Chunk.prototype, 'isAncillary', {
+      get: function() {
+        if (this._m_isAncillary !== undefined)
+          return this._m_isAncillary;
+        this._m_isAncillary = (this.typeRaw[0] & 32) != 0;
+        return this._m_isAncillary;
+      }
+    });
+
+    /**
+     * false = public chunk (defined by the W3C), true = private chunk (can
+     * be defined by anyone)
+     */
+    Object.defineProperty(Chunk.prototype, 'isPrivate', {
+      get: function() {
+        if (this._m_isPrivate !== undefined)
+          return this._m_isPrivate;
+        this._m_isPrivate = (this.typeRaw[1] & 32) != 0;
+        return this._m_isPrivate;
+      }
+    });
+
+    /**
+     * Defines whether the chunk may be copied if the image data (i.e.
+     * pixels) is modified. This tells PNG editors how to handle unknown
+     * chunks - see section [14.2 Behavior of PNG
+     * editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in
+     * the official specification.
+     */
+    Object.defineProperty(Chunk.prototype, 'isSafeToCopy', {
+      get: function() {
+        if (this._m_isSafeToCopy !== undefined)
+          return this._m_isSafeToCopy;
+        this._m_isSafeToCopy = (this.typeRaw[3] & 32) != 0;
+        return this._m_isSafeToCopy;
+      }
+    });
+
+    /**
+     * Should be `false`, i.e. all chunk types should have uppercase third
+     * letters (the lowercase third letter is reserved for possible future
+     * extensions to the PNG standard)
+     */
+    Object.defineProperty(Chunk.prototype, 'reservedBit', {
+      get: function() {
+        if (this._m_reservedBit !== undefined)
+          return this._m_reservedBit;
+        this._m_reservedBit = (this.typeRaw[2] & 32) != 0;
+        return this._m_reservedBit;
+      }
+    });
+    Object.defineProperty(Chunk.prototype, 'type', {
+      get: function() {
+        if (this._m_type !== undefined)
+          return this._m_type;
+        this._m_type = KaitaiStream.bytesToStr(this.typeRaw, "ASCII");
+        return this._m_type;
+      }
+    });
+
+    /**
+     * Each byte of a chunk type is restricted to the hexadecimal values
+     * 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters
+     * (`A-Z` and `a-z`).
+     * @see {@link https://www.w3.org/TR/2025/REC-png-3-20250624/#table51|Source}
+     */
 
     return Chunk;
   })();
@@ -603,10 +688,38 @@ var Png = (function() {
     return ClliChunk;
   })();
 
+  var CompressedText = Png.CompressedText = (function() {
+    function CompressedText(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CompressedText.prototype._read = function() {
+      this.value = KaitaiStream.bytesToStr(this._io.readBytesFull(), "ISO-8859-1");
+    }
+
+    /**
+     * Text string (the "value" of this key-value pair).
+     * 
+     * Although it is not null-terminated (unlike the keyword), it must not
+     * contain a zero byte (U+0000 NULL character). A newline should be
+     * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+     * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+     * U+007F..U+009F) are discouraged.
+     */
+
+    return CompressedText;
+  })();
+
   /**
-   * Compressed text chunk effectively allows to store key-value
-   * string pairs in PNG container, compressing "value" part (which
-   * can be quite lengthy) with zlib compression.
+   * Compressed textual data (`zTXt`) chunk effectively allows you to store
+   * key-value string pairs in the PNG container, compressing the "value" part
+   * (which can be quite lengthy) with zlib compression.
+   * 
+   * The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`
+   * chunk is recommended for storing large blocks of text.
    * @see {@link https://www.w3.org/TR/png/#11zTXt|Source}
    */
 
@@ -619,14 +732,26 @@ var Png = (function() {
       this._read();
     }
     CompressedTextChunk.prototype._read = function() {
-      this.keyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
+      this.keyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ISO-8859-1");
       this.compressionMethod = this._io.readU1();
-      this._raw_textDatastream = this._io.readBytesFull();
-      this.textDatastream = KaitaiStream.processZlib(this._raw_textDatastream);
+      if (!(this.compressionMethod == Png.CompressionMethods.ZLIB)) {
+        throw new KaitaiStream.ValidationNotEqualError(Png.CompressionMethods.ZLIB, this.compressionMethod, this._io, "/types/compressed_text_chunk/seq/1");
+      }
+      this._raw__raw_text = this._io.readBytesFull();
+      this._raw_text = KaitaiStream.processZlib(this._raw__raw_text);
+      var _io__raw_text = new KaitaiStream(this._raw_text);
+      this.text = new CompressedText(_io__raw_text, this, this._root);
     }
 
     /**
-     * Indicates purpose of the following text data.
+     * Indicates the type of information represented by the text string.
+     * 
+     * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+     * characters and spaces; that is, only code points 0x20-0x7E and
+     * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+     * keyword, leading spaces, trailing spaces, and consecutive spaces are
+     * not permitted.
+     * @see {@link https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords|Source}
      */
 
     return CompressedTextChunk;
@@ -695,7 +820,7 @@ var Png = (function() {
   })();
 
   /**
-   * @see {@link https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk|Source}
+   * @see {@link https://www.w3.org/TR/png/#fcTL-chunk|Source}
    */
 
   var FrameControlChunk = Png.FrameControlChunk = (function() {
@@ -733,7 +858,13 @@ var Png = (function() {
       this.delayNum = this._io.readU2be();
       this.delayDen = this._io.readU2be();
       this.disposeOp = this._io.readU1();
+      if (!Object.prototype.hasOwnProperty.call(Png.DisposeOpValues, this.disposeOp)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.disposeOp, this._io, "/types/frame_control_chunk/seq/7");
+      }
       this.blendOp = this._io.readU1();
+      if (!Object.prototype.hasOwnProperty.call(Png.BlendOpValues, this.blendOp)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.blendOp, this._io, "/types/frame_control_chunk/seq/8");
+      }
     }
 
     /**
@@ -749,7 +880,19 @@ var Png = (function() {
     });
 
     /**
-     * Sequence number of the animation chunk
+     * Sequence number of the animation chunk, starting from 0.
+     * 
+     * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+     * types share the sequence. The purpose of this number is to detect (and
+     * optionally correct) sequence errors in an Animated PNG, since the PNG
+     * specification does not impose ordering restrictions on ancillary
+     * chunks (which means that a PNG editor is technically allowed to
+     * reorder them arbitrarily, see [14.2 Behavior of PNG
+     * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+     * 
+     * The first `fcTL` chunk must contain sequence number 0, and the
+     * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+     * ascending order, with no gaps or duplicates.
      */
 
     /**
@@ -788,7 +931,7 @@ var Png = (function() {
   })();
 
   /**
-   * @see {@link https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk|Source}
+   * @see {@link https://www.w3.org/TR/png/#fdAT-chunk|Source}
    */
 
   var FrameDataChunk = Png.FrameDataChunk = (function() {
@@ -805,17 +948,27 @@ var Png = (function() {
     }
 
     /**
-     * Sequence number of the animation chunk. The fcTL and fdAT chunks
-     * have a 4 byte sequence number. Both chunk types share the sequence.
-     * The first fcTL chunk must contain sequence number 0, and the sequence
-     * numbers in the remaining fcTL and fdAT chunks must be in order, with
-     * no gaps or duplicates.
+     * Sequence number of the animation chunk, starting from 0.
+     * 
+     * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+     * types share the sequence. The purpose of this number is to detect (and
+     * optionally correct) sequence errors in an Animated PNG, since the PNG
+     * specification does not impose ordering restrictions on ancillary
+     * chunks (which means that a PNG editor is technically allowed to
+     * reorder them arbitrarily, see [14.2 Behavior of PNG
+     * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+     * 
+     * The first `fcTL` chunk must contain sequence number 0, and the
+     * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+     * ascending order, with no gaps or duplicates.
      */
 
     /**
-     * Frame data for the frame. At least one fdAT chunk is required for
-     * each frame. The compressed datastream is the concatenation of the
-     * contents of the data fields of all the fdAT chunks within a frame.
+     * Frame data for the frame. At least one `fdAT` chunk is required for
+     * each frame, except for the first frame, if that frame is represented
+     * by an `IDAT` chunk. The compressed datastream for each frame is the
+     * concatenation of the contents of the data fields of all the `fdAT`
+     * chunks within a frame.
      */
 
     return FrameDataChunk;
@@ -835,15 +988,41 @@ var Png = (function() {
     }
     GamaChunk.prototype._read = function() {
       this.gammaInt = this._io.readU4be();
+      var _ = this.gammaInt;
+      if (!(_ != 0)) {
+        throw new KaitaiStream.ValidationExprError(this.gammaInt, this._io, "/types/gama_chunk/seq/0");
+      }
     }
-    Object.defineProperty(GamaChunk.prototype, 'gammaRatio', {
+
+    /**
+     * Image gamma, typically 0.45455 = 1/2.2
+     */
+    Object.defineProperty(GamaChunk.prototype, 'gamma', {
       get: function() {
-        if (this._m_gammaRatio !== undefined)
-          return this._m_gammaRatio;
-        this._m_gammaRatio = 100000.0 / this.gammaInt;
-        return this._m_gammaRatio;
+        if (this._m_gamma !== undefined)
+          return this._m_gamma;
+        this._m_gamma = this.gammaInt / 100000.0;
+        return this._m_gamma;
       }
     });
+
+    /**
+     * Inverse of the image gamma (1 / gamma), typically 2.2 (not considering
+     * rounding)
+     */
+    Object.defineProperty(GamaChunk.prototype, 'invGamma', {
+      get: function() {
+        if (this._m_invGamma !== undefined)
+          return this._m_invGamma;
+        this._m_invGamma = 100000.0 / this.gammaInt;
+        return this._m_invGamma;
+      }
+    });
+
+    /**
+     * Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
+     * 45455)
+     */
 
     return GamaChunk;
   })();
@@ -874,9 +1053,21 @@ var Png = (function() {
         throw new KaitaiStream.ValidationNotAnyOfError(this.bitDepth, this._io, "/types/ihdr_chunk/seq/2");
       }
       this.colorType = this._io.readU1();
+      if (!Object.prototype.hasOwnProperty.call(Png.ColorType, this.colorType)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.colorType, this._io, "/types/ihdr_chunk/seq/3");
+      }
       this.compressionMethod = this._io.readU1();
+      if (!Object.prototype.hasOwnProperty.call(Png.CompressionMethods, this.compressionMethod)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.compressionMethod, this._io, "/types/ihdr_chunk/seq/4");
+      }
       this.filterMethod = this._io.readU1();
+      if (!Object.prototype.hasOwnProperty.call(Png.FilterMethod, this.filterMethod)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.filterMethod, this._io, "/types/ihdr_chunk/seq/5");
+      }
       this.interlaceMethod = this._io.readU1();
+      if (!Object.prototype.hasOwnProperty.call(Png.InterlaceMethod, this.interlaceMethod)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.interlaceMethod, this._io, "/types/ihdr_chunk/seq/6");
+      }
     }
 
     return IhdrChunk;
@@ -891,23 +1082,32 @@ var Png = (function() {
       this._read();
     }
     InternationalText.prototype._read = function() {
-      this.text = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+      this.value = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
     }
 
     /**
-     * Text contents ("value" of this key-value pair), written in
-     * language specified in `language_tag`. Line breaks are
-     * allowed.
+     * Text string (the "value" of this key-value pair), written in language
+     * specified in `_parent.language_tag`.
+     * 
+     * Although it is not null-terminated (unlike other textual data in the
+     * `iTXt` chunk), it must not contain a zero byte
+     * (U+0000 NULL character). A newline should be represented by a single
+     * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+     * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+     * discouraged.
      */
 
     return InternationalText;
   })();
 
   /**
-   * International text chunk effectively allows to store key-value string pairs in
-   * PNG container. Both "key" (keyword) and "value" (text) parts are
-   * given in pre-defined subset of iso8859-1 without control
-   * characters.
+   * International textual data (`iTXt`) chunk effectively allows you to store
+   * key-value string pairs in the PNG container.
+   * 
+   * The "key" part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)
+   * characters and spaces. The translated keyword and the "value" part
+   * (`text`) are stored in UTF-8 and thus can store text in any language -
+   * this language can be indicated via the language tag (`language_tag`).
    * @see {@link https://www.w3.org/TR/png/#11iTXt|Source}
    */
 
@@ -920,12 +1120,15 @@ var Png = (function() {
       this._read();
     }
     InternationalTextChunk.prototype._read = function() {
-      this.keyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
+      this.keyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ISO-8859-1");
       this.compressionFlag = this._io.readU1();
       if (!( ((this.compressionFlag == 0) || (this.compressionFlag == 1)) )) {
         throw new KaitaiStream.ValidationNotAnyOfError(this.compressionFlag, this._io, "/types/international_text_chunk/seq/1");
       }
       this.compressionMethod = this._io.readU1();
+      if (!(this.compressionMethod == (this.compressionFlag == 1 ? Png.CompressionMethods.ZLIB : this.compressionMethod))) {
+        throw new KaitaiStream.ValidationNotEqualError((this.compressionFlag == 1 ? Png.CompressionMethods.ZLIB : this.compressionMethod), this.compressionMethod, this._io, "/types/international_text_chunk/seq/2");
+      }
       this.languageTag = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
       this.translatedKeyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8");
       if (this.compressionFlag == 0) {
@@ -942,21 +1145,34 @@ var Png = (function() {
     }
 
     /**
-     * Text contents ("value" of this key-value pair), written in
-     * language specified in `language_tag`. Line breaks are
-     * allowed.
+     * Text string (the "value" of this key-value pair), written in language
+     * specified in `language_tag`.
+     * 
+     * Although it is not null-terminated (unlike other textual data in the
+     * `iTXt` chunk), it must not contain a zero byte
+     * (U+0000 NULL character). A newline should be represented by a single
+     * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+     * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+     * discouraged.
      */
     Object.defineProperty(InternationalTextChunk.prototype, 'text', {
       get: function() {
         if (this._m_text !== undefined)
           return this._m_text;
-        this._m_text = (this.compressionFlag == 0 ? this.textPlain : this.textZlib).text;
+        this._m_text = (this.compressionFlag == 0 ? this.textPlain : this.textZlib).value;
         return this._m_text;
       }
     });
 
     /**
-     * Indicates purpose of the following text data.
+     * Indicates the type of information represented by the text string.
+     * 
+     * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+     * characters and spaces; that is, only code points 0x20-0x7E and
+     * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+     * keyword, leading spaces, trailing spaces, and consecutive spaces are
+     * not permitted.
+     * @see {@link https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords|Source}
      */
 
     /**
@@ -965,14 +1181,29 @@ var Png = (function() {
      */
 
     /**
-     * Human language used in `translated_keyword` and `text`
-     * attributes - should be a language code conforming to ISO
-     * 646.IRV:1991.
+     * Human language used in the `translated_keyword` and `text` fields.
+     * 
+     * From the [official
+     * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):
+     * 
+     * > The language tag is a well-formed language tag defined by [RFC 5646:
+     * > BCP 47: Tags for Identifying
+     * > Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the
+     * > keyword, the language tag is case-insensitive. Subtags must appear
+     * > in the [IANA language subtag
+     * > registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+     * > If the language tag is empty, the language is unspecified. Examples
+     * > of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,
+     * > `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.
      */
 
     /**
-     * Keyword translated into language specified in
-     * `language_tag`. Line breaks are not allowed.
+     * The keyword (`keyword`) translated into the language specified in
+     * `language_tag`.
+     * 
+     * It must not contain a zero byte (U+0000 NULL character). Line breaks
+     * should not appear. The remaining control characters (U+0001..U+0009,
+     * U+000B..0+001F, U+007F..U+009F) are discouraged.
      */
 
     return InternationalTextChunk;
@@ -1060,8 +1291,9 @@ var Png = (function() {
   })();
 
   /**
-   * "Physical size" chunk stores data that allows to translate
-   * logical pixels into physical units (meters, etc) and vice-versa.
+   * Physical pixel dimensions (`pHYs`) chunk specifies the intended physical
+   * size of the pixels (in meters) or pixel aspect ratio for display of the
+   * image.
    * @see {@link https://www.w3.org/TR/png/#11pHYs|Source}
    */
 
@@ -1077,7 +1309,38 @@ var Png = (function() {
       this.pixelsPerUnitX = this._io.readU4be();
       this.pixelsPerUnitY = this._io.readU4be();
       this.unit = this._io.readU1();
+      if (!Object.prototype.hasOwnProperty.call(Png.PhysUnit, this.unit)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.unit, this._io, "/types/phys_chunk/seq/2");
+      }
     }
+
+    /**
+     * Horizontal resolution (DPI)
+     */
+    Object.defineProperty(PhysChunk.prototype, 'dotsPerInchX', {
+      get: function() {
+        if (this._m_dotsPerInchX !== undefined)
+          return this._m_dotsPerInchX;
+        if (this.unit == Png.PhysUnit.METER) {
+          this._m_dotsPerInchX = this.pixelsPerUnitX * 0.0254;
+        }
+        return this._m_dotsPerInchX;
+      }
+    });
+
+    /**
+     * Vertical resolution (DPI)
+     */
+    Object.defineProperty(PhysChunk.prototype, 'dotsPerInchY', {
+      get: function() {
+        if (this._m_dotsPerInchY !== undefined)
+          return this._m_dotsPerInchY;
+        if (this.unit == Png.PhysUnit.METER) {
+          this._m_dotsPerInchY = this.pixelsPerUnitY * 0.0254;
+        }
+        return this._m_dotsPerInchY;
+      }
+    });
 
     /**
      * Number of pixels per physical unit (typically, 1 meter) by X
@@ -1159,16 +1422,22 @@ var Png = (function() {
     }
     SrgbChunk.prototype._read = function() {
       this.renderIntent = this._io.readU1();
+      if (!Object.prototype.hasOwnProperty.call(Png.SrgbChunk.Intent, this.renderIntent)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.renderIntent, this._io, "/types/srgb_chunk/seq/0");
+      }
     }
 
     return SrgbChunk;
   })();
 
   /**
-   * Text chunk effectively allows to store key-value string pairs in
-   * PNG container. Both "key" (keyword) and "value" (text) parts are
-   * given in pre-defined subset of iso8859-1 without control
-   * characters.
+   * Textual data (`tEXt`) chunk effectively allows you to store key-value
+   * string pairs in the PNG container.
+   * 
+   * Both the "key" (`keyword`) and "value" (`text`) parts are restricted to
+   * printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the
+   * exception that `text` can also contain newlines (U+000A LINE FEED (LF)
+   * characters) and U+00A0 NON-BREAKING SPACE characters.
    * @see {@link https://www.w3.org/TR/png/#11tEXt|Source}
    */
 
@@ -1186,7 +1455,24 @@ var Png = (function() {
     }
 
     /**
-     * Indicates purpose of the following text data.
+     * Indicates the type of information represented by the text string.
+     * 
+     * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+     * characters and spaces; that is, only code points 0x20-0x7E and
+     * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+     * keyword, leading spaces, trailing spaces, and consecutive spaces are
+     * not permitted.
+     * @see {@link https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords|Source}
+     */
+
+    /**
+     * Text string (the "value" of this key-value pair).
+     * 
+     * Although it is not null-terminated (unlike the keyword), it must not
+     * contain a zero byte (U+0000 NULL character). A newline should be
+     * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+     * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+     * U+007F..U+009F) are discouraged.
      */
 
     return TextChunk;

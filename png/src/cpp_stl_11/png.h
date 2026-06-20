@@ -36,6 +36,7 @@ public:
     class chunk_t;
     class cicp_chunk_t;
     class clli_chunk_t;
+    class compressed_text_t;
     class compressed_text_chunk_t;
     class evernote_skmf_chunk_t;
     class evernote_skrf_chunk_t;
@@ -101,6 +102,27 @@ private:
 
 public:
 
+    enum filter_method_t {
+        FILTER_METHOD_BASE = 0
+    };
+    static bool _is_defined_filter_method_t(filter_method_t v);
+
+private:
+    static const std::set<filter_method_t> _values_filter_method_t;
+
+public:
+
+    enum interlace_method_t {
+        INTERLACE_METHOD_NONE = 0,
+        INTERLACE_METHOD_ADAM7 = 1
+    };
+    static bool _is_defined_interlace_method_t(interlace_method_t v);
+
+private:
+    static const std::set<interlace_method_t> _values_interlace_method_t;
+
+public:
+
     enum phys_unit_t {
         PHYS_UNIT_UNKNOWN = 0,
         PHYS_UNIT_METER = 1
@@ -152,7 +174,7 @@ public:
     };
 
     /**
-     * \sa https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
+     * \sa https://www.w3.org/TR/png/#acTL-chunk Source
      */
 
     class animation_control_chunk_t : public kaitai::kstruct {
@@ -177,7 +199,8 @@ public:
     public:
 
         /**
-         * Number of frames, must be equal to the number of `frame_control_chunk`s
+         * Number of frames, must be equal to the number of `fcTL` chunks (i.e.
+         * `frame_control_chunk` objects)
          */
         uint32_t num_frames() const { return m_num_frames; }
 
@@ -492,8 +515,66 @@ public:
         ~chunk_t();
 
     private:
-        uint32_t m_len;
+        bool f_is_ancillary;
+        bool m_is_ancillary;
+
+    public:
+
+        /**
+         * false = critical chunk, true = ancillary chunk
+         */
+        bool is_ancillary();
+
+    private:
+        bool f_is_private;
+        bool m_is_private;
+
+    public:
+
+        /**
+         * false = public chunk (defined by the W3C), true = private chunk (can
+         * be defined by anyone)
+         */
+        bool is_private();
+
+    private:
+        bool f_is_safe_to_copy;
+        bool m_is_safe_to_copy;
+
+    public:
+
+        /**
+         * Defines whether the chunk may be copied if the image data (i.e.
+         * pixels) is modified. This tells PNG editors how to handle unknown
+         * chunks - see section [14.2 Behavior of PNG
+         * editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in
+         * the official specification.
+         */
+        bool is_safe_to_copy();
+
+    private:
+        bool f_reserved_bit;
+        bool m_reserved_bit;
+
+    public:
+
+        /**
+         * Should be `false`, i.e. all chunk types should have uppercase third
+         * letters (the lowercase third letter is reserved for possible future
+         * extensions to the PNG standard)
+         */
+        bool reserved_bit();
+
+    private:
+        bool f_type;
         std::string m_type;
+
+    public:
+        std::string type();
+
+    private:
+        uint32_t m_len;
+        std::string m_type_raw;
         std::unique_ptr<kaitai::kstruct> m_body;
         bool n_body;
 
@@ -501,7 +582,7 @@ public:
         bool _is_null_body() { body(); return n_body; };
 
     private:
-        std::string m_crc;
+        uint32_t m_crc;
         png_t* m__root;
         png_t* m__parent;
         std::string m__raw_body;
@@ -509,9 +590,16 @@ public:
 
     public:
         uint32_t len() const { return m_len; }
-        std::string type() const { return m_type; }
+
+        /**
+         * Each byte of a chunk type is restricted to the hexadecimal values
+         * 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters
+         * (`A-Z` and `a-z`).
+         * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#table51 Source
+         */
+        std::string type_raw() const { return m_type_raw; }
         kaitai::kstruct* body() const { return m_body.get(); }
-        std::string crc() const { return m_crc; }
+        uint32_t crc() const { return m_crc; }
         png_t* _root() const { return m__root; }
         png_t* _parent() const { return m__parent; }
         std::string _raw_body() const { return m__raw_body; }
@@ -638,10 +726,47 @@ public:
         png_t::chunk_t* _parent() const { return m__parent; }
     };
 
+    class compressed_text_t : public kaitai::kstruct {
+
+    public:
+
+        compressed_text_t(kaitai::kstream* p__io, png_t::compressed_text_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~compressed_text_t();
+
+    private:
+        std::string m_value;
+        png_t* m__root;
+        png_t::compressed_text_chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Text string (the "value" of this key-value pair).
+         * 
+         * Although it is not null-terminated (unlike the keyword), it must not
+         * contain a zero byte (U+0000 NULL character). A newline should be
+         * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+         * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+         * U+007F..U+009F) are discouraged.
+         */
+        std::string value() const { return m_value; }
+        png_t* _root() const { return m__root; }
+        png_t::compressed_text_chunk_t* _parent() const { return m__parent; }
+    };
+
     /**
-     * Compressed text chunk effectively allows to store key-value
-     * string pairs in PNG container, compressing "value" part (which
-     * can be quite lengthy) with zlib compression.
+     * Compressed textual data (`zTXt`) chunk effectively allows you to store
+     * key-value string pairs in the PNG container, compressing the "value" part
+     * (which can be quite lengthy) with zlib compression.
+     * 
+     * The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`
+     * chunk is recommended for storing large blocks of text.
      * \sa https://www.w3.org/TR/png/#11zTXt Source
      */
 
@@ -661,22 +786,33 @@ public:
     private:
         std::string m_keyword;
         compression_methods_t m_compression_method;
-        std::string m_text_datastream;
+        std::unique_ptr<compressed_text_t> m_text;
         png_t* m__root;
         png_t::chunk_t* m__parent;
-        std::string m__raw_text_datastream;
+        std::string m__raw_text;
+        std::unique_ptr<kaitai::kstream> m__io__raw_text;
+        std::string m__raw__raw_text;
 
     public:
 
         /**
-         * Indicates purpose of the following text data.
+         * Indicates the type of information represented by the text string.
+         * 
+         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+         * keyword, leading spaces, trailing spaces, and consecutive spaces are
+         * not permitted.
+         * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source
          */
         std::string keyword() const { return m_keyword; }
         compression_methods_t compression_method() const { return m_compression_method; }
-        std::string text_datastream() const { return m_text_datastream; }
+        compressed_text_t* text() const { return m_text.get(); }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
-        std::string _raw_text_datastream() const { return m__raw_text_datastream; }
+        std::string _raw_text() const { return m__raw_text; }
+        kaitai::kstream* _io__raw_text() const { return m__io__raw_text.get(); }
+        std::string _raw__raw_text() const { return m__raw__raw_text; }
     };
 
     /**
@@ -761,7 +897,7 @@ public:
     };
 
     /**
-     * \sa https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source
+     * \sa https://www.w3.org/TR/png/#fcTL-chunk Source
      */
 
     class frame_control_chunk_t : public kaitai::kstruct {
@@ -804,7 +940,19 @@ public:
     public:
 
         /**
-         * Sequence number of the animation chunk
+         * Sequence number of the animation chunk, starting from 0.
+         * 
+         * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+         * types share the sequence. The purpose of this number is to detect (and
+         * optionally correct) sequence errors in an Animated PNG, since the PNG
+         * specification does not impose ordering restrictions on ancillary
+         * chunks (which means that a PNG editor is technically allowed to
+         * reorder them arbitrarily, see [14.2 Behavior of PNG
+         * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+         * 
+         * The first `fcTL` chunk must contain sequence number 0, and the
+         * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+         * ascending order, with no gaps or duplicates.
          */
         uint32_t sequence_number() const { return m_sequence_number; }
 
@@ -852,7 +1000,7 @@ public:
     };
 
     /**
-     * \sa https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source
+     * \sa https://www.w3.org/TR/png/#fdAT-chunk Source
      */
 
     class frame_data_chunk_t : public kaitai::kstruct {
@@ -877,18 +1025,28 @@ public:
     public:
 
         /**
-         * Sequence number of the animation chunk. The fcTL and fdAT chunks
-         * have a 4 byte sequence number. Both chunk types share the sequence.
-         * The first fcTL chunk must contain sequence number 0, and the sequence
-         * numbers in the remaining fcTL and fdAT chunks must be in order, with
-         * no gaps or duplicates.
+         * Sequence number of the animation chunk, starting from 0.
+         * 
+         * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+         * types share the sequence. The purpose of this number is to detect (and
+         * optionally correct) sequence errors in an Animated PNG, since the PNG
+         * specification does not impose ordering restrictions on ancillary
+         * chunks (which means that a PNG editor is technically allowed to
+         * reorder them arbitrarily, see [14.2 Behavior of PNG
+         * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+         * 
+         * The first `fcTL` chunk must contain sequence number 0, and the
+         * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+         * ascending order, with no gaps or duplicates.
          */
         uint32_t sequence_number() const { return m_sequence_number; }
 
         /**
-         * Frame data for the frame. At least one fdAT chunk is required for
-         * each frame. The compressed datastream is the concatenation of the
-         * contents of the data fields of all the fdAT chunks within a frame.
+         * Frame data for the frame. At least one `fdAT` chunk is required for
+         * each frame, except for the first frame, if that frame is represented
+         * by an `IDAT` chunk. The compressed datastream for each frame is the
+         * concatenation of the contents of the data fields of all the `fdAT`
+         * chunks within a frame.
          */
         std::string frame_data() const { return m_frame_data; }
         png_t* _root() const { return m__root; }
@@ -913,11 +1071,27 @@ public:
         ~gama_chunk_t();
 
     private:
-        bool f_gamma_ratio;
-        double m_gamma_ratio;
+        bool f_gamma;
+        double m_gamma;
 
     public:
-        double gamma_ratio();
+
+        /**
+         * Image gamma, typically 0.45455 = 1/2.2
+         */
+        double gamma();
+
+    private:
+        bool f_inv_gamma;
+        double m_inv_gamma;
+
+    public:
+
+        /**
+         * Inverse of the image gamma (1 / gamma), typically 2.2 (not considering
+         * rounding)
+         */
+        double inv_gamma();
 
     private:
         uint32_t m_gamma_int;
@@ -925,6 +1099,11 @@ public:
         png_t::chunk_t* m__parent;
 
     public:
+
+        /**
+         * Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
+         * 45455)
+         */
         uint32_t gamma_int() const { return m_gamma_int; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
@@ -952,9 +1131,9 @@ public:
         uint32_t m_height;
         uint8_t m_bit_depth;
         color_type_t m_color_type;
-        uint8_t m_compression_method;
-        uint8_t m_filter_method;
-        uint8_t m_interlace_method;
+        compression_methods_t m_compression_method;
+        filter_method_t m_filter_method;
+        interlace_method_t m_interlace_method;
         png_t* m__root;
         png_t* m__parent;
 
@@ -963,9 +1142,9 @@ public:
         uint32_t height() const { return m_height; }
         uint8_t bit_depth() const { return m_bit_depth; }
         color_type_t color_type() const { return m_color_type; }
-        uint8_t compression_method() const { return m_compression_method; }
-        uint8_t filter_method() const { return m_filter_method; }
-        uint8_t interlace_method() const { return m_interlace_method; }
+        compression_methods_t compression_method() const { return m_compression_method; }
+        filter_method_t filter_method() const { return m_filter_method; }
+        interlace_method_t interlace_method() const { return m_interlace_method; }
         png_t* _root() const { return m__root; }
         png_t* _parent() const { return m__parent; }
     };
@@ -984,27 +1163,36 @@ public:
         ~international_text_t();
 
     private:
-        std::string m_text;
+        std::string m_value;
         png_t* m__root;
         png_t::international_text_chunk_t* m__parent;
 
     public:
 
         /**
-         * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Line breaks are
-         * allowed.
+         * Text string (the "value" of this key-value pair), written in language
+         * specified in `_parent.language_tag`.
+         * 
+         * Although it is not null-terminated (unlike other textual data in the
+         * `iTXt` chunk), it must not contain a zero byte
+         * (U+0000 NULL character). A newline should be represented by a single
+         * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+         * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+         * discouraged.
          */
-        std::string text() const { return m_text; }
+        std::string value() const { return m_value; }
         png_t* _root() const { return m__root; }
         png_t::international_text_chunk_t* _parent() const { return m__parent; }
     };
 
     /**
-     * International text chunk effectively allows to store key-value string pairs in
-     * PNG container. Both "key" (keyword) and "value" (text) parts are
-     * given in pre-defined subset of iso8859-1 without control
-     * characters.
+     * International textual data (`iTXt`) chunk effectively allows you to store
+     * key-value string pairs in the PNG container.
+     * 
+     * The "key" part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)
+     * characters and spaces. The translated keyword and the "value" part
+     * (`text`) are stored in UTF-8 and thus can store text in any language -
+     * this language can be indicated via the language tag (`language_tag`).
      * \sa https://www.w3.org/TR/png/#11iTXt Source
      */
 
@@ -1028,9 +1216,15 @@ public:
     public:
 
         /**
-         * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Line breaks are
-         * allowed.
+         * Text string (the "value" of this key-value pair), written in language
+         * specified in `language_tag`.
+         * 
+         * Although it is not null-terminated (unlike other textual data in the
+         * `iTXt` chunk), it must not contain a zero byte
+         * (U+0000 NULL character). A newline should be represented by a single
+         * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+         * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+         * discouraged.
          */
         std::string text();
 
@@ -1083,7 +1277,14 @@ public:
     public:
 
         /**
-         * Indicates purpose of the following text data.
+         * Indicates the type of information represented by the text string.
+         * 
+         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+         * keyword, leading spaces, trailing spaces, and consecutive spaces are
+         * not permitted.
+         * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source
          */
         std::string keyword() const { return m_keyword; }
 
@@ -1095,15 +1296,30 @@ public:
         compression_methods_t compression_method() const { return m_compression_method; }
 
         /**
-         * Human language used in `translated_keyword` and `text`
-         * attributes - should be a language code conforming to ISO
-         * 646.IRV:1991.
+         * Human language used in the `translated_keyword` and `text` fields.
+         * 
+         * From the [official
+         * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):
+         * 
+         * > The language tag is a well-formed language tag defined by [RFC 5646:
+         * > BCP 47: Tags for Identifying
+         * > Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the
+         * > keyword, the language tag is case-insensitive. Subtags must appear
+         * > in the [IANA language subtag
+         * > registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+         * > If the language tag is empty, the language is unspecified. Examples
+         * > of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,
+         * > `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.
          */
         std::string language_tag() const { return m_language_tag; }
 
         /**
-         * Keyword translated into language specified in
-         * `language_tag`. Line breaks are not allowed.
+         * The keyword (`keyword`) translated into the language specified in
+         * `language_tag`.
+         * 
+         * It must not contain a zero byte (U+0000 NULL character). Line breaks
+         * should not appear. The remaining control characters (U+0001..U+0009,
+         * U+000B..0+001F, U+007F..U+009F) are discouraged.
          */
         std::string translated_keyword() const { return m_translated_keyword; }
         international_text_t* text_plain() const { return m_text_plain.get(); }
@@ -1219,8 +1435,9 @@ public:
     };
 
     /**
-     * "Physical size" chunk stores data that allows to translate
-     * logical pixels into physical units (meters, etc) and vice-versa.
+     * Physical pixel dimensions (`pHYs`) chunk specifies the intended physical
+     * size of the pixels (in meters) or pixel aspect ratio for display of the
+     * image.
      * \sa https://www.w3.org/TR/png/#11pHYs Source
      */
 
@@ -1236,6 +1453,40 @@ public:
 
     public:
         ~phys_chunk_t();
+
+    private:
+        bool f_dots_per_inch_x;
+        double m_dots_per_inch_x;
+        bool n_dots_per_inch_x;
+
+    public:
+        bool _is_null_dots_per_inch_x() { dots_per_inch_x(); return n_dots_per_inch_x; };
+
+    private:
+
+    public:
+
+        /**
+         * Horizontal resolution (DPI)
+         */
+        double dots_per_inch_x();
+
+    private:
+        bool f_dots_per_inch_y;
+        double m_dots_per_inch_y;
+        bool n_dots_per_inch_y;
+
+    public:
+        bool _is_null_dots_per_inch_y() { dots_per_inch_y(); return n_dots_per_inch_y; };
+
+    private:
+
+    public:
+
+        /**
+         * Vertical resolution (DPI)
+         */
+        double dots_per_inch_y();
 
     private:
         uint32_t m_pixels_per_unit_x;
@@ -1360,10 +1611,13 @@ public:
     };
 
     /**
-     * Text chunk effectively allows to store key-value string pairs in
-     * PNG container. Both "key" (keyword) and "value" (text) parts are
-     * given in pre-defined subset of iso8859-1 without control
-     * characters.
+     * Textual data (`tEXt`) chunk effectively allows you to store key-value
+     * string pairs in the PNG container.
+     * 
+     * Both the "key" (`keyword`) and "value" (`text`) parts are restricted to
+     * printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the
+     * exception that `text` can also contain newlines (U+000A LINE FEED (LF)
+     * characters) and U+00A0 NON-BREAKING SPACE characters.
      * \sa https://www.w3.org/TR/png/#11tEXt Source
      */
 
@@ -1389,9 +1643,26 @@ public:
     public:
 
         /**
-         * Indicates purpose of the following text data.
+         * Indicates the type of information represented by the text string.
+         * 
+         * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+         * keyword, leading spaces, trailing spaces, and consecutive spaces are
+         * not permitted.
+         * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source
          */
         std::string keyword() const { return m_keyword; }
+
+        /**
+         * Text string (the "value" of this key-value pair).
+         * 
+         * Although it is not null-terminated (unlike the keyword), it must not
+         * contain a zero byte (U+0000 NULL character). A newline should be
+         * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+         * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+         * U+007F..U+009F) are discouraged.
+         */
         std::string text() const { return m_text; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
@@ -1442,7 +1713,7 @@ private:
     uint32_t m_ihdr_len;
     std::string m_ihdr_type;
     std::unique_ptr<ihdr_chunk_t> m_ihdr;
-    std::string m_ihdr_crc;
+    uint32_t m_ihdr_crc;
     std::unique_ptr<std::vector<std::unique_ptr<chunk_t>>> m_chunks;
     png_t* m__root;
     kaitai::kstruct* m__parent;
@@ -1452,7 +1723,7 @@ public:
     uint32_t ihdr_len() const { return m_ihdr_len; }
     std::string ihdr_type() const { return m_ihdr_type; }
     ihdr_chunk_t* ihdr() const { return m_ihdr.get(); }
-    std::string ihdr_crc() const { return m_ihdr_crc; }
+    uint32_t ihdr_crc() const { return m_ihdr_crc; }
     std::vector<std::unique_ptr<chunk_t>>* chunks() const { return m_chunks.get(); }
     png_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }

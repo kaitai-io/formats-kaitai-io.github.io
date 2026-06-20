@@ -28,7 +28,7 @@ pub struct Png {
     ihdr_len: RefCell<u32>,
     ihdr_type: RefCell<Vec<u8>>,
     ihdr: RefCell<OptRc<Png_IhdrChunk>>,
-    ihdr_crc: RefCell<Vec<u8>>,
+    ihdr_crc: RefCell<u32>,
     chunks: RefCell<Vec<OptRc<Png_Chunk>>>,
     _io: RefCell<BytesReader>,
 }
@@ -63,7 +63,7 @@ impl KStruct for Png {
         }
         let t = Self::read_into::<_, Png_IhdrChunk>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
         *self_rc.ihdr.borrow_mut() = t;
-        *self_rc.ihdr_crc.borrow_mut() = _io.read_bytes(4 as usize)?.into();
+        *self_rc.ihdr_crc.borrow_mut() = _io.read_u4be()?.into();
         *self_rc.chunks.borrow_mut() = Vec::new();
         {
             let mut _i = 0;
@@ -73,7 +73,7 @@ impl KStruct for Png {
                 let _t_chunks = self_rc.chunks.borrow();
                 let _tmpa = _t_chunks.last().unwrap();
                 _i += 1;
-                let x = !( ((*_tmpa.type() == "IEND".to_string()) || (_io.is_eof())) );
+                let x = !( ((*_tmpa.type()? == "IEND".to_string()) || (_io.is_eof())) );
                 x
             } {}
         }
@@ -103,7 +103,7 @@ impl Png {
     }
 }
 impl Png {
-    pub fn ihdr_crc(&self) -> Ref<'_, Vec<u8>> {
+    pub fn ihdr_crc(&self) -> Ref<'_, u32> {
         self.ihdr_crc.borrow()
     }
 }
@@ -123,11 +123,15 @@ pub enum Png_BlendOpValues {
     /**
      * All color components of the frame, including alpha,
      * overwrite the current contents of the frame's output buffer region.
+     * \sa https://www.w3.org/TR/png/#fcTL-chunk Source
      */
     Source,
 
     /**
-     * The frame is composited onto the output buffer based on its alpha
+     * The frame is composited onto the output buffer based on its alpha, using
+     * a simple OVER operation as described in [Alpha Channel
+     * Processing](https://www.w3.org/TR/png/#13Alpha-channel-processing).
+     * \sa https://www.w3.org/TR/png/#fcTL-chunk Source
      */
     Over,
     Unknown(i64),
@@ -234,21 +238,21 @@ pub enum Png_DisposeOpValues {
     /**
      * No disposal is done on this frame before rendering the next;
      * the contents of the output buffer are left as is.
-     * \sa https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source
+     * \sa https://www.w3.org/TR/png/#fcTL-chunk Source
      */
     None,
 
     /**
      * The frame's region of the output buffer is to be cleared to
      * fully transparent black before rendering the next frame.
-     * \sa https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source
+     * \sa https://www.w3.org/TR/png/#fcTL-chunk Source
      */
     Background,
 
     /**
      * The frame's region of the output buffer is to be reverted
      * to the previous contents before rendering the next frame.
-     * \sa https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source
+     * \sa https://www.w3.org/TR/png/#fcTL-chunk Source
      */
     Previous,
     Unknown(i64),
@@ -279,6 +283,73 @@ impl From<&Png_DisposeOpValues> for i64 {
 
 impl Default for Png_DisposeOpValues {
     fn default() -> Self { Png_DisposeOpValues::Unknown(0) }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum Png_FilterMethod {
+
+    /**
+     * Single row per-byte filtering
+     * \sa https://github.com/pnggroup/libpng/blob/dd5d363ae1fc7778f2734bf51b10d3fe65028671/png.h#L599 Source
+     * \sa https://www.w3.org/TR/png/#9Filter-types Source
+     */
+    Base,
+    Unknown(i64),
+}
+
+impl TryFrom<i64> for Png_FilterMethod {
+    type Error = KError;
+    fn try_from(flag: i64) -> KResult<Png_FilterMethod> {
+        match flag {
+            0 => Ok(Png_FilterMethod::Base),
+            _ => Ok(Png_FilterMethod::Unknown(flag)),
+        }
+    }
+}
+
+impl From<&Png_FilterMethod> for i64 {
+    fn from(v: &Png_FilterMethod) -> Self {
+        match *v {
+            Png_FilterMethod::Base => 0,
+            Png_FilterMethod::Unknown(v) => v
+        }
+    }
+}
+
+impl Default for Png_FilterMethod {
+    fn default() -> Self { Png_FilterMethod::Unknown(0) }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum Png_InterlaceMethod {
+    None,
+    Adam7,
+    Unknown(i64),
+}
+
+impl TryFrom<i64> for Png_InterlaceMethod {
+    type Error = KError;
+    fn try_from(flag: i64) -> KResult<Png_InterlaceMethod> {
+        match flag {
+            0 => Ok(Png_InterlaceMethod::None),
+            1 => Ok(Png_InterlaceMethod::Adam7),
+            _ => Ok(Png_InterlaceMethod::Unknown(flag)),
+        }
+    }
+}
+
+impl From<&Png_InterlaceMethod> for i64 {
+    fn from(v: &Png_InterlaceMethod) -> Self {
+        match *v {
+            Png_InterlaceMethod::None => 0,
+            Png_InterlaceMethod::Adam7 => 1,
+            Png_InterlaceMethod::Unknown(v) => v
+        }
+    }
+}
+
+impl Default for Png_InterlaceMethod {
+    fn default() -> Self { Png_InterlaceMethod::Unknown(0) }
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -368,7 +439,7 @@ impl Png_AdobeFireworksChunk {
 }
 
 /**
- * \sa https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
+ * \sa https://www.w3.org/TR/png/#acTL-chunk Source
  */
 
 #[derive(Default, Debug, Clone)]
@@ -406,7 +477,8 @@ impl Png_AnimationControlChunk {
 }
 
 /**
- * Number of frames, must be equal to the number of `frame_control_chunk`s
+ * Number of frames, must be equal to the number of `fcTL` chunks (i.e.
+ * `frame_control_chunk` objects)
  */
 impl Png_AnimationControlChunk {
     pub fn num_frames(&self) -> Ref<'_, u32> {
@@ -1002,11 +1074,21 @@ pub struct Png_Chunk {
     pub _parent: SharedType<Png>,
     pub _self: SharedType<Self>,
     len: RefCell<u32>,
-    type: RefCell<String>,
+    type_raw: RefCell<Vec<u8>>,
     body: RefCell<Option<Png_Chunk_Body>>,
-    crc: RefCell<Vec<u8>>,
+    crc: RefCell<u32>,
     _io: RefCell<BytesReader>,
     body_raw: RefCell<Vec<u8>>,
+    f_is_ancillary: Cell<bool>,
+    is_ancillary: RefCell<bool>,
+    f_is_private: Cell<bool>,
+    is_private: RefCell<bool>,
+    f_is_safe_to_copy: Cell<bool>,
+    is_safe_to_copy: RefCell<bool>,
+    f_reserved_bit: Cell<bool>,
+    reserved_bit: RefCell<bool>,
+    f_type: Cell<bool>,
+    type: RefCell<String>,
 }
 #[derive(Debug, Clone)]
 pub enum Png_Chunk_Body {
@@ -1323,13 +1405,13 @@ impl KStruct for Png_Chunk {
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
         *self_rc.len.borrow_mut() = _io.read_u4be()?.into();
-        *self_rc.type.borrow_mut() = bytes_to_str(&_io.read_bytes(4 as usize)?.into(), "UTF-8")?;
-        let _tmpa = *self_rc.type();
-        if !(*self_rc.type() != "\u{0}\u{0}\u{0}\u{0}".to_string()) {
+        *self_rc.type_raw.borrow_mut() = _io.read_bytes(4 as usize)?.into();
+        let _tmpa = *self_rc.type_raw();
+        if !( (( (( ((((_tmpa[0 as usize] as u8) >= (65 as u8))) && (((_tmpa[0 as usize] as u8) <= (90 as u8)))) ) || ( ((((_tmpa[0 as usize] as u8) >= (97 as u8))) && (((_tmpa[0 as usize] as u8) <= (122 as u8)))) )) ) && ( (( ((((_tmpa[1 as usize] as u8) >= (65 as u8))) && (((_tmpa[1 as usize] as u8) <= (90 as u8)))) ) || ( ((((_tmpa[1 as usize] as u8) >= (97 as u8))) && (((_tmpa[1 as usize] as u8) <= (122 as u8)))) )) ) && ( (( ((((_tmpa[2 as usize] as u8) >= (65 as u8))) && (((_tmpa[2 as usize] as u8) <= (90 as u8)))) ) || ( ((((_tmpa[2 as usize] as u8) >= (97 as u8))) && (((_tmpa[2 as usize] as u8) <= (122 as u8)))) )) ) && ( (( ((((_tmpa[3 as usize] as u8) >= (65 as u8))) && (((_tmpa[3 as usize] as u8) <= (90 as u8)))) ) || ( ((((_tmpa[3 as usize] as u8) >= (97 as u8))) && (((_tmpa[3 as usize] as u8) <= (122 as u8)))) )) )) ) {
             return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/chunk/seq/1".to_string() }));
         }
         {
-            let on = self_rc.type();
+            let on = self_rc.type()?;
             if *on == "PLTE" {
                 *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
                 let body_raw = self_rc.body_raw.borrow();
@@ -1488,20 +1570,120 @@ impl KStruct for Png_Chunk {
                 *self_rc.body.borrow_mut() = Some(_io.read_bytes(*self_rc.len() as usize)?.into());
             }
         }
-        *self_rc.crc.borrow_mut() = _io.read_bytes(4 as usize)?.into();
+        *self_rc.crc.borrow_mut() = _io.read_u4be()?.into();
         Ok(())
     }
 }
 impl Png_Chunk {
+
+    /**
+     * false = critical chunk, true = ancillary chunk
+     */
+    pub fn is_ancillary(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_is_ancillary.get() {
+            return Ok(self.is_ancillary.borrow());
+        }
+        self.f_is_ancillary.set(true);
+        *self.is_ancillary.borrow_mut() = (((((self.type_raw()[0 as usize] as u8) & (32 as u8)) as i32) != (0 as i32))) as bool;
+        Ok(self.is_ancillary.borrow())
+    }
+
+    /**
+     * false = public chunk (defined by the W3C), true = private chunk (can
+     * be defined by anyone)
+     */
+    pub fn is_private(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_is_private.get() {
+            return Ok(self.is_private.borrow());
+        }
+        self.f_is_private.set(true);
+        *self.is_private.borrow_mut() = (((((self.type_raw()[1 as usize] as u8) & (32 as u8)) as i32) != (0 as i32))) as bool;
+        Ok(self.is_private.borrow())
+    }
+
+    /**
+     * Defines whether the chunk may be copied if the image data (i.e.
+     * pixels) is modified. This tells PNG editors how to handle unknown
+     * chunks - see section [14.2 Behavior of PNG
+     * editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in
+     * the official specification.
+     */
+    pub fn is_safe_to_copy(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_is_safe_to_copy.get() {
+            return Ok(self.is_safe_to_copy.borrow());
+        }
+        self.f_is_safe_to_copy.set(true);
+        *self.is_safe_to_copy.borrow_mut() = (((((self.type_raw()[3 as usize] as u8) & (32 as u8)) as i32) != (0 as i32))) as bool;
+        Ok(self.is_safe_to_copy.borrow())
+    }
+
+    /**
+     * Should be `false`, i.e. all chunk types should have uppercase third
+     * letters (the lowercase third letter is reserved for possible future
+     * extensions to the PNG standard)
+     */
+    pub fn reserved_bit(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_reserved_bit.get() {
+            return Ok(self.reserved_bit.borrow());
+        }
+        self.f_reserved_bit.set(true);
+        *self.reserved_bit.borrow_mut() = (((((self.type_raw()[2 as usize] as u8) & (32 as u8)) as i32) != (0 as i32))) as bool;
+        Ok(self.reserved_bit.borrow())
+    }
+    pub fn type(
+        &self
+    ) -> KResult<Ref<'_, String>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_type.get() {
+            return Ok(self.type.borrow());
+        }
+        self.f_type.set(true);
+        *self.type.borrow_mut() = bytes_to_str(&*self.type_raw(), "ASCII")?.to_string();
+        Ok(self.type.borrow())
+    }
 }
 impl Png_Chunk {
     pub fn len(&self) -> Ref<'_, u32> {
         self.len.borrow()
     }
 }
+
+/**
+ * Each byte of a chunk type is restricted to the hexadecimal values
+ * 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters
+ * (`A-Z` and `a-z`).
+ * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#table51 Source
+ */
 impl Png_Chunk {
-    pub fn type(&self) -> Ref<'_, String> {
-        self.type.borrow()
+    pub fn type_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.type_raw.borrow()
     }
 }
 impl Png_Chunk {
@@ -1510,7 +1692,7 @@ impl Png_Chunk {
     }
 }
 impl Png_Chunk {
-    pub fn crc(&self) -> Ref<'_, Vec<u8>> {
+    pub fn crc(&self) -> Ref<'_, u32> {
         self.crc.borrow()
     }
 }
@@ -1725,10 +1907,65 @@ impl Png_ClliChunk {
     }
 }
 
+#[derive(Default, Debug, Clone)]
+pub struct Png_CompressedText {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_CompressedTextChunk>,
+    pub _self: SharedType<Self>,
+    value: RefCell<String>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_CompressedText {
+    type Root = Png;
+    type Parent = Png_CompressedTextChunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.value.borrow_mut() = bytes_to_str(&_io.read_bytes_full()?.into(), "ISO-8859-1")?;
+        Ok(())
+    }
+}
+impl Png_CompressedText {
+}
+
 /**
- * Compressed text chunk effectively allows to store key-value
- * string pairs in PNG container, compressing "value" part (which
- * can be quite lengthy) with zlib compression.
+ * Text string (the "value" of this key-value pair).
+ * 
+ * Although it is not null-terminated (unlike the keyword), it must not
+ * contain a zero byte (U+0000 NULL character). A newline should be
+ * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+ * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+ * U+007F..U+009F) are discouraged.
+ */
+impl Png_CompressedText {
+    pub fn value(&self) -> Ref<'_, String> {
+        self.value.borrow()
+    }
+}
+impl Png_CompressedText {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Compressed textual data (`zTXt`) chunk effectively allows you to store
+ * key-value string pairs in the PNG container, compressing the "value" part
+ * (which can be quite lengthy) with zlib compression.
+ * 
+ * The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`
+ * chunk is recommended for storing large blocks of text.
  * \sa https://www.w3.org/TR/png/#11zTXt Source
  */
 
@@ -1739,9 +1976,10 @@ pub struct Png_CompressedTextChunk {
     pub _self: SharedType<Self>,
     keyword: RefCell<String>,
     compression_method: RefCell<Png_CompressionMethods>,
-    text_datastream: RefCell<Vec<u8>>,
+    text: RefCell<OptRc<Png_CompressedText>>,
     _io: RefCell<BytesReader>,
-    text_datastream_raw: RefCell<Vec<u8>>,
+    text_raw: RefCell<Vec<u8>>,
+    text_raw_raw: RefCell<Vec<u8>>,
 }
 impl KStruct for Png_CompressedTextChunk {
     type Root = Png;
@@ -1760,10 +1998,17 @@ impl KStruct for Png_CompressedTextChunk {
         let _rrc = self_rc._root.get_value().borrow().upgrade();
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        *self_rc.keyword.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "UTF-8")?;
+        *self_rc.keyword.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "ISO-8859-1")?;
         *self_rc.compression_method.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
-        *self_rc.text_datastream_raw.borrow_mut() = _io.read_bytes_full()?.into();
-        *self_rc.text_datastream.borrow_mut() = process_zlib(&self_rc.text_datastream_raw.borrow()).map_err(|msg| KError::BytesDecodingError { msg })?;
+        if !(*self_rc.compression_method() == Png_CompressionMethods::Zlib) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotEqual, src_path: "/types/compressed_text_chunk/seq/1".to_string() }));
+        }
+        *self_rc.text_raw_raw.borrow_mut() = _io.read_bytes_full()?.into();
+        *self_rc.text_raw.borrow_mut() = process_zlib(&self_rc.text_raw_raw.borrow()).map_err(|msg| KError::BytesDecodingError { msg })?;
+        let text_raw = self_rc.text_raw.borrow();
+        let _t_text_raw_io = BytesReader::from(text_raw.clone());
+        let t = Self::read_into::<BytesReader, Png_CompressedText>(&_t_text_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+        *self_rc.text.borrow_mut() = t;
         Ok(())
     }
 }
@@ -1771,7 +2016,14 @@ impl Png_CompressedTextChunk {
 }
 
 /**
- * Indicates purpose of the following text data.
+ * Indicates the type of information represented by the text string.
+ * 
+ * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+ * characters and spaces; that is, only code points 0x20-0x7E and
+ * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+ * keyword, leading spaces, trailing spaces, and consecutive spaces are
+ * not permitted.
+ * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source
  */
 impl Png_CompressedTextChunk {
     pub fn keyword(&self) -> Ref<'_, String> {
@@ -1784,8 +2036,8 @@ impl Png_CompressedTextChunk {
     }
 }
 impl Png_CompressedTextChunk {
-    pub fn text_datastream(&self) -> Ref<'_, Vec<u8>> {
-        self.text_datastream.borrow()
+    pub fn text(&self) -> Ref<'_, OptRc<Png_CompressedText>> {
+        self.text.borrow()
     }
 }
 impl Png_CompressedTextChunk {
@@ -1794,8 +2046,13 @@ impl Png_CompressedTextChunk {
     }
 }
 impl Png_CompressedTextChunk {
-    pub fn text_datastream_raw(&self) -> Ref<'_, Vec<u8>> {
-        self.text_datastream_raw.borrow()
+    pub fn text_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.text_raw.borrow()
+    }
+}
+impl Png_CompressedTextChunk {
+    pub fn text_raw_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.text_raw_raw.borrow()
     }
 }
 
@@ -1922,7 +2179,7 @@ impl Png_EvernoteSkrfChunk {
 }
 
 /**
- * \sa https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source
+ * \sa https://www.w3.org/TR/png/#fcTL-chunk Source
  */
 
 #[derive(Default, Debug, Clone)]
@@ -2012,7 +2269,19 @@ impl Png_FrameControlChunk {
 }
 
 /**
- * Sequence number of the animation chunk
+ * Sequence number of the animation chunk, starting from 0.
+ * 
+ * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+ * types share the sequence. The purpose of this number is to detect (and
+ * optionally correct) sequence errors in an Animated PNG, since the PNG
+ * specification does not impose ordering restrictions on ancillary
+ * chunks (which means that a PNG editor is technically allowed to
+ * reorder them arbitrarily, see [14.2 Behavior of PNG
+ * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+ * 
+ * The first `fcTL` chunk must contain sequence number 0, and the
+ * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+ * ascending order, with no gaps or duplicates.
  */
 impl Png_FrameControlChunk {
     pub fn sequence_number(&self) -> Ref<'_, u32> {
@@ -2098,7 +2367,7 @@ impl Png_FrameControlChunk {
 }
 
 /**
- * \sa https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source
+ * \sa https://www.w3.org/TR/png/#fdAT-chunk Source
  */
 
 #[derive(Default, Debug, Clone)]
@@ -2136,11 +2405,19 @@ impl Png_FrameDataChunk {
 }
 
 /**
- * Sequence number of the animation chunk. The fcTL and fdAT chunks
- * have a 4 byte sequence number. Both chunk types share the sequence.
- * The first fcTL chunk must contain sequence number 0, and the sequence
- * numbers in the remaining fcTL and fdAT chunks must be in order, with
- * no gaps or duplicates.
+ * Sequence number of the animation chunk, starting from 0.
+ * 
+ * The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+ * types share the sequence. The purpose of this number is to detect (and
+ * optionally correct) sequence errors in an Animated PNG, since the PNG
+ * specification does not impose ordering restrictions on ancillary
+ * chunks (which means that a PNG editor is technically allowed to
+ * reorder them arbitrarily, see [14.2 Behavior of PNG
+ * editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+ * 
+ * The first `fcTL` chunk must contain sequence number 0, and the
+ * sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+ * ascending order, with no gaps or duplicates.
  */
 impl Png_FrameDataChunk {
     pub fn sequence_number(&self) -> Ref<'_, u32> {
@@ -2149,9 +2426,11 @@ impl Png_FrameDataChunk {
 }
 
 /**
- * Frame data for the frame. At least one fdAT chunk is required for
- * each frame. The compressed datastream is the concatenation of the
- * contents of the data fields of all the fdAT chunks within a frame.
+ * Frame data for the frame. At least one `fdAT` chunk is required for
+ * each frame, except for the first frame, if that frame is represented
+ * by an `IDAT` chunk. The compressed datastream for each frame is the
+ * concatenation of the contents of the data fields of all the `fdAT`
+ * chunks within a frame.
  */
 impl Png_FrameDataChunk {
     pub fn frame_data(&self) -> Ref<'_, Vec<u8>> {
@@ -2175,8 +2454,10 @@ pub struct Png_GamaChunk {
     pub _self: SharedType<Self>,
     gamma_int: RefCell<u32>,
     _io: RefCell<BytesReader>,
-    f_gamma_ratio: Cell<bool>,
-    gamma_ratio: RefCell<f64>,
+    f_gamma: Cell<bool>,
+    gamma: RefCell<f64>,
+    f_inv_gamma: Cell<bool>,
+    inv_gamma: RefCell<f64>,
 }
 impl KStruct for Png_GamaChunk {
     type Root = Png;
@@ -2196,25 +2477,57 @@ impl KStruct for Png_GamaChunk {
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
         *self_rc.gamma_int.borrow_mut() = _io.read_u4be()?.into();
+        let _tmpa = *self_rc.gamma_int();
+        if !(((_tmpa as u32) != (0 as u32))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/gama_chunk/seq/0".to_string() }));
+        }
         Ok(())
     }
 }
 impl Png_GamaChunk {
-    pub fn gamma_ratio(
+
+    /**
+     * Image gamma, typically 0.45455 = 1/2.2
+     */
+    pub fn gamma(
         &self
     ) -> KResult<Ref<'_, f64>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_gamma_ratio.get() {
-            return Ok(self.gamma_ratio.borrow());
+        if self.f_gamma.get() {
+            return Ok(self.gamma.borrow());
         }
-        self.f_gamma_ratio.set(true);
-        *self.gamma_ratio.borrow_mut() = (((100000.0 as f64) / (*self.gamma_int() as f64))) as f64;
-        Ok(self.gamma_ratio.borrow())
+        self.f_gamma.set(true);
+        *self.gamma.borrow_mut() = (((*self.gamma_int() as f64) / (100000.0 as f64))) as f64;
+        Ok(self.gamma.borrow())
+    }
+
+    /**
+     * Inverse of the image gamma (1 / gamma), typically 2.2 (not considering
+     * rounding)
+     */
+    pub fn inv_gamma(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_inv_gamma.get() {
+            return Ok(self.inv_gamma.borrow());
+        }
+        self.f_inv_gamma.set(true);
+        *self.inv_gamma.borrow_mut() = (((100000.0 as f64) / (*self.gamma_int() as f64))) as f64;
+        Ok(self.inv_gamma.borrow())
     }
 }
+
+/**
+ * Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
+ * 45455)
+ */
 impl Png_GamaChunk {
     pub fn gamma_int(&self) -> Ref<'_, u32> {
         self.gamma_int.borrow()
@@ -2239,9 +2552,9 @@ pub struct Png_IhdrChunk {
     height: RefCell<u32>,
     bit_depth: RefCell<u8>,
     color_type: RefCell<Png_ColorType>,
-    compression_method: RefCell<u8>,
-    filter_method: RefCell<u8>,
-    interlace_method: RefCell<u8>,
+    compression_method: RefCell<Png_CompressionMethods>,
+    filter_method: RefCell<Png_FilterMethod>,
+    interlace_method: RefCell<Png_InterlaceMethod>,
     _io: RefCell<BytesReader>,
 }
 impl KStruct for Png_IhdrChunk {
@@ -2274,9 +2587,9 @@ impl KStruct for Png_IhdrChunk {
             return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotAnyOf, src_path: "/types/ihdr_chunk/seq/2".to_string() }));
         }
         *self_rc.color_type.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
-        *self_rc.compression_method.borrow_mut() = _io.read_u1()?.into();
-        *self_rc.filter_method.borrow_mut() = _io.read_u1()?.into();
-        *self_rc.interlace_method.borrow_mut() = _io.read_u1()?.into();
+        *self_rc.compression_method.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
+        *self_rc.filter_method.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
+        *self_rc.interlace_method.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
         Ok(())
     }
 }
@@ -2303,17 +2616,17 @@ impl Png_IhdrChunk {
     }
 }
 impl Png_IhdrChunk {
-    pub fn compression_method(&self) -> Ref<'_, u8> {
+    pub fn compression_method(&self) -> Ref<'_, Png_CompressionMethods> {
         self.compression_method.borrow()
     }
 }
 impl Png_IhdrChunk {
-    pub fn filter_method(&self) -> Ref<'_, u8> {
+    pub fn filter_method(&self) -> Ref<'_, Png_FilterMethod> {
         self.filter_method.borrow()
     }
 }
 impl Png_IhdrChunk {
-    pub fn interlace_method(&self) -> Ref<'_, u8> {
+    pub fn interlace_method(&self) -> Ref<'_, Png_InterlaceMethod> {
         self.interlace_method.borrow()
     }
 }
@@ -2328,7 +2641,7 @@ pub struct Png_InternationalText {
     pub _root: SharedType<Png>,
     pub _parent: SharedType<Png_InternationalTextChunk>,
     pub _self: SharedType<Self>,
-    text: RefCell<String>,
+    value: RefCell<String>,
     _io: RefCell<BytesReader>,
 }
 impl KStruct for Png_InternationalText {
@@ -2348,7 +2661,7 @@ impl KStruct for Png_InternationalText {
         let _rrc = self_rc._root.get_value().borrow().upgrade();
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        *self_rc.text.borrow_mut() = bytes_to_str(&_io.read_bytes_full()?.into(), "UTF-8")?;
+        *self_rc.value.borrow_mut() = bytes_to_str(&_io.read_bytes_full()?.into(), "UTF-8")?;
         Ok(())
     }
 }
@@ -2356,13 +2669,19 @@ impl Png_InternationalText {
 }
 
 /**
- * Text contents ("value" of this key-value pair), written in
- * language specified in `language_tag`. Line breaks are
- * allowed.
+ * Text string (the "value" of this key-value pair), written in language
+ * specified in `_parent.language_tag`.
+ * 
+ * Although it is not null-terminated (unlike other textual data in the
+ * `iTXt` chunk), it must not contain a zero byte
+ * (U+0000 NULL character). A newline should be represented by a single
+ * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+ * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+ * discouraged.
  */
 impl Png_InternationalText {
-    pub fn text(&self) -> Ref<'_, String> {
-        self.text.borrow()
+    pub fn value(&self) -> Ref<'_, String> {
+        self.value.borrow()
     }
 }
 impl Png_InternationalText {
@@ -2372,10 +2691,13 @@ impl Png_InternationalText {
 }
 
 /**
- * International text chunk effectively allows to store key-value string pairs in
- * PNG container. Both "key" (keyword) and "value" (text) parts are
- * given in pre-defined subset of iso8859-1 without control
- * characters.
+ * International textual data (`iTXt`) chunk effectively allows you to store
+ * key-value string pairs in the PNG container.
+ * 
+ * The "key" part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)
+ * characters and spaces. The translated keyword and the "value" part
+ * (`text`) are stored in UTF-8 and thus can store text in any language -
+ * this language can be indicated via the language tag (`language_tag`).
  * \sa https://www.w3.org/TR/png/#11iTXt Source
  */
 
@@ -2415,12 +2737,15 @@ impl KStruct for Png_InternationalTextChunk {
         let _rrc = self_rc._root.get_value().borrow().upgrade();
         let _prc = self_rc._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        *self_rc.keyword.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "UTF-8")?;
+        *self_rc.keyword.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "ISO-8859-1")?;
         *self_rc.compression_flag.borrow_mut() = _io.read_u1()?.into();
         if !( ((((*self_rc.compression_flag() as u8) == (0 as u8))) || (((*self_rc.compression_flag() as u8) == (1 as u8)))) ) {
             return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotAnyOf, src_path: "/types/international_text_chunk/seq/1".to_string() }));
         }
         *self_rc.compression_method.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
+        if !(*self_rc.compression_method() == if ((*self_rc.compression_flag() as u8) == (1 as u8)) { Png_CompressionMethods::Zlib.clone() } else { self_rc.compression_method().clone() }) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotEqual, src_path: "/types/international_text_chunk/seq/2".to_string() }));
+        }
         *self_rc.language_tag.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "ASCII")?;
         *self_rc.translated_keyword.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "UTF-8")?;
         if ((*self_rc.compression_flag() as u8) == (0 as u8)) {
@@ -2444,9 +2769,15 @@ impl KStruct for Png_InternationalTextChunk {
 impl Png_InternationalTextChunk {
 
     /**
-     * Text contents ("value" of this key-value pair), written in
-     * language specified in `language_tag`. Line breaks are
-     * allowed.
+     * Text string (the "value" of this key-value pair), written in language
+     * specified in `language_tag`.
+     * 
+     * Although it is not null-terminated (unlike other textual data in the
+     * `iTXt` chunk), it must not contain a zero byte
+     * (U+0000 NULL character). A newline should be represented by a single
+     * U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+     * characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+     * discouraged.
      */
     pub fn text(
         &self
@@ -2459,13 +2790,20 @@ impl Png_InternationalTextChunk {
             return Ok(self.text.borrow());
         }
         self.f_text.set(true);
-        *self.text.borrow_mut() = if ((*self.compression_flag() as u8) == (0 as u8)) { self.text_plain().clone() } else { self.text_zlib().clone() }.text().to_string();
+        *self.text.borrow_mut() = if ((*self.compression_flag() as u8) == (0 as u8)) { self.text_plain().clone() } else { self.text_zlib().clone() }.value().to_string();
         Ok(self.text.borrow())
     }
 }
 
 /**
- * Indicates purpose of the following text data.
+ * Indicates the type of information represented by the text string.
+ * 
+ * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+ * characters and spaces; that is, only code points 0x20-0x7E and
+ * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+ * keyword, leading spaces, trailing spaces, and consecutive spaces are
+ * not permitted.
+ * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source
  */
 impl Png_InternationalTextChunk {
     pub fn keyword(&self) -> Ref<'_, String> {
@@ -2489,9 +2827,20 @@ impl Png_InternationalTextChunk {
 }
 
 /**
- * Human language used in `translated_keyword` and `text`
- * attributes - should be a language code conforming to ISO
- * 646.IRV:1991.
+ * Human language used in the `translated_keyword` and `text` fields.
+ * 
+ * From the [official
+ * specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):
+ * 
+ * > The language tag is a well-formed language tag defined by [RFC 5646:
+ * > BCP 47: Tags for Identifying
+ * > Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the
+ * > keyword, the language tag is case-insensitive. Subtags must appear
+ * > in the [IANA language subtag
+ * > registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+ * > If the language tag is empty, the language is unspecified. Examples
+ * > of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,
+ * > `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.
  */
 impl Png_InternationalTextChunk {
     pub fn language_tag(&self) -> Ref<'_, String> {
@@ -2500,8 +2849,12 @@ impl Png_InternationalTextChunk {
 }
 
 /**
- * Keyword translated into language specified in
- * `language_tag`. Line breaks are not allowed.
+ * The keyword (`keyword`) translated into the language specified in
+ * `language_tag`.
+ * 
+ * It must not contain a zero byte (U+0000 NULL character). Line breaks
+ * should not appear. The remaining control characters (U+0001..U+0009,
+ * U+000B..0+001F, U+007F..U+009F) are discouraged.
  */
 impl Png_InternationalTextChunk {
     pub fn translated_keyword(&self) -> Ref<'_, String> {
@@ -2747,8 +3100,9 @@ impl Png_MdcvChunk {
 }
 
 /**
- * "Physical size" chunk stores data that allows to translate
- * logical pixels into physical units (meters, etc) and vice-versa.
+ * Physical pixel dimensions (`pHYs`) chunk specifies the intended physical
+ * size of the pixels (in meters) or pixel aspect ratio for display of the
+ * image.
  * \sa https://www.w3.org/TR/png/#11pHYs Source
  */
 
@@ -2761,6 +3115,10 @@ pub struct Png_PhysChunk {
     pixels_per_unit_y: RefCell<u32>,
     unit: RefCell<Png_PhysUnit>,
     _io: RefCell<BytesReader>,
+    f_dots_per_inch_x: Cell<bool>,
+    dots_per_inch_x: RefCell<f64>,
+    f_dots_per_inch_y: Cell<bool>,
+    dots_per_inch_y: RefCell<f64>,
 }
 impl KStruct for Png_PhysChunk {
     type Root = Png;
@@ -2786,6 +3144,46 @@ impl KStruct for Png_PhysChunk {
     }
 }
 impl Png_PhysChunk {
+
+    /**
+     * Horizontal resolution (DPI)
+     */
+    pub fn dots_per_inch_x(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_dots_per_inch_x.get() {
+            return Ok(self.dots_per_inch_x.borrow());
+        }
+        self.f_dots_per_inch_x.set(true);
+        if *self.unit() == Png_PhysUnit::Meter {
+            *self.dots_per_inch_x.borrow_mut() = (((*self.pixels_per_unit_x() as f64) * (0.0254 as f64))) as f64;
+        }
+        Ok(self.dots_per_inch_x.borrow())
+    }
+
+    /**
+     * Vertical resolution (DPI)
+     */
+    pub fn dots_per_inch_y(
+        &self
+    ) -> KResult<Ref<'_, f64>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_dots_per_inch_y.get() {
+            return Ok(self.dots_per_inch_y.borrow());
+        }
+        self.f_dots_per_inch_y.set(true);
+        if *self.unit() == Png_PhysUnit::Meter {
+            *self.dots_per_inch_y.borrow_mut() = (((*self.pixels_per_unit_y() as f64) * (0.0254 as f64))) as f64;
+        }
+        Ok(self.dots_per_inch_y.borrow())
+    }
 }
 
 /**
@@ -3013,10 +3411,13 @@ impl Default for Png_SrgbChunk_Intent {
 
 
 /**
- * Text chunk effectively allows to store key-value string pairs in
- * PNG container. Both "key" (keyword) and "value" (text) parts are
- * given in pre-defined subset of iso8859-1 without control
- * characters.
+ * Textual data (`tEXt`) chunk effectively allows you to store key-value
+ * string pairs in the PNG container.
+ * 
+ * Both the "key" (`keyword`) and "value" (`text`) parts are restricted to
+ * printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the
+ * exception that `text` can also contain newlines (U+000A LINE FEED (LF)
+ * characters) and U+00A0 NON-BREAKING SPACE characters.
  * \sa https://www.w3.org/TR/png/#11tEXt Source
  */
 
@@ -3055,13 +3456,30 @@ impl Png_TextChunk {
 }
 
 /**
- * Indicates purpose of the following text data.
+ * Indicates the type of information represented by the text string.
+ * 
+ * Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+ * characters and spaces; that is, only code points 0x20-0x7E and
+ * 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+ * keyword, leading spaces, trailing spaces, and consecutive spaces are
+ * not permitted.
+ * \sa https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source
  */
 impl Png_TextChunk {
     pub fn keyword(&self) -> Ref<'_, String> {
         self.keyword.borrow()
     }
 }
+
+/**
+ * Text string (the "value" of this key-value pair).
+ * 
+ * Although it is not null-terminated (unlike the keyword), it must not
+ * contain a zero byte (U+0000 NULL character). A newline should be
+ * represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+ * The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+ * U+007F..U+009F) are discouraged.
+ */
 impl Png_TextChunk {
     pub fn text(&self) -> Ref<'_, String> {
         self.text.borrow()

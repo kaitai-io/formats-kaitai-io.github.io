@@ -35,6 +35,11 @@ our $DISPOSE_OP_VALUES_NONE = 0;
 our $DISPOSE_OP_VALUES_BACKGROUND = 1;
 our $DISPOSE_OP_VALUES_PREVIOUS = 2;
 
+our $FILTER_METHOD_BASE = 0;
+
+our $INTERLACE_METHOD_NONE = 0;
+our $INTERLACE_METHOD_ADAM7 = 1;
+
 our $PHYS_UNIT_UNKNOWN = 0;
 our $PHYS_UNIT_METER = 1;
 
@@ -58,7 +63,7 @@ sub _read {
     $self->{ihdr_len} = $self->{_io}->read_u4be();
     $self->{ihdr_type} = $self->{_io}->read_bytes(4);
     $self->{ihdr} = Png::IhdrChunk->new($self->{_io}, $self, $self->{_root});
-    $self->{ihdr_crc} = $self->{_io}->read_bytes(4);
+    $self->{ihdr_crc} = $self->{_io}->read_u4be();
     $self->{chunks} = [];
     {
         my $_it;
@@ -590,9 +595,9 @@ sub _read {
     my ($self) = @_;
 
     $self->{len} = $self->{_io}->read_u4be();
-    $self->{type} = Encode::decode("UTF-8", $self->{_io}->read_bytes(4));
+    $self->{type_raw} = $self->{_io}->read_bytes(4);
     {
-        my $_it = $self->{type};
+        my $_it = $self->{type_raw};
     }
     my $_on = $self->type();
     if ($_on eq "PLTE") {
@@ -708,7 +713,42 @@ sub _read {
     else {
         $self->{body} = $self->{_io}->read_bytes($self->len());
     }
-    $self->{crc} = $self->{_io}->read_bytes(4);
+    $self->{crc} = $self->{_io}->read_u4be();
+}
+
+sub is_ancillary {
+    my ($self) = @_;
+    return $self->{is_ancillary} if ($self->{is_ancillary});
+    $self->{is_ancillary} = (unpack('C', substr($self->type_raw(), 0, 1)) & 32) != 0;
+    return $self->{is_ancillary};
+}
+
+sub is_private {
+    my ($self) = @_;
+    return $self->{is_private} if ($self->{is_private});
+    $self->{is_private} = (unpack('C', substr($self->type_raw(), 1, 1)) & 32) != 0;
+    return $self->{is_private};
+}
+
+sub is_safe_to_copy {
+    my ($self) = @_;
+    return $self->{is_safe_to_copy} if ($self->{is_safe_to_copy});
+    $self->{is_safe_to_copy} = (unpack('C', substr($self->type_raw(), 3, 1)) & 32) != 0;
+    return $self->{is_safe_to_copy};
+}
+
+sub reserved_bit {
+    my ($self) = @_;
+    return $self->{reserved_bit} if ($self->{reserved_bit});
+    $self->{reserved_bit} = (unpack('C', substr($self->type_raw(), 2, 1)) & 32) != 0;
+    return $self->{reserved_bit};
+}
+
+sub type {
+    my ($self) = @_;
+    return $self->{type} if ($self->{type});
+    $self->{type} = Encode::decode("ASCII", $self->type_raw());
+    return $self->{type};
 }
 
 sub len {
@@ -716,9 +756,9 @@ sub len {
     return $self->{len};
 }
 
-sub type {
+sub type_raw {
     my ($self) = @_;
-    return $self->{type};
+    return $self->{type_raw};
 }
 
 sub body {
@@ -851,6 +891,44 @@ sub max_frame_average_light_level_int {
 }
 
 ########################################################################
+package Png::CompressedText;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{value} = Encode::decode("ISO-8859-1", $self->{_io}->read_bytes_full());
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+########################################################################
 package Png::CompressedTextChunk;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -880,10 +958,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{keyword} = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{keyword} = Encode::decode("ISO-8859-1", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     $self->{compression_method} = $self->{_io}->read_u1();
-    $self->{_raw_text_datastream} = $self->{_io}->read_bytes_full();
-    $self->{text_datastream} = Compress::Zlib::uncompress($self->{_raw_text_datastream});
+    $self->{_raw__raw_text} = $self->{_io}->read_bytes_full();
+    $self->{_raw_text} = Compress::Zlib::uncompress($self->{_raw__raw_text});
+    my $io__raw_text = IO::KaitaiStruct::Stream->new($self->{_raw_text});
+    $self->{text} = Png::CompressedText->new($io__raw_text, $self, $self->{_root});
 }
 
 sub keyword {
@@ -896,14 +976,19 @@ sub compression_method {
     return $self->{compression_method};
 }
 
-sub text_datastream {
+sub text {
     my ($self) = @_;
-    return $self->{text_datastream};
+    return $self->{text};
 }
 
-sub _raw_text_datastream {
+sub _raw_text {
     my ($self) = @_;
-    return $self->{_raw_text_datastream};
+    return $self->{_raw_text};
+}
+
+sub _raw__raw_text {
+    my ($self) = @_;
+    return $self->{_raw__raw_text};
 }
 
 ########################################################################
@@ -1156,13 +1241,23 @@ sub _read {
     my ($self) = @_;
 
     $self->{gamma_int} = $self->{_io}->read_u4be();
+    {
+        my $_it = $self->{gamma_int};
+    }
 }
 
-sub gamma_ratio {
+sub gamma {
     my ($self) = @_;
-    return $self->{gamma_ratio} if ($self->{gamma_ratio});
-    $self->{gamma_ratio} = 100000.0 / $self->gamma_int();
-    return $self->{gamma_ratio};
+    return $self->{gamma} if ($self->{gamma});
+    $self->{gamma} = $self->gamma_int() / 100000.0;
+    return $self->{gamma};
+}
+
+sub inv_gamma {
+    my ($self) = @_;
+    return $self->{inv_gamma} if ($self->{inv_gamma});
+    $self->{inv_gamma} = 100000.0 / $self->gamma_int();
+    return $self->{inv_gamma};
 }
 
 sub gamma_int {
@@ -1274,12 +1369,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{text} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
+    $self->{value} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
 }
 
-sub text {
+sub value {
     my ($self) = @_;
-    return $self->{text};
+    return $self->{value};
 }
 
 ########################################################################
@@ -1312,7 +1407,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{keyword} = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{keyword} = Encode::decode("ISO-8859-1", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     $self->{compression_flag} = $self->{_io}->read_u1();
     $self->{compression_method} = $self->{_io}->read_u1();
     $self->{language_tag} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
@@ -1333,7 +1428,7 @@ sub _read {
 sub text {
     my ($self) = @_;
     return $self->{text} if ($self->{text});
-    $self->{text} = ($self->compression_flag() == 0 ? $self->text_plain() : $self->text_zlib())->text();
+    $self->{text} = ($self->compression_flag() == 0 ? $self->text_plain() : $self->text_zlib())->value();
     return $self->{text};
 }
 
@@ -1560,6 +1655,24 @@ sub _read {
     $self->{pixels_per_unit_x} = $self->{_io}->read_u4be();
     $self->{pixels_per_unit_y} = $self->{_io}->read_u4be();
     $self->{unit} = $self->{_io}->read_u1();
+}
+
+sub dots_per_inch_x {
+    my ($self) = @_;
+    return $self->{dots_per_inch_x} if ($self->{dots_per_inch_x});
+    if ($self->unit() == $Png::PHYS_UNIT_METER) {
+        $self->{dots_per_inch_x} = $self->pixels_per_unit_x() * 0.0254;
+    }
+    return $self->{dots_per_inch_x};
+}
+
+sub dots_per_inch_y {
+    my ($self) = @_;
+    return $self->{dots_per_inch_y} if ($self->{dots_per_inch_y});
+    if ($self->unit() == $Png::PHYS_UNIT_METER) {
+        $self->{dots_per_inch_y} = $self->pixels_per_unit_y() * 0.0254;
+    }
+    return $self->{dots_per_inch_y};
 }
 
 sub pixels_per_unit_x {

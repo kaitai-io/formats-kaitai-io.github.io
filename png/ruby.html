@@ -370,6 +370,17 @@ section#format-index .row {
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__DISPOSE_OP_VALUES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DISPOSE_OP_VALUES</span><span class="o">.</span><span class="n">invert</span>
 
+<span class="w">  </span><span class="no">FILTER_METHOD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:filter_method_base</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="no">I__FILTER_METHOD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FILTER_METHOD</span><span class="o">.</span><span class="n">invert</span>
+
+<span class="w">  </span><span class="no">INTERLACE_METHOD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:interlace_method_none</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:interlace_method_adam7</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="no">I__INTERLACE_METHOD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">INTERLACE_METHOD</span><span class="o">.</span><span class="n">invert</span>
+
 <span class="w">  </span><span class="no">PHYS_UNIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:phys_unit_unknown</span><span class="p">,</span>
 <span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:phys_unit_meter</span><span class="p">,</span>
@@ -388,7 +399,7 @@ section#format-index .row {
 <span class="w">    </span><span class="vi">@ihdr_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="vi">@ihdr_type</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@ihdr_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@ihdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">IhdrChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">    </span><span class="vi">@ihdr_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@ihdr_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">    </span><span class="vi">@chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
 <span class="w">    </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">    </span><span class="k">begin</span>
@@ -417,7 +428,7 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#acTL-chunk Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">AnimationControlChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
@@ -431,7 +442,8 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Number of frames, must be equal to the number of `frame_control_chunk`s</span>
+<span class="w">    </span><span class="c1"># Number of frames, must be equal to the number of `fcTL` chunks (i.e.</span>
+<span class="w">    </span><span class="c1"># `frame_control_chunk` objects)</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_frames</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -627,9 +639,9 @@ section#format-index .row {
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">      </span><span class="vi">@len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@type</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationExprError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@type</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\000\000\000\000</span><span class="s2">&quot;</span>
+<span class="w">      </span><span class="vi">@type_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@type_raw</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationExprError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@type_raw</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w">  </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span>
 <span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">type</span>
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;PLTE&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
@@ -700,11 +712,61 @@ section#format-index .row {
 <span class="w">      </span><span class="k">else</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="vi">@crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># false = critical chunk, true = ancillary chunk</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_ancillary</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_ancillary</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_ancillary</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_ancillary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">type_raw</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@is_ancillary</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># false = public chunk (defined by the W3C), true = private chunk (can</span>
+<span class="w">    </span><span class="c1"># be defined by anyone)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_private</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_private</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_private</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_private</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">type_raw</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@is_private</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Defines whether the chunk may be copied if the image data (i.e.</span>
+<span class="w">    </span><span class="c1"># pixels) is modified. This tells PNG editors how to handle unknown</span>
+<span class="w">    </span><span class="c1"># chunks - see section [14.2 Behavior of PNG</span>
+<span class="w">    </span><span class="c1"># editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in</span>
+<span class="w">    </span><span class="c1"># the official specification.</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_safe_to_copy</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_safe_to_copy</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_safe_to_copy</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_safe_to_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">type_raw</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@is_safe_to_copy</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Should be `false`, i.e. all chunk types should have uppercase third</span>
+<span class="w">    </span><span class="c1"># letters (the lowercase third letter is reserved for possible future</span>
+<span class="w">    </span><span class="c1"># extensions to the PNG standard)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">reserved_bit</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@reserved_bit</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@reserved_bit</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@reserved_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">type_raw</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">ord</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@reserved_bit</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">type</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@type</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@type</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">type_raw</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@type</span>
+<span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:type</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Each byte of a chunk type is restricted to the hexadecimal values</span>
+<span class="w">    </span><span class="c1"># 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters</span>
+<span class="w">    </span><span class="c1"># (`A-Z` and `a-z`).</span>
+<span class="w">    </span><span class="c1"># @see https://www.w3.org/TR/2025/REC-png-3-20250624/#table51 Source</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:type_raw</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:body</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:crc</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_body</span>
@@ -795,11 +857,35 @@ section#format-index .row {
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:max_content_light_level_int</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:max_frame_average_light_level_int</span>
 <span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">CompressedText</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Text string (the &quot;value&quot; of this key-value pair).</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Although it is not null-terminated (unlike the keyword), it must not</span>
+<span class="w">    </span><span class="c1"># contain a zero byte (U+0000 NULL character). A newline should be</span>
+<span class="w">    </span><span class="c1"># represented by a single U+000A LINE FEED (LF) character (aka `\n`).</span>
+<span class="w">    </span><span class="c1"># The remaining control characters (U+0001..U+0009, U+000B..0+001F,</span>
+<span class="w">    </span><span class="c1"># U+007F..U+009F) are discouraged.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value</span>
+<span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># Compressed text chunk effectively allows to store key-value</span>
-<span class="w">  </span><span class="c1"># string pairs in PNG container, compressing &quot;value&quot; part (which</span>
-<span class="w">  </span><span class="c1"># can be quite lengthy) with zlib compression.</span>
+<span class="w">  </span><span class="c1"># Compressed textual data (`zTXt`) chunk effectively allows you to store</span>
+<span class="w">  </span><span class="c1"># key-value string pairs in the PNG container, compressing the &quot;value&quot; part</span>
+<span class="w">  </span><span class="c1"># (which can be quite lengthy) with zlib compression.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`</span>
+<span class="w">  </span><span class="c1"># chunk is recommended for storing large blocks of text.</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11zTXt Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">CompressedTextChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
@@ -808,19 +894,30 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COMPRESSION_METHODS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@_raw_text_datastream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
-<span class="w">      </span><span class="vi">@text_datastream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Zlib</span><span class="o">::</span><span class="no">Inflate</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="vi">@_raw_text_datastream</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:compression_methods_zlib</span><span class="p">,</span><span class="w"> </span><span class="vi">@compression_method</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/compressed_text_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:compression_methods_zlib</span>
+<span class="w">      </span><span class="vi">@_raw__raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+<span class="w">      </span><span class="vi">@_raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Zlib</span><span class="o">::</span><span class="no">Inflate</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="vi">@_raw__raw_text</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_io__raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_text</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">CompressedText</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_text</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Indicates purpose of the following text data.</span>
+<span class="w">    </span><span class="c1"># Indicates the type of information represented by the text string.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="w">    </span><span class="c1"># characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="w">    </span><span class="c1"># 0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="w">    </span><span class="c1"># keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="w">    </span><span class="c1"># not permitted.</span>
+<span class="w">    </span><span class="c1"># @see https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:keyword</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:compression_method</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text_datastream</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_text_datastream</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_text</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw__raw_text</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
@@ -876,7 +973,7 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#fcTL-chunk Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">FrameControlChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
@@ -898,7 +995,9 @@ section#format-index .row {
 <span class="w">      </span><span class="vi">@delay_num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
 <span class="w">      </span><span class="vi">@delay_den</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
 <span class="w">      </span><span class="vi">@dispose_op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">DISPOSE_OP_VALUES</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotInEnumError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@dispose_op</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/7&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="no">Png</span><span class="o">::</span><span class="no">I__DISPOSE_OP_VALUES</span><span class="o">.</span><span class="n">key?</span><span class="p">(</span><span class="vi">@dispose_op</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@blend_op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">BLEND_OP_VALUES</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotInEnumError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@blend_op</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/8&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="no">Png</span><span class="o">::</span><span class="no">I__BLEND_OP_VALUES</span><span class="o">.</span><span class="n">key?</span><span class="p">(</span><span class="vi">@blend_op</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 
@@ -911,7 +1010,19 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Sequence number of the animation chunk</span>
+<span class="w">    </span><span class="c1"># Sequence number of the animation chunk, starting from 0.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk</span>
+<span class="w">    </span><span class="c1"># types share the sequence. The purpose of this number is to detect (and</span>
+<span class="w">    </span><span class="c1"># optionally correct) sequence errors in an Animated PNG, since the PNG</span>
+<span class="w">    </span><span class="c1"># specification does not impose ordering restrictions on ancillary</span>
+<span class="w">    </span><span class="c1"># chunks (which means that a PNG editor is technically allowed to</span>
+<span class="w">    </span><span class="c1"># reorder them arbitrarily, see [14.2 Behavior of PNG</span>
+<span class="w">    </span><span class="c1"># editors](https://www.w3.org/TR/png/#14Ordering) in the spec).</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># The first `fcTL` chunk must contain sequence number 0, and the</span>
+<span class="w">    </span><span class="c1"># sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in</span>
+<span class="w">    </span><span class="c1"># ascending order, with no gaps or duplicates.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sequence_number</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -948,7 +1059,7 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#fdAT-chunk Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">FrameDataChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
@@ -962,17 +1073,27 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Sequence number of the animation chunk. The fcTL and fdAT chunks</span>
-<span class="w">    </span><span class="c1"># have a 4 byte sequence number. Both chunk types share the sequence.</span>
-<span class="w">    </span><span class="c1"># The first fcTL chunk must contain sequence number 0, and the sequence</span>
-<span class="w">    </span><span class="c1"># numbers in the remaining fcTL and fdAT chunks must be in order, with</span>
-<span class="w">    </span><span class="c1"># no gaps or duplicates.</span>
+<span class="w">    </span><span class="c1"># Sequence number of the animation chunk, starting from 0.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk</span>
+<span class="w">    </span><span class="c1"># types share the sequence. The purpose of this number is to detect (and</span>
+<span class="w">    </span><span class="c1"># optionally correct) sequence errors in an Animated PNG, since the PNG</span>
+<span class="w">    </span><span class="c1"># specification does not impose ordering restrictions on ancillary</span>
+<span class="w">    </span><span class="c1"># chunks (which means that a PNG editor is technically allowed to</span>
+<span class="w">    </span><span class="c1"># reorder them arbitrarily, see [14.2 Behavior of PNG</span>
+<span class="w">    </span><span class="c1"># editors](https://www.w3.org/TR/png/#14Ordering) in the spec).</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># The first `fcTL` chunk must contain sequence number 0, and the</span>
+<span class="w">    </span><span class="c1"># sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in</span>
+<span class="w">    </span><span class="c1"># ascending order, with no gaps or duplicates.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sequence_number</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Frame data for the frame. At least one fdAT chunk is required for</span>
-<span class="w">    </span><span class="c1"># each frame. The compressed datastream is the concatenation of the</span>
-<span class="w">    </span><span class="c1"># contents of the data fields of all the fdAT chunks within a frame.</span>
+<span class="w">    </span><span class="c1"># Frame data for the frame. At least one `fdAT` chunk is required for</span>
+<span class="w">    </span><span class="c1"># each frame, except for the first frame, if that frame is represented</span>
+<span class="w">    </span><span class="c1"># by an `IDAT` chunk. The compressed datastream for each frame is the</span>
+<span class="w">    </span><span class="c1"># concatenation of the contents of the data fields of all the `fdAT`</span>
+<span class="w">    </span><span class="c1"># chunks within a frame.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:frame_data</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -986,13 +1107,31 @@ section#format-index .row {
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">      </span><span class="vi">@gamma_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@gamma_int</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationExprError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@gamma_int</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/gama_chunk/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">gamma_ratio</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@gamma_ratio</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@gamma_ratio</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@gamma_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gamma_int</span>
-<span class="w">      </span><span class="vi">@gamma_ratio</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Image gamma, typically 0.45455 = 1/2.2</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">gamma</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@gamma</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@gamma</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gamma_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@gamma</span>
 <span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Inverse of the image gamma (1 / gamma), typically 2.2 (not considering</span>
+<span class="w">    </span><span class="c1"># rounding)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">inv_gamma</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@inv_gamma</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@inv_gamma</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@inv_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gamma_int</span>
+<span class="w">      </span><span class="vi">@inv_gamma</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as</span>
+<span class="w">    </span><span class="c1"># 45455)</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:gamma_int</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -1012,9 +1151,13 @@ section#format-index .row {
 <span class="w">      </span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
 <span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotAnyOfError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@bit_depth</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/ihdr_chunk/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w">  </span><span class="p">((</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">16</span><span class="p">))</span><span class="w"> </span>
 <span class="w">      </span><span class="vi">@color_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COLOR_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@interlace_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotInEnumError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@color_type</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/ihdr_chunk/seq/3&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="no">Png</span><span class="o">::</span><span class="no">I__COLOR_TYPE</span><span class="o">.</span><span class="n">key?</span><span class="p">(</span><span class="vi">@color_type</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COMPRESSION_METHODS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotInEnumError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@compression_method</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/ihdr_chunk/seq/4&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="no">Png</span><span class="o">::</span><span class="no">I__COMPRESSION_METHODS</span><span class="o">.</span><span class="n">key?</span><span class="p">(</span><span class="vi">@compression_method</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">FILTER_METHOD</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotInEnumError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@filter_method</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/ihdr_chunk/seq/5&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="no">Png</span><span class="o">::</span><span class="no">I__FILTER_METHOD</span><span class="o">.</span><span class="n">key?</span><span class="p">(</span><span class="vi">@filter_method</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@interlace_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">INTERLACE_METHOD</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotInEnumError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@interlace_method</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/ihdr_chunk/seq/6&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="no">Png</span><span class="o">::</span><span class="no">I__INTERLACE_METHOD</span><span class="o">.</span><span class="n">key?</span><span class="p">(</span><span class="vi">@interlace_method</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:width</span>
@@ -1032,22 +1175,31 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="w">    </span><span class="c1"># language specified in `language_tag`. Line breaks are</span>
-<span class="w">    </span><span class="c1"># allowed.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text</span>
+<span class="w">    </span><span class="c1"># Text string (the &quot;value&quot; of this key-value pair), written in language</span>
+<span class="w">    </span><span class="c1"># specified in `_parent.language_tag`.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Although it is not null-terminated (unlike other textual data in the</span>
+<span class="w">    </span><span class="c1"># `iTXt` chunk), it must not contain a zero byte</span>
+<span class="w">    </span><span class="c1"># (U+0000 NULL character). A newline should be represented by a single</span>
+<span class="w">    </span><span class="c1"># U+000A LINE FEED (LF) character (aka `\n`). The remaining control</span>
+<span class="w">    </span><span class="c1"># characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are</span>
+<span class="w">    </span><span class="c1"># discouraged.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># International text chunk effectively allows to store key-value string pairs in</span>
-<span class="w">  </span><span class="c1"># PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
-<span class="w">  </span><span class="c1"># given in pre-defined subset of iso8859-1 without control</span>
-<span class="w">  </span><span class="c1"># characters.</span>
+<span class="w">  </span><span class="c1"># International textual data (`iTXt`) chunk effectively allows you to store</span>
+<span class="w">  </span><span class="c1"># key-value string pairs in the PNG container.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># The &quot;key&quot; part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)</span>
+<span class="w">  </span><span class="c1"># characters and spaces. The translated keyword and the &quot;value&quot; part</span>
+<span class="w">  </span><span class="c1"># (`text`) are stored in UTF-8 and thus can store text in any language -</span>
+<span class="w">  </span><span class="c1"># this language can be indicated via the language tag (`language_tag`).</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11iTXt Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">InternationalTextChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
@@ -1056,10 +1208,11 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@compression_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
 <span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotAnyOfError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@compression_flag</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/international_text_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w">  </span><span class="p">((</span><span class="vi">@compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span>
 <span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COMPRESSION_METHODS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="ss">:compression_methods_zlib</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">compression_method</span><span class="p">),</span><span class="w"> </span><span class="vi">@compression_method</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/international_text_chunk/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="ss">:compression_methods_zlib</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">compression_method</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@language_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@translated_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
@@ -1077,17 +1230,30 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="w">    </span><span class="c1"># language specified in `language_tag`. Line breaks are</span>
-<span class="w">    </span><span class="c1"># allowed.</span>
+<span class="w">    </span><span class="c1"># Text string (the &quot;value&quot; of this key-value pair), written in language</span>
+<span class="w">    </span><span class="c1"># specified in `language_tag`.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Although it is not null-terminated (unlike other textual data in the</span>
+<span class="w">    </span><span class="c1"># `iTXt` chunk), it must not contain a zero byte</span>
+<span class="w">    </span><span class="c1"># (U+0000 NULL character). A newline should be represented by a single</span>
+<span class="w">    </span><span class="c1"># U+000A LINE FEED (LF) character (aka `\n`). The remaining control</span>
+<span class="w">    </span><span class="c1"># characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are</span>
+<span class="w">    </span><span class="c1"># discouraged.</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">text</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@text</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@text</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">text_plain</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">text_zlib</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+<span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">text_plain</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">text_zlib</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
 <span class="w">      </span><span class="vi">@text</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Indicates purpose of the following text data.</span>
+<span class="w">    </span><span class="c1"># Indicates the type of information represented by the text string.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="w">    </span><span class="c1"># characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="w">    </span><span class="c1"># 0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="w">    </span><span class="c1"># keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="w">    </span><span class="c1"># not permitted.</span>
+<span class="w">    </span><span class="c1"># @see https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:keyword</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -1097,14 +1263,29 @@ section#format-index .row {
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:compression_method</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Human language used in `translated_keyword` and `text`</span>
-<span class="w">    </span><span class="c1"># attributes - should be a language code conforming to ISO</span>
-<span class="w">    </span><span class="c1"># 646.IRV:1991.</span>
+<span class="w">    </span><span class="c1"># Human language used in the `translated_keyword` and `text` fields.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># From the [official</span>
+<span class="w">    </span><span class="c1"># specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># &gt; The language tag is a well-formed language tag defined by [RFC 5646:</span>
+<span class="w">    </span><span class="c1"># &gt; BCP 47: Tags for Identifying</span>
+<span class="w">    </span><span class="c1"># &gt; Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the</span>
+<span class="w">    </span><span class="c1"># &gt; keyword, the language tag is case-insensitive. Subtags must appear</span>
+<span class="w">    </span><span class="c1"># &gt; in the [IANA language subtag</span>
+<span class="w">    </span><span class="c1"># &gt; registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).</span>
+<span class="w">    </span><span class="c1"># &gt; If the language tag is empty, the language is unspecified. Examples</span>
+<span class="w">    </span><span class="c1"># &gt; of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,</span>
+<span class="w">    </span><span class="c1"># &gt; `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:language_tag</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Keyword translated into language specified in</span>
-<span class="w">    </span><span class="c1"># `language_tag`. Line breaks are not allowed.</span>
+<span class="w">    </span><span class="c1"># The keyword (`keyword`) translated into the language specified in</span>
+<span class="w">    </span><span class="c1"># `language_tag`.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># It must not contain a zero byte (U+0000 NULL character). Line breaks</span>
+<span class="w">    </span><span class="c1"># should not appear. The remaining control characters (U+0001..U+0009,</span>
+<span class="w">    </span><span class="c1"># U+000B..0+001F, U+007F..U+009F) are discouraged.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:translated_keyword</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text_plain</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text_zlib</span>
@@ -1180,8 +1361,9 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># &quot;Physical size&quot; chunk stores data that allows to translate</span>
-<span class="w">  </span><span class="c1"># logical pixels into physical units (meters, etc) and vice-versa.</span>
+<span class="w">  </span><span class="c1"># Physical pixel dimensions (`pHYs`) chunk specifies the intended physical</span>
+<span class="w">  </span><span class="c1"># size of the pixels (in meters) or pixel aspect ratio for display of the</span>
+<span class="w">  </span><span class="c1"># image.</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11pHYs Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">PhysChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
@@ -1193,7 +1375,28 @@ section#format-index .row {
 <span class="w">      </span><span class="vi">@pixels_per_unit_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="vi">@pixels_per_unit_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="vi">@unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">PHYS_UNIT</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotInEnumError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@unit</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/phys_chunk/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="no">Png</span><span class="o">::</span><span class="no">I__PHYS_UNIT</span><span class="o">.</span><span class="n">key?</span><span class="p">(</span><span class="vi">@unit</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Horizontal resolution (DPI)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">dots_per_inch_x</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@dots_per_inch_x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@dots_per_inch_x</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">unit</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:phys_unit_meter</span>
+<span class="w">        </span><span class="vi">@dots_per_inch_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pixels_per_unit_x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="o">.</span><span class="mo">0254</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@dots_per_inch_x</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Vertical resolution (DPI)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">dots_per_inch_y</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@dots_per_inch_y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@dots_per_inch_y</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">unit</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:phys_unit_meter</span>
+<span class="w">        </span><span class="vi">@dots_per_inch_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pixels_per_unit_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">0</span><span class="o">.</span><span class="mo">0254</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@dots_per_inch_y</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -1262,16 +1465,20 @@ section#format-index .row {
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">      </span><span class="vi">@render_intent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">INTENT</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotInEnumError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@render_intent</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/srgb_chunk/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="no">I__INTENT</span><span class="o">.</span><span class="n">key?</span><span class="p">(</span><span class="vi">@render_intent</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:render_intent</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># Text chunk effectively allows to store key-value string pairs in</span>
-<span class="w">  </span><span class="c1"># PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
-<span class="w">  </span><span class="c1"># given in pre-defined subset of iso8859-1 without control</span>
-<span class="w">  </span><span class="c1"># characters.</span>
+<span class="w">  </span><span class="c1"># Textual data (`tEXt`) chunk effectively allows you to store key-value</span>
+<span class="w">  </span><span class="c1"># string pairs in the PNG container.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># Both the &quot;key&quot; (`keyword`) and &quot;value&quot; (`text`) parts are restricted to</span>
+<span class="w">  </span><span class="c1"># printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the</span>
+<span class="w">  </span><span class="c1"># exception that `text` can also contain newlines (U+000A LINE FEED (LF)</span>
+<span class="w">  </span><span class="c1"># characters) and U+00A0 NON-BREAKING SPACE characters.</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11tEXt Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">TextChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
@@ -1286,8 +1493,24 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Indicates purpose of the following text data.</span>
+<span class="w">    </span><span class="c1"># Indicates the type of information represented by the text string.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="w">    </span><span class="c1"># characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="w">    </span><span class="c1"># 0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="w">    </span><span class="c1"># keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="w">    </span><span class="c1"># not permitted.</span>
+<span class="w">    </span><span class="c1"># @see https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords Source</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:keyword</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Text string (the &quot;value&quot; of this key-value pair).</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Although it is not null-terminated (unlike the keyword), it must not</span>
+<span class="w">    </span><span class="c1"># contain a zero byte (U+0000 NULL character). A newline should be</span>
+<span class="w">    </span><span class="c1"># represented by a single U+000A LINE FEED (LF) character (aka `\n`).</span>
+<span class="w">    </span><span class="c1"># The remaining control characters (U+0001..U+0009, U+000B..0+001F,</span>
+<span class="w">    </span><span class="c1"># U+007F..U+009F) are discouraged.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:text</span>
 <span class="w">  </span><span class="k">end</span>
 

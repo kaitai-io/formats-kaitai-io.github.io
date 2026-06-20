@@ -47,6 +47,17 @@ namespace Kaitai
             Previous = 2,
         }
 
+        public enum FilterMethod
+        {
+            Base = 0,
+        }
+
+        public enum InterlaceMethod
+        {
+            None = 0,
+            Adam7 = 1,
+        }
+
         public enum PhysUnit
         {
             Unknown = 0,
@@ -76,7 +87,7 @@ namespace Kaitai
                 throw new ValidationNotEqualError(new byte[] { 73, 72, 68, 82 }, _ihdrType, m_io, "/seq/2");
             }
             _ihdr = new IhdrChunk(m_io, this, m_root);
-            _ihdrCrc = m_io.ReadBytes(4);
+            _ihdrCrc = m_io.ReadU4be();
             _chunks = new List<Chunk>();
             {
                 var i = 0;
@@ -121,7 +132,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#acTL-chunk">Source</a>
         /// </remarks>
         public partial class AnimationControlChunk : KaitaiStruct
         {
@@ -147,7 +158,8 @@ namespace Kaitai
             private Png.Chunk m_parent;
 
             /// <summary>
-            /// Number of frames, must be equal to the number of `frame_control_chunk`s
+            /// Number of frames, must be equal to the number of `fcTL` chunks (i.e.
+            /// `frame_control_chunk` objects)
             /// </summary>
             public uint NumFrames { get { return _numFrames; } }
 
@@ -500,17 +512,22 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_isAncillary = false;
+                f_isPrivate = false;
+                f_isSafeToCopy = false;
+                f_reservedBit = false;
+                f_type = false;
                 _read();
             }
             private void _read()
             {
                 _len = m_io.ReadU4be();
-                _type = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _typeRaw = m_io.ReadBytes(4);
                 {
-                    string M_ = _type;
-                    if (!(Type != "\0\0\0\0"))
+                    byte[] M_ = _typeRaw;
+                    if (!( (( (( ((M_[0] >= 65) && (M_[0] <= 90)) ) || ( ((M_[0] >= 97) && (M_[0] <= 122)) )) ) && ( (( ((M_[1] >= 65) && (M_[1] <= 90)) ) || ( ((M_[1] >= 97) && (M_[1] <= 122)) )) ) && ( (( ((M_[2] >= 65) && (M_[2] <= 90)) ) || ( ((M_[2] >= 97) && (M_[2] <= 122)) )) ) && ( (( ((M_[3] >= 65) && (M_[3] <= 90)) ) || ( ((M_[3] >= 97) && (M_[3] <= 122)) )) )) ))
                     {
-                        throw new ValidationExprError(_type, m_io, "/types/chunk/seq/1");
+                        throw new ValidationExprError(_typeRaw, m_io, "/types/chunk/seq/1");
                     }
                 }
                 switch (Type) {
@@ -651,19 +668,116 @@ namespace Kaitai
                     break;
                 }
                 }
-                _crc = m_io.ReadBytes(4);
+                _crc = m_io.ReadU4be();
+            }
+            private bool f_isAncillary;
+            private bool _isAncillary;
+
+            /// <summary>
+            /// false = critical chunk, true = ancillary chunk
+            /// </summary>
+            public bool IsAncillary
+            {
+                get
+                {
+                    if (f_isAncillary)
+                        return _isAncillary;
+                    f_isAncillary = true;
+                    _isAncillary = (bool) ((TypeRaw[0] & 32) != 0);
+                    return _isAncillary;
+                }
+            }
+            private bool f_isPrivate;
+            private bool _isPrivate;
+
+            /// <summary>
+            /// false = public chunk (defined by the W3C), true = private chunk (can
+            /// be defined by anyone)
+            /// </summary>
+            public bool IsPrivate
+            {
+                get
+                {
+                    if (f_isPrivate)
+                        return _isPrivate;
+                    f_isPrivate = true;
+                    _isPrivate = (bool) ((TypeRaw[1] & 32) != 0);
+                    return _isPrivate;
+                }
+            }
+            private bool f_isSafeToCopy;
+            private bool _isSafeToCopy;
+
+            /// <summary>
+            /// Defines whether the chunk may be copied if the image data (i.e.
+            /// pixels) is modified. This tells PNG editors how to handle unknown
+            /// chunks - see section [14.2 Behavior of PNG
+            /// editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in
+            /// the official specification.
+            /// </summary>
+            public bool IsSafeToCopy
+            {
+                get
+                {
+                    if (f_isSafeToCopy)
+                        return _isSafeToCopy;
+                    f_isSafeToCopy = true;
+                    _isSafeToCopy = (bool) ((TypeRaw[3] & 32) != 0);
+                    return _isSafeToCopy;
+                }
+            }
+            private bool f_reservedBit;
+            private bool _reservedBit;
+
+            /// <summary>
+            /// Should be `false`, i.e. all chunk types should have uppercase third
+            /// letters (the lowercase third letter is reserved for possible future
+            /// extensions to the PNG standard)
+            /// </summary>
+            public bool ReservedBit
+            {
+                get
+                {
+                    if (f_reservedBit)
+                        return _reservedBit;
+                    f_reservedBit = true;
+                    _reservedBit = (bool) ((TypeRaw[2] & 32) != 0);
+                    return _reservedBit;
+                }
+            }
+            private bool f_type;
+            private string _type;
+            public string Type
+            {
+                get
+                {
+                    if (f_type)
+                        return _type;
+                    f_type = true;
+                    _type = (string) (System.Text.Encoding.GetEncoding("ASCII").GetString(TypeRaw));
+                    return _type;
+                }
             }
             private uint _len;
-            private string _type;
+            private byte[] _typeRaw;
             private object _body;
-            private byte[] _crc;
+            private uint _crc;
             private Png m_root;
             private Png m_parent;
             private byte[] __raw_body;
             public uint Len { get { return _len; } }
-            public string Type { get { return _type; } }
+
+            /// <summary>
+            /// Each byte of a chunk type is restricted to the hexadecimal values
+            /// 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters
+            /// (`A-Z` and `a-z`).
+            /// </summary>
+            /// <remarks>
+            /// Reference: <a href="https://www.w3.org/TR/2025/REC-png-3-20250624/#table51">Source</a>
+            /// </remarks>
+            public byte[] TypeRaw { get { return _typeRaw; } }
             public object Body { get { return _body; } }
-            public byte[] Crc { get { return _crc; } }
+            public uint Crc { get { return _crc; } }
             public Png M_Root { get { return m_root; } }
             public Png M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
@@ -818,11 +932,48 @@ namespace Kaitai
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
+        public partial class CompressedText : KaitaiStruct
+        {
+            public static CompressedText FromFile(string fileName)
+            {
+                return new CompressedText(new KaitaiStream(fileName));
+            }
+
+            public CompressedText(KaitaiStream p__io, Png.CompressedTextChunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _value = System.Text.Encoding.GetEncoding("ISO-8859-1").GetString(m_io.ReadBytesFull());
+            }
+            private string _value;
+            private Png m_root;
+            private Png.CompressedTextChunk m_parent;
+
+            /// <summary>
+            /// Text string (the &quot;value&quot; of this key-value pair).
+            /// 
+            /// Although it is not null-terminated (unlike the keyword), it must not
+            /// contain a zero byte (U+0000 NULL character). A newline should be
+            /// represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+            /// The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+            /// U+007F..U+009F) are discouraged.
+            /// </summary>
+            public string Value { get { return _value; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.CompressedTextChunk M_Parent { get { return m_parent; } }
+        }
 
         /// <summary>
-        /// Compressed text chunk effectively allows to store key-value
-        /// string pairs in PNG container, compressing &quot;value&quot; part (which
-        /// can be quite lengthy) with zlib compression.
+        /// Compressed textual data (`zTXt`) chunk effectively allows you to store
+        /// key-value string pairs in the PNG container, compressing the &quot;value&quot; part
+        /// (which can be quite lengthy) with zlib compression.
+        /// 
+        /// The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`
+        /// chunk is recommended for storing large blocks of text.
         /// </summary>
         /// <remarks>
         /// Reference: <a href="https://www.w3.org/TR/png/#11zTXt">Source</a>
@@ -842,27 +993,44 @@ namespace Kaitai
             }
             private void _read()
             {
-                _keyword = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                _keyword = System.Text.Encoding.GetEncoding("ISO-8859-1").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _compressionMethod = ((Png.CompressionMethods) m_io.ReadU1());
-                __raw_textDatastream = m_io.ReadBytesFull();
-                _textDatastream = m_io.ProcessZlib(__raw_textDatastream);
+                if (!(_compressionMethod == Png.CompressionMethods.Zlib))
+                {
+                    throw new ValidationNotEqualError(Png.CompressionMethods.Zlib, _compressionMethod, m_io, "/types/compressed_text_chunk/seq/1");
+                }
+                __raw__raw_text = m_io.ReadBytesFull();
+                __raw_text = m_io.ProcessZlib(__raw__raw_text);
+                var io___raw_text = new KaitaiStream(__raw_text);
+                _text = new CompressedText(io___raw_text, this, m_root);
             }
             private string _keyword;
             private CompressionMethods _compressionMethod;
-            private byte[] _textDatastream;
+            private CompressedText _text;
             private Png m_root;
             private Png.Chunk m_parent;
-            private byte[] __raw_textDatastream;
+            private byte[] __raw_text;
+            private byte[] __raw__raw_text;
 
             /// <summary>
-            /// Indicates purpose of the following text data.
+            /// Indicates the type of information represented by the text string.
+            /// 
+            /// Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+            /// characters and spaces; that is, only code points 0x20-0x7E and
+            /// 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+            /// keyword, leading spaces, trailing spaces, and consecutive spaces are
+            /// not permitted.
             /// </summary>
+            /// <remarks>
+            /// Reference: <a href="https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords">Source</a>
+            /// </remarks>
             public string Keyword { get { return _keyword; } }
             public CompressionMethods CompressionMethod { get { return _compressionMethod; } }
-            public byte[] TextDatastream { get { return _textDatastream; } }
+            public CompressedText Text { get { return _text; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
-            public byte[] M_RawTextDatastream { get { return __raw_textDatastream; } }
+            public byte[] M_RawText { get { return __raw_text; } }
+            public byte[] M_RawM_RawText { get { return __raw__raw_text; } }
         }
 
         /// <remarks>
@@ -948,7 +1116,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#fcTL-chunk">Source</a>
         /// </remarks>
         public partial class FrameControlChunk : KaitaiStruct
         {
@@ -998,7 +1166,15 @@ namespace Kaitai
                 _delayNum = m_io.ReadU2be();
                 _delayDen = m_io.ReadU2be();
                 _disposeOp = ((Png.DisposeOpValues) m_io.ReadU1());
+                if (!Enum.IsDefined(typeof(DisposeOpValues), _disposeOp))
+                {
+                    throw new ValidationNotInEnumError(_disposeOp, m_io, "/types/frame_control_chunk/seq/7");
+                }
                 _blendOp = ((Png.BlendOpValues) m_io.ReadU1());
+                if (!Enum.IsDefined(typeof(BlendOpValues), _blendOp))
+                {
+                    throw new ValidationNotInEnumError(_blendOp, m_io, "/types/frame_control_chunk/seq/8");
+                }
             }
             private bool f_delay;
             private double _delay;
@@ -1030,7 +1206,19 @@ namespace Kaitai
             private Png.Chunk m_parent;
 
             /// <summary>
-            /// Sequence number of the animation chunk
+            /// Sequence number of the animation chunk, starting from 0.
+            /// 
+            /// The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+            /// types share the sequence. The purpose of this number is to detect (and
+            /// optionally correct) sequence errors in an Animated PNG, since the PNG
+            /// specification does not impose ordering restrictions on ancillary
+            /// chunks (which means that a PNG editor is technically allowed to
+            /// reorder them arbitrarily, see [14.2 Behavior of PNG
+            /// editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+            /// 
+            /// The first `fcTL` chunk must contain sequence number 0, and the
+            /// sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+            /// ascending order, with no gaps or duplicates.
             /// </summary>
             public uint SequenceNumber { get { return _sequenceNumber; } }
 
@@ -1078,7 +1266,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk">Source</a>
+        /// Reference: <a href="https://www.w3.org/TR/png/#fdAT-chunk">Source</a>
         /// </remarks>
         public partial class FrameDataChunk : KaitaiStruct
         {
@@ -1104,18 +1292,28 @@ namespace Kaitai
             private Png.Chunk m_parent;
 
             /// <summary>
-            /// Sequence number of the animation chunk. The fcTL and fdAT chunks
-            /// have a 4 byte sequence number. Both chunk types share the sequence.
-            /// The first fcTL chunk must contain sequence number 0, and the sequence
-            /// numbers in the remaining fcTL and fdAT chunks must be in order, with
-            /// no gaps or duplicates.
+            /// Sequence number of the animation chunk, starting from 0.
+            /// 
+            /// The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk
+            /// types share the sequence. The purpose of this number is to detect (and
+            /// optionally correct) sequence errors in an Animated PNG, since the PNG
+            /// specification does not impose ordering restrictions on ancillary
+            /// chunks (which means that a PNG editor is technically allowed to
+            /// reorder them arbitrarily, see [14.2 Behavior of PNG
+            /// editors](https://www.w3.org/TR/png/#14Ordering) in the spec).
+            /// 
+            /// The first `fcTL` chunk must contain sequence number 0, and the
+            /// sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in
+            /// ascending order, with no gaps or duplicates.
             /// </summary>
             public uint SequenceNumber { get { return _sequenceNumber; } }
 
             /// <summary>
-            /// Frame data for the frame. At least one fdAT chunk is required for
-            /// each frame. The compressed datastream is the concatenation of the
-            /// contents of the data fields of all the fdAT chunks within a frame.
+            /// Frame data for the frame. At least one `fdAT` chunk is required for
+            /// each frame, except for the first frame, if that frame is represented
+            /// by an `IDAT` chunk. The compressed datastream for each frame is the
+            /// concatenation of the contents of the data fields of all the `fdAT`
+            /// chunks within a frame.
             /// </summary>
             public byte[] FrameData { get { return _frameData; } }
             public Png M_Root { get { return m_root; } }
@@ -1136,29 +1334,64 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_gammaRatio = false;
+                f_gamma = false;
+                f_invGamma = false;
                 _read();
             }
             private void _read()
             {
                 _gammaInt = m_io.ReadU4be();
+                {
+                    uint M_ = _gammaInt;
+                    if (!(M_ != 0))
+                    {
+                        throw new ValidationExprError(_gammaInt, m_io, "/types/gama_chunk/seq/0");
+                    }
+                }
             }
-            private bool f_gammaRatio;
-            private double _gammaRatio;
-            public double GammaRatio
+            private bool f_gamma;
+            private double _gamma;
+
+            /// <summary>
+            /// Image gamma, typically 0.45455 = 1/2.2
+            /// </summary>
+            public double Gamma
             {
                 get
                 {
-                    if (f_gammaRatio)
-                        return _gammaRatio;
-                    f_gammaRatio = true;
-                    _gammaRatio = (double) (100000.0 / GammaInt);
-                    return _gammaRatio;
+                    if (f_gamma)
+                        return _gamma;
+                    f_gamma = true;
+                    _gamma = (double) (GammaInt / 100000.0);
+                    return _gamma;
+                }
+            }
+            private bool f_invGamma;
+            private double _invGamma;
+
+            /// <summary>
+            /// Inverse of the image gamma (1 / gamma), typically 2.2 (not considering
+            /// rounding)
+            /// </summary>
+            public double InvGamma
+            {
+                get
+                {
+                    if (f_invGamma)
+                        return _invGamma;
+                    f_invGamma = true;
+                    _invGamma = (double) (100000.0 / GammaInt);
+                    return _invGamma;
                 }
             }
             private uint _gammaInt;
             private Png m_root;
             private Png.Chunk m_parent;
+
+            /// <summary>
+            /// Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
+            /// 45455)
+            /// </summary>
             public uint GammaInt { get { return _gammaInt; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
@@ -1198,26 +1431,42 @@ namespace Kaitai
                     throw new ValidationNotAnyOfError(_bitDepth, m_io, "/types/ihdr_chunk/seq/2");
                 }
                 _colorType = ((Png.ColorType) m_io.ReadU1());
-                _compressionMethod = m_io.ReadU1();
-                _filterMethod = m_io.ReadU1();
-                _interlaceMethod = m_io.ReadU1();
+                if (!Enum.IsDefined(typeof(ColorType), _colorType))
+                {
+                    throw new ValidationNotInEnumError(_colorType, m_io, "/types/ihdr_chunk/seq/3");
+                }
+                _compressionMethod = ((Png.CompressionMethods) m_io.ReadU1());
+                if (!Enum.IsDefined(typeof(CompressionMethods), _compressionMethod))
+                {
+                    throw new ValidationNotInEnumError(_compressionMethod, m_io, "/types/ihdr_chunk/seq/4");
+                }
+                _filterMethod = ((Png.FilterMethod) m_io.ReadU1());
+                if (!Enum.IsDefined(typeof(FilterMethod), _filterMethod))
+                {
+                    throw new ValidationNotInEnumError(_filterMethod, m_io, "/types/ihdr_chunk/seq/5");
+                }
+                _interlaceMethod = ((Png.InterlaceMethod) m_io.ReadU1());
+                if (!Enum.IsDefined(typeof(InterlaceMethod), _interlaceMethod))
+                {
+                    throw new ValidationNotInEnumError(_interlaceMethod, m_io, "/types/ihdr_chunk/seq/6");
+                }
             }
             private uint _width;
             private uint _height;
             private byte _bitDepth;
             private ColorType _colorType;
-            private byte _compressionMethod;
-            private byte _filterMethod;
-            private byte _interlaceMethod;
+            private CompressionMethods _compressionMethod;
+            private FilterMethod _filterMethod;
+            private InterlaceMethod _interlaceMethod;
             private Png m_root;
             private Png m_parent;
             public uint Width { get { return _width; } }
             public uint Height { get { return _height; } }
             public byte BitDepth { get { return _bitDepth; } }
             public ColorType ColorType { get { return _colorType; } }
-            public byte CompressionMethod { get { return _compressionMethod; } }
-            public byte FilterMethod { get { return _filterMethod; } }
-            public byte InterlaceMethod { get { return _interlaceMethod; } }
+            public CompressionMethods CompressionMethod { get { return _compressionMethod; } }
+            public FilterMethod FilterMethod { get { return _filterMethod; } }
+            public InterlaceMethod InterlaceMethod { get { return _interlaceMethod; } }
             public Png M_Root { get { return m_root; } }
             public Png M_Parent { get { return m_parent; } }
         }
@@ -1236,27 +1485,36 @@ namespace Kaitai
             }
             private void _read()
             {
-                _text = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
+                _value = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
             }
-            private string _text;
+            private string _value;
             private Png m_root;
             private Png.InternationalTextChunk m_parent;
 
             /// <summary>
-            /// Text contents (&quot;value&quot; of this key-value pair), written in
-            /// language specified in `language_tag`. Line breaks are
-            /// allowed.
+            /// Text string (the &quot;value&quot; of this key-value pair), written in language
+            /// specified in `_parent.language_tag`.
+            /// 
+            /// Although it is not null-terminated (unlike other textual data in the
+            /// `iTXt` chunk), it must not contain a zero byte
+            /// (U+0000 NULL character). A newline should be represented by a single
+            /// U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+            /// characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+            /// discouraged.
             /// </summary>
-            public string Text { get { return _text; } }
+            public string Value { get { return _value; } }
             public Png M_Root { get { return m_root; } }
             public Png.InternationalTextChunk M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
-        /// International text chunk effectively allows to store key-value string pairs in
-        /// PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are
-        /// given in pre-defined subset of iso8859-1 without control
-        /// characters.
+        /// International textual data (`iTXt`) chunk effectively allows you to store
+        /// key-value string pairs in the PNG container.
+        /// 
+        /// The &quot;key&quot; part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)
+        /// characters and spaces. The translated keyword and the &quot;value&quot; part
+        /// (`text`) are stored in UTF-8 and thus can store text in any language -
+        /// this language can be indicated via the language tag (`language_tag`).
         /// </summary>
         /// <remarks>
         /// Reference: <a href="https://www.w3.org/TR/png/#11iTXt">Source</a>
@@ -1277,13 +1535,17 @@ namespace Kaitai
             }
             private void _read()
             {
-                _keyword = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                _keyword = System.Text.Encoding.GetEncoding("ISO-8859-1").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _compressionFlag = m_io.ReadU1();
                 if (!( ((_compressionFlag == 0) || (_compressionFlag == 1)) ))
                 {
                     throw new ValidationNotAnyOfError(_compressionFlag, m_io, "/types/international_text_chunk/seq/1");
                 }
                 _compressionMethod = ((Png.CompressionMethods) m_io.ReadU1());
+                if (!(_compressionMethod == (CompressionFlag == 1 ? Png.CompressionMethods.Zlib : CompressionMethod)))
+                {
+                    throw new ValidationNotEqualError((CompressionFlag == 1 ? Png.CompressionMethods.Zlib : CompressionMethod), _compressionMethod, m_io, "/types/international_text_chunk/seq/2");
+                }
                 _languageTag = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 _translatedKeyword = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
                 if (CompressionFlag == 0) {
@@ -1302,9 +1564,15 @@ namespace Kaitai
             private string _text;
 
             /// <summary>
-            /// Text contents (&quot;value&quot; of this key-value pair), written in
-            /// language specified in `language_tag`. Line breaks are
-            /// allowed.
+            /// Text string (the &quot;value&quot; of this key-value pair), written in language
+            /// specified in `language_tag`.
+            /// 
+            /// Although it is not null-terminated (unlike other textual data in the
+            /// `iTXt` chunk), it must not contain a zero byte
+            /// (U+0000 NULL character). A newline should be represented by a single
+            /// U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+            /// characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+            /// discouraged.
             /// </summary>
             public string Text
             {
@@ -1313,7 +1581,7 @@ namespace Kaitai
                     if (f_text)
                         return _text;
                     f_text = true;
-                    _text = (string) ((CompressionFlag == 0 ? TextPlain : TextZlib).Text);
+                    _text = (string) ((CompressionFlag == 0 ? TextPlain : TextZlib).Value);
                     return _text;
                 }
             }
@@ -1331,8 +1599,17 @@ namespace Kaitai
             private byte[] __raw__raw_textZlib;
 
             /// <summary>
-            /// Indicates purpose of the following text data.
+            /// Indicates the type of information represented by the text string.
+            /// 
+            /// Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+            /// characters and spaces; that is, only code points 0x20-0x7E and
+            /// 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+            /// keyword, leading spaces, trailing spaces, and consecutive spaces are
+            /// not permitted.
             /// </summary>
+            /// <remarks>
+            /// Reference: <a href="https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords">Source</a>
+            /// </remarks>
             public string Keyword { get { return _keyword; } }
 
             /// <summary>
@@ -1343,15 +1620,30 @@ namespace Kaitai
             public CompressionMethods CompressionMethod { get { return _compressionMethod; } }
 
             /// <summary>
-            /// Human language used in `translated_keyword` and `text`
-            /// attributes - should be a language code conforming to ISO
-            /// 646.IRV:1991.
+            /// Human language used in the `translated_keyword` and `text` fields.
+            /// 
+            /// From the [official
+            /// specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):
+            /// 
+            /// &gt; The language tag is a well-formed language tag defined by [RFC 5646:
+            /// &gt; BCP 47: Tags for Identifying
+            /// &gt; Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the
+            /// &gt; keyword, the language tag is case-insensitive. Subtags must appear
+            /// &gt; in the [IANA language subtag
+            /// &gt; registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+            /// &gt; If the language tag is empty, the language is unspecified. Examples
+            /// &gt; of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,
+            /// &gt; `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.
             /// </summary>
             public string LanguageTag { get { return _languageTag; } }
 
             /// <summary>
-            /// Keyword translated into language specified in
-            /// `language_tag`. Line breaks are not allowed.
+            /// The keyword (`keyword`) translated into the language specified in
+            /// `language_tag`.
+            /// 
+            /// It must not contain a zero byte (U+0000 NULL character). Line breaks
+            /// should not appear. The remaining control characters (U+0001..U+0009,
+            /// U+000B..0+001F, U+007F..U+009F) are discouraged.
             /// </summary>
             public string TranslatedKeyword { get { return _translatedKeyword; } }
             public InternationalText TextPlain { get { return _textPlain; } }
@@ -1501,8 +1793,9 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// &quot;Physical size&quot; chunk stores data that allows to translate
-        /// logical pixels into physical units (meters, etc) and vice-versa.
+        /// Physical pixel dimensions (`pHYs`) chunk specifies the intended physical
+        /// size of the pixels (in meters) or pixel aspect ratio for display of the
+        /// image.
         /// </summary>
         /// <remarks>
         /// Reference: <a href="https://www.w3.org/TR/png/#11pHYs">Source</a>
@@ -1518,6 +1811,8 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_dotsPerInchX = false;
+                f_dotsPerInchY = false;
                 _read();
             }
             private void _read()
@@ -1525,6 +1820,48 @@ namespace Kaitai
                 _pixelsPerUnitX = m_io.ReadU4be();
                 _pixelsPerUnitY = m_io.ReadU4be();
                 _unit = ((Png.PhysUnit) m_io.ReadU1());
+                if (!Enum.IsDefined(typeof(PhysUnit), _unit))
+                {
+                    throw new ValidationNotInEnumError(_unit, m_io, "/types/phys_chunk/seq/2");
+                }
+            }
+            private bool f_dotsPerInchX;
+            private double? _dotsPerInchX;
+
+            /// <summary>
+            /// Horizontal resolution (DPI)
+            /// </summary>
+            public double? DotsPerInchX
+            {
+                get
+                {
+                    if (f_dotsPerInchX)
+                        return _dotsPerInchX;
+                    f_dotsPerInchX = true;
+                    if (Unit == Png.PhysUnit.Meter) {
+                        _dotsPerInchX = (double) (PixelsPerUnitX * 0.0254);
+                    }
+                    return _dotsPerInchX;
+                }
+            }
+            private bool f_dotsPerInchY;
+            private double? _dotsPerInchY;
+
+            /// <summary>
+            /// Vertical resolution (DPI)
+            /// </summary>
+            public double? DotsPerInchY
+            {
+                get
+                {
+                    if (f_dotsPerInchY)
+                        return _dotsPerInchY;
+                    f_dotsPerInchY = true;
+                    if (Unit == Png.PhysUnit.Meter) {
+                        _dotsPerInchY = (double) (PixelsPerUnitY * 0.0254);
+                    }
+                    return _dotsPerInchY;
+                }
             }
             private uint _pixelsPerUnitX;
             private uint _pixelsPerUnitY;
@@ -1640,6 +1977,10 @@ namespace Kaitai
             private void _read()
             {
                 _renderIntent = ((Intent) m_io.ReadU1());
+                if (!Enum.IsDefined(typeof(Intent), _renderIntent))
+                {
+                    throw new ValidationNotInEnumError(_renderIntent, m_io, "/types/srgb_chunk/seq/0");
+                }
             }
             private Intent _renderIntent;
             private Png m_root;
@@ -1650,10 +1991,13 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// Text chunk effectively allows to store key-value string pairs in
-        /// PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are
-        /// given in pre-defined subset of iso8859-1 without control
-        /// characters.
+        /// Textual data (`tEXt`) chunk effectively allows you to store key-value
+        /// string pairs in the PNG container.
+        /// 
+        /// Both the &quot;key&quot; (`keyword`) and &quot;value&quot; (`text`) parts are restricted to
+        /// printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the
+        /// exception that `text` can also contain newlines (U+000A LINE FEED (LF)
+        /// characters) and U+00A0 NON-BREAKING SPACE characters.
         /// </summary>
         /// <remarks>
         /// Reference: <a href="https://www.w3.org/TR/png/#11tEXt">Source</a>
@@ -1682,9 +2026,28 @@ namespace Kaitai
             private Png.Chunk m_parent;
 
             /// <summary>
-            /// Indicates purpose of the following text data.
+            /// Indicates the type of information represented by the text string.
+            /// 
+            /// Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)
+            /// characters and spaces; that is, only code points 0x20-0x7E and
+            /// 0xA1-0xFF are allowed. To reduce the chances for human misreading of a
+            /// keyword, leading spaces, trailing spaces, and consecutive spaces are
+            /// not permitted.
             /// </summary>
+            /// <remarks>
+            /// Reference: <a href="https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords">Source</a>
+            /// </remarks>
             public string Keyword { get { return _keyword; } }
+
+            /// <summary>
+            /// Text string (the &quot;value&quot; of this key-value pair).
+            /// 
+            /// Although it is not null-terminated (unlike the keyword), it must not
+            /// contain a zero byte (U+0000 NULL character). A newline should be
+            /// represented by a single U+000A LINE FEED (LF) character (aka `\n`).
+            /// The remaining control characters (U+0001..U+0009, U+000B..0+001F,
+            /// U+007F..U+009F) are discouraged.
+            /// </summary>
             public string Text { get { return _text; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
@@ -1740,7 +2103,7 @@ namespace Kaitai
         private uint _ihdrLen;
         private byte[] _ihdrType;
         private IhdrChunk _ihdr;
-        private byte[] _ihdrCrc;
+        private uint _ihdrCrc;
         private List<Chunk> _chunks;
         private Png m_root;
         private KaitaiStruct m_parent;
@@ -1748,7 +2111,7 @@ namespace Kaitai
         public uint IhdrLen { get { return _ihdrLen; } }
         public byte[] IhdrType { get { return _ihdrType; } }
         public IhdrChunk Ihdr { get { return _ihdr; } }
-        public byte[] IhdrCrc { get { return _ihdrCrc; } }
+        public uint IhdrCrc { get { return _ihdrCrc; } }
         public List<Chunk> Chunks { get { return _chunks; } }
         public Png M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }

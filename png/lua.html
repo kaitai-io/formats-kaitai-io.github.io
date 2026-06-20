@@ -323,6 +323,15 @@ section#format-index .row {
 <span class="w">  </span><span class="nv">previous</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
 <span class="p">}</span>
 
+<span class="nv">Png</span><span class="p">.</span><span class="py">FilterMethod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="nv">Png</span><span class="p">.</span><span class="py">InterlaceMethod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">none</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">adam7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+
 <span class="nv">Png</span><span class="p">.</span><span class="py">PhysUnit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nv">unknown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">  </span><span class="nv">meter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -349,7 +358,7 @@ section#format-index .row {
 <span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\073\072\068\082</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">ihdr_type</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ihdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">IhdrChunk</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ihdr_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ihdr_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">  </span><span class="kr">while</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="kr">do</span>
@@ -381,7 +390,7 @@ section#format-index .row {
 
 
 <span class="c1">-- </span>
-<span class="c1">-- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk)</span>
+<span class="c1">-- See also: Source (https://www.w3.org/TR/png/#acTL-chunk)</span>
 <span class="nv">Png</span><span class="p">.</span><span class="py">AnimationControlChunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">AnimationControlChunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
@@ -397,7 +406,8 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Number of frames, must be equal to the number of `frame_control_chunk`s.</span>
+<span class="c1">-- Number of frames, must be equal to the number of `fcTL` chunks (i.e.</span>
+<span class="c1">-- `frame_control_chunk` objects)</span>
 <span class="c1">-- </span>
 <span class="c1">-- Number of times to loop, 0 indicates infinite looping.</span>
 
@@ -608,9 +618,9 @@ section#format-index .row {
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\000\000\000\000</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">type_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">type_raw</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">65</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">90</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">97</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">122</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationExprError&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span>
@@ -705,9 +715,79 @@ section#format-index .row {
 <span class="w">  </span><span class="kr">else</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
 <span class="kr">end</span>
 
+<span class="c1">-- </span>
+<span class="c1">-- false = critical chunk, true = ancillary chunk</span>
+<span class="nv">Png</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_ancillary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_ancillary</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_ancillary</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_ancillary</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_ancillary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">type_raw</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_ancillary</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- false = public chunk (defined by the W3C), true = private chunk (can</span>
+<span class="c1">-- be defined by anyone)</span>
+<span class="nv">Png</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_private</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_private</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_private</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_private</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_private</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">type_raw</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_private</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Defines whether the chunk may be copied if the image data (i.e.</span>
+<span class="c1">-- pixels) is modified. This tells PNG editors how to handle unknown</span>
+<span class="c1">-- chunks - see section [14.2 Behavior of PNG</span>
+<span class="c1">-- editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in</span>
+<span class="c1">-- the official specification.</span>
+<span class="nv">Png</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_safe_to_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_safe_to_copy</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_safe_to_copy</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_safe_to_copy</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_safe_to_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">type_raw</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_safe_to_copy</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Should be `false`, i.e. all chunk types should have uppercase third</span>
+<span class="c1">-- letters (the lowercase third letter is reserved for possible future</span>
+<span class="c1">-- extensions to the PNG standard)</span>
+<span class="nv">Png</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">reserved_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">reserved_bit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reserved_bit</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reserved_bit</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reserved_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">string.byte</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">type_raw</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reserved_bit</span>
+<span class="kr">end</span>
+
+<span class="nv">Png</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">type</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">type_raw</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Each byte of a chunk type is restricted to the hexadecimal values</span>
+<span class="c1">-- 0x41..0x5a and 0x61..0x7a, i.e. uppercase and lowercase ASCII letters</span>
+<span class="c1">-- (`A-Z` and `a-z`).</span>
+<span class="c1">-- See also: Source (https://www.w3.org/TR/2025/REC-png-3-20250624/#table51)</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://www.w3.org/TR/png/#cICP-chunk)</span>
@@ -801,10 +881,35 @@ section#format-index .row {
 <span class="kr">end</span>
 
 
+<span class="nv">Png</span><span class="p">.</span><span class="py">CompressedText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">CompressedText</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">CompressedText</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">(),</span><span class="w"> </span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
 <span class="c1">-- </span>
-<span class="c1">-- Compressed text chunk effectively allows to store key-value</span>
-<span class="c1">-- string pairs in PNG container, compressing &quot;value&quot; part (which</span>
-<span class="c1">-- can be quite lengthy) with zlib compression.</span>
+<span class="c1">-- Text string (the &quot;value&quot; of this key-value pair).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Although it is not null-terminated (unlike the keyword), it must not</span>
+<span class="c1">-- contain a zero byte (U+0000 NULL character). A newline should be</span>
+<span class="c1">-- represented by a single U+000A LINE FEED (LF) character (aka `\n`).</span>
+<span class="c1">-- The remaining control characters (U+0001..U+0009, U+000B..0+001F,</span>
+<span class="c1">-- U+007F..U+009F) are discouraged.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Compressed textual data (`zTXt`) chunk effectively allows you to store</span>
+<span class="c1">-- key-value string pairs in the PNG container, compressing the &quot;value&quot; part</span>
+<span class="c1">-- (which can be quite lengthy) with zlib compression.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`</span>
+<span class="c1">-- chunk is recommended for storing large blocks of text.</span>
 <span class="c1">-- See also: Source (https://www.w3.org/TR/png/#11zTXt)</span>
 <span class="nv">Png</span><span class="p">.</span><span class="py">CompressedTextChunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
@@ -816,14 +921,26 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">CompressedTextChunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">CompressionMethods</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_text_datastream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">text_datastream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">KaitaiStream</span><span class="p">.</span><span class="nf">process_zlib</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_text_datastream</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="py">CompressionMethods</span><span class="p">.</span><span class="py">zlib</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="py">CompressionMethods</span><span class="p">.</span><span class="py">zlib</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">KaitaiStream</span><span class="p">.</span><span class="nf">process_zlib</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__raw_text</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_text</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">CompressedText</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Indicates purpose of the following text data.</span>
+<span class="c1">-- Indicates the type of information represented by the text string.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="c1">-- characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="c1">-- 0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="c1">-- keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="c1">-- not permitted.</span>
+<span class="c1">-- See also: Source (https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords)</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://web.archive.org/web/20210302212148/https://discussion.evernote.com/forums/topic/88532-how-to-extract-annotation-information-from-annotated-evernoteskitch-images/#comment-451501)</span>
@@ -876,7 +993,7 @@ section#format-index .row {
 <span class="c1">-- image as well, but it can also be a JPEG or possibly other formats.</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk)</span>
+<span class="c1">-- See also: Source (https://www.w3.org/TR/png/#fcTL-chunk)</span>
 <span class="nv">Png</span><span class="p">.</span><span class="py">FrameControlChunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">FrameControlChunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
@@ -913,7 +1030,13 @@ section#format-index .row {
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">delay_num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">delay_den</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dispose_op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">DisposeOpValues</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">dispose_op</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotInEnumError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">blend_op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">BlendOpValues</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">blend_op</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotInEnumError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -929,7 +1052,19 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Sequence number of the animation chunk.</span>
+<span class="c1">-- Sequence number of the animation chunk, starting from 0.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk</span>
+<span class="c1">-- types share the sequence. The purpose of this number is to detect (and</span>
+<span class="c1">-- optionally correct) sequence errors in an Animated PNG, since the PNG</span>
+<span class="c1">-- specification does not impose ordering restrictions on ancillary</span>
+<span class="c1">-- chunks (which means that a PNG editor is technically allowed to</span>
+<span class="c1">-- reorder them arbitrarily, see [14.2 Behavior of PNG</span>
+<span class="c1">-- editors](https://www.w3.org/TR/png/#14Ordering) in the spec).</span>
+<span class="c1">-- </span>
+<span class="c1">-- The first `fcTL` chunk must contain sequence number 0, and the</span>
+<span class="c1">-- sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in</span>
+<span class="c1">-- ascending order, with no gaps or duplicates.</span>
 <span class="c1">-- </span>
 <span class="c1">-- Width of the following frame.</span>
 <span class="c1">-- </span>
@@ -948,7 +1083,7 @@ section#format-index .row {
 <span class="c1">-- Type of frame area rendering for this frame.</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk)</span>
+<span class="c1">-- See also: Source (https://www.w3.org/TR/png/#fdAT-chunk)</span>
 <span class="nv">Png</span><span class="p">.</span><span class="py">FrameDataChunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">FrameDataChunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
@@ -964,15 +1099,25 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Sequence number of the animation chunk. The fcTL and fdAT chunks</span>
-<span class="c1">-- have a 4 byte sequence number. Both chunk types share the sequence.</span>
-<span class="c1">-- The first fcTL chunk must contain sequence number 0, and the sequence</span>
-<span class="c1">-- numbers in the remaining fcTL and fdAT chunks must be in order, with</span>
-<span class="c1">-- no gaps or duplicates.</span>
+<span class="c1">-- Sequence number of the animation chunk, starting from 0.</span>
 <span class="c1">-- </span>
-<span class="c1">-- Frame data for the frame. At least one fdAT chunk is required for</span>
-<span class="c1">-- each frame. The compressed datastream is the concatenation of the</span>
-<span class="c1">-- contents of the data fields of all the fdAT chunks within a frame.</span>
+<span class="c1">-- The `fcTL` and `fdAT` chunks have a 4-byte sequence number. Both chunk</span>
+<span class="c1">-- types share the sequence. The purpose of this number is to detect (and</span>
+<span class="c1">-- optionally correct) sequence errors in an Animated PNG, since the PNG</span>
+<span class="c1">-- specification does not impose ordering restrictions on ancillary</span>
+<span class="c1">-- chunks (which means that a PNG editor is technically allowed to</span>
+<span class="c1">-- reorder them arbitrarily, see [14.2 Behavior of PNG</span>
+<span class="c1">-- editors](https://www.w3.org/TR/png/#14Ordering) in the spec).</span>
+<span class="c1">-- </span>
+<span class="c1">-- The first `fcTL` chunk must contain sequence number 0, and the</span>
+<span class="c1">-- sequence numbers in the remaining `fcTL` and `fdAT` chunks must be in</span>
+<span class="c1">-- ascending order, with no gaps or duplicates.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Frame data for the frame. At least one `fdAT` chunk is required for</span>
+<span class="c1">-- each frame, except for the first frame, if that frame is represented</span>
+<span class="c1">-- by an `IDAT` chunk. The compressed datastream for each frame is the</span>
+<span class="c1">-- concatenation of the contents of the data fields of all the `fdAT`</span>
+<span class="c1">-- chunks within a frame.</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://www.w3.org/TR/png/#11gAMA)</span>
@@ -987,18 +1132,40 @@ section#format-index .row {
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">GamaChunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">gamma_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">gamma_int</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">_</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationExprError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
-<span class="nv">Png</span><span class="p">.</span><span class="py">GamaChunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">gamma_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">GamaChunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">gamma_ratio</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_gamma_ratio</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_gamma_ratio</span>
+<span class="c1">-- </span>
+<span class="c1">-- Image gamma, typically 0.45455 = 1/2.2.</span>
+<span class="nv">Png</span><span class="p">.</span><span class="py">GamaChunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">GamaChunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">gamma</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_gamma</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_gamma</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_gamma_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">100000.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">gamma_int</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_gamma_ratio</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">gamma_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">100000.0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_gamma</span>
 <span class="kr">end</span>
 
+<span class="c1">-- </span>
+<span class="c1">-- Inverse of the image gamma (1 / gamma), typically 2.2 (not considering</span>
+<span class="c1">-- rounding)</span>
+<span class="nv">Png</span><span class="p">.</span><span class="py">GamaChunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">inv_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">GamaChunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">inv_gamma</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_inv_gamma</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_inv_gamma</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_inv_gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">100000.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">gamma_int</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_inv_gamma</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as</span>
+<span class="c1">-- 45455)</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://www.w3.org/TR/png/#11IHDR)</span>
@@ -1025,9 +1192,21 @@ section#format-index .row {
 <span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotAnyOfError&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">color_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">ColorType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">interlace_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">color_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotInEnumError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">CompressionMethods</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotInEnumError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">FilterMethod</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">filter_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotInEnumError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">interlace_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">InterlaceMethod</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">interlace_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotInEnumError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 
@@ -1041,19 +1220,28 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">InternationalText</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">(),</span><span class="w"> </span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">(),</span><span class="w"> </span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="c1">-- language specified in `language_tag`. Line breaks are</span>
-<span class="c1">-- allowed.</span>
+<span class="c1">-- Text string (the &quot;value&quot; of this key-value pair), written in language</span>
+<span class="c1">-- specified in `_parent.language_tag`.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Although it is not null-terminated (unlike other textual data in the</span>
+<span class="c1">-- `iTXt` chunk), it must not contain a zero byte</span>
+<span class="c1">-- (U+0000 NULL character). A newline should be represented by a single</span>
+<span class="c1">-- U+000A LINE FEED (LF) character (aka `\n`). The remaining control</span>
+<span class="c1">-- characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are</span>
+<span class="c1">-- discouraged.</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- International text chunk effectively allows to store key-value string pairs in</span>
-<span class="c1">-- PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
-<span class="c1">-- given in pre-defined subset of iso8859-1 without control</span>
-<span class="c1">-- characters.</span>
+<span class="c1">-- International textual data (`iTXt`) chunk effectively allows you to store</span>
+<span class="c1">-- key-value string pairs in the PNG container.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The &quot;key&quot; part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)</span>
+<span class="c1">-- characters and spaces. The translated keyword and the &quot;value&quot; part</span>
+<span class="c1">-- (`text`) are stored in UTF-8 and thus can store text in any language -</span>
+<span class="c1">-- this language can be indicated via the language tag (`language_tag`).</span>
 <span class="c1">-- See also: Source (https://www.w3.org/TR/png/#11iTXt)</span>
 <span class="nv">Png</span><span class="p">.</span><span class="py">InternationalTextChunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
@@ -1065,12 +1253,15 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">InternationalTextChunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotAnyOfError&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">CompressionMethods</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">Png</span><span class="p">.</span><span class="py">CompressionMethods</span><span class="p">.</span><span class="py">zlib</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="p">)))</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">Png</span><span class="p">.</span><span class="py">CompressionMethods</span><span class="p">.</span><span class="py">zlib</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="p">))</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">language_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">translated_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
@@ -1087,31 +1278,59 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Text contents (&quot;value&quot; of this key-value pair), written in</span>
-<span class="c1">-- language specified in `language_tag`. Line breaks are</span>
-<span class="c1">-- allowed.</span>
+<span class="c1">-- Text string (the &quot;value&quot; of this key-value pair), written in language</span>
+<span class="c1">-- specified in `language_tag`.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Although it is not null-terminated (unlike other textual data in the</span>
+<span class="c1">-- `iTXt` chunk), it must not contain a zero byte</span>
+<span class="c1">-- (U+0000 NULL character). A newline should be represented by a single</span>
+<span class="c1">-- U+000A LINE FEED (LF) character (aka `\n`). The remaining control</span>
+<span class="c1">-- characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are</span>
+<span class="c1">-- discouraged.</span>
 <span class="nv">Png</span><span class="p">.</span><span class="py">InternationalTextChunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">InternationalTextChunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">text</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_text</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_text</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">text_plain</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">text_zlib</span><span class="p">)).</span><span class="nv">text</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">compression_flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">text_plain</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">text_zlib</span><span class="p">)).</span><span class="nv">value</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_text</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Indicates purpose of the following text data.</span>
+<span class="c1">-- Indicates the type of information represented by the text string.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="c1">-- characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="c1">-- 0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="c1">-- keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="c1">-- not permitted.</span>
+<span class="c1">-- See also: Source (https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords)</span>
 <span class="c1">-- </span>
 <span class="c1">-- 0 = text is uncompressed, 1 = text is compressed with a</span>
 <span class="c1">-- method specified in `compression_method`.</span>
 <span class="c1">-- </span>
-<span class="c1">-- Human language used in `translated_keyword` and `text`</span>
-<span class="c1">-- attributes - should be a language code conforming to ISO</span>
-<span class="c1">-- 646.IRV:1991.</span>
+<span class="c1">-- Human language used in the `translated_keyword` and `text` fields.</span>
 <span class="c1">-- </span>
-<span class="c1">-- Keyword translated into language specified in</span>
-<span class="c1">-- `language_tag`. Line breaks are not allowed.</span>
+<span class="c1">-- From the [official</span>
+<span class="c1">-- specification](https://www.w3.org/TR/2025/REC-png-3-20250624/#11iTXt):</span>
+<span class="c1">-- </span>
+<span class="c1">-- &gt; The language tag is a well-formed language tag defined by [RFC 5646:</span>
+<span class="c1">-- &gt; BCP 47: Tags for Identifying</span>
+<span class="c1">-- &gt; Languages](https://www.rfc-editor.org/info/rfc5646/). Unlike the</span>
+<span class="c1">-- &gt; keyword, the language tag is case-insensitive. Subtags must appear</span>
+<span class="c1">-- &gt; in the [IANA language subtag</span>
+<span class="c1">-- &gt; registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).</span>
+<span class="c1">-- &gt; If the language tag is empty, the language is unspecified. Examples</span>
+<span class="c1">-- &gt; of language tags include: `en`, `en-GB`, `es-419`, `zh-Hans`,</span>
+<span class="c1">-- &gt; `zh-Hans-CN`, `tlh-Cyrl-AQ`, `ar-AE-u-nu-latn`, and `x-private`.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The keyword (`keyword`) translated into the language specified in</span>
+<span class="c1">-- `language_tag`.</span>
+<span class="c1">-- </span>
+<span class="c1">-- It must not contain a zero byte (U+0000 NULL character). Line breaks</span>
+<span class="c1">-- should not appear. The remaining control characters (U+0001..U+0009,</span>
+<span class="c1">-- U+000B..0+001F, U+007F..U+009F) are discouraged.</span>
 
 <span class="nv">Png</span><span class="p">.</span><span class="py">MdcvChromaticity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
@@ -1195,8 +1414,9 @@ section#format-index .row {
 
 
 <span class="c1">-- </span>
-<span class="c1">-- &quot;Physical size&quot; chunk stores data that allows to translate</span>
-<span class="c1">-- logical pixels into physical units (meters, etc) and vice-versa.</span>
+<span class="c1">-- Physical pixel dimensions (`pHYs`) chunk specifies the intended physical</span>
+<span class="c1">-- size of the pixels (in meters) or pixel aspect ratio for display of the</span>
+<span class="c1">-- image.</span>
 <span class="c1">-- See also: Source (https://www.w3.org/TR/png/#11pHYs)</span>
 <span class="nv">Png</span><span class="p">.</span><span class="py">PhysChunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
@@ -1211,6 +1431,37 @@ section#format-index .row {
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">pixels_per_unit_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">pixels_per_unit_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="nf">PhysUnit</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">unit</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotInEnumError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Horizontal resolution (DPI).</span>
+<span class="nv">Png</span><span class="p">.</span><span class="py">PhysChunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">dots_per_inch_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">PhysChunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">dots_per_inch_x</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_dots_per_inch_x</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_dots_per_inch_x</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">unit</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="py">PhysUnit</span><span class="p">.</span><span class="py">meter</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_dots_per_inch_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">pixels_per_unit_x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0254</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_dots_per_inch_x</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Vertical resolution (DPI).</span>
+<span class="nv">Png</span><span class="p">.</span><span class="py">PhysChunk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">dots_per_inch_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">PhysChunk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">dots_per_inch_y</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_dots_per_inch_y</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_dots_per_inch_y</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">unit</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="py">PhysUnit</span><span class="p">.</span><span class="py">meter</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_dots_per_inch_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">pixels_per_unit_y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.0254</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_dots_per_inch_y</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -1277,14 +1528,20 @@ section#format-index .row {
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Png</span><span class="p">.</span><span class="nc">SrgbChunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">render_intent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Png</span><span class="p">.</span><span class="py">SrgbChunk</span><span class="p">.</span><span class="nf">Intent</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">render_intent</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationNotInEnumError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 
 <span class="c1">-- </span>
-<span class="c1">-- Text chunk effectively allows to store key-value string pairs in</span>
-<span class="c1">-- PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
-<span class="c1">-- given in pre-defined subset of iso8859-1 without control</span>
-<span class="c1">-- characters.</span>
+<span class="c1">-- Textual data (`tEXt`) chunk effectively allows you to store key-value</span>
+<span class="c1">-- string pairs in the PNG container.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Both the &quot;key&quot; (`keyword`) and &quot;value&quot; (`text`) parts are restricted to</span>
+<span class="c1">-- printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the</span>
+<span class="c1">-- exception that `text` can also contain newlines (U+000A LINE FEED (LF)</span>
+<span class="c1">-- characters) and U+00A0 NON-BREAKING SPACE characters.</span>
 <span class="c1">-- See also: Source (https://www.w3.org/TR/png/#11tEXt)</span>
 <span class="nv">Png</span><span class="p">.</span><span class="py">TextChunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
@@ -1301,7 +1558,22 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Indicates purpose of the following text data.</span>
+<span class="c1">-- Indicates the type of information represented by the text string.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Keywords must consist exclusively of printable ISO-8859-1 (Latin-1)</span>
+<span class="c1">-- characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="c1">-- 0xA1-0xFF are allowed. To reduce the chances for human misreading of a</span>
+<span class="c1">-- keyword, leading spaces, trailing spaces, and consecutive spaces are</span>
+<span class="c1">-- not permitted.</span>
+<span class="c1">-- See also: Source (https://www.w3.org/TR/2025/REC-png-3-20250624/#11keywords)</span>
+<span class="c1">-- </span>
+<span class="c1">-- Text string (the &quot;value&quot; of this key-value pair).</span>
+<span class="c1">-- </span>
+<span class="c1">-- Although it is not null-terminated (unlike the keyword), it must not</span>
+<span class="c1">-- contain a zero byte (U+0000 NULL character). A newline should be</span>
+<span class="c1">-- represented by a single U+000A LINE FEED (LF) character (aka `\n`).</span>
+<span class="c1">-- The remaining control characters (U+0001..U+0009, U+000B..0+001F,</span>
+<span class="c1">-- U+007F..U+009F) are discouraged.</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- Time chunk stores time stamp of last modification of this image,</span>

@@ -36,6 +36,13 @@ class Png(ReadWriteKaitaiStruct):
         background = 1
         previous = 2
 
+    class FilterMethod(IntEnum):
+        base = 0
+
+    class InterlaceMethod(IntEnum):
+        none = 0
+        adam7 = 1
+
     class PhysUnit(IntEnum):
         unknown = 0
         meter = 1
@@ -56,7 +63,7 @@ class Png(ReadWriteKaitaiStruct):
             raise kaitaistruct.ValidationNotEqualError(b"\x49\x48\x44\x52", self.ihdr_type, self._io, u"/seq/2")
         self.ihdr = Png.IhdrChunk(self._io, self, self._root)
         self.ihdr._read()
-        self.ihdr_crc = self._io.read_bytes(4)
+        self.ihdr_crc = self._io.read_u4be()
         self.chunks = []
         i = 0
         while True:
@@ -87,7 +94,7 @@ class Png(ReadWriteKaitaiStruct):
         self._io.write_u4be(self.ihdr_len)
         self._io.write_bytes(self.ihdr_type)
         self.ihdr._write__seq(self._io)
-        self._io.write_bytes(self.ihdr_crc)
+        self._io.write_u4be(self.ihdr_crc)
         for i in range(len(self.chunks)):
             pass
             self.chunks[i]._write__seq(self._io)
@@ -112,8 +119,6 @@ class Png(ReadWriteKaitaiStruct):
             raise kaitaistruct.ConsistencyError(u"ihdr", self._root, self.ihdr._root)
         if self.ihdr._parent != self:
             raise kaitaistruct.ConsistencyError(u"ihdr", self, self.ihdr._parent)
-        if len(self.ihdr_crc) != 4:
-            raise kaitaistruct.ConsistencyError(u"ihdr_crc", 4, len(self.ihdr_crc))
         if len(self.chunks) == 0:
             raise kaitaistruct.ConsistencyError(u"chunks", 0, len(self.chunks))
         for i in range(len(self.chunks)):
@@ -160,7 +165,7 @@ class Png(ReadWriteKaitaiStruct):
     class AnimationControlChunk(ReadWriteKaitaiStruct):
         """
         .. seealso::
-           Source - https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk
+           Source - https://www.w3.org/TR/png/#acTL-chunk
         """
         def __init__(self, _io=None, _parent=None, _root=None):
             super(Png.AnimationControlChunk, self).__init__(_io)
@@ -585,10 +590,10 @@ class Png(ReadWriteKaitaiStruct):
 
         def _read(self):
             self.len = self._io.read_u4be()
-            self.type = (self._io.read_bytes(4)).decode(u"UTF-8")
-            _ = self.type
-            if not self.type != u"\000\000\000\000":
-                raise kaitaistruct.ValidationExprError(self.type, self._io, u"/types/chunk/seq/1")
+            self.type_raw = self._io.read_bytes(4)
+            _ = self.type_raw
+            if not  (( (( ((KaitaiStream.byte_array_index(_, 0) >= 65) and (KaitaiStream.byte_array_index(_, 0) <= 90)) ) or ( ((KaitaiStream.byte_array_index(_, 0) >= 97) and (KaitaiStream.byte_array_index(_, 0) <= 122)) )) ) and ( (( ((KaitaiStream.byte_array_index(_, 1) >= 65) and (KaitaiStream.byte_array_index(_, 1) <= 90)) ) or ( ((KaitaiStream.byte_array_index(_, 1) >= 97) and (KaitaiStream.byte_array_index(_, 1) <= 122)) )) ) and ( (( ((KaitaiStream.byte_array_index(_, 2) >= 65) and (KaitaiStream.byte_array_index(_, 2) <= 90)) ) or ( ((KaitaiStream.byte_array_index(_, 2) >= 97) and (KaitaiStream.byte_array_index(_, 2) <= 122)) )) ) and ( (( ((KaitaiStream.byte_array_index(_, 3) >= 65) and (KaitaiStream.byte_array_index(_, 3) <= 90)) ) or ( ((KaitaiStream.byte_array_index(_, 3) >= 97) and (KaitaiStream.byte_array_index(_, 3) <= 122)) )) )) :
+                raise kaitaistruct.ValidationExprError(self.type_raw, self._io, u"/types/chunk/seq/1")
             _on = self.type
             if _on == u"PLTE":
                 pass
@@ -725,7 +730,7 @@ class Png(ReadWriteKaitaiStruct):
             else:
                 pass
                 self.body = self._io.read_bytes(self.len)
-            self.crc = self._io.read_bytes(4)
+            self.crc = self._io.read_u4be()
             self._dirty = False
 
 
@@ -805,7 +810,7 @@ class Png(ReadWriteKaitaiStruct):
         def _write__seq(self, io=None):
             super(Png.Chunk, self)._write__seq(io)
             self._io.write_u4be(self.len)
-            self._io.write_bytes((self.type).encode(u"UTF-8"))
+            self._io.write_bytes(self.type_raw)
             _on = self.type
             if _on == u"PLTE":
                 pass
@@ -1096,15 +1101,15 @@ class Png(ReadWriteKaitaiStruct):
             else:
                 pass
                 self._io.write_bytes(self.body)
-            self._io.write_bytes(self.crc)
+            self._io.write_u4be(self.crc)
 
 
         def _check(self):
-            if len((self.type).encode(u"UTF-8")) != 4:
-                raise kaitaistruct.ConsistencyError(u"type", 4, len((self.type).encode(u"UTF-8")))
-            _ = self.type
-            if not self.type != u"\000\000\000\000":
-                raise kaitaistruct.ValidationExprError(self.type, None, u"/types/chunk/seq/1")
+            if len(self.type_raw) != 4:
+                raise kaitaistruct.ConsistencyError(u"type_raw", 4, len(self.type_raw))
+            _ = self.type_raw
+            if not  (( (( ((KaitaiStream.byte_array_index(_, 0) >= 65) and (KaitaiStream.byte_array_index(_, 0) <= 90)) ) or ( ((KaitaiStream.byte_array_index(_, 0) >= 97) and (KaitaiStream.byte_array_index(_, 0) <= 122)) )) ) and ( (( ((KaitaiStream.byte_array_index(_, 1) >= 65) and (KaitaiStream.byte_array_index(_, 1) <= 90)) ) or ( ((KaitaiStream.byte_array_index(_, 1) >= 97) and (KaitaiStream.byte_array_index(_, 1) <= 122)) )) ) and ( (( ((KaitaiStream.byte_array_index(_, 2) >= 65) and (KaitaiStream.byte_array_index(_, 2) <= 90)) ) or ( ((KaitaiStream.byte_array_index(_, 2) >= 97) and (KaitaiStream.byte_array_index(_, 2) <= 122)) )) ) and ( (( ((KaitaiStream.byte_array_index(_, 3) >= 65) and (KaitaiStream.byte_array_index(_, 3) <= 90)) ) or ( ((KaitaiStream.byte_array_index(_, 3) >= 97) and (KaitaiStream.byte_array_index(_, 3) <= 122)) )) )) :
+                raise kaitaistruct.ValidationExprError(self.type_raw, None, u"/types/chunk/seq/1")
             _on = self.type
             if _on == u"PLTE":
                 pass
@@ -1242,10 +1247,73 @@ class Png(ReadWriteKaitaiStruct):
                 pass
                 if len(self.body) != self.len:
                     raise kaitaistruct.ConsistencyError(u"body", self.len, len(self.body))
-            if len(self.crc) != 4:
-                raise kaitaistruct.ConsistencyError(u"crc", 4, len(self.crc))
             self._dirty = False
 
+        @property
+        def is_ancillary(self):
+            """false = critical chunk, true = ancillary chunk
+            """
+            if hasattr(self, '_m_is_ancillary'):
+                return self._m_is_ancillary
+
+            self._m_is_ancillary = KaitaiStream.byte_array_index(self.type_raw, 0) & 32 != 0
+            return getattr(self, '_m_is_ancillary', None)
+
+        def _invalidate_is_ancillary(self):
+            del self._m_is_ancillary
+        @property
+        def is_private(self):
+            """false = public chunk (defined by the W3C), true = private chunk (can
+            be defined by anyone)
+            """
+            if hasattr(self, '_m_is_private'):
+                return self._m_is_private
+
+            self._m_is_private = KaitaiStream.byte_array_index(self.type_raw, 1) & 32 != 0
+            return getattr(self, '_m_is_private', None)
+
+        def _invalidate_is_private(self):
+            del self._m_is_private
+        @property
+        def is_safe_to_copy(self):
+            """Defines whether the chunk may be copied if the image data (i.e.
+            pixels) is modified. This tells PNG editors how to handle unknown
+            chunks - see section [14.2 Behavior of PNG
+            editors](https://www.w3.org/TR/2025/REC-png-3-20250624/#14Ordering) in
+            the official specification.
+            """
+            if hasattr(self, '_m_is_safe_to_copy'):
+                return self._m_is_safe_to_copy
+
+            self._m_is_safe_to_copy = KaitaiStream.byte_array_index(self.type_raw, 3) & 32 != 0
+            return getattr(self, '_m_is_safe_to_copy', None)
+
+        def _invalidate_is_safe_to_copy(self):
+            del self._m_is_safe_to_copy
+        @property
+        def reserved_bit(self):
+            """Should be `false`, i.e. all chunk types should have uppercase third
+            letters (the lowercase third letter is reserved for possible future
+            extensions to the PNG standard)
+            """
+            if hasattr(self, '_m_reserved_bit'):
+                return self._m_reserved_bit
+
+            self._m_reserved_bit = KaitaiStream.byte_array_index(self.type_raw, 2) & 32 != 0
+            return getattr(self, '_m_reserved_bit', None)
+
+        def _invalidate_reserved_bit(self):
+            del self._m_reserved_bit
+        @property
+        def type(self):
+            if hasattr(self, '_m_type'):
+                return self._m_type
+
+            self._m_type = (self.type_raw).decode(u"ASCII")
+            return getattr(self, '_m_type', None)
+
+        def _invalidate_type(self):
+            del self._m_type
 
     class CicpChunk(ReadWriteKaitaiStruct):
         """
@@ -1349,10 +1417,39 @@ class Png(ReadWriteKaitaiStruct):
         def _invalidate_max_frame_average_light_level(self):
             del self._m_max_frame_average_light_level
 
+    class CompressedText(ReadWriteKaitaiStruct):
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Png.CompressedText, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.value = (self._io.read_bytes_full()).decode(u"ISO-8859-1")
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Png.CompressedText, self)._write__seq(io)
+            self._io.write_bytes((self.value).encode(u"ISO-8859-1"))
+            if not self._io.is_eof():
+                raise kaitaistruct.ConsistencyError(u"value", 0, self._io.size() - self._io.pos())
+
+
+        def _check(self):
+            self._dirty = False
+
+
     class CompressedTextChunk(ReadWriteKaitaiStruct):
-        """Compressed text chunk effectively allows to store key-value
-        string pairs in PNG container, compressing "value" part (which
-        can be quite lengthy) with zlib compression.
+        """Compressed textual data (`zTXt`) chunk effectively allows you to store
+        key-value string pairs in the PNG container, compressing the "value" part
+        (which can be quite lengthy) with zlib compression.
+        
+        The `zTXt` and `tEXt` chunks are semantically equivalent, but the `zTXt`
+        chunk is recommended for storing large blocks of text.
         
         .. seealso::
            Source - https://www.w3.org/TR/png/#11zTXt
@@ -1363,31 +1460,52 @@ class Png(ReadWriteKaitaiStruct):
             self._root = _root
 
         def _read(self):
-            self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+            self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"ISO-8859-1")
             self.compression_method = KaitaiStream.resolve_enum(Png.CompressionMethods, self._io.read_u1())
-            self._raw_text_datastream = self._io.read_bytes_full()
-            self.text_datastream = zlib.decompress(self._raw_text_datastream)
+            if not self.compression_method == Png.CompressionMethods.zlib:
+                raise kaitaistruct.ValidationNotEqualError(Png.CompressionMethods.zlib, self.compression_method, self._io, u"/types/compressed_text_chunk/seq/1")
+            self._raw__raw_text = self._io.read_bytes_full()
+            self._raw_text = zlib.decompress(self._raw__raw_text)
+            self.text__inner_size = len(self._raw_text)
+            _io__raw_text = KaitaiStream(BytesIO(self._raw_text))
+            self.text = Png.CompressedText(_io__raw_text, self, self._root)
+            self.text._read()
             self._dirty = False
 
 
         def _fetch_instances(self):
             pass
+            self.text._fetch_instances()
 
 
         def _write__seq(self, io=None):
             super(Png.CompressedTextChunk, self)._write__seq(io)
-            self._io.write_bytes((self.keyword).encode(u"UTF-8"))
+            self._io.write_bytes((self.keyword).encode(u"ISO-8859-1"))
             self._io.write_u1(0)
             self._io.write_u1(int(self.compression_method))
-            self._raw_text_datastream = zlib.compress(self.text_datastream)
-            self._io.write_bytes(self._raw_text_datastream)
-            if not self._io.is_eof():
-                raise kaitaistruct.ConsistencyError(u"text_datastream", 0, self._io.size() - self._io.pos())
+            _io__raw_text = KaitaiStream(BytesIO(bytearray(self.text__inner_size)))
+            self._io.add_child_stream(_io__raw_text)
+            _pos2 = self._io.pos()
+            self._io.seek(self._io.pos() + (self._io.size() - self._io.pos()))
+            def handler(parent, _io__raw_text=_io__raw_text):
+                self._raw_text = _io__raw_text.to_byte_array()
+                self._raw__raw_text = zlib.compress(self._raw_text)
+                parent.write_bytes(self._raw__raw_text)
+                if not parent.is_eof():
+                    raise kaitaistruct.ConsistencyError(u"raw(text)", 0, parent.size() - parent.pos())
+            _io__raw_text.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+            self.text._write__seq(_io__raw_text)
 
 
         def _check(self):
-            if KaitaiStream.byte_array_index_of((self.keyword).encode(u"UTF-8"), 0) != -1:
-                raise kaitaistruct.ConsistencyError(u"keyword", -1, KaitaiStream.byte_array_index_of((self.keyword).encode(u"UTF-8"), 0))
+            if KaitaiStream.byte_array_index_of((self.keyword).encode(u"ISO-8859-1"), 0) != -1:
+                raise kaitaistruct.ConsistencyError(u"keyword", -1, KaitaiStream.byte_array_index_of((self.keyword).encode(u"ISO-8859-1"), 0))
+            if not self.compression_method == Png.CompressionMethods.zlib:
+                raise kaitaistruct.ValidationNotEqualError(Png.CompressionMethods.zlib, self.compression_method, None, u"/types/compressed_text_chunk/seq/1")
+            if self.text._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"text", self._root, self.text._root)
+            if self.text._parent != self:
+                raise kaitaistruct.ConsistencyError(u"text", self, self.text._parent)
             self._dirty = False
 
 
@@ -1458,7 +1576,7 @@ class Png(ReadWriteKaitaiStruct):
     class FrameControlChunk(ReadWriteKaitaiStruct):
         """
         .. seealso::
-           Source - https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk
+           Source - https://www.w3.org/TR/png/#fcTL-chunk
         """
         def __init__(self, _io=None, _parent=None, _root=None):
             super(Png.FrameControlChunk, self).__init__(_io)
@@ -1486,7 +1604,11 @@ class Png(ReadWriteKaitaiStruct):
             self.delay_num = self._io.read_u2be()
             self.delay_den = self._io.read_u2be()
             self.dispose_op = KaitaiStream.resolve_enum(Png.DisposeOpValues, self._io.read_u1())
+            if not isinstance(self.dispose_op, Png.DisposeOpValues):
+                raise kaitaistruct.ValidationNotInEnumError(self.dispose_op, self._io, u"/types/frame_control_chunk/seq/7")
             self.blend_op = KaitaiStream.resolve_enum(Png.BlendOpValues, self._io.read_u1())
+            if not isinstance(self.blend_op, Png.BlendOpValues):
+                raise kaitaistruct.ValidationNotInEnumError(self.blend_op, self._io, u"/types/frame_control_chunk/seq/8")
             self._dirty = False
 
 
@@ -1520,6 +1642,10 @@ class Png(ReadWriteKaitaiStruct):
                 raise kaitaistruct.ValidationGreaterThanError(self._root.ihdr.width - self.width, self.x_offset, None, u"/types/frame_control_chunk/seq/3")
             if not self.y_offset <= self._root.ihdr.height - self.height:
                 raise kaitaistruct.ValidationGreaterThanError(self._root.ihdr.height - self.height, self.y_offset, None, u"/types/frame_control_chunk/seq/4")
+            if not isinstance(self.dispose_op, Png.DisposeOpValues):
+                raise kaitaistruct.ValidationNotInEnumError(self.dispose_op, None, u"/types/frame_control_chunk/seq/7")
+            if not isinstance(self.blend_op, Png.BlendOpValues):
+                raise kaitaistruct.ValidationNotInEnumError(self.blend_op, None, u"/types/frame_control_chunk/seq/8")
             self._dirty = False
 
         @property
@@ -1537,7 +1663,7 @@ class Png(ReadWriteKaitaiStruct):
     class FrameDataChunk(ReadWriteKaitaiStruct):
         """
         .. seealso::
-           Source - https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk
+           Source - https://www.w3.org/TR/png/#fdAT-chunk
         """
         def __init__(self, _io=None, _parent=None, _root=None):
             super(Png.FrameDataChunk, self).__init__(_io)
@@ -1578,6 +1704,9 @@ class Png(ReadWriteKaitaiStruct):
 
         def _read(self):
             self.gamma_int = self._io.read_u4be()
+            _ = self.gamma_int
+            if not _ != 0:
+                raise kaitaistruct.ValidationExprError(self.gamma_int, self._io, u"/types/gama_chunk/seq/0")
             self._dirty = False
 
 
@@ -1591,18 +1720,35 @@ class Png(ReadWriteKaitaiStruct):
 
 
         def _check(self):
+            _ = self.gamma_int
+            if not _ != 0:
+                raise kaitaistruct.ValidationExprError(self.gamma_int, None, u"/types/gama_chunk/seq/0")
             self._dirty = False
 
         @property
-        def gamma_ratio(self):
-            if hasattr(self, '_m_gamma_ratio'):
-                return self._m_gamma_ratio
+        def gamma(self):
+            """Image gamma, typically 0.45455 = 1/2.2."""
+            if hasattr(self, '_m_gamma'):
+                return self._m_gamma
 
-            self._m_gamma_ratio = 100000.0 / self.gamma_int
-            return getattr(self, '_m_gamma_ratio', None)
+            self._m_gamma = self.gamma_int / 100000.0
+            return getattr(self, '_m_gamma', None)
 
-        def _invalidate_gamma_ratio(self):
-            del self._m_gamma_ratio
+        def _invalidate_gamma(self):
+            del self._m_gamma
+        @property
+        def inv_gamma(self):
+            """Inverse of the image gamma (1 / gamma), typically 2.2 (not considering
+            rounding)
+            """
+            if hasattr(self, '_m_inv_gamma'):
+                return self._m_inv_gamma
+
+            self._m_inv_gamma = 100000.0 / self.gamma_int
+            return getattr(self, '_m_inv_gamma', None)
+
+        def _invalidate_inv_gamma(self):
+            del self._m_inv_gamma
 
     class IhdrChunk(ReadWriteKaitaiStruct):
         """
@@ -1625,9 +1771,17 @@ class Png(ReadWriteKaitaiStruct):
             if not  ((self.bit_depth == 1) or (self.bit_depth == 2) or (self.bit_depth == 4) or (self.bit_depth == 8) or (self.bit_depth == 16)) :
                 raise kaitaistruct.ValidationNotAnyOfError(self.bit_depth, self._io, u"/types/ihdr_chunk/seq/2")
             self.color_type = KaitaiStream.resolve_enum(Png.ColorType, self._io.read_u1())
-            self.compression_method = self._io.read_u1()
-            self.filter_method = self._io.read_u1()
-            self.interlace_method = self._io.read_u1()
+            if not isinstance(self.color_type, Png.ColorType):
+                raise kaitaistruct.ValidationNotInEnumError(self.color_type, self._io, u"/types/ihdr_chunk/seq/3")
+            self.compression_method = KaitaiStream.resolve_enum(Png.CompressionMethods, self._io.read_u1())
+            if not isinstance(self.compression_method, Png.CompressionMethods):
+                raise kaitaistruct.ValidationNotInEnumError(self.compression_method, self._io, u"/types/ihdr_chunk/seq/4")
+            self.filter_method = KaitaiStream.resolve_enum(Png.FilterMethod, self._io.read_u1())
+            if not isinstance(self.filter_method, Png.FilterMethod):
+                raise kaitaistruct.ValidationNotInEnumError(self.filter_method, self._io, u"/types/ihdr_chunk/seq/5")
+            self.interlace_method = KaitaiStream.resolve_enum(Png.InterlaceMethod, self._io.read_u1())
+            if not isinstance(self.interlace_method, Png.InterlaceMethod):
+                raise kaitaistruct.ValidationNotInEnumError(self.interlace_method, self._io, u"/types/ihdr_chunk/seq/6")
             self._dirty = False
 
 
@@ -1641,9 +1795,9 @@ class Png(ReadWriteKaitaiStruct):
             self._io.write_u4be(self.height)
             self._io.write_u1(self.bit_depth)
             self._io.write_u1(int(self.color_type))
-            self._io.write_u1(self.compression_method)
-            self._io.write_u1(self.filter_method)
-            self._io.write_u1(self.interlace_method)
+            self._io.write_u1(int(self.compression_method))
+            self._io.write_u1(int(self.filter_method))
+            self._io.write_u1(int(self.interlace_method))
 
 
         def _check(self):
@@ -1653,6 +1807,14 @@ class Png(ReadWriteKaitaiStruct):
                 raise kaitaistruct.ValidationLessThanError(1, self.height, None, u"/types/ihdr_chunk/seq/1")
             if not  ((self.bit_depth == 1) or (self.bit_depth == 2) or (self.bit_depth == 4) or (self.bit_depth == 8) or (self.bit_depth == 16)) :
                 raise kaitaistruct.ValidationNotAnyOfError(self.bit_depth, None, u"/types/ihdr_chunk/seq/2")
+            if not isinstance(self.color_type, Png.ColorType):
+                raise kaitaistruct.ValidationNotInEnumError(self.color_type, None, u"/types/ihdr_chunk/seq/3")
+            if not isinstance(self.compression_method, Png.CompressionMethods):
+                raise kaitaistruct.ValidationNotInEnumError(self.compression_method, None, u"/types/ihdr_chunk/seq/4")
+            if not isinstance(self.filter_method, Png.FilterMethod):
+                raise kaitaistruct.ValidationNotInEnumError(self.filter_method, None, u"/types/ihdr_chunk/seq/5")
+            if not isinstance(self.interlace_method, Png.InterlaceMethod):
+                raise kaitaistruct.ValidationNotInEnumError(self.interlace_method, None, u"/types/ihdr_chunk/seq/6")
             self._dirty = False
 
 
@@ -1663,7 +1825,7 @@ class Png(ReadWriteKaitaiStruct):
             self._root = _root
 
         def _read(self):
-            self.text = (self._io.read_bytes_full()).decode(u"UTF-8")
+            self.value = (self._io.read_bytes_full()).decode(u"UTF-8")
             self._dirty = False
 
 
@@ -1673,9 +1835,9 @@ class Png(ReadWriteKaitaiStruct):
 
         def _write__seq(self, io=None):
             super(Png.InternationalText, self)._write__seq(io)
-            self._io.write_bytes((self.text).encode(u"UTF-8"))
+            self._io.write_bytes((self.value).encode(u"UTF-8"))
             if not self._io.is_eof():
-                raise kaitaistruct.ConsistencyError(u"text", 0, self._io.size() - self._io.pos())
+                raise kaitaistruct.ConsistencyError(u"value", 0, self._io.size() - self._io.pos())
 
 
         def _check(self):
@@ -1683,10 +1845,13 @@ class Png(ReadWriteKaitaiStruct):
 
 
     class InternationalTextChunk(ReadWriteKaitaiStruct):
-        """International text chunk effectively allows to store key-value string pairs in
-        PNG container. Both "key" (keyword) and "value" (text) parts are
-        given in pre-defined subset of iso8859-1 without control
-        characters.
+        """International textual data (`iTXt`) chunk effectively allows you to store
+        key-value string pairs in the PNG container.
+        
+        The "key" part (`keyword`) is restricted to printable ISO-8859-1 (Latin-1)
+        characters and spaces. The translated keyword and the "value" part
+        (`text`) are stored in UTF-8 and thus can store text in any language -
+        this language can be indicated via the language tag (`language_tag`).
         
         .. seealso::
            Source - https://www.w3.org/TR/png/#11iTXt
@@ -1697,11 +1862,13 @@ class Png(ReadWriteKaitaiStruct):
             self._root = _root
 
         def _read(self):
-            self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+            self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"ISO-8859-1")
             self.compression_flag = self._io.read_u1()
             if not  ((self.compression_flag == 0) or (self.compression_flag == 1)) :
                 raise kaitaistruct.ValidationNotAnyOfError(self.compression_flag, self._io, u"/types/international_text_chunk/seq/1")
             self.compression_method = KaitaiStream.resolve_enum(Png.CompressionMethods, self._io.read_u1())
+            if not self.compression_method == (Png.CompressionMethods.zlib if self.compression_flag == 1 else self.compression_method):
+                raise kaitaistruct.ValidationNotEqualError((Png.CompressionMethods.zlib if self.compression_flag == 1 else self.compression_method), self.compression_method, self._io, u"/types/international_text_chunk/seq/2")
             self.language_tag = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
             self.translated_keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
             if self.compression_flag == 0:
@@ -1737,7 +1904,7 @@ class Png(ReadWriteKaitaiStruct):
 
         def _write__seq(self, io=None):
             super(Png.InternationalTextChunk, self)._write__seq(io)
-            self._io.write_bytes((self.keyword).encode(u"UTF-8"))
+            self._io.write_bytes((self.keyword).encode(u"ISO-8859-1"))
             self._io.write_u1(0)
             self._io.write_u1(self.compression_flag)
             self._io.write_u1(int(self.compression_method))
@@ -1777,10 +1944,12 @@ class Png(ReadWriteKaitaiStruct):
 
 
         def _check(self):
-            if KaitaiStream.byte_array_index_of((self.keyword).encode(u"UTF-8"), 0) != -1:
-                raise kaitaistruct.ConsistencyError(u"keyword", -1, KaitaiStream.byte_array_index_of((self.keyword).encode(u"UTF-8"), 0))
+            if KaitaiStream.byte_array_index_of((self.keyword).encode(u"ISO-8859-1"), 0) != -1:
+                raise kaitaistruct.ConsistencyError(u"keyword", -1, KaitaiStream.byte_array_index_of((self.keyword).encode(u"ISO-8859-1"), 0))
             if not  ((self.compression_flag == 0) or (self.compression_flag == 1)) :
                 raise kaitaistruct.ValidationNotAnyOfError(self.compression_flag, None, u"/types/international_text_chunk/seq/1")
+            if not self.compression_method == (Png.CompressionMethods.zlib if self.compression_flag == 1 else self.compression_method):
+                raise kaitaistruct.ValidationNotEqualError((Png.CompressionMethods.zlib if self.compression_flag == 1 else self.compression_method), self.compression_method, None, u"/types/international_text_chunk/seq/2")
             if KaitaiStream.byte_array_index_of((self.language_tag).encode(u"ASCII"), 0) != -1:
                 raise kaitaistruct.ConsistencyError(u"language_tag", -1, KaitaiStream.byte_array_index_of((self.language_tag).encode(u"ASCII"), 0))
             if KaitaiStream.byte_array_index_of((self.translated_keyword).encode(u"UTF-8"), 0) != -1:
@@ -1803,14 +1972,20 @@ class Png(ReadWriteKaitaiStruct):
 
         @property
         def text(self):
-            """Text contents ("value" of this key-value pair), written in
-            language specified in `language_tag`. Line breaks are
-            allowed.
+            """Text string (the "value" of this key-value pair), written in language
+            specified in `language_tag`.
+            
+            Although it is not null-terminated (unlike other textual data in the
+            `iTXt` chunk), it must not contain a zero byte
+            (U+0000 NULL character). A newline should be represented by a single
+            U+000A LINE FEED (LF) character (aka `\n`). The remaining control
+            characters (U+0001..U+0009, U+000B..0+001F, U+007F..U+009F) are
+            discouraged.
             """
             if hasattr(self, '_m_text'):
                 return self._m_text
 
-            self._m_text = (self.text_plain if self.compression_flag == 0 else self.text_zlib).text
+            self._m_text = (self.text_plain if self.compression_flag == 0 else self.text_zlib).value
             return getattr(self, '_m_text', None)
 
         def _invalidate_text(self):
@@ -1951,8 +2126,9 @@ class Png(ReadWriteKaitaiStruct):
             del self._m_min_luminance
 
     class PhysChunk(ReadWriteKaitaiStruct):
-        """"Physical size" chunk stores data that allows to translate
-        logical pixels into physical units (meters, etc) and vice-versa.
+        """Physical pixel dimensions (`pHYs`) chunk specifies the intended physical
+        size of the pixels (in meters) or pixel aspect ratio for display of the
+        image.
         
         .. seealso::
            Source - https://www.w3.org/TR/png/#11pHYs
@@ -1966,6 +2142,8 @@ class Png(ReadWriteKaitaiStruct):
             self.pixels_per_unit_x = self._io.read_u4be()
             self.pixels_per_unit_y = self._io.read_u4be()
             self.unit = KaitaiStream.resolve_enum(Png.PhysUnit, self._io.read_u1())
+            if not isinstance(self.unit, Png.PhysUnit):
+                raise kaitaistruct.ValidationNotInEnumError(self.unit, self._io, u"/types/phys_chunk/seq/2")
             self._dirty = False
 
 
@@ -1981,8 +2159,38 @@ class Png(ReadWriteKaitaiStruct):
 
 
         def _check(self):
+            if not isinstance(self.unit, Png.PhysUnit):
+                raise kaitaistruct.ValidationNotInEnumError(self.unit, None, u"/types/phys_chunk/seq/2")
             self._dirty = False
 
+        @property
+        def dots_per_inch_x(self):
+            """Horizontal resolution (DPI)."""
+            if hasattr(self, '_m_dots_per_inch_x'):
+                return self._m_dots_per_inch_x
+
+            if self.unit == Png.PhysUnit.meter:
+                pass
+                self._m_dots_per_inch_x = self.pixels_per_unit_x * 0.0254
+
+            return getattr(self, '_m_dots_per_inch_x', None)
+
+        def _invalidate_dots_per_inch_x(self):
+            del self._m_dots_per_inch_x
+        @property
+        def dots_per_inch_y(self):
+            """Vertical resolution (DPI)."""
+            if hasattr(self, '_m_dots_per_inch_y'):
+                return self._m_dots_per_inch_y
+
+            if self.unit == Png.PhysUnit.meter:
+                pass
+                self._m_dots_per_inch_y = self.pixels_per_unit_y * 0.0254
+
+            return getattr(self, '_m_dots_per_inch_y', None)
+
+        def _invalidate_dots_per_inch_y(self):
+            del self._m_dots_per_inch_y
 
     class PlteChunk(ReadWriteKaitaiStruct):
         """
@@ -2085,6 +2293,8 @@ class Png(ReadWriteKaitaiStruct):
 
         def _read(self):
             self.render_intent = KaitaiStream.resolve_enum(Png.SrgbChunk.Intent, self._io.read_u1())
+            if not isinstance(self.render_intent, Png.SrgbChunk.Intent):
+                raise kaitaistruct.ValidationNotInEnumError(self.render_intent, self._io, u"/types/srgb_chunk/seq/0")
             self._dirty = False
 
 
@@ -2098,14 +2308,19 @@ class Png(ReadWriteKaitaiStruct):
 
 
         def _check(self):
+            if not isinstance(self.render_intent, Png.SrgbChunk.Intent):
+                raise kaitaistruct.ValidationNotInEnumError(self.render_intent, None, u"/types/srgb_chunk/seq/0")
             self._dirty = False
 
 
     class TextChunk(ReadWriteKaitaiStruct):
-        """Text chunk effectively allows to store key-value string pairs in
-        PNG container. Both "key" (keyword) and "value" (text) parts are
-        given in pre-defined subset of iso8859-1 without control
-        characters.
+        """Textual data (`tEXt`) chunk effectively allows you to store key-value
+        string pairs in the PNG container.
+        
+        Both the "key" (`keyword`) and "value" (`text`) parts are restricted to
+        printable ISO-8859-1 (Latin-1) characters and ASCII spaces, with the
+        exception that `text` can also contain newlines (U+000A LINE FEED (LF)
+        characters) and U+00A0 NON-BREAKING SPACE characters.
         
         .. seealso::
            Source - https://www.w3.org/TR/png/#11tEXt
