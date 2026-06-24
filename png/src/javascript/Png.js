@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+    define(['exports', 'kaitai-struct/KaitaiStream', './Exif', './Icc4'], factory);
   } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
-    factory(exports, require('kaitai-struct/KaitaiStream'));
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./Exif'), require('./Icc4'));
   } else {
-    factory(root.Png || (root.Png = {}), root.KaitaiStream);
+    factory(root.Png || (root.Png = {}), root.KaitaiStream, root.Exif || (root.Exif = {}), root.Icc4 || (root.Icc4 = {}));
   }
-})(typeof self !== 'undefined' ? self : this, function (Png_, KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Png_, KaitaiStream, Exif_, Icc4_) {
 /**
  * Test files for APNG can be found at the following locations:
  * 
@@ -427,6 +427,11 @@ var Png = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new ClliChunk(_io__raw_body, this, this._root);
         break;
+      case "eXIf":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new ExifChunk(_io__raw_body, this, this._root);
+        break;
       case "fcTL":
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -441,6 +446,16 @@ var Png = (function() {
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new GamaChunk(_io__raw_body, this, this._root);
+        break;
+      case "hIST":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new HistChunk(_io__raw_body, this, this._root);
+        break;
+      case "iCCP":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new IccpChunk(_io__raw_body, this, this._root);
         break;
       case "iTXt":
         this._raw_body = this._io.readBytes(this.len);
@@ -472,6 +487,16 @@ var Png = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new AdobeFireworksChunk(_io__raw_body, this, this._root);
         break;
+      case "sBIT":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SbitChunk(_io__raw_body, this, this._root);
+        break;
+      case "sPLT":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SpltChunk(_io__raw_body, this, this._root);
+        break;
       case "sRGB":
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -496,6 +521,11 @@ var Png = (function() {
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new TimeChunk(_io__raw_body, this, this._root);
+        break;
+      case "tRNS":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new TrnsChunk(_io__raw_body, this, this._root);
         break;
       case "zTXt":
         this._raw_body = this._io.readBytes(this.len);
@@ -820,6 +850,32 @@ var Png = (function() {
   })();
 
   /**
+   * Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+   * 
+   * Only one `eXIf` chunk is allowed in a PNG datastream.
+   * 
+   * The `eXIf` chunk contains metadata concerning the original image data. If
+   * the image has been edited subsequent to creation of the Exif profile, this
+   * data might no longer apply to the PNG image data.
+   * @see {@link https://www.w3.org/TR/png/#eXIf|Source}
+   */
+
+  var ExifChunk = Png.ExifChunk = (function() {
+    function ExifChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ExifChunk.prototype._read = function() {
+      this.exif = new Exif_.Exif(this._io, null, null);
+    }
+
+    return ExifChunk;
+  })();
+
+  /**
    * @see {@link https://www.w3.org/TR/png/#fcTL-chunk|Source}
    */
 
@@ -1025,6 +1081,118 @@ var Png = (function() {
      */
 
     return GamaChunk;
+  })();
+
+  /**
+   * Image histogram (`hIST`) chunk gives the approximate usage frequency of
+   * each color in the palette. A histogram chunk can appear only when a `PLTE`
+   * chunk appears.
+   * @see {@link https://www.w3.org/TR/png/#11hIST|Source}
+   */
+
+  var HistChunk = Png.HistChunk = (function() {
+    function HistChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    HistChunk.prototype._read = function() {
+      this.usageFreqs = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.usageFreqs.push(this._io.readU2be());
+        i++;
+      }
+    }
+
+    /**
+     * Usage frequencies of each color in the palette.
+     * 
+     * There must be exactly one entry for each entry in the `PLTE` chunk. Each
+     * entry is proportional to the fraction of pixels in the image that have
+     * that palette index; the exact scale factor is chosen by the encoder.
+     * 
+     * Histogram entries are approximate, with the exception that a zero
+     * entry specifies that the corresponding palette entry is not used at
+     * all in the image. A histogram entry must be nonzero if there are any
+     * pixels of that color.
+     */
+
+    return HistChunk;
+  })();
+
+  /**
+   * Embedded ICC profile (`iCCP`) chunk.
+   * 
+   * If the `iCCP` chunk is present, the image samples conform to the color
+   * space represented by the embedded ICC profile as defined by the
+   * International Color Consortium.
+   * 
+   * This chunk is ignored unless it is the [highest-precedence color
+   * chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+   * the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+   * at most one embedded profile, whether specified explicitly with an `iCCP`
+   * or implicitly with an `sRGB` chunk.
+   * 
+   * It is recommended that the `sRGB` and `iCCP` chunks do not appear
+   * simultaneously in a PNG datastream.
+   * @see {@link https://www.w3.org/TR/png/#11iCCP|Source}
+   */
+
+  var IccpChunk = Png.IccpChunk = (function() {
+    function IccpChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    IccpChunk.prototype._read = function() {
+      this.profileName = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ISO-8859-1");
+      this.compressionMethod = this._io.readU1();
+      if (!(this.compressionMethod == Png.CompressionMethods.ZLIB)) {
+        throw new KaitaiStream.ValidationNotEqualError(Png.CompressionMethods.ZLIB, this.compressionMethod, this._io, "/types/iccp_chunk/seq/1");
+      }
+      this._raw__raw_profile = this._io.readBytesFull();
+      this._raw_profile = KaitaiStream.processZlib(this._raw__raw_profile);
+      var _io__raw_profile = new KaitaiStream(this._raw_profile);
+      this.profile = new Icc4_.Icc4(_io__raw_profile, null, null);
+    }
+
+    /**
+     * Any convenient name for referring to the profile. It is
+     * case-sensitive.
+     * 
+     * Profile names must contain only printable ISO-8859-1 (Latin-1)
+     * characters and spaces; that is, only code points 0x20-0x7E and
+     * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+     * not permitted.
+     */
+
+    /**
+     * Embedded ICC profile.
+     * 
+     * The color space of the ICC profile must be:
+     * 
+     * * an RGB color space for color images (color types
+     *   `color_type::truecolor` = 2, `color_type::indexed` = 3, and
+     *   `color_type::truecolor_alpha` = 6), or
+     * * a greyscale color space for greyscale images (color types
+     *   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).
+     * 
+     * Note that the imported `icc_4.ksy` spec currently in use here supports
+     * only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.
+     * This means that PNG files with an embedded v2 profile (for example
+     * https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)
+     * will fail to parse.
+     * 
+     * TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it
+     * to `icc.ksy`, and use it here.
+     */
+
+    return IccpChunk;
   })();
 
   /**
@@ -1397,6 +1565,262 @@ var Png = (function() {
   })();
 
   /**
+   * Significant bits (`sBIT`) chunk stores the original number of significant
+   * bits of the sample values (which can be less than or equal to the sample
+   * depth). This allows PNG decoders to recover the original data losslessly
+   * even if the data had a sample depth not directly supported by PNG.
+   * @see {@link https://www.w3.org/TR/png/#11sBIT|Source}
+   */
+
+  var SbitChunk = Png.SbitChunk = (function() {
+    function SbitChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SbitChunk.prototype._read = function() {
+      switch (this._root.ihdr.colorType) {
+      case Png.ColorType.GREYSCALE:
+        this.significantBits = new SbitGreyscale(this._io, this, this._root, false);
+        break;
+      case Png.ColorType.GREYSCALE_ALPHA:
+        this.significantBits = new SbitGreyscale(this._io, this, this._root, true);
+        break;
+      case Png.ColorType.INDEXED:
+        this.significantBits = new SbitTruecolor(this._io, this, this._root, false);
+        break;
+      case Png.ColorType.TRUECOLOR:
+        this.significantBits = new SbitTruecolor(this._io, this, this._root, false);
+        break;
+      case Png.ColorType.TRUECOLOR_ALPHA:
+        this.significantBits = new SbitTruecolor(this._io, this, this._root, true);
+        break;
+      }
+    }
+    Object.defineProperty(SbitChunk.prototype, 'sampleDepth', {
+      get: function() {
+        if (this._m_sampleDepth !== undefined)
+          return this._m_sampleDepth;
+        this._m_sampleDepth = (this._root.ihdr.colorType == Png.ColorType.INDEXED ? 8 : this._root.ihdr.bitDepth);
+        return this._m_sampleDepth;
+      }
+    });
+
+    return SbitChunk;
+  })();
+
+  var SbitGreyscale = Png.SbitGreyscale = (function() {
+    function SbitGreyscale(_io, _parent, _root, hasAlpha) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.hasAlpha = hasAlpha;
+
+      this._read();
+    }
+    SbitGreyscale.prototype._read = function() {
+      this.grey = this._io.readU1();
+      if (!(this.grey >= 1)) {
+        throw new KaitaiStream.ValidationLessThanError(1, this.grey, this._io, "/types/sbit_greyscale/seq/0");
+      }
+      if (!(this.grey <= this._parent.sampleDepth)) {
+        throw new KaitaiStream.ValidationGreaterThanError(this._parent.sampleDepth, this.grey, this._io, "/types/sbit_greyscale/seq/0");
+      }
+      if (this.hasAlpha) {
+        this.alpha = this._io.readU1();
+        if (!(this.alpha >= 1)) {
+          throw new KaitaiStream.ValidationLessThanError(1, this.alpha, this._io, "/types/sbit_greyscale/seq/1");
+        }
+        if (!(this.alpha <= this._parent.sampleDepth)) {
+          throw new KaitaiStream.ValidationGreaterThanError(this._parent.sampleDepth, this.alpha, this._io, "/types/sbit_greyscale/seq/1");
+        }
+      }
+    }
+
+    return SbitGreyscale;
+  })();
+
+  var SbitTruecolor = Png.SbitTruecolor = (function() {
+    function SbitTruecolor(_io, _parent, _root, hasAlpha) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.hasAlpha = hasAlpha;
+
+      this._read();
+    }
+    SbitTruecolor.prototype._read = function() {
+      this.red = this._io.readU1();
+      if (!(this.red >= 1)) {
+        throw new KaitaiStream.ValidationLessThanError(1, this.red, this._io, "/types/sbit_truecolor/seq/0");
+      }
+      if (!(this.red <= this._parent.sampleDepth)) {
+        throw new KaitaiStream.ValidationGreaterThanError(this._parent.sampleDepth, this.red, this._io, "/types/sbit_truecolor/seq/0");
+      }
+      this.green = this._io.readU1();
+      if (!(this.green >= 1)) {
+        throw new KaitaiStream.ValidationLessThanError(1, this.green, this._io, "/types/sbit_truecolor/seq/1");
+      }
+      if (!(this.green <= this._parent.sampleDepth)) {
+        throw new KaitaiStream.ValidationGreaterThanError(this._parent.sampleDepth, this.green, this._io, "/types/sbit_truecolor/seq/1");
+      }
+      this.blue = this._io.readU1();
+      if (!(this.blue >= 1)) {
+        throw new KaitaiStream.ValidationLessThanError(1, this.blue, this._io, "/types/sbit_truecolor/seq/2");
+      }
+      if (!(this.blue <= this._parent.sampleDepth)) {
+        throw new KaitaiStream.ValidationGreaterThanError(this._parent.sampleDepth, this.blue, this._io, "/types/sbit_truecolor/seq/2");
+      }
+      if (this.hasAlpha) {
+        this.alpha = this._io.readU1();
+        if (!(this.alpha >= 1)) {
+          throw new KaitaiStream.ValidationLessThanError(1, this.alpha, this._io, "/types/sbit_truecolor/seq/3");
+        }
+        if (!(this.alpha <= this._parent.sampleDepth)) {
+          throw new KaitaiStream.ValidationGreaterThanError(this._parent.sampleDepth, this.alpha, this._io, "/types/sbit_truecolor/seq/3");
+        }
+      }
+    }
+
+    return SbitTruecolor;
+  })();
+
+  /**
+   * Suggested palette (`sPLT`) chunk.
+   * 
+   * Multiple `sPLT` chunks are permitted, but each must have a different
+   * palette name.
+   * @see {@link https://www.w3.org/TR/png/#11sPLT|Source}
+   * @see {@link https://www.w3.org/TR/png/#12Suggested-palettes|Source}
+   */
+
+  var SpltChunk = Png.SpltChunk = (function() {
+    function SpltChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SpltChunk.prototype._read = function() {
+      this.paletteName = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ISO-8859-1");
+      this.sampleDepth = this._io.readU1();
+      if (!( ((this.sampleDepth == 8) || (this.sampleDepth == 16)) )) {
+        throw new KaitaiStream.ValidationNotAnyOfError(this.sampleDepth, this._io, "/types/splt_chunk/seq/1");
+      }
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new SpltEntry(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    /**
+     * Any convenient name for referring to the palette. It is
+     * case-sensitive. The palette name may aid the choice of the appropriate
+     * suggested palette when more than one appears in a PNG datastream.
+     * 
+     * Palette names must contain only printable ISO-8859-1 (Latin-1)
+     * characters and spaces; that is, only code points 0x20-0x7E and
+     * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+     * not permitted.
+     */
+
+    /**
+     * There may be any number of entries. Entries must appear "in decreasing
+     * order of frequency" (note: strictly speaking, I think the W3C
+     * specification actually meant "non-increasing"). There is no
+     * requirement that the entries all be used by the image, nor that they
+     * all be different.
+     * 
+     * The color samples are not premultiplied by alpha, nor are they
+     * precomposited against any background.
+     * 
+     * Entries in `sPLT` use the same gamma value and chromaticity values as
+     * the PNG image, but may fall outside the range of values used in the
+     * color space of the PNG image; for example, in a greyscale PNG image,
+     * each `sPLT` entry would typically have equal red, green, and blue
+     * values, but this is not required. Similarly, `sPLT` entries can have
+     * non-opaque alpha values even when the PNG image does not use
+     * transparency.
+     */
+
+    return SpltChunk;
+  })();
+
+  var SpltEntry = Png.SpltEntry = (function() {
+    function SpltEntry(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SpltEntry.prototype._read = function() {
+      switch (this._parent.sampleDepth) {
+      case 8:
+        this.red = this._io.readU1();
+        break;
+      default:
+        this.red = this._io.readU2be();
+        break;
+      }
+      switch (this._parent.sampleDepth) {
+      case 8:
+        this.green = this._io.readU1();
+        break;
+      default:
+        this.green = this._io.readU2be();
+        break;
+      }
+      switch (this._parent.sampleDepth) {
+      case 8:
+        this.blue = this._io.readU1();
+        break;
+      default:
+        this.blue = this._io.readU2be();
+        break;
+      }
+      switch (this._parent.sampleDepth) {
+      case 8:
+        this.alpha = this._io.readU1();
+        break;
+      default:
+        this.alpha = this._io.readU2be();
+        break;
+      }
+      this.freq = this._io.readU2be();
+    }
+
+    /**
+     * An alpha value of 0 means fully transparent. An alpha value of 255
+     * (when `_parent.sample_depth` is 8) or 65535 (when
+     * `_parent.sample_depth` is 16) means fully opaque.
+     */
+
+    /**
+     * Each frequency value is proportional to the fraction of the pixels in
+     * the image for which that palette entry is the closest match in RGBA
+     * space, before the image has been composited against any background.
+     * 
+     * The exact scale factor is chosen by the PNG encoder; it is recommended
+     * that the resulting range of individual values reasonably fills the
+     * range 0 to 65535.
+     * 
+     * Zero is a valid frequency meaning that the color is "least important"
+     * or that it is rarely, if ever, used. When all the frequencies are
+     * zero, they are meaningless, that is to say, nothing may be inferred
+     * about the actual frequencies with which the colors appear in the PNG
+     * image.
+     */
+
+    return SpltEntry;
+  })();
+
+  /**
    * @see {@link https://www.w3.org/TR/png/#11sRGB|Source}
    */
 
@@ -1502,6 +1926,147 @@ var Png = (function() {
     }
 
     return TimeChunk;
+  })();
+
+  /**
+   * Transparency (`tRNS`) chunk specifies either alpha values that are
+   * associated with palette entries (for indexed-color images) or a single
+   * transparent color (for greyscale and truecolor images).
+   * 
+   * A `tRNS` chunk must not appear for color types
+   * `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+   * since a full alpha channel is already present in those cases.
+   * @see {@link https://www.w3.org/TR/png/#11tRNS|Source}
+   */
+
+  var TrnsChunk = Png.TrnsChunk = (function() {
+    function TrnsChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TrnsChunk.prototype._read = function() {
+      if (this._root.ihdr.colorType == Png.ColorType.INDEXED) {
+        this.paletteAlphas = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.paletteAlphas.push(this._io.readU1());
+          i++;
+        }
+      }
+      switch (this._root.ihdr.colorType) {
+      case Png.ColorType.GREYSCALE:
+        this.transparentColor = new TrnsGreyscaleColor(this._io, this, this._root);
+        break;
+      case Png.ColorType.TRUECOLOR:
+        this.transparentColor = new TrnsTruecolorColor(this._io, this, this._root);
+        break;
+      }
+    }
+    Object.defineProperty(TrnsChunk.prototype, 'sampleMask', {
+      get: function() {
+        if (this._m_sampleMask !== undefined)
+          return this._m_sampleMask;
+        this._m_sampleMask = (1 << this._root.ihdr.bitDepth) - 1;
+        return this._m_sampleMask;
+      }
+    });
+
+    /**
+     * Alpha values associated with palette entries in the `PLTE` chunk.
+     * 
+     * Each entry indicates that pixels of the corresponding palette index
+     * shall be treated as having the specified alpha value. Alpha values
+     * have the same interpretation as in an 8-bit full alpha channel: 0 is
+     * fully transparent, 255 is fully opaque, regardless of image bit depth.
+     * 
+     * The `tRNS` chunk must not contain more alpha values than there are
+     * palette entries, but it may contain fewer values than there are
+     * palette entries. In this case, the alpha value for all remaining
+     * palette entries is assumed to be 255. If all palette indices are
+     * opaque, the `tRNS` chunk may be omitted.
+     */
+
+    /**
+     * Pixels of the specified grey sample value or RGB sample values are
+     * treated as transparent (equivalent to alpha value 0); all other pixels
+     * are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).
+     * 
+     * If the image bit depth is less than 16, the least significant bits of
+     * these sample values are used. Encoders should set the other bits to 0,
+     * and decoders must mask the other bits to 0 before the value is used.
+     * 
+     * Note: in this Kaitai Struct implementation, the bitmask used to
+     * implement this masking is stored in the value instance `sample_mask`.
+     */
+
+    return TrnsChunk;
+  })();
+
+  var TrnsGreyscaleColor = Png.TrnsGreyscaleColor = (function() {
+    function TrnsGreyscaleColor(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TrnsGreyscaleColor.prototype._read = function() {
+      this.greyRaw = this._io.readU2be();
+    }
+    Object.defineProperty(TrnsGreyscaleColor.prototype, 'grey', {
+      get: function() {
+        if (this._m_grey !== undefined)
+          return this._m_grey;
+        this._m_grey = this.greyRaw & this._parent.sampleMask;
+        return this._m_grey;
+      }
+    });
+
+    return TrnsGreyscaleColor;
+  })();
+
+  var TrnsTruecolorColor = Png.TrnsTruecolorColor = (function() {
+    function TrnsTruecolorColor(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TrnsTruecolorColor.prototype._read = function() {
+      this.redRaw = this._io.readU2be();
+      this.greenRaw = this._io.readU2be();
+      this.blueRaw = this._io.readU2be();
+    }
+    Object.defineProperty(TrnsTruecolorColor.prototype, 'blue', {
+      get: function() {
+        if (this._m_blue !== undefined)
+          return this._m_blue;
+        this._m_blue = this.blueRaw & this._parent.sampleMask;
+        return this._m_blue;
+      }
+    });
+    Object.defineProperty(TrnsTruecolorColor.prototype, 'green', {
+      get: function() {
+        if (this._m_green !== undefined)
+          return this._m_green;
+        this._m_green = this.greenRaw & this._parent.sampleMask;
+        return this._m_green;
+      }
+    });
+    Object.defineProperty(TrnsTruecolorColor.prototype, 'red', {
+      get: function() {
+        if (this._m_red !== undefined)
+          return this._m_red;
+        this._m_red = this.redRaw & this._parent.sampleMask;
+        return this._m_red;
+      }
+    });
+
+    return TrnsTruecolorColor;
   })();
 
   return Png;

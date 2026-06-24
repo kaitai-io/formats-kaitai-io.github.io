@@ -1,6 +1,8 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'exif'
+require_relative 'icc_4'
 require 'zlib'
 
 unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
@@ -336,6 +338,9 @@ class Png < Kaitai::Struct::Struct
       when "cLLI"
         _io_body = @_io.substream(len)
         @body = ClliChunk.new(_io_body, self, @_root)
+      when "eXIf"
+        _io_body = @_io.substream(len)
+        @body = ExifChunk.new(_io_body, self, @_root)
       when "fcTL"
         _io_body = @_io.substream(len)
         @body = FrameControlChunk.new(_io_body, self, @_root)
@@ -345,6 +350,12 @@ class Png < Kaitai::Struct::Struct
       when "gAMA"
         _io_body = @_io.substream(len)
         @body = GamaChunk.new(_io_body, self, @_root)
+      when "hIST"
+        _io_body = @_io.substream(len)
+        @body = HistChunk.new(_io_body, self, @_root)
+      when "iCCP"
+        _io_body = @_io.substream(len)
+        @body = IccpChunk.new(_io_body, self, @_root)
       when "iTXt"
         _io_body = @_io.substream(len)
         @body = InternationalTextChunk.new(_io_body, self, @_root)
@@ -363,6 +374,12 @@ class Png < Kaitai::Struct::Struct
       when "prVW"
         _io_body = @_io.substream(len)
         @body = AdobeFireworksChunk.new(_io_body, self, @_root)
+      when "sBIT"
+        _io_body = @_io.substream(len)
+        @body = SbitChunk.new(_io_body, self, @_root)
+      when "sPLT"
+        _io_body = @_io.substream(len)
+        @body = SpltChunk.new(_io_body, self, @_root)
       when "sRGB"
         _io_body = @_io.substream(len)
         @body = SrgbChunk.new(_io_body, self, @_root)
@@ -378,6 +395,9 @@ class Png < Kaitai::Struct::Struct
       when "tIME"
         _io_body = @_io.substream(len)
         @body = TimeChunk.new(_io_body, self, @_root)
+      when "tRNS"
+        _io_body = @_io.substream(len)
+        @body = TrnsChunk.new(_io_body, self, @_root)
       when "zTXt"
         _io_body = @_io.substream(len)
         @body = CompressedTextChunk.new(_io_body, self, @_root)
@@ -645,6 +665,28 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
+  # Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+  # 
+  # Only one `eXIf` chunk is allowed in a PNG datastream.
+  # 
+  # The `eXIf` chunk contains metadata concerning the original image data. If
+  # the image has been edited subsequent to creation of the Exif profile, this
+  # data might no longer apply to the PNG image data.
+  # @see https://www.w3.org/TR/png/#eXIf Source
+  class ExifChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @exif = Exif.new(@_io)
+      self
+    end
+    attr_reader :exif
+  end
+
+  ##
   # @see https://www.w3.org/TR/png/#fcTL-chunk Source
   class FrameControlChunk < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
@@ -805,6 +847,109 @@ class Png < Kaitai::Struct::Struct
     # Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
     # 45455)
     attr_reader :gamma_int
+  end
+
+  ##
+  # Image histogram (`hIST`) chunk gives the approximate usage frequency of
+  # each color in the palette. A histogram chunk can appear only when a `PLTE`
+  # chunk appears.
+  # @see https://www.w3.org/TR/png/#11hIST Source
+  class HistChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @usage_freqs = []
+      i = 0
+      while not @_io.eof?
+        @usage_freqs << @_io.read_u2be
+        i += 1
+      end
+      self
+    end
+
+    ##
+    # Usage frequencies of each color in the palette.
+    # 
+    # There must be exactly one entry for each entry in the `PLTE` chunk. Each
+    # entry is proportional to the fraction of pixels in the image that have
+    # that palette index; the exact scale factor is chosen by the encoder.
+    # 
+    # Histogram entries are approximate, with the exception that a zero
+    # entry specifies that the corresponding palette entry is not used at
+    # all in the image. A histogram entry must be nonzero if there are any
+    # pixels of that color.
+    attr_reader :usage_freqs
+  end
+
+  ##
+  # Embedded ICC profile (`iCCP`) chunk.
+  # 
+  # If the `iCCP` chunk is present, the image samples conform to the color
+  # space represented by the embedded ICC profile as defined by the
+  # International Color Consortium.
+  # 
+  # This chunk is ignored unless it is the [highest-precedence color
+  # chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+  # the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+  # at most one embedded profile, whether specified explicitly with an `iCCP`
+  # or implicitly with an `sRGB` chunk.
+  # 
+  # It is recommended that the `sRGB` and `iCCP` chunks do not appear
+  # simultaneously in a PNG datastream.
+  # @see https://www.w3.org/TR/png/#11iCCP Source
+  class IccpChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @profile_name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ISO-8859-1").encode('UTF-8')
+      @compression_method = Kaitai::Struct::Stream::resolve_enum(Png::COMPRESSION_METHODS, @_io.read_u1)
+      raise Kaitai::Struct::ValidationNotEqualError.new(:compression_methods_zlib, @compression_method, @_io, "/types/iccp_chunk/seq/1") if not @compression_method == :compression_methods_zlib
+      @_raw__raw_profile = @_io.read_bytes_full
+      @_raw_profile = Zlib::Inflate.inflate(@_raw__raw_profile)
+      _io__raw_profile = Kaitai::Struct::Stream.new(@_raw_profile)
+      @profile = Icc4.new(_io__raw_profile)
+      self
+    end
+
+    ##
+    # Any convenient name for referring to the profile. It is
+    # case-sensitive.
+    # 
+    # Profile names must contain only printable ISO-8859-1 (Latin-1)
+    # characters and spaces; that is, only code points 0x20-0x7E and
+    # 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+    # not permitted.
+    attr_reader :profile_name
+    attr_reader :compression_method
+
+    ##
+    # Embedded ICC profile.
+    # 
+    # The color space of the ICC profile must be:
+    # 
+    # * an RGB color space for color images (color types
+    #   `color_type::truecolor` = 2, `color_type::indexed` = 3, and
+    #   `color_type::truecolor_alpha` = 6), or
+    # * a greyscale color space for greyscale images (color types
+    #   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).
+    # 
+    # Note that the imported `icc_4.ksy` spec currently in use here supports
+    # only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.
+    # This means that PNG files with an embedded v2 profile (for example
+    # https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)
+    # will fail to parse.
+    # 
+    # TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it
+    # to `icc.ksy`, and use it here.
+    attr_reader :profile
+    attr_reader :_raw_profile
+    attr_reader :_raw__raw_profile
   end
 
   ##
@@ -1120,6 +1265,211 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
+  # Significant bits (`sBIT`) chunk stores the original number of significant
+  # bits of the sample values (which can be less than or equal to the sample
+  # depth). This allows PNG decoders to recover the original data losslessly
+  # even if the data had a sample depth not directly supported by PNG.
+  # @see https://www.w3.org/TR/png/#11sBIT Source
+  class SbitChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      case _root.ihdr.color_type
+      when :color_type_greyscale
+        @significant_bits = SbitGreyscale.new(@_io, self, @_root, false)
+      when :color_type_greyscale_alpha
+        @significant_bits = SbitGreyscale.new(@_io, self, @_root, true)
+      when :color_type_indexed
+        @significant_bits = SbitTruecolor.new(@_io, self, @_root, false)
+      when :color_type_truecolor
+        @significant_bits = SbitTruecolor.new(@_io, self, @_root, false)
+      when :color_type_truecolor_alpha
+        @significant_bits = SbitTruecolor.new(@_io, self, @_root, true)
+      end
+      self
+    end
+    def sample_depth
+      return @sample_depth unless @sample_depth.nil?
+      @sample_depth = (_root.ihdr.color_type == :color_type_indexed ? 8 : _root.ihdr.bit_depth)
+      @sample_depth
+    end
+    attr_reader :significant_bits
+  end
+  class SbitGreyscale < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, has_alpha)
+      super(_io, _parent, _root)
+      @has_alpha = has_alpha
+      _read
+    end
+
+    def _read
+      @grey = @_io.read_u1
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @grey, @_io, "/types/sbit_greyscale/seq/0") if not @grey >= 1
+      raise Kaitai::Struct::ValidationGreaterThanError.new(_parent.sample_depth, @grey, @_io, "/types/sbit_greyscale/seq/0") if not @grey <= _parent.sample_depth
+      if has_alpha
+        @alpha = @_io.read_u1
+        raise Kaitai::Struct::ValidationLessThanError.new(1, @alpha, @_io, "/types/sbit_greyscale/seq/1") if not @alpha >= 1
+        raise Kaitai::Struct::ValidationGreaterThanError.new(_parent.sample_depth, @alpha, @_io, "/types/sbit_greyscale/seq/1") if not @alpha <= _parent.sample_depth
+      end
+      self
+    end
+    attr_reader :grey
+    attr_reader :alpha
+    attr_reader :has_alpha
+  end
+  class SbitTruecolor < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, has_alpha)
+      super(_io, _parent, _root)
+      @has_alpha = has_alpha
+      _read
+    end
+
+    def _read
+      @red = @_io.read_u1
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @red, @_io, "/types/sbit_truecolor/seq/0") if not @red >= 1
+      raise Kaitai::Struct::ValidationGreaterThanError.new(_parent.sample_depth, @red, @_io, "/types/sbit_truecolor/seq/0") if not @red <= _parent.sample_depth
+      @green = @_io.read_u1
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @green, @_io, "/types/sbit_truecolor/seq/1") if not @green >= 1
+      raise Kaitai::Struct::ValidationGreaterThanError.new(_parent.sample_depth, @green, @_io, "/types/sbit_truecolor/seq/1") if not @green <= _parent.sample_depth
+      @blue = @_io.read_u1
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @blue, @_io, "/types/sbit_truecolor/seq/2") if not @blue >= 1
+      raise Kaitai::Struct::ValidationGreaterThanError.new(_parent.sample_depth, @blue, @_io, "/types/sbit_truecolor/seq/2") if not @blue <= _parent.sample_depth
+      if has_alpha
+        @alpha = @_io.read_u1
+        raise Kaitai::Struct::ValidationLessThanError.new(1, @alpha, @_io, "/types/sbit_truecolor/seq/3") if not @alpha >= 1
+        raise Kaitai::Struct::ValidationGreaterThanError.new(_parent.sample_depth, @alpha, @_io, "/types/sbit_truecolor/seq/3") if not @alpha <= _parent.sample_depth
+      end
+      self
+    end
+    attr_reader :red
+    attr_reader :green
+    attr_reader :blue
+    attr_reader :alpha
+    attr_reader :has_alpha
+  end
+
+  ##
+  # Suggested palette (`sPLT`) chunk.
+  # 
+  # Multiple `sPLT` chunks are permitted, but each must have a different
+  # palette name.
+  # @see https://www.w3.org/TR/png/#11sPLT Source
+  # @see https://www.w3.org/TR/png/#12Suggested-palettes Source
+  class SpltChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @palette_name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ISO-8859-1").encode('UTF-8')
+      @sample_depth = @_io.read_u1
+      raise Kaitai::Struct::ValidationNotAnyOfError.new(@sample_depth, @_io, "/types/splt_chunk/seq/1") if not  ((@sample_depth == 8) || (@sample_depth == 16)) 
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << SpltEntry.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+
+    ##
+    # Any convenient name for referring to the palette. It is
+    # case-sensitive. The palette name may aid the choice of the appropriate
+    # suggested palette when more than one appears in a PNG datastream.
+    # 
+    # Palette names must contain only printable ISO-8859-1 (Latin-1)
+    # characters and spaces; that is, only code points 0x20-0x7E and
+    # 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+    # not permitted.
+    attr_reader :palette_name
+    attr_reader :sample_depth
+
+    ##
+    # There may be any number of entries. Entries must appear "in decreasing
+    # order of frequency" (note: strictly speaking, I think the W3C
+    # specification actually meant "non-increasing"). There is no
+    # requirement that the entries all be used by the image, nor that they
+    # all be different.
+    # 
+    # The color samples are not premultiplied by alpha, nor are they
+    # precomposited against any background.
+    # 
+    # Entries in `sPLT` use the same gamma value and chromaticity values as
+    # the PNG image, but may fall outside the range of values used in the
+    # color space of the PNG image; for example, in a greyscale PNG image,
+    # each `sPLT` entry would typically have equal red, green, and blue
+    # values, but this is not required. Similarly, `sPLT` entries can have
+    # non-opaque alpha values even when the PNG image does not use
+    # transparency.
+    attr_reader :entries
+  end
+  class SpltEntry < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      case _parent.sample_depth
+      when 8
+        @red = @_io.read_u1
+      else
+        @red = @_io.read_u2be
+      end
+      case _parent.sample_depth
+      when 8
+        @green = @_io.read_u1
+      else
+        @green = @_io.read_u2be
+      end
+      case _parent.sample_depth
+      when 8
+        @blue = @_io.read_u1
+      else
+        @blue = @_io.read_u2be
+      end
+      case _parent.sample_depth
+      when 8
+        @alpha = @_io.read_u1
+      else
+        @alpha = @_io.read_u2be
+      end
+      @freq = @_io.read_u2be
+      self
+    end
+    attr_reader :red
+    attr_reader :green
+    attr_reader :blue
+
+    ##
+    # An alpha value of 0 means fully transparent. An alpha value of 255
+    # (when `_parent.sample_depth` is 8) or 65535 (when
+    # `_parent.sample_depth` is 16) means fully opaque.
+    attr_reader :alpha
+
+    ##
+    # Each frequency value is proportional to the fraction of the pixels in
+    # the image for which that palette entry is the closest match in RGBA
+    # space, before the image has been composited against any background.
+    # 
+    # The exact scale factor is chosen by the PNG encoder; it is recommended
+    # that the resulting range of individual values reasonably fills the
+    # range 0 to 65535.
+    # 
+    # Zero is a valid frequency meaning that the color is "least important"
+    # or that it is rarely, if ever, used. When all the frequencies are
+    # zero, they are meaningless, that is to say, nothing may be inferred
+    # about the actual frequencies with which the colors appear in the PNG
+    # image.
+    attr_reader :freq
+  end
+
+  ##
   # @see https://www.w3.org/TR/png/#11sRGB Source
   class SrgbChunk < Kaitai::Struct::Struct
 
@@ -1211,6 +1561,121 @@ class Png < Kaitai::Struct::Struct
     attr_reader :hour
     attr_reader :minute
     attr_reader :second
+  end
+
+  ##
+  # Transparency (`tRNS`) chunk specifies either alpha values that are
+  # associated with palette entries (for indexed-color images) or a single
+  # transparent color (for greyscale and truecolor images).
+  # 
+  # A `tRNS` chunk must not appear for color types
+  # `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+  # since a full alpha channel is already present in those cases.
+  # @see https://www.w3.org/TR/png/#11tRNS Source
+  class TrnsChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      if _root.ihdr.color_type == :color_type_indexed
+        @palette_alphas = []
+        i = 0
+        while not @_io.eof?
+          @palette_alphas << @_io.read_u1
+          i += 1
+        end
+      end
+      case _root.ihdr.color_type
+      when :color_type_greyscale
+        @transparent_color = TrnsGreyscaleColor.new(@_io, self, @_root)
+      when :color_type_truecolor
+        @transparent_color = TrnsTruecolorColor.new(@_io, self, @_root)
+      end
+      self
+    end
+    def sample_mask
+      return @sample_mask unless @sample_mask.nil?
+      @sample_mask = (1 << _root.ihdr.bit_depth) - 1
+      @sample_mask
+    end
+
+    ##
+    # Alpha values associated with palette entries in the `PLTE` chunk.
+    # 
+    # Each entry indicates that pixels of the corresponding palette index
+    # shall be treated as having the specified alpha value. Alpha values
+    # have the same interpretation as in an 8-bit full alpha channel: 0 is
+    # fully transparent, 255 is fully opaque, regardless of image bit depth.
+    # 
+    # The `tRNS` chunk must not contain more alpha values than there are
+    # palette entries, but it may contain fewer values than there are
+    # palette entries. In this case, the alpha value for all remaining
+    # palette entries is assumed to be 255. If all palette indices are
+    # opaque, the `tRNS` chunk may be omitted.
+    attr_reader :palette_alphas
+
+    ##
+    # Pixels of the specified grey sample value or RGB sample values are
+    # treated as transparent (equivalent to alpha value 0); all other pixels
+    # are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).
+    # 
+    # If the image bit depth is less than 16, the least significant bits of
+    # these sample values are used. Encoders should set the other bits to 0,
+    # and decoders must mask the other bits to 0 before the value is used.
+    # 
+    # Note: in this Kaitai Struct implementation, the bitmask used to
+    # implement this masking is stored in the value instance `sample_mask`.
+    attr_reader :transparent_color
+  end
+  class TrnsGreyscaleColor < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @grey_raw = @_io.read_u2be
+      self
+    end
+    def grey
+      return @grey unless @grey.nil?
+      @grey = grey_raw & _parent.sample_mask
+      @grey
+    end
+    attr_reader :grey_raw
+  end
+  class TrnsTruecolorColor < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @red_raw = @_io.read_u2be
+      @green_raw = @_io.read_u2be
+      @blue_raw = @_io.read_u2be
+      self
+    end
+    def blue
+      return @blue unless @blue.nil?
+      @blue = blue_raw & _parent.sample_mask
+      @blue
+    end
+    def green
+      return @green unless @green.nil?
+      @green = green_raw & _parent.sample_mask
+      @green
+    end
+    def red
+      return @red unless @red.nil?
+      @red = red_raw & _parent.sample_mask
+      @red
+    end
+    attr_reader :red_raw
+    attr_reader :green_raw
+    attr_reader :blue_raw
   end
   attr_reader :magic
   attr_reader :ihdr_len

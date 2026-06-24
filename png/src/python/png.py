@@ -3,6 +3,8 @@
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
+import exif
+import icc_4
 from enum import IntEnum
 import zlib
 
@@ -387,6 +389,11 @@ class Png(KaitaiStruct):
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.ClliChunk(_io__raw_body, self, self._root)
+            elif _on == u"eXIf":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.ExifChunk(_io__raw_body, self, self._root)
             elif _on == u"fcTL":
                 pass
                 self._raw_body = self._io.read_bytes(self.len)
@@ -402,6 +409,16 @@ class Png(KaitaiStruct):
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.GamaChunk(_io__raw_body, self, self._root)
+            elif _on == u"hIST":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.HistChunk(_io__raw_body, self, self._root)
+            elif _on == u"iCCP":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.IccpChunk(_io__raw_body, self, self._root)
             elif _on == u"iTXt":
                 pass
                 self._raw_body = self._io.read_bytes(self.len)
@@ -432,6 +449,16 @@ class Png(KaitaiStruct):
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.AdobeFireworksChunk(_io__raw_body, self, self._root)
+            elif _on == u"sBIT":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.SbitChunk(_io__raw_body, self, self._root)
+            elif _on == u"sPLT":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.SpltChunk(_io__raw_body, self, self._root)
             elif _on == u"sRGB":
                 pass
                 self._raw_body = self._io.read_bytes(self.len)
@@ -457,6 +484,11 @@ class Png(KaitaiStruct):
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.TimeChunk(_io__raw_body, self, self._root)
+            elif _on == u"tRNS":
+                pass
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.TrnsChunk(_io__raw_body, self, self._root)
             elif _on == u"zTXt":
                 pass
                 self._raw_body = self._io.read_bytes(self.len)
@@ -492,6 +524,9 @@ class Png(KaitaiStruct):
             elif _on == u"cLLI":
                 pass
                 self.body._fetch_instances()
+            elif _on == u"eXIf":
+                pass
+                self.body._fetch_instances()
             elif _on == u"fcTL":
                 pass
                 self.body._fetch_instances()
@@ -499,6 +534,12 @@ class Png(KaitaiStruct):
                 pass
                 self.body._fetch_instances()
             elif _on == u"gAMA":
+                pass
+                self.body._fetch_instances()
+            elif _on == u"hIST":
+                pass
+                self.body._fetch_instances()
+            elif _on == u"iCCP":
                 pass
                 self.body._fetch_instances()
             elif _on == u"iTXt":
@@ -519,6 +560,12 @@ class Png(KaitaiStruct):
             elif _on == u"prVW":
                 pass
                 self.body._fetch_instances()
+            elif _on == u"sBIT":
+                pass
+                self.body._fetch_instances()
+            elif _on == u"sPLT":
+                pass
+                self.body._fetch_instances()
             elif _on == u"sRGB":
                 pass
                 self.body._fetch_instances()
@@ -532,6 +579,9 @@ class Png(KaitaiStruct):
                 pass
                 self.body._fetch_instances()
             elif _on == u"tIME":
+                pass
+                self.body._fetch_instances()
+            elif _on == u"tRNS":
                 pass
                 self.body._fetch_instances()
             elif _on == u"zTXt":
@@ -755,6 +805,33 @@ class Png(KaitaiStruct):
             pass
 
 
+    class ExifChunk(KaitaiStruct):
+        """Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+        
+        Only one `eXIf` chunk is allowed in a PNG datastream.
+        
+        The `eXIf` chunk contains metadata concerning the original image data. If
+        the image has been edited subsequent to creation of the Exif profile, this
+        data might no longer apply to the PNG image data.
+        
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#eXIf
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Png.ExifChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.exif = exif.Exif(self._io)
+
+
+        def _fetch_instances(self):
+            pass
+            self.exif._fetch_instances()
+
+
     class FrameControlChunk(KaitaiStruct):
         """
         .. seealso::
@@ -867,6 +944,77 @@ class Png(KaitaiStruct):
 
             self._m_inv_gamma = 100000.0 / self.gamma_int
             return getattr(self, '_m_inv_gamma', None)
+
+
+    class HistChunk(KaitaiStruct):
+        """Image histogram (`hIST`) chunk gives the approximate usage frequency of
+        each color in the palette. A histogram chunk can appear only when a `PLTE`
+        chunk appears.
+        
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#11hIST
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Png.HistChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.usage_freqs = []
+            i = 0
+            while not self._io.is_eof():
+                self.usage_freqs.append(self._io.read_u2be())
+                i += 1
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.usage_freqs)):
+                pass
+
+
+
+    class IccpChunk(KaitaiStruct):
+        """Embedded ICC profile (`iCCP`) chunk.
+        
+        If the `iCCP` chunk is present, the image samples conform to the color
+        space represented by the embedded ICC profile as defined by the
+        International Color Consortium.
+        
+        This chunk is ignored unless it is the [highest-precedence color
+        chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+        the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+        at most one embedded profile, whether specified explicitly with an `iCCP`
+        or implicitly with an `sRGB` chunk.
+        
+        It is recommended that the `sRGB` and `iCCP` chunks do not appear
+        simultaneously in a PNG datastream.
+        
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#11iCCP
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Png.IccpChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.profile_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ISO-8859-1")
+            self.compression_method = KaitaiStream.resolve_enum(Png.CompressionMethods, self._io.read_u1())
+            if not self.compression_method == Png.CompressionMethods.zlib:
+                raise kaitaistruct.ValidationNotEqualError(Png.CompressionMethods.zlib, self.compression_method, self._io, u"/types/iccp_chunk/seq/1")
+            self._raw__raw_profile = self._io.read_bytes_full()
+            self._raw_profile = zlib.decompress(self._raw__raw_profile)
+            _io__raw_profile = KaitaiStream(BytesIO(self._raw_profile))
+            self.profile = icc_4.Icc4(_io__raw_profile)
+
+
+        def _fetch_instances(self):
+            pass
+            self.profile._fetch_instances()
 
 
     class IhdrChunk(KaitaiStruct):
@@ -1173,6 +1321,243 @@ class Png(KaitaiStruct):
             pass
 
 
+    class SbitChunk(KaitaiStruct):
+        """Significant bits (`sBIT`) chunk stores the original number of significant
+        bits of the sample values (which can be less than or equal to the sample
+        depth). This allows PNG decoders to recover the original data losslessly
+        even if the data had a sample depth not directly supported by PNG.
+        
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#11sBIT
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Png.SbitChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            _on = self._root.ihdr.color_type
+            if _on == Png.ColorType.greyscale:
+                pass
+                self.significant_bits = Png.SbitGreyscale(False, self._io, self, self._root)
+            elif _on == Png.ColorType.greyscale_alpha:
+                pass
+                self.significant_bits = Png.SbitGreyscale(True, self._io, self, self._root)
+            elif _on == Png.ColorType.indexed:
+                pass
+                self.significant_bits = Png.SbitTruecolor(False, self._io, self, self._root)
+            elif _on == Png.ColorType.truecolor:
+                pass
+                self.significant_bits = Png.SbitTruecolor(False, self._io, self, self._root)
+            elif _on == Png.ColorType.truecolor_alpha:
+                pass
+                self.significant_bits = Png.SbitTruecolor(True, self._io, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            _on = self._root.ihdr.color_type
+            if _on == Png.ColorType.greyscale:
+                pass
+                self.significant_bits._fetch_instances()
+            elif _on == Png.ColorType.greyscale_alpha:
+                pass
+                self.significant_bits._fetch_instances()
+            elif _on == Png.ColorType.indexed:
+                pass
+                self.significant_bits._fetch_instances()
+            elif _on == Png.ColorType.truecolor:
+                pass
+                self.significant_bits._fetch_instances()
+            elif _on == Png.ColorType.truecolor_alpha:
+                pass
+                self.significant_bits._fetch_instances()
+
+        @property
+        def sample_depth(self):
+            if hasattr(self, '_m_sample_depth'):
+                return self._m_sample_depth
+
+            self._m_sample_depth = (8 if self._root.ihdr.color_type == Png.ColorType.indexed else self._root.ihdr.bit_depth)
+            return getattr(self, '_m_sample_depth', None)
+
+
+    class SbitGreyscale(KaitaiStruct):
+        def __init__(self, has_alpha, _io, _parent=None, _root=None):
+            super(Png.SbitGreyscale, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self.has_alpha = has_alpha
+            self._read()
+
+        def _read(self):
+            self.grey = self._io.read_u1()
+            if not self.grey >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.grey, self._io, u"/types/sbit_greyscale/seq/0")
+            if not self.grey <= self._parent.sample_depth:
+                raise kaitaistruct.ValidationGreaterThanError(self._parent.sample_depth, self.grey, self._io, u"/types/sbit_greyscale/seq/0")
+            if self.has_alpha:
+                pass
+                self.alpha = self._io.read_u1()
+                if not self.alpha >= 1:
+                    raise kaitaistruct.ValidationLessThanError(1, self.alpha, self._io, u"/types/sbit_greyscale/seq/1")
+                if not self.alpha <= self._parent.sample_depth:
+                    raise kaitaistruct.ValidationGreaterThanError(self._parent.sample_depth, self.alpha, self._io, u"/types/sbit_greyscale/seq/1")
+
+
+
+        def _fetch_instances(self):
+            pass
+            if self.has_alpha:
+                pass
+
+
+
+    class SbitTruecolor(KaitaiStruct):
+        def __init__(self, has_alpha, _io, _parent=None, _root=None):
+            super(Png.SbitTruecolor, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self.has_alpha = has_alpha
+            self._read()
+
+        def _read(self):
+            self.red = self._io.read_u1()
+            if not self.red >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.red, self._io, u"/types/sbit_truecolor/seq/0")
+            if not self.red <= self._parent.sample_depth:
+                raise kaitaistruct.ValidationGreaterThanError(self._parent.sample_depth, self.red, self._io, u"/types/sbit_truecolor/seq/0")
+            self.green = self._io.read_u1()
+            if not self.green >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.green, self._io, u"/types/sbit_truecolor/seq/1")
+            if not self.green <= self._parent.sample_depth:
+                raise kaitaistruct.ValidationGreaterThanError(self._parent.sample_depth, self.green, self._io, u"/types/sbit_truecolor/seq/1")
+            self.blue = self._io.read_u1()
+            if not self.blue >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.blue, self._io, u"/types/sbit_truecolor/seq/2")
+            if not self.blue <= self._parent.sample_depth:
+                raise kaitaistruct.ValidationGreaterThanError(self._parent.sample_depth, self.blue, self._io, u"/types/sbit_truecolor/seq/2")
+            if self.has_alpha:
+                pass
+                self.alpha = self._io.read_u1()
+                if not self.alpha >= 1:
+                    raise kaitaistruct.ValidationLessThanError(1, self.alpha, self._io, u"/types/sbit_truecolor/seq/3")
+                if not self.alpha <= self._parent.sample_depth:
+                    raise kaitaistruct.ValidationGreaterThanError(self._parent.sample_depth, self.alpha, self._io, u"/types/sbit_truecolor/seq/3")
+
+
+
+        def _fetch_instances(self):
+            pass
+            if self.has_alpha:
+                pass
+
+
+
+    class SpltChunk(KaitaiStruct):
+        """Suggested palette (`sPLT`) chunk.
+        
+        Multiple `sPLT` chunks are permitted, but each must have a different
+        palette name.
+        
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#11sPLT
+        
+        
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#12Suggested-palettes
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Png.SpltChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.palette_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ISO-8859-1")
+            self.sample_depth = self._io.read_u1()
+            if not  ((self.sample_depth == 8) or (self.sample_depth == 16)) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.sample_depth, self._io, u"/types/splt_chunk/seq/1")
+            self.entries = []
+            i = 0
+            while not self._io.is_eof():
+                self.entries.append(Png.SpltEntry(self._io, self, self._root))
+                i += 1
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.entries)):
+                pass
+                self.entries[i]._fetch_instances()
+
+
+
+    class SpltEntry(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Png.SpltEntry, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            _on = self._parent.sample_depth
+            if _on == 8:
+                pass
+                self.red = self._io.read_u1()
+            else:
+                pass
+                self.red = self._io.read_u2be()
+            _on = self._parent.sample_depth
+            if _on == 8:
+                pass
+                self.green = self._io.read_u1()
+            else:
+                pass
+                self.green = self._io.read_u2be()
+            _on = self._parent.sample_depth
+            if _on == 8:
+                pass
+                self.blue = self._io.read_u1()
+            else:
+                pass
+                self.blue = self._io.read_u2be()
+            _on = self._parent.sample_depth
+            if _on == 8:
+                pass
+                self.alpha = self._io.read_u1()
+            else:
+                pass
+                self.alpha = self._io.read_u2be()
+            self.freq = self._io.read_u2be()
+
+
+        def _fetch_instances(self):
+            pass
+            _on = self._parent.sample_depth
+            if _on == 8:
+                pass
+            else:
+                pass
+            _on = self._parent.sample_depth
+            if _on == 8:
+                pass
+            else:
+                pass
+            _on = self._parent.sample_depth
+            if _on == 8:
+                pass
+            else:
+                pass
+            _on = self._parent.sample_depth
+            if _on == 8:
+                pass
+            else:
+                pass
+
+
     class SrgbChunk(KaitaiStruct):
         """
         .. seealso::
@@ -1251,6 +1636,132 @@ class Png(KaitaiStruct):
 
         def _fetch_instances(self):
             pass
+
+
+    class TrnsChunk(KaitaiStruct):
+        """Transparency (`tRNS`) chunk specifies either alpha values that are
+        associated with palette entries (for indexed-color images) or a single
+        transparent color (for greyscale and truecolor images).
+        
+        A `tRNS` chunk must not appear for color types
+        `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+        since a full alpha channel is already present in those cases.
+        
+        .. seealso::
+           Source - https://www.w3.org/TR/png/#11tRNS
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Png.TrnsChunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            if self._root.ihdr.color_type == Png.ColorType.indexed:
+                pass
+                self.palette_alphas = []
+                i = 0
+                while not self._io.is_eof():
+                    self.palette_alphas.append(self._io.read_u1())
+                    i += 1
+
+
+            _on = self._root.ihdr.color_type
+            if _on == Png.ColorType.greyscale:
+                pass
+                self.transparent_color = Png.TrnsGreyscaleColor(self._io, self, self._root)
+            elif _on == Png.ColorType.truecolor:
+                pass
+                self.transparent_color = Png.TrnsTruecolorColor(self._io, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            if self._root.ihdr.color_type == Png.ColorType.indexed:
+                pass
+                for i in range(len(self.palette_alphas)):
+                    pass
+
+
+            _on = self._root.ihdr.color_type
+            if _on == Png.ColorType.greyscale:
+                pass
+                self.transparent_color._fetch_instances()
+            elif _on == Png.ColorType.truecolor:
+                pass
+                self.transparent_color._fetch_instances()
+
+        @property
+        def sample_mask(self):
+            if hasattr(self, '_m_sample_mask'):
+                return self._m_sample_mask
+
+            self._m_sample_mask = (1 << self._root.ihdr.bit_depth) - 1
+            return getattr(self, '_m_sample_mask', None)
+
+
+    class TrnsGreyscaleColor(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Png.TrnsGreyscaleColor, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.grey_raw = self._io.read_u2be()
+
+
+        def _fetch_instances(self):
+            pass
+
+        @property
+        def grey(self):
+            if hasattr(self, '_m_grey'):
+                return self._m_grey
+
+            self._m_grey = self.grey_raw & self._parent.sample_mask
+            return getattr(self, '_m_grey', None)
+
+
+    class TrnsTruecolorColor(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Png.TrnsTruecolorColor, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.red_raw = self._io.read_u2be()
+            self.green_raw = self._io.read_u2be()
+            self.blue_raw = self._io.read_u2be()
+
+
+        def _fetch_instances(self):
+            pass
+
+        @property
+        def blue(self):
+            if hasattr(self, '_m_blue'):
+                return self._m_blue
+
+            self._m_blue = self.blue_raw & self._parent.sample_mask
+            return getattr(self, '_m_blue', None)
+
+        @property
+        def green(self):
+            if hasattr(self, '_m_green'):
+                return self._m_green
+
+            self._m_green = self.green_raw & self._parent.sample_mask
+            return getattr(self, '_m_green', None)
+
+        @property
+        def red(self):
+            if hasattr(self, '_m_red'):
+                return self._m_red
+
+            self._m_red = self.red_raw & self._parent.sample_mask
+            return getattr(self, '_m_red', None)
 
 
 

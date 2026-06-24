@@ -379,6 +379,11 @@ namespace Png {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\ClliChunk($_io__raw_body, $this, $this->_root);
                     break;
+                case "eXIf":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\ExifChunk($_io__raw_body, $this, $this->_root);
+                    break;
                 case "fcTL":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -393,6 +398,16 @@ namespace Png {
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\GamaChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "hIST":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\HistChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "iCCP":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\IccpChunk($_io__raw_body, $this, $this->_root);
                     break;
                 case "iTXt":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
@@ -424,6 +439,16 @@ namespace Png {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\AdobeFireworksChunk($_io__raw_body, $this, $this->_root);
                     break;
+                case "sBIT":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\SbitChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "sPLT":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\SpltChunk($_io__raw_body, $this, $this->_root);
+                    break;
                 case "sRGB":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -448,6 +473,11 @@ namespace Png {
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\TimeChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "tRNS":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\TrnsChunk($_io__raw_body, $this, $this->_root);
                     break;
                 case "zTXt":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
@@ -770,6 +800,31 @@ namespace Png {
     }
 }
 
+/**
+ * Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+ * 
+ * Only one `eXIf` chunk is allowed in a PNG datastream.
+ * 
+ * The `eXIf` chunk contains metadata concerning the original image data. If
+ * the image has been edited subsequent to creation of the Exif profile, this
+ * data might no longer apply to the PNG image data.
+ */
+
+namespace Png {
+    class ExifChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_exif = new \Exif($this->_io);
+        }
+        protected $_m_exif;
+        public function exif() { return $this->_m_exif; }
+    }
+}
+
 namespace Png {
     class FrameControlChunk extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
@@ -978,6 +1033,124 @@ namespace Png {
          * 45455)
          */
         public function gammaInt() { return $this->_m_gammaInt; }
+    }
+}
+
+/**
+ * Image histogram (`hIST`) chunk gives the approximate usage frequency of
+ * each color in the palette. A histogram chunk can appear only when a `PLTE`
+ * chunk appears.
+ */
+
+namespace Png {
+    class HistChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_usageFreqs = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_usageFreqs[] = $this->_io->readU2be();
+                $i++;
+            }
+        }
+        protected $_m_usageFreqs;
+
+        /**
+         * Usage frequencies of each color in the palette.
+         * 
+         * There must be exactly one entry for each entry in the `PLTE` chunk. Each
+         * entry is proportional to the fraction of pixels in the image that have
+         * that palette index; the exact scale factor is chosen by the encoder.
+         * 
+         * Histogram entries are approximate, with the exception that a zero
+         * entry specifies that the corresponding palette entry is not used at
+         * all in the image. A histogram entry must be nonzero if there are any
+         * pixels of that color.
+         */
+        public function usageFreqs() { return $this->_m_usageFreqs; }
+    }
+}
+
+/**
+ * Embedded ICC profile (`iCCP`) chunk.
+ * 
+ * If the `iCCP` chunk is present, the image samples conform to the color
+ * space represented by the embedded ICC profile as defined by the
+ * International Color Consortium.
+ * 
+ * This chunk is ignored unless it is the [highest-precedence color
+ * chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+ * the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+ * at most one embedded profile, whether specified explicitly with an `iCCP`
+ * or implicitly with an `sRGB` chunk.
+ * 
+ * It is recommended that the `sRGB` and `iCCP` chunks do not appear
+ * simultaneously in a PNG datastream.
+ */
+
+namespace Png {
+    class IccpChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_profileName = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ISO-8859-1");
+            $this->_m_compressionMethod = $this->_io->readU1();
+            if (!($this->_m_compressionMethod == \Png\CompressionMethods::ZLIB)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(\Png\CompressionMethods::ZLIB, $this->_m_compressionMethod, $this->_io, "/types/iccp_chunk/seq/1");
+            }
+            $this->_m__raw__raw_profile = $this->_io->readBytesFull();
+            $this->_m__raw_profile = \Kaitai\Struct\Stream::processZlib($this->_m__raw__raw_profile);
+            $_io__raw_profile = new \Kaitai\Struct\Stream($this->_m__raw_profile);
+            $this->_m_profile = new \Icc4($_io__raw_profile);
+        }
+        protected $_m_profileName;
+        protected $_m_compressionMethod;
+        protected $_m_profile;
+        protected $_m__raw_profile;
+        protected $_m__raw__raw_profile;
+
+        /**
+         * Any convenient name for referring to the profile. It is
+         * case-sensitive.
+         * 
+         * Profile names must contain only printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+         * not permitted.
+         */
+        public function profileName() { return $this->_m_profileName; }
+        public function compressionMethod() { return $this->_m_compressionMethod; }
+
+        /**
+         * Embedded ICC profile.
+         * 
+         * The color space of the ICC profile must be:
+         * 
+         * * an RGB color space for color images (color types
+         *   `color_type::truecolor` = 2, `color_type::indexed` = 3, and
+         *   `color_type::truecolor_alpha` = 6), or
+         * * a greyscale color space for greyscale images (color types
+         *   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).
+         * 
+         * Note that the imported `icc_4.ksy` spec currently in use here supports
+         * only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.
+         * This means that PNG files with an embedded v2 profile (for example
+         * https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)
+         * will fail to parse.
+         * 
+         * TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it
+         * to `icc.ksy`, and use it here.
+         */
+        public function profile() { return $this->_m_profile; }
+        public function _raw_profile() { return $this->_m__raw_profile; }
+        public function _raw__raw_profile() { return $this->_m__raw__raw_profile; }
     }
 }
 
@@ -1377,6 +1550,282 @@ namespace Png {
     }
 }
 
+/**
+ * Significant bits (`sBIT`) chunk stores the original number of significant
+ * bits of the sample values (which can be less than or equal to the sample
+ * depth). This allows PNG decoders to recover the original data losslessly
+ * even if the data had a sample depth not directly supported by PNG.
+ */
+
+namespace Png {
+    class SbitChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            switch ($this->_root()->ihdr()->colorType()) {
+                case \Png\ColorType::GREYSCALE:
+                    $this->_m_significantBits = new \Png\SbitGreyscale(false, $this->_io, $this, $this->_root);
+                    break;
+                case \Png\ColorType::GREYSCALE_ALPHA:
+                    $this->_m_significantBits = new \Png\SbitGreyscale(true, $this->_io, $this, $this->_root);
+                    break;
+                case \Png\ColorType::INDEXED:
+                    $this->_m_significantBits = new \Png\SbitTruecolor(false, $this->_io, $this, $this->_root);
+                    break;
+                case \Png\ColorType::TRUECOLOR:
+                    $this->_m_significantBits = new \Png\SbitTruecolor(false, $this->_io, $this, $this->_root);
+                    break;
+                case \Png\ColorType::TRUECOLOR_ALPHA:
+                    $this->_m_significantBits = new \Png\SbitTruecolor(true, $this->_io, $this, $this->_root);
+                    break;
+            }
+        }
+        protected $_m_sampleDepth;
+        public function sampleDepth() {
+            if ($this->_m_sampleDepth !== null)
+                return $this->_m_sampleDepth;
+            $this->_m_sampleDepth = ($this->_root()->ihdr()->colorType() == \Png\ColorType::INDEXED ? 8 : $this->_root()->ihdr()->bitDepth());
+            return $this->_m_sampleDepth;
+        }
+        protected $_m_significantBits;
+        public function significantBits() { return $this->_m_significantBits; }
+    }
+}
+
+namespace Png {
+    class SbitGreyscale extends \Kaitai\Struct\Struct {
+        public function __construct(bool $hasAlpha, \Kaitai\Struct\Stream $_io, ?\Png\SbitChunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_hasAlpha = $hasAlpha;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_grey = $this->_io->readU1();
+            if (!($this->_m_grey >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_grey, $this->_io, "/types/sbit_greyscale/seq/0");
+            }
+            if (!($this->_m_grey <= $this->_parent()->sampleDepth())) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->_parent()->sampleDepth(), $this->_m_grey, $this->_io, "/types/sbit_greyscale/seq/0");
+            }
+            if ($this->hasAlpha()) {
+                $this->_m_alpha = $this->_io->readU1();
+                if (!($this->_m_alpha >= 1)) {
+                    throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_alpha, $this->_io, "/types/sbit_greyscale/seq/1");
+                }
+                if (!($this->_m_alpha <= $this->_parent()->sampleDepth())) {
+                    throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->_parent()->sampleDepth(), $this->_m_alpha, $this->_io, "/types/sbit_greyscale/seq/1");
+                }
+            }
+        }
+        protected $_m_grey;
+        protected $_m_alpha;
+        protected $_m_hasAlpha;
+        public function grey() { return $this->_m_grey; }
+        public function alpha() { return $this->_m_alpha; }
+        public function hasAlpha() { return $this->_m_hasAlpha; }
+    }
+}
+
+namespace Png {
+    class SbitTruecolor extends \Kaitai\Struct\Struct {
+        public function __construct(bool $hasAlpha, \Kaitai\Struct\Stream $_io, ?\Png\SbitChunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_hasAlpha = $hasAlpha;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_red = $this->_io->readU1();
+            if (!($this->_m_red >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_red, $this->_io, "/types/sbit_truecolor/seq/0");
+            }
+            if (!($this->_m_red <= $this->_parent()->sampleDepth())) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->_parent()->sampleDepth(), $this->_m_red, $this->_io, "/types/sbit_truecolor/seq/0");
+            }
+            $this->_m_green = $this->_io->readU1();
+            if (!($this->_m_green >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_green, $this->_io, "/types/sbit_truecolor/seq/1");
+            }
+            if (!($this->_m_green <= $this->_parent()->sampleDepth())) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->_parent()->sampleDepth(), $this->_m_green, $this->_io, "/types/sbit_truecolor/seq/1");
+            }
+            $this->_m_blue = $this->_io->readU1();
+            if (!($this->_m_blue >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_blue, $this->_io, "/types/sbit_truecolor/seq/2");
+            }
+            if (!($this->_m_blue <= $this->_parent()->sampleDepth())) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->_parent()->sampleDepth(), $this->_m_blue, $this->_io, "/types/sbit_truecolor/seq/2");
+            }
+            if ($this->hasAlpha()) {
+                $this->_m_alpha = $this->_io->readU1();
+                if (!($this->_m_alpha >= 1)) {
+                    throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_alpha, $this->_io, "/types/sbit_truecolor/seq/3");
+                }
+                if (!($this->_m_alpha <= $this->_parent()->sampleDepth())) {
+                    throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->_parent()->sampleDepth(), $this->_m_alpha, $this->_io, "/types/sbit_truecolor/seq/3");
+                }
+            }
+        }
+        protected $_m_red;
+        protected $_m_green;
+        protected $_m_blue;
+        protected $_m_alpha;
+        protected $_m_hasAlpha;
+        public function red() { return $this->_m_red; }
+        public function green() { return $this->_m_green; }
+        public function blue() { return $this->_m_blue; }
+        public function alpha() { return $this->_m_alpha; }
+        public function hasAlpha() { return $this->_m_hasAlpha; }
+    }
+}
+
+/**
+ * Suggested palette (`sPLT`) chunk.
+ * 
+ * Multiple `sPLT` chunks are permitted, but each must have a different
+ * palette name.
+ */
+
+namespace Png {
+    class SpltChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_paletteName = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ISO-8859-1");
+            $this->_m_sampleDepth = $this->_io->readU1();
+            if (!( (($this->_m_sampleDepth == 8) || ($this->_m_sampleDepth == 16)) )) {
+                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_sampleDepth, $this->_io, "/types/splt_chunk/seq/1");
+            }
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \Png\SpltEntry($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_paletteName;
+        protected $_m_sampleDepth;
+        protected $_m_entries;
+
+        /**
+         * Any convenient name for referring to the palette. It is
+         * case-sensitive. The palette name may aid the choice of the appropriate
+         * suggested palette when more than one appears in a PNG datastream.
+         * 
+         * Palette names must contain only printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+         * not permitted.
+         */
+        public function paletteName() { return $this->_m_paletteName; }
+        public function sampleDepth() { return $this->_m_sampleDepth; }
+
+        /**
+         * There may be any number of entries. Entries must appear "in decreasing
+         * order of frequency" (note: strictly speaking, I think the W3C
+         * specification actually meant "non-increasing"). There is no
+         * requirement that the entries all be used by the image, nor that they
+         * all be different.
+         * 
+         * The color samples are not premultiplied by alpha, nor are they
+         * precomposited against any background.
+         * 
+         * Entries in `sPLT` use the same gamma value and chromaticity values as
+         * the PNG image, but may fall outside the range of values used in the
+         * color space of the PNG image; for example, in a greyscale PNG image,
+         * each `sPLT` entry would typically have equal red, green, and blue
+         * values, but this is not required. Similarly, `sPLT` entries can have
+         * non-opaque alpha values even when the PNG image does not use
+         * transparency.
+         */
+        public function entries() { return $this->_m_entries; }
+    }
+}
+
+namespace Png {
+    class SpltEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\SpltChunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            switch ($this->_parent()->sampleDepth()) {
+                case 8:
+                    $this->_m_red = $this->_io->readU1();
+                    break;
+                default:
+                    $this->_m_red = $this->_io->readU2be();
+                    break;
+            }
+            switch ($this->_parent()->sampleDepth()) {
+                case 8:
+                    $this->_m_green = $this->_io->readU1();
+                    break;
+                default:
+                    $this->_m_green = $this->_io->readU2be();
+                    break;
+            }
+            switch ($this->_parent()->sampleDepth()) {
+                case 8:
+                    $this->_m_blue = $this->_io->readU1();
+                    break;
+                default:
+                    $this->_m_blue = $this->_io->readU2be();
+                    break;
+            }
+            switch ($this->_parent()->sampleDepth()) {
+                case 8:
+                    $this->_m_alpha = $this->_io->readU1();
+                    break;
+                default:
+                    $this->_m_alpha = $this->_io->readU2be();
+                    break;
+            }
+            $this->_m_freq = $this->_io->readU2be();
+        }
+        protected $_m_red;
+        protected $_m_green;
+        protected $_m_blue;
+        protected $_m_alpha;
+        protected $_m_freq;
+        public function red() { return $this->_m_red; }
+        public function green() { return $this->_m_green; }
+        public function blue() { return $this->_m_blue; }
+
+        /**
+         * An alpha value of 0 means fully transparent. An alpha value of 255
+         * (when `_parent.sample_depth` is 8) or 65535 (when
+         * `_parent.sample_depth` is 16) means fully opaque.
+         */
+        public function alpha() { return $this->_m_alpha; }
+
+        /**
+         * Each frequency value is proportional to the fraction of the pixels in
+         * the image for which that palette entry is the closest match in RGBA
+         * space, before the image has been composited against any background.
+         * 
+         * The exact scale factor is chosen by the PNG encoder; it is recommended
+         * that the resulting range of individual values reasonably fills the
+         * range 0 to 65535.
+         * 
+         * Zero is a valid frequency meaning that the color is "least important"
+         * or that it is rarely, if ever, used. When all the frequencies are
+         * zero, they are meaningless, that is to say, nothing may be inferred
+         * about the actual frequencies with which the colors appear in the PNG
+         * image.
+         */
+        public function freq() { return $this->_m_freq; }
+    }
+}
+
 namespace Png {
     class SrgbChunk extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
@@ -1490,6 +1939,147 @@ namespace Png {
         public function hour() { return $this->_m_hour; }
         public function minute() { return $this->_m_minute; }
         public function second() { return $this->_m_second; }
+    }
+}
+
+/**
+ * Transparency (`tRNS`) chunk specifies either alpha values that are
+ * associated with palette entries (for indexed-color images) or a single
+ * transparent color (for greyscale and truecolor images).
+ * 
+ * A `tRNS` chunk must not appear for color types
+ * `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+ * since a full alpha channel is already present in those cases.
+ */
+
+namespace Png {
+    class TrnsChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\Chunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            if ($this->_root()->ihdr()->colorType() == \Png\ColorType::INDEXED) {
+                $this->_m_paletteAlphas = [];
+                $i = 0;
+                while (!$this->_io->isEof()) {
+                    $this->_m_paletteAlphas[] = $this->_io->readU1();
+                    $i++;
+                }
+            }
+            switch ($this->_root()->ihdr()->colorType()) {
+                case \Png\ColorType::GREYSCALE:
+                    $this->_m_transparentColor = new \Png\TrnsGreyscaleColor($this->_io, $this, $this->_root);
+                    break;
+                case \Png\ColorType::TRUECOLOR:
+                    $this->_m_transparentColor = new \Png\TrnsTruecolorColor($this->_io, $this, $this->_root);
+                    break;
+            }
+        }
+        protected $_m_sampleMask;
+        public function sampleMask() {
+            if ($this->_m_sampleMask !== null)
+                return $this->_m_sampleMask;
+            $this->_m_sampleMask = (1 << $this->_root()->ihdr()->bitDepth()) - 1;
+            return $this->_m_sampleMask;
+        }
+        protected $_m_paletteAlphas;
+        protected $_m_transparentColor;
+
+        /**
+         * Alpha values associated with palette entries in the `PLTE` chunk.
+         * 
+         * Each entry indicates that pixels of the corresponding palette index
+         * shall be treated as having the specified alpha value. Alpha values
+         * have the same interpretation as in an 8-bit full alpha channel: 0 is
+         * fully transparent, 255 is fully opaque, regardless of image bit depth.
+         * 
+         * The `tRNS` chunk must not contain more alpha values than there are
+         * palette entries, but it may contain fewer values than there are
+         * palette entries. In this case, the alpha value for all remaining
+         * palette entries is assumed to be 255. If all palette indices are
+         * opaque, the `tRNS` chunk may be omitted.
+         */
+        public function paletteAlphas() { return $this->_m_paletteAlphas; }
+
+        /**
+         * Pixels of the specified grey sample value or RGB sample values are
+         * treated as transparent (equivalent to alpha value 0); all other pixels
+         * are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).
+         * 
+         * If the image bit depth is less than 16, the least significant bits of
+         * these sample values are used. Encoders should set the other bits to 0,
+         * and decoders must mask the other bits to 0 before the value is used.
+         * 
+         * Note: in this Kaitai Struct implementation, the bitmask used to
+         * implement this masking is stored in the value instance `sample_mask`.
+         */
+        public function transparentColor() { return $this->_m_transparentColor; }
+    }
+}
+
+namespace Png {
+    class TrnsGreyscaleColor extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\TrnsChunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_greyRaw = $this->_io->readU2be();
+        }
+        protected $_m_grey;
+        public function grey() {
+            if ($this->_m_grey !== null)
+                return $this->_m_grey;
+            $this->_m_grey = $this->greyRaw() & $this->_parent()->sampleMask();
+            return $this->_m_grey;
+        }
+        protected $_m_greyRaw;
+        public function greyRaw() { return $this->_m_greyRaw; }
+    }
+}
+
+namespace Png {
+    class TrnsTruecolorColor extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Png\TrnsChunk $_parent = null, ?\Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_redRaw = $this->_io->readU2be();
+            $this->_m_greenRaw = $this->_io->readU2be();
+            $this->_m_blueRaw = $this->_io->readU2be();
+        }
+        protected $_m_blue;
+        public function blue() {
+            if ($this->_m_blue !== null)
+                return $this->_m_blue;
+            $this->_m_blue = $this->blueRaw() & $this->_parent()->sampleMask();
+            return $this->_m_blue;
+        }
+        protected $_m_green;
+        public function green() {
+            if ($this->_m_green !== null)
+                return $this->_m_green;
+            $this->_m_green = $this->greenRaw() & $this->_parent()->sampleMask();
+            return $this->_m_green;
+        }
+        protected $_m_red;
+        public function red() {
+            if ($this->_m_red !== null)
+                return $this->_m_red;
+            $this->_m_red = $this->redRaw() & $this->_parent()->sampleMask();
+            return $this->_m_red;
+        }
+        protected $_m_redRaw;
+        protected $_m_greenRaw;
+        protected $_m_blueRaw;
+        public function redRaw() { return $this->_m_redRaw; }
+        public function greenRaw() { return $this->_m_greenRaw; }
+        public function blueRaw() { return $this->_m_blueRaw; }
     }
 }
 

@@ -11,6 +11,8 @@ use kaitai::*;
 use std::convert::{TryFrom, TryInto};
 use std::cell::{Ref, Cell, RefCell};
 use std::rc::{Rc, Weak};
+use super::exif::Exif;
+use super::icc_4::Icc4;
 
 /**
  * Test files for APNG can be found at the following locations:
@@ -1095,14 +1097,18 @@ pub enum Png_Chunk_Body {
     Png_MdcvChunk(OptRc<Png_MdcvChunk>),
     Png_SrgbChunk(OptRc<Png_SrgbChunk>),
     Png_FrameControlChunk(OptRc<Png_FrameControlChunk>),
+    Png_TrnsChunk(OptRc<Png_TrnsChunk>),
     Png_ChrmChunk(OptRc<Png_ChrmChunk>),
     Png_EvernoteSkmfChunk(OptRc<Png_EvernoteSkmfChunk>),
     Png_TimeChunk(OptRc<Png_TimeChunk>),
     Png_AnimationControlChunk(OptRc<Png_AnimationControlChunk>),
     Png_CompressedTextChunk(OptRc<Png_CompressedTextChunk>),
-    Png_GamaChunk(OptRc<Png_GamaChunk>),
+    Png_HistChunk(OptRc<Png_HistChunk>),
     Png_AdobeFireworksChunk(OptRc<Png_AdobeFireworksChunk>),
+    Png_SbitChunk(OptRc<Png_SbitChunk>),
     Png_AtchChunk(OptRc<Png_AtchChunk>),
+    Png_SpltChunk(OptRc<Png_SpltChunk>),
+    Png_IccpChunk(OptRc<Png_IccpChunk>),
     Png_PhysChunk(OptRc<Png_PhysChunk>),
     Png_CicpChunk(OptRc<Png_CicpChunk>),
     Png_FrameDataChunk(OptRc<Png_FrameDataChunk>),
@@ -1113,6 +1119,8 @@ pub enum Png_Chunk_Body {
     Png_BkgdChunk(OptRc<Png_BkgdChunk>),
     Png_ClliChunk(OptRc<Png_ClliChunk>),
     Png_InternationalTextChunk(OptRc<Png_InternationalTextChunk>),
+    Png_ExifChunk(OptRc<Png_ExifChunk>),
+    Png_GamaChunk(OptRc<Png_GamaChunk>),
 }
 impl From<&Png_Chunk_Body> for OptRc<Png_MdcvChunk> {
     fn from(v: &Png_Chunk_Body) -> Self {
@@ -1151,6 +1159,19 @@ impl From<&Png_Chunk_Body> for OptRc<Png_FrameControlChunk> {
 impl From<OptRc<Png_FrameControlChunk>> for Png_Chunk_Body {
     fn from(v: OptRc<Png_FrameControlChunk>) -> Self {
         Self::Png_FrameControlChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_TrnsChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_TrnsChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_TrnsChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_TrnsChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_TrnsChunk>) -> Self {
+        Self::Png_TrnsChunk(v)
     }
 }
 impl From<&Png_Chunk_Body> for OptRc<Png_ChrmChunk> {
@@ -1218,17 +1239,17 @@ impl From<OptRc<Png_CompressedTextChunk>> for Png_Chunk_Body {
         Self::Png_CompressedTextChunk(v)
     }
 }
-impl From<&Png_Chunk_Body> for OptRc<Png_GamaChunk> {
+impl From<&Png_Chunk_Body> for OptRc<Png_HistChunk> {
     fn from(v: &Png_Chunk_Body) -> Self {
-        if let Png_Chunk_Body::Png_GamaChunk(x) = v {
+        if let Png_Chunk_Body::Png_HistChunk(x) = v {
             return x.clone();
         }
-        panic!("expected Png_Chunk_Body::Png_GamaChunk, got {:?}", v)
+        panic!("expected Png_Chunk_Body::Png_HistChunk, got {:?}", v)
     }
 }
-impl From<OptRc<Png_GamaChunk>> for Png_Chunk_Body {
-    fn from(v: OptRc<Png_GamaChunk>) -> Self {
-        Self::Png_GamaChunk(v)
+impl From<OptRc<Png_HistChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_HistChunk>) -> Self {
+        Self::Png_HistChunk(v)
     }
 }
 impl From<&Png_Chunk_Body> for OptRc<Png_AdobeFireworksChunk> {
@@ -1244,6 +1265,19 @@ impl From<OptRc<Png_AdobeFireworksChunk>> for Png_Chunk_Body {
         Self::Png_AdobeFireworksChunk(v)
     }
 }
+impl From<&Png_Chunk_Body> for OptRc<Png_SbitChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_SbitChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_SbitChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_SbitChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_SbitChunk>) -> Self {
+        Self::Png_SbitChunk(v)
+    }
+}
 impl From<&Png_Chunk_Body> for OptRc<Png_AtchChunk> {
     fn from(v: &Png_Chunk_Body) -> Self {
         if let Png_Chunk_Body::Png_AtchChunk(x) = v {
@@ -1255,6 +1289,32 @@ impl From<&Png_Chunk_Body> for OptRc<Png_AtchChunk> {
 impl From<OptRc<Png_AtchChunk>> for Png_Chunk_Body {
     fn from(v: OptRc<Png_AtchChunk>) -> Self {
         Self::Png_AtchChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_SpltChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_SpltChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_SpltChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_SpltChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_SpltChunk>) -> Self {
+        Self::Png_SpltChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_IccpChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_IccpChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_IccpChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_IccpChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_IccpChunk>) -> Self {
+        Self::Png_IccpChunk(v)
     }
 }
 impl From<&Png_Chunk_Body> for OptRc<Png_PhysChunk> {
@@ -1387,6 +1447,32 @@ impl From<OptRc<Png_InternationalTextChunk>> for Png_Chunk_Body {
         Self::Png_InternationalTextChunk(v)
     }
 }
+impl From<&Png_Chunk_Body> for OptRc<Png_ExifChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_ExifChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_ExifChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_ExifChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_ExifChunk>) -> Self {
+        Self::Png_ExifChunk(v)
+    }
+}
+impl From<&Png_Chunk_Body> for OptRc<Png_GamaChunk> {
+    fn from(v: &Png_Chunk_Body) -> Self {
+        if let Png_Chunk_Body::Png_GamaChunk(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_Chunk_Body::Png_GamaChunk, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_GamaChunk>> for Png_Chunk_Body {
+    fn from(v: OptRc<Png_GamaChunk>) -> Self {
+        Self::Png_GamaChunk(v)
+    }
+}
 impl KStruct for Png_Chunk {
     type Root = Png;
     type Parent = Png;
@@ -1461,6 +1547,13 @@ impl KStruct for Png_Chunk {
                 let t = Self::read_into::<BytesReader, Png_ClliChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
+            else if *on == "eXIf" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_ExifChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
             else if *on == "fcTL" {
                 *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
                 let body_raw = self_rc.body_raw.borrow();
@@ -1480,6 +1573,20 @@ impl KStruct for Png_Chunk {
                 let body_raw = self_rc.body_raw.borrow();
                 let _t_body_raw_io = BytesReader::from(body_raw.clone());
                 let t = Self::read_into::<BytesReader, Png_GamaChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "hIST" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_HistChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "iCCP" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_IccpChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
             else if *on == "iTXt" {
@@ -1524,6 +1631,20 @@ impl KStruct for Png_Chunk {
                 let t = Self::read_into::<BytesReader, Png_AdobeFireworksChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
+            else if *on == "sBIT" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_SbitChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "sPLT" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_SpltChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
             else if *on == "sRGB" {
                 *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
                 let body_raw = self_rc.body_raw.borrow();
@@ -1557,6 +1678,13 @@ impl KStruct for Png_Chunk {
                 let body_raw = self_rc.body_raw.borrow();
                 let _t_body_raw_io = BytesReader::from(body_raw.clone());
                 let t = Self::read_into::<BytesReader, Png_TimeChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.body.borrow_mut() = Some(t);
+            }
+            else if *on == "tRNS" {
+                *self_rc.body_raw.borrow_mut() = _io.read_bytes(*self_rc.len() as usize)?.into();
+                let body_raw = self_rc.body_raw.borrow();
+                let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                let t = Self::read_into::<BytesReader, Png_TrnsChunk>(&_t_body_raw_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
                 *self_rc.body.borrow_mut() = Some(t);
             }
             else if *on == "zTXt" {
@@ -2179,6 +2307,60 @@ impl Png_EvernoteSkrfChunk {
 }
 
 /**
+ * Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+ * 
+ * Only one `eXIf` chunk is allowed in a PNG datastream.
+ * 
+ * The `eXIf` chunk contains metadata concerning the original image data. If
+ * the image has been edited subsequent to creation of the Exif profile, this
+ * data might no longer apply to the PNG image data.
+ * \sa https://www.w3.org/TR/png/#eXIf Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_ExifChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    exif: RefCell<OptRc<Exif>>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_ExifChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        let t = Self::read_into::<_, Exif>(&*_io, None, None)?.into();
+        *self_rc.exif.borrow_mut() = t;
+        Ok(())
+    }
+}
+impl Png_ExifChunk {
+}
+impl Png_ExifChunk {
+    pub fn exif(&self) -> Ref<'_, OptRc<Exif>> {
+        self.exif.borrow()
+    }
+}
+impl Png_ExifChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
  * \sa https://www.w3.org/TR/png/#fcTL-chunk Source
  */
 
@@ -2536,6 +2718,200 @@ impl Png_GamaChunk {
 impl Png_GamaChunk {
     pub fn _io(&self) -> Ref<'_, BytesReader> {
         self._io.borrow()
+    }
+}
+
+/**
+ * Image histogram (`hIST`) chunk gives the approximate usage frequency of
+ * each color in the palette. A histogram chunk can appear only when a `PLTE`
+ * chunk appears.
+ * \sa https://www.w3.org/TR/png/#11hIST Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_HistChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    usage_freqs: RefCell<Vec<u16>>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_HistChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.usage_freqs.borrow_mut() = Vec::new();
+        {
+            let mut _i = 0;
+            while !_io.is_eof() {
+                self_rc.usage_freqs.borrow_mut().push(_io.read_u2be()?.into());
+                _i += 1;
+            }
+        }
+        Ok(())
+    }
+}
+impl Png_HistChunk {
+}
+
+/**
+ * Usage frequencies of each color in the palette.
+ * 
+ * There must be exactly one entry for each entry in the `PLTE` chunk. Each
+ * entry is proportional to the fraction of pixels in the image that have
+ * that palette index; the exact scale factor is chosen by the encoder.
+ * 
+ * Histogram entries are approximate, with the exception that a zero
+ * entry specifies that the corresponding palette entry is not used at
+ * all in the image. A histogram entry must be nonzero if there are any
+ * pixels of that color.
+ */
+impl Png_HistChunk {
+    pub fn usage_freqs(&self) -> Ref<'_, Vec<u16>> {
+        self.usage_freqs.borrow()
+    }
+}
+impl Png_HistChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Embedded ICC profile (`iCCP`) chunk.
+ * 
+ * If the `iCCP` chunk is present, the image samples conform to the color
+ * space represented by the embedded ICC profile as defined by the
+ * International Color Consortium.
+ * 
+ * This chunk is ignored unless it is the [highest-precedence color
+ * chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+ * the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+ * at most one embedded profile, whether specified explicitly with an `iCCP`
+ * or implicitly with an `sRGB` chunk.
+ * 
+ * It is recommended that the `sRGB` and `iCCP` chunks do not appear
+ * simultaneously in a PNG datastream.
+ * \sa https://www.w3.org/TR/png/#11iCCP Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_IccpChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    profile_name: RefCell<String>,
+    compression_method: RefCell<Png_CompressionMethods>,
+    profile: RefCell<OptRc<Icc4>>,
+    _io: RefCell<BytesReader>,
+    profile_raw: RefCell<Vec<u8>>,
+    profile_raw_raw: RefCell<Vec<u8>>,
+}
+impl KStruct for Png_IccpChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.profile_name.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "ISO-8859-1")?;
+        *self_rc.compression_method.borrow_mut() = (_io.read_u1()? as i64).try_into()?;
+        if !(*self_rc.compression_method() == Png_CompressionMethods::Zlib) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotEqual, src_path: "/types/iccp_chunk/seq/1".to_string() }));
+        }
+        *self_rc.profile_raw_raw.borrow_mut() = _io.read_bytes_full()?.into();
+        *self_rc.profile_raw.borrow_mut() = process_zlib(&self_rc.profile_raw_raw.borrow()).map_err(|msg| KError::BytesDecodingError { msg })?;
+        let profile_raw = self_rc.profile_raw.borrow();
+        let _t_profile_raw_io = BytesReader::from(profile_raw.clone());
+        let t = Self::read_into::<BytesReader, Icc4>(&_t_profile_raw_io, None, None)?.into();
+        *self_rc.profile.borrow_mut() = t;
+        Ok(())
+    }
+}
+impl Png_IccpChunk {
+}
+
+/**
+ * Any convenient name for referring to the profile. It is
+ * case-sensitive.
+ * 
+ * Profile names must contain only printable ISO-8859-1 (Latin-1)
+ * characters and spaces; that is, only code points 0x20-0x7E and
+ * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+ * not permitted.
+ */
+impl Png_IccpChunk {
+    pub fn profile_name(&self) -> Ref<'_, String> {
+        self.profile_name.borrow()
+    }
+}
+impl Png_IccpChunk {
+    pub fn compression_method(&self) -> Ref<'_, Png_CompressionMethods> {
+        self.compression_method.borrow()
+    }
+}
+
+/**
+ * Embedded ICC profile.
+ * 
+ * The color space of the ICC profile must be:
+ * 
+ * * an RGB color space for color images (color types
+ *   `color_type::truecolor` = 2, `color_type::indexed` = 3, and
+ *   `color_type::truecolor_alpha` = 6), or
+ * * a greyscale color space for greyscale images (color types
+ *   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).
+ * 
+ * Note that the imported `icc_4.ksy` spec currently in use here supports
+ * only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.
+ * This means that PNG files with an embedded v2 profile (for example
+ * https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)
+ * will fail to parse.
+ * 
+ * TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it
+ * to `icc.ksy`, and use it here.
+ */
+impl Png_IccpChunk {
+    pub fn profile(&self) -> Ref<'_, OptRc<Icc4>> {
+        self.profile.borrow()
+    }
+}
+impl Png_IccpChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+impl Png_IccpChunk {
+    pub fn profile_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.profile_raw.borrow()
+    }
+}
+impl Png_IccpChunk {
+    pub fn profile_raw_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.profile_raw_raw.borrow()
     }
 }
 
@@ -3327,6 +3703,702 @@ impl Png_Rgb {
 }
 
 /**
+ * Significant bits (`sBIT`) chunk stores the original number of significant
+ * bits of the sample values (which can be less than or equal to the sample
+ * depth). This allows PNG decoders to recover the original data losslessly
+ * even if the data had a sample depth not directly supported by PNG.
+ * \sa https://www.w3.org/TR/png/#11sBIT Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_SbitChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    significant_bits: RefCell<Option<Png_SbitChunk_SignificantBits>>,
+    _io: RefCell<BytesReader>,
+    f_sample_depth: Cell<bool>,
+    sample_depth: RefCell<u8>,
+}
+#[derive(Debug, Clone)]
+pub enum Png_SbitChunk_SignificantBits {
+    Png_SbitGreyscale(OptRc<Png_SbitGreyscale>),
+    Png_SbitTruecolor(OptRc<Png_SbitTruecolor>),
+}
+impl From<&Png_SbitChunk_SignificantBits> for OptRc<Png_SbitGreyscale> {
+    fn from(v: &Png_SbitChunk_SignificantBits) -> Self {
+        if let Png_SbitChunk_SignificantBits::Png_SbitGreyscale(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_SbitChunk_SignificantBits::Png_SbitGreyscale, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_SbitGreyscale>> for Png_SbitChunk_SignificantBits {
+    fn from(v: OptRc<Png_SbitGreyscale>) -> Self {
+        Self::Png_SbitGreyscale(v)
+    }
+}
+impl From<&Png_SbitChunk_SignificantBits> for OptRc<Png_SbitTruecolor> {
+    fn from(v: &Png_SbitChunk_SignificantBits) -> Self {
+        if let Png_SbitChunk_SignificantBits::Png_SbitTruecolor(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_SbitChunk_SignificantBits::Png_SbitTruecolor, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_SbitTruecolor>> for Png_SbitChunk_SignificantBits {
+    fn from(v: OptRc<Png_SbitTruecolor>) -> Self {
+        Self::Png_SbitTruecolor(v)
+    }
+}
+impl KStruct for Png_SbitChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        match *_r.ihdr().color_type() {
+            Png_ColorType::Greyscale => {
+                let f = |t : &mut Png_SbitGreyscale| Ok(t.set_params(false));
+                let t = Self::read_into_with_init::<_, Png_SbitGreyscale>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+                *self_rc.significant_bits.borrow_mut() = Some(t);
+            }
+            Png_ColorType::GreyscaleAlpha => {
+                let f = |t : &mut Png_SbitGreyscale| Ok(t.set_params(true));
+                let t = Self::read_into_with_init::<_, Png_SbitGreyscale>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+                *self_rc.significant_bits.borrow_mut() = Some(t);
+            }
+            Png_ColorType::Indexed => {
+                let f = |t : &mut Png_SbitTruecolor| Ok(t.set_params(false));
+                let t = Self::read_into_with_init::<_, Png_SbitTruecolor>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+                *self_rc.significant_bits.borrow_mut() = Some(t);
+            }
+            Png_ColorType::Truecolor => {
+                let f = |t : &mut Png_SbitTruecolor| Ok(t.set_params(false));
+                let t = Self::read_into_with_init::<_, Png_SbitTruecolor>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+                *self_rc.significant_bits.borrow_mut() = Some(t);
+            }
+            Png_ColorType::TruecolorAlpha => {
+                let f = |t : &mut Png_SbitTruecolor| Ok(t.set_params(true));
+                let t = Self::read_into_with_init::<_, Png_SbitTruecolor>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+                *self_rc.significant_bits.borrow_mut() = Some(t);
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+}
+impl Png_SbitChunk {
+    pub fn sample_depth(
+        &self
+    ) -> KResult<Ref<'_, u8>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_sample_depth.get() {
+            return Ok(self.sample_depth.borrow());
+        }
+        self.f_sample_depth.set(true);
+        *self.sample_depth.borrow_mut() = (if *_r.ihdr().color_type() == Png_ColorType::Indexed { 8 } else { *_r.ihdr().bit_depth() }) as u8;
+        Ok(self.sample_depth.borrow())
+    }
+}
+impl Png_SbitChunk {
+    pub fn significant_bits(&self) -> Ref<'_, Option<Png_SbitChunk_SignificantBits>> {
+        self.significant_bits.borrow()
+    }
+}
+impl Png_SbitChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_SbitGreyscale {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_SbitChunk>,
+    pub _self: SharedType<Self>,
+    has_alpha: RefCell<bool>,
+    grey: RefCell<u8>,
+    alpha: RefCell<u8>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_SbitGreyscale {
+    type Root = Png;
+    type Parent = Png_SbitChunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.grey.borrow_mut() = _io.read_u1()?.into();
+        if !(((*self_rc.grey() as u8) >= (1 as u8))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/sbit_greyscale/seq/0".to_string() }));
+        }
+        if !(*self_rc.grey() <= *_prc.as_ref().unwrap().sample_depth()?) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::GreaterThan, src_path: "/types/sbit_greyscale/seq/0".to_string() }));
+        }
+        if *self_rc.has_alpha() {
+            *self_rc.alpha.borrow_mut() = _io.read_u1()?.into();
+            if !(((*self_rc.alpha() as u8) >= (1 as u8))) {
+                return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/sbit_greyscale/seq/1".to_string() }));
+            }
+            if !(*self_rc.alpha() <= *_prc.as_ref().unwrap().sample_depth()?) {
+                return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::GreaterThan, src_path: "/types/sbit_greyscale/seq/1".to_string() }));
+            }
+        }
+        Ok(())
+    }
+}
+impl Png_SbitGreyscale {
+    pub fn has_alpha(&self) -> Ref<'_, bool> {
+        self.has_alpha.borrow()
+    }
+}
+impl Png_SbitGreyscale {
+    pub fn set_params(&mut self, has_alpha: bool) {
+        *self.has_alpha.borrow_mut() = has_alpha;
+    }
+}
+impl Png_SbitGreyscale {
+}
+impl Png_SbitGreyscale {
+    pub fn grey(&self) -> Ref<'_, u8> {
+        self.grey.borrow()
+    }
+}
+impl Png_SbitGreyscale {
+    pub fn alpha(&self) -> Ref<'_, u8> {
+        self.alpha.borrow()
+    }
+}
+impl Png_SbitGreyscale {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_SbitTruecolor {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_SbitChunk>,
+    pub _self: SharedType<Self>,
+    has_alpha: RefCell<bool>,
+    red: RefCell<u8>,
+    green: RefCell<u8>,
+    blue: RefCell<u8>,
+    alpha: RefCell<u8>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_SbitTruecolor {
+    type Root = Png;
+    type Parent = Png_SbitChunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.red.borrow_mut() = _io.read_u1()?.into();
+        if !(((*self_rc.red() as u8) >= (1 as u8))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/sbit_truecolor/seq/0".to_string() }));
+        }
+        if !(*self_rc.red() <= *_prc.as_ref().unwrap().sample_depth()?) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::GreaterThan, src_path: "/types/sbit_truecolor/seq/0".to_string() }));
+        }
+        *self_rc.green.borrow_mut() = _io.read_u1()?.into();
+        if !(((*self_rc.green() as u8) >= (1 as u8))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/sbit_truecolor/seq/1".to_string() }));
+        }
+        if !(*self_rc.green() <= *_prc.as_ref().unwrap().sample_depth()?) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::GreaterThan, src_path: "/types/sbit_truecolor/seq/1".to_string() }));
+        }
+        *self_rc.blue.borrow_mut() = _io.read_u1()?.into();
+        if !(((*self_rc.blue() as u8) >= (1 as u8))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/sbit_truecolor/seq/2".to_string() }));
+        }
+        if !(*self_rc.blue() <= *_prc.as_ref().unwrap().sample_depth()?) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::GreaterThan, src_path: "/types/sbit_truecolor/seq/2".to_string() }));
+        }
+        if *self_rc.has_alpha() {
+            *self_rc.alpha.borrow_mut() = _io.read_u1()?.into();
+            if !(((*self_rc.alpha() as u8) >= (1 as u8))) {
+                return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/sbit_truecolor/seq/3".to_string() }));
+            }
+            if !(*self_rc.alpha() <= *_prc.as_ref().unwrap().sample_depth()?) {
+                return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::GreaterThan, src_path: "/types/sbit_truecolor/seq/3".to_string() }));
+            }
+        }
+        Ok(())
+    }
+}
+impl Png_SbitTruecolor {
+    pub fn has_alpha(&self) -> Ref<'_, bool> {
+        self.has_alpha.borrow()
+    }
+}
+impl Png_SbitTruecolor {
+    pub fn set_params(&mut self, has_alpha: bool) {
+        *self.has_alpha.borrow_mut() = has_alpha;
+    }
+}
+impl Png_SbitTruecolor {
+}
+impl Png_SbitTruecolor {
+    pub fn red(&self) -> Ref<'_, u8> {
+        self.red.borrow()
+    }
+}
+impl Png_SbitTruecolor {
+    pub fn green(&self) -> Ref<'_, u8> {
+        self.green.borrow()
+    }
+}
+impl Png_SbitTruecolor {
+    pub fn blue(&self) -> Ref<'_, u8> {
+        self.blue.borrow()
+    }
+}
+impl Png_SbitTruecolor {
+    pub fn alpha(&self) -> Ref<'_, u8> {
+        self.alpha.borrow()
+    }
+}
+impl Png_SbitTruecolor {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Suggested palette (`sPLT`) chunk.
+ * 
+ * Multiple `sPLT` chunks are permitted, but each must have a different
+ * palette name.
+ * \sa https://www.w3.org/TR/png/#11sPLT Source
+ * \sa https://www.w3.org/TR/png/#12Suggested-palettes Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_SpltChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    palette_name: RefCell<String>,
+    sample_depth: RefCell<u8>,
+    entries: RefCell<Vec<OptRc<Png_SpltEntry>>>,
+    _io: RefCell<BytesReader>,
+}
+impl KStruct for Png_SpltChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.palette_name.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "ISO-8859-1")?;
+        *self_rc.sample_depth.borrow_mut() = _io.read_u1()?.into();
+        if !( ((((*self_rc.sample_depth() as u8) == (8 as u8))) || (((*self_rc.sample_depth() as u8) == (16 as u8)))) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotAnyOf, src_path: "/types/splt_chunk/seq/1".to_string() }));
+        }
+        *self_rc.entries.borrow_mut() = Vec::new();
+        {
+            let mut _i = 0;
+            while !_io.is_eof() {
+                let t = Self::read_into::<_, Png_SpltEntry>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                self_rc.entries.borrow_mut().push(t);
+                _i += 1;
+            }
+        }
+        Ok(())
+    }
+}
+impl Png_SpltChunk {
+}
+
+/**
+ * Any convenient name for referring to the palette. It is
+ * case-sensitive. The palette name may aid the choice of the appropriate
+ * suggested palette when more than one appears in a PNG datastream.
+ * 
+ * Palette names must contain only printable ISO-8859-1 (Latin-1)
+ * characters and spaces; that is, only code points 0x20-0x7E and
+ * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+ * not permitted.
+ */
+impl Png_SpltChunk {
+    pub fn palette_name(&self) -> Ref<'_, String> {
+        self.palette_name.borrow()
+    }
+}
+impl Png_SpltChunk {
+    pub fn sample_depth(&self) -> Ref<'_, u8> {
+        self.sample_depth.borrow()
+    }
+}
+
+/**
+ * There may be any number of entries. Entries must appear "in decreasing
+ * order of frequency" (note: strictly speaking, I think the W3C
+ * specification actually meant "non-increasing"). There is no
+ * requirement that the entries all be used by the image, nor that they
+ * all be different.
+ * 
+ * The color samples are not premultiplied by alpha, nor are they
+ * precomposited against any background.
+ * 
+ * Entries in `sPLT` use the same gamma value and chromaticity values as
+ * the PNG image, but may fall outside the range of values used in the
+ * color space of the PNG image; for example, in a greyscale PNG image,
+ * each `sPLT` entry would typically have equal red, green, and blue
+ * values, but this is not required. Similarly, `sPLT` entries can have
+ * non-opaque alpha values even when the PNG image does not use
+ * transparency.
+ */
+impl Png_SpltChunk {
+    pub fn entries(&self) -> Ref<'_, Vec<OptRc<Png_SpltEntry>>> {
+        self.entries.borrow()
+    }
+}
+impl Png_SpltChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_SpltEntry {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_SpltChunk>,
+    pub _self: SharedType<Self>,
+    red: RefCell<Option<Png_SpltEntry_Red>>,
+    green: RefCell<Option<Png_SpltEntry_Green>>,
+    blue: RefCell<Option<Png_SpltEntry_Blue>>,
+    alpha: RefCell<Option<Png_SpltEntry_Alpha>>,
+    freq: RefCell<u16>,
+    _io: RefCell<BytesReader>,
+}
+#[derive(Debug, Clone)]
+pub enum Png_SpltEntry_Red {
+    U1(u8),
+    U2(u16),
+}
+impl From<u8> for Png_SpltEntry_Red {
+    fn from(v: u8) -> Self {
+        Self::U1(v)
+    }
+}
+impl From<&Png_SpltEntry_Red> for u8 {
+    fn from(e: &Png_SpltEntry_Red) -> Self {
+        if let Png_SpltEntry_Red::U1(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Png_SpltEntry_Red::U1 to u8, enum value {:?}", e)
+    }
+}
+impl From<u16> for Png_SpltEntry_Red {
+    fn from(v: u16) -> Self {
+        Self::U2(v)
+    }
+}
+impl From<&Png_SpltEntry_Red> for u16 {
+    fn from(e: &Png_SpltEntry_Red) -> Self {
+        if let Png_SpltEntry_Red::U2(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Png_SpltEntry_Red::U2 to u16, enum value {:?}", e)
+    }
+}
+impl From<&Png_SpltEntry_Red> for usize {
+    fn from(e: &Png_SpltEntry_Red) -> Self {
+        match e {
+            Png_SpltEntry_Red::U1(v) => *v as usize,
+            Png_SpltEntry_Red::U2(v) => *v as usize,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum Png_SpltEntry_Green {
+    U1(u8),
+    U2(u16),
+}
+impl From<u8> for Png_SpltEntry_Green {
+    fn from(v: u8) -> Self {
+        Self::U1(v)
+    }
+}
+impl From<&Png_SpltEntry_Green> for u8 {
+    fn from(e: &Png_SpltEntry_Green) -> Self {
+        if let Png_SpltEntry_Green::U1(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Png_SpltEntry_Green::U1 to u8, enum value {:?}", e)
+    }
+}
+impl From<u16> for Png_SpltEntry_Green {
+    fn from(v: u16) -> Self {
+        Self::U2(v)
+    }
+}
+impl From<&Png_SpltEntry_Green> for u16 {
+    fn from(e: &Png_SpltEntry_Green) -> Self {
+        if let Png_SpltEntry_Green::U2(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Png_SpltEntry_Green::U2 to u16, enum value {:?}", e)
+    }
+}
+impl From<&Png_SpltEntry_Green> for usize {
+    fn from(e: &Png_SpltEntry_Green) -> Self {
+        match e {
+            Png_SpltEntry_Green::U1(v) => *v as usize,
+            Png_SpltEntry_Green::U2(v) => *v as usize,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum Png_SpltEntry_Blue {
+    U1(u8),
+    U2(u16),
+}
+impl From<u8> for Png_SpltEntry_Blue {
+    fn from(v: u8) -> Self {
+        Self::U1(v)
+    }
+}
+impl From<&Png_SpltEntry_Blue> for u8 {
+    fn from(e: &Png_SpltEntry_Blue) -> Self {
+        if let Png_SpltEntry_Blue::U1(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Png_SpltEntry_Blue::U1 to u8, enum value {:?}", e)
+    }
+}
+impl From<u16> for Png_SpltEntry_Blue {
+    fn from(v: u16) -> Self {
+        Self::U2(v)
+    }
+}
+impl From<&Png_SpltEntry_Blue> for u16 {
+    fn from(e: &Png_SpltEntry_Blue) -> Self {
+        if let Png_SpltEntry_Blue::U2(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Png_SpltEntry_Blue::U2 to u16, enum value {:?}", e)
+    }
+}
+impl From<&Png_SpltEntry_Blue> for usize {
+    fn from(e: &Png_SpltEntry_Blue) -> Self {
+        match e {
+            Png_SpltEntry_Blue::U1(v) => *v as usize,
+            Png_SpltEntry_Blue::U2(v) => *v as usize,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum Png_SpltEntry_Alpha {
+    U1(u8),
+    U2(u16),
+}
+impl From<u8> for Png_SpltEntry_Alpha {
+    fn from(v: u8) -> Self {
+        Self::U1(v)
+    }
+}
+impl From<&Png_SpltEntry_Alpha> for u8 {
+    fn from(e: &Png_SpltEntry_Alpha) -> Self {
+        if let Png_SpltEntry_Alpha::U1(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Png_SpltEntry_Alpha::U1 to u8, enum value {:?}", e)
+    }
+}
+impl From<u16> for Png_SpltEntry_Alpha {
+    fn from(v: u16) -> Self {
+        Self::U2(v)
+    }
+}
+impl From<&Png_SpltEntry_Alpha> for u16 {
+    fn from(e: &Png_SpltEntry_Alpha) -> Self {
+        if let Png_SpltEntry_Alpha::U2(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Png_SpltEntry_Alpha::U2 to u16, enum value {:?}", e)
+    }
+}
+impl From<&Png_SpltEntry_Alpha> for usize {
+    fn from(e: &Png_SpltEntry_Alpha) -> Self {
+        match e {
+            Png_SpltEntry_Alpha::U1(v) => *v as usize,
+            Png_SpltEntry_Alpha::U2(v) => *v as usize,
+        }
+    }
+}
+
+impl KStruct for Png_SpltEntry {
+    type Root = Png;
+    type Parent = Png_SpltChunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        match *_prc.as_ref().unwrap().sample_depth()? {
+            8 => {
+                *self_rc.red.borrow_mut() = Some(_io.read_u1()?.into());
+            }
+            _ => {
+                *self_rc.red.borrow_mut() = Some(_io.read_u2be()?.into());
+            }
+        }
+        match *_prc.as_ref().unwrap().sample_depth()? {
+            8 => {
+                *self_rc.green.borrow_mut() = Some(_io.read_u1()?.into());
+            }
+            _ => {
+                *self_rc.green.borrow_mut() = Some(_io.read_u2be()?.into());
+            }
+        }
+        match *_prc.as_ref().unwrap().sample_depth()? {
+            8 => {
+                *self_rc.blue.borrow_mut() = Some(_io.read_u1()?.into());
+            }
+            _ => {
+                *self_rc.blue.borrow_mut() = Some(_io.read_u2be()?.into());
+            }
+        }
+        match *_prc.as_ref().unwrap().sample_depth()? {
+            8 => {
+                *self_rc.alpha.borrow_mut() = Some(_io.read_u1()?.into());
+            }
+            _ => {
+                *self_rc.alpha.borrow_mut() = Some(_io.read_u2be()?.into());
+            }
+        }
+        *self_rc.freq.borrow_mut() = _io.read_u2be()?.into();
+        Ok(())
+    }
+}
+impl Png_SpltEntry {
+}
+impl Png_SpltEntry {
+    pub fn red(&self) -> usize {
+        self.red.borrow().as_ref().unwrap().into()
+    }
+    pub fn red_enum(&self) -> Ref<'_, Option<Png_SpltEntry_Red>> {
+        self.red.borrow()
+    }
+}
+impl Png_SpltEntry {
+    pub fn green(&self) -> usize {
+        self.green.borrow().as_ref().unwrap().into()
+    }
+    pub fn green_enum(&self) -> Ref<'_, Option<Png_SpltEntry_Green>> {
+        self.green.borrow()
+    }
+}
+impl Png_SpltEntry {
+    pub fn blue(&self) -> usize {
+        self.blue.borrow().as_ref().unwrap().into()
+    }
+    pub fn blue_enum(&self) -> Ref<'_, Option<Png_SpltEntry_Blue>> {
+        self.blue.borrow()
+    }
+}
+
+/**
+ * An alpha value of 0 means fully transparent. An alpha value of 255
+ * (when `_parent.sample_depth` is 8) or 65535 (when
+ * `_parent.sample_depth` is 16) means fully opaque.
+ */
+impl Png_SpltEntry {
+    pub fn alpha(&self) -> usize {
+        self.alpha.borrow().as_ref().unwrap().into()
+    }
+    pub fn alpha_enum(&self) -> Ref<'_, Option<Png_SpltEntry_Alpha>> {
+        self.alpha.borrow()
+    }
+}
+
+/**
+ * Each frequency value is proportional to the fraction of the pixels in
+ * the image for which that palette entry is the closest match in RGBA
+ * space, before the image has been composited against any background.
+ * 
+ * The exact scale factor is chosen by the PNG encoder; it is recommended
+ * that the resulting range of individual values reasonably fills the
+ * range 0 to 65535.
+ * 
+ * Zero is a valid frequency meaning that the color is "least important"
+ * or that it is rarely, if ever, used. When all the frequencies are
+ * zero, they are meaningless, that is to say, nothing may be inferred
+ * about the actual frequencies with which the colors appear in the PNG
+ * image.
+ */
+impl Png_SpltEntry {
+    pub fn freq(&self) -> Ref<'_, u16> {
+        self.freq.borrow()
+    }
+}
+impl Png_SpltEntry {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
  * \sa https://www.w3.org/TR/png/#11sRGB Source
  */
 
@@ -3569,6 +4641,322 @@ impl Png_TimeChunk {
     }
 }
 impl Png_TimeChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Transparency (`tRNS`) chunk specifies either alpha values that are
+ * associated with palette entries (for indexed-color images) or a single
+ * transparent color (for greyscale and truecolor images).
+ * 
+ * A `tRNS` chunk must not appear for color types
+ * `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+ * since a full alpha channel is already present in those cases.
+ * \sa https://www.w3.org/TR/png/#11tRNS Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_TrnsChunk {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_Chunk>,
+    pub _self: SharedType<Self>,
+    palette_alphas: RefCell<Vec<u8>>,
+    transparent_color: RefCell<Option<Png_TrnsChunk_TransparentColor>>,
+    _io: RefCell<BytesReader>,
+    f_sample_mask: Cell<bool>,
+    sample_mask: RefCell<i32>,
+}
+#[derive(Debug, Clone)]
+pub enum Png_TrnsChunk_TransparentColor {
+    Png_TrnsGreyscaleColor(OptRc<Png_TrnsGreyscaleColor>),
+    Png_TrnsTruecolorColor(OptRc<Png_TrnsTruecolorColor>),
+}
+impl From<&Png_TrnsChunk_TransparentColor> for OptRc<Png_TrnsGreyscaleColor> {
+    fn from(v: &Png_TrnsChunk_TransparentColor) -> Self {
+        if let Png_TrnsChunk_TransparentColor::Png_TrnsGreyscaleColor(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_TrnsChunk_TransparentColor::Png_TrnsGreyscaleColor, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_TrnsGreyscaleColor>> for Png_TrnsChunk_TransparentColor {
+    fn from(v: OptRc<Png_TrnsGreyscaleColor>) -> Self {
+        Self::Png_TrnsGreyscaleColor(v)
+    }
+}
+impl From<&Png_TrnsChunk_TransparentColor> for OptRc<Png_TrnsTruecolorColor> {
+    fn from(v: &Png_TrnsChunk_TransparentColor) -> Self {
+        if let Png_TrnsChunk_TransparentColor::Png_TrnsTruecolorColor(x) = v {
+            return x.clone();
+        }
+        panic!("expected Png_TrnsChunk_TransparentColor::Png_TrnsTruecolorColor, got {:?}", v)
+    }
+}
+impl From<OptRc<Png_TrnsTruecolorColor>> for Png_TrnsChunk_TransparentColor {
+    fn from(v: OptRc<Png_TrnsTruecolorColor>) -> Self {
+        Self::Png_TrnsTruecolorColor(v)
+    }
+}
+impl KStruct for Png_TrnsChunk {
+    type Root = Png;
+    type Parent = Png_Chunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if *_r.ihdr().color_type() == Png_ColorType::Indexed {
+            *self_rc.palette_alphas.borrow_mut() = Vec::new();
+            {
+                let mut _i = 0;
+                while !_io.is_eof() {
+                    self_rc.palette_alphas.borrow_mut().push(_io.read_u1()?.into());
+                    _i += 1;
+                }
+            }
+        }
+        match *_r.ihdr().color_type() {
+            Png_ColorType::Greyscale => {
+                let t = Self::read_into::<_, Png_TrnsGreyscaleColor>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.transparent_color.borrow_mut() = Some(t);
+            }
+            Png_ColorType::Truecolor => {
+                let t = Self::read_into::<_, Png_TrnsTruecolorColor>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()))?.into();
+                *self_rc.transparent_color.borrow_mut() = Some(t);
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+}
+impl Png_TrnsChunk {
+    pub fn sample_mask(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_sample_mask.get() {
+            return Ok(self.sample_mask.borrow());
+        }
+        self.f_sample_mask.set(true);
+        *self.sample_mask.borrow_mut() = (((((1 as u8) << (*_r.ihdr().bit_depth() as u8)) as i32) - (1 as i32))) as i32;
+        Ok(self.sample_mask.borrow())
+    }
+}
+
+/**
+ * Alpha values associated with palette entries in the `PLTE` chunk.
+ * 
+ * Each entry indicates that pixels of the corresponding palette index
+ * shall be treated as having the specified alpha value. Alpha values
+ * have the same interpretation as in an 8-bit full alpha channel: 0 is
+ * fully transparent, 255 is fully opaque, regardless of image bit depth.
+ * 
+ * The `tRNS` chunk must not contain more alpha values than there are
+ * palette entries, but it may contain fewer values than there are
+ * palette entries. In this case, the alpha value for all remaining
+ * palette entries is assumed to be 255. If all palette indices are
+ * opaque, the `tRNS` chunk may be omitted.
+ */
+impl Png_TrnsChunk {
+    pub fn palette_alphas(&self) -> Ref<'_, Vec<u8>> {
+        self.palette_alphas.borrow()
+    }
+}
+
+/**
+ * Pixels of the specified grey sample value or RGB sample values are
+ * treated as transparent (equivalent to alpha value 0); all other pixels
+ * are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).
+ * 
+ * If the image bit depth is less than 16, the least significant bits of
+ * these sample values are used. Encoders should set the other bits to 0,
+ * and decoders must mask the other bits to 0 before the value is used.
+ * 
+ * Note: in this Kaitai Struct implementation, the bitmask used to
+ * implement this masking is stored in the value instance `sample_mask`.
+ */
+impl Png_TrnsChunk {
+    pub fn transparent_color(&self) -> Ref<'_, Option<Png_TrnsChunk_TransparentColor>> {
+        self.transparent_color.borrow()
+    }
+}
+impl Png_TrnsChunk {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_TrnsGreyscaleColor {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_TrnsChunk>,
+    pub _self: SharedType<Self>,
+    grey_raw: RefCell<u16>,
+    _io: RefCell<BytesReader>,
+    f_grey: Cell<bool>,
+    grey: RefCell<i32>,
+}
+impl KStruct for Png_TrnsGreyscaleColor {
+    type Root = Png;
+    type Parent = Png_TrnsChunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.grey_raw.borrow_mut() = _io.read_u2be()?.into();
+        Ok(())
+    }
+}
+impl Png_TrnsGreyscaleColor {
+    pub fn grey(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_grey.get() {
+            return Ok(self.grey.borrow());
+        }
+        self.f_grey.set(true);
+        *self.grey.borrow_mut() = (((*self.grey_raw() as i32) & (*_prc.as_ref().unwrap().sample_mask()? as i32))) as i32;
+        Ok(self.grey.borrow())
+    }
+}
+impl Png_TrnsGreyscaleColor {
+    pub fn grey_raw(&self) -> Ref<'_, u16> {
+        self.grey_raw.borrow()
+    }
+}
+impl Png_TrnsGreyscaleColor {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+#[derive(Default, Debug, Clone)]
+pub struct Png_TrnsTruecolorColor {
+    pub _root: SharedType<Png>,
+    pub _parent: SharedType<Png_TrnsChunk>,
+    pub _self: SharedType<Self>,
+    red_raw: RefCell<u16>,
+    green_raw: RefCell<u16>,
+    blue_raw: RefCell<u16>,
+    _io: RefCell<BytesReader>,
+    f_blue: Cell<bool>,
+    blue: RefCell<i32>,
+    f_green: Cell<bool>,
+    green: RefCell<i32>,
+    f_red: Cell<bool>,
+    red: RefCell<i32>,
+}
+impl KStruct for Png_TrnsTruecolorColor {
+    type Root = Png;
+    type Parent = Png_TrnsChunk;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.red_raw.borrow_mut() = _io.read_u2be()?.into();
+        *self_rc.green_raw.borrow_mut() = _io.read_u2be()?.into();
+        *self_rc.blue_raw.borrow_mut() = _io.read_u2be()?.into();
+        Ok(())
+    }
+}
+impl Png_TrnsTruecolorColor {
+    pub fn blue(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_blue.get() {
+            return Ok(self.blue.borrow());
+        }
+        self.f_blue.set(true);
+        *self.blue.borrow_mut() = (((*self.blue_raw() as i32) & (*_prc.as_ref().unwrap().sample_mask()? as i32))) as i32;
+        Ok(self.blue.borrow())
+    }
+    pub fn green(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_green.get() {
+            return Ok(self.green.borrow());
+        }
+        self.f_green.set(true);
+        *self.green.borrow_mut() = (((*self.green_raw() as i32) & (*_prc.as_ref().unwrap().sample_mask()? as i32))) as i32;
+        Ok(self.green.borrow())
+    }
+    pub fn red(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_red.get() {
+            return Ok(self.red.borrow());
+        }
+        self.f_red.set(true);
+        *self.red.borrow_mut() = (((*self.red_raw() as i32) & (*_prc.as_ref().unwrap().sample_mask()? as i32))) as i32;
+        Ok(self.red.borrow())
+    }
+}
+impl Png_TrnsTruecolorColor {
+    pub fn red_raw(&self) -> Ref<'_, u16> {
+        self.red_raw.borrow()
+    }
+}
+impl Png_TrnsTruecolorColor {
+    pub fn green_raw(&self) -> Ref<'_, u16> {
+        self.green_raw.borrow()
+    }
+}
+impl Png_TrnsTruecolorColor {
+    pub fn blue_raw(&self) -> Ref<'_, u16> {
+        self.blue_raw.borrow()
+    }
+}
+impl Png_TrnsTruecolorColor {
     pub fn _io(&self) -> Ref<'_, BytesReader> {
         self._io.borrow()
     }

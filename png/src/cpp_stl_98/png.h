@@ -7,6 +7,8 @@ class png_t;
 
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include "exif.h"
+#include "icc_4.h"
 #include <set>
 #include <vector>
 
@@ -40,9 +42,12 @@ public:
     class compressed_text_chunk_t;
     class evernote_skmf_chunk_t;
     class evernote_skrf_chunk_t;
+    class exif_chunk_t;
     class frame_control_chunk_t;
     class frame_data_chunk_t;
     class gama_chunk_t;
+    class hist_chunk_t;
+    class iccp_chunk_t;
     class ihdr_chunk_t;
     class international_text_t;
     class international_text_chunk_t;
@@ -51,9 +56,17 @@ public:
     class phys_chunk_t;
     class plte_chunk_t;
     class rgb_t;
+    class sbit_chunk_t;
+    class sbit_greyscale_t;
+    class sbit_truecolor_t;
+    class splt_chunk_t;
+    class splt_entry_t;
     class srgb_chunk_t;
     class text_chunk_t;
     class time_chunk_t;
+    class trns_chunk_t;
+    class trns_greyscale_color_t;
+    class trns_truecolor_color_t;
 
     enum blend_op_values_t {
         BLEND_OP_VALUES_SOURCE = 0,
@@ -905,6 +918,41 @@ public:
     };
 
     /**
+     * Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+     * 
+     * Only one `eXIf` chunk is allowed in a PNG datastream.
+     * 
+     * The `eXIf` chunk contains metadata concerning the original image data. If
+     * the image has been edited subsequent to creation of the Exif profile, this
+     * data might no longer apply to the PNG image data.
+     * \sa https://www.w3.org/TR/png/#eXIf Source
+     */
+
+    class exif_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        exif_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~exif_chunk_t();
+
+    private:
+        exif_t* m_exif;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+        exif_t* exif() const { return m_exif; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
      * \sa https://www.w3.org/TR/png/#fcTL-chunk Source
      */
 
@@ -1115,6 +1163,133 @@ public:
         uint32_t gamma_int() const { return m_gamma_int; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Image histogram (`hIST`) chunk gives the approximate usage frequency of
+     * each color in the palette. A histogram chunk can appear only when a `PLTE`
+     * chunk appears.
+     * \sa https://www.w3.org/TR/png/#11hIST Source
+     */
+
+    class hist_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        hist_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~hist_chunk_t();
+
+    private:
+        std::vector<uint16_t>* m_usage_freqs;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Usage frequencies of each color in the palette.
+         * 
+         * There must be exactly one entry for each entry in the `PLTE` chunk. Each
+         * entry is proportional to the fraction of pixels in the image that have
+         * that palette index; the exact scale factor is chosen by the encoder.
+         * 
+         * Histogram entries are approximate, with the exception that a zero
+         * entry specifies that the corresponding palette entry is not used at
+         * all in the image. A histogram entry must be nonzero if there are any
+         * pixels of that color.
+         */
+        std::vector<uint16_t>* usage_freqs() const { return m_usage_freqs; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Embedded ICC profile (`iCCP`) chunk.
+     * 
+     * If the `iCCP` chunk is present, the image samples conform to the color
+     * space represented by the embedded ICC profile as defined by the
+     * International Color Consortium.
+     * 
+     * This chunk is ignored unless it is the [highest-precedence color
+     * chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+     * the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+     * at most one embedded profile, whether specified explicitly with an `iCCP`
+     * or implicitly with an `sRGB` chunk.
+     * 
+     * It is recommended that the `sRGB` and `iCCP` chunks do not appear
+     * simultaneously in a PNG datastream.
+     * \sa https://www.w3.org/TR/png/#11iCCP Source
+     */
+
+    class iccp_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        iccp_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~iccp_chunk_t();
+
+    private:
+        std::string m_profile_name;
+        compression_methods_t m_compression_method;
+        icc_4_t* m_profile;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+        std::string m__raw_profile;
+        kaitai::kstream* m__io__raw_profile;
+        std::string m__raw__raw_profile;
+
+    public:
+
+        /**
+         * Any convenient name for referring to the profile. It is
+         * case-sensitive.
+         * 
+         * Profile names must contain only printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+         * not permitted.
+         */
+        std::string profile_name() const { return m_profile_name; }
+        compression_methods_t compression_method() const { return m_compression_method; }
+
+        /**
+         * Embedded ICC profile.
+         * 
+         * The color space of the ICC profile must be:
+         * 
+         * * an RGB color space for color images (color types
+         *   `color_type::truecolor` = 2, `color_type::indexed` = 3, and
+         *   `color_type::truecolor_alpha` = 6), or
+         * * a greyscale color space for greyscale images (color types
+         *   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).
+         * 
+         * Note that the imported `icc_4.ksy` spec currently in use here supports
+         * only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.
+         * This means that PNG files with an embedded v2 profile (for example
+         * https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)
+         * will fail to parse.
+         * 
+         * TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it
+         * to `icc.ksy`, and use it here.
+         */
+        icc_4_t* profile() const { return m_profile; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+        std::string _raw_profile() const { return m__raw_profile; }
+        kaitai::kstream* _io__raw_profile() const { return m__io__raw_profile; }
+        std::string _raw__raw_profile() const { return m__raw__raw_profile; }
     };
 
     /**
@@ -1578,6 +1753,244 @@ public:
     };
 
     /**
+     * Significant bits (`sBIT`) chunk stores the original number of significant
+     * bits of the sample values (which can be less than or equal to the sample
+     * depth). This allows PNG decoders to recover the original data losslessly
+     * even if the data had a sample depth not directly supported by PNG.
+     * \sa https://www.w3.org/TR/png/#11sBIT Source
+     */
+
+    class sbit_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        sbit_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~sbit_chunk_t();
+
+    private:
+        bool f_sample_depth;
+        uint8_t m_sample_depth;
+
+    public:
+        uint8_t sample_depth();
+
+    private:
+        kaitai::kstruct* m_significant_bits;
+        bool n_significant_bits;
+
+    public:
+        bool _is_null_significant_bits() { significant_bits(); return n_significant_bits; };
+
+    private:
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+        kaitai::kstruct* significant_bits() const { return m_significant_bits; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    class sbit_greyscale_t : public kaitai::kstruct {
+
+    public:
+
+        sbit_greyscale_t(bool p_has_alpha, kaitai::kstream* p__io, png_t::sbit_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~sbit_greyscale_t();
+
+    private:
+        uint8_t m_grey;
+        uint8_t m_alpha;
+        bool n_alpha;
+
+    public:
+        bool _is_null_alpha() { alpha(); return n_alpha; };
+
+    private:
+        bool m_has_alpha;
+        png_t* m__root;
+        png_t::sbit_chunk_t* m__parent;
+
+    public:
+        uint8_t grey() const { return m_grey; }
+        uint8_t alpha() const { return m_alpha; }
+        bool has_alpha() const { return m_has_alpha; }
+        png_t* _root() const { return m__root; }
+        png_t::sbit_chunk_t* _parent() const { return m__parent; }
+    };
+
+    class sbit_truecolor_t : public kaitai::kstruct {
+
+    public:
+
+        sbit_truecolor_t(bool p_has_alpha, kaitai::kstream* p__io, png_t::sbit_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~sbit_truecolor_t();
+
+    private:
+        uint8_t m_red;
+        uint8_t m_green;
+        uint8_t m_blue;
+        uint8_t m_alpha;
+        bool n_alpha;
+
+    public:
+        bool _is_null_alpha() { alpha(); return n_alpha; };
+
+    private:
+        bool m_has_alpha;
+        png_t* m__root;
+        png_t::sbit_chunk_t* m__parent;
+
+    public:
+        uint8_t red() const { return m_red; }
+        uint8_t green() const { return m_green; }
+        uint8_t blue() const { return m_blue; }
+        uint8_t alpha() const { return m_alpha; }
+        bool has_alpha() const { return m_has_alpha; }
+        png_t* _root() const { return m__root; }
+        png_t::sbit_chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Suggested palette (`sPLT`) chunk.
+     * 
+     * Multiple `sPLT` chunks are permitted, but each must have a different
+     * palette name.
+     * \sa https://www.w3.org/TR/png/#11sPLT Source
+     * \sa https://www.w3.org/TR/png/#12Suggested-palettes Source
+     */
+
+    class splt_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        splt_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~splt_chunk_t();
+
+    private:
+        std::string m_palette_name;
+        uint8_t m_sample_depth;
+        std::vector<splt_entry_t*>* m_entries;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Any convenient name for referring to the palette. It is
+         * case-sensitive. The palette name may aid the choice of the appropriate
+         * suggested palette when more than one appears in a PNG datastream.
+         * 
+         * Palette names must contain only printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+         * not permitted.
+         */
+        std::string palette_name() const { return m_palette_name; }
+        uint8_t sample_depth() const { return m_sample_depth; }
+
+        /**
+         * There may be any number of entries. Entries must appear "in decreasing
+         * order of frequency" (note: strictly speaking, I think the W3C
+         * specification actually meant "non-increasing"). There is no
+         * requirement that the entries all be used by the image, nor that they
+         * all be different.
+         * 
+         * The color samples are not premultiplied by alpha, nor are they
+         * precomposited against any background.
+         * 
+         * Entries in `sPLT` use the same gamma value and chromaticity values as
+         * the PNG image, but may fall outside the range of values used in the
+         * color space of the PNG image; for example, in a greyscale PNG image,
+         * each `sPLT` entry would typically have equal red, green, and blue
+         * values, but this is not required. Similarly, `sPLT` entries can have
+         * non-opaque alpha values even when the PNG image does not use
+         * transparency.
+         */
+        std::vector<splt_entry_t*>* entries() const { return m_entries; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    class splt_entry_t : public kaitai::kstruct {
+
+    public:
+
+        splt_entry_t(kaitai::kstream* p__io, png_t::splt_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~splt_entry_t();
+
+    private:
+        uint16_t m_red;
+        uint16_t m_green;
+        uint16_t m_blue;
+        uint16_t m_alpha;
+        uint16_t m_freq;
+        png_t* m__root;
+        png_t::splt_chunk_t* m__parent;
+
+    public:
+        uint16_t red() const { return m_red; }
+        uint16_t green() const { return m_green; }
+        uint16_t blue() const { return m_blue; }
+
+        /**
+         * An alpha value of 0 means fully transparent. An alpha value of 255
+         * (when `_parent.sample_depth` is 8) or 65535 (when
+         * `_parent.sample_depth` is 16) means fully opaque.
+         */
+        uint16_t alpha() const { return m_alpha; }
+
+        /**
+         * Each frequency value is proportional to the fraction of the pixels in
+         * the image for which that palette entry is the closest match in RGBA
+         * space, before the image has been composited against any background.
+         * 
+         * The exact scale factor is chosen by the PNG encoder; it is recommended
+         * that the resulting range of individual values reasonably fills the
+         * range 0 to 65535.
+         * 
+         * Zero is a valid frequency meaning that the color is "least important"
+         * or that it is rarely, if ever, used. When all the frequencies are
+         * zero, they are meaningless, that is to say, nothing may be inferred
+         * about the actual frequencies with which the colors appear in the PNG
+         * image.
+         */
+        uint16_t freq() const { return m_freq; }
+        png_t* _root() const { return m__root; }
+        png_t::splt_chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
      * \sa https://www.w3.org/TR/png/#11sRGB Source
      */
 
@@ -1715,6 +2128,170 @@ public:
         uint8_t second() const { return m_second; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Transparency (`tRNS`) chunk specifies either alpha values that are
+     * associated with palette entries (for indexed-color images) or a single
+     * transparent color (for greyscale and truecolor images).
+     * 
+     * A `tRNS` chunk must not appear for color types
+     * `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+     * since a full alpha channel is already present in those cases.
+     * \sa https://www.w3.org/TR/png/#11tRNS Source
+     */
+
+    class trns_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        trns_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~trns_chunk_t();
+
+    private:
+        bool f_sample_mask;
+        int32_t m_sample_mask;
+
+    public:
+        int32_t sample_mask();
+
+    private:
+        std::vector<uint8_t>* m_palette_alphas;
+        bool n_palette_alphas;
+
+    public:
+        bool _is_null_palette_alphas() { palette_alphas(); return n_palette_alphas; };
+
+    private:
+        kaitai::kstruct* m_transparent_color;
+        bool n_transparent_color;
+
+    public:
+        bool _is_null_transparent_color() { transparent_color(); return n_transparent_color; };
+
+    private:
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Alpha values associated with palette entries in the `PLTE` chunk.
+         * 
+         * Each entry indicates that pixels of the corresponding palette index
+         * shall be treated as having the specified alpha value. Alpha values
+         * have the same interpretation as in an 8-bit full alpha channel: 0 is
+         * fully transparent, 255 is fully opaque, regardless of image bit depth.
+         * 
+         * The `tRNS` chunk must not contain more alpha values than there are
+         * palette entries, but it may contain fewer values than there are
+         * palette entries. In this case, the alpha value for all remaining
+         * palette entries is assumed to be 255. If all palette indices are
+         * opaque, the `tRNS` chunk may be omitted.
+         */
+        std::vector<uint8_t>* palette_alphas() const { return m_palette_alphas; }
+
+        /**
+         * Pixels of the specified grey sample value or RGB sample values are
+         * treated as transparent (equivalent to alpha value 0); all other pixels
+         * are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).
+         * 
+         * If the image bit depth is less than 16, the least significant bits of
+         * these sample values are used. Encoders should set the other bits to 0,
+         * and decoders must mask the other bits to 0 before the value is used.
+         * 
+         * Note: in this Kaitai Struct implementation, the bitmask used to
+         * implement this masking is stored in the value instance `sample_mask`.
+         */
+        kaitai::kstruct* transparent_color() const { return m_transparent_color; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    class trns_greyscale_color_t : public kaitai::kstruct {
+
+    public:
+
+        trns_greyscale_color_t(kaitai::kstream* p__io, png_t::trns_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~trns_greyscale_color_t();
+
+    private:
+        bool f_grey;
+        int32_t m_grey;
+
+    public:
+        int32_t grey();
+
+    private:
+        uint16_t m_grey_raw;
+        png_t* m__root;
+        png_t::trns_chunk_t* m__parent;
+
+    public:
+        uint16_t grey_raw() const { return m_grey_raw; }
+        png_t* _root() const { return m__root; }
+        png_t::trns_chunk_t* _parent() const { return m__parent; }
+    };
+
+    class trns_truecolor_color_t : public kaitai::kstruct {
+
+    public:
+
+        trns_truecolor_color_t(kaitai::kstream* p__io, png_t::trns_chunk_t* p__parent = 0, png_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~trns_truecolor_color_t();
+
+    private:
+        bool f_blue;
+        int32_t m_blue;
+
+    public:
+        int32_t blue();
+
+    private:
+        bool f_green;
+        int32_t m_green;
+
+    public:
+        int32_t green();
+
+    private:
+        bool f_red;
+        int32_t m_red;
+
+    public:
+        int32_t red();
+
+    private:
+        uint16_t m_red_raw;
+        uint16_t m_green_raw;
+        uint16_t m_blue_raw;
+        png_t* m__root;
+        png_t::trns_chunk_t* m__parent;
+
+    public:
+        uint16_t red_raw() const { return m_red_raw; }
+        uint16_t green_raw() const { return m_green_raw; }
+        uint16_t blue_raw() const { return m_blue_raw; }
+        png_t* _root() const { return m__root; }
+        png_t::trns_chunk_t* _parent() const { return m__parent; }
     };
 
 private:

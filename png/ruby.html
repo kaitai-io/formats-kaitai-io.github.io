@@ -329,6 +329,8 @@ section#format-index .row {
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;exif&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;icc_4&#39;</span>
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;zlib&#39;</span>
 
 <span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
@@ -664,6 +666,9 @@ section#format-index .row {
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;cLLI&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ClliChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;eXIf&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ExifChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;fcTL&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FrameControlChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
@@ -673,6 +678,12 @@ section#format-index .row {
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;gAMA&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">GamaChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;hIST&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">HistChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;iCCP&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">IccpChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;iTXt&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">InternationalTextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
@@ -691,6 +702,12 @@ section#format-index .row {
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;prVW&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">AdobeFireworksChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;sBIT&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SbitChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;sPLT&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SpltChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;sRGB&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SrgbChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
@@ -706,6 +723,9 @@ section#format-index .row {
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;tIME&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TimeChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;tRNS&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TrnsChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;zTXt&quot;</span>
 <span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">CompressedTextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
@@ -973,6 +993,28 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Exchangeable Image File (Exif) Profile (`eXIf`) chunk.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># Only one `eXIf` chunk is allowed in a PNG datastream.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># The `eXIf` chunk contains metadata concerning the original image data. If</span>
+<span class="w">  </span><span class="c1"># the image has been edited subsequent to creation of the Exif profile, this</span>
+<span class="w">  </span><span class="c1"># data might no longer apply to the PNG image data.</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#eXIf Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ExifChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@exif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Exif</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:exif</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#fcTL-chunk Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">FrameControlChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
@@ -1133,6 +1175,109 @@ section#format-index .row {
 <span class="w">    </span><span class="c1"># Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as</span>
 <span class="w">    </span><span class="c1"># 45455)</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:gamma_int</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Image histogram (`hIST`) chunk gives the approximate usage frequency of</span>
+<span class="w">  </span><span class="c1"># each color in the palette. A histogram chunk can appear only when a `PLTE`</span>
+<span class="w">  </span><span class="c1"># chunk appears.</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11hIST Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">HistChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@usage_freqs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+<span class="w">        </span><span class="vi">@usage_freqs</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Usage frequencies of each color in the palette.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># There must be exactly one entry for each entry in the `PLTE` chunk. Each</span>
+<span class="w">    </span><span class="c1"># entry is proportional to the fraction of pixels in the image that have</span>
+<span class="w">    </span><span class="c1"># that palette index; the exact scale factor is chosen by the encoder.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Histogram entries are approximate, with the exception that a zero</span>
+<span class="w">    </span><span class="c1"># entry specifies that the corresponding palette entry is not used at</span>
+<span class="w">    </span><span class="c1"># all in the image. A histogram entry must be nonzero if there are any</span>
+<span class="w">    </span><span class="c1"># pixels of that color.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:usage_freqs</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Embedded ICC profile (`iCCP`) chunk.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># If the `iCCP` chunk is present, the image samples conform to the color</span>
+<span class="w">  </span><span class="c1"># space represented by the embedded ICC profile as defined by the</span>
+<span class="w">  </span><span class="c1"># International Color Consortium.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># This chunk is ignored unless it is the [highest-precedence color</span>
+<span class="w">  </span><span class="c1"># chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by</span>
+<span class="w">  </span><span class="c1"># the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain</span>
+<span class="w">  </span><span class="c1"># at most one embedded profile, whether specified explicitly with an `iCCP`</span>
+<span class="w">  </span><span class="c1"># or implicitly with an `sRGB` chunk.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># It is recommended that the `sRGB` and `iCCP` chunks do not appear</span>
+<span class="w">  </span><span class="c1"># simultaneously in a PNG datastream.</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11iCCP Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">IccpChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@profile_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COMPRESSION_METHODS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:compression_methods_zlib</span><span class="p">,</span><span class="w"> </span><span class="vi">@compression_method</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/iccp_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:compression_methods_zlib</span>
+<span class="w">      </span><span class="vi">@_raw__raw_profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+<span class="w">      </span><span class="vi">@_raw_profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Zlib</span><span class="o">::</span><span class="no">Inflate</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="vi">@_raw__raw_profile</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_io__raw_profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_profile</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Icc4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_profile</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Any convenient name for referring to the profile. It is</span>
+<span class="w">    </span><span class="c1"># case-sensitive.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Profile names must contain only printable ISO-8859-1 (Latin-1)</span>
+<span class="w">    </span><span class="c1"># characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="w">    </span><span class="c1"># 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are</span>
+<span class="w">    </span><span class="c1"># not permitted.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:profile_name</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:compression_method</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Embedded ICC profile.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># The color space of the ICC profile must be:</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># * an RGB color space for color images (color types</span>
+<span class="w">    </span><span class="c1">#   `color_type::truecolor` = 2, `color_type::indexed` = 3, and</span>
+<span class="w">    </span><span class="c1">#   `color_type::truecolor_alpha` = 6), or</span>
+<span class="w">    </span><span class="c1"># * a greyscale color space for greyscale images (color types</span>
+<span class="w">    </span><span class="c1">#   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Note that the imported `icc_4.ksy` spec currently in use here supports</span>
+<span class="w">    </span><span class="c1"># only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.</span>
+<span class="w">    </span><span class="c1"># This means that PNG files with an embedded v2 profile (for example</span>
+<span class="w">    </span><span class="c1"># https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)</span>
+<span class="w">    </span><span class="c1"># will fail to parse.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it</span>
+<span class="w">    </span><span class="c1"># to `icc.ksy`, and use it here.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:profile</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_profile</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw__raw_profile</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
@@ -1448,6 +1593,211 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Significant bits (`sBIT`) chunk stores the original number of significant</span>
+<span class="w">  </span><span class="c1"># bits of the sample values (which can be less than or equal to the sample</span>
+<span class="w">  </span><span class="c1"># depth). This allows PNG decoders to recover the original data losslessly</span>
+<span class="w">  </span><span class="c1"># even if the data had a sample depth not directly supported by PNG.</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11sBIT Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SbitChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">color_type</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_greyscale</span>
+<span class="w">        </span><span class="vi">@significant_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SbitGreyscale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_greyscale_alpha</span>
+<span class="w">        </span><span class="vi">@significant_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SbitGreyscale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_indexed</span>
+<span class="w">        </span><span class="vi">@significant_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SbitTruecolor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_truecolor</span>
+<span class="w">        </span><span class="vi">@significant_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SbitTruecolor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_truecolor_alpha</span>
+<span class="w">        </span><span class="vi">@significant_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SbitTruecolor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">sample_depth</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@sample_depth</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@sample_depth</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@sample_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">color_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:color_type_indexed</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">bit_depth</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@sample_depth</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:significant_bits</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SbitGreyscale</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">has_alpha</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@has_alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">has_alpha</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@grey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="vi">@grey</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_greyscale/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@grey</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span><span class="p">,</span><span class="w"> </span><span class="vi">@grey</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_greyscale/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@grey</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">has_alpha</span>
+<span class="w">        </span><span class="vi">@alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">        </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="vi">@alpha</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_greyscale/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@alpha</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span><span class="p">,</span><span class="w"> </span><span class="vi">@alpha</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_greyscale/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@alpha</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:grey</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:alpha</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:has_alpha</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SbitTruecolor</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">has_alpha</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@has_alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">has_alpha</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="vi">@red</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_truecolor/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@red</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span><span class="p">,</span><span class="w"> </span><span class="vi">@red</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_truecolor/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@red</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="vi">@green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="vi">@green</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_truecolor/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@green</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span><span class="p">,</span><span class="w"> </span><span class="vi">@green</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_truecolor/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@green</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="vi">@blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="vi">@blue</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_truecolor/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@blue</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span><span class="p">,</span><span class="w"> </span><span class="vi">@blue</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_truecolor/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@blue</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">has_alpha</span>
+<span class="w">        </span><span class="vi">@alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">        </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="vi">@alpha</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_truecolor/seq/3&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@alpha</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span><span class="p">,</span><span class="w"> </span><span class="vi">@alpha</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/sbit_truecolor/seq/3&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@alpha</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:alpha</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:has_alpha</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Suggested palette (`sPLT`) chunk.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># Multiple `sPLT` chunks are permitted, but each must have a different</span>
+<span class="w">  </span><span class="c1"># palette name.</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11sPLT Source</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#12Suggested-palettes Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SpltChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@palette_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@sample_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotAnyOfError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@sample_depth</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/splt_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w">  </span><span class="p">((</span><span class="vi">@sample_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="vi">@sample_depth</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">16</span><span class="p">))</span><span class="w"> </span>
+<span class="w">      </span><span class="vi">@entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+<span class="w">        </span><span class="vi">@entries</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">SpltEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Any convenient name for referring to the palette. It is</span>
+<span class="w">    </span><span class="c1"># case-sensitive. The palette name may aid the choice of the appropriate</span>
+<span class="w">    </span><span class="c1"># suggested palette when more than one appears in a PNG datastream.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Palette names must contain only printable ISO-8859-1 (Latin-1)</span>
+<span class="w">    </span><span class="c1"># characters and spaces; that is, only code points 0x20-0x7E and</span>
+<span class="w">    </span><span class="c1"># 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are</span>
+<span class="w">    </span><span class="c1"># not permitted.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:palette_name</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sample_depth</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># There may be any number of entries. Entries must appear &quot;in decreasing</span>
+<span class="w">    </span><span class="c1"># order of frequency&quot; (note: strictly speaking, I think the W3C</span>
+<span class="w">    </span><span class="c1"># specification actually meant &quot;non-increasing&quot;). There is no</span>
+<span class="w">    </span><span class="c1"># requirement that the entries all be used by the image, nor that they</span>
+<span class="w">    </span><span class="c1"># all be different.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># The color samples are not premultiplied by alpha, nor are they</span>
+<span class="w">    </span><span class="c1"># precomposited against any background.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Entries in `sPLT` use the same gamma value and chromaticity values as</span>
+<span class="w">    </span><span class="c1"># the PNG image, but may fall outside the range of values used in the</span>
+<span class="w">    </span><span class="c1"># color space of the PNG image; for example, in a greyscale PNG image,</span>
+<span class="w">    </span><span class="c1"># each `sPLT` entry would typically have equal red, green, and blue</span>
+<span class="w">    </span><span class="c1"># values, but this is not required. Similarly, `sPLT` entries can have</span>
+<span class="w">    </span><span class="c1"># non-opaque alpha values even when the PNG image does not use</span>
+<span class="w">    </span><span class="c1"># transparency.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:entries</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SpltEntry</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">        </span><span class="vi">@red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="vi">@red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">        </span><span class="vi">@green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="vi">@green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">        </span><span class="vi">@blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="vi">@blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_depth</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">        </span><span class="vi">@alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="vi">@alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># An alpha value of 0 means fully transparent. An alpha value of 255</span>
+<span class="w">    </span><span class="c1"># (when `_parent.sample_depth` is 8) or 65535 (when</span>
+<span class="w">    </span><span class="c1"># `_parent.sample_depth` is 16) means fully opaque.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:alpha</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Each frequency value is proportional to the fraction of the pixels in</span>
+<span class="w">    </span><span class="c1"># the image for which that palette entry is the closest match in RGBA</span>
+<span class="w">    </span><span class="c1"># space, before the image has been composited against any background.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># The exact scale factor is chosen by the PNG encoder; it is recommended</span>
+<span class="w">    </span><span class="c1"># that the resulting range of individual values reasonably fills the</span>
+<span class="w">    </span><span class="c1"># range 0 to 65535.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Zero is a valid frequency meaning that the color is &quot;least important&quot;</span>
+<span class="w">    </span><span class="c1"># or that it is rarely, if ever, used. When all the frequencies are</span>
+<span class="w">    </span><span class="c1"># zero, they are meaningless, that is to say, nothing may be inferred</span>
+<span class="w">    </span><span class="c1"># about the actual frequencies with which the colors appear in the PNG</span>
+<span class="w">    </span><span class="c1"># image.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:freq</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11sRGB Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SrgbChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
@@ -1539,6 +1889,121 @@ section#format-index .row {
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:hour</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:minute</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:second</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Transparency (`tRNS`) chunk specifies either alpha values that are</span>
+<span class="w">  </span><span class="c1"># associated with palette entries (for indexed-color images) or a single</span>
+<span class="w">  </span><span class="c1"># transparent color (for greyscale and truecolor images).</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># A `tRNS` chunk must not appear for color types</span>
+<span class="w">  </span><span class="c1"># `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,</span>
+<span class="w">  </span><span class="c1"># since a full alpha channel is already present in those cases.</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11tRNS Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">TrnsChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">color_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:color_type_indexed</span>
+<span class="w">        </span><span class="vi">@palette_alphas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+<span class="w">          </span><span class="vi">@palette_alphas</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">          </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">color_type</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_greyscale</span>
+<span class="w">        </span><span class="vi">@transparent_color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TrnsGreyscaleColor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_truecolor</span>
+<span class="w">        </span><span class="vi">@transparent_color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TrnsTruecolorColor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">sample_mask</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@sample_mask</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@sample_mask</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@sample_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">bit_depth</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="vi">@sample_mask</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Alpha values associated with palette entries in the `PLTE` chunk.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Each entry indicates that pixels of the corresponding palette index</span>
+<span class="w">    </span><span class="c1"># shall be treated as having the specified alpha value. Alpha values</span>
+<span class="w">    </span><span class="c1"># have the same interpretation as in an 8-bit full alpha channel: 0 is</span>
+<span class="w">    </span><span class="c1"># fully transparent, 255 is fully opaque, regardless of image bit depth.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># The `tRNS` chunk must not contain more alpha values than there are</span>
+<span class="w">    </span><span class="c1"># palette entries, but it may contain fewer values than there are</span>
+<span class="w">    </span><span class="c1"># palette entries. In this case, the alpha value for all remaining</span>
+<span class="w">    </span><span class="c1"># palette entries is assumed to be 255. If all palette indices are</span>
+<span class="w">    </span><span class="c1"># opaque, the `tRNS` chunk may be omitted.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:palette_alphas</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Pixels of the specified grey sample value or RGB sample values are</span>
+<span class="w">    </span><span class="c1"># treated as transparent (equivalent to alpha value 0); all other pixels</span>
+<span class="w">    </span><span class="c1"># are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># If the image bit depth is less than 16, the least significant bits of</span>
+<span class="w">    </span><span class="c1"># these sample values are used. Encoders should set the other bits to 0,</span>
+<span class="w">    </span><span class="c1"># and decoders must mask the other bits to 0 before the value is used.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># Note: in this Kaitai Struct implementation, the bitmask used to</span>
+<span class="w">    </span><span class="c1"># implement this masking is stored in the value instance `sample_mask`.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:transparent_color</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">TrnsGreyscaleColor</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@grey_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">grey</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@grey</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@grey</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@grey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">grey_raw</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_mask</span>
+<span class="w">      </span><span class="vi">@grey</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:grey_raw</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">TrnsTruecolorColor</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@red_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="vi">@green_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="vi">@blue_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">blue</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@blue</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@blue</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blue_raw</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_mask</span>
+<span class="w">      </span><span class="vi">@blue</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">green</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@green</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@green</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">green_raw</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_mask</span>
+<span class="w">      </span><span class="vi">@green</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">red</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@red</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@red</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">red_raw</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">sample_mask</span>
+<span class="w">      </span><span class="vi">@red</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red_raw</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green_raw</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue_raw</span>
 <span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:magic</span>
 <span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:ihdr_len</span>

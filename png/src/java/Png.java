@@ -737,6 +737,11 @@ public class Png extends KaitaiStruct {
                 this.body = new ClliChunk(_io_body, this, _root);
                 break;
             }
+            case "eXIf": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new ExifChunk(_io_body, this, _root);
+                break;
+            }
             case "fcTL": {
                 KaitaiStream _io_body = this._io.substream(len());
                 this.body = new FrameControlChunk(_io_body, this, _root);
@@ -750,6 +755,16 @@ public class Png extends KaitaiStruct {
             case "gAMA": {
                 KaitaiStream _io_body = this._io.substream(len());
                 this.body = new GamaChunk(_io_body, this, _root);
+                break;
+            }
+            case "hIST": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new HistChunk(_io_body, this, _root);
+                break;
+            }
+            case "iCCP": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new IccpChunk(_io_body, this, _root);
                 break;
             }
             case "iTXt": {
@@ -782,6 +797,16 @@ public class Png extends KaitaiStruct {
                 this.body = new AdobeFireworksChunk(_io_body, this, _root);
                 break;
             }
+            case "sBIT": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new SbitChunk(_io_body, this, _root);
+                break;
+            }
+            case "sPLT": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new SpltChunk(_io_body, this, _root);
+                break;
+            }
             case "sRGB": {
                 KaitaiStream _io_body = this._io.substream(len());
                 this.body = new SrgbChunk(_io_body, this, _root);
@@ -805,6 +830,11 @@ public class Png extends KaitaiStruct {
             case "tIME": {
                 KaitaiStream _io_body = this._io.substream(len());
                 this.body = new TimeChunk(_io_body, this, _root);
+                break;
+            }
+            case "tRNS": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new TrnsChunk(_io_body, this, _root);
                 break;
             }
             case "zTXt": {
@@ -850,6 +880,10 @@ public class Png extends KaitaiStruct {
                 ((ClliChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "eXIf": {
+                ((ExifChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "fcTL": {
                 ((FrameControlChunk) (this.body))._fetchInstances();
                 break;
@@ -860,6 +894,14 @@ public class Png extends KaitaiStruct {
             }
             case "gAMA": {
                 ((GamaChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "hIST": {
+                ((HistChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "iCCP": {
+                ((IccpChunk) (this.body))._fetchInstances();
                 break;
             }
             case "iTXt": {
@@ -886,6 +928,14 @@ public class Png extends KaitaiStruct {
                 ((AdobeFireworksChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "sBIT": {
+                ((SbitChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "sPLT": {
+                ((SpltChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "sRGB": {
                 ((SrgbChunk) (this.body))._fetchInstances();
                 break;
@@ -904,6 +954,10 @@ public class Png extends KaitaiStruct {
             }
             case "tIME": {
                 ((TimeChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "tRNS": {
+                ((TrnsChunk) (this.body))._fetchInstances();
                 break;
             }
             case "zTXt": {
@@ -1351,6 +1405,50 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+     * 
+     * Only one `eXIf` chunk is allowed in a PNG datastream.
+     * 
+     * The `eXIf` chunk contains metadata concerning the original image data. If
+     * the image has been edited subsequent to creation of the Exif profile, this
+     * data might no longer apply to the PNG image data.
+     * @see <a href="https://www.w3.org/TR/png/#eXIf">Source</a>
+     */
+    public static class ExifChunk extends KaitaiStruct {
+        public static ExifChunk fromFile(String fileName) throws IOException {
+            return new ExifChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ExifChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ExifChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ExifChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.exif = new Exif(this._io);
+        }
+
+        public void _fetchInstances() {
+            this.exif._fetchInstances();
+        }
+        private Exif exif;
+        private Png _root;
+        private Png.Chunk _parent;
+        public Exif exif() { return exif; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
      * @see <a href="https://www.w3.org/TR/png/#fcTL-chunk">Source</a>
      */
     public static class FrameControlChunk extends KaitaiStruct {
@@ -1624,6 +1722,165 @@ public class Png extends KaitaiStruct {
         public long gammaInt() { return gammaInt; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * Image histogram (`hIST`) chunk gives the approximate usage frequency of
+     * each color in the palette. A histogram chunk can appear only when a `PLTE`
+     * chunk appears.
+     * @see <a href="https://www.w3.org/TR/png/#11hIST">Source</a>
+     */
+    public static class HistChunk extends KaitaiStruct {
+        public static HistChunk fromFile(String fileName) throws IOException {
+            return new HistChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public HistChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public HistChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public HistChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.usageFreqs = new ArrayList<Integer>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.usageFreqs.add(this._io.readU2be());
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.usageFreqs.size(); i++) {
+            }
+        }
+        private List<Integer> usageFreqs;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Usage frequencies of each color in the palette.
+         * 
+         * There must be exactly one entry for each entry in the `PLTE` chunk. Each
+         * entry is proportional to the fraction of pixels in the image that have
+         * that palette index; the exact scale factor is chosen by the encoder.
+         * 
+         * Histogram entries are approximate, with the exception that a zero
+         * entry specifies that the corresponding palette entry is not used at
+         * all in the image. A histogram entry must be nonzero if there are any
+         * pixels of that color.
+         */
+        public List<Integer> usageFreqs() { return usageFreqs; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * Embedded ICC profile (`iCCP`) chunk.
+     * 
+     * If the `iCCP` chunk is present, the image samples conform to the color
+     * space represented by the embedded ICC profile as defined by the
+     * International Color Consortium.
+     * 
+     * This chunk is ignored unless it is the [highest-precedence color
+     * chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+     * the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+     * at most one embedded profile, whether specified explicitly with an `iCCP`
+     * or implicitly with an `sRGB` chunk.
+     * 
+     * It is recommended that the `sRGB` and `iCCP` chunks do not appear
+     * simultaneously in a PNG datastream.
+     * @see <a href="https://www.w3.org/TR/png/#11iCCP">Source</a>
+     */
+    public static class IccpChunk extends KaitaiStruct {
+        public static IccpChunk fromFile(String fileName) throws IOException {
+            return new IccpChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public IccpChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public IccpChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public IccpChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.profileName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.ISO_8859_1);
+            this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
+            if (!(this.compressionMethod == Png.CompressionMethods.ZLIB)) {
+                throw new KaitaiStream.ValidationNotEqualError(Png.CompressionMethods.ZLIB, this.compressionMethod, this._io, "/types/iccp_chunk/seq/1");
+            }
+            this._raw__raw_profile = this._io.readBytesFull();
+            this._raw_profile = KaitaiStream.processZlib(this._raw__raw_profile);
+            KaitaiStream _io__raw_profile = new ByteBufferKaitaiStream(this._raw_profile);
+            this.profile = new Icc4(_io__raw_profile);
+        }
+
+        public void _fetchInstances() {
+            this.profile._fetchInstances();
+        }
+        private String profileName;
+        private CompressionMethods compressionMethod;
+        private Icc4 profile;
+        private Png _root;
+        private Png.Chunk _parent;
+        private byte[] _raw_profile;
+        private byte[] _raw__raw_profile;
+
+        /**
+         * Any convenient name for referring to the profile. It is
+         * case-sensitive.
+         * 
+         * Profile names must contain only printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+         * not permitted.
+         */
+        public String profileName() { return profileName; }
+        public CompressionMethods compressionMethod() { return compressionMethod; }
+
+        /**
+         * Embedded ICC profile.
+         * 
+         * The color space of the ICC profile must be:
+         * 
+         * * an RGB color space for color images (color types
+         *   `color_type::truecolor` = 2, `color_type::indexed` = 3, and
+         *   `color_type::truecolor_alpha` = 6), or
+         * * a greyscale color space for greyscale images (color types
+         *   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).
+         * 
+         * Note that the imported `icc_4.ksy` spec currently in use here supports
+         * only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.
+         * This means that PNG files with an embedded v2 profile (for example
+         * https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)
+         * will fail to parse.
+         * 
+         * TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it
+         * to `icc.ksy`, and use it here.
+         */
+        public Icc4 profile() { return profile; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+        public byte[] _raw_profile() { return _raw_profile; }
+        public byte[] _raw__raw_profile() { return _raw__raw_profile; }
     }
 
     /**
@@ -2190,6 +2447,450 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * Significant bits (`sBIT`) chunk stores the original number of significant
+     * bits of the sample values (which can be less than or equal to the sample
+     * depth). This allows PNG decoders to recover the original data losslessly
+     * even if the data had a sample depth not directly supported by PNG.
+     * @see <a href="https://www.w3.org/TR/png/#11sBIT">Source</a>
+     */
+    public static class SbitChunk extends KaitaiStruct {
+        public static SbitChunk fromFile(String fileName) throws IOException {
+            return new SbitChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SbitChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SbitChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SbitChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        this.significantBits = new SbitGreyscale(this._io, this, _root, false);
+                        break;
+                    }
+                    case GREYSCALE_ALPHA: {
+                        this.significantBits = new SbitGreyscale(this._io, this, _root, true);
+                        break;
+                    }
+                    case INDEXED: {
+                        this.significantBits = new SbitTruecolor(this._io, this, _root, false);
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        this.significantBits = new SbitTruecolor(this._io, this, _root, false);
+                        break;
+                    }
+                    case TRUECOLOR_ALPHA: {
+                        this.significantBits = new SbitTruecolor(this._io, this, _root, true);
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        ((SbitGreyscale) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    case GREYSCALE_ALPHA: {
+                        ((SbitGreyscale) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    case INDEXED: {
+                        ((SbitTruecolor) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        ((SbitTruecolor) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    case TRUECOLOR_ALPHA: {
+                        ((SbitTruecolor) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+        private Integer sampleDepth;
+        public Integer sampleDepth() {
+            if (this.sampleDepth != null)
+                return this.sampleDepth;
+            this.sampleDepth = ((Number) ((_root().ihdr().colorType() == Png.ColorType.INDEXED ? 8 : _root().ihdr().bitDepth()))).intValue();
+            return this.sampleDepth;
+        }
+        private KaitaiStruct significantBits;
+        private Png _root;
+        private Png.Chunk _parent;
+        public KaitaiStruct significantBits() { return significantBits; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+    public static class SbitGreyscale extends KaitaiStruct {
+
+        public SbitGreyscale(KaitaiStream _io, boolean hasAlpha) {
+            this(_io, null, null, hasAlpha);
+        }
+
+        public SbitGreyscale(KaitaiStream _io, Png.SbitChunk _parent, boolean hasAlpha) {
+            this(_io, _parent, null, hasAlpha);
+        }
+
+        public SbitGreyscale(KaitaiStream _io, Png.SbitChunk _parent, Png _root, boolean hasAlpha) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.hasAlpha = hasAlpha;
+            _read();
+        }
+        private void _read() {
+            this.grey = this._io.readU1();
+            if (!(this.grey >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.grey, this._io, "/types/sbit_greyscale/seq/0");
+            }
+            if (!(this.grey <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.grey, this._io, "/types/sbit_greyscale/seq/0");
+            }
+            if (hasAlpha()) {
+                this.alpha = this._io.readU1();
+                if (!(this.alpha >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.alpha, this._io, "/types/sbit_greyscale/seq/1");
+                }
+                if (!(this.alpha <= _parent().sampleDepth())) {
+                    throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.alpha, this._io, "/types/sbit_greyscale/seq/1");
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            if (hasAlpha()) {
+            }
+        }
+        private int grey;
+        private Integer alpha;
+        private boolean hasAlpha;
+        private Png _root;
+        private Png.SbitChunk _parent;
+        public int grey() { return grey; }
+        public Integer alpha() { return alpha; }
+        public boolean hasAlpha() { return hasAlpha; }
+        public Png _root() { return _root; }
+        public Png.SbitChunk _parent() { return _parent; }
+    }
+    public static class SbitTruecolor extends KaitaiStruct {
+
+        public SbitTruecolor(KaitaiStream _io, boolean hasAlpha) {
+            this(_io, null, null, hasAlpha);
+        }
+
+        public SbitTruecolor(KaitaiStream _io, Png.SbitChunk _parent, boolean hasAlpha) {
+            this(_io, _parent, null, hasAlpha);
+        }
+
+        public SbitTruecolor(KaitaiStream _io, Png.SbitChunk _parent, Png _root, boolean hasAlpha) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.hasAlpha = hasAlpha;
+            _read();
+        }
+        private void _read() {
+            this.red = this._io.readU1();
+            if (!(this.red >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.red, this._io, "/types/sbit_truecolor/seq/0");
+            }
+            if (!(this.red <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.red, this._io, "/types/sbit_truecolor/seq/0");
+            }
+            this.green = this._io.readU1();
+            if (!(this.green >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.green, this._io, "/types/sbit_truecolor/seq/1");
+            }
+            if (!(this.green <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.green, this._io, "/types/sbit_truecolor/seq/1");
+            }
+            this.blue = this._io.readU1();
+            if (!(this.blue >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.blue, this._io, "/types/sbit_truecolor/seq/2");
+            }
+            if (!(this.blue <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.blue, this._io, "/types/sbit_truecolor/seq/2");
+            }
+            if (hasAlpha()) {
+                this.alpha = this._io.readU1();
+                if (!(this.alpha >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.alpha, this._io, "/types/sbit_truecolor/seq/3");
+                }
+                if (!(this.alpha <= _parent().sampleDepth())) {
+                    throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.alpha, this._io, "/types/sbit_truecolor/seq/3");
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            if (hasAlpha()) {
+            }
+        }
+        private int red;
+        private int green;
+        private int blue;
+        private Integer alpha;
+        private boolean hasAlpha;
+        private Png _root;
+        private Png.SbitChunk _parent;
+        public int red() { return red; }
+        public int green() { return green; }
+        public int blue() { return blue; }
+        public Integer alpha() { return alpha; }
+        public boolean hasAlpha() { return hasAlpha; }
+        public Png _root() { return _root; }
+        public Png.SbitChunk _parent() { return _parent; }
+    }
+
+    /**
+     * Suggested palette (`sPLT`) chunk.
+     * 
+     * Multiple `sPLT` chunks are permitted, but each must have a different
+     * palette name.
+     * @see <a href="https://www.w3.org/TR/png/#11sPLT">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#12Suggested-palettes">Source</a>
+     */
+    public static class SpltChunk extends KaitaiStruct {
+        public static SpltChunk fromFile(String fileName) throws IOException {
+            return new SpltChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SpltChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SpltChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SpltChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.paletteName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.ISO_8859_1);
+            this.sampleDepth = this._io.readU1();
+            if (!( ((this.sampleDepth == 8) || (this.sampleDepth == 16)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.sampleDepth, this._io, "/types/splt_chunk/seq/1");
+            }
+            this.entries = new ArrayList<SpltEntry>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new SpltEntry(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private String paletteName;
+        private int sampleDepth;
+        private List<SpltEntry> entries;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Any convenient name for referring to the palette. It is
+         * case-sensitive. The palette name may aid the choice of the appropriate
+         * suggested palette when more than one appears in a PNG datastream.
+         * 
+         * Palette names must contain only printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+         * not permitted.
+         */
+        public String paletteName() { return paletteName; }
+        public int sampleDepth() { return sampleDepth; }
+
+        /**
+         * There may be any number of entries. Entries must appear "in decreasing
+         * order of frequency" (note: strictly speaking, I think the W3C
+         * specification actually meant "non-increasing"). There is no
+         * requirement that the entries all be used by the image, nor that they
+         * all be different.
+         * 
+         * The color samples are not premultiplied by alpha, nor are they
+         * precomposited against any background.
+         * 
+         * Entries in `sPLT` use the same gamma value and chromaticity values as
+         * the PNG image, but may fall outside the range of values used in the
+         * color space of the PNG image; for example, in a greyscale PNG image,
+         * each `sPLT` entry would typically have equal red, green, and blue
+         * values, but this is not required. Similarly, `sPLT` entries can have
+         * non-opaque alpha values even when the PNG image does not use
+         * transparency.
+         */
+        public List<SpltEntry> entries() { return entries; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+    public static class SpltEntry extends KaitaiStruct {
+        public static SpltEntry fromFile(String fileName) throws IOException {
+            return new SpltEntry(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SpltEntry(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SpltEntry(KaitaiStream _io, Png.SpltChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SpltEntry(KaitaiStream _io, Png.SpltChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this.red = ((Number) (this._io.readU1())).intValue();
+                break;
+            }
+            default: {
+                this.red = this._io.readU2be();
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this.green = ((Number) (this._io.readU1())).intValue();
+                break;
+            }
+            default: {
+                this.green = this._io.readU2be();
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this.blue = ((Number) (this._io.readU1())).intValue();
+                break;
+            }
+            default: {
+                this.blue = this._io.readU2be();
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this.alpha = ((Number) (this._io.readU1())).intValue();
+                break;
+            }
+            default: {
+                this.alpha = this._io.readU2be();
+                break;
+            }
+            }
+            this.freq = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+        }
+        private int red;
+        private int green;
+        private int blue;
+        private int alpha;
+        private int freq;
+        private Png _root;
+        private Png.SpltChunk _parent;
+        public int red() { return red; }
+        public int green() { return green; }
+        public int blue() { return blue; }
+
+        /**
+         * An alpha value of 0 means fully transparent. An alpha value of 255
+         * (when `_parent.sample_depth` is 8) or 65535 (when
+         * `_parent.sample_depth` is 16) means fully opaque.
+         */
+        public int alpha() { return alpha; }
+
+        /**
+         * Each frequency value is proportional to the fraction of the pixels in
+         * the image for which that palette entry is the closest match in RGBA
+         * space, before the image has been composited against any background.
+         * 
+         * The exact scale factor is chosen by the PNG encoder; it is recommended
+         * that the resulting range of individual values reasonably fills the
+         * range 0 to 65535.
+         * 
+         * Zero is a valid frequency meaning that the color is "least important"
+         * or that it is rarely, if ever, used. When all the frequencies are
+         * zero, they are meaningless, that is to say, nothing may be inferred
+         * about the actual frequencies with which the colors appear in the PNG
+         * image.
+         */
+        public int freq() { return freq; }
+        public Png _root() { return _root; }
+        public Png.SpltChunk _parent() { return _parent; }
+    }
+
+    /**
      * @see <a href="https://www.w3.org/TR/png/#11sRGB">Source</a>
      */
     public static class SrgbChunk extends KaitaiStruct {
@@ -2363,6 +3064,227 @@ public class Png extends KaitaiStruct {
         public int second() { return second; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * Transparency (`tRNS`) chunk specifies either alpha values that are
+     * associated with palette entries (for indexed-color images) or a single
+     * transparent color (for greyscale and truecolor images).
+     * 
+     * A `tRNS` chunk must not appear for color types
+     * `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+     * since a full alpha channel is already present in those cases.
+     * @see <a href="https://www.w3.org/TR/png/#11tRNS">Source</a>
+     */
+    public static class TrnsChunk extends KaitaiStruct {
+        public static TrnsChunk fromFile(String fileName) throws IOException {
+            return new TrnsChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TrnsChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TrnsChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TrnsChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            if (_root().ihdr().colorType() == Png.ColorType.INDEXED) {
+                this.paletteAlphas = new ArrayList<Integer>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.paletteAlphas.add(this._io.readU1());
+                        i++;
+                    }
+                }
+            }
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        this.transparentColor = new TrnsGreyscaleColor(this._io, this, _root);
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        this.transparentColor = new TrnsTruecolorColor(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            if (_root().ihdr().colorType() == Png.ColorType.INDEXED) {
+                for (int i = 0; i < this.paletteAlphas.size(); i++) {
+                }
+            }
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        ((TrnsGreyscaleColor) (this.transparentColor))._fetchInstances();
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        ((TrnsTruecolorColor) (this.transparentColor))._fetchInstances();
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+        private Integer sampleMask;
+        public Integer sampleMask() {
+            if (this.sampleMask != null)
+                return this.sampleMask;
+            this.sampleMask = ((Number) ((1 << _root().ihdr().bitDepth()) - 1)).intValue();
+            return this.sampleMask;
+        }
+        private List<Integer> paletteAlphas;
+        private KaitaiStruct transparentColor;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Alpha values associated with palette entries in the `PLTE` chunk.
+         * 
+         * Each entry indicates that pixels of the corresponding palette index
+         * shall be treated as having the specified alpha value. Alpha values
+         * have the same interpretation as in an 8-bit full alpha channel: 0 is
+         * fully transparent, 255 is fully opaque, regardless of image bit depth.
+         * 
+         * The `tRNS` chunk must not contain more alpha values than there are
+         * palette entries, but it may contain fewer values than there are
+         * palette entries. In this case, the alpha value for all remaining
+         * palette entries is assumed to be 255. If all palette indices are
+         * opaque, the `tRNS` chunk may be omitted.
+         */
+        public List<Integer> paletteAlphas() { return paletteAlphas; }
+
+        /**
+         * Pixels of the specified grey sample value or RGB sample values are
+         * treated as transparent (equivalent to alpha value 0); all other pixels
+         * are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).
+         * 
+         * If the image bit depth is less than 16, the least significant bits of
+         * these sample values are used. Encoders should set the other bits to 0,
+         * and decoders must mask the other bits to 0 before the value is used.
+         * 
+         * Note: in this Kaitai Struct implementation, the bitmask used to
+         * implement this masking is stored in the value instance `sample_mask`.
+         */
+        public KaitaiStruct transparentColor() { return transparentColor; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+    public static class TrnsGreyscaleColor extends KaitaiStruct {
+        public static TrnsGreyscaleColor fromFile(String fileName) throws IOException {
+            return new TrnsGreyscaleColor(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TrnsGreyscaleColor(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TrnsGreyscaleColor(KaitaiStream _io, Png.TrnsChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TrnsGreyscaleColor(KaitaiStream _io, Png.TrnsChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.greyRaw = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer grey;
+        public Integer grey() {
+            if (this.grey != null)
+                return this.grey;
+            this.grey = ((Number) (greyRaw() & _parent().sampleMask())).intValue();
+            return this.grey;
+        }
+        private int greyRaw;
+        private Png _root;
+        private Png.TrnsChunk _parent;
+        public int greyRaw() { return greyRaw; }
+        public Png _root() { return _root; }
+        public Png.TrnsChunk _parent() { return _parent; }
+    }
+    public static class TrnsTruecolorColor extends KaitaiStruct {
+        public static TrnsTruecolorColor fromFile(String fileName) throws IOException {
+            return new TrnsTruecolorColor(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TrnsTruecolorColor(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TrnsTruecolorColor(KaitaiStream _io, Png.TrnsChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TrnsTruecolorColor(KaitaiStream _io, Png.TrnsChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.redRaw = this._io.readU2be();
+            this.greenRaw = this._io.readU2be();
+            this.blueRaw = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer blue;
+        public Integer blue() {
+            if (this.blue != null)
+                return this.blue;
+            this.blue = ((Number) (blueRaw() & _parent().sampleMask())).intValue();
+            return this.blue;
+        }
+        private Integer green;
+        public Integer green() {
+            if (this.green != null)
+                return this.green;
+            this.green = ((Number) (greenRaw() & _parent().sampleMask())).intValue();
+            return this.green;
+        }
+        private Integer red;
+        public Integer red() {
+            if (this.red != null)
+                return this.red;
+            this.red = ((Number) (redRaw() & _parent().sampleMask())).intValue();
+            return this.red;
+        }
+        private int redRaw;
+        private int greenRaw;
+        private int blueRaw;
+        private Png _root;
+        private Png.TrnsChunk _parent;
+        public int redRaw() { return redRaw; }
+        public int greenRaw() { return greenRaw; }
+        public int blueRaw() { return blueRaw; }
+        public Png _root() { return _root; }
+        public Png.TrnsChunk _parent() { return _parent; }
     }
     private byte[] magic;
     private long ihdrLen;

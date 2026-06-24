@@ -4,6 +4,8 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("exif")
+require("icc_4")
 local enum = require("enum")
 local str_decode = require("string_decode")
 local utils = require("utils")
@@ -368,6 +370,10 @@ function Png.Chunk:_read()
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.ClliChunk(_io, self, self._root)
+  elseif _on == "eXIf" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.ExifChunk(_io, self, self._root)
   elseif _on == "fcTL" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
@@ -380,6 +386,14 @@ function Png.Chunk:_read()
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.GamaChunk(_io, self, self._root)
+  elseif _on == "hIST" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.HistChunk(_io, self, self._root)
+  elseif _on == "iCCP" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.IccpChunk(_io, self, self._root)
   elseif _on == "iTXt" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
@@ -404,6 +418,14 @@ function Png.Chunk:_read()
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.AdobeFireworksChunk(_io, self, self._root)
+  elseif _on == "sBIT" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.SbitChunk(_io, self, self._root)
+  elseif _on == "sPLT" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.SpltChunk(_io, self, self._root)
   elseif _on == "sRGB" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
@@ -424,6 +446,10 @@ function Png.Chunk:_read()
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Png.TimeChunk(_io, self, self._root)
+  elseif _on == "tRNS" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.TrnsChunk(_io, self, self._root)
   elseif _on == "zTXt" then
     self._raw_body = self._io:read_bytes(self.len)
     local _io = KaitaiStream(stringstream(self._raw_body))
@@ -709,6 +735,29 @@ end
 -- image as well, but it can also be a JPEG or possibly other formats.
 
 -- 
+-- Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+-- 
+-- Only one `eXIf` chunk is allowed in a PNG datastream.
+-- 
+-- The `eXIf` chunk contains metadata concerning the original image data. If
+-- the image has been edited subsequent to creation of the Exif profile, this
+-- data might no longer apply to the PNG image data.
+-- See also: Source (https://www.w3.org/TR/png/#eXIf)
+Png.ExifChunk = class.class(KaitaiStruct)
+
+function Png.ExifChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.ExifChunk:_read()
+  self.exif = Exif(self._io)
+end
+
+
+-- 
 -- See also: Source (https://www.w3.org/TR/png/#fcTL-chunk)
 Png.FrameControlChunk = class.class(KaitaiStruct)
 
@@ -882,6 +931,106 @@ end
 -- 
 -- Image gamma multiplied by 100000 (a gamma value of 1/2.2 is stored as
 -- 45455)
+
+-- 
+-- Image histogram (`hIST`) chunk gives the approximate usage frequency of
+-- each color in the palette. A histogram chunk can appear only when a `PLTE`
+-- chunk appears.
+-- See also: Source (https://www.w3.org/TR/png/#11hIST)
+Png.HistChunk = class.class(KaitaiStruct)
+
+function Png.HistChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.HistChunk:_read()
+  self.usage_freqs = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.usage_freqs[i + 1] = self._io:read_u2be()
+    i = i + 1
+  end
+end
+
+-- 
+-- Usage frequencies of each color in the palette.
+-- 
+-- There must be exactly one entry for each entry in the `PLTE` chunk. Each
+-- entry is proportional to the fraction of pixels in the image that have
+-- that palette index; the exact scale factor is chosen by the encoder.
+-- 
+-- Histogram entries are approximate, with the exception that a zero
+-- entry specifies that the corresponding palette entry is not used at
+-- all in the image. A histogram entry must be nonzero if there are any
+-- pixels of that color.
+
+-- 
+-- Embedded ICC profile (`iCCP`) chunk.
+-- 
+-- If the `iCCP` chunk is present, the image samples conform to the color
+-- space represented by the embedded ICC profile as defined by the
+-- International Color Consortium.
+-- 
+-- This chunk is ignored unless it is the [highest-precedence color
+-- chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+-- the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+-- at most one embedded profile, whether specified explicitly with an `iCCP`
+-- or implicitly with an `sRGB` chunk.
+-- 
+-- It is recommended that the `sRGB` and `iCCP` chunks do not appear
+-- simultaneously in a PNG datastream.
+-- See also: Source (https://www.w3.org/TR/png/#11iCCP)
+Png.IccpChunk = class.class(KaitaiStruct)
+
+function Png.IccpChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.IccpChunk:_read()
+  self.profile_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ISO-8859-1")
+  self.compression_method = Png.CompressionMethods(self._io:read_u1())
+  if not(self.compression_method == Png.CompressionMethods.zlib) then
+    error("not equal, expected " .. Png.CompressionMethods.zlib .. ", but got " .. self.compression_method)
+  end
+  self._raw__raw_profile = self._io:read_bytes_full()
+  self._raw_profile = KaitaiStream.process_zlib(self._raw__raw_profile)
+  local _io = KaitaiStream(stringstream(self._raw_profile))
+  self.profile = Icc4(_io)
+end
+
+-- 
+-- Any convenient name for referring to the profile. It is
+-- case-sensitive.
+-- 
+-- Profile names must contain only printable ISO-8859-1 (Latin-1)
+-- characters and spaces; that is, only code points 0x20-0x7E and
+-- 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+-- not permitted.
+-- 
+-- Embedded ICC profile.
+-- 
+-- The color space of the ICC profile must be:
+-- 
+-- * an RGB color space for color images (color types
+--   `color_type::truecolor` = 2, `color_type::indexed` = 3, and
+--   `color_type::truecolor_alpha` = 6), or
+-- * a greyscale color space for greyscale images (color types
+--   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).
+-- 
+-- Note that the imported `icc_4.ksy` spec currently in use here supports
+-- only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.
+-- This means that PNG files with an embedded v2 profile (for example
+-- https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)
+-- will fail to parse.
+-- 
+-- TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it
+-- to `icc.ksy`, and use it here.
 
 -- 
 -- See also: Source (https://www.w3.org/TR/png/#11IHDR)
@@ -1225,6 +1374,234 @@ end
 
 
 -- 
+-- Significant bits (`sBIT`) chunk stores the original number of significant
+-- bits of the sample values (which can be less than or equal to the sample
+-- depth). This allows PNG decoders to recover the original data losslessly
+-- even if the data had a sample depth not directly supported by PNG.
+-- See also: Source (https://www.w3.org/TR/png/#11sBIT)
+Png.SbitChunk = class.class(KaitaiStruct)
+
+function Png.SbitChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.SbitChunk:_read()
+  local _on = self._root.ihdr.color_type
+  if _on == Png.ColorType.greyscale then
+    self.significant_bits = Png.SbitGreyscale(false, self._io, self, self._root)
+  elseif _on == Png.ColorType.greyscale_alpha then
+    self.significant_bits = Png.SbitGreyscale(true, self._io, self, self._root)
+  elseif _on == Png.ColorType.indexed then
+    self.significant_bits = Png.SbitTruecolor(false, self._io, self, self._root)
+  elseif _on == Png.ColorType.truecolor then
+    self.significant_bits = Png.SbitTruecolor(false, self._io, self, self._root)
+  elseif _on == Png.ColorType.truecolor_alpha then
+    self.significant_bits = Png.SbitTruecolor(true, self._io, self, self._root)
+  end
+end
+
+Png.SbitChunk.property.sample_depth = {}
+function Png.SbitChunk.property.sample_depth:get()
+  if self._m_sample_depth ~= nil then
+    return self._m_sample_depth
+  end
+
+  self._m_sample_depth = utils.box_unwrap((self._root.ihdr.color_type == Png.ColorType.indexed) and utils.box_wrap(8) or (self._root.ihdr.bit_depth))
+  return self._m_sample_depth
+end
+
+
+Png.SbitGreyscale = class.class(KaitaiStruct)
+
+function Png.SbitGreyscale:_init(has_alpha, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.has_alpha = has_alpha
+  self:_read()
+end
+
+function Png.SbitGreyscale:_read()
+  self.grey = self._io:read_u1()
+  if not(self.grey >= 1) then
+    error("ValidationLessThanError")
+  end
+  if not(self.grey <= self._parent.sample_depth) then
+    error("ValidationGreaterThanError")
+  end
+  if self.has_alpha then
+    self.alpha = self._io:read_u1()
+    if not(self.alpha >= 1) then
+      error("ValidationLessThanError")
+    end
+    if not(self.alpha <= self._parent.sample_depth) then
+      error("ValidationGreaterThanError")
+    end
+  end
+end
+
+
+Png.SbitTruecolor = class.class(KaitaiStruct)
+
+function Png.SbitTruecolor:_init(has_alpha, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.has_alpha = has_alpha
+  self:_read()
+end
+
+function Png.SbitTruecolor:_read()
+  self.red = self._io:read_u1()
+  if not(self.red >= 1) then
+    error("ValidationLessThanError")
+  end
+  if not(self.red <= self._parent.sample_depth) then
+    error("ValidationGreaterThanError")
+  end
+  self.green = self._io:read_u1()
+  if not(self.green >= 1) then
+    error("ValidationLessThanError")
+  end
+  if not(self.green <= self._parent.sample_depth) then
+    error("ValidationGreaterThanError")
+  end
+  self.blue = self._io:read_u1()
+  if not(self.blue >= 1) then
+    error("ValidationLessThanError")
+  end
+  if not(self.blue <= self._parent.sample_depth) then
+    error("ValidationGreaterThanError")
+  end
+  if self.has_alpha then
+    self.alpha = self._io:read_u1()
+    if not(self.alpha >= 1) then
+      error("ValidationLessThanError")
+    end
+    if not(self.alpha <= self._parent.sample_depth) then
+      error("ValidationGreaterThanError")
+    end
+  end
+end
+
+
+-- 
+-- Suggested palette (`sPLT`) chunk.
+-- 
+-- Multiple `sPLT` chunks are permitted, but each must have a different
+-- palette name.
+-- See also: Source (https://www.w3.org/TR/png/#11sPLT)
+-- See also: Source (https://www.w3.org/TR/png/#12Suggested-palettes)
+Png.SpltChunk = class.class(KaitaiStruct)
+
+function Png.SpltChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.SpltChunk:_read()
+  self.palette_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ISO-8859-1")
+  self.sample_depth = self._io:read_u1()
+  if not( ((self.sample_depth == 8) or (self.sample_depth == 16)) ) then
+    error("ValidationNotAnyOfError")
+  end
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Png.SpltEntry(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+-- 
+-- Any convenient name for referring to the palette. It is
+-- case-sensitive. The palette name may aid the choice of the appropriate
+-- suggested palette when more than one appears in a PNG datastream.
+-- 
+-- Palette names must contain only printable ISO-8859-1 (Latin-1)
+-- characters and spaces; that is, only code points 0x20-0x7E and
+-- 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+-- not permitted.
+-- 
+-- There may be any number of entries. Entries must appear "in decreasing
+-- order of frequency" (note: strictly speaking, I think the W3C
+-- specification actually meant "non-increasing"). There is no
+-- requirement that the entries all be used by the image, nor that they
+-- all be different.
+-- 
+-- The color samples are not premultiplied by alpha, nor are they
+-- precomposited against any background.
+-- 
+-- Entries in `sPLT` use the same gamma value and chromaticity values as
+-- the PNG image, but may fall outside the range of values used in the
+-- color space of the PNG image; for example, in a greyscale PNG image,
+-- each `sPLT` entry would typically have equal red, green, and blue
+-- values, but this is not required. Similarly, `sPLT` entries can have
+-- non-opaque alpha values even when the PNG image does not use
+-- transparency.
+
+Png.SpltEntry = class.class(KaitaiStruct)
+
+function Png.SpltEntry:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.SpltEntry:_read()
+  local _on = self._parent.sample_depth
+  if _on == 8 then
+    self.red = self._io:read_u1()
+  else
+    self.red = self._io:read_u2be()
+  end
+  local _on = self._parent.sample_depth
+  if _on == 8 then
+    self.green = self._io:read_u1()
+  else
+    self.green = self._io:read_u2be()
+  end
+  local _on = self._parent.sample_depth
+  if _on == 8 then
+    self.blue = self._io:read_u1()
+  else
+    self.blue = self._io:read_u2be()
+  end
+  local _on = self._parent.sample_depth
+  if _on == 8 then
+    self.alpha = self._io:read_u1()
+  else
+    self.alpha = self._io:read_u2be()
+  end
+  self.freq = self._io:read_u2be()
+end
+
+-- 
+-- An alpha value of 0 means fully transparent. An alpha value of 255
+-- (when `_parent.sample_depth` is 8) or 65535 (when
+-- `_parent.sample_depth` is 16) means fully opaque.
+-- 
+-- Each frequency value is proportional to the fraction of the pixels in
+-- the image for which that palette entry is the closest match in RGBA
+-- space, before the image has been composited against any background.
+-- 
+-- The exact scale factor is chosen by the PNG encoder; it is recommended
+-- that the resulting range of individual values reasonably fills the
+-- range 0 to 65535.
+-- 
+-- Zero is a valid frequency meaning that the color is "least important"
+-- or that it is rarely, if ever, used. When all the frequencies are
+-- zero, they are meaningless, that is to say, nothing may be inferred
+-- about the actual frequencies with which the colors appear in the PNG
+-- image.
+
+-- 
 -- See also: Source (https://www.w3.org/TR/png/#11sRGB)
 Png.SrgbChunk = class.class(KaitaiStruct)
 
@@ -1311,6 +1688,146 @@ function Png.TimeChunk:_read()
   self.hour = self._io:read_u1()
   self.minute = self._io:read_u1()
   self.second = self._io:read_u1()
+end
+
+
+-- 
+-- Transparency (`tRNS`) chunk specifies either alpha values that are
+-- associated with palette entries (for indexed-color images) or a single
+-- transparent color (for greyscale and truecolor images).
+-- 
+-- A `tRNS` chunk must not appear for color types
+-- `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+-- since a full alpha channel is already present in those cases.
+-- See also: Source (https://www.w3.org/TR/png/#11tRNS)
+Png.TrnsChunk = class.class(KaitaiStruct)
+
+function Png.TrnsChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.TrnsChunk:_read()
+  if self._root.ihdr.color_type == Png.ColorType.indexed then
+    self.palette_alphas = {}
+    local i = 0
+    while not self._io:is_eof() do
+      self.palette_alphas[i + 1] = self._io:read_u1()
+      i = i + 1
+    end
+  end
+  local _on = self._root.ihdr.color_type
+  if _on == Png.ColorType.greyscale then
+    self.transparent_color = Png.TrnsGreyscaleColor(self._io, self, self._root)
+  elseif _on == Png.ColorType.truecolor then
+    self.transparent_color = Png.TrnsTruecolorColor(self._io, self, self._root)
+  end
+end
+
+Png.TrnsChunk.property.sample_mask = {}
+function Png.TrnsChunk.property.sample_mask:get()
+  if self._m_sample_mask ~= nil then
+    return self._m_sample_mask
+  end
+
+  self._m_sample_mask = (1 << self._root.ihdr.bit_depth) - 1
+  return self._m_sample_mask
+end
+
+-- 
+-- Alpha values associated with palette entries in the `PLTE` chunk.
+-- 
+-- Each entry indicates that pixels of the corresponding palette index
+-- shall be treated as having the specified alpha value. Alpha values
+-- have the same interpretation as in an 8-bit full alpha channel: 0 is
+-- fully transparent, 255 is fully opaque, regardless of image bit depth.
+-- 
+-- The `tRNS` chunk must not contain more alpha values than there are
+-- palette entries, but it may contain fewer values than there are
+-- palette entries. In this case, the alpha value for all remaining
+-- palette entries is assumed to be 255. If all palette indices are
+-- opaque, the `tRNS` chunk may be omitted.
+-- 
+-- Pixels of the specified grey sample value or RGB sample values are
+-- treated as transparent (equivalent to alpha value 0); all other pixels
+-- are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).
+-- 
+-- If the image bit depth is less than 16, the least significant bits of
+-- these sample values are used. Encoders should set the other bits to 0,
+-- and decoders must mask the other bits to 0 before the value is used.
+-- 
+-- Note: in this Kaitai Struct implementation, the bitmask used to
+-- implement this masking is stored in the value instance `sample_mask`.
+
+Png.TrnsGreyscaleColor = class.class(KaitaiStruct)
+
+function Png.TrnsGreyscaleColor:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.TrnsGreyscaleColor:_read()
+  self.grey_raw = self._io:read_u2be()
+end
+
+Png.TrnsGreyscaleColor.property.grey = {}
+function Png.TrnsGreyscaleColor.property.grey:get()
+  if self._m_grey ~= nil then
+    return self._m_grey
+  end
+
+  self._m_grey = self.grey_raw & self._parent.sample_mask
+  return self._m_grey
+end
+
+
+Png.TrnsTruecolorColor = class.class(KaitaiStruct)
+
+function Png.TrnsTruecolorColor:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.TrnsTruecolorColor:_read()
+  self.red_raw = self._io:read_u2be()
+  self.green_raw = self._io:read_u2be()
+  self.blue_raw = self._io:read_u2be()
+end
+
+Png.TrnsTruecolorColor.property.blue = {}
+function Png.TrnsTruecolorColor.property.blue:get()
+  if self._m_blue ~= nil then
+    return self._m_blue
+  end
+
+  self._m_blue = self.blue_raw & self._parent.sample_mask
+  return self._m_blue
+end
+
+Png.TrnsTruecolorColor.property.green = {}
+function Png.TrnsTruecolorColor.property.green:get()
+  if self._m_green ~= nil then
+    return self._m_green
+  end
+
+  self._m_green = self.green_raw & self._parent.sample_mask
+  return self._m_green
+end
+
+Png.TrnsTruecolorColor.property.red = {}
+function Png.TrnsTruecolorColor.property.red:get()
+  if self._m_red ~= nil then
+    return self._m_red
+  end
+
+  self._m_red = self.red_raw & self._parent.sample_mask
+  return self._m_red
 end
 
 

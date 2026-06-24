@@ -415,6 +415,12 @@ void png_t::chunk_t::_read() {
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<clli_chunk_t>(new clli_chunk_t(m__io__raw_body.get(), this, m__root));
         }
+        else if (on == std::string("eXIf")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<exif_chunk_t>(new exif_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
         else if (on == std::string("fcTL")) {
             n_body = false;
             m__raw_body = m__io->read_bytes(len());
@@ -432,6 +438,18 @@ void png_t::chunk_t::_read() {
             m__raw_body = m__io->read_bytes(len());
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<gama_chunk_t>(new gama_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
+        else if (on == std::string("hIST")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<hist_chunk_t>(new hist_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
+        else if (on == std::string("iCCP")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<iccp_chunk_t>(new iccp_chunk_t(m__io__raw_body.get(), this, m__root));
         }
         else if (on == std::string("iTXt")) {
             n_body = false;
@@ -469,6 +487,18 @@ void png_t::chunk_t::_read() {
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<adobe_fireworks_chunk_t>(new adobe_fireworks_chunk_t(m__io__raw_body.get(), this, m__root));
         }
+        else if (on == std::string("sBIT")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<sbit_chunk_t>(new sbit_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
+        else if (on == std::string("sPLT")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<splt_chunk_t>(new splt_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
         else if (on == std::string("sRGB")) {
             n_body = false;
             m__raw_body = m__io->read_bytes(len());
@@ -498,6 +528,12 @@ void png_t::chunk_t::_read() {
             m__raw_body = m__io->read_bytes(len());
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<time_chunk_t>(new time_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
+        else if (on == std::string("tRNS")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<trns_chunk_t>(new trns_chunk_t(m__io__raw_body.get(), this, m__root));
         }
         else if (on == std::string("zTXt")) {
             n_body = false;
@@ -702,6 +738,24 @@ png_t::evernote_skrf_chunk_t::~evernote_skrf_chunk_t() {
 void png_t::evernote_skrf_chunk_t::_clean_up() {
 }
 
+png_t::exif_chunk_t::exif_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_exif = nullptr;
+    _read();
+}
+
+void png_t::exif_chunk_t::_read() {
+    m_exif = std::unique_ptr<exif_t>(new exif_t(m__io));
+}
+
+png_t::exif_chunk_t::~exif_chunk_t() {
+    _clean_up();
+}
+
+void png_t::exif_chunk_t::_clean_up() {
+}
+
 png_t::frame_control_chunk_t::frame_control_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -817,6 +871,58 @@ double png_t::gama_chunk_t::inv_gamma() {
     f_inv_gamma = true;
     m_inv_gamma = 100000.0 / gamma_int();
     return m_inv_gamma;
+}
+
+png_t::hist_chunk_t::hist_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_usage_freqs = nullptr;
+    _read();
+}
+
+void png_t::hist_chunk_t::_read() {
+    m_usage_freqs = std::unique_ptr<std::vector<uint16_t>>(new std::vector<uint16_t>());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_usage_freqs->push_back(std::move(m__io->read_u2be()));
+            i++;
+        }
+    }
+}
+
+png_t::hist_chunk_t::~hist_chunk_t() {
+    _clean_up();
+}
+
+void png_t::hist_chunk_t::_clean_up() {
+}
+
+png_t::iccp_chunk_t::iccp_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_profile = nullptr;
+    m__io__raw_profile = nullptr;
+    _read();
+}
+
+void png_t::iccp_chunk_t::_read() {
+    m_profile_name = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ISO-8859-1");
+    m_compression_method = static_cast<png_t::compression_methods_t>(m__io->read_u1());
+    if (!(m_compression_method == png_t::COMPRESSION_METHODS_ZLIB)) {
+        throw kaitai::validation_not_equal_error<png_t::compression_methods_t>(png_t::COMPRESSION_METHODS_ZLIB, m_compression_method, m__io, std::string("/types/iccp_chunk/seq/1"));
+    }
+    m__raw__raw_profile = m__io->read_bytes_full();
+    m__raw_profile = kaitai::kstream::process_zlib(m__raw__raw_profile);
+    m__io__raw_profile = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_profile));
+    m_profile = std::unique_ptr<icc_4_t>(new icc_4_t(m__io__raw_profile.get()));
+}
+
+png_t::iccp_chunk_t::~iccp_chunk_t() {
+    _clean_up();
+}
+
+void png_t::iccp_chunk_t::_clean_up() {
 }
 
 png_t::ihdr_chunk_t::ihdr_chunk_t(kaitai::kstream* p__io, png_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
@@ -1110,6 +1216,236 @@ png_t::rgb_t::~rgb_t() {
 
 void png_t::rgb_t::_clean_up() {
 }
+
+png_t::sbit_chunk_t::sbit_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_sample_depth = false;
+    _read();
+}
+
+void png_t::sbit_chunk_t::_read() {
+    n_significant_bits = true;
+    switch (_root()->ihdr()->color_type()) {
+    case png_t::COLOR_TYPE_GREYSCALE: {
+        n_significant_bits = false;
+        m_significant_bits = std::unique_ptr<sbit_greyscale_t>(new sbit_greyscale_t(false, m__io, this, m__root));
+        break;
+    }
+    case png_t::COLOR_TYPE_GREYSCALE_ALPHA: {
+        n_significant_bits = false;
+        m_significant_bits = std::unique_ptr<sbit_greyscale_t>(new sbit_greyscale_t(true, m__io, this, m__root));
+        break;
+    }
+    case png_t::COLOR_TYPE_INDEXED: {
+        n_significant_bits = false;
+        m_significant_bits = std::unique_ptr<sbit_truecolor_t>(new sbit_truecolor_t(false, m__io, this, m__root));
+        break;
+    }
+    case png_t::COLOR_TYPE_TRUECOLOR: {
+        n_significant_bits = false;
+        m_significant_bits = std::unique_ptr<sbit_truecolor_t>(new sbit_truecolor_t(false, m__io, this, m__root));
+        break;
+    }
+    case png_t::COLOR_TYPE_TRUECOLOR_ALPHA: {
+        n_significant_bits = false;
+        m_significant_bits = std::unique_ptr<sbit_truecolor_t>(new sbit_truecolor_t(true, m__io, this, m__root));
+        break;
+    }
+    }
+}
+
+png_t::sbit_chunk_t::~sbit_chunk_t() {
+    _clean_up();
+}
+
+void png_t::sbit_chunk_t::_clean_up() {
+    if (!n_significant_bits) {
+    }
+}
+
+uint8_t png_t::sbit_chunk_t::sample_depth() {
+    if (f_sample_depth)
+        return m_sample_depth;
+    f_sample_depth = true;
+    m_sample_depth = ((_root()->ihdr()->color_type() == png_t::COLOR_TYPE_INDEXED) ? (8) : (_root()->ihdr()->bit_depth()));
+    return m_sample_depth;
+}
+
+png_t::sbit_greyscale_t::sbit_greyscale_t(bool p_has_alpha, kaitai::kstream* p__io, png_t::sbit_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_has_alpha = p_has_alpha;
+    _read();
+}
+
+void png_t::sbit_greyscale_t::_read() {
+    m_grey = m__io->read_u1();
+    if (!(m_grey >= 1)) {
+        throw kaitai::validation_less_than_error<uint8_t>(1, m_grey, m__io, std::string("/types/sbit_greyscale/seq/0"));
+    }
+    if (!(m_grey <= _parent()->sample_depth())) {
+        throw kaitai::validation_greater_than_error<uint8_t>(_parent()->sample_depth(), m_grey, m__io, std::string("/types/sbit_greyscale/seq/0"));
+    }
+    n_alpha = true;
+    if (has_alpha()) {
+        n_alpha = false;
+        m_alpha = m__io->read_u1();
+        if (!(m_alpha >= 1)) {
+            throw kaitai::validation_less_than_error<uint8_t>(1, m_alpha, m__io, std::string("/types/sbit_greyscale/seq/1"));
+        }
+        if (!(m_alpha <= _parent()->sample_depth())) {
+            throw kaitai::validation_greater_than_error<uint8_t>(_parent()->sample_depth(), m_alpha, m__io, std::string("/types/sbit_greyscale/seq/1"));
+        }
+    }
+}
+
+png_t::sbit_greyscale_t::~sbit_greyscale_t() {
+    _clean_up();
+}
+
+void png_t::sbit_greyscale_t::_clean_up() {
+    if (!n_alpha) {
+    }
+}
+
+png_t::sbit_truecolor_t::sbit_truecolor_t(bool p_has_alpha, kaitai::kstream* p__io, png_t::sbit_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_has_alpha = p_has_alpha;
+    _read();
+}
+
+void png_t::sbit_truecolor_t::_read() {
+    m_red = m__io->read_u1();
+    if (!(m_red >= 1)) {
+        throw kaitai::validation_less_than_error<uint8_t>(1, m_red, m__io, std::string("/types/sbit_truecolor/seq/0"));
+    }
+    if (!(m_red <= _parent()->sample_depth())) {
+        throw kaitai::validation_greater_than_error<uint8_t>(_parent()->sample_depth(), m_red, m__io, std::string("/types/sbit_truecolor/seq/0"));
+    }
+    m_green = m__io->read_u1();
+    if (!(m_green >= 1)) {
+        throw kaitai::validation_less_than_error<uint8_t>(1, m_green, m__io, std::string("/types/sbit_truecolor/seq/1"));
+    }
+    if (!(m_green <= _parent()->sample_depth())) {
+        throw kaitai::validation_greater_than_error<uint8_t>(_parent()->sample_depth(), m_green, m__io, std::string("/types/sbit_truecolor/seq/1"));
+    }
+    m_blue = m__io->read_u1();
+    if (!(m_blue >= 1)) {
+        throw kaitai::validation_less_than_error<uint8_t>(1, m_blue, m__io, std::string("/types/sbit_truecolor/seq/2"));
+    }
+    if (!(m_blue <= _parent()->sample_depth())) {
+        throw kaitai::validation_greater_than_error<uint8_t>(_parent()->sample_depth(), m_blue, m__io, std::string("/types/sbit_truecolor/seq/2"));
+    }
+    n_alpha = true;
+    if (has_alpha()) {
+        n_alpha = false;
+        m_alpha = m__io->read_u1();
+        if (!(m_alpha >= 1)) {
+            throw kaitai::validation_less_than_error<uint8_t>(1, m_alpha, m__io, std::string("/types/sbit_truecolor/seq/3"));
+        }
+        if (!(m_alpha <= _parent()->sample_depth())) {
+            throw kaitai::validation_greater_than_error<uint8_t>(_parent()->sample_depth(), m_alpha, m__io, std::string("/types/sbit_truecolor/seq/3"));
+        }
+    }
+}
+
+png_t::sbit_truecolor_t::~sbit_truecolor_t() {
+    _clean_up();
+}
+
+void png_t::sbit_truecolor_t::_clean_up() {
+    if (!n_alpha) {
+    }
+}
+
+png_t::splt_chunk_t::splt_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_entries = nullptr;
+    _read();
+}
+
+void png_t::splt_chunk_t::_read() {
+    m_palette_name = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ISO-8859-1");
+    m_sample_depth = m__io->read_u1();
+    if (!( ((m_sample_depth == 8) || (m_sample_depth == 16)) )) {
+        throw kaitai::validation_not_any_of_error<uint8_t>(m_sample_depth, m__io, std::string("/types/splt_chunk/seq/1"));
+    }
+    m_entries = std::unique_ptr<std::vector<std::unique_ptr<splt_entry_t>>>(new std::vector<std::unique_ptr<splt_entry_t>>());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(std::move(std::unique_ptr<splt_entry_t>(new splt_entry_t(m__io, this, m__root))));
+            i++;
+        }
+    }
+}
+
+png_t::splt_chunk_t::~splt_chunk_t() {
+    _clean_up();
+}
+
+void png_t::splt_chunk_t::_clean_up() {
+}
+
+png_t::splt_entry_t::splt_entry_t(kaitai::kstream* p__io, png_t::splt_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void png_t::splt_entry_t::_read() {
+    switch (_parent()->sample_depth()) {
+    case 8: {
+        m_red = m__io->read_u1();
+        break;
+    }
+    default: {
+        m_red = m__io->read_u2be();
+        break;
+    }
+    }
+    switch (_parent()->sample_depth()) {
+    case 8: {
+        m_green = m__io->read_u1();
+        break;
+    }
+    default: {
+        m_green = m__io->read_u2be();
+        break;
+    }
+    }
+    switch (_parent()->sample_depth()) {
+    case 8: {
+        m_blue = m__io->read_u1();
+        break;
+    }
+    default: {
+        m_blue = m__io->read_u2be();
+        break;
+    }
+    }
+    switch (_parent()->sample_depth()) {
+    case 8: {
+        m_alpha = m__io->read_u1();
+        break;
+    }
+    default: {
+        m_alpha = m__io->read_u2be();
+        break;
+    }
+    }
+    m_freq = m__io->read_u2be();
+}
+
+png_t::splt_entry_t::~splt_entry_t() {
+    _clean_up();
+}
+
+void png_t::splt_entry_t::_clean_up() {
+}
 const std::set<png_t::srgb_chunk_t::intent_t> png_t::srgb_chunk_t::_values_intent_t{
     png_t::srgb_chunk_t::INTENT_PERCEPTUAL,
     png_t::srgb_chunk_t::INTENT_RELATIVE_COLORIMETRIC,
@@ -1178,4 +1514,131 @@ png_t::time_chunk_t::~time_chunk_t() {
 }
 
 void png_t::time_chunk_t::_clean_up() {
+}
+
+png_t::trns_chunk_t::trns_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_palette_alphas = nullptr;
+    f_sample_mask = false;
+    _read();
+}
+
+void png_t::trns_chunk_t::_read() {
+    n_palette_alphas = true;
+    if (_root()->ihdr()->color_type() == png_t::COLOR_TYPE_INDEXED) {
+        n_palette_alphas = false;
+        m_palette_alphas = std::unique_ptr<std::vector<uint8_t>>(new std::vector<uint8_t>());
+        {
+            int i = 0;
+            while (!m__io->is_eof()) {
+                m_palette_alphas->push_back(std::move(m__io->read_u1()));
+                i++;
+            }
+        }
+    }
+    n_transparent_color = true;
+    switch (_root()->ihdr()->color_type()) {
+    case png_t::COLOR_TYPE_GREYSCALE: {
+        n_transparent_color = false;
+        m_transparent_color = std::unique_ptr<trns_greyscale_color_t>(new trns_greyscale_color_t(m__io, this, m__root));
+        break;
+    }
+    case png_t::COLOR_TYPE_TRUECOLOR: {
+        n_transparent_color = false;
+        m_transparent_color = std::unique_ptr<trns_truecolor_color_t>(new trns_truecolor_color_t(m__io, this, m__root));
+        break;
+    }
+    }
+}
+
+png_t::trns_chunk_t::~trns_chunk_t() {
+    _clean_up();
+}
+
+void png_t::trns_chunk_t::_clean_up() {
+    if (!n_palette_alphas) {
+    }
+    if (!n_transparent_color) {
+    }
+}
+
+int32_t png_t::trns_chunk_t::sample_mask() {
+    if (f_sample_mask)
+        return m_sample_mask;
+    f_sample_mask = true;
+    m_sample_mask = (1 << _root()->ihdr()->bit_depth()) - 1;
+    return m_sample_mask;
+}
+
+png_t::trns_greyscale_color_t::trns_greyscale_color_t(kaitai::kstream* p__io, png_t::trns_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_grey = false;
+    _read();
+}
+
+void png_t::trns_greyscale_color_t::_read() {
+    m_grey_raw = m__io->read_u2be();
+}
+
+png_t::trns_greyscale_color_t::~trns_greyscale_color_t() {
+    _clean_up();
+}
+
+void png_t::trns_greyscale_color_t::_clean_up() {
+}
+
+int32_t png_t::trns_greyscale_color_t::grey() {
+    if (f_grey)
+        return m_grey;
+    f_grey = true;
+    m_grey = grey_raw() & _parent()->sample_mask();
+    return m_grey;
+}
+
+png_t::trns_truecolor_color_t::trns_truecolor_color_t(kaitai::kstream* p__io, png_t::trns_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_blue = false;
+    f_green = false;
+    f_red = false;
+    _read();
+}
+
+void png_t::trns_truecolor_color_t::_read() {
+    m_red_raw = m__io->read_u2be();
+    m_green_raw = m__io->read_u2be();
+    m_blue_raw = m__io->read_u2be();
+}
+
+png_t::trns_truecolor_color_t::~trns_truecolor_color_t() {
+    _clean_up();
+}
+
+void png_t::trns_truecolor_color_t::_clean_up() {
+}
+
+int32_t png_t::trns_truecolor_color_t::blue() {
+    if (f_blue)
+        return m_blue;
+    f_blue = true;
+    m_blue = blue_raw() & _parent()->sample_mask();
+    return m_blue;
+}
+
+int32_t png_t::trns_truecolor_color_t::green() {
+    if (f_green)
+        return m_green;
+    f_green = true;
+    m_green = green_raw() & _parent()->sample_mask();
+    return m_green;
+}
+
+int32_t png_t::trns_truecolor_color_t::red() {
+    if (f_red)
+        return m_red;
+    f_red = true;
+    m_red = red_raw() & _parent()->sample_mask();
+    return m_red;
 }

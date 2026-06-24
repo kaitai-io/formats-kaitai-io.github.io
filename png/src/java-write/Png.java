@@ -1092,6 +1092,13 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((ClliChunk) (this.body))._read();
                 break;
             }
+            case "eXIf": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new ExifChunk(_io__raw_body, this, _root);
+                ((ExifChunk) (this.body))._read();
+                break;
+            }
             case "fcTL": {
                 this._raw_body = this._io.readBytes(len());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
@@ -1111,6 +1118,20 @@ public class Png extends KaitaiStruct.ReadWrite {
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
                 this.body = new GamaChunk(_io__raw_body, this, _root);
                 ((GamaChunk) (this.body))._read();
+                break;
+            }
+            case "hIST": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new HistChunk(_io__raw_body, this, _root);
+                ((HistChunk) (this.body))._read();
+                break;
+            }
+            case "iCCP": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new IccpChunk(_io__raw_body, this, _root);
+                ((IccpChunk) (this.body))._read();
                 break;
             }
             case "iTXt": {
@@ -1155,6 +1176,20 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((AdobeFireworksChunk) (this.body))._read();
                 break;
             }
+            case "sBIT": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new SbitChunk(_io__raw_body, this, _root);
+                ((SbitChunk) (this.body))._read();
+                break;
+            }
+            case "sPLT": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new SpltChunk(_io__raw_body, this, _root);
+                ((SpltChunk) (this.body))._read();
+                break;
+            }
             case "sRGB": {
                 this._raw_body = this._io.readBytes(len());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
@@ -1188,6 +1223,13 @@ public class Png extends KaitaiStruct.ReadWrite {
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
                 this.body = new TimeChunk(_io__raw_body, this, _root);
                 ((TimeChunk) (this.body))._read();
+                break;
+            }
+            case "tRNS": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
+                this.body = new TrnsChunk(_io__raw_body, this, _root);
+                ((TrnsChunk) (this.body))._read();
                 break;
             }
             case "zTXt": {
@@ -1236,6 +1278,10 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((ClliChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "eXIf": {
+                ((ExifChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "fcTL": {
                 ((FrameControlChunk) (this.body))._fetchInstances();
                 break;
@@ -1246,6 +1292,14 @@ public class Png extends KaitaiStruct.ReadWrite {
             }
             case "gAMA": {
                 ((GamaChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "hIST": {
+                ((HistChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "iCCP": {
+                ((IccpChunk) (this.body))._fetchInstances();
                 break;
             }
             case "iTXt": {
@@ -1272,6 +1326,14 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((AdobeFireworksChunk) (this.body))._fetchInstances();
                 break;
             }
+            case "sBIT": {
+                ((SbitChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "sPLT": {
+                ((SpltChunk) (this.body))._fetchInstances();
+                break;
+            }
             case "sRGB": {
                 ((SrgbChunk) (this.body))._fetchInstances();
                 break;
@@ -1290,6 +1352,10 @@ public class Png extends KaitaiStruct.ReadWrite {
             }
             case "tIME": {
                 ((TimeChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "tRNS": {
+                ((TrnsChunk) (this.body))._fetchInstances();
                 break;
             }
             case "zTXt": {
@@ -1447,6 +1513,26 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((ClliChunk) (this.body))._write_Seq(_io__raw_body);
                 break;
             }
+            case "eXIf": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((ExifChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
             case "fcTL": {
                 final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
                 this._io.addChildStream(_io__raw_body);
@@ -1505,6 +1591,46 @@ public class Png extends KaitaiStruct.ReadWrite {
                     });
                 }
                 ((GamaChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
+            case "hIST": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((HistChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
+            case "iCCP": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((IccpChunk) (this.body))._write_Seq(_io__raw_body);
                 break;
             }
             case "iTXt": {
@@ -1627,6 +1753,46 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((AdobeFireworksChunk) (this.body))._write_Seq(_io__raw_body);
                 break;
             }
+            case "sBIT": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((SbitChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
+            case "sPLT": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((SpltChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
             case "sRGB": {
                 final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
                 this._io.addChildStream(_io__raw_body);
@@ -1727,6 +1893,26 @@ public class Png extends KaitaiStruct.ReadWrite {
                 ((TimeChunk) (this.body))._write_Seq(_io__raw_body);
                 break;
             }
+            case "tRNS": {
+                final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
+                this._io.addChildStream(_io__raw_body);
+                {
+                    long _pos2 = this._io.pos();
+                    this._io.seek(this._io.pos() + (len()));
+                    final Chunk _this = this;
+                    _io__raw_body.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                        @Override
+                        protected void write(KaitaiStream parent) {
+                            _this._raw_body = _io__raw_body.toByteArray();
+                            if (((byte[]) (_this._raw_body)).length != len())
+                                throw new ConsistencyError("raw(body)", len(), ((byte[]) (_this._raw_body)).length);
+                            parent.writeBytes(((byte[]) (((byte[]) (_this._raw_body)))));
+                        }
+                    });
+                }
+                ((TrnsChunk) (this.body))._write_Seq(_io__raw_body);
+                break;
+            }
             case "zTXt": {
                 final KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(len());
                 this._io.addChildStream(_io__raw_body);
@@ -1814,6 +2000,13 @@ public class Png extends KaitaiStruct.ReadWrite {
                     throw new ConsistencyError("body", this, ((Png.ClliChunk) (this.body))._parent());
                 break;
             }
+            case "eXIf": {
+                if (!Objects.equals(((Png.ExifChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.ExifChunk) (this.body))._root());
+                if (!Objects.equals(((Png.ExifChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.ExifChunk) (this.body))._parent());
+                break;
+            }
             case "fcTL": {
                 if (!Objects.equals(((Png.FrameControlChunk) (this.body))._root(), _root()))
                     throw new ConsistencyError("body", _root(), ((Png.FrameControlChunk) (this.body))._root());
@@ -1833,6 +2026,20 @@ public class Png extends KaitaiStruct.ReadWrite {
                     throw new ConsistencyError("body", _root(), ((Png.GamaChunk) (this.body))._root());
                 if (!Objects.equals(((Png.GamaChunk) (this.body))._parent(), this))
                     throw new ConsistencyError("body", this, ((Png.GamaChunk) (this.body))._parent());
+                break;
+            }
+            case "hIST": {
+                if (!Objects.equals(((Png.HistChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.HistChunk) (this.body))._root());
+                if (!Objects.equals(((Png.HistChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.HistChunk) (this.body))._parent());
+                break;
+            }
+            case "iCCP": {
+                if (!Objects.equals(((Png.IccpChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.IccpChunk) (this.body))._root());
+                if (!Objects.equals(((Png.IccpChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.IccpChunk) (this.body))._parent());
                 break;
             }
             case "iTXt": {
@@ -1877,6 +2084,20 @@ public class Png extends KaitaiStruct.ReadWrite {
                     throw new ConsistencyError("body", this, ((Png.AdobeFireworksChunk) (this.body))._parent());
                 break;
             }
+            case "sBIT": {
+                if (!Objects.equals(((Png.SbitChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.SbitChunk) (this.body))._root());
+                if (!Objects.equals(((Png.SbitChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.SbitChunk) (this.body))._parent());
+                break;
+            }
+            case "sPLT": {
+                if (!Objects.equals(((Png.SpltChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.SpltChunk) (this.body))._root());
+                if (!Objects.equals(((Png.SpltChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.SpltChunk) (this.body))._parent());
+                break;
+            }
             case "sRGB": {
                 if (!Objects.equals(((Png.SrgbChunk) (this.body))._root(), _root()))
                     throw new ConsistencyError("body", _root(), ((Png.SrgbChunk) (this.body))._root());
@@ -1910,6 +2131,13 @@ public class Png extends KaitaiStruct.ReadWrite {
                     throw new ConsistencyError("body", _root(), ((Png.TimeChunk) (this.body))._root());
                 if (!Objects.equals(((Png.TimeChunk) (this.body))._parent(), this))
                     throw new ConsistencyError("body", this, ((Png.TimeChunk) (this.body))._parent());
+                break;
+            }
+            case "tRNS": {
+                if (!Objects.equals(((Png.TrnsChunk) (this.body))._root(), _root()))
+                    throw new ConsistencyError("body", _root(), ((Png.TrnsChunk) (this.body))._root());
+                if (!Objects.equals(((Png.TrnsChunk) (this.body))._parent(), this))
+                    throw new ConsistencyError("body", this, ((Png.TrnsChunk) (this.body))._parent());
                 break;
             }
             case "zTXt": {
@@ -2531,6 +2759,66 @@ public class Png extends KaitaiStruct.ReadWrite {
     }
 
     /**
+     * Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+     * 
+     * Only one `eXIf` chunk is allowed in a PNG datastream.
+     * 
+     * The `eXIf` chunk contains metadata concerning the original image data. If
+     * the image has been edited subsequent to creation of the Exif profile, this
+     * data might no longer apply to the PNG image data.
+     * @see <a href="https://www.w3.org/TR/png/#eXIf">Source</a>
+     */
+    public static class ExifChunk extends KaitaiStruct.ReadWrite {
+        public static ExifChunk fromFile(String fileName) throws IOException {
+            return new ExifChunk(new ByteBufferKaitaiStream(fileName));
+        }
+        public ExifChunk() {
+            this(null, null, null);
+        }
+
+        public ExifChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ExifChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ExifChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.exif = new Exif(this._io);
+            this.exif._read();
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            this.exif._fetchInstances();
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this.exif._write_Seq(this._io);
+        }
+
+        public void _check() {
+            _dirty = false;
+        }
+        private Exif exif;
+        private Png _root;
+        private Png.Chunk _parent;
+        public Exif exif() { return exif; }
+        public void setExif(Exif _v) { _dirty = true; exif = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
      * @see <a href="https://www.w3.org/TR/png/#fcTL-chunk">Source</a>
      */
     public static class FrameControlChunk extends KaitaiStruct.ReadWrite {
@@ -2902,6 +3190,237 @@ public class Png extends KaitaiStruct.ReadWrite {
         public void set_root(Png _v) { _dirty = true; _root = _v; }
         public Png.Chunk _parent() { return _parent; }
         public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
+     * Image histogram (`hIST`) chunk gives the approximate usage frequency of
+     * each color in the palette. A histogram chunk can appear only when a `PLTE`
+     * chunk appears.
+     * @see <a href="https://www.w3.org/TR/png/#11hIST">Source</a>
+     */
+    public static class HistChunk extends KaitaiStruct.ReadWrite {
+        public static HistChunk fromFile(String fileName) throws IOException {
+            return new HistChunk(new ByteBufferKaitaiStream(fileName));
+        }
+        public HistChunk() {
+            this(null, null, null);
+        }
+
+        public HistChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public HistChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public HistChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.usageFreqs = new ArrayList<Integer>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.usageFreqs.add(this._io.readU2be());
+                    i++;
+                }
+            }
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.usageFreqs.size(); i++) {
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            for (int i = 0; i < this.usageFreqs.size(); i++) {
+                if (this._io.isEof())
+                    throw new ConsistencyError("usage_freqs", 0, this._io.size() - this._io.pos());
+                this._io.writeU2be(this.usageFreqs.get(((Number) (i)).intValue()));
+            }
+            if (!(this._io.isEof()))
+                throw new ConsistencyError("usage_freqs", 0, this._io.size() - this._io.pos());
+        }
+
+        public void _check() {
+            for (int i = 0; i < this.usageFreqs.size(); i++) {
+            }
+            _dirty = false;
+        }
+        private List<Integer> usageFreqs;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Usage frequencies of each color in the palette.
+         * 
+         * There must be exactly one entry for each entry in the `PLTE` chunk. Each
+         * entry is proportional to the fraction of pixels in the image that have
+         * that palette index; the exact scale factor is chosen by the encoder.
+         * 
+         * Histogram entries are approximate, with the exception that a zero
+         * entry specifies that the corresponding palette entry is not used at
+         * all in the image. A histogram entry must be nonzero if there are any
+         * pixels of that color.
+         */
+        public List<Integer> usageFreqs() { return usageFreqs; }
+        public void setUsageFreqs(List<Integer> _v) { _dirty = true; usageFreqs = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
+     * Embedded ICC profile (`iCCP`) chunk.
+     * 
+     * If the `iCCP` chunk is present, the image samples conform to the color
+     * space represented by the embedded ICC profile as defined by the
+     * International Color Consortium.
+     * 
+     * This chunk is ignored unless it is the [highest-precedence color
+     * chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+     * the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+     * at most one embedded profile, whether specified explicitly with an `iCCP`
+     * or implicitly with an `sRGB` chunk.
+     * 
+     * It is recommended that the `sRGB` and `iCCP` chunks do not appear
+     * simultaneously in a PNG datastream.
+     * @see <a href="https://www.w3.org/TR/png/#11iCCP">Source</a>
+     */
+    public static class IccpChunk extends KaitaiStruct.ReadWrite {
+        public static IccpChunk fromFile(String fileName) throws IOException {
+            return new IccpChunk(new ByteBufferKaitaiStream(fileName));
+        }
+        public IccpChunk() {
+            this(null, null, null);
+        }
+
+        public IccpChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public IccpChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public IccpChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.profileName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.ISO_8859_1);
+            this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
+            if (!(this.compressionMethod == Png.CompressionMethods.ZLIB)) {
+                throw new KaitaiStream.ValidationNotEqualError(Png.CompressionMethods.ZLIB, this.compressionMethod, this._io, "/types/iccp_chunk/seq/1");
+            }
+            this._raw__raw_profile = this._io.readBytesFull();
+            this._raw_profile = KaitaiStream.processZlib(this._raw__raw_profile);
+            this.profile_InnerSize = this._raw_profile.length;
+            KaitaiStream _io__raw_profile = new ByteBufferKaitaiStream(this._raw_profile);
+            this.profile = new Icc4(_io__raw_profile);
+            this.profile._read();
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            this.profile._fetchInstances();
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeBytes((this.profileName).getBytes(Charset.forName("ISO-8859-1")));
+            this._io.writeU1(0);
+            this._io.writeU1(((Number) (this.compressionMethod.id())).intValue());
+            final KaitaiStream _io__raw_profile = new ByteBufferKaitaiStream(this.profile_InnerSize);
+            this._io.addChildStream(_io__raw_profile);
+            {
+                long _pos2 = this._io.pos();
+                this._io.seek(this._io.pos() + (this._io.size() - this._io.pos()));
+                final IccpChunk _this = this;
+                _io__raw_profile.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                    @Override
+                    protected void write(KaitaiStream parent) {
+                        _this._raw_profile = _io__raw_profile.toByteArray();
+                        _this._raw__raw_profile = KaitaiStream.unprocessZlib(_this._raw_profile);
+                        parent.writeBytes(_this._raw__raw_profile);
+                        if (!(parent.isEof()))
+                            throw new ConsistencyError("raw(profile)", 0, parent.size() - parent.pos());
+                    }
+                });
+            }
+            this.profile._write_Seq(_io__raw_profile);
+        }
+
+        public void _check() {
+            if (KaitaiStream.byteArrayIndexOf((this.profileName).getBytes(Charset.forName("ISO-8859-1")), ((byte) 0)) != -1)
+                throw new ConsistencyError("profile_name", -1, KaitaiStream.byteArrayIndexOf((this.profileName).getBytes(Charset.forName("ISO-8859-1")), ((byte) 0)));
+            if (!(this.compressionMethod == Png.CompressionMethods.ZLIB)) {
+                throw new KaitaiStream.ValidationNotEqualError(Png.CompressionMethods.ZLIB, this.compressionMethod, null, "/types/iccp_chunk/seq/1");
+            }
+            _dirty = false;
+        }
+        private String profileName;
+        private CompressionMethods compressionMethod;
+        private Icc4 profile;
+        private Png _root;
+        private Png.Chunk _parent;
+        private byte[] _raw_profile;
+        private int profile_InnerSize;
+        private byte[] _raw__raw_profile;
+
+        /**
+         * Any convenient name for referring to the profile. It is
+         * case-sensitive.
+         * 
+         * Profile names must contain only printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+         * not permitted.
+         */
+        public String profileName() { return profileName; }
+        public void setProfileName(String _v) { _dirty = true; profileName = _v; }
+        public CompressionMethods compressionMethod() { return compressionMethod; }
+        public void setCompressionMethod(CompressionMethods _v) { _dirty = true; compressionMethod = _v; }
+
+        /**
+         * Embedded ICC profile.
+         * 
+         * The color space of the ICC profile must be:
+         * 
+         * * an RGB color space for color images (color types
+         *   `color_type::truecolor` = 2, `color_type::indexed` = 3, and
+         *   `color_type::truecolor_alpha` = 6), or
+         * * a greyscale color space for greyscale images (color types
+         *   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).
+         * 
+         * Note that the imported `icc_4.ksy` spec currently in use here supports
+         * only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.
+         * This means that PNG files with an embedded v2 profile (for example
+         * https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)
+         * will fail to parse.
+         * 
+         * TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it
+         * to `icc.ksy`, and use it here.
+         */
+        public Icc4 profile() { return profile; }
+        public void setProfile(Icc4 _v) { _dirty = true; profile = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+        public byte[] _raw_profile() { return _raw_profile; }
+        public void set_raw_Profile(byte[] _v) { _dirty = true; _raw_profile = _v; }
+        public int profile_InnerSize() { return profile_InnerSize; }
+        public void setProfile_InnerSize(int _v) { _dirty = true; profile_InnerSize = _v; }
+        public byte[] _raw__raw_profile() { return _raw__raw_profile; }
+        public void set_raw__raw_Profile(byte[] _v) { _dirty = true; _raw__raw_profile = _v; }
     }
 
     /**
@@ -3775,6 +4294,766 @@ public class Png extends KaitaiStruct.ReadWrite {
     }
 
     /**
+     * Significant bits (`sBIT`) chunk stores the original number of significant
+     * bits of the sample values (which can be less than or equal to the sample
+     * depth). This allows PNG decoders to recover the original data losslessly
+     * even if the data had a sample depth not directly supported by PNG.
+     * @see <a href="https://www.w3.org/TR/png/#11sBIT">Source</a>
+     */
+    public static class SbitChunk extends KaitaiStruct.ReadWrite {
+        public static SbitChunk fromFile(String fileName) throws IOException {
+            return new SbitChunk(new ByteBufferKaitaiStream(fileName));
+        }
+        public SbitChunk() {
+            this(null, null, null);
+        }
+
+        public SbitChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SbitChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SbitChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        this.significantBits = new SbitGreyscale(this._io, this, _root, false);
+                        ((SbitGreyscale) (this.significantBits))._read();
+                        break;
+                    }
+                    case GREYSCALE_ALPHA: {
+                        this.significantBits = new SbitGreyscale(this._io, this, _root, true);
+                        ((SbitGreyscale) (this.significantBits))._read();
+                        break;
+                    }
+                    case INDEXED: {
+                        this.significantBits = new SbitTruecolor(this._io, this, _root, false);
+                        ((SbitTruecolor) (this.significantBits))._read();
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        this.significantBits = new SbitTruecolor(this._io, this, _root, false);
+                        ((SbitTruecolor) (this.significantBits))._read();
+                        break;
+                    }
+                    case TRUECOLOR_ALPHA: {
+                        this.significantBits = new SbitTruecolor(this._io, this, _root, true);
+                        ((SbitTruecolor) (this.significantBits))._read();
+                        break;
+                    }
+                    }
+                }
+            }
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        ((SbitGreyscale) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    case GREYSCALE_ALPHA: {
+                        ((SbitGreyscale) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    case INDEXED: {
+                        ((SbitTruecolor) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        ((SbitTruecolor) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    case TRUECOLOR_ALPHA: {
+                        ((SbitTruecolor) (this.significantBits))._fetchInstances();
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        ((SbitGreyscale) (this.significantBits))._write_Seq(this._io);
+                        break;
+                    }
+                    case GREYSCALE_ALPHA: {
+                        ((SbitGreyscale) (this.significantBits))._write_Seq(this._io);
+                        break;
+                    }
+                    case INDEXED: {
+                        ((SbitTruecolor) (this.significantBits))._write_Seq(this._io);
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        ((SbitTruecolor) (this.significantBits))._write_Seq(this._io);
+                        break;
+                    }
+                    case TRUECOLOR_ALPHA: {
+                        ((SbitTruecolor) (this.significantBits))._write_Seq(this._io);
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _check() {
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        if (!Objects.equals(((Png.SbitGreyscale) (this.significantBits))._root(), _root()))
+                            throw new ConsistencyError("significant_bits", _root(), ((Png.SbitGreyscale) (this.significantBits))._root());
+                        if (!Objects.equals(((Png.SbitGreyscale) (this.significantBits))._parent(), this))
+                            throw new ConsistencyError("significant_bits", this, ((Png.SbitGreyscale) (this.significantBits))._parent());
+                        if (((Png.SbitGreyscale) (this.significantBits)).hasAlpha() != false)
+                            throw new ConsistencyError("significant_bits", false, ((Png.SbitGreyscale) (this.significantBits)).hasAlpha());
+                        break;
+                    }
+                    case GREYSCALE_ALPHA: {
+                        if (!Objects.equals(((Png.SbitGreyscale) (this.significantBits))._root(), _root()))
+                            throw new ConsistencyError("significant_bits", _root(), ((Png.SbitGreyscale) (this.significantBits))._root());
+                        if (!Objects.equals(((Png.SbitGreyscale) (this.significantBits))._parent(), this))
+                            throw new ConsistencyError("significant_bits", this, ((Png.SbitGreyscale) (this.significantBits))._parent());
+                        if (((Png.SbitGreyscale) (this.significantBits)).hasAlpha() != true)
+                            throw new ConsistencyError("significant_bits", true, ((Png.SbitGreyscale) (this.significantBits)).hasAlpha());
+                        break;
+                    }
+                    case INDEXED: {
+                        if (!Objects.equals(((Png.SbitTruecolor) (this.significantBits))._root(), _root()))
+                            throw new ConsistencyError("significant_bits", _root(), ((Png.SbitTruecolor) (this.significantBits))._root());
+                        if (!Objects.equals(((Png.SbitTruecolor) (this.significantBits))._parent(), this))
+                            throw new ConsistencyError("significant_bits", this, ((Png.SbitTruecolor) (this.significantBits))._parent());
+                        if (((Png.SbitTruecolor) (this.significantBits)).hasAlpha() != false)
+                            throw new ConsistencyError("significant_bits", false, ((Png.SbitTruecolor) (this.significantBits)).hasAlpha());
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        if (!Objects.equals(((Png.SbitTruecolor) (this.significantBits))._root(), _root()))
+                            throw new ConsistencyError("significant_bits", _root(), ((Png.SbitTruecolor) (this.significantBits))._root());
+                        if (!Objects.equals(((Png.SbitTruecolor) (this.significantBits))._parent(), this))
+                            throw new ConsistencyError("significant_bits", this, ((Png.SbitTruecolor) (this.significantBits))._parent());
+                        if (((Png.SbitTruecolor) (this.significantBits)).hasAlpha() != false)
+                            throw new ConsistencyError("significant_bits", false, ((Png.SbitTruecolor) (this.significantBits)).hasAlpha());
+                        break;
+                    }
+                    case TRUECOLOR_ALPHA: {
+                        if (!Objects.equals(((Png.SbitTruecolor) (this.significantBits))._root(), _root()))
+                            throw new ConsistencyError("significant_bits", _root(), ((Png.SbitTruecolor) (this.significantBits))._root());
+                        if (!Objects.equals(((Png.SbitTruecolor) (this.significantBits))._parent(), this))
+                            throw new ConsistencyError("significant_bits", this, ((Png.SbitTruecolor) (this.significantBits))._parent());
+                        if (((Png.SbitTruecolor) (this.significantBits)).hasAlpha() != true)
+                            throw new ConsistencyError("significant_bits", true, ((Png.SbitTruecolor) (this.significantBits)).hasAlpha());
+                        break;
+                    }
+                    }
+                }
+            }
+            _dirty = false;
+        }
+        private Integer sampleDepth;
+        public Integer sampleDepth() {
+            if (this.sampleDepth != null)
+                return this.sampleDepth;
+            this.sampleDepth = ((Number) ((_root().ihdr().colorType() == Png.ColorType.INDEXED ? 8 : _root().ihdr().bitDepth()))).intValue();
+            return this.sampleDepth;
+        }
+        public void _invalidateSampleDepth() { this.sampleDepth = null; }
+        private KaitaiStruct.ReadWrite significantBits;
+        private Png _root;
+        private Png.Chunk _parent;
+        public KaitaiStruct.ReadWrite significantBits() { return significantBits; }
+        public void setSignificantBits(KaitaiStruct.ReadWrite _v) { _dirty = true; significantBits = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+    }
+    public static class SbitGreyscale extends KaitaiStruct.ReadWrite {
+        public SbitGreyscale(boolean hasAlpha) {
+            this(null, null, null, hasAlpha);
+        }
+
+        public SbitGreyscale(KaitaiStream _io, boolean hasAlpha) {
+            this(_io, null, null, hasAlpha);
+        }
+
+        public SbitGreyscale(KaitaiStream _io, Png.SbitChunk _parent, boolean hasAlpha) {
+            this(_io, _parent, null, hasAlpha);
+        }
+
+        public SbitGreyscale(KaitaiStream _io, Png.SbitChunk _parent, Png _root, boolean hasAlpha) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.hasAlpha = hasAlpha;
+        }
+        public void _read() {
+            this.grey = this._io.readU1();
+            if (!(this.grey >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.grey, this._io, "/types/sbit_greyscale/seq/0");
+            }
+            if (!(this.grey <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.grey, this._io, "/types/sbit_greyscale/seq/0");
+            }
+            if (hasAlpha()) {
+                this.alpha = this._io.readU1();
+                if (!(this.alpha >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.alpha, this._io, "/types/sbit_greyscale/seq/1");
+                }
+                if (!(this.alpha <= _parent().sampleDepth())) {
+                    throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.alpha, this._io, "/types/sbit_greyscale/seq/1");
+                }
+            }
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            if (hasAlpha()) {
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeU1(this.grey);
+            if (hasAlpha()) {
+                this._io.writeU1(this.alpha);
+            }
+        }
+
+        public void _check() {
+            if (!(this.grey >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.grey, null, "/types/sbit_greyscale/seq/0");
+            }
+            if (!(this.grey <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.grey, null, "/types/sbit_greyscale/seq/0");
+            }
+            if (hasAlpha()) {
+                if (!(this.alpha >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.alpha, null, "/types/sbit_greyscale/seq/1");
+                }
+                if (!(this.alpha <= _parent().sampleDepth())) {
+                    throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.alpha, null, "/types/sbit_greyscale/seq/1");
+                }
+            }
+            _dirty = false;
+        }
+        private int grey;
+        private Integer alpha;
+        private boolean hasAlpha;
+        private Png _root;
+        private Png.SbitChunk _parent;
+        public int grey() { return grey; }
+        public void setGrey(int _v) { _dirty = true; grey = _v; }
+        public Integer alpha() { return alpha; }
+        public void setAlpha(Integer _v) { _dirty = true; alpha = _v; }
+        public boolean hasAlpha() { return hasAlpha; }
+        public void setHasAlpha(boolean _v) { _dirty = true; hasAlpha = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.SbitChunk _parent() { return _parent; }
+        public void set_parent(Png.SbitChunk _v) { _dirty = true; _parent = _v; }
+    }
+    public static class SbitTruecolor extends KaitaiStruct.ReadWrite {
+        public SbitTruecolor(boolean hasAlpha) {
+            this(null, null, null, hasAlpha);
+        }
+
+        public SbitTruecolor(KaitaiStream _io, boolean hasAlpha) {
+            this(_io, null, null, hasAlpha);
+        }
+
+        public SbitTruecolor(KaitaiStream _io, Png.SbitChunk _parent, boolean hasAlpha) {
+            this(_io, _parent, null, hasAlpha);
+        }
+
+        public SbitTruecolor(KaitaiStream _io, Png.SbitChunk _parent, Png _root, boolean hasAlpha) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.hasAlpha = hasAlpha;
+        }
+        public void _read() {
+            this.red = this._io.readU1();
+            if (!(this.red >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.red, this._io, "/types/sbit_truecolor/seq/0");
+            }
+            if (!(this.red <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.red, this._io, "/types/sbit_truecolor/seq/0");
+            }
+            this.green = this._io.readU1();
+            if (!(this.green >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.green, this._io, "/types/sbit_truecolor/seq/1");
+            }
+            if (!(this.green <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.green, this._io, "/types/sbit_truecolor/seq/1");
+            }
+            this.blue = this._io.readU1();
+            if (!(this.blue >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.blue, this._io, "/types/sbit_truecolor/seq/2");
+            }
+            if (!(this.blue <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.blue, this._io, "/types/sbit_truecolor/seq/2");
+            }
+            if (hasAlpha()) {
+                this.alpha = this._io.readU1();
+                if (!(this.alpha >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.alpha, this._io, "/types/sbit_truecolor/seq/3");
+                }
+                if (!(this.alpha <= _parent().sampleDepth())) {
+                    throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.alpha, this._io, "/types/sbit_truecolor/seq/3");
+                }
+            }
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            if (hasAlpha()) {
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeU1(this.red);
+            this._io.writeU1(this.green);
+            this._io.writeU1(this.blue);
+            if (hasAlpha()) {
+                this._io.writeU1(this.alpha);
+            }
+        }
+
+        public void _check() {
+            if (!(this.red >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.red, null, "/types/sbit_truecolor/seq/0");
+            }
+            if (!(this.red <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.red, null, "/types/sbit_truecolor/seq/0");
+            }
+            if (!(this.green >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.green, null, "/types/sbit_truecolor/seq/1");
+            }
+            if (!(this.green <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.green, null, "/types/sbit_truecolor/seq/1");
+            }
+            if (!(this.blue >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.blue, null, "/types/sbit_truecolor/seq/2");
+            }
+            if (!(this.blue <= _parent().sampleDepth())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.blue, null, "/types/sbit_truecolor/seq/2");
+            }
+            if (hasAlpha()) {
+                if (!(this.alpha >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.alpha, null, "/types/sbit_truecolor/seq/3");
+                }
+                if (!(this.alpha <= _parent().sampleDepth())) {
+                    throw new KaitaiStream.ValidationGreaterThanError(_parent().sampleDepth(), this.alpha, null, "/types/sbit_truecolor/seq/3");
+                }
+            }
+            _dirty = false;
+        }
+        private int red;
+        private int green;
+        private int blue;
+        private Integer alpha;
+        private boolean hasAlpha;
+        private Png _root;
+        private Png.SbitChunk _parent;
+        public int red() { return red; }
+        public void setRed(int _v) { _dirty = true; red = _v; }
+        public int green() { return green; }
+        public void setGreen(int _v) { _dirty = true; green = _v; }
+        public int blue() { return blue; }
+        public void setBlue(int _v) { _dirty = true; blue = _v; }
+        public Integer alpha() { return alpha; }
+        public void setAlpha(Integer _v) { _dirty = true; alpha = _v; }
+        public boolean hasAlpha() { return hasAlpha; }
+        public void setHasAlpha(boolean _v) { _dirty = true; hasAlpha = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.SbitChunk _parent() { return _parent; }
+        public void set_parent(Png.SbitChunk _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
+     * Suggested palette (`sPLT`) chunk.
+     * 
+     * Multiple `sPLT` chunks are permitted, but each must have a different
+     * palette name.
+     * @see <a href="https://www.w3.org/TR/png/#11sPLT">Source</a>
+     * @see <a href="https://www.w3.org/TR/png/#12Suggested-palettes">Source</a>
+     */
+    public static class SpltChunk extends KaitaiStruct.ReadWrite {
+        public static SpltChunk fromFile(String fileName) throws IOException {
+            return new SpltChunk(new ByteBufferKaitaiStream(fileName));
+        }
+        public SpltChunk() {
+            this(null, null, null);
+        }
+
+        public SpltChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SpltChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SpltChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.paletteName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.ISO_8859_1);
+            this.sampleDepth = this._io.readU1();
+            if (!( ((this.sampleDepth == 8) || (this.sampleDepth == 16)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.sampleDepth, this._io, "/types/splt_chunk/seq/1");
+            }
+            this.entries = new ArrayList<SpltEntry>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    SpltEntry _t_entries = new SpltEntry(this._io, this, _root);
+                    try {
+                        _t_entries._read();
+                    } finally {
+                        this.entries.add(_t_entries);
+                    }
+                    i++;
+                }
+            }
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeBytes((this.paletteName).getBytes(Charset.forName("ISO-8859-1")));
+            this._io.writeU1(0);
+            this._io.writeU1(this.sampleDepth);
+            for (int i = 0; i < this.entries.size(); i++) {
+                if (this._io.isEof())
+                    throw new ConsistencyError("entries", 0, this._io.size() - this._io.pos());
+                this.entries.get(((Number) (i)).intValue())._write_Seq(this._io);
+            }
+            if (!(this._io.isEof()))
+                throw new ConsistencyError("entries", 0, this._io.size() - this._io.pos());
+        }
+
+        public void _check() {
+            if (KaitaiStream.byteArrayIndexOf((this.paletteName).getBytes(Charset.forName("ISO-8859-1")), ((byte) 0)) != -1)
+                throw new ConsistencyError("palette_name", -1, KaitaiStream.byteArrayIndexOf((this.paletteName).getBytes(Charset.forName("ISO-8859-1")), ((byte) 0)));
+            if (!( ((this.sampleDepth == 8) || (this.sampleDepth == 16)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.sampleDepth, null, "/types/splt_chunk/seq/1");
+            }
+            for (int i = 0; i < this.entries.size(); i++) {
+                if (!Objects.equals(this.entries.get(((Number) (i)).intValue())._root(), _root()))
+                    throw new ConsistencyError("entries", _root(), this.entries.get(((Number) (i)).intValue())._root());
+                if (!Objects.equals(this.entries.get(((Number) (i)).intValue())._parent(), this))
+                    throw new ConsistencyError("entries", this, this.entries.get(((Number) (i)).intValue())._parent());
+            }
+            _dirty = false;
+        }
+        private String paletteName;
+        private int sampleDepth;
+        private List<SpltEntry> entries;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Any convenient name for referring to the palette. It is
+         * case-sensitive. The palette name may aid the choice of the appropriate
+         * suggested palette when more than one appears in a PNG datastream.
+         * 
+         * Palette names must contain only printable ISO-8859-1 (Latin-1)
+         * characters and spaces; that is, only code points 0x20-0x7E and
+         * 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+         * not permitted.
+         */
+        public String paletteName() { return paletteName; }
+        public void setPaletteName(String _v) { _dirty = true; paletteName = _v; }
+        public int sampleDepth() { return sampleDepth; }
+        public void setSampleDepth(int _v) { _dirty = true; sampleDepth = _v; }
+
+        /**
+         * There may be any number of entries. Entries must appear "in decreasing
+         * order of frequency" (note: strictly speaking, I think the W3C
+         * specification actually meant "non-increasing"). There is no
+         * requirement that the entries all be used by the image, nor that they
+         * all be different.
+         * 
+         * The color samples are not premultiplied by alpha, nor are they
+         * precomposited against any background.
+         * 
+         * Entries in `sPLT` use the same gamma value and chromaticity values as
+         * the PNG image, but may fall outside the range of values used in the
+         * color space of the PNG image; for example, in a greyscale PNG image,
+         * each `sPLT` entry would typically have equal red, green, and blue
+         * values, but this is not required. Similarly, `sPLT` entries can have
+         * non-opaque alpha values even when the PNG image does not use
+         * transparency.
+         */
+        public List<SpltEntry> entries() { return entries; }
+        public void setEntries(List<SpltEntry> _v) { _dirty = true; entries = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+    }
+    public static class SpltEntry extends KaitaiStruct.ReadWrite {
+        public static SpltEntry fromFile(String fileName) throws IOException {
+            return new SpltEntry(new ByteBufferKaitaiStream(fileName));
+        }
+        public SpltEntry() {
+            this(null, null, null);
+        }
+
+        public SpltEntry(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SpltEntry(KaitaiStream _io, Png.SpltChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SpltEntry(KaitaiStream _io, Png.SpltChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this.red = ((Number) (this._io.readU1())).intValue();
+                break;
+            }
+            default: {
+                this.red = this._io.readU2be();
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this.green = ((Number) (this._io.readU1())).intValue();
+                break;
+            }
+            default: {
+                this.green = this._io.readU2be();
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this.blue = ((Number) (this._io.readU1())).intValue();
+                break;
+            }
+            default: {
+                this.blue = this._io.readU2be();
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this.alpha = ((Number) (this._io.readU1())).intValue();
+                break;
+            }
+            default: {
+                this.alpha = this._io.readU2be();
+                break;
+            }
+            }
+            this.freq = this._io.readU2be();
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this._io.writeU1(((Number) (this.red)).intValue());
+                break;
+            }
+            default: {
+                this._io.writeU2be(this.red);
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this._io.writeU1(((Number) (this.green)).intValue());
+                break;
+            }
+            default: {
+                this._io.writeU2be(this.green);
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this._io.writeU1(((Number) (this.blue)).intValue());
+                break;
+            }
+            default: {
+                this._io.writeU2be(this.blue);
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                this._io.writeU1(((Number) (this.alpha)).intValue());
+                break;
+            }
+            default: {
+                this._io.writeU2be(this.alpha);
+                break;
+            }
+            }
+            this._io.writeU2be(this.freq);
+        }
+
+        public void _check() {
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            switch (_parent().sampleDepth()) {
+            case 8: {
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            _dirty = false;
+        }
+        private int red;
+        private int green;
+        private int blue;
+        private int alpha;
+        private int freq;
+        private Png _root;
+        private Png.SpltChunk _parent;
+        public int red() { return red; }
+        public void setRed(int _v) { _dirty = true; red = _v; }
+        public int green() { return green; }
+        public void setGreen(int _v) { _dirty = true; green = _v; }
+        public int blue() { return blue; }
+        public void setBlue(int _v) { _dirty = true; blue = _v; }
+
+        /**
+         * An alpha value of 0 means fully transparent. An alpha value of 255
+         * (when `_parent.sample_depth` is 8) or 65535 (when
+         * `_parent.sample_depth` is 16) means fully opaque.
+         */
+        public int alpha() { return alpha; }
+        public void setAlpha(int _v) { _dirty = true; alpha = _v; }
+
+        /**
+         * Each frequency value is proportional to the fraction of the pixels in
+         * the image for which that palette entry is the closest match in RGBA
+         * space, before the image has been composited against any background.
+         * 
+         * The exact scale factor is chosen by the PNG encoder; it is recommended
+         * that the resulting range of individual values reasonably fills the
+         * range 0 to 65535.
+         * 
+         * Zero is a valid frequency meaning that the color is "least important"
+         * or that it is rarely, if ever, used. When all the frequencies are
+         * zero, they are meaningless, that is to say, nothing may be inferred
+         * about the actual frequencies with which the colors appear in the PNG
+         * image.
+         */
+        public int freq() { return freq; }
+        public void setFreq(int _v) { _dirty = true; freq = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.SpltChunk _parent() { return _parent; }
+        public void set_parent(Png.SpltChunk _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
      * @see <a href="https://www.w3.org/TR/png/#11sRGB">Source</a>
      */
     public static class SrgbChunk extends KaitaiStruct.ReadWrite {
@@ -4013,6 +5292,332 @@ public class Png extends KaitaiStruct.ReadWrite {
         public void set_root(Png _v) { _dirty = true; _root = _v; }
         public Png.Chunk _parent() { return _parent; }
         public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+    }
+
+    /**
+     * Transparency (`tRNS`) chunk specifies either alpha values that are
+     * associated with palette entries (for indexed-color images) or a single
+     * transparent color (for greyscale and truecolor images).
+     * 
+     * A `tRNS` chunk must not appear for color types
+     * `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+     * since a full alpha channel is already present in those cases.
+     * @see <a href="https://www.w3.org/TR/png/#11tRNS">Source</a>
+     */
+    public static class TrnsChunk extends KaitaiStruct.ReadWrite {
+        public static TrnsChunk fromFile(String fileName) throws IOException {
+            return new TrnsChunk(new ByteBufferKaitaiStream(fileName));
+        }
+        public TrnsChunk() {
+            this(null, null, null);
+        }
+
+        public TrnsChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TrnsChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TrnsChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            if (_root().ihdr().colorType() == Png.ColorType.INDEXED) {
+                this.paletteAlphas = new ArrayList<Integer>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.paletteAlphas.add(this._io.readU1());
+                        i++;
+                    }
+                }
+            }
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        this.transparentColor = new TrnsGreyscaleColor(this._io, this, _root);
+                        ((TrnsGreyscaleColor) (this.transparentColor))._read();
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        this.transparentColor = new TrnsTruecolorColor(this._io, this, _root);
+                        ((TrnsTruecolorColor) (this.transparentColor))._read();
+                        break;
+                    }
+                    }
+                }
+            }
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            if (_root().ihdr().colorType() == Png.ColorType.INDEXED) {
+                for (int i = 0; i < this.paletteAlphas.size(); i++) {
+                }
+            }
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        ((TrnsGreyscaleColor) (this.transparentColor))._fetchInstances();
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        ((TrnsTruecolorColor) (this.transparentColor))._fetchInstances();
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            if (_root().ihdr().colorType() == Png.ColorType.INDEXED) {
+                for (int i = 0; i < this.paletteAlphas.size(); i++) {
+                    if (this._io.isEof())
+                        throw new ConsistencyError("palette_alphas", 0, this._io.size() - this._io.pos());
+                    this._io.writeU1(this.paletteAlphas.get(((Number) (i)).intValue()));
+                }
+                if (!(this._io.isEof()))
+                    throw new ConsistencyError("palette_alphas", 0, this._io.size() - this._io.pos());
+            }
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        ((TrnsGreyscaleColor) (this.transparentColor))._write_Seq(this._io);
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        ((TrnsTruecolorColor) (this.transparentColor))._write_Seq(this._io);
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _check() {
+            if (_root().ihdr().colorType() == Png.ColorType.INDEXED) {
+                for (int i = 0; i < this.paletteAlphas.size(); i++) {
+                }
+            }
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
+                    case GREYSCALE: {
+                        if (!Objects.equals(((Png.TrnsGreyscaleColor) (this.transparentColor))._root(), _root()))
+                            throw new ConsistencyError("transparent_color", _root(), ((Png.TrnsGreyscaleColor) (this.transparentColor))._root());
+                        if (!Objects.equals(((Png.TrnsGreyscaleColor) (this.transparentColor))._parent(), this))
+                            throw new ConsistencyError("transparent_color", this, ((Png.TrnsGreyscaleColor) (this.transparentColor))._parent());
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        if (!Objects.equals(((Png.TrnsTruecolorColor) (this.transparentColor))._root(), _root()))
+                            throw new ConsistencyError("transparent_color", _root(), ((Png.TrnsTruecolorColor) (this.transparentColor))._root());
+                        if (!Objects.equals(((Png.TrnsTruecolorColor) (this.transparentColor))._parent(), this))
+                            throw new ConsistencyError("transparent_color", this, ((Png.TrnsTruecolorColor) (this.transparentColor))._parent());
+                        break;
+                    }
+                    }
+                }
+            }
+            _dirty = false;
+        }
+        private Integer sampleMask;
+        public Integer sampleMask() {
+            if (this.sampleMask != null)
+                return this.sampleMask;
+            this.sampleMask = ((Number) ((1 << _root().ihdr().bitDepth()) - 1)).intValue();
+            return this.sampleMask;
+        }
+        public void _invalidateSampleMask() { this.sampleMask = null; }
+        private List<Integer> paletteAlphas;
+        private KaitaiStruct.ReadWrite transparentColor;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Alpha values associated with palette entries in the `PLTE` chunk.
+         * 
+         * Each entry indicates that pixels of the corresponding palette index
+         * shall be treated as having the specified alpha value. Alpha values
+         * have the same interpretation as in an 8-bit full alpha channel: 0 is
+         * fully transparent, 255 is fully opaque, regardless of image bit depth.
+         * 
+         * The `tRNS` chunk must not contain more alpha values than there are
+         * palette entries, but it may contain fewer values than there are
+         * palette entries. In this case, the alpha value for all remaining
+         * palette entries is assumed to be 255. If all palette indices are
+         * opaque, the `tRNS` chunk may be omitted.
+         */
+        public List<Integer> paletteAlphas() { return paletteAlphas; }
+        public void setPaletteAlphas(List<Integer> _v) { _dirty = true; paletteAlphas = _v; }
+
+        /**
+         * Pixels of the specified grey sample value or RGB sample values are
+         * treated as transparent (equivalent to alpha value 0); all other pixels
+         * are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).
+         * 
+         * If the image bit depth is less than 16, the least significant bits of
+         * these sample values are used. Encoders should set the other bits to 0,
+         * and decoders must mask the other bits to 0 before the value is used.
+         * 
+         * Note: in this Kaitai Struct implementation, the bitmask used to
+         * implement this masking is stored in the value instance `sample_mask`.
+         */
+        public KaitaiStruct.ReadWrite transparentColor() { return transparentColor; }
+        public void setTransparentColor(KaitaiStruct.ReadWrite _v) { _dirty = true; transparentColor = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.Chunk _parent() { return _parent; }
+        public void set_parent(Png.Chunk _v) { _dirty = true; _parent = _v; }
+    }
+    public static class TrnsGreyscaleColor extends KaitaiStruct.ReadWrite {
+        public static TrnsGreyscaleColor fromFile(String fileName) throws IOException {
+            return new TrnsGreyscaleColor(new ByteBufferKaitaiStream(fileName));
+        }
+        public TrnsGreyscaleColor() {
+            this(null, null, null);
+        }
+
+        public TrnsGreyscaleColor(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TrnsGreyscaleColor(KaitaiStream _io, Png.TrnsChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TrnsGreyscaleColor(KaitaiStream _io, Png.TrnsChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.greyRaw = this._io.readU2be();
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeU2be(this.greyRaw);
+        }
+
+        public void _check() {
+            _dirty = false;
+        }
+        private Integer grey;
+        public Integer grey() {
+            if (this.grey != null)
+                return this.grey;
+            this.grey = ((Number) (greyRaw() & _parent().sampleMask())).intValue();
+            return this.grey;
+        }
+        public void _invalidateGrey() { this.grey = null; }
+        private int greyRaw;
+        private Png _root;
+        private Png.TrnsChunk _parent;
+        public int greyRaw() { return greyRaw; }
+        public void setGreyRaw(int _v) { _dirty = true; greyRaw = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.TrnsChunk _parent() { return _parent; }
+        public void set_parent(Png.TrnsChunk _v) { _dirty = true; _parent = _v; }
+    }
+    public static class TrnsTruecolorColor extends KaitaiStruct.ReadWrite {
+        public static TrnsTruecolorColor fromFile(String fileName) throws IOException {
+            return new TrnsTruecolorColor(new ByteBufferKaitaiStream(fileName));
+        }
+        public TrnsTruecolorColor() {
+            this(null, null, null);
+        }
+
+        public TrnsTruecolorColor(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TrnsTruecolorColor(KaitaiStream _io, Png.TrnsChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TrnsTruecolorColor(KaitaiStream _io, Png.TrnsChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.redRaw = this._io.readU2be();
+            this.greenRaw = this._io.readU2be();
+            this.blueRaw = this._io.readU2be();
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeU2be(this.redRaw);
+            this._io.writeU2be(this.greenRaw);
+            this._io.writeU2be(this.blueRaw);
+        }
+
+        public void _check() {
+            _dirty = false;
+        }
+        private Integer blue;
+        public Integer blue() {
+            if (this.blue != null)
+                return this.blue;
+            this.blue = ((Number) (blueRaw() & _parent().sampleMask())).intValue();
+            return this.blue;
+        }
+        public void _invalidateBlue() { this.blue = null; }
+        private Integer green;
+        public Integer green() {
+            if (this.green != null)
+                return this.green;
+            this.green = ((Number) (greenRaw() & _parent().sampleMask())).intValue();
+            return this.green;
+        }
+        public void _invalidateGreen() { this.green = null; }
+        private Integer red;
+        public Integer red() {
+            if (this.red != null)
+                return this.red;
+            this.red = ((Number) (redRaw() & _parent().sampleMask())).intValue();
+            return this.red;
+        }
+        public void _invalidateRed() { this.red = null; }
+        private int redRaw;
+        private int greenRaw;
+        private int blueRaw;
+        private Png _root;
+        private Png.TrnsChunk _parent;
+        public int redRaw() { return redRaw; }
+        public void setRedRaw(int _v) { _dirty = true; redRaw = _v; }
+        public int greenRaw() { return greenRaw; }
+        public void setGreenRaw(int _v) { _dirty = true; greenRaw = _v; }
+        public int blueRaw() { return blueRaw; }
+        public void setBlueRaw(int _v) { _dirty = true; blueRaw = _v; }
+        public Png _root() { return _root; }
+        public void set_root(Png _v) { _dirty = true; _root = _v; }
+        public Png.TrnsChunk _parent() { return _parent; }
+        public void set_parent(Png.TrnsChunk _v) { _dirty = true; _parent = _v; }
     }
     private byte[] magic;
     private long ihdrLen;

@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.011_000;
+use Exif;
+use Icc4;
 use Compress::Zlib;
 use Encode;
 
@@ -635,6 +637,11 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::ClliChunk->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on eq "eXIf") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::ExifChunk->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on eq "fcTL") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
@@ -649,6 +656,16 @@ sub _read {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::GamaChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "hIST") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::HistChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "iCCP") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::IccpChunk->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on eq "iTXt") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
@@ -680,6 +697,16 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::AdobeFireworksChunk->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on eq "sBIT") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::SbitChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "sPLT") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::SpltChunk->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on eq "sRGB") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
@@ -704,6 +731,11 @@ sub _read {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::TimeChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "tRNS") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::TrnsChunk->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on eq "zTXt") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
@@ -1074,6 +1106,44 @@ sub orig_img {
 }
 
 ########################################################################
+package Png::ExifChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{exif} = Exif->new($self->{_io});
+}
+
+sub exif {
+    my ($self) = @_;
+    return $self->{exif};
+}
+
+########################################################################
 package Png::FrameControlChunk;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1263,6 +1333,110 @@ sub inv_gamma {
 sub gamma_int {
     my ($self) = @_;
     return $self->{gamma_int};
+}
+
+########################################################################
+package Png::HistChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{usage_freqs} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{usage_freqs}}, $self->{_io}->read_u2be();
+    }
+}
+
+sub usage_freqs {
+    my ($self) = @_;
+    return $self->{usage_freqs};
+}
+
+########################################################################
+package Png::IccpChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{profile_name} = Encode::decode("ISO-8859-1", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{compression_method} = $self->{_io}->read_u1();
+    $self->{_raw__raw_profile} = $self->{_io}->read_bytes_full();
+    $self->{_raw_profile} = Compress::Zlib::uncompress($self->{_raw__raw_profile});
+    my $io__raw_profile = IO::KaitaiStruct::Stream->new($self->{_raw_profile});
+    $self->{profile} = Icc4->new($io__raw_profile);
+}
+
+sub profile_name {
+    my ($self) = @_;
+    return $self->{profile_name};
+}
+
+sub compression_method {
+    my ($self) = @_;
+    return $self->{compression_method};
+}
+
+sub profile {
+    my ($self) = @_;
+    return $self->{profile};
+}
+
+sub _raw_profile {
+    my ($self) = @_;
+    return $self->{_raw_profile};
+}
+
+sub _raw__raw_profile {
+    my ($self) = @_;
+    return $self->{_raw__raw_profile};
 }
 
 ########################################################################
@@ -1782,6 +1956,319 @@ sub b {
 }
 
 ########################################################################
+package Png::SbitChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    my $_on = $self->_root()->ihdr()->color_type();
+    if ($_on == $Png::COLOR_TYPE_GREYSCALE) {
+        $self->{significant_bits} = Png::SbitGreyscale->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Png::COLOR_TYPE_GREYSCALE_ALPHA) {
+        $self->{significant_bits} = Png::SbitGreyscale->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Png::COLOR_TYPE_INDEXED) {
+        $self->{significant_bits} = Png::SbitTruecolor->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Png::COLOR_TYPE_TRUECOLOR) {
+        $self->{significant_bits} = Png::SbitTruecolor->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Png::COLOR_TYPE_TRUECOLOR_ALPHA) {
+        $self->{significant_bits} = Png::SbitTruecolor->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub sample_depth {
+    my ($self) = @_;
+    return $self->{sample_depth} if ($self->{sample_depth});
+    $self->{sample_depth} = ($self->_root()->ihdr()->color_type() == $Png::COLOR_TYPE_INDEXED ? 8 : $self->_root()->ihdr()->bit_depth());
+    return $self->{sample_depth};
+}
+
+sub significant_bits {
+    my ($self) = @_;
+    return $self->{significant_bits};
+}
+
+########################################################################
+package Png::SbitGreyscale;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{grey} = $self->{_io}->read_u1();
+    if ($self->has_alpha()) {
+        $self->{alpha} = $self->{_io}->read_u1();
+    }
+}
+
+sub grey {
+    my ($self) = @_;
+    return $self->{grey};
+}
+
+sub alpha {
+    my ($self) = @_;
+    return $self->{alpha};
+}
+
+sub has_alpha {
+    my ($self) = @_;
+    return $self->{has_alpha};
+}
+
+########################################################################
+package Png::SbitTruecolor;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{red} = $self->{_io}->read_u1();
+    $self->{green} = $self->{_io}->read_u1();
+    $self->{blue} = $self->{_io}->read_u1();
+    if ($self->has_alpha()) {
+        $self->{alpha} = $self->{_io}->read_u1();
+    }
+}
+
+sub red {
+    my ($self) = @_;
+    return $self->{red};
+}
+
+sub green {
+    my ($self) = @_;
+    return $self->{green};
+}
+
+sub blue {
+    my ($self) = @_;
+    return $self->{blue};
+}
+
+sub alpha {
+    my ($self) = @_;
+    return $self->{alpha};
+}
+
+sub has_alpha {
+    my ($self) = @_;
+    return $self->{has_alpha};
+}
+
+########################################################################
+package Png::SpltChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{palette_name} = Encode::decode("ISO-8859-1", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{sample_depth} = $self->{_io}->read_u1();
+    $self->{entries} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Png::SpltEntry->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub palette_name {
+    my ($self) = @_;
+    return $self->{palette_name};
+}
+
+sub sample_depth {
+    my ($self) = @_;
+    return $self->{sample_depth};
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+########################################################################
+package Png::SpltEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    my $_on = $self->_parent()->sample_depth();
+    if ($_on == 8) {
+        $self->{red} = $self->{_io}->read_u1();
+    }
+    else {
+        $self->{red} = $self->{_io}->read_u2be();
+    }
+    my $_on = $self->_parent()->sample_depth();
+    if ($_on == 8) {
+        $self->{green} = $self->{_io}->read_u1();
+    }
+    else {
+        $self->{green} = $self->{_io}->read_u2be();
+    }
+    my $_on = $self->_parent()->sample_depth();
+    if ($_on == 8) {
+        $self->{blue} = $self->{_io}->read_u1();
+    }
+    else {
+        $self->{blue} = $self->{_io}->read_u2be();
+    }
+    my $_on = $self->_parent()->sample_depth();
+    if ($_on == 8) {
+        $self->{alpha} = $self->{_io}->read_u1();
+    }
+    else {
+        $self->{alpha} = $self->{_io}->read_u2be();
+    }
+    $self->{freq} = $self->{_io}->read_u2be();
+}
+
+sub red {
+    my ($self) = @_;
+    return $self->{red};
+}
+
+sub green {
+    my ($self) = @_;
+    return $self->{green};
+}
+
+sub blue {
+    my ($self) = @_;
+    return $self->{blue};
+}
+
+sub alpha {
+    my ($self) = @_;
+    return $self->{alpha};
+}
+
+sub freq {
+    my ($self) = @_;
+    return $self->{freq};
+}
+
+########################################################################
 package Png::SrgbChunk;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1934,6 +2421,184 @@ sub minute {
 sub second {
     my ($self) = @_;
     return $self->{second};
+}
+
+########################################################################
+package Png::TrnsChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if ($self->_root()->ihdr()->color_type() == $Png::COLOR_TYPE_INDEXED) {
+        $self->{palette_alphas} = [];
+        while (!$self->{_io}->is_eof()) {
+            push @{$self->{palette_alphas}}, $self->{_io}->read_u1();
+        }
+    }
+    my $_on = $self->_root()->ihdr()->color_type();
+    if ($_on == $Png::COLOR_TYPE_GREYSCALE) {
+        $self->{transparent_color} = Png::TrnsGreyscaleColor->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Png::COLOR_TYPE_TRUECOLOR) {
+        $self->{transparent_color} = Png::TrnsTruecolorColor->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub sample_mask {
+    my ($self) = @_;
+    return $self->{sample_mask} if ($self->{sample_mask});
+    $self->{sample_mask} = (1 << $self->_root()->ihdr()->bit_depth()) - 1;
+    return $self->{sample_mask};
+}
+
+sub palette_alphas {
+    my ($self) = @_;
+    return $self->{palette_alphas};
+}
+
+sub transparent_color {
+    my ($self) = @_;
+    return $self->{transparent_color};
+}
+
+########################################################################
+package Png::TrnsGreyscaleColor;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{grey_raw} = $self->{_io}->read_u2be();
+}
+
+sub grey {
+    my ($self) = @_;
+    return $self->{grey} if ($self->{grey});
+    $self->{grey} = $self->grey_raw() & $self->_parent()->sample_mask();
+    return $self->{grey};
+}
+
+sub grey_raw {
+    my ($self) = @_;
+    return $self->{grey_raw};
+}
+
+########################################################################
+package Png::TrnsTruecolorColor;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{red_raw} = $self->{_io}->read_u2be();
+    $self->{green_raw} = $self->{_io}->read_u2be();
+    $self->{blue_raw} = $self->{_io}->read_u2be();
+}
+
+sub blue {
+    my ($self) = @_;
+    return $self->{blue} if ($self->{blue});
+    $self->{blue} = $self->blue_raw() & $self->_parent()->sample_mask();
+    return $self->{blue};
+}
+
+sub green {
+    my ($self) = @_;
+    return $self->{green} if ($self->{green});
+    $self->{green} = $self->green_raw() & $self->_parent()->sample_mask();
+    return $self->{green};
+}
+
+sub red {
+    my ($self) = @_;
+    return $self->{red} if ($self->{red});
+    $self->{red} = $self->red_raw() & $self->_parent()->sample_mask();
+    return $self->{red};
+}
+
+sub red_raw {
+    my ($self) = @_;
+    return $self->{red_raw};
+}
+
+sub green_raw {
+    my ($self) = @_;
+    return $self->{green_raw};
+}
+
+sub blue_raw {
+    my ($self) = @_;
+    return $self->{blue_raw};
 }
 
 1;

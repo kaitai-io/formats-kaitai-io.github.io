@@ -573,6 +573,12 @@ namespace Kaitai
                     _body = new ClliChunk(io___raw_body, this, m_root);
                     break;
                 }
+                case "eXIf": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new ExifChunk(io___raw_body, this, m_root);
+                    break;
+                }
                 case "fcTL": {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -589,6 +595,18 @@ namespace Kaitai
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new GamaChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "hIST": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new HistChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "iCCP": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new IccpChunk(io___raw_body, this, m_root);
                     break;
                 }
                 case "iTXt": {
@@ -627,6 +645,18 @@ namespace Kaitai
                     _body = new AdobeFireworksChunk(io___raw_body, this, m_root);
                     break;
                 }
+                case "sBIT": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SbitChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "sPLT": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new SpltChunk(io___raw_body, this, m_root);
+                    break;
+                }
                 case "sRGB": {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -655,6 +685,12 @@ namespace Kaitai
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new TimeChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "tRNS": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new TrnsChunk(io___raw_body, this, m_root);
                     break;
                 }
                 case "zTXt": {
@@ -1115,6 +1151,43 @@ namespace Kaitai
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
+        /// <summary>
+        /// Exchangeable Image File (Exif) Profile (`eXIf`) chunk.
+        /// 
+        /// Only one `eXIf` chunk is allowed in a PNG datastream.
+        /// 
+        /// The `eXIf` chunk contains metadata concerning the original image data. If
+        /// the image has been edited subsequent to creation of the Exif profile, this
+        /// data might no longer apply to the PNG image data.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#eXIf">Source</a>
+        /// </remarks>
+        public partial class ExifChunk : KaitaiStruct
+        {
+            public static ExifChunk FromFile(string fileName)
+            {
+                return new ExifChunk(new KaitaiStream(fileName));
+            }
+
+            public ExifChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _exif = new Exif(m_io);
+            }
+            private Exif _exif;
+            private Png m_root;
+            private Png.Chunk m_parent;
+            public Exif Exif { get { return _exif; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
         /// <remarks>
         /// Reference: <a href="https://www.w3.org/TR/png/#fcTL-chunk">Source</a>
         /// </remarks>
@@ -1395,6 +1468,151 @@ namespace Kaitai
             public uint GammaInt { get { return _gammaInt; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Image histogram (`hIST`) chunk gives the approximate usage frequency of
+        /// each color in the palette. A histogram chunk can appear only when a `PLTE`
+        /// chunk appears.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11hIST">Source</a>
+        /// </remarks>
+        public partial class HistChunk : KaitaiStruct
+        {
+            public static HistChunk FromFile(string fileName)
+            {
+                return new HistChunk(new KaitaiStream(fileName));
+            }
+
+            public HistChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _usageFreqs = new List<ushort>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _usageFreqs.Add(m_io.ReadU2be());
+                        i++;
+                    }
+                }
+            }
+            private List<ushort> _usageFreqs;
+            private Png m_root;
+            private Png.Chunk m_parent;
+
+            /// <summary>
+            /// Usage frequencies of each color in the palette.
+            /// 
+            /// There must be exactly one entry for each entry in the `PLTE` chunk. Each
+            /// entry is proportional to the fraction of pixels in the image that have
+            /// that palette index; the exact scale factor is chosen by the encoder.
+            /// 
+            /// Histogram entries are approximate, with the exception that a zero
+            /// entry specifies that the corresponding palette entry is not used at
+            /// all in the image. A histogram entry must be nonzero if there are any
+            /// pixels of that color.
+            /// </summary>
+            public List<ushort> UsageFreqs { get { return _usageFreqs; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Embedded ICC profile (`iCCP`) chunk.
+        /// 
+        /// If the `iCCP` chunk is present, the image samples conform to the color
+        /// space represented by the embedded ICC profile as defined by the
+        /// International Color Consortium.
+        /// 
+        /// This chunk is ignored unless it is the [highest-precedence color
+        /// chunk](https://www.w3.org/TR/png/#color-chunk-precendence) understood by
+        /// the decoder. Unless a `cICP` chunk exists, a PNG datastream should contain
+        /// at most one embedded profile, whether specified explicitly with an `iCCP`
+        /// or implicitly with an `sRGB` chunk.
+        /// 
+        /// It is recommended that the `sRGB` and `iCCP` chunks do not appear
+        /// simultaneously in a PNG datastream.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11iCCP">Source</a>
+        /// </remarks>
+        public partial class IccpChunk : KaitaiStruct
+        {
+            public static IccpChunk FromFile(string fileName)
+            {
+                return new IccpChunk(new KaitaiStream(fileName));
+            }
+
+            public IccpChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _profileName = System.Text.Encoding.GetEncoding("ISO-8859-1").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                _compressionMethod = ((Png.CompressionMethods) m_io.ReadU1());
+                if (!(_compressionMethod == Png.CompressionMethods.Zlib))
+                {
+                    throw new ValidationNotEqualError(Png.CompressionMethods.Zlib, _compressionMethod, m_io, "/types/iccp_chunk/seq/1");
+                }
+                __raw__raw_profile = m_io.ReadBytesFull();
+                __raw_profile = m_io.ProcessZlib(__raw__raw_profile);
+                var io___raw_profile = new KaitaiStream(__raw_profile);
+                _profile = new Icc4(io___raw_profile);
+            }
+            private string _profileName;
+            private CompressionMethods _compressionMethod;
+            private Icc4 _profile;
+            private Png m_root;
+            private Png.Chunk m_parent;
+            private byte[] __raw_profile;
+            private byte[] __raw__raw_profile;
+
+            /// <summary>
+            /// Any convenient name for referring to the profile. It is
+            /// case-sensitive.
+            /// 
+            /// Profile names must contain only printable ISO-8859-1 (Latin-1)
+            /// characters and spaces; that is, only code points 0x20-0x7E and
+            /// 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+            /// not permitted.
+            /// </summary>
+            public string ProfileName { get { return _profileName; } }
+            public CompressionMethods CompressionMethod { get { return _compressionMethod; } }
+
+            /// <summary>
+            /// Embedded ICC profile.
+            /// 
+            /// The color space of the ICC profile must be:
+            /// 
+            /// * an RGB color space for color images (color types
+            ///   `color_type::truecolor` = 2, `color_type::indexed` = 3, and
+            ///   `color_type::truecolor_alpha` = 6), or
+            /// * a greyscale color space for greyscale images (color types
+            ///   `color_type::greyscale` = 0 and `color_type::greyscale_alpha` = 4).
+            /// 
+            /// Note that the imported `icc_4.ksy` spec currently in use here supports
+            /// only the ICC.1 v4 specification (as the name suggests), not ICC.1 v2.
+            /// This means that PNG files with an embedded v2 profile (for example
+            /// https://github.com/web-platform-tests/wpt/blob/495d9d7716298588ff49d6e701bf27c5134bde06/css/css-color/support/swap-990000-iCCP.png)
+            /// will fail to parse.
+            /// 
+            /// TODO: extend `icc_4.ksy` to support both v4 and v2 profiles, rename it
+            /// to `icc.ksy`, and use it here.
+            /// </summary>
+            public Icc4 Profile { get { return _profile; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+            public byte[] M_RawProfile { get { return __raw_profile; } }
+            public byte[] M_RawM_RawProfile { get { return __raw__raw_profile; } }
         }
 
         /// <remarks>
@@ -1950,6 +2168,361 @@ namespace Kaitai
             public Png.PlteChunk M_Parent { get { return m_parent; } }
         }
 
+        /// <summary>
+        /// Significant bits (`sBIT`) chunk stores the original number of significant
+        /// bits of the sample values (which can be less than or equal to the sample
+        /// depth). This allows PNG decoders to recover the original data losslessly
+        /// even if the data had a sample depth not directly supported by PNG.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11sBIT">Source</a>
+        /// </remarks>
+        public partial class SbitChunk : KaitaiStruct
+        {
+            public static SbitChunk FromFile(string fileName)
+            {
+                return new SbitChunk(new KaitaiStream(fileName));
+            }
+
+            public SbitChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_sampleDepth = false;
+                _read();
+            }
+            private void _read()
+            {
+                switch (M_Root.Ihdr.ColorType) {
+                case Png.ColorType.Greyscale: {
+                    _significantBits = new SbitGreyscale(false, m_io, this, m_root);
+                    break;
+                }
+                case Png.ColorType.GreyscaleAlpha: {
+                    _significantBits = new SbitGreyscale(true, m_io, this, m_root);
+                    break;
+                }
+                case Png.ColorType.Indexed: {
+                    _significantBits = new SbitTruecolor(false, m_io, this, m_root);
+                    break;
+                }
+                case Png.ColorType.Truecolor: {
+                    _significantBits = new SbitTruecolor(false, m_io, this, m_root);
+                    break;
+                }
+                case Png.ColorType.TruecolorAlpha: {
+                    _significantBits = new SbitTruecolor(true, m_io, this, m_root);
+                    break;
+                }
+                }
+            }
+            private bool f_sampleDepth;
+            private byte _sampleDepth;
+            public byte SampleDepth
+            {
+                get
+                {
+                    if (f_sampleDepth)
+                        return _sampleDepth;
+                    f_sampleDepth = true;
+                    _sampleDepth = (byte) ((M_Root.Ihdr.ColorType == Png.ColorType.Indexed ? 8 : M_Root.Ihdr.BitDepth));
+                    return _sampleDepth;
+                }
+            }
+            private KaitaiStruct _significantBits;
+            private Png m_root;
+            private Png.Chunk m_parent;
+            public KaitaiStruct SignificantBits { get { return _significantBits; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+        public partial class SbitGreyscale : KaitaiStruct
+        {
+            public SbitGreyscale(bool p_hasAlpha, KaitaiStream p__io, Png.SbitChunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _hasAlpha = p_hasAlpha;
+                _read();
+            }
+            private void _read()
+            {
+                _grey = m_io.ReadU1();
+                if (!(_grey >= 1))
+                {
+                    throw new ValidationLessThanError(1, _grey, m_io, "/types/sbit_greyscale/seq/0");
+                }
+                if (!(_grey <= M_Parent.SampleDepth))
+                {
+                    throw new ValidationGreaterThanError(M_Parent.SampleDepth, _grey, m_io, "/types/sbit_greyscale/seq/0");
+                }
+                if (HasAlpha) {
+                    _alpha = m_io.ReadU1();
+                    if (!(_alpha >= 1))
+                    {
+                        throw new ValidationLessThanError(1, _alpha, m_io, "/types/sbit_greyscale/seq/1");
+                    }
+                    if (!(_alpha <= M_Parent.SampleDepth))
+                    {
+                        throw new ValidationGreaterThanError(M_Parent.SampleDepth, _alpha, m_io, "/types/sbit_greyscale/seq/1");
+                    }
+                }
+            }
+            private byte _grey;
+            private byte? _alpha;
+            private bool _hasAlpha;
+            private Png m_root;
+            private Png.SbitChunk m_parent;
+            public byte Grey { get { return _grey; } }
+            public byte? Alpha { get { return _alpha; } }
+            public bool HasAlpha { get { return _hasAlpha; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.SbitChunk M_Parent { get { return m_parent; } }
+        }
+        public partial class SbitTruecolor : KaitaiStruct
+        {
+            public SbitTruecolor(bool p_hasAlpha, KaitaiStream p__io, Png.SbitChunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _hasAlpha = p_hasAlpha;
+                _read();
+            }
+            private void _read()
+            {
+                _red = m_io.ReadU1();
+                if (!(_red >= 1))
+                {
+                    throw new ValidationLessThanError(1, _red, m_io, "/types/sbit_truecolor/seq/0");
+                }
+                if (!(_red <= M_Parent.SampleDepth))
+                {
+                    throw new ValidationGreaterThanError(M_Parent.SampleDepth, _red, m_io, "/types/sbit_truecolor/seq/0");
+                }
+                _green = m_io.ReadU1();
+                if (!(_green >= 1))
+                {
+                    throw new ValidationLessThanError(1, _green, m_io, "/types/sbit_truecolor/seq/1");
+                }
+                if (!(_green <= M_Parent.SampleDepth))
+                {
+                    throw new ValidationGreaterThanError(M_Parent.SampleDepth, _green, m_io, "/types/sbit_truecolor/seq/1");
+                }
+                _blue = m_io.ReadU1();
+                if (!(_blue >= 1))
+                {
+                    throw new ValidationLessThanError(1, _blue, m_io, "/types/sbit_truecolor/seq/2");
+                }
+                if (!(_blue <= M_Parent.SampleDepth))
+                {
+                    throw new ValidationGreaterThanError(M_Parent.SampleDepth, _blue, m_io, "/types/sbit_truecolor/seq/2");
+                }
+                if (HasAlpha) {
+                    _alpha = m_io.ReadU1();
+                    if (!(_alpha >= 1))
+                    {
+                        throw new ValidationLessThanError(1, _alpha, m_io, "/types/sbit_truecolor/seq/3");
+                    }
+                    if (!(_alpha <= M_Parent.SampleDepth))
+                    {
+                        throw new ValidationGreaterThanError(M_Parent.SampleDepth, _alpha, m_io, "/types/sbit_truecolor/seq/3");
+                    }
+                }
+            }
+            private byte _red;
+            private byte _green;
+            private byte _blue;
+            private byte? _alpha;
+            private bool _hasAlpha;
+            private Png m_root;
+            private Png.SbitChunk m_parent;
+            public byte Red { get { return _red; } }
+            public byte Green { get { return _green; } }
+            public byte Blue { get { return _blue; } }
+            public byte? Alpha { get { return _alpha; } }
+            public bool HasAlpha { get { return _hasAlpha; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.SbitChunk M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Suggested palette (`sPLT`) chunk.
+        /// 
+        /// Multiple `sPLT` chunks are permitted, but each must have a different
+        /// palette name.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11sPLT">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#12Suggested-palettes">Source</a>
+        /// </remarks>
+        public partial class SpltChunk : KaitaiStruct
+        {
+            public static SpltChunk FromFile(string fileName)
+            {
+                return new SpltChunk(new KaitaiStream(fileName));
+            }
+
+            public SpltChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _paletteName = System.Text.Encoding.GetEncoding("ISO-8859-1").GetString(m_io.ReadBytesTerm(0, false, true, true));
+                _sampleDepth = m_io.ReadU1();
+                if (!( ((_sampleDepth == 8) || (_sampleDepth == 16)) ))
+                {
+                    throw new ValidationNotAnyOfError(_sampleDepth, m_io, "/types/splt_chunk/seq/1");
+                }
+                _entries = new List<SpltEntry>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new SpltEntry(m_io, this, m_root));
+                        i++;
+                    }
+                }
+            }
+            private string _paletteName;
+            private byte _sampleDepth;
+            private List<SpltEntry> _entries;
+            private Png m_root;
+            private Png.Chunk m_parent;
+
+            /// <summary>
+            /// Any convenient name for referring to the palette. It is
+            /// case-sensitive. The palette name may aid the choice of the appropriate
+            /// suggested palette when more than one appears in a PNG datastream.
+            /// 
+            /// Palette names must contain only printable ISO-8859-1 (Latin-1)
+            /// characters and spaces; that is, only code points 0x20-0x7E and
+            /// 0xA1-0xFF are allowed. Leading, trailing, and consecutive spaces are
+            /// not permitted.
+            /// </summary>
+            public string PaletteName { get { return _paletteName; } }
+            public byte SampleDepth { get { return _sampleDepth; } }
+
+            /// <summary>
+            /// There may be any number of entries. Entries must appear &quot;in decreasing
+            /// order of frequency&quot; (note: strictly speaking, I think the W3C
+            /// specification actually meant &quot;non-increasing&quot;). There is no
+            /// requirement that the entries all be used by the image, nor that they
+            /// all be different.
+            /// 
+            /// The color samples are not premultiplied by alpha, nor are they
+            /// precomposited against any background.
+            /// 
+            /// Entries in `sPLT` use the same gamma value and chromaticity values as
+            /// the PNG image, but may fall outside the range of values used in the
+            /// color space of the PNG image; for example, in a greyscale PNG image,
+            /// each `sPLT` entry would typically have equal red, green, and blue
+            /// values, but this is not required. Similarly, `sPLT` entries can have
+            /// non-opaque alpha values even when the PNG image does not use
+            /// transparency.
+            /// </summary>
+            public List<SpltEntry> Entries { get { return _entries; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+        public partial class SpltEntry : KaitaiStruct
+        {
+            public static SpltEntry FromFile(string fileName)
+            {
+                return new SpltEntry(new KaitaiStream(fileName));
+            }
+
+            public SpltEntry(KaitaiStream p__io, Png.SpltChunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                switch (M_Parent.SampleDepth) {
+                case 8: {
+                    _red = m_io.ReadU1();
+                    break;
+                }
+                default: {
+                    _red = m_io.ReadU2be();
+                    break;
+                }
+                }
+                switch (M_Parent.SampleDepth) {
+                case 8: {
+                    _green = m_io.ReadU1();
+                    break;
+                }
+                default: {
+                    _green = m_io.ReadU2be();
+                    break;
+                }
+                }
+                switch (M_Parent.SampleDepth) {
+                case 8: {
+                    _blue = m_io.ReadU1();
+                    break;
+                }
+                default: {
+                    _blue = m_io.ReadU2be();
+                    break;
+                }
+                }
+                switch (M_Parent.SampleDepth) {
+                case 8: {
+                    _alpha = m_io.ReadU1();
+                    break;
+                }
+                default: {
+                    _alpha = m_io.ReadU2be();
+                    break;
+                }
+                }
+                _freq = m_io.ReadU2be();
+            }
+            private ushort _red;
+            private ushort _green;
+            private ushort _blue;
+            private ushort _alpha;
+            private ushort _freq;
+            private Png m_root;
+            private Png.SpltChunk m_parent;
+            public ushort Red { get { return _red; } }
+            public ushort Green { get { return _green; } }
+            public ushort Blue { get { return _blue; } }
+
+            /// <summary>
+            /// An alpha value of 0 means fully transparent. An alpha value of 255
+            /// (when `_parent.sample_depth` is 8) or 65535 (when
+            /// `_parent.sample_depth` is 16) means fully opaque.
+            /// </summary>
+            public ushort Alpha { get { return _alpha; } }
+
+            /// <summary>
+            /// Each frequency value is proportional to the fraction of the pixels in
+            /// the image for which that palette entry is the closest match in RGBA
+            /// space, before the image has been composited against any background.
+            /// 
+            /// The exact scale factor is chosen by the PNG encoder; it is recommended
+            /// that the resulting range of individual values reasonably fills the
+            /// range 0 to 65535.
+            /// 
+            /// Zero is a valid frequency meaning that the color is &quot;least important&quot;
+            /// or that it is rarely, if ever, used. When all the frequencies are
+            /// zero, they are meaningless, that is to say, nothing may be inferred
+            /// about the actual frequencies with which the colors appear in the PNG
+            /// image.
+            /// </summary>
+            public ushort Freq { get { return _freq; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.SpltChunk M_Parent { get { return m_parent; } }
+        }
+
         /// <remarks>
         /// Reference: <a href="https://www.w3.org/TR/png/#11sRGB">Source</a>
         /// </remarks>
@@ -2098,6 +2671,216 @@ namespace Kaitai
             public byte Second { get { return _second; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Transparency (`tRNS`) chunk specifies either alpha values that are
+        /// associated with palette entries (for indexed-color images) or a single
+        /// transparent color (for greyscale and truecolor images).
+        /// 
+        /// A `tRNS` chunk must not appear for color types
+        /// `color_type::greyscale_alpha` = 4 and `color_type::truecolor_alpha` = 6,
+        /// since a full alpha channel is already present in those cases.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://www.w3.org/TR/png/#11tRNS">Source</a>
+        /// </remarks>
+        public partial class TrnsChunk : KaitaiStruct
+        {
+            public static TrnsChunk FromFile(string fileName)
+            {
+                return new TrnsChunk(new KaitaiStream(fileName));
+            }
+
+            public TrnsChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_sampleMask = false;
+                _read();
+            }
+            private void _read()
+            {
+                if (M_Root.Ihdr.ColorType == Png.ColorType.Indexed) {
+                    _paletteAlphas = new List<byte>();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _paletteAlphas.Add(m_io.ReadU1());
+                            i++;
+                        }
+                    }
+                }
+                switch (M_Root.Ihdr.ColorType) {
+                case Png.ColorType.Greyscale: {
+                    _transparentColor = new TrnsGreyscaleColor(m_io, this, m_root);
+                    break;
+                }
+                case Png.ColorType.Truecolor: {
+                    _transparentColor = new TrnsTruecolorColor(m_io, this, m_root);
+                    break;
+                }
+                }
+            }
+            private bool f_sampleMask;
+            private int _sampleMask;
+            public int SampleMask
+            {
+                get
+                {
+                    if (f_sampleMask)
+                        return _sampleMask;
+                    f_sampleMask = true;
+                    _sampleMask = (int) ((1 << M_Root.Ihdr.BitDepth) - 1);
+                    return _sampleMask;
+                }
+            }
+            private List<byte> _paletteAlphas;
+            private KaitaiStruct _transparentColor;
+            private Png m_root;
+            private Png.Chunk m_parent;
+
+            /// <summary>
+            /// Alpha values associated with palette entries in the `PLTE` chunk.
+            /// 
+            /// Each entry indicates that pixels of the corresponding palette index
+            /// shall be treated as having the specified alpha value. Alpha values
+            /// have the same interpretation as in an 8-bit full alpha channel: 0 is
+            /// fully transparent, 255 is fully opaque, regardless of image bit depth.
+            /// 
+            /// The `tRNS` chunk must not contain more alpha values than there are
+            /// palette entries, but it may contain fewer values than there are
+            /// palette entries. In this case, the alpha value for all remaining
+            /// palette entries is assumed to be 255. If all palette indices are
+            /// opaque, the `tRNS` chunk may be omitted.
+            /// </summary>
+            public List<byte> PaletteAlphas { get { return _paletteAlphas; } }
+
+            /// <summary>
+            /// Pixels of the specified grey sample value or RGB sample values are
+            /// treated as transparent (equivalent to alpha value 0); all other pixels
+            /// are to be treated as fully opaque (alpha value `2^{bitdepth} - 1`).
+            /// 
+            /// If the image bit depth is less than 16, the least significant bits of
+            /// these sample values are used. Encoders should set the other bits to 0,
+            /// and decoders must mask the other bits to 0 before the value is used.
+            /// 
+            /// Note: in this Kaitai Struct implementation, the bitmask used to
+            /// implement this masking is stored in the value instance `sample_mask`.
+            /// </summary>
+            public KaitaiStruct TransparentColor { get { return _transparentColor; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+        public partial class TrnsGreyscaleColor : KaitaiStruct
+        {
+            public static TrnsGreyscaleColor FromFile(string fileName)
+            {
+                return new TrnsGreyscaleColor(new KaitaiStream(fileName));
+            }
+
+            public TrnsGreyscaleColor(KaitaiStream p__io, Png.TrnsChunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_grey = false;
+                _read();
+            }
+            private void _read()
+            {
+                _greyRaw = m_io.ReadU2be();
+            }
+            private bool f_grey;
+            private int _grey;
+            public int Grey
+            {
+                get
+                {
+                    if (f_grey)
+                        return _grey;
+                    f_grey = true;
+                    _grey = (int) (GreyRaw & M_Parent.SampleMask);
+                    return _grey;
+                }
+            }
+            private ushort _greyRaw;
+            private Png m_root;
+            private Png.TrnsChunk m_parent;
+            public ushort GreyRaw { get { return _greyRaw; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.TrnsChunk M_Parent { get { return m_parent; } }
+        }
+        public partial class TrnsTruecolorColor : KaitaiStruct
+        {
+            public static TrnsTruecolorColor FromFile(string fileName)
+            {
+                return new TrnsTruecolorColor(new KaitaiStream(fileName));
+            }
+
+            public TrnsTruecolorColor(KaitaiStream p__io, Png.TrnsChunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_blue = false;
+                f_green = false;
+                f_red = false;
+                _read();
+            }
+            private void _read()
+            {
+                _redRaw = m_io.ReadU2be();
+                _greenRaw = m_io.ReadU2be();
+                _blueRaw = m_io.ReadU2be();
+            }
+            private bool f_blue;
+            private int _blue;
+            public int Blue
+            {
+                get
+                {
+                    if (f_blue)
+                        return _blue;
+                    f_blue = true;
+                    _blue = (int) (BlueRaw & M_Parent.SampleMask);
+                    return _blue;
+                }
+            }
+            private bool f_green;
+            private int _green;
+            public int Green
+            {
+                get
+                {
+                    if (f_green)
+                        return _green;
+                    f_green = true;
+                    _green = (int) (GreenRaw & M_Parent.SampleMask);
+                    return _green;
+                }
+            }
+            private bool f_red;
+            private int _red;
+            public int Red
+            {
+                get
+                {
+                    if (f_red)
+                        return _red;
+                    f_red = true;
+                    _red = (int) (RedRaw & M_Parent.SampleMask);
+                    return _red;
+                }
+            }
+            private ushort _redRaw;
+            private ushort _greenRaw;
+            private ushort _blueRaw;
+            private Png m_root;
+            private Png.TrnsChunk m_parent;
+            public ushort RedRaw { get { return _redRaw; } }
+            public ushort GreenRaw { get { return _greenRaw; } }
+            public ushort BlueRaw { get { return _blueRaw; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.TrnsChunk M_Parent { get { return m_parent; } }
         }
         private byte[] _magic;
         private uint _ihdrLen;
