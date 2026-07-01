@@ -7,6 +7,62 @@ namespace Kaitai
 {
 
     /// <summary>
+    /// NOTICE: Many of the documentation comments (or docstrings) in this file were
+    /// copied from or derived from the [Portable Network Graphics (PNG) Specification
+    /// (Third Edition)](https://www.w3.org/TR/2025/REC-png-3-20250624/).
+    /// Copyright © 1996-2025 [World Wide Web Consortium](https://www.w3.org/).
+    /// &lt;https://www.w3.org/copyright/software-license-2023/&gt;
+    /// 
+    /// The full text of the license for the original W3C PNG specification is
+    /// provided below:
+    /// 
+    /// &gt; ## Software and Document license - 2023 version
+    /// &gt;
+    /// &gt; This work is being provided by the copyright holders under the following
+    /// &gt; license.
+    /// &gt;
+    /// &gt; ### License
+    /// &gt;
+    /// &gt; By obtaining and/or copying this work, you (the licensee) agree that you
+    /// &gt; have read, understood, and will comply with the following terms and
+    /// &gt; conditions.
+    /// &gt;
+    /// &gt; Permission to copy, modify, and distribute this work, with or without
+    /// &gt; modification, for any purpose and without fee or royalty is hereby granted,
+    /// &gt; provided that you include the following on ALL copies of the work or
+    /// &gt; portions thereof, including modifications:
+    /// &gt;
+    /// &gt; * The full text of this NOTICE in a location viewable to users of the
+    /// &gt;   redistributed or derivative work.
+    /// &gt; * Any pre-existing intellectual property disclaimers, notices, or terms and
+    /// &gt;   conditions. If none exist, the [W3C software and document short
+    /// &gt;   notice](https://www.w3.org/Consortium/Legal/2023/copyright-software-short-notice.html)
+    /// &gt;   should be included.
+    /// &gt; * Notice of any changes or modifications, through a copyright statement on
+    /// &gt;   the new code or document such as &quot;This software or document includes
+    /// &gt;   material copied from or derived from [title and URI of the W3C document].
+    /// &gt;   Copyright © [$year-of-document] [World Wide Web
+    /// &gt;   Consortium](https://www.w3.org/).
+    /// &gt;   &lt;https://www.w3.org/copyright/software-license-2023/&gt;&quot;
+    /// &gt;
+    /// &gt; ### Disclaimers
+    /// &gt;
+    /// &gt; THIS WORK IS PROVIDED &quot;AS IS,&quot; AND COPYRIGHT HOLDERS MAKE NO REPRESENTATIONS
+    /// &gt; OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES
+    /// &gt; OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF
+    /// &gt; THE SOFTWARE OR DOCUMENT WILL NOT INFRINGE ANY THIRD PARTY PATENTS,
+    /// &gt; COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+    /// &gt;
+    /// &gt; COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR
+    /// &gt; CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THE SOFTWARE OR DOCUMENT.
+    /// &gt;
+    /// &gt; The name and trademarks of copyright holders may NOT be used in advertising
+    /// &gt; or publicity pertaining to the work without specific, written prior
+    /// &gt; permission. Title to copyright in this work will at all times remain with
+    /// &gt; copyright holders.
+    /// 
+    /// ---
+    /// 
     /// Test files for APNG can be found at the following locations:
     /// 
     ///   * &lt;https://philip.html5.org/tests/apng/tests.html&gt;
