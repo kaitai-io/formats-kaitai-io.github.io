@@ -77,6 +77,7 @@ class png_t;
  * 
  *   * <https://philip.html5.org/tests/apng/tests.html>
  *   * <http://littlesvr.ca/apng/>
+ * \sa https://www.w3.org/TR/png/ Source
  */
 
 class png_t : public kaitai::kstruct {

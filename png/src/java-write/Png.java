@@ -76,6 +76,7 @@ import java.util.List;
  * 
  *   * <https://philip.html5.org/tests/apng/tests.html>
  *   * <http://littlesvr.ca/apng/>
+ * @see <a href="https://www.w3.org/TR/png/">Source</a>
  */
 public class Png extends KaitaiStruct.ReadWrite {
     public static Png fromFile(String fileName) throws IOException {

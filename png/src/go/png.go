@@ -69,6 +69,7 @@ import (
  * 
  *   * <https://philip.html5.org/tests/apng/tests.html>
  *   * <http://littlesvr.ca/apng/>
+ * @see <a href="https://www.w3.org/TR/png/">Source</a>
  */
 
 type Png_BlendOpValues int

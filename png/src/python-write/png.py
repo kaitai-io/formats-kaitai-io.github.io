@@ -73,6 +73,9 @@ class Png(ReadWriteKaitaiStruct):
     
       * <https://philip.html5.org/tests/apng/tests.html>
       * <http://littlesvr.ca/apng/>
+    
+    .. seealso::
+       Source - https://www.w3.org/TR/png/
     """
 
     class BlendOpValues(IntEnum):

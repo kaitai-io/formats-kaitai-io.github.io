@@ -71,6 +71,7 @@ end
 # 
 #   * <https://philip.html5.org/tests/apng/tests.html>
 #   * <http://littlesvr.ca/apng/>
+# @see https://www.w3.org/TR/png/ Source
 class Png < Kaitai::Struct::Struct
 
   BLEND_OP_VALUES = {

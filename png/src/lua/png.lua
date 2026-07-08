@@ -72,6 +72,7 @@ local stringstream = require("string_stream")
 -- 
 --   * <https://philip.html5.org/tests/apng/tests.html>
 --   * <http://littlesvr.ca/apng/>
+-- See also: Source (https://www.w3.org/TR/png/)
 Png = class.class(KaitaiStruct)
 
 Png.BlendOpValues = enum.Enum {

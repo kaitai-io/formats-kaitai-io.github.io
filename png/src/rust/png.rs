@@ -75,6 +75,7 @@ use super::icc_4::Icc4;
  * 
  *   * <https://philip.html5.org/tests/apng/tests.html>
  *   * <http://littlesvr.ca/apng/>
+ * \sa https://www.w3.org/TR/png/ Source
  */
 
 #[derive(Default, Debug, Clone)]

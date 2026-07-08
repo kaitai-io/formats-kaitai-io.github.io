@@ -70,6 +70,7 @@
  * 
  *   * <https://philip.html5.org/tests/apng/tests.html>
  *   * <http://littlesvr.ca/apng/>
+ * @see {@link https://www.w3.org/TR/png/|Source}
  */
 
 var Png = (function() {

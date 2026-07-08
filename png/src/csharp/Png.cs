@@ -68,6 +68,9 @@ namespace Kaitai
     ///   * &lt;https://philip.html5.org/tests/apng/tests.html&gt;
     ///   * &lt;http://littlesvr.ca/apng/&gt;
     /// </summary>
+    /// <remarks>
+    /// Reference: <a href="https://www.w3.org/TR/png/">Source</a>
+    /// </remarks>
     public partial class Png : KaitaiStruct
     {
         public static Png FromFile(string fileName)
