@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.011_000;
-use Exif;
 use Icc4;
+use Exif;
 use Compress::Zlib;
 use Encode;
 

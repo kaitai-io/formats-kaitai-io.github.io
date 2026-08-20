@@ -7,8 +7,8 @@ class png_t;
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
-#include "exif.h"
 #include "icc_4.h"
+#include "exif.h"
 #include <set>
 #include <vector>
 

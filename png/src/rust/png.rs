@@ -11,8 +11,8 @@ use kaitai::*;
 use std::convert::{TryFrom, TryInto};
 use std::cell::{Ref, Cell, RefCell};
 use std::rc::{Rc, Weak};
-use super::exif::Exif;
 use super::icc_4::Icc4;
+use super::exif::Exif;
 
 /**
  * NOTICE: Many of the documentation comments (or docstrings) in this file were

@@ -10,6 +10,38 @@ if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
     raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Exif(KaitaiStruct):
+    """
+    .. seealso::
+       Exif Version 3.1 - https://www.cipa.jp/std/documents/download_e.html?CIPA_DC-008-2026-E
+    
+    
+    .. seealso::
+       Exif Version 3.0 - https://www.cipa.jp/std/documents/download_e.html?CIPA_DC-008-2024-E
+    
+    
+    .. seealso::
+       Exif Version 2.32 - https://web.archive.org/web/20190624045241id_/https://www.cipa.jp/std/documents/e/DC-008-Translation-2019-E.pdf
+    
+    
+    .. seealso::
+       Exif Version 2.31 - https://web.archive.org/web/20190712232333id_/https://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf
+    
+    
+    .. seealso::
+       Exif Version 2.3 (with Corrigendum at the end) - https://www.cipa.jp/std/documents/e/DC-008-2012_E_C.pdf
+    
+    
+    .. seealso::
+       Exif Version 2.21 (2003 draft) - https://web.archive.org/web/20051228234707id_/https://tsc.jeita.or.jp/avs/data/cp3451_1.pdf
+    
+    
+    .. seealso::
+       Exif Version 2.2 - https://web.archive.org/web/20131018091152id_/https://exif.org/Exif2-2.PDF
+    
+    
+    .. seealso::
+       Exif Version 2.1 - https://web.archive.org/web/20131111073619id_/https://exif.org/Exif2-1.PDF
+    """
     def __init__(self, _io, _parent=None, _root=None):
         super(Exif, self).__init__(_io)
         self._parent = _parent

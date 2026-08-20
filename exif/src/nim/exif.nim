@@ -517,6 +517,17 @@ proc data*(this: Exif_ExifBody_IfdField): seq[byte]
 proc isImmediateData*(this: Exif_ExifBody_IfdField): bool
 proc typeByteLength*(this: Exif_ExifBody_IfdField): int8
 
+
+##[
+@see <a href="https://www.cipa.jp/std/documents/download_e.html?CIPA_DC-008-2026-E">Exif Version 3.1</a>
+@see <a href="https://www.cipa.jp/std/documents/download_e.html?CIPA_DC-008-2024-E">Exif Version 3.0</a>
+@see <a href="https://web.archive.org/web/20190624045241id_/https://www.cipa.jp/std/documents/e/DC-008-Translation-2019-E.pdf">Exif Version 2.32</a>
+@see <a href="https://web.archive.org/web/20190712232333id_/https://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf">Exif Version 2.31</a>
+@see <a href="https://www.cipa.jp/std/documents/e/DC-008-2012_E_C.pdf">Exif Version 2.3 (with Corrigendum at the end)</a>
+@see <a href="https://web.archive.org/web/20051228234707id_/https://tsc.jeita.or.jp/avs/data/cp3451_1.pdf">Exif Version 2.21 (2003 draft)</a>
+@see <a href="https://web.archive.org/web/20131018091152id_/https://exif.org/Exif2-2.PDF">Exif Version 2.2</a>
+@see <a href="https://web.archive.org/web/20131111073619id_/https://exif.org/Exif2-1.PDF">Exif Version 2.1</a>
+]##
 proc read*(_: typedesc[Exif], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Exif =
   template this: untyped = result
   this = new(Exif)

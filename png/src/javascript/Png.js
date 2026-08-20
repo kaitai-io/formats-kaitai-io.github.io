@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['exports', 'kaitai-struct/KaitaiStream', './Exif', './Icc4'], factory);
+    define(['exports', 'kaitai-struct/KaitaiStream', './Icc4', './Exif'], factory);
   } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
-    factory(exports, require('kaitai-struct/KaitaiStream'), require('./Exif'), require('./Icc4'));
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./Icc4'), require('./Exif'));
   } else {
-    factory(root.Png || (root.Png = {}), root.KaitaiStream, root.Exif || (root.Exif = {}), root.Icc4 || (root.Icc4 = {}));
+    factory(root.Png || (root.Png = {}), root.KaitaiStream, root.Icc4 || (root.Icc4 = {}), root.Exif || (root.Exif = {}));
   }
-})(typeof self !== 'undefined' ? self : this, function (Png_, KaitaiStream, Exif_, Icc4_) {
+})(typeof self !== 'undefined' ? self : this, function (Png_, KaitaiStream, Icc4_, Exif_) {
 /**
  * NOTICE: Many of the documentation comments (or docstrings) in this file were
  * copied from or derived from the [Portable Network Graphics (PNG) Specification

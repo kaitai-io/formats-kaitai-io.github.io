@@ -3,8 +3,8 @@
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-import exif
 import icc_4
+import exif
 from enum import IntEnum
 import zlib
 

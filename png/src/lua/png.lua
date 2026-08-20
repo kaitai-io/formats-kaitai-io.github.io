@@ -4,8 +4,8 @@
 
 local class = require("class")
 require("kaitaistruct")
-require("exif")
 require("icc_4")
+require("exif")
 local enum = require("enum")
 local str_decode = require("string_decode")
 local utils = require("utils")
