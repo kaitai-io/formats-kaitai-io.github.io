@@ -3,10 +3,20 @@
 import (
 	"github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
 	"io"
+	"bytes"
 )
 
 
 /**
+ * Sample files (numbers in parentheses show how many files per extension contain
+ * Exif metadata out of the total):
+ * 
+ * * <https://github.com/ianare/exif-py/tree/a69bf74770caf6b333221658f5092ed69f99faac/tests/resources/jpg> (84/93 .jpg, 1/1 .jpeg)
+ * * <https://github.com/exiftool/exiftool/tree/2200871d9cef988051d2a99d67df3bda6cbb30a8/t/images> (34/41 .jpg, 0/1 .png)
+ * * <https://github.com/Exiv2/exiv2/tree/648ada43dcb35ce6077f38183ace52d5e2071f64/test/data> (85/155 .jpg, 5/23 .png)
+ * * <https://github.com/python-pillow/Pillow/tree/807d689a83738027b6f6e0f219a6a6dd30e01c08/Tests/images> (36/55 .jpg, 3/420 .png)
+ * * <https://github.com/drewnoakes/metadata-extractor-images/tree/651ad0e67aa8d43d358ad05f9bc07b52d8b9ac6e/jpg> (335/430 .jpg)
+ * * <https://github.com/libexif/libexif-testsuite/tree/8c1f5bbc18d2cbc80b01b3f9b3eb29546310acf2> (15/18 .jpg)
  * @see <a href="https://www.cipa.jp/std/documents/download_e.html?CIPA_DC-008-2026-E">Exif Version 3.1</a>
  * @see <a href="https://www.cipa.jp/std/documents/download_e.html?CIPA_DC-008-2024-E">Exif Version 3.0</a>
  * @see <a href="https://web.archive.org/web/20190624045241id_/https://www.cipa.jp/std/documents/e/DC-008-Translation-2019-E.pdf">Exif Version 2.32</a>
@@ -16,6 +26,539 @@ import (
  * @see <a href="https://web.archive.org/web/20131018091152id_/https://exif.org/Exif2-2.PDF">Exif Version 2.2</a>
  * @see <a href="https://web.archive.org/web/20131111073619id_/https://exif.org/Exif2-1.PDF">Exif Version 2.1</a>
  */
+
+type Exif_FieldType int
+const (
+	Exif_FieldType__Byte Exif_FieldType = 1
+	Exif_FieldType__Ascii Exif_FieldType = 2
+	Exif_FieldType__Short Exif_FieldType = 3
+	Exif_FieldType__Long Exif_FieldType = 4
+	Exif_FieldType__Rational Exif_FieldType = 5
+	Exif_FieldType__Sbyte Exif_FieldType = 6
+	Exif_FieldType__Undefined Exif_FieldType = 7
+	Exif_FieldType__Sshort Exif_FieldType = 8
+	Exif_FieldType__Slong Exif_FieldType = 9
+	Exif_FieldType__Srational Exif_FieldType = 10
+	Exif_FieldType__Float Exif_FieldType = 11
+	Exif_FieldType__Double Exif_FieldType = 12
+	Exif_FieldType__Ifd Exif_FieldType = 13
+	Exif_FieldType__Utf8 Exif_FieldType = 129
+)
+var values_Exif_FieldType = map[Exif_FieldType]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 129: {}}
+func (v Exif_FieldType) isDefined() bool {
+	_, ok := values_Exif_FieldType[v]
+	return ok
+}
+
+type Exif_GpsTag int
+const (
+	Exif_GpsTag__GpsVersionId Exif_GpsTag = 0
+	Exif_GpsTag__GpsLatitudeRef Exif_GpsTag = 1
+	Exif_GpsTag__GpsLatitude Exif_GpsTag = 2
+	Exif_GpsTag__GpsLongitudeRef Exif_GpsTag = 3
+	Exif_GpsTag__GpsLongitude Exif_GpsTag = 4
+	Exif_GpsTag__GpsAltitudeRef Exif_GpsTag = 5
+	Exif_GpsTag__GpsAltitude Exif_GpsTag = 6
+	Exif_GpsTag__GpsTimeStamp Exif_GpsTag = 7
+	Exif_GpsTag__GpsSatellites Exif_GpsTag = 8
+	Exif_GpsTag__GpsStatus Exif_GpsTag = 9
+	Exif_GpsTag__GpsMeasureMode Exif_GpsTag = 10
+	Exif_GpsTag__GpsDop Exif_GpsTag = 11
+	Exif_GpsTag__GpsSpeedRef Exif_GpsTag = 12
+	Exif_GpsTag__GpsSpeed Exif_GpsTag = 13
+	Exif_GpsTag__GpsTrackRef Exif_GpsTag = 14
+	Exif_GpsTag__GpsTrack Exif_GpsTag = 15
+	Exif_GpsTag__GpsImgDirectionRef Exif_GpsTag = 16
+	Exif_GpsTag__GpsImgDirection Exif_GpsTag = 17
+	Exif_GpsTag__GpsMapDatum Exif_GpsTag = 18
+	Exif_GpsTag__GpsDestLatitudeRef Exif_GpsTag = 19
+	Exif_GpsTag__GpsDestLatitude Exif_GpsTag = 20
+	Exif_GpsTag__GpsDestLongitudeRef Exif_GpsTag = 21
+	Exif_GpsTag__GpsDestLongitude Exif_GpsTag = 22
+	Exif_GpsTag__GpsDestBearingRef Exif_GpsTag = 23
+	Exif_GpsTag__GpsDestBearing Exif_GpsTag = 24
+	Exif_GpsTag__GpsDestDistanceRef Exif_GpsTag = 25
+	Exif_GpsTag__GpsDestDistance Exif_GpsTag = 26
+	Exif_GpsTag__GpsProcessingMethod Exif_GpsTag = 27
+	Exif_GpsTag__GpsAreaInformation Exif_GpsTag = 28
+	Exif_GpsTag__GpsDateStamp Exif_GpsTag = 29
+	Exif_GpsTag__GpsDifferential Exif_GpsTag = 30
+	Exif_GpsTag__GpsHPositioningError Exif_GpsTag = 31
+)
+var values_Exif_GpsTag = map[Exif_GpsTag]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}}
+func (v Exif_GpsTag) isDefined() bool {
+	_, ok := values_Exif_GpsTag[v]
+	return ok
+}
+
+type Exif_Tag int
+const (
+	Exif_Tag__InteropIndex Exif_Tag = 1
+	Exif_Tag__InteropVersion Exif_Tag = 2
+	Exif_Tag__ImageWidth Exif_Tag = 256
+	Exif_Tag__ImageHeight Exif_Tag = 257
+	Exif_Tag__BitsPerSample Exif_Tag = 258
+	Exif_Tag__Compression Exif_Tag = 259
+	Exif_Tag__PhotometricInterpretation Exif_Tag = 262
+	Exif_Tag__Thresholding Exif_Tag = 263
+	Exif_Tag__CellWidth Exif_Tag = 264
+	Exif_Tag__CellLength Exif_Tag = 265
+	Exif_Tag__FillOrder Exif_Tag = 266
+	Exif_Tag__DocumentName Exif_Tag = 269
+	Exif_Tag__ImageDescription Exif_Tag = 270
+	Exif_Tag__Make Exif_Tag = 271
+	Exif_Tag__Model Exif_Tag = 272
+	Exif_Tag__StripOffsets Exif_Tag = 273
+	Exif_Tag__Orientation Exif_Tag = 274
+	Exif_Tag__SamplesPerPixel Exif_Tag = 277
+	Exif_Tag__RowsPerStrip Exif_Tag = 278
+	Exif_Tag__StripByteCounts Exif_Tag = 279
+	Exif_Tag__MinSampleValue Exif_Tag = 280
+	Exif_Tag__MaxSampleValue Exif_Tag = 281
+	Exif_Tag__XResolution Exif_Tag = 282
+	Exif_Tag__YResolution Exif_Tag = 283
+	Exif_Tag__PlanarConfiguration Exif_Tag = 284
+	Exif_Tag__PageName Exif_Tag = 285
+	Exif_Tag__XPosition Exif_Tag = 286
+	Exif_Tag__YPosition Exif_Tag = 287
+	Exif_Tag__FreeOffsets Exif_Tag = 288
+	Exif_Tag__FreeByteCounts Exif_Tag = 289
+	Exif_Tag__GrayResponseUnit Exif_Tag = 290
+	Exif_Tag__GrayResponseCurve Exif_Tag = 291
+	Exif_Tag__T4Options Exif_Tag = 292
+	Exif_Tag__T6Options Exif_Tag = 293
+	Exif_Tag__ResolutionUnit Exif_Tag = 296
+	Exif_Tag__PageNumber Exif_Tag = 297
+	Exif_Tag__ColorResponseUnit Exif_Tag = 300
+	Exif_Tag__TransferFunction Exif_Tag = 301
+	Exif_Tag__Software Exif_Tag = 305
+	Exif_Tag__ModifyDate Exif_Tag = 306
+	Exif_Tag__Artist Exif_Tag = 315
+	Exif_Tag__HostComputer Exif_Tag = 316
+	Exif_Tag__Predictor Exif_Tag = 317
+	Exif_Tag__WhitePoint Exif_Tag = 318
+	Exif_Tag__PrimaryChromaticities Exif_Tag = 319
+	Exif_Tag__ColorMap Exif_Tag = 320
+	Exif_Tag__HalftoneHints Exif_Tag = 321
+	Exif_Tag__TileWidth Exif_Tag = 322
+	Exif_Tag__TileLength Exif_Tag = 323
+	Exif_Tag__TileOffsets Exif_Tag = 324
+	Exif_Tag__TileByteCounts Exif_Tag = 325
+	Exif_Tag__BadFaxLines Exif_Tag = 326
+	Exif_Tag__CleanFaxData Exif_Tag = 327
+	Exif_Tag__ConsecutiveBadFaxLines Exif_Tag = 328
+	Exif_Tag__SubIfd Exif_Tag = 330
+	Exif_Tag__InkSet Exif_Tag = 332
+	Exif_Tag__InkNames Exif_Tag = 333
+	Exif_Tag__NumberofInks Exif_Tag = 334
+	Exif_Tag__DotRange Exif_Tag = 336
+	Exif_Tag__TargetPrinter Exif_Tag = 337
+	Exif_Tag__ExtraSamples Exif_Tag = 338
+	Exif_Tag__SampleFormat Exif_Tag = 339
+	Exif_Tag__SMinSampleValue Exif_Tag = 340
+	Exif_Tag__SMaxSampleValue Exif_Tag = 341
+	Exif_Tag__TransferRange Exif_Tag = 342
+	Exif_Tag__ClipPath Exif_Tag = 343
+	Exif_Tag__XClipPathUnits Exif_Tag = 344
+	Exif_Tag__YClipPathUnits Exif_Tag = 345
+	Exif_Tag__Indexed Exif_Tag = 346
+	Exif_Tag__JpegTables Exif_Tag = 347
+	Exif_Tag__OpiProxy Exif_Tag = 351
+	Exif_Tag__GlobalParametersIfd Exif_Tag = 400
+	Exif_Tag__ProfileType Exif_Tag = 401
+	Exif_Tag__FaxProfile Exif_Tag = 402
+	Exif_Tag__CodingMethods Exif_Tag = 403
+	Exif_Tag__VersionYear Exif_Tag = 404
+	Exif_Tag__ModeNumber Exif_Tag = 405
+	Exif_Tag__Decode Exif_Tag = 433
+	Exif_Tag__DefaultImageColor Exif_Tag = 434
+	Exif_Tag__T82Options Exif_Tag = 435
+	Exif_Tag__JpegTables2 Exif_Tag = 437
+	Exif_Tag__JpegProc Exif_Tag = 512
+	Exif_Tag__ThumbnailOffset Exif_Tag = 513
+	Exif_Tag__ThumbnailLength Exif_Tag = 514
+	Exif_Tag__JpegRestartInterval Exif_Tag = 515
+	Exif_Tag__JpegLosslessPredictors Exif_Tag = 517
+	Exif_Tag__JpegPointTransforms Exif_Tag = 518
+	Exif_Tag__JpegqTables Exif_Tag = 519
+	Exif_Tag__JpegdcTables Exif_Tag = 520
+	Exif_Tag__JpegacTables Exif_Tag = 521
+	Exif_Tag__YCbCrCoefficients Exif_Tag = 529
+	Exif_Tag__YCbCrSubSampling Exif_Tag = 530
+	Exif_Tag__YCbCrPositioning Exif_Tag = 531
+	Exif_Tag__ReferenceBlackWhite Exif_Tag = 532
+	Exif_Tag__StripRowCounts Exif_Tag = 559
+	Exif_Tag__ApplicationNotes Exif_Tag = 700
+	Exif_Tag__UsptoMiscellaneous Exif_Tag = 999
+	Exif_Tag__RelatedImageFileFormat Exif_Tag = 4096
+	Exif_Tag__RelatedImageWidth Exif_Tag = 4097
+	Exif_Tag__RelatedImageHeight Exif_Tag = 4098
+	Exif_Tag__Rating Exif_Tag = 18246
+	Exif_Tag__XpDipXml Exif_Tag = 18247
+	Exif_Tag__StitchInfo Exif_Tag = 18248
+	Exif_Tag__RatingPercent Exif_Tag = 18249
+	Exif_Tag__SonyRawFileType Exif_Tag = 28672
+	Exif_Tag__LightFalloffParams Exif_Tag = 28722
+	Exif_Tag__ChromaticAberrationCorrParams Exif_Tag = 28725
+	Exif_Tag__DistortionCorrParams Exif_Tag = 28727
+	Exif_Tag__ImageId Exif_Tag = 32781
+	Exif_Tag__WangTag1 Exif_Tag = 32931
+	Exif_Tag__WangAnnotation Exif_Tag = 32932
+	Exif_Tag__WangTag3 Exif_Tag = 32933
+	Exif_Tag__WangTag4 Exif_Tag = 32934
+	Exif_Tag__ImageReferencePoints Exif_Tag = 32953
+	Exif_Tag__RegionXformTackPoint Exif_Tag = 32954
+	Exif_Tag__WarpQuadrilateral Exif_Tag = 32955
+	Exif_Tag__AffineTransformMat Exif_Tag = 32956
+	Exif_Tag__Matteing Exif_Tag = 32995
+	Exif_Tag__DataType Exif_Tag = 32996
+	Exif_Tag__ImageDepth Exif_Tag = 32997
+	Exif_Tag__TileDepth Exif_Tag = 32998
+	Exif_Tag__ImageFullWidth Exif_Tag = 33300
+	Exif_Tag__ImageFullHeight Exif_Tag = 33301
+	Exif_Tag__TextureFormat Exif_Tag = 33302
+	Exif_Tag__WrapModes Exif_Tag = 33303
+	Exif_Tag__FovCot Exif_Tag = 33304
+	Exif_Tag__MatrixWorldToScreen Exif_Tag = 33305
+	Exif_Tag__MatrixWorldToCamera Exif_Tag = 33306
+	Exif_Tag__Model2 Exif_Tag = 33405
+	Exif_Tag__CfaRepeatPatternDim Exif_Tag = 33421
+	Exif_Tag__CfaPattern2 Exif_Tag = 33422
+	Exif_Tag__BatteryLevel Exif_Tag = 33423
+	Exif_Tag__KodakIfd Exif_Tag = 33424
+	Exif_Tag__Copyright Exif_Tag = 33432
+	Exif_Tag__ExposureTime Exif_Tag = 33434
+	Exif_Tag__FNumber Exif_Tag = 33437
+	Exif_Tag__MdFileTag Exif_Tag = 33445
+	Exif_Tag__MdScalePixel Exif_Tag = 33446
+	Exif_Tag__MdColorTable Exif_Tag = 33447
+	Exif_Tag__MdLabName Exif_Tag = 33448
+	Exif_Tag__MdSampleInfo Exif_Tag = 33449
+	Exif_Tag__MdPrepDate Exif_Tag = 33450
+	Exif_Tag__MdPrepTime Exif_Tag = 33451
+	Exif_Tag__MdFileUnits Exif_Tag = 33452
+	Exif_Tag__PixelScale Exif_Tag = 33550
+	Exif_Tag__AdventScale Exif_Tag = 33589
+	Exif_Tag__AdventRevision Exif_Tag = 33590
+	Exif_Tag__Uic1Tag Exif_Tag = 33628
+	Exif_Tag__Uic2Tag Exif_Tag = 33629
+	Exif_Tag__Uic3Tag Exif_Tag = 33630
+	Exif_Tag__Uic4Tag Exif_Tag = 33631
+	Exif_Tag__IptcNaa Exif_Tag = 33723
+	Exif_Tag__IntergraphPacketData Exif_Tag = 33918
+	Exif_Tag__IntergraphFlagRegisters Exif_Tag = 33919
+	Exif_Tag__IntergraphMatrix Exif_Tag = 33920
+	Exif_Tag__IngrReserved Exif_Tag = 33921
+	Exif_Tag__ModelTiePoint Exif_Tag = 33922
+	Exif_Tag__Site Exif_Tag = 34016
+	Exif_Tag__ColorSequence Exif_Tag = 34017
+	Exif_Tag__It8Header Exif_Tag = 34018
+	Exif_Tag__RasterPadding Exif_Tag = 34019
+	Exif_Tag__BitsPerRunLength Exif_Tag = 34020
+	Exif_Tag__BitsPerExtendedRunLength Exif_Tag = 34021
+	Exif_Tag__ColorTable Exif_Tag = 34022
+	Exif_Tag__ImageColorIndicator Exif_Tag = 34023
+	Exif_Tag__BackgroundColorIndicator Exif_Tag = 34024
+	Exif_Tag__ImageColorValue Exif_Tag = 34025
+	Exif_Tag__BackgroundColorValue Exif_Tag = 34026
+	Exif_Tag__PixelIntensityRange Exif_Tag = 34027
+	Exif_Tag__TransparencyIndicator Exif_Tag = 34028
+	Exif_Tag__ColorCharacterization Exif_Tag = 34029
+	Exif_Tag__HcUsage Exif_Tag = 34030
+	Exif_Tag__TrapIndicator Exif_Tag = 34031
+	Exif_Tag__CmykEquivalent Exif_Tag = 34032
+	Exif_Tag__SemInfo Exif_Tag = 34118
+	Exif_Tag__AfcpIptc Exif_Tag = 34152
+	Exif_Tag__PixelMagicJbigOptions Exif_Tag = 34232
+	Exif_Tag__JplCartoIfd Exif_Tag = 34263
+	Exif_Tag__ModelTransform Exif_Tag = 34264
+	Exif_Tag__WbGrgbLevels Exif_Tag = 34306
+	Exif_Tag__LeafData Exif_Tag = 34310
+	Exif_Tag__PhotoshopSettings Exif_Tag = 34377
+	Exif_Tag__ExifOffset Exif_Tag = 34665
+	Exif_Tag__IccProfile Exif_Tag = 34675
+	Exif_Tag__TiffFxExtensions Exif_Tag = 34687
+	Exif_Tag__MultiProfiles Exif_Tag = 34688
+	Exif_Tag__SharedData Exif_Tag = 34689
+	Exif_Tag__T88Options Exif_Tag = 34690
+	Exif_Tag__ImageLayer Exif_Tag = 34732
+	Exif_Tag__GeoTiffDirectory Exif_Tag = 34735
+	Exif_Tag__GeoTiffDoubleParams Exif_Tag = 34736
+	Exif_Tag__GeoTiffAsciiParams Exif_Tag = 34737
+	Exif_Tag__JbigOptions Exif_Tag = 34750
+	Exif_Tag__ExposureProgram Exif_Tag = 34850
+	Exif_Tag__SpectralSensitivity Exif_Tag = 34852
+	Exif_Tag__GpsInfo Exif_Tag = 34853
+	Exif_Tag__Iso Exif_Tag = 34855
+	Exif_Tag__OptoElectricConvFactor Exif_Tag = 34856
+	Exif_Tag__Interlace Exif_Tag = 34857
+	Exif_Tag__TimeZoneOffset Exif_Tag = 34858
+	Exif_Tag__SelfTimerMode Exif_Tag = 34859
+	Exif_Tag__SensitivityType Exif_Tag = 34864
+	Exif_Tag__StandardOutputSensitivity Exif_Tag = 34865
+	Exif_Tag__RecommendedExposureIndex Exif_Tag = 34866
+	Exif_Tag__IsoSpeed Exif_Tag = 34867
+	Exif_Tag__IsoSpeedLatitudeyyy Exif_Tag = 34868
+	Exif_Tag__IsoSpeedLatitudezzz Exif_Tag = 34869
+	Exif_Tag__FaxRecvParams Exif_Tag = 34908
+	Exif_Tag__FaxSubAddress Exif_Tag = 34909
+	Exif_Tag__FaxRecvTime Exif_Tag = 34910
+	Exif_Tag__FedexEdr Exif_Tag = 34929
+	Exif_Tag__LeafSubIfd Exif_Tag = 34954
+	Exif_Tag__ExifVersion Exif_Tag = 36864
+	Exif_Tag__DateTimeOriginal Exif_Tag = 36867
+	Exif_Tag__CreateDate Exif_Tag = 36868
+	Exif_Tag__GooglePlusUploadCode Exif_Tag = 36873
+	Exif_Tag__OffsetTime Exif_Tag = 36880
+	Exif_Tag__OffsetTimeOriginal Exif_Tag = 36881
+	Exif_Tag__OffsetTimeDigitized Exif_Tag = 36882
+	Exif_Tag__ComponentsConfiguration Exif_Tag = 37121
+	Exif_Tag__CompressedBitsPerPixel Exif_Tag = 37122
+	Exif_Tag__ShutterSpeedValue Exif_Tag = 37377
+	Exif_Tag__ApertureValue Exif_Tag = 37378
+	Exif_Tag__BrightnessValue Exif_Tag = 37379
+	Exif_Tag__ExposureCompensation Exif_Tag = 37380
+	Exif_Tag__MaxApertureValue Exif_Tag = 37381
+	Exif_Tag__SubjectDistance Exif_Tag = 37382
+	Exif_Tag__MeteringMode Exif_Tag = 37383
+	Exif_Tag__LightSource Exif_Tag = 37384
+	Exif_Tag__Flash Exif_Tag = 37385
+	Exif_Tag__FocalLength Exif_Tag = 37386
+	Exif_Tag__FlashEnergy Exif_Tag = 37387
+	Exif_Tag__SpatialFrequencyResponse Exif_Tag = 37388
+	Exif_Tag__Noise Exif_Tag = 37389
+	Exif_Tag__FocalPlaneXResolution Exif_Tag = 37390
+	Exif_Tag__FocalPlaneYResolution Exif_Tag = 37391
+	Exif_Tag__FocalPlaneResolutionUnit Exif_Tag = 37392
+	Exif_Tag__ImageNumber Exif_Tag = 37393
+	Exif_Tag__SecurityClassification Exif_Tag = 37394
+	Exif_Tag__ImageHistory Exif_Tag = 37395
+	Exif_Tag__SubjectArea Exif_Tag = 37396
+	Exif_Tag__ExposureIndex Exif_Tag = 37397
+	Exif_Tag__TiffEpStandardId Exif_Tag = 37398
+	Exif_Tag__SensingMethod Exif_Tag = 37399
+	Exif_Tag__Cip3DataFile Exif_Tag = 37434
+	Exif_Tag__Cip3Sheet Exif_Tag = 37435
+	Exif_Tag__Cip3Side Exif_Tag = 37436
+	Exif_Tag__StoNits Exif_Tag = 37439
+	Exif_Tag__MakerNote Exif_Tag = 37500
+	Exif_Tag__UserComment Exif_Tag = 37510
+	Exif_Tag__SubSecTime Exif_Tag = 37520
+	Exif_Tag__SubSecTimeOriginal Exif_Tag = 37521
+	Exif_Tag__SubSecTimeDigitized Exif_Tag = 37522
+	Exif_Tag__MsDocumentText Exif_Tag = 37679
+	Exif_Tag__MsPropertySetStorage Exif_Tag = 37680
+	Exif_Tag__MsDocumentTextPosition Exif_Tag = 37681
+	Exif_Tag__ImageSourceData Exif_Tag = 37724
+	Exif_Tag__AmbientTemperature Exif_Tag = 37888
+	Exif_Tag__Humidity Exif_Tag = 37889
+	Exif_Tag__Pressure Exif_Tag = 37890
+	Exif_Tag__WaterDepth Exif_Tag = 37891
+	Exif_Tag__Acceleration Exif_Tag = 37892
+	Exif_Tag__CameraElevationAngle Exif_Tag = 37893
+	Exif_Tag__XpTitle Exif_Tag = 40091
+	Exif_Tag__XpComment Exif_Tag = 40092
+	Exif_Tag__XpAuthor Exif_Tag = 40093
+	Exif_Tag__XpKeywords Exif_Tag = 40094
+	Exif_Tag__XpSubject Exif_Tag = 40095
+	Exif_Tag__FlashpixVersion Exif_Tag = 40960
+	Exif_Tag__ColorSpace Exif_Tag = 40961
+	Exif_Tag__ExifImageWidth Exif_Tag = 40962
+	Exif_Tag__ExifImageHeight Exif_Tag = 40963
+	Exif_Tag__RelatedSoundFile Exif_Tag = 40964
+	Exif_Tag__InteropOffset Exif_Tag = 40965
+	Exif_Tag__SamsungRawPointersOffset Exif_Tag = 40976
+	Exif_Tag__SamsungRawPointersLength Exif_Tag = 40977
+	Exif_Tag__SamsungRawByteOrder Exif_Tag = 41217
+	Exif_Tag__SamsungRawUnknown Exif_Tag = 41218
+	Exif_Tag__FlashEnergy2 Exif_Tag = 41483
+	Exif_Tag__SpatialFrequencyResponse2 Exif_Tag = 41484
+	Exif_Tag__Noise2 Exif_Tag = 41485
+	Exif_Tag__FocalPlaneXResolution2 Exif_Tag = 41486
+	Exif_Tag__FocalPlaneYResolution2 Exif_Tag = 41487
+	Exif_Tag__FocalPlaneResolutionUnit2 Exif_Tag = 41488
+	Exif_Tag__ImageNumber2 Exif_Tag = 41489
+	Exif_Tag__SecurityClassification2 Exif_Tag = 41490
+	Exif_Tag__ImageHistory2 Exif_Tag = 41491
+	Exif_Tag__SubjectLocation Exif_Tag = 41492
+	Exif_Tag__ExposureIndex2 Exif_Tag = 41493
+	Exif_Tag__TiffEpStandardId2 Exif_Tag = 41494
+	Exif_Tag__SensingMethod2 Exif_Tag = 41495
+	Exif_Tag__FileSource Exif_Tag = 41728
+	Exif_Tag__SceneType Exif_Tag = 41729
+	Exif_Tag__CfaPattern Exif_Tag = 41730
+	Exif_Tag__CustomRendered Exif_Tag = 41985
+	Exif_Tag__ExposureMode Exif_Tag = 41986
+	Exif_Tag__WhiteBalance Exif_Tag = 41987
+	Exif_Tag__DigitalZoomRatio Exif_Tag = 41988
+	Exif_Tag__FocalLengthIn35mmFormat Exif_Tag = 41989
+	Exif_Tag__SceneCaptureType Exif_Tag = 41990
+	Exif_Tag__GainControl Exif_Tag = 41991
+	Exif_Tag__Contrast Exif_Tag = 41992
+	Exif_Tag__Saturation Exif_Tag = 41993
+	Exif_Tag__Sharpness Exif_Tag = 41994
+	Exif_Tag__DeviceSettingDescription Exif_Tag = 41995
+	Exif_Tag__SubjectDistanceRange Exif_Tag = 41996
+	Exif_Tag__ImageUniqueId Exif_Tag = 42016
+	Exif_Tag__OwnerName Exif_Tag = 42032
+	Exif_Tag__SerialNumber Exif_Tag = 42033
+	Exif_Tag__LensInfo Exif_Tag = 42034
+	Exif_Tag__LensMake Exif_Tag = 42035
+	Exif_Tag__LensModel Exif_Tag = 42036
+	Exif_Tag__LensSerialNumber Exif_Tag = 42037
+	Exif_Tag__GdalMetadata Exif_Tag = 42112
+	Exif_Tag__GdalNoData Exif_Tag = 42113
+	Exif_Tag__Gamma Exif_Tag = 42240
+	Exif_Tag__ExpandSoftware Exif_Tag = 44992
+	Exif_Tag__ExpandLens Exif_Tag = 44993
+	Exif_Tag__ExpandFilm Exif_Tag = 44994
+	Exif_Tag__ExpandFilterLens Exif_Tag = 44995
+	Exif_Tag__ExpandScanner Exif_Tag = 44996
+	Exif_Tag__ExpandFlashLamp Exif_Tag = 44997
+	Exif_Tag__PixelFormat Exif_Tag = 48129
+	Exif_Tag__Transformation Exif_Tag = 48130
+	Exif_Tag__Uncompressed Exif_Tag = 48131
+	Exif_Tag__ImageType Exif_Tag = 48132
+	Exif_Tag__ImageWidth2 Exif_Tag = 48256
+	Exif_Tag__ImageHeight2 Exif_Tag = 48257
+	Exif_Tag__WidthResolution Exif_Tag = 48258
+	Exif_Tag__HeightResolution Exif_Tag = 48259
+	Exif_Tag__ImageOffset Exif_Tag = 48320
+	Exif_Tag__ImageByteCount Exif_Tag = 48321
+	Exif_Tag__AlphaOffset Exif_Tag = 48322
+	Exif_Tag__AlphaByteCount Exif_Tag = 48323
+	Exif_Tag__ImageDataDiscard Exif_Tag = 48324
+	Exif_Tag__AlphaDataDiscard Exif_Tag = 48325
+	Exif_Tag__OceScanjobDesc Exif_Tag = 50215
+	Exif_Tag__OceApplicationSelector Exif_Tag = 50216
+	Exif_Tag__OceIdNumber Exif_Tag = 50217
+	Exif_Tag__OceImageLogic Exif_Tag = 50218
+	Exif_Tag__Annotations Exif_Tag = 50255
+	Exif_Tag__PrintIm Exif_Tag = 50341
+	Exif_Tag__OriginalFileName Exif_Tag = 50547
+	Exif_Tag__UsptoOriginalContentType Exif_Tag = 50560
+	Exif_Tag__DngVersion Exif_Tag = 50706
+	Exif_Tag__DngBackwardVersion Exif_Tag = 50707
+	Exif_Tag__UniqueCameraModel Exif_Tag = 50708
+	Exif_Tag__LocalizedCameraModel Exif_Tag = 50709
+	Exif_Tag__CfaPlaneColor Exif_Tag = 50710
+	Exif_Tag__CfaLayout Exif_Tag = 50711
+	Exif_Tag__LinearizationTable Exif_Tag = 50712
+	Exif_Tag__BlackLevelRepeatDim Exif_Tag = 50713
+	Exif_Tag__BlackLevel Exif_Tag = 50714
+	Exif_Tag__BlackLevelDeltaH Exif_Tag = 50715
+	Exif_Tag__BlackLevelDeltaV Exif_Tag = 50716
+	Exif_Tag__WhiteLevel Exif_Tag = 50717
+	Exif_Tag__DefaultScale Exif_Tag = 50718
+	Exif_Tag__DefaultCropOrigin Exif_Tag = 50719
+	Exif_Tag__DefaultCropSize Exif_Tag = 50720
+	Exif_Tag__ColorMatrix1 Exif_Tag = 50721
+	Exif_Tag__ColorMatrix2 Exif_Tag = 50722
+	Exif_Tag__CameraCalibration1 Exif_Tag = 50723
+	Exif_Tag__CameraCalibration2 Exif_Tag = 50724
+	Exif_Tag__ReductionMatrix1 Exif_Tag = 50725
+	Exif_Tag__ReductionMatrix2 Exif_Tag = 50726
+	Exif_Tag__AnalogBalance Exif_Tag = 50727
+	Exif_Tag__AsShotNeutral Exif_Tag = 50728
+	Exif_Tag__AsShotWhiteXy Exif_Tag = 50729
+	Exif_Tag__BaselineExposure Exif_Tag = 50730
+	Exif_Tag__BaselineNoise Exif_Tag = 50731
+	Exif_Tag__BaselineSharpness Exif_Tag = 50732
+	Exif_Tag__BayerGreenSplit Exif_Tag = 50733
+	Exif_Tag__LinearResponseLimit Exif_Tag = 50734
+	Exif_Tag__CameraSerialNumber Exif_Tag = 50735
+	Exif_Tag__DngLensInfo Exif_Tag = 50736
+	Exif_Tag__ChromaBlurRadius Exif_Tag = 50737
+	Exif_Tag__AntiAliasStrength Exif_Tag = 50738
+	Exif_Tag__ShadowScale Exif_Tag = 50739
+	Exif_Tag__Sr2Private Exif_Tag = 50740
+	Exif_Tag__MakerNoteSafety Exif_Tag = 50741
+	Exif_Tag__RawImageSegmentation Exif_Tag = 50752
+	Exif_Tag__CalibrationIlluminant1 Exif_Tag = 50778
+	Exif_Tag__CalibrationIlluminant2 Exif_Tag = 50779
+	Exif_Tag__BestQualityScale Exif_Tag = 50780
+	Exif_Tag__RawDataUniqueId Exif_Tag = 50781
+	Exif_Tag__AliasLayerMetadata Exif_Tag = 50784
+	Exif_Tag__OriginalRawFileName Exif_Tag = 50827
+	Exif_Tag__OriginalRawFileData Exif_Tag = 50828
+	Exif_Tag__ActiveArea Exif_Tag = 50829
+	Exif_Tag__MaskedAreas Exif_Tag = 50830
+	Exif_Tag__AsShotIccProfile Exif_Tag = 50831
+	Exif_Tag__AsShotPreProfileMatrix Exif_Tag = 50832
+	Exif_Tag__CurrentIccProfile Exif_Tag = 50833
+	Exif_Tag__CurrentPreProfileMatrix Exif_Tag = 50834
+	Exif_Tag__ColorimetricReference Exif_Tag = 50879
+	Exif_Tag__SRawType Exif_Tag = 50885
+	Exif_Tag__PanasonicTitle Exif_Tag = 50898
+	Exif_Tag__PanasonicTitle2 Exif_Tag = 50899
+	Exif_Tag__CameraCalibrationSig Exif_Tag = 50931
+	Exif_Tag__ProfileCalibrationSig Exif_Tag = 50932
+	Exif_Tag__ProfileIfd Exif_Tag = 50933
+	Exif_Tag__AsShotProfileName Exif_Tag = 50934
+	Exif_Tag__NoiseReductionApplied Exif_Tag = 50935
+	Exif_Tag__ProfileName Exif_Tag = 50936
+	Exif_Tag__ProfileHueSatMapDims Exif_Tag = 50937
+	Exif_Tag__ProfileHueSatMapData1 Exif_Tag = 50938
+	Exif_Tag__ProfileHueSatMapData2 Exif_Tag = 50939
+	Exif_Tag__ProfileToneCurve Exif_Tag = 50940
+	Exif_Tag__ProfileEmbedPolicy Exif_Tag = 50941
+	Exif_Tag__ProfileCopyright Exif_Tag = 50942
+	Exif_Tag__ForwardMatrix1 Exif_Tag = 50964
+	Exif_Tag__ForwardMatrix2 Exif_Tag = 50965
+	Exif_Tag__PreviewApplicationName Exif_Tag = 50966
+	Exif_Tag__PreviewApplicationVersion Exif_Tag = 50967
+	Exif_Tag__PreviewSettingsName Exif_Tag = 50968
+	Exif_Tag__PreviewSettingsDigest Exif_Tag = 50969
+	Exif_Tag__PreviewColorSpace Exif_Tag = 50970
+	Exif_Tag__PreviewDateTime Exif_Tag = 50971
+	Exif_Tag__RawImageDigest Exif_Tag = 50972
+	Exif_Tag__OriginalRawFileDigest Exif_Tag = 50973
+	Exif_Tag__SubTileBlockSize Exif_Tag = 50974
+	Exif_Tag__RowInterleaveFactor Exif_Tag = 50975
+	Exif_Tag__ProfileLookTableDims Exif_Tag = 50981
+	Exif_Tag__ProfileLookTableData Exif_Tag = 50982
+	Exif_Tag__OpcodeList1 Exif_Tag = 51008
+	Exif_Tag__OpcodeList2 Exif_Tag = 51009
+	Exif_Tag__OpcodeList3 Exif_Tag = 51022
+	Exif_Tag__NoiseProfile Exif_Tag = 51041
+	Exif_Tag__TimeCodes Exif_Tag = 51043
+	Exif_Tag__FrameRate Exif_Tag = 51044
+	Exif_Tag__TStop Exif_Tag = 51058
+	Exif_Tag__ReelName Exif_Tag = 51081
+	Exif_Tag__OriginalDefaultFinalSize Exif_Tag = 51089
+	Exif_Tag__OriginalBestQualitySize Exif_Tag = 51090
+	Exif_Tag__OriginalDefaultCropSize Exif_Tag = 51091
+	Exif_Tag__CameraLabel Exif_Tag = 51105
+	Exif_Tag__ProfileHueSatMapEncoding Exif_Tag = 51107
+	Exif_Tag__ProfileLookTableEncoding Exif_Tag = 51108
+	Exif_Tag__BaselineExposureOffset Exif_Tag = 51109
+	Exif_Tag__DefaultBlackRender Exif_Tag = 51110
+	Exif_Tag__NewRawImageDigest Exif_Tag = 51111
+	Exif_Tag__RawToPreviewGain Exif_Tag = 51112
+	Exif_Tag__DefaultUserCrop Exif_Tag = 51125
+	Exif_Tag__Padding Exif_Tag = 59932
+	Exif_Tag__OffsetSchema Exif_Tag = 59933
+	Exif_Tag__OwnerName2 Exif_Tag = 65000
+	Exif_Tag__SerialNumber2 Exif_Tag = 65001
+	Exif_Tag__Lens Exif_Tag = 65002
+	Exif_Tag__KdcIfd Exif_Tag = 65024
+	Exif_Tag__RawFile Exif_Tag = 65100
+	Exif_Tag__Converter Exif_Tag = 65101
+	Exif_Tag__WhiteBalance2 Exif_Tag = 65102
+	Exif_Tag__Exposure Exif_Tag = 65105
+	Exif_Tag__Shadows Exif_Tag = 65106
+	Exif_Tag__Brightness Exif_Tag = 65107
+	Exif_Tag__Contrast2 Exif_Tag = 65108
+	Exif_Tag__Saturation2 Exif_Tag = 65109
+	Exif_Tag__Sharpness2 Exif_Tag = 65110
+	Exif_Tag__Smoothness Exif_Tag = 65111
+	Exif_Tag__MoireFilter Exif_Tag = 65112
+)
+var values_Exif_Tag = map[Exif_Tag]struct{}{1: {}, 2: {}, 256: {}, 257: {}, 258: {}, 259: {}, 262: {}, 263: {}, 264: {}, 265: {}, 266: {}, 269: {}, 270: {}, 271: {}, 272: {}, 273: {}, 274: {}, 277: {}, 278: {}, 279: {}, 280: {}, 281: {}, 282: {}, 283: {}, 284: {}, 285: {}, 286: {}, 287: {}, 288: {}, 289: {}, 290: {}, 291: {}, 292: {}, 293: {}, 296: {}, 297: {}, 300: {}, 301: {}, 305: {}, 306: {}, 315: {}, 316: {}, 317: {}, 318: {}, 319: {}, 320: {}, 321: {}, 322: {}, 323: {}, 324: {}, 325: {}, 326: {}, 327: {}, 328: {}, 330: {}, 332: {}, 333: {}, 334: {}, 336: {}, 337: {}, 338: {}, 339: {}, 340: {}, 341: {}, 342: {}, 343: {}, 344: {}, 345: {}, 346: {}, 347: {}, 351: {}, 400: {}, 401: {}, 402: {}, 403: {}, 404: {}, 405: {}, 433: {}, 434: {}, 435: {}, 437: {}, 512: {}, 513: {}, 514: {}, 515: {}, 517: {}, 518: {}, 519: {}, 520: {}, 521: {}, 529: {}, 530: {}, 531: {}, 532: {}, 559: {}, 700: {}, 999: {}, 4096: {}, 4097: {}, 4098: {}, 18246: {}, 18247: {}, 18248: {}, 18249: {}, 28672: {}, 28722: {}, 28725: {}, 28727: {}, 32781: {}, 32931: {}, 32932: {}, 32933: {}, 32934: {}, 32953: {}, 32954: {}, 32955: {}, 32956: {}, 32995: {}, 32996: {}, 32997: {}, 32998: {}, 33300: {}, 33301: {}, 33302: {}, 33303: {}, 33304: {}, 33305: {}, 33306: {}, 33405: {}, 33421: {}, 33422: {}, 33423: {}, 33424: {}, 33432: {}, 33434: {}, 33437: {}, 33445: {}, 33446: {}, 33447: {}, 33448: {}, 33449: {}, 33450: {}, 33451: {}, 33452: {}, 33550: {}, 33589: {}, 33590: {}, 33628: {}, 33629: {}, 33630: {}, 33631: {}, 33723: {}, 33918: {}, 33919: {}, 33920: {}, 33921: {}, 33922: {}, 34016: {}, 34017: {}, 34018: {}, 34019: {}, 34020: {}, 34021: {}, 34022: {}, 34023: {}, 34024: {}, 34025: {}, 34026: {}, 34027: {}, 34028: {}, 34029: {}, 34030: {}, 34031: {}, 34032: {}, 34118: {}, 34152: {}, 34232: {}, 34263: {}, 34264: {}, 34306: {}, 34310: {}, 34377: {}, 34665: {}, 34675: {}, 34687: {}, 34688: {}, 34689: {}, 34690: {}, 34732: {}, 34735: {}, 34736: {}, 34737: {}, 34750: {}, 34850: {}, 34852: {}, 34853: {}, 34855: {}, 34856: {}, 34857: {}, 34858: {}, 34859: {}, 34864: {}, 34865: {}, 34866: {}, 34867: {}, 34868: {}, 34869: {}, 34908: {}, 34909: {}, 34910: {}, 34929: {}, 34954: {}, 36864: {}, 36867: {}, 36868: {}, 36873: {}, 36880: {}, 36881: {}, 36882: {}, 37121: {}, 37122: {}, 37377: {}, 37378: {}, 37379: {}, 37380: {}, 37381: {}, 37382: {}, 37383: {}, 37384: {}, 37385: {}, 37386: {}, 37387: {}, 37388: {}, 37389: {}, 37390: {}, 37391: {}, 37392: {}, 37393: {}, 37394: {}, 37395: {}, 37396: {}, 37397: {}, 37398: {}, 37399: {}, 37434: {}, 37435: {}, 37436: {}, 37439: {}, 37500: {}, 37510: {}, 37520: {}, 37521: {}, 37522: {}, 37679: {}, 37680: {}, 37681: {}, 37724: {}, 37888: {}, 37889: {}, 37890: {}, 37891: {}, 37892: {}, 37893: {}, 40091: {}, 40092: {}, 40093: {}, 40094: {}, 40095: {}, 40960: {}, 40961: {}, 40962: {}, 40963: {}, 40964: {}, 40965: {}, 40976: {}, 40977: {}, 41217: {}, 41218: {}, 41483: {}, 41484: {}, 41485: {}, 41486: {}, 41487: {}, 41488: {}, 41489: {}, 41490: {}, 41491: {}, 41492: {}, 41493: {}, 41494: {}, 41495: {}, 41728: {}, 41729: {}, 41730: {}, 41985: {}, 41986: {}, 41987: {}, 41988: {}, 41989: {}, 41990: {}, 41991: {}, 41992: {}, 41993: {}, 41994: {}, 41995: {}, 41996: {}, 42016: {}, 42032: {}, 42033: {}, 42034: {}, 42035: {}, 42036: {}, 42037: {}, 42112: {}, 42113: {}, 42240: {}, 44992: {}, 44993: {}, 44994: {}, 44995: {}, 44996: {}, 44997: {}, 48129: {}, 48130: {}, 48131: {}, 48132: {}, 48256: {}, 48257: {}, 48258: {}, 48259: {}, 48320: {}, 48321: {}, 48322: {}, 48323: {}, 48324: {}, 48325: {}, 50215: {}, 50216: {}, 50217: {}, 50218: {}, 50255: {}, 50341: {}, 50547: {}, 50560: {}, 50706: {}, 50707: {}, 50708: {}, 50709: {}, 50710: {}, 50711: {}, 50712: {}, 50713: {}, 50714: {}, 50715: {}, 50716: {}, 50717: {}, 50718: {}, 50719: {}, 50720: {}, 50721: {}, 50722: {}, 50723: {}, 50724: {}, 50725: {}, 50726: {}, 50727: {}, 50728: {}, 50729: {}, 50730: {}, 50731: {}, 50732: {}, 50733: {}, 50734: {}, 50735: {}, 50736: {}, 50737: {}, 50738: {}, 50739: {}, 50740: {}, 50741: {}, 50752: {}, 50778: {}, 50779: {}, 50780: {}, 50781: {}, 50784: {}, 50827: {}, 50828: {}, 50829: {}, 50830: {}, 50831: {}, 50832: {}, 50833: {}, 50834: {}, 50879: {}, 50885: {}, 50898: {}, 50899: {}, 50931: {}, 50932: {}, 50933: {}, 50934: {}, 50935: {}, 50936: {}, 50937: {}, 50938: {}, 50939: {}, 50940: {}, 50941: {}, 50942: {}, 50964: {}, 50965: {}, 50966: {}, 50967: {}, 50968: {}, 50969: {}, 50970: {}, 50971: {}, 50972: {}, 50973: {}, 50974: {}, 50975: {}, 50981: {}, 50982: {}, 51008: {}, 51009: {}, 51022: {}, 51041: {}, 51043: {}, 51044: {}, 51058: {}, 51081: {}, 51089: {}, 51090: {}, 51091: {}, 51105: {}, 51107: {}, 51108: {}, 51109: {}, 51110: {}, 51111: {}, 51112: {}, 51125: {}, 59932: {}, 59933: {}, 65000: {}, 65001: {}, 65002: {}, 65024: {}, 65100: {}, 65101: {}, 65102: {}, 65105: {}, 65106: {}, 65107: {}, 65108: {}, 65109: {}, 65110: {}, 65111: {}, 65112: {}}
+func (v Exif_Tag) isDefined() bool {
+	_, ok := values_Exif_Tag[v]
+	return ok
+}
 type Exif struct {
 	Endianness uint16
 	Body *Exif_ExifBody
@@ -51,8 +594,8 @@ func (this *Exif) Read(io *kaitai.Stream, parent kaitai.Struct, root *Exif) (err
 	return err
 }
 type Exif_ExifBody struct {
-	Version uint16
-	Ifd0Ofs uint32
+	Magic uint16
+	OfsIfd0 uint32
 	_io *kaitai.Stream
 	_root *Exif
 	_parent *Exif
@@ -98,12 +641,15 @@ func (this *Exif_ExifBody) _read_le() (err error) {
 	if err != nil {
 		return err
 	}
-	this.Version = uint16(tmp3)
+	this.Magic = uint16(tmp3)
+	if !(this.Magic == 42) {
+		return kaitai.NewValidationNotEqualError(42, this.Magic, this._io, "/types/exif_body/seq/0")
+	}
 	tmp4, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Ifd0Ofs = uint32(tmp4)
+	this.OfsIfd0 = uint32(tmp4)
 	return err
 }
 
@@ -112,12 +658,15 @@ func (this *Exif_ExifBody) _read_be() (err error) {
 	if err != nil {
 		return err
 	}
-	this.Version = uint16(tmp5)
+	this.Magic = uint16(tmp5)
+	if !(this.Magic == 42) {
+		return kaitai.NewValidationNotEqualError(42, this.Magic, this._io, "/types/exif_body/seq/0")
+	}
 	tmp6, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Ifd0Ofs = uint32(tmp6)
+	this.OfsIfd0 = uint32(tmp6)
 	return err
 }
 func (this *Exif_ExifBody) Ifd0() (v *Exif_ExifBody_Ifd, err error) {
@@ -129,20 +678,20 @@ func (this *Exif_ExifBody) Ifd0() (v *Exif_ExifBody_Ifd, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64(this.Ifd0Ofs), io.SeekStart)
+	_, err = this._io.Seek(int64(this.OfsIfd0), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
 	switch this._is_le {
 	case 0:
-		tmp7 := NewExif_ExifBody_Ifd()
+		tmp7 := NewExif_ExifBody_Ifd(false)
 		err = tmp7.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.ifd0 = tmp7
 	case 1:
-		tmp8 := NewExif_ExifBody_Ifd()
+		tmp8 := NewExif_ExifBody_Ifd(false)
 		err = tmp8.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
@@ -157,19 +706,213 @@ func (this *Exif_ExifBody) Ifd0() (v *Exif_ExifBody_Ifd, err error) {
 	}
 	return this.ifd0, nil
 }
+type Exif_ExifBody_AsciiString struct {
+	Value []byte
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_AsciiString() *Exif_ExifBody_AsciiString {
+	return &Exif_ExifBody_AsciiString{
+	}
+}
+
+func (this Exif_ExifBody_AsciiString) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_AsciiString) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_AsciiString) _read_le() (err error) {
+	tmp9, err := this._io.ReadBytesTerm(0, false, true, false)
+	if err != nil {
+		return err
+	}
+	this.Value = tmp9
+	return err
+}
+
+func (this *Exif_ExifBody_AsciiString) _read_be() (err error) {
+	tmp10, err := this._io.ReadBytesTerm(0, false, true, false)
+	if err != nil {
+		return err
+	}
+	this.Value = tmp10
+	return err
+}
+
+/**
+ * According to the core Exif standard, this should be ASCII, but in
+ * practice, this is not always the case. From
+ * [ExifTool FAQ](https://exiftool.sourceforge.net/faq.html#Q10):
+ * 
+ * > However, it is not uncommon for applications to write UTF-8 or
+ * other encodings where ASCII is expected.
+ * 
+ * Therefore, this field is a byte array, not a string. This is to
+ * avoid non-ASCII characters being treated as errors in some target
+ * languages, such as Python. The only assumption is that a null byte
+ * terminates the value (although sometimes the null byte is missing,
+ * which we tolerate thanks to the `eos-error: false` setting).
+ * 
+ * Here is a sample JPEG file with a `tag::image_description` IFD
+ * field of type `field_type::ascii` that actually contains UTF-8:
+ * <https://github.com/Exiv2/exiv2/blob/2cd987a731236037b6b78cbff897d08685a8ef49/test/data/exiv2-bug501.jpg>
+ * 
+ * It seems that most modern applications (e.g. GIMP 3.0.6) always
+ * use UTF-8 when storing Exif metadata. However, there are also
+ * files with a non-UTF-8 encoding, for example
+ * <https://github.com/drewnoakes/metadata-extractor-images/blob/651ad0e67aa8d43d358ad05f9bc07b52d8b9ac6e/jpg/Ricoh%20DC-3Z%20(low%20res).jpg>
+ * has a `tag::copyright` IFD field with a value encoded in
+ * ISO-8859-1 (Latin-1).
+ */
+type Exif_ExifBody_Doubles struct {
+	Values []float64
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Doubles() *Exif_ExifBody_Doubles {
+	return &Exif_ExifBody_Doubles{
+	}
+}
+
+func (this Exif_ExifBody_Doubles) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Doubles) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Doubles) _read_le() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp11, err := this._io.ReadF8le()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp11)
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Doubles) _read_be() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp12, err := this._io.ReadF8be()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp12)
+	}
+	return err
+}
+type Exif_ExifBody_Floats struct {
+	Values []float32
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Floats() *Exif_ExifBody_Floats {
+	return &Exif_ExifBody_Floats{
+	}
+}
+
+func (this Exif_ExifBody_Floats) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Floats) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Floats) _read_le() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp13, err := this._io.ReadF4le()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp13)
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Floats) _read_be() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp14, err := this._io.ReadF4be()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp14)
+	}
+	return err
+}
 type Exif_ExifBody_Ifd struct {
 	NumFields uint16
 	Fields []*Exif_ExifBody_IfdField
-	NextIfdOfs uint32
+	OfsNextIfd uint32
+	IsGpsIfd bool
 	_io *kaitai.Stream
 	_root *Exif
 	_parent kaitai.Struct
+	_raw_Fields [][]byte
 	_f_nextIfd bool
 	nextIfd *Exif_ExifBody_Ifd
 	_is_le int
 }
-func NewExif_ExifBody_Ifd() *Exif_ExifBody_Ifd {
+func NewExif_ExifBody_Ifd(isGpsIfd bool) *Exif_ExifBody_Ifd {
 	return &Exif_ExifBody_Ifd{
+		IsGpsIfd: isGpsIfd,
 	}
 }
 
@@ -196,48 +939,62 @@ func (this *Exif_ExifBody_Ifd) Read(io *kaitai.Stream, parent kaitai.Struct, roo
 }
 
 func (this *Exif_ExifBody_Ifd) _read_le() (err error) {
-	tmp9, err := this._io.ReadU2le()
+	tmp15, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NumFields = uint16(tmp9)
+	this.NumFields = uint16(tmp15)
 	for i := 0; i < int(this.NumFields); i++ {
 		_ = i
-		tmp10 := NewExif_ExifBody_IfdField()
-		err = tmp10.Read(this._io, this, this._root)
+		tmp16, err := this._io.ReadBytes(int(12))
 		if err != nil {
 			return err
 		}
-		this.Fields = append(this.Fields, tmp10)
+		tmp16 = tmp16
+		this._raw_Fields = append(this._raw_Fields, tmp16)
+		_io__raw_Fields := kaitai.NewStream(bytes.NewReader(this._raw_Fields[i]))
+		tmp17 := NewExif_ExifBody_IfdField()
+		err = tmp17.Read(_io__raw_Fields, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Fields = append(this.Fields, tmp17)
 	}
-	tmp11, err := this._io.ReadU4le()
+	tmp18, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NextIfdOfs = uint32(tmp11)
+	this.OfsNextIfd = uint32(tmp18)
 	return err
 }
 
 func (this *Exif_ExifBody_Ifd) _read_be() (err error) {
-	tmp12, err := this._io.ReadU2be()
+	tmp19, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.NumFields = uint16(tmp12)
+	this.NumFields = uint16(tmp19)
 	for i := 0; i < int(this.NumFields); i++ {
 		_ = i
-		tmp13 := NewExif_ExifBody_IfdField()
-		err = tmp13.Read(this._io, this, this._root)
+		tmp20, err := this._io.ReadBytes(int(12))
 		if err != nil {
 			return err
 		}
-		this.Fields = append(this.Fields, tmp13)
+		tmp20 = tmp20
+		this._raw_Fields = append(this._raw_Fields, tmp20)
+		_io__raw_Fields := kaitai.NewStream(bytes.NewReader(this._raw_Fields[i]))
+		tmp21 := NewExif_ExifBody_IfdField()
+		err = tmp21.Read(_io__raw_Fields, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Fields = append(this.Fields, tmp21)
 	}
-	tmp14, err := this._io.ReadU4be()
+	tmp22, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.NextIfdOfs = uint32(tmp14)
+	this.OfsNextIfd = uint32(tmp22)
 	return err
 }
 func (this *Exif_ExifBody_Ifd) NextIfd() (v *Exif_ExifBody_Ifd, err error) {
@@ -245,30 +1002,30 @@ func (this *Exif_ExifBody_Ifd) NextIfd() (v *Exif_ExifBody_Ifd, err error) {
 		return this.nextIfd, nil
 	}
 	this._f_nextIfd = true
-	if (this.NextIfdOfs != 0) {
+	if (this.OfsNextIfd != 0) {
 		_pos, err := this._io.Pos()
 		if err != nil {
 			return nil, err
 		}
-		_, err = this._io.Seek(int64(this.NextIfdOfs), io.SeekStart)
+		_, err = this._io.Seek(int64(this.OfsNextIfd), io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
 		switch this._is_le {
 		case 0:
-			tmp15 := NewExif_ExifBody_Ifd()
-			err = tmp15.Read(this._io, this, this._root)
+			tmp23 := NewExif_ExifBody_Ifd(this.IsGpsIfd)
+			err = tmp23.Read(this._io, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.nextIfd = tmp15
+			this.nextIfd = tmp23
 		case 1:
-			tmp16 := NewExif_ExifBody_Ifd()
-			err = tmp16.Read(this._io, this, this._root)
+			tmp24 := NewExif_ExifBody_Ifd(this.IsGpsIfd)
+			err = tmp24.Read(this._io, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.nextIfd = tmp16
+			this.nextIfd = tmp24
 		default:
 			err = kaitai.UndecidedEndiannessError{}
 		}
@@ -279,506 +1036,29 @@ func (this *Exif_ExifBody_Ifd) NextIfd() (v *Exif_ExifBody_Ifd, err error) {
 	}
 	return this.nextIfd, nil
 }
-
-type Exif_ExifBody_IfdField_FieldTypeEnum int
-const (
-	Exif_ExifBody_IfdField_FieldTypeEnum__Byte Exif_ExifBody_IfdField_FieldTypeEnum = 1
-	Exif_ExifBody_IfdField_FieldTypeEnum__AsciiString Exif_ExifBody_IfdField_FieldTypeEnum = 2
-	Exif_ExifBody_IfdField_FieldTypeEnum__Word Exif_ExifBody_IfdField_FieldTypeEnum = 3
-	Exif_ExifBody_IfdField_FieldTypeEnum__Dword Exif_ExifBody_IfdField_FieldTypeEnum = 4
-	Exif_ExifBody_IfdField_FieldTypeEnum__Rational Exif_ExifBody_IfdField_FieldTypeEnum = 5
-	Exif_ExifBody_IfdField_FieldTypeEnum__Undefined Exif_ExifBody_IfdField_FieldTypeEnum = 7
-	Exif_ExifBody_IfdField_FieldTypeEnum__Slong Exif_ExifBody_IfdField_FieldTypeEnum = 9
-	Exif_ExifBody_IfdField_FieldTypeEnum__Srational Exif_ExifBody_IfdField_FieldTypeEnum = 10
-)
-var values_Exif_ExifBody_IfdField_FieldTypeEnum = map[Exif_ExifBody_IfdField_FieldTypeEnum]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 7: {}, 9: {}, 10: {}}
-func (v Exif_ExifBody_IfdField_FieldTypeEnum) isDefined() bool {
-	_, ok := values_Exif_ExifBody_IfdField_FieldTypeEnum[v]
-	return ok
-}
-
-type Exif_ExifBody_IfdField_TagEnum int
-const (
-	Exif_ExifBody_IfdField_TagEnum__ImageWidth Exif_ExifBody_IfdField_TagEnum = 256
-	Exif_ExifBody_IfdField_TagEnum__ImageHeight Exif_ExifBody_IfdField_TagEnum = 257
-	Exif_ExifBody_IfdField_TagEnum__BitsPerSample Exif_ExifBody_IfdField_TagEnum = 258
-	Exif_ExifBody_IfdField_TagEnum__Compression Exif_ExifBody_IfdField_TagEnum = 259
-	Exif_ExifBody_IfdField_TagEnum__PhotometricInterpretation Exif_ExifBody_IfdField_TagEnum = 262
-	Exif_ExifBody_IfdField_TagEnum__Thresholding Exif_ExifBody_IfdField_TagEnum = 263
-	Exif_ExifBody_IfdField_TagEnum__CellWidth Exif_ExifBody_IfdField_TagEnum = 264
-	Exif_ExifBody_IfdField_TagEnum__CellLength Exif_ExifBody_IfdField_TagEnum = 265
-	Exif_ExifBody_IfdField_TagEnum__FillOrder Exif_ExifBody_IfdField_TagEnum = 266
-	Exif_ExifBody_IfdField_TagEnum__DocumentName Exif_ExifBody_IfdField_TagEnum = 269
-	Exif_ExifBody_IfdField_TagEnum__ImageDescription Exif_ExifBody_IfdField_TagEnum = 270
-	Exif_ExifBody_IfdField_TagEnum__Make Exif_ExifBody_IfdField_TagEnum = 271
-	Exif_ExifBody_IfdField_TagEnum__Model Exif_ExifBody_IfdField_TagEnum = 272
-	Exif_ExifBody_IfdField_TagEnum__StripOffsets Exif_ExifBody_IfdField_TagEnum = 273
-	Exif_ExifBody_IfdField_TagEnum__Orientation Exif_ExifBody_IfdField_TagEnum = 274
-	Exif_ExifBody_IfdField_TagEnum__SamplesPerPixel Exif_ExifBody_IfdField_TagEnum = 277
-	Exif_ExifBody_IfdField_TagEnum__RowsPerStrip Exif_ExifBody_IfdField_TagEnum = 278
-	Exif_ExifBody_IfdField_TagEnum__StripByteCounts Exif_ExifBody_IfdField_TagEnum = 279
-	Exif_ExifBody_IfdField_TagEnum__MinSampleValue Exif_ExifBody_IfdField_TagEnum = 280
-	Exif_ExifBody_IfdField_TagEnum__MaxSampleValue Exif_ExifBody_IfdField_TagEnum = 281
-	Exif_ExifBody_IfdField_TagEnum__XResolution Exif_ExifBody_IfdField_TagEnum = 282
-	Exif_ExifBody_IfdField_TagEnum__YResolution Exif_ExifBody_IfdField_TagEnum = 283
-	Exif_ExifBody_IfdField_TagEnum__PlanarConfiguration Exif_ExifBody_IfdField_TagEnum = 284
-	Exif_ExifBody_IfdField_TagEnum__PageName Exif_ExifBody_IfdField_TagEnum = 285
-	Exif_ExifBody_IfdField_TagEnum__XPosition Exif_ExifBody_IfdField_TagEnum = 286
-	Exif_ExifBody_IfdField_TagEnum__YPosition Exif_ExifBody_IfdField_TagEnum = 287
-	Exif_ExifBody_IfdField_TagEnum__FreeOffsets Exif_ExifBody_IfdField_TagEnum = 288
-	Exif_ExifBody_IfdField_TagEnum__FreeByteCounts Exif_ExifBody_IfdField_TagEnum = 289
-	Exif_ExifBody_IfdField_TagEnum__GrayResponseUnit Exif_ExifBody_IfdField_TagEnum = 290
-	Exif_ExifBody_IfdField_TagEnum__GrayResponseCurve Exif_ExifBody_IfdField_TagEnum = 291
-	Exif_ExifBody_IfdField_TagEnum__T4Options Exif_ExifBody_IfdField_TagEnum = 292
-	Exif_ExifBody_IfdField_TagEnum__T6Options Exif_ExifBody_IfdField_TagEnum = 293
-	Exif_ExifBody_IfdField_TagEnum__ResolutionUnit Exif_ExifBody_IfdField_TagEnum = 296
-	Exif_ExifBody_IfdField_TagEnum__PageNumber Exif_ExifBody_IfdField_TagEnum = 297
-	Exif_ExifBody_IfdField_TagEnum__ColorResponseUnit Exif_ExifBody_IfdField_TagEnum = 300
-	Exif_ExifBody_IfdField_TagEnum__TransferFunction Exif_ExifBody_IfdField_TagEnum = 301
-	Exif_ExifBody_IfdField_TagEnum__Software Exif_ExifBody_IfdField_TagEnum = 305
-	Exif_ExifBody_IfdField_TagEnum__ModifyDate Exif_ExifBody_IfdField_TagEnum = 306
-	Exif_ExifBody_IfdField_TagEnum__Artist Exif_ExifBody_IfdField_TagEnum = 315
-	Exif_ExifBody_IfdField_TagEnum__HostComputer Exif_ExifBody_IfdField_TagEnum = 316
-	Exif_ExifBody_IfdField_TagEnum__Predictor Exif_ExifBody_IfdField_TagEnum = 317
-	Exif_ExifBody_IfdField_TagEnum__WhitePoint Exif_ExifBody_IfdField_TagEnum = 318
-	Exif_ExifBody_IfdField_TagEnum__PrimaryChromaticities Exif_ExifBody_IfdField_TagEnum = 319
-	Exif_ExifBody_IfdField_TagEnum__ColorMap Exif_ExifBody_IfdField_TagEnum = 320
-	Exif_ExifBody_IfdField_TagEnum__HalftoneHints Exif_ExifBody_IfdField_TagEnum = 321
-	Exif_ExifBody_IfdField_TagEnum__TileWidth Exif_ExifBody_IfdField_TagEnum = 322
-	Exif_ExifBody_IfdField_TagEnum__TileLength Exif_ExifBody_IfdField_TagEnum = 323
-	Exif_ExifBody_IfdField_TagEnum__TileOffsets Exif_ExifBody_IfdField_TagEnum = 324
-	Exif_ExifBody_IfdField_TagEnum__TileByteCounts Exif_ExifBody_IfdField_TagEnum = 325
-	Exif_ExifBody_IfdField_TagEnum__BadFaxLines Exif_ExifBody_IfdField_TagEnum = 326
-	Exif_ExifBody_IfdField_TagEnum__CleanFaxData Exif_ExifBody_IfdField_TagEnum = 327
-	Exif_ExifBody_IfdField_TagEnum__ConsecutiveBadFaxLines Exif_ExifBody_IfdField_TagEnum = 328
-	Exif_ExifBody_IfdField_TagEnum__SubIfd Exif_ExifBody_IfdField_TagEnum = 330
-	Exif_ExifBody_IfdField_TagEnum__InkSet Exif_ExifBody_IfdField_TagEnum = 332
-	Exif_ExifBody_IfdField_TagEnum__InkNames Exif_ExifBody_IfdField_TagEnum = 333
-	Exif_ExifBody_IfdField_TagEnum__NumberofInks Exif_ExifBody_IfdField_TagEnum = 334
-	Exif_ExifBody_IfdField_TagEnum__DotRange Exif_ExifBody_IfdField_TagEnum = 336
-	Exif_ExifBody_IfdField_TagEnum__TargetPrinter Exif_ExifBody_IfdField_TagEnum = 337
-	Exif_ExifBody_IfdField_TagEnum__ExtraSamples Exif_ExifBody_IfdField_TagEnum = 338
-	Exif_ExifBody_IfdField_TagEnum__SampleFormat Exif_ExifBody_IfdField_TagEnum = 339
-	Exif_ExifBody_IfdField_TagEnum__SMinSampleValue Exif_ExifBody_IfdField_TagEnum = 340
-	Exif_ExifBody_IfdField_TagEnum__SMaxSampleValue Exif_ExifBody_IfdField_TagEnum = 341
-	Exif_ExifBody_IfdField_TagEnum__TransferRange Exif_ExifBody_IfdField_TagEnum = 342
-	Exif_ExifBody_IfdField_TagEnum__ClipPath Exif_ExifBody_IfdField_TagEnum = 343
-	Exif_ExifBody_IfdField_TagEnum__XClipPathUnits Exif_ExifBody_IfdField_TagEnum = 344
-	Exif_ExifBody_IfdField_TagEnum__YClipPathUnits Exif_ExifBody_IfdField_TagEnum = 345
-	Exif_ExifBody_IfdField_TagEnum__Indexed Exif_ExifBody_IfdField_TagEnum = 346
-	Exif_ExifBody_IfdField_TagEnum__JpegTables Exif_ExifBody_IfdField_TagEnum = 347
-	Exif_ExifBody_IfdField_TagEnum__OpiProxy Exif_ExifBody_IfdField_TagEnum = 351
-	Exif_ExifBody_IfdField_TagEnum__GlobalParametersIfd Exif_ExifBody_IfdField_TagEnum = 400
-	Exif_ExifBody_IfdField_TagEnum__ProfileType Exif_ExifBody_IfdField_TagEnum = 401
-	Exif_ExifBody_IfdField_TagEnum__FaxProfile Exif_ExifBody_IfdField_TagEnum = 402
-	Exif_ExifBody_IfdField_TagEnum__CodingMethods Exif_ExifBody_IfdField_TagEnum = 403
-	Exif_ExifBody_IfdField_TagEnum__VersionYear Exif_ExifBody_IfdField_TagEnum = 404
-	Exif_ExifBody_IfdField_TagEnum__ModeNumber Exif_ExifBody_IfdField_TagEnum = 405
-	Exif_ExifBody_IfdField_TagEnum__Decode Exif_ExifBody_IfdField_TagEnum = 433
-	Exif_ExifBody_IfdField_TagEnum__DefaultImageColor Exif_ExifBody_IfdField_TagEnum = 434
-	Exif_ExifBody_IfdField_TagEnum__T82Options Exif_ExifBody_IfdField_TagEnum = 435
-	Exif_ExifBody_IfdField_TagEnum__JpegTables2 Exif_ExifBody_IfdField_TagEnum = 437
-	Exif_ExifBody_IfdField_TagEnum__JpegProc Exif_ExifBody_IfdField_TagEnum = 512
-	Exif_ExifBody_IfdField_TagEnum__ThumbnailOffset Exif_ExifBody_IfdField_TagEnum = 513
-	Exif_ExifBody_IfdField_TagEnum__ThumbnailLength Exif_ExifBody_IfdField_TagEnum = 514
-	Exif_ExifBody_IfdField_TagEnum__JpegRestartInterval Exif_ExifBody_IfdField_TagEnum = 515
-	Exif_ExifBody_IfdField_TagEnum__JpegLosslessPredictors Exif_ExifBody_IfdField_TagEnum = 517
-	Exif_ExifBody_IfdField_TagEnum__JpegPointTransforms Exif_ExifBody_IfdField_TagEnum = 518
-	Exif_ExifBody_IfdField_TagEnum__JpegqTables Exif_ExifBody_IfdField_TagEnum = 519
-	Exif_ExifBody_IfdField_TagEnum__JpegdcTables Exif_ExifBody_IfdField_TagEnum = 520
-	Exif_ExifBody_IfdField_TagEnum__JpegacTables Exif_ExifBody_IfdField_TagEnum = 521
-	Exif_ExifBody_IfdField_TagEnum__YCbCrCoefficients Exif_ExifBody_IfdField_TagEnum = 529
-	Exif_ExifBody_IfdField_TagEnum__YCbCrSubSampling Exif_ExifBody_IfdField_TagEnum = 530
-	Exif_ExifBody_IfdField_TagEnum__YCbCrPositioning Exif_ExifBody_IfdField_TagEnum = 531
-	Exif_ExifBody_IfdField_TagEnum__ReferenceBlackWhite Exif_ExifBody_IfdField_TagEnum = 532
-	Exif_ExifBody_IfdField_TagEnum__StripRowCounts Exif_ExifBody_IfdField_TagEnum = 559
-	Exif_ExifBody_IfdField_TagEnum__ApplicationNotes Exif_ExifBody_IfdField_TagEnum = 700
-	Exif_ExifBody_IfdField_TagEnum__UsptoMiscellaneous Exif_ExifBody_IfdField_TagEnum = 999
-	Exif_ExifBody_IfdField_TagEnum__RelatedImageFileFormat Exif_ExifBody_IfdField_TagEnum = 4096
-	Exif_ExifBody_IfdField_TagEnum__RelatedImageWidth Exif_ExifBody_IfdField_TagEnum = 4097
-	Exif_ExifBody_IfdField_TagEnum__RelatedImageHeight Exif_ExifBody_IfdField_TagEnum = 4098
-	Exif_ExifBody_IfdField_TagEnum__Rating Exif_ExifBody_IfdField_TagEnum = 18246
-	Exif_ExifBody_IfdField_TagEnum__XpDipXml Exif_ExifBody_IfdField_TagEnum = 18247
-	Exif_ExifBody_IfdField_TagEnum__StitchInfo Exif_ExifBody_IfdField_TagEnum = 18248
-	Exif_ExifBody_IfdField_TagEnum__RatingPercent Exif_ExifBody_IfdField_TagEnum = 18249
-	Exif_ExifBody_IfdField_TagEnum__SonyRawFileType Exif_ExifBody_IfdField_TagEnum = 28672
-	Exif_ExifBody_IfdField_TagEnum__LightFalloffParams Exif_ExifBody_IfdField_TagEnum = 28722
-	Exif_ExifBody_IfdField_TagEnum__ChromaticAberrationCorrParams Exif_ExifBody_IfdField_TagEnum = 28725
-	Exif_ExifBody_IfdField_TagEnum__DistortionCorrParams Exif_ExifBody_IfdField_TagEnum = 28727
-	Exif_ExifBody_IfdField_TagEnum__ImageId Exif_ExifBody_IfdField_TagEnum = 32781
-	Exif_ExifBody_IfdField_TagEnum__WangTag1 Exif_ExifBody_IfdField_TagEnum = 32931
-	Exif_ExifBody_IfdField_TagEnum__WangAnnotation Exif_ExifBody_IfdField_TagEnum = 32932
-	Exif_ExifBody_IfdField_TagEnum__WangTag3 Exif_ExifBody_IfdField_TagEnum = 32933
-	Exif_ExifBody_IfdField_TagEnum__WangTag4 Exif_ExifBody_IfdField_TagEnum = 32934
-	Exif_ExifBody_IfdField_TagEnum__ImageReferencePoints Exif_ExifBody_IfdField_TagEnum = 32953
-	Exif_ExifBody_IfdField_TagEnum__RegionXformTackPoint Exif_ExifBody_IfdField_TagEnum = 32954
-	Exif_ExifBody_IfdField_TagEnum__WarpQuadrilateral Exif_ExifBody_IfdField_TagEnum = 32955
-	Exif_ExifBody_IfdField_TagEnum__AffineTransformMat Exif_ExifBody_IfdField_TagEnum = 32956
-	Exif_ExifBody_IfdField_TagEnum__Matteing Exif_ExifBody_IfdField_TagEnum = 32995
-	Exif_ExifBody_IfdField_TagEnum__DataType Exif_ExifBody_IfdField_TagEnum = 32996
-	Exif_ExifBody_IfdField_TagEnum__ImageDepth Exif_ExifBody_IfdField_TagEnum = 32997
-	Exif_ExifBody_IfdField_TagEnum__TileDepth Exif_ExifBody_IfdField_TagEnum = 32998
-	Exif_ExifBody_IfdField_TagEnum__ImageFullWidth Exif_ExifBody_IfdField_TagEnum = 33300
-	Exif_ExifBody_IfdField_TagEnum__ImageFullHeight Exif_ExifBody_IfdField_TagEnum = 33301
-	Exif_ExifBody_IfdField_TagEnum__TextureFormat Exif_ExifBody_IfdField_TagEnum = 33302
-	Exif_ExifBody_IfdField_TagEnum__WrapModes Exif_ExifBody_IfdField_TagEnum = 33303
-	Exif_ExifBody_IfdField_TagEnum__FovCot Exif_ExifBody_IfdField_TagEnum = 33304
-	Exif_ExifBody_IfdField_TagEnum__MatrixWorldToScreen Exif_ExifBody_IfdField_TagEnum = 33305
-	Exif_ExifBody_IfdField_TagEnum__MatrixWorldToCamera Exif_ExifBody_IfdField_TagEnum = 33306
-	Exif_ExifBody_IfdField_TagEnum__Model2 Exif_ExifBody_IfdField_TagEnum = 33405
-	Exif_ExifBody_IfdField_TagEnum__CfaRepeatPatternDim Exif_ExifBody_IfdField_TagEnum = 33421
-	Exif_ExifBody_IfdField_TagEnum__CfaPattern2 Exif_ExifBody_IfdField_TagEnum = 33422
-	Exif_ExifBody_IfdField_TagEnum__BatteryLevel Exif_ExifBody_IfdField_TagEnum = 33423
-	Exif_ExifBody_IfdField_TagEnum__KodakIfd Exif_ExifBody_IfdField_TagEnum = 33424
-	Exif_ExifBody_IfdField_TagEnum__Copyright Exif_ExifBody_IfdField_TagEnum = 33432
-	Exif_ExifBody_IfdField_TagEnum__ExposureTime Exif_ExifBody_IfdField_TagEnum = 33434
-	Exif_ExifBody_IfdField_TagEnum__FNumber Exif_ExifBody_IfdField_TagEnum = 33437
-	Exif_ExifBody_IfdField_TagEnum__MdFileTag Exif_ExifBody_IfdField_TagEnum = 33445
-	Exif_ExifBody_IfdField_TagEnum__MdScalePixel Exif_ExifBody_IfdField_TagEnum = 33446
-	Exif_ExifBody_IfdField_TagEnum__MdColorTable Exif_ExifBody_IfdField_TagEnum = 33447
-	Exif_ExifBody_IfdField_TagEnum__MdLabName Exif_ExifBody_IfdField_TagEnum = 33448
-	Exif_ExifBody_IfdField_TagEnum__MdSampleInfo Exif_ExifBody_IfdField_TagEnum = 33449
-	Exif_ExifBody_IfdField_TagEnum__MdPrepDate Exif_ExifBody_IfdField_TagEnum = 33450
-	Exif_ExifBody_IfdField_TagEnum__MdPrepTime Exif_ExifBody_IfdField_TagEnum = 33451
-	Exif_ExifBody_IfdField_TagEnum__MdFileUnits Exif_ExifBody_IfdField_TagEnum = 33452
-	Exif_ExifBody_IfdField_TagEnum__PixelScale Exif_ExifBody_IfdField_TagEnum = 33550
-	Exif_ExifBody_IfdField_TagEnum__AdventScale Exif_ExifBody_IfdField_TagEnum = 33589
-	Exif_ExifBody_IfdField_TagEnum__AdventRevision Exif_ExifBody_IfdField_TagEnum = 33590
-	Exif_ExifBody_IfdField_TagEnum__Uic1Tag Exif_ExifBody_IfdField_TagEnum = 33628
-	Exif_ExifBody_IfdField_TagEnum__Uic2Tag Exif_ExifBody_IfdField_TagEnum = 33629
-	Exif_ExifBody_IfdField_TagEnum__Uic3Tag Exif_ExifBody_IfdField_TagEnum = 33630
-	Exif_ExifBody_IfdField_TagEnum__Uic4Tag Exif_ExifBody_IfdField_TagEnum = 33631
-	Exif_ExifBody_IfdField_TagEnum__IptcNaa Exif_ExifBody_IfdField_TagEnum = 33723
-	Exif_ExifBody_IfdField_TagEnum__IntergraphPacketData Exif_ExifBody_IfdField_TagEnum = 33918
-	Exif_ExifBody_IfdField_TagEnum__IntergraphFlagRegisters Exif_ExifBody_IfdField_TagEnum = 33919
-	Exif_ExifBody_IfdField_TagEnum__IntergraphMatrix Exif_ExifBody_IfdField_TagEnum = 33920
-	Exif_ExifBody_IfdField_TagEnum__IngrReserved Exif_ExifBody_IfdField_TagEnum = 33921
-	Exif_ExifBody_IfdField_TagEnum__ModelTiePoint Exif_ExifBody_IfdField_TagEnum = 33922
-	Exif_ExifBody_IfdField_TagEnum__Site Exif_ExifBody_IfdField_TagEnum = 34016
-	Exif_ExifBody_IfdField_TagEnum__ColorSequence Exif_ExifBody_IfdField_TagEnum = 34017
-	Exif_ExifBody_IfdField_TagEnum__It8Header Exif_ExifBody_IfdField_TagEnum = 34018
-	Exif_ExifBody_IfdField_TagEnum__RasterPadding Exif_ExifBody_IfdField_TagEnum = 34019
-	Exif_ExifBody_IfdField_TagEnum__BitsPerRunLength Exif_ExifBody_IfdField_TagEnum = 34020
-	Exif_ExifBody_IfdField_TagEnum__BitsPerExtendedRunLength Exif_ExifBody_IfdField_TagEnum = 34021
-	Exif_ExifBody_IfdField_TagEnum__ColorTable Exif_ExifBody_IfdField_TagEnum = 34022
-	Exif_ExifBody_IfdField_TagEnum__ImageColorIndicator Exif_ExifBody_IfdField_TagEnum = 34023
-	Exif_ExifBody_IfdField_TagEnum__BackgroundColorIndicator Exif_ExifBody_IfdField_TagEnum = 34024
-	Exif_ExifBody_IfdField_TagEnum__ImageColorValue Exif_ExifBody_IfdField_TagEnum = 34025
-	Exif_ExifBody_IfdField_TagEnum__BackgroundColorValue Exif_ExifBody_IfdField_TagEnum = 34026
-	Exif_ExifBody_IfdField_TagEnum__PixelIntensityRange Exif_ExifBody_IfdField_TagEnum = 34027
-	Exif_ExifBody_IfdField_TagEnum__TransparencyIndicator Exif_ExifBody_IfdField_TagEnum = 34028
-	Exif_ExifBody_IfdField_TagEnum__ColorCharacterization Exif_ExifBody_IfdField_TagEnum = 34029
-	Exif_ExifBody_IfdField_TagEnum__HcUsage Exif_ExifBody_IfdField_TagEnum = 34030
-	Exif_ExifBody_IfdField_TagEnum__TrapIndicator Exif_ExifBody_IfdField_TagEnum = 34031
-	Exif_ExifBody_IfdField_TagEnum__CmykEquivalent Exif_ExifBody_IfdField_TagEnum = 34032
-	Exif_ExifBody_IfdField_TagEnum__SemInfo Exif_ExifBody_IfdField_TagEnum = 34118
-	Exif_ExifBody_IfdField_TagEnum__AfcpIptc Exif_ExifBody_IfdField_TagEnum = 34152
-	Exif_ExifBody_IfdField_TagEnum__PixelMagicJbigOptions Exif_ExifBody_IfdField_TagEnum = 34232
-	Exif_ExifBody_IfdField_TagEnum__JplCartoIfd Exif_ExifBody_IfdField_TagEnum = 34263
-	Exif_ExifBody_IfdField_TagEnum__ModelTransform Exif_ExifBody_IfdField_TagEnum = 34264
-	Exif_ExifBody_IfdField_TagEnum__WbGrgbLevels Exif_ExifBody_IfdField_TagEnum = 34306
-	Exif_ExifBody_IfdField_TagEnum__LeafData Exif_ExifBody_IfdField_TagEnum = 34310
-	Exif_ExifBody_IfdField_TagEnum__PhotoshopSettings Exif_ExifBody_IfdField_TagEnum = 34377
-	Exif_ExifBody_IfdField_TagEnum__ExifOffset Exif_ExifBody_IfdField_TagEnum = 34665
-	Exif_ExifBody_IfdField_TagEnum__IccProfile Exif_ExifBody_IfdField_TagEnum = 34675
-	Exif_ExifBody_IfdField_TagEnum__TiffFxExtensions Exif_ExifBody_IfdField_TagEnum = 34687
-	Exif_ExifBody_IfdField_TagEnum__MultiProfiles Exif_ExifBody_IfdField_TagEnum = 34688
-	Exif_ExifBody_IfdField_TagEnum__SharedData Exif_ExifBody_IfdField_TagEnum = 34689
-	Exif_ExifBody_IfdField_TagEnum__T88Options Exif_ExifBody_IfdField_TagEnum = 34690
-	Exif_ExifBody_IfdField_TagEnum__ImageLayer Exif_ExifBody_IfdField_TagEnum = 34732
-	Exif_ExifBody_IfdField_TagEnum__GeoTiffDirectory Exif_ExifBody_IfdField_TagEnum = 34735
-	Exif_ExifBody_IfdField_TagEnum__GeoTiffDoubleParams Exif_ExifBody_IfdField_TagEnum = 34736
-	Exif_ExifBody_IfdField_TagEnum__GeoTiffAsciiParams Exif_ExifBody_IfdField_TagEnum = 34737
-	Exif_ExifBody_IfdField_TagEnum__JbigOptions Exif_ExifBody_IfdField_TagEnum = 34750
-	Exif_ExifBody_IfdField_TagEnum__ExposureProgram Exif_ExifBody_IfdField_TagEnum = 34850
-	Exif_ExifBody_IfdField_TagEnum__SpectralSensitivity Exif_ExifBody_IfdField_TagEnum = 34852
-	Exif_ExifBody_IfdField_TagEnum__GpsInfo Exif_ExifBody_IfdField_TagEnum = 34853
-	Exif_ExifBody_IfdField_TagEnum__Iso Exif_ExifBody_IfdField_TagEnum = 34855
-	Exif_ExifBody_IfdField_TagEnum__OptoElectricConvFactor Exif_ExifBody_IfdField_TagEnum = 34856
-	Exif_ExifBody_IfdField_TagEnum__Interlace Exif_ExifBody_IfdField_TagEnum = 34857
-	Exif_ExifBody_IfdField_TagEnum__TimeZoneOffset Exif_ExifBody_IfdField_TagEnum = 34858
-	Exif_ExifBody_IfdField_TagEnum__SelfTimerMode Exif_ExifBody_IfdField_TagEnum = 34859
-	Exif_ExifBody_IfdField_TagEnum__SensitivityType Exif_ExifBody_IfdField_TagEnum = 34864
-	Exif_ExifBody_IfdField_TagEnum__StandardOutputSensitivity Exif_ExifBody_IfdField_TagEnum = 34865
-	Exif_ExifBody_IfdField_TagEnum__RecommendedExposureIndex Exif_ExifBody_IfdField_TagEnum = 34866
-	Exif_ExifBody_IfdField_TagEnum__IsoSpeed Exif_ExifBody_IfdField_TagEnum = 34867
-	Exif_ExifBody_IfdField_TagEnum__IsoSpeedLatitudeyyy Exif_ExifBody_IfdField_TagEnum = 34868
-	Exif_ExifBody_IfdField_TagEnum__IsoSpeedLatitudezzz Exif_ExifBody_IfdField_TagEnum = 34869
-	Exif_ExifBody_IfdField_TagEnum__FaxRecvParams Exif_ExifBody_IfdField_TagEnum = 34908
-	Exif_ExifBody_IfdField_TagEnum__FaxSubAddress Exif_ExifBody_IfdField_TagEnum = 34909
-	Exif_ExifBody_IfdField_TagEnum__FaxRecvTime Exif_ExifBody_IfdField_TagEnum = 34910
-	Exif_ExifBody_IfdField_TagEnum__FedexEdr Exif_ExifBody_IfdField_TagEnum = 34929
-	Exif_ExifBody_IfdField_TagEnum__LeafSubIfd Exif_ExifBody_IfdField_TagEnum = 34954
-	Exif_ExifBody_IfdField_TagEnum__ExifVersion Exif_ExifBody_IfdField_TagEnum = 36864
-	Exif_ExifBody_IfdField_TagEnum__DateTimeOriginal Exif_ExifBody_IfdField_TagEnum = 36867
-	Exif_ExifBody_IfdField_TagEnum__CreateDate Exif_ExifBody_IfdField_TagEnum = 36868
-	Exif_ExifBody_IfdField_TagEnum__GooglePlusUploadCode Exif_ExifBody_IfdField_TagEnum = 36873
-	Exif_ExifBody_IfdField_TagEnum__OffsetTime Exif_ExifBody_IfdField_TagEnum = 36880
-	Exif_ExifBody_IfdField_TagEnum__OffsetTimeOriginal Exif_ExifBody_IfdField_TagEnum = 36881
-	Exif_ExifBody_IfdField_TagEnum__OffsetTimeDigitized Exif_ExifBody_IfdField_TagEnum = 36882
-	Exif_ExifBody_IfdField_TagEnum__ComponentsConfiguration Exif_ExifBody_IfdField_TagEnum = 37121
-	Exif_ExifBody_IfdField_TagEnum__CompressedBitsPerPixel Exif_ExifBody_IfdField_TagEnum = 37122
-	Exif_ExifBody_IfdField_TagEnum__ShutterSpeedValue Exif_ExifBody_IfdField_TagEnum = 37377
-	Exif_ExifBody_IfdField_TagEnum__ApertureValue Exif_ExifBody_IfdField_TagEnum = 37378
-	Exif_ExifBody_IfdField_TagEnum__BrightnessValue Exif_ExifBody_IfdField_TagEnum = 37379
-	Exif_ExifBody_IfdField_TagEnum__ExposureCompensation Exif_ExifBody_IfdField_TagEnum = 37380
-	Exif_ExifBody_IfdField_TagEnum__MaxApertureValue Exif_ExifBody_IfdField_TagEnum = 37381
-	Exif_ExifBody_IfdField_TagEnum__SubjectDistance Exif_ExifBody_IfdField_TagEnum = 37382
-	Exif_ExifBody_IfdField_TagEnum__MeteringMode Exif_ExifBody_IfdField_TagEnum = 37383
-	Exif_ExifBody_IfdField_TagEnum__LightSource Exif_ExifBody_IfdField_TagEnum = 37384
-	Exif_ExifBody_IfdField_TagEnum__Flash Exif_ExifBody_IfdField_TagEnum = 37385
-	Exif_ExifBody_IfdField_TagEnum__FocalLength Exif_ExifBody_IfdField_TagEnum = 37386
-	Exif_ExifBody_IfdField_TagEnum__FlashEnergy Exif_ExifBody_IfdField_TagEnum = 37387
-	Exif_ExifBody_IfdField_TagEnum__SpatialFrequencyResponse Exif_ExifBody_IfdField_TagEnum = 37388
-	Exif_ExifBody_IfdField_TagEnum__Noise Exif_ExifBody_IfdField_TagEnum = 37389
-	Exif_ExifBody_IfdField_TagEnum__FocalPlaneXResolution Exif_ExifBody_IfdField_TagEnum = 37390
-	Exif_ExifBody_IfdField_TagEnum__FocalPlaneYResolution Exif_ExifBody_IfdField_TagEnum = 37391
-	Exif_ExifBody_IfdField_TagEnum__FocalPlaneResolutionUnit Exif_ExifBody_IfdField_TagEnum = 37392
-	Exif_ExifBody_IfdField_TagEnum__ImageNumber Exif_ExifBody_IfdField_TagEnum = 37393
-	Exif_ExifBody_IfdField_TagEnum__SecurityClassification Exif_ExifBody_IfdField_TagEnum = 37394
-	Exif_ExifBody_IfdField_TagEnum__ImageHistory Exif_ExifBody_IfdField_TagEnum = 37395
-	Exif_ExifBody_IfdField_TagEnum__SubjectArea Exif_ExifBody_IfdField_TagEnum = 37396
-	Exif_ExifBody_IfdField_TagEnum__ExposureIndex Exif_ExifBody_IfdField_TagEnum = 37397
-	Exif_ExifBody_IfdField_TagEnum__TiffEpStandardId Exif_ExifBody_IfdField_TagEnum = 37398
-	Exif_ExifBody_IfdField_TagEnum__SensingMethod Exif_ExifBody_IfdField_TagEnum = 37399
-	Exif_ExifBody_IfdField_TagEnum__Cip3DataFile Exif_ExifBody_IfdField_TagEnum = 37434
-	Exif_ExifBody_IfdField_TagEnum__Cip3Sheet Exif_ExifBody_IfdField_TagEnum = 37435
-	Exif_ExifBody_IfdField_TagEnum__Cip3Side Exif_ExifBody_IfdField_TagEnum = 37436
-	Exif_ExifBody_IfdField_TagEnum__StoNits Exif_ExifBody_IfdField_TagEnum = 37439
-	Exif_ExifBody_IfdField_TagEnum__MakerNote Exif_ExifBody_IfdField_TagEnum = 37500
-	Exif_ExifBody_IfdField_TagEnum__UserComment Exif_ExifBody_IfdField_TagEnum = 37510
-	Exif_ExifBody_IfdField_TagEnum__SubSecTime Exif_ExifBody_IfdField_TagEnum = 37520
-	Exif_ExifBody_IfdField_TagEnum__SubSecTimeOriginal Exif_ExifBody_IfdField_TagEnum = 37521
-	Exif_ExifBody_IfdField_TagEnum__SubSecTimeDigitized Exif_ExifBody_IfdField_TagEnum = 37522
-	Exif_ExifBody_IfdField_TagEnum__MsDocumentText Exif_ExifBody_IfdField_TagEnum = 37679
-	Exif_ExifBody_IfdField_TagEnum__MsPropertySetStorage Exif_ExifBody_IfdField_TagEnum = 37680
-	Exif_ExifBody_IfdField_TagEnum__MsDocumentTextPosition Exif_ExifBody_IfdField_TagEnum = 37681
-	Exif_ExifBody_IfdField_TagEnum__ImageSourceData Exif_ExifBody_IfdField_TagEnum = 37724
-	Exif_ExifBody_IfdField_TagEnum__AmbientTemperature Exif_ExifBody_IfdField_TagEnum = 37888
-	Exif_ExifBody_IfdField_TagEnum__Humidity Exif_ExifBody_IfdField_TagEnum = 37889
-	Exif_ExifBody_IfdField_TagEnum__Pressure Exif_ExifBody_IfdField_TagEnum = 37890
-	Exif_ExifBody_IfdField_TagEnum__WaterDepth Exif_ExifBody_IfdField_TagEnum = 37891
-	Exif_ExifBody_IfdField_TagEnum__Acceleration Exif_ExifBody_IfdField_TagEnum = 37892
-	Exif_ExifBody_IfdField_TagEnum__CameraElevationAngle Exif_ExifBody_IfdField_TagEnum = 37893
-	Exif_ExifBody_IfdField_TagEnum__XpTitle Exif_ExifBody_IfdField_TagEnum = 40091
-	Exif_ExifBody_IfdField_TagEnum__XpComment Exif_ExifBody_IfdField_TagEnum = 40092
-	Exif_ExifBody_IfdField_TagEnum__XpAuthor Exif_ExifBody_IfdField_TagEnum = 40093
-	Exif_ExifBody_IfdField_TagEnum__XpKeywords Exif_ExifBody_IfdField_TagEnum = 40094
-	Exif_ExifBody_IfdField_TagEnum__XpSubject Exif_ExifBody_IfdField_TagEnum = 40095
-	Exif_ExifBody_IfdField_TagEnum__FlashpixVersion Exif_ExifBody_IfdField_TagEnum = 40960
-	Exif_ExifBody_IfdField_TagEnum__ColorSpace Exif_ExifBody_IfdField_TagEnum = 40961
-	Exif_ExifBody_IfdField_TagEnum__ExifImageWidth Exif_ExifBody_IfdField_TagEnum = 40962
-	Exif_ExifBody_IfdField_TagEnum__ExifImageHeight Exif_ExifBody_IfdField_TagEnum = 40963
-	Exif_ExifBody_IfdField_TagEnum__RelatedSoundFile Exif_ExifBody_IfdField_TagEnum = 40964
-	Exif_ExifBody_IfdField_TagEnum__InteropOffset Exif_ExifBody_IfdField_TagEnum = 40965
-	Exif_ExifBody_IfdField_TagEnum__SamsungRawPointersOffset Exif_ExifBody_IfdField_TagEnum = 40976
-	Exif_ExifBody_IfdField_TagEnum__SamsungRawPointersLength Exif_ExifBody_IfdField_TagEnum = 40977
-	Exif_ExifBody_IfdField_TagEnum__SamsungRawByteOrder Exif_ExifBody_IfdField_TagEnum = 41217
-	Exif_ExifBody_IfdField_TagEnum__SamsungRawUnknown Exif_ExifBody_IfdField_TagEnum = 41218
-	Exif_ExifBody_IfdField_TagEnum__FlashEnergy2 Exif_ExifBody_IfdField_TagEnum = 41483
-	Exif_ExifBody_IfdField_TagEnum__SpatialFrequencyResponse2 Exif_ExifBody_IfdField_TagEnum = 41484
-	Exif_ExifBody_IfdField_TagEnum__Noise2 Exif_ExifBody_IfdField_TagEnum = 41485
-	Exif_ExifBody_IfdField_TagEnum__FocalPlaneXResolution2 Exif_ExifBody_IfdField_TagEnum = 41486
-	Exif_ExifBody_IfdField_TagEnum__FocalPlaneYResolution2 Exif_ExifBody_IfdField_TagEnum = 41487
-	Exif_ExifBody_IfdField_TagEnum__FocalPlaneResolutionUnit2 Exif_ExifBody_IfdField_TagEnum = 41488
-	Exif_ExifBody_IfdField_TagEnum__ImageNumber2 Exif_ExifBody_IfdField_TagEnum = 41489
-	Exif_ExifBody_IfdField_TagEnum__SecurityClassification2 Exif_ExifBody_IfdField_TagEnum = 41490
-	Exif_ExifBody_IfdField_TagEnum__ImageHistory2 Exif_ExifBody_IfdField_TagEnum = 41491
-	Exif_ExifBody_IfdField_TagEnum__SubjectLocation Exif_ExifBody_IfdField_TagEnum = 41492
-	Exif_ExifBody_IfdField_TagEnum__ExposureIndex2 Exif_ExifBody_IfdField_TagEnum = 41493
-	Exif_ExifBody_IfdField_TagEnum__TiffEpStandardId2 Exif_ExifBody_IfdField_TagEnum = 41494
-	Exif_ExifBody_IfdField_TagEnum__SensingMethod2 Exif_ExifBody_IfdField_TagEnum = 41495
-	Exif_ExifBody_IfdField_TagEnum__FileSource Exif_ExifBody_IfdField_TagEnum = 41728
-	Exif_ExifBody_IfdField_TagEnum__SceneType Exif_ExifBody_IfdField_TagEnum = 41729
-	Exif_ExifBody_IfdField_TagEnum__CfaPattern Exif_ExifBody_IfdField_TagEnum = 41730
-	Exif_ExifBody_IfdField_TagEnum__CustomRendered Exif_ExifBody_IfdField_TagEnum = 41985
-	Exif_ExifBody_IfdField_TagEnum__ExposureMode Exif_ExifBody_IfdField_TagEnum = 41986
-	Exif_ExifBody_IfdField_TagEnum__WhiteBalance Exif_ExifBody_IfdField_TagEnum = 41987
-	Exif_ExifBody_IfdField_TagEnum__DigitalZoomRatio Exif_ExifBody_IfdField_TagEnum = 41988
-	Exif_ExifBody_IfdField_TagEnum__FocalLengthIn35mmFormat Exif_ExifBody_IfdField_TagEnum = 41989
-	Exif_ExifBody_IfdField_TagEnum__SceneCaptureType Exif_ExifBody_IfdField_TagEnum = 41990
-	Exif_ExifBody_IfdField_TagEnum__GainControl Exif_ExifBody_IfdField_TagEnum = 41991
-	Exif_ExifBody_IfdField_TagEnum__Contrast Exif_ExifBody_IfdField_TagEnum = 41992
-	Exif_ExifBody_IfdField_TagEnum__Saturation Exif_ExifBody_IfdField_TagEnum = 41993
-	Exif_ExifBody_IfdField_TagEnum__Sharpness Exif_ExifBody_IfdField_TagEnum = 41994
-	Exif_ExifBody_IfdField_TagEnum__DeviceSettingDescription Exif_ExifBody_IfdField_TagEnum = 41995
-	Exif_ExifBody_IfdField_TagEnum__SubjectDistanceRange Exif_ExifBody_IfdField_TagEnum = 41996
-	Exif_ExifBody_IfdField_TagEnum__ImageUniqueId Exif_ExifBody_IfdField_TagEnum = 42016
-	Exif_ExifBody_IfdField_TagEnum__OwnerName Exif_ExifBody_IfdField_TagEnum = 42032
-	Exif_ExifBody_IfdField_TagEnum__SerialNumber Exif_ExifBody_IfdField_TagEnum = 42033
-	Exif_ExifBody_IfdField_TagEnum__LensInfo Exif_ExifBody_IfdField_TagEnum = 42034
-	Exif_ExifBody_IfdField_TagEnum__LensMake Exif_ExifBody_IfdField_TagEnum = 42035
-	Exif_ExifBody_IfdField_TagEnum__LensModel Exif_ExifBody_IfdField_TagEnum = 42036
-	Exif_ExifBody_IfdField_TagEnum__LensSerialNumber Exif_ExifBody_IfdField_TagEnum = 42037
-	Exif_ExifBody_IfdField_TagEnum__GdalMetadata Exif_ExifBody_IfdField_TagEnum = 42112
-	Exif_ExifBody_IfdField_TagEnum__GdalNoData Exif_ExifBody_IfdField_TagEnum = 42113
-	Exif_ExifBody_IfdField_TagEnum__Gamma Exif_ExifBody_IfdField_TagEnum = 42240
-	Exif_ExifBody_IfdField_TagEnum__ExpandSoftware Exif_ExifBody_IfdField_TagEnum = 44992
-	Exif_ExifBody_IfdField_TagEnum__ExpandLens Exif_ExifBody_IfdField_TagEnum = 44993
-	Exif_ExifBody_IfdField_TagEnum__ExpandFilm Exif_ExifBody_IfdField_TagEnum = 44994
-	Exif_ExifBody_IfdField_TagEnum__ExpandFilterLens Exif_ExifBody_IfdField_TagEnum = 44995
-	Exif_ExifBody_IfdField_TagEnum__ExpandScanner Exif_ExifBody_IfdField_TagEnum = 44996
-	Exif_ExifBody_IfdField_TagEnum__ExpandFlashLamp Exif_ExifBody_IfdField_TagEnum = 44997
-	Exif_ExifBody_IfdField_TagEnum__PixelFormat Exif_ExifBody_IfdField_TagEnum = 48129
-	Exif_ExifBody_IfdField_TagEnum__Transformation Exif_ExifBody_IfdField_TagEnum = 48130
-	Exif_ExifBody_IfdField_TagEnum__Uncompressed Exif_ExifBody_IfdField_TagEnum = 48131
-	Exif_ExifBody_IfdField_TagEnum__ImageType Exif_ExifBody_IfdField_TagEnum = 48132
-	Exif_ExifBody_IfdField_TagEnum__ImageWidth2 Exif_ExifBody_IfdField_TagEnum = 48256
-	Exif_ExifBody_IfdField_TagEnum__ImageHeight2 Exif_ExifBody_IfdField_TagEnum = 48257
-	Exif_ExifBody_IfdField_TagEnum__WidthResolution Exif_ExifBody_IfdField_TagEnum = 48258
-	Exif_ExifBody_IfdField_TagEnum__HeightResolution Exif_ExifBody_IfdField_TagEnum = 48259
-	Exif_ExifBody_IfdField_TagEnum__ImageOffset Exif_ExifBody_IfdField_TagEnum = 48320
-	Exif_ExifBody_IfdField_TagEnum__ImageByteCount Exif_ExifBody_IfdField_TagEnum = 48321
-	Exif_ExifBody_IfdField_TagEnum__AlphaOffset Exif_ExifBody_IfdField_TagEnum = 48322
-	Exif_ExifBody_IfdField_TagEnum__AlphaByteCount Exif_ExifBody_IfdField_TagEnum = 48323
-	Exif_ExifBody_IfdField_TagEnum__ImageDataDiscard Exif_ExifBody_IfdField_TagEnum = 48324
-	Exif_ExifBody_IfdField_TagEnum__AlphaDataDiscard Exif_ExifBody_IfdField_TagEnum = 48325
-	Exif_ExifBody_IfdField_TagEnum__OceScanjobDesc Exif_ExifBody_IfdField_TagEnum = 50215
-	Exif_ExifBody_IfdField_TagEnum__OceApplicationSelector Exif_ExifBody_IfdField_TagEnum = 50216
-	Exif_ExifBody_IfdField_TagEnum__OceIdNumber Exif_ExifBody_IfdField_TagEnum = 50217
-	Exif_ExifBody_IfdField_TagEnum__OceImageLogic Exif_ExifBody_IfdField_TagEnum = 50218
-	Exif_ExifBody_IfdField_TagEnum__Annotations Exif_ExifBody_IfdField_TagEnum = 50255
-	Exif_ExifBody_IfdField_TagEnum__PrintIm Exif_ExifBody_IfdField_TagEnum = 50341
-	Exif_ExifBody_IfdField_TagEnum__OriginalFileName Exif_ExifBody_IfdField_TagEnum = 50547
-	Exif_ExifBody_IfdField_TagEnum__UsptoOriginalContentType Exif_ExifBody_IfdField_TagEnum = 50560
-	Exif_ExifBody_IfdField_TagEnum__DngVersion Exif_ExifBody_IfdField_TagEnum = 50706
-	Exif_ExifBody_IfdField_TagEnum__DngBackwardVersion Exif_ExifBody_IfdField_TagEnum = 50707
-	Exif_ExifBody_IfdField_TagEnum__UniqueCameraModel Exif_ExifBody_IfdField_TagEnum = 50708
-	Exif_ExifBody_IfdField_TagEnum__LocalizedCameraModel Exif_ExifBody_IfdField_TagEnum = 50709
-	Exif_ExifBody_IfdField_TagEnum__CfaPlaneColor Exif_ExifBody_IfdField_TagEnum = 50710
-	Exif_ExifBody_IfdField_TagEnum__CfaLayout Exif_ExifBody_IfdField_TagEnum = 50711
-	Exif_ExifBody_IfdField_TagEnum__LinearizationTable Exif_ExifBody_IfdField_TagEnum = 50712
-	Exif_ExifBody_IfdField_TagEnum__BlackLevelRepeatDim Exif_ExifBody_IfdField_TagEnum = 50713
-	Exif_ExifBody_IfdField_TagEnum__BlackLevel Exif_ExifBody_IfdField_TagEnum = 50714
-	Exif_ExifBody_IfdField_TagEnum__BlackLevelDeltaH Exif_ExifBody_IfdField_TagEnum = 50715
-	Exif_ExifBody_IfdField_TagEnum__BlackLevelDeltaV Exif_ExifBody_IfdField_TagEnum = 50716
-	Exif_ExifBody_IfdField_TagEnum__WhiteLevel Exif_ExifBody_IfdField_TagEnum = 50717
-	Exif_ExifBody_IfdField_TagEnum__DefaultScale Exif_ExifBody_IfdField_TagEnum = 50718
-	Exif_ExifBody_IfdField_TagEnum__DefaultCropOrigin Exif_ExifBody_IfdField_TagEnum = 50719
-	Exif_ExifBody_IfdField_TagEnum__DefaultCropSize Exif_ExifBody_IfdField_TagEnum = 50720
-	Exif_ExifBody_IfdField_TagEnum__ColorMatrix1 Exif_ExifBody_IfdField_TagEnum = 50721
-	Exif_ExifBody_IfdField_TagEnum__ColorMatrix2 Exif_ExifBody_IfdField_TagEnum = 50722
-	Exif_ExifBody_IfdField_TagEnum__CameraCalibration1 Exif_ExifBody_IfdField_TagEnum = 50723
-	Exif_ExifBody_IfdField_TagEnum__CameraCalibration2 Exif_ExifBody_IfdField_TagEnum = 50724
-	Exif_ExifBody_IfdField_TagEnum__ReductionMatrix1 Exif_ExifBody_IfdField_TagEnum = 50725
-	Exif_ExifBody_IfdField_TagEnum__ReductionMatrix2 Exif_ExifBody_IfdField_TagEnum = 50726
-	Exif_ExifBody_IfdField_TagEnum__AnalogBalance Exif_ExifBody_IfdField_TagEnum = 50727
-	Exif_ExifBody_IfdField_TagEnum__AsShotNeutral Exif_ExifBody_IfdField_TagEnum = 50728
-	Exif_ExifBody_IfdField_TagEnum__AsShotWhiteXy Exif_ExifBody_IfdField_TagEnum = 50729
-	Exif_ExifBody_IfdField_TagEnum__BaselineExposure Exif_ExifBody_IfdField_TagEnum = 50730
-	Exif_ExifBody_IfdField_TagEnum__BaselineNoise Exif_ExifBody_IfdField_TagEnum = 50731
-	Exif_ExifBody_IfdField_TagEnum__BaselineSharpness Exif_ExifBody_IfdField_TagEnum = 50732
-	Exif_ExifBody_IfdField_TagEnum__BayerGreenSplit Exif_ExifBody_IfdField_TagEnum = 50733
-	Exif_ExifBody_IfdField_TagEnum__LinearResponseLimit Exif_ExifBody_IfdField_TagEnum = 50734
-	Exif_ExifBody_IfdField_TagEnum__CameraSerialNumber Exif_ExifBody_IfdField_TagEnum = 50735
-	Exif_ExifBody_IfdField_TagEnum__DngLensInfo Exif_ExifBody_IfdField_TagEnum = 50736
-	Exif_ExifBody_IfdField_TagEnum__ChromaBlurRadius Exif_ExifBody_IfdField_TagEnum = 50737
-	Exif_ExifBody_IfdField_TagEnum__AntiAliasStrength Exif_ExifBody_IfdField_TagEnum = 50738
-	Exif_ExifBody_IfdField_TagEnum__ShadowScale Exif_ExifBody_IfdField_TagEnum = 50739
-	Exif_ExifBody_IfdField_TagEnum__Sr2Private Exif_ExifBody_IfdField_TagEnum = 50740
-	Exif_ExifBody_IfdField_TagEnum__MakerNoteSafety Exif_ExifBody_IfdField_TagEnum = 50741
-	Exif_ExifBody_IfdField_TagEnum__RawImageSegmentation Exif_ExifBody_IfdField_TagEnum = 50752
-	Exif_ExifBody_IfdField_TagEnum__CalibrationIlluminant1 Exif_ExifBody_IfdField_TagEnum = 50778
-	Exif_ExifBody_IfdField_TagEnum__CalibrationIlluminant2 Exif_ExifBody_IfdField_TagEnum = 50779
-	Exif_ExifBody_IfdField_TagEnum__BestQualityScale Exif_ExifBody_IfdField_TagEnum = 50780
-	Exif_ExifBody_IfdField_TagEnum__RawDataUniqueId Exif_ExifBody_IfdField_TagEnum = 50781
-	Exif_ExifBody_IfdField_TagEnum__AliasLayerMetadata Exif_ExifBody_IfdField_TagEnum = 50784
-	Exif_ExifBody_IfdField_TagEnum__OriginalRawFileName Exif_ExifBody_IfdField_TagEnum = 50827
-	Exif_ExifBody_IfdField_TagEnum__OriginalRawFileData Exif_ExifBody_IfdField_TagEnum = 50828
-	Exif_ExifBody_IfdField_TagEnum__ActiveArea Exif_ExifBody_IfdField_TagEnum = 50829
-	Exif_ExifBody_IfdField_TagEnum__MaskedAreas Exif_ExifBody_IfdField_TagEnum = 50830
-	Exif_ExifBody_IfdField_TagEnum__AsShotIccProfile Exif_ExifBody_IfdField_TagEnum = 50831
-	Exif_ExifBody_IfdField_TagEnum__AsShotPreProfileMatrix Exif_ExifBody_IfdField_TagEnum = 50832
-	Exif_ExifBody_IfdField_TagEnum__CurrentIccProfile Exif_ExifBody_IfdField_TagEnum = 50833
-	Exif_ExifBody_IfdField_TagEnum__CurrentPreProfileMatrix Exif_ExifBody_IfdField_TagEnum = 50834
-	Exif_ExifBody_IfdField_TagEnum__ColorimetricReference Exif_ExifBody_IfdField_TagEnum = 50879
-	Exif_ExifBody_IfdField_TagEnum__SRawType Exif_ExifBody_IfdField_TagEnum = 50885
-	Exif_ExifBody_IfdField_TagEnum__PanasonicTitle Exif_ExifBody_IfdField_TagEnum = 50898
-	Exif_ExifBody_IfdField_TagEnum__PanasonicTitle2 Exif_ExifBody_IfdField_TagEnum = 50899
-	Exif_ExifBody_IfdField_TagEnum__CameraCalibrationSig Exif_ExifBody_IfdField_TagEnum = 50931
-	Exif_ExifBody_IfdField_TagEnum__ProfileCalibrationSig Exif_ExifBody_IfdField_TagEnum = 50932
-	Exif_ExifBody_IfdField_TagEnum__ProfileIfd Exif_ExifBody_IfdField_TagEnum = 50933
-	Exif_ExifBody_IfdField_TagEnum__AsShotProfileName Exif_ExifBody_IfdField_TagEnum = 50934
-	Exif_ExifBody_IfdField_TagEnum__NoiseReductionApplied Exif_ExifBody_IfdField_TagEnum = 50935
-	Exif_ExifBody_IfdField_TagEnum__ProfileName Exif_ExifBody_IfdField_TagEnum = 50936
-	Exif_ExifBody_IfdField_TagEnum__ProfileHueSatMapDims Exif_ExifBody_IfdField_TagEnum = 50937
-	Exif_ExifBody_IfdField_TagEnum__ProfileHueSatMapData1 Exif_ExifBody_IfdField_TagEnum = 50938
-	Exif_ExifBody_IfdField_TagEnum__ProfileHueSatMapData2 Exif_ExifBody_IfdField_TagEnum = 50939
-	Exif_ExifBody_IfdField_TagEnum__ProfileToneCurve Exif_ExifBody_IfdField_TagEnum = 50940
-	Exif_ExifBody_IfdField_TagEnum__ProfileEmbedPolicy Exif_ExifBody_IfdField_TagEnum = 50941
-	Exif_ExifBody_IfdField_TagEnum__ProfileCopyright Exif_ExifBody_IfdField_TagEnum = 50942
-	Exif_ExifBody_IfdField_TagEnum__ForwardMatrix1 Exif_ExifBody_IfdField_TagEnum = 50964
-	Exif_ExifBody_IfdField_TagEnum__ForwardMatrix2 Exif_ExifBody_IfdField_TagEnum = 50965
-	Exif_ExifBody_IfdField_TagEnum__PreviewApplicationName Exif_ExifBody_IfdField_TagEnum = 50966
-	Exif_ExifBody_IfdField_TagEnum__PreviewApplicationVersion Exif_ExifBody_IfdField_TagEnum = 50967
-	Exif_ExifBody_IfdField_TagEnum__PreviewSettingsName Exif_ExifBody_IfdField_TagEnum = 50968
-	Exif_ExifBody_IfdField_TagEnum__PreviewSettingsDigest Exif_ExifBody_IfdField_TagEnum = 50969
-	Exif_ExifBody_IfdField_TagEnum__PreviewColorSpace Exif_ExifBody_IfdField_TagEnum = 50970
-	Exif_ExifBody_IfdField_TagEnum__PreviewDateTime Exif_ExifBody_IfdField_TagEnum = 50971
-	Exif_ExifBody_IfdField_TagEnum__RawImageDigest Exif_ExifBody_IfdField_TagEnum = 50972
-	Exif_ExifBody_IfdField_TagEnum__OriginalRawFileDigest Exif_ExifBody_IfdField_TagEnum = 50973
-	Exif_ExifBody_IfdField_TagEnum__SubTileBlockSize Exif_ExifBody_IfdField_TagEnum = 50974
-	Exif_ExifBody_IfdField_TagEnum__RowInterleaveFactor Exif_ExifBody_IfdField_TagEnum = 50975
-	Exif_ExifBody_IfdField_TagEnum__ProfileLookTableDims Exif_ExifBody_IfdField_TagEnum = 50981
-	Exif_ExifBody_IfdField_TagEnum__ProfileLookTableData Exif_ExifBody_IfdField_TagEnum = 50982
-	Exif_ExifBody_IfdField_TagEnum__OpcodeList1 Exif_ExifBody_IfdField_TagEnum = 51008
-	Exif_ExifBody_IfdField_TagEnum__OpcodeList2 Exif_ExifBody_IfdField_TagEnum = 51009
-	Exif_ExifBody_IfdField_TagEnum__OpcodeList3 Exif_ExifBody_IfdField_TagEnum = 51022
-	Exif_ExifBody_IfdField_TagEnum__NoiseProfile Exif_ExifBody_IfdField_TagEnum = 51041
-	Exif_ExifBody_IfdField_TagEnum__TimeCodes Exif_ExifBody_IfdField_TagEnum = 51043
-	Exif_ExifBody_IfdField_TagEnum__FrameRate Exif_ExifBody_IfdField_TagEnum = 51044
-	Exif_ExifBody_IfdField_TagEnum__TStop Exif_ExifBody_IfdField_TagEnum = 51058
-	Exif_ExifBody_IfdField_TagEnum__ReelName Exif_ExifBody_IfdField_TagEnum = 51081
-	Exif_ExifBody_IfdField_TagEnum__OriginalDefaultFinalSize Exif_ExifBody_IfdField_TagEnum = 51089
-	Exif_ExifBody_IfdField_TagEnum__OriginalBestQualitySize Exif_ExifBody_IfdField_TagEnum = 51090
-	Exif_ExifBody_IfdField_TagEnum__OriginalDefaultCropSize Exif_ExifBody_IfdField_TagEnum = 51091
-	Exif_ExifBody_IfdField_TagEnum__CameraLabel Exif_ExifBody_IfdField_TagEnum = 51105
-	Exif_ExifBody_IfdField_TagEnum__ProfileHueSatMapEncoding Exif_ExifBody_IfdField_TagEnum = 51107
-	Exif_ExifBody_IfdField_TagEnum__ProfileLookTableEncoding Exif_ExifBody_IfdField_TagEnum = 51108
-	Exif_ExifBody_IfdField_TagEnum__BaselineExposureOffset Exif_ExifBody_IfdField_TagEnum = 51109
-	Exif_ExifBody_IfdField_TagEnum__DefaultBlackRender Exif_ExifBody_IfdField_TagEnum = 51110
-	Exif_ExifBody_IfdField_TagEnum__NewRawImageDigest Exif_ExifBody_IfdField_TagEnum = 51111
-	Exif_ExifBody_IfdField_TagEnum__RawToPreviewGain Exif_ExifBody_IfdField_TagEnum = 51112
-	Exif_ExifBody_IfdField_TagEnum__DefaultUserCrop Exif_ExifBody_IfdField_TagEnum = 51125
-	Exif_ExifBody_IfdField_TagEnum__Padding Exif_ExifBody_IfdField_TagEnum = 59932
-	Exif_ExifBody_IfdField_TagEnum__OffsetSchema Exif_ExifBody_IfdField_TagEnum = 59933
-	Exif_ExifBody_IfdField_TagEnum__OwnerName2 Exif_ExifBody_IfdField_TagEnum = 65000
-	Exif_ExifBody_IfdField_TagEnum__SerialNumber2 Exif_ExifBody_IfdField_TagEnum = 65001
-	Exif_ExifBody_IfdField_TagEnum__Lens Exif_ExifBody_IfdField_TagEnum = 65002
-	Exif_ExifBody_IfdField_TagEnum__KdcIfd Exif_ExifBody_IfdField_TagEnum = 65024
-	Exif_ExifBody_IfdField_TagEnum__RawFile Exif_ExifBody_IfdField_TagEnum = 65100
-	Exif_ExifBody_IfdField_TagEnum__Converter Exif_ExifBody_IfdField_TagEnum = 65101
-	Exif_ExifBody_IfdField_TagEnum__WhiteBalance2 Exif_ExifBody_IfdField_TagEnum = 65102
-	Exif_ExifBody_IfdField_TagEnum__Exposure Exif_ExifBody_IfdField_TagEnum = 65105
-	Exif_ExifBody_IfdField_TagEnum__Shadows Exif_ExifBody_IfdField_TagEnum = 65106
-	Exif_ExifBody_IfdField_TagEnum__Brightness Exif_ExifBody_IfdField_TagEnum = 65107
-	Exif_ExifBody_IfdField_TagEnum__Contrast2 Exif_ExifBody_IfdField_TagEnum = 65108
-	Exif_ExifBody_IfdField_TagEnum__Saturation2 Exif_ExifBody_IfdField_TagEnum = 65109
-	Exif_ExifBody_IfdField_TagEnum__Sharpness2 Exif_ExifBody_IfdField_TagEnum = 65110
-	Exif_ExifBody_IfdField_TagEnum__Smoothness Exif_ExifBody_IfdField_TagEnum = 65111
-	Exif_ExifBody_IfdField_TagEnum__MoireFilter Exif_ExifBody_IfdField_TagEnum = 65112
-)
-var values_Exif_ExifBody_IfdField_TagEnum = map[Exif_ExifBody_IfdField_TagEnum]struct{}{256: {}, 257: {}, 258: {}, 259: {}, 262: {}, 263: {}, 264: {}, 265: {}, 266: {}, 269: {}, 270: {}, 271: {}, 272: {}, 273: {}, 274: {}, 277: {}, 278: {}, 279: {}, 280: {}, 281: {}, 282: {}, 283: {}, 284: {}, 285: {}, 286: {}, 287: {}, 288: {}, 289: {}, 290: {}, 291: {}, 292: {}, 293: {}, 296: {}, 297: {}, 300: {}, 301: {}, 305: {}, 306: {}, 315: {}, 316: {}, 317: {}, 318: {}, 319: {}, 320: {}, 321: {}, 322: {}, 323: {}, 324: {}, 325: {}, 326: {}, 327: {}, 328: {}, 330: {}, 332: {}, 333: {}, 334: {}, 336: {}, 337: {}, 338: {}, 339: {}, 340: {}, 341: {}, 342: {}, 343: {}, 344: {}, 345: {}, 346: {}, 347: {}, 351: {}, 400: {}, 401: {}, 402: {}, 403: {}, 404: {}, 405: {}, 433: {}, 434: {}, 435: {}, 437: {}, 512: {}, 513: {}, 514: {}, 515: {}, 517: {}, 518: {}, 519: {}, 520: {}, 521: {}, 529: {}, 530: {}, 531: {}, 532: {}, 559: {}, 700: {}, 999: {}, 4096: {}, 4097: {}, 4098: {}, 18246: {}, 18247: {}, 18248: {}, 18249: {}, 28672: {}, 28722: {}, 28725: {}, 28727: {}, 32781: {}, 32931: {}, 32932: {}, 32933: {}, 32934: {}, 32953: {}, 32954: {}, 32955: {}, 32956: {}, 32995: {}, 32996: {}, 32997: {}, 32998: {}, 33300: {}, 33301: {}, 33302: {}, 33303: {}, 33304: {}, 33305: {}, 33306: {}, 33405: {}, 33421: {}, 33422: {}, 33423: {}, 33424: {}, 33432: {}, 33434: {}, 33437: {}, 33445: {}, 33446: {}, 33447: {}, 33448: {}, 33449: {}, 33450: {}, 33451: {}, 33452: {}, 33550: {}, 33589: {}, 33590: {}, 33628: {}, 33629: {}, 33630: {}, 33631: {}, 33723: {}, 33918: {}, 33919: {}, 33920: {}, 33921: {}, 33922: {}, 34016: {}, 34017: {}, 34018: {}, 34019: {}, 34020: {}, 34021: {}, 34022: {}, 34023: {}, 34024: {}, 34025: {}, 34026: {}, 34027: {}, 34028: {}, 34029: {}, 34030: {}, 34031: {}, 34032: {}, 34118: {}, 34152: {}, 34232: {}, 34263: {}, 34264: {}, 34306: {}, 34310: {}, 34377: {}, 34665: {}, 34675: {}, 34687: {}, 34688: {}, 34689: {}, 34690: {}, 34732: {}, 34735: {}, 34736: {}, 34737: {}, 34750: {}, 34850: {}, 34852: {}, 34853: {}, 34855: {}, 34856: {}, 34857: {}, 34858: {}, 34859: {}, 34864: {}, 34865: {}, 34866: {}, 34867: {}, 34868: {}, 34869: {}, 34908: {}, 34909: {}, 34910: {}, 34929: {}, 34954: {}, 36864: {}, 36867: {}, 36868: {}, 36873: {}, 36880: {}, 36881: {}, 36882: {}, 37121: {}, 37122: {}, 37377: {}, 37378: {}, 37379: {}, 37380: {}, 37381: {}, 37382: {}, 37383: {}, 37384: {}, 37385: {}, 37386: {}, 37387: {}, 37388: {}, 37389: {}, 37390: {}, 37391: {}, 37392: {}, 37393: {}, 37394: {}, 37395: {}, 37396: {}, 37397: {}, 37398: {}, 37399: {}, 37434: {}, 37435: {}, 37436: {}, 37439: {}, 37500: {}, 37510: {}, 37520: {}, 37521: {}, 37522: {}, 37679: {}, 37680: {}, 37681: {}, 37724: {}, 37888: {}, 37889: {}, 37890: {}, 37891: {}, 37892: {}, 37893: {}, 40091: {}, 40092: {}, 40093: {}, 40094: {}, 40095: {}, 40960: {}, 40961: {}, 40962: {}, 40963: {}, 40964: {}, 40965: {}, 40976: {}, 40977: {}, 41217: {}, 41218: {}, 41483: {}, 41484: {}, 41485: {}, 41486: {}, 41487: {}, 41488: {}, 41489: {}, 41490: {}, 41491: {}, 41492: {}, 41493: {}, 41494: {}, 41495: {}, 41728: {}, 41729: {}, 41730: {}, 41985: {}, 41986: {}, 41987: {}, 41988: {}, 41989: {}, 41990: {}, 41991: {}, 41992: {}, 41993: {}, 41994: {}, 41995: {}, 41996: {}, 42016: {}, 42032: {}, 42033: {}, 42034: {}, 42035: {}, 42036: {}, 42037: {}, 42112: {}, 42113: {}, 42240: {}, 44992: {}, 44993: {}, 44994: {}, 44995: {}, 44996: {}, 44997: {}, 48129: {}, 48130: {}, 48131: {}, 48132: {}, 48256: {}, 48257: {}, 48258: {}, 48259: {}, 48320: {}, 48321: {}, 48322: {}, 48323: {}, 48324: {}, 48325: {}, 50215: {}, 50216: {}, 50217: {}, 50218: {}, 50255: {}, 50341: {}, 50547: {}, 50560: {}, 50706: {}, 50707: {}, 50708: {}, 50709: {}, 50710: {}, 50711: {}, 50712: {}, 50713: {}, 50714: {}, 50715: {}, 50716: {}, 50717: {}, 50718: {}, 50719: {}, 50720: {}, 50721: {}, 50722: {}, 50723: {}, 50724: {}, 50725: {}, 50726: {}, 50727: {}, 50728: {}, 50729: {}, 50730: {}, 50731: {}, 50732: {}, 50733: {}, 50734: {}, 50735: {}, 50736: {}, 50737: {}, 50738: {}, 50739: {}, 50740: {}, 50741: {}, 50752: {}, 50778: {}, 50779: {}, 50780: {}, 50781: {}, 50784: {}, 50827: {}, 50828: {}, 50829: {}, 50830: {}, 50831: {}, 50832: {}, 50833: {}, 50834: {}, 50879: {}, 50885: {}, 50898: {}, 50899: {}, 50931: {}, 50932: {}, 50933: {}, 50934: {}, 50935: {}, 50936: {}, 50937: {}, 50938: {}, 50939: {}, 50940: {}, 50941: {}, 50942: {}, 50964: {}, 50965: {}, 50966: {}, 50967: {}, 50968: {}, 50969: {}, 50970: {}, 50971: {}, 50972: {}, 50973: {}, 50974: {}, 50975: {}, 50981: {}, 50982: {}, 51008: {}, 51009: {}, 51022: {}, 51041: {}, 51043: {}, 51044: {}, 51058: {}, 51081: {}, 51089: {}, 51090: {}, 51091: {}, 51105: {}, 51107: {}, 51108: {}, 51109: {}, 51110: {}, 51111: {}, 51112: {}, 51125: {}, 59932: {}, 59933: {}, 65000: {}, 65001: {}, 65002: {}, 65024: {}, 65100: {}, 65101: {}, 65102: {}, 65105: {}, 65106: {}, 65107: {}, 65108: {}, 65109: {}, 65110: {}, 65111: {}, 65112: {}}
-func (v Exif_ExifBody_IfdField_TagEnum) isDefined() bool {
-	_, ok := values_Exif_ExifBody_IfdField_TagEnum[v]
-	return ok
-}
 type Exif_ExifBody_IfdField struct {
-	Tag Exif_ExifBody_IfdField_TagEnum
-	FieldType Exif_ExifBody_IfdField_FieldTypeEnum
-	Length uint32
-	OfsOrData uint32
+	TagRaw uint16
+	FieldType Exif_FieldType
+	NumValues uint32
+	OfsData uint32
 	_io *kaitai.Stream
 	_root *Exif
 	_parent *Exif_ExifBody_Ifd
-	_f_byteLength bool
-	byteLength int
+	_raw_data []byte
+	_f_bytesPerValue bool
+	bytesPerValue int8
 	_f_data bool
-	data []byte
-	_f_isImmediateData bool
-	isImmediateData bool
-	_f_typeByteLength bool
-	typeByteLength int8
+	data interface{}
+	_f_gpsTag bool
+	gpsTag Exif_GpsTag
+	_f_hasImmediateData bool
+	hasImmediateData bool
+	_f_lenData bool
+	lenData int
+	_f_subIfd bool
+	subIfd *Exif_ExifBody_Ifd
+	_f_tag bool
+	tag Exif_Tag
 	_is_le int
 }
 func NewExif_ExifBody_IfdField() *Exif_ExifBody_IfdField {
@@ -809,106 +1089,726 @@ func (this *Exif_ExifBody_IfdField) Read(io *kaitai.Stream, parent *Exif_ExifBod
 }
 
 func (this *Exif_ExifBody_IfdField) _read_le() (err error) {
-	tmp17, err := this._io.ReadU2le()
+	tmp25, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Tag = Exif_ExifBody_IfdField_TagEnum(tmp17)
-	tmp18, err := this._io.ReadU2le()
+	this.TagRaw = uint16(tmp25)
+	tmp26, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.FieldType = Exif_ExifBody_IfdField_FieldTypeEnum(tmp18)
-	tmp19, err := this._io.ReadU4le()
+	this.FieldType = Exif_FieldType(tmp26)
+	tmp27, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Length = uint32(tmp19)
-	tmp20, err := this._io.ReadU4le()
+	this.NumValues = uint32(tmp27)
+	tmp28, err := this.HasImmediateData()
 	if err != nil {
 		return err
 	}
-	this.OfsOrData = uint32(tmp20)
+	if (!(tmp28)) {
+		tmp29, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.OfsData = uint32(tmp29)
+	}
 	return err
 }
 
 func (this *Exif_ExifBody_IfdField) _read_be() (err error) {
-	tmp21, err := this._io.ReadU2be()
+	tmp30, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Tag = Exif_ExifBody_IfdField_TagEnum(tmp21)
-	tmp22, err := this._io.ReadU2be()
+	this.TagRaw = uint16(tmp30)
+	tmp31, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.FieldType = Exif_ExifBody_IfdField_FieldTypeEnum(tmp22)
-	tmp23, err := this._io.ReadU4be()
+	this.FieldType = Exif_FieldType(tmp31)
+	tmp32, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Length = uint32(tmp23)
-	tmp24, err := this._io.ReadU4be()
+	this.NumValues = uint32(tmp32)
+	tmp33, err := this.HasImmediateData()
 	if err != nil {
 		return err
 	}
-	this.OfsOrData = uint32(tmp24)
+	if (!(tmp33)) {
+		tmp34, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.OfsData = uint32(tmp34)
+	}
 	return err
 }
-func (this *Exif_ExifBody_IfdField) ByteLength() (v int, err error) {
-	if (this._f_byteLength) {
-		return this.byteLength, nil
+
+/**
+ * Size in bytes of a single value of type `field_type`, or 0 if
+ * `field_type` is not one of the known types (in which case the size
+ * cannot be determined and `data` will be empty).
+ * @see <a href="https://www.media.mit.edu/pia/Research/deepview/exif.html#DataForm">Source</a>
+ */
+func (this *Exif_ExifBody_IfdField) BytesPerValue() (v int8, err error) {
+	if (this._f_bytesPerValue) {
+		return this.bytesPerValue, nil
 	}
-	this._f_byteLength = true
-	tmp25, err := this.TypeByteLength()
-	if err != nil {
-		return 0, err
+	this._f_bytesPerValue = true
+	var tmp35 int8;
+	if ( ((this.FieldType == Exif_FieldType__Byte) || (this.FieldType == Exif_FieldType__Ascii) || (this.FieldType == Exif_FieldType__Sbyte) || (this.FieldType == Exif_FieldType__Undefined) || (this.FieldType == Exif_FieldType__Utf8)) ) {
+		tmp35 = 1
+	} else {
+		var tmp36 int8;
+		if ( ((this.FieldType == Exif_FieldType__Short) || (this.FieldType == Exif_FieldType__Sshort)) ) {
+			tmp36 = 2
+		} else {
+			var tmp37 int8;
+			if ( ((this.FieldType == Exif_FieldType__Long) || (this.FieldType == Exif_FieldType__Slong) || (this.FieldType == Exif_FieldType__Float) || (this.FieldType == Exif_FieldType__Ifd)) ) {
+				tmp37 = 4
+			} else {
+				var tmp38 int8;
+				if ( ((this.FieldType == Exif_FieldType__Rational) || (this.FieldType == Exif_FieldType__Srational) || (this.FieldType == Exif_FieldType__Double)) ) {
+					tmp38 = 8
+				} else {
+					tmp38 = 0
+				}
+				tmp37 = tmp38
+			}
+			tmp36 = tmp37
+		}
+		tmp35 = tmp36
 	}
-	this.byteLength = int(this.Length * tmp25)
-	return this.byteLength, nil
+	this.bytesPerValue = int8(tmp35)
+	return this.bytesPerValue, nil
 }
-func (this *Exif_ExifBody_IfdField) Data() (v []byte, err error) {
+func (this *Exif_ExifBody_IfdField) Data() (v interface{}, err error) {
 	if (this._f_data) {
 		return this.data, nil
 	}
 	this._f_data = true
-	tmp26, err := this.IsImmediateData()
+	var tmp39 *kaitai.Stream;
+	tmp40, err := this.HasImmediateData()
 	if err != nil {
 		return nil, err
 	}
-	if (!(tmp26)) {
+	if (tmp40) {
+		tmp39 = this._io
+	} else {
+		tmp39 = this._root._io
+	}
+	thisIo := tmp39
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return nil, err
+	}
+	var tmp41 int8;
+	tmp42, err := this.HasImmediateData()
+	if err != nil {
+		return nil, err
+	}
+	if (tmp42) {
+		tmp41 = 8
+	} else {
+		tmp41 = this.OfsData
+	}
+	_, err = thisIo.Seek(int64(tmp41), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	switch this._is_le {
+	case 0:
+		switch (this.FieldType) {
+		case Exif_FieldType__Ascii:
+			tmp43, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp44, err := thisIo.ReadBytes(int(tmp43))
+			if err != nil {
+				return nil, err
+			}
+			tmp44 = tmp44
+			this._raw_data = tmp44
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp45 := NewExif_ExifBody_AsciiString()
+			err = tmp45.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp45
+		case Exif_FieldType__Double:
+			tmp46, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp47, err := thisIo.ReadBytes(int(tmp46))
+			if err != nil {
+				return nil, err
+			}
+			tmp47 = tmp47
+			this._raw_data = tmp47
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp48 := NewExif_ExifBody_Doubles()
+			err = tmp48.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp48
+		case Exif_FieldType__Float:
+			tmp49, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp50, err := thisIo.ReadBytes(int(tmp49))
+			if err != nil {
+				return nil, err
+			}
+			tmp50 = tmp50
+			this._raw_data = tmp50
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp51 := NewExif_ExifBody_Floats()
+			err = tmp51.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp51
+		case Exif_FieldType__Ifd:
+			tmp52, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp53, err := thisIo.ReadBytes(int(tmp52))
+			if err != nil {
+				return nil, err
+			}
+			tmp53 = tmp53
+			this._raw_data = tmp53
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp54 := NewExif_ExifBody_Longs()
+			err = tmp54.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp54
+		case Exif_FieldType__Long:
+			tmp55, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp56, err := thisIo.ReadBytes(int(tmp55))
+			if err != nil {
+				return nil, err
+			}
+			tmp56 = tmp56
+			this._raw_data = tmp56
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp57 := NewExif_ExifBody_Longs()
+			err = tmp57.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp57
+		case Exif_FieldType__Rational:
+			tmp58, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp59, err := thisIo.ReadBytes(int(tmp58))
+			if err != nil {
+				return nil, err
+			}
+			tmp59 = tmp59
+			this._raw_data = tmp59
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp60 := NewExif_ExifBody_Rationals()
+			err = tmp60.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp60
+		case Exif_FieldType__Sbyte:
+			tmp61, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp62, err := thisIo.ReadBytes(int(tmp61))
+			if err != nil {
+				return nil, err
+			}
+			tmp62 = tmp62
+			this._raw_data = tmp62
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp63 := NewExif_ExifBody_Sbytes()
+			err = tmp63.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp63
+		case Exif_FieldType__Short:
+			tmp64, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp65, err := thisIo.ReadBytes(int(tmp64))
+			if err != nil {
+				return nil, err
+			}
+			tmp65 = tmp65
+			this._raw_data = tmp65
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp66 := NewExif_ExifBody_Shorts()
+			err = tmp66.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp66
+		case Exif_FieldType__Slong:
+			tmp67, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp68, err := thisIo.ReadBytes(int(tmp67))
+			if err != nil {
+				return nil, err
+			}
+			tmp68 = tmp68
+			this._raw_data = tmp68
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp69 := NewExif_ExifBody_Slongs()
+			err = tmp69.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp69
+		case Exif_FieldType__Srational:
+			tmp70, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp71, err := thisIo.ReadBytes(int(tmp70))
+			if err != nil {
+				return nil, err
+			}
+			tmp71 = tmp71
+			this._raw_data = tmp71
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp72 := NewExif_ExifBody_Srationals()
+			err = tmp72.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp72
+		case Exif_FieldType__Sshort:
+			tmp73, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp74, err := thisIo.ReadBytes(int(tmp73))
+			if err != nil {
+				return nil, err
+			}
+			tmp74 = tmp74
+			this._raw_data = tmp74
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp75 := NewExif_ExifBody_Sshorts()
+			err = tmp75.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp75
+		case Exif_FieldType__Utf8:
+			tmp76, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp77, err := thisIo.ReadBytes(int(tmp76))
+			if err != nil {
+				return nil, err
+			}
+			tmp77 = tmp77
+			this._raw_data = tmp77
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp78 := NewExif_ExifBody_Utf8String()
+			err = tmp78.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp78
+		default:
+			tmp79, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp80, err := thisIo.ReadBytes(int(tmp79))
+			if err != nil {
+				return nil, err
+			}
+			tmp80 = tmp80
+			this._raw_data = tmp80
+		}
+	case 1:
+		switch (this.FieldType) {
+		case Exif_FieldType__Ascii:
+			tmp81, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp82, err := thisIo.ReadBytes(int(tmp81))
+			if err != nil {
+				return nil, err
+			}
+			tmp82 = tmp82
+			this._raw_data = tmp82
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp83 := NewExif_ExifBody_AsciiString()
+			err = tmp83.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp83
+		case Exif_FieldType__Double:
+			tmp84, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp85, err := thisIo.ReadBytes(int(tmp84))
+			if err != nil {
+				return nil, err
+			}
+			tmp85 = tmp85
+			this._raw_data = tmp85
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp86 := NewExif_ExifBody_Doubles()
+			err = tmp86.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp86
+		case Exif_FieldType__Float:
+			tmp87, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp88, err := thisIo.ReadBytes(int(tmp87))
+			if err != nil {
+				return nil, err
+			}
+			tmp88 = tmp88
+			this._raw_data = tmp88
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp89 := NewExif_ExifBody_Floats()
+			err = tmp89.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp89
+		case Exif_FieldType__Ifd:
+			tmp90, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp91, err := thisIo.ReadBytes(int(tmp90))
+			if err != nil {
+				return nil, err
+			}
+			tmp91 = tmp91
+			this._raw_data = tmp91
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp92 := NewExif_ExifBody_Longs()
+			err = tmp92.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp92
+		case Exif_FieldType__Long:
+			tmp93, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp94, err := thisIo.ReadBytes(int(tmp93))
+			if err != nil {
+				return nil, err
+			}
+			tmp94 = tmp94
+			this._raw_data = tmp94
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp95 := NewExif_ExifBody_Longs()
+			err = tmp95.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp95
+		case Exif_FieldType__Rational:
+			tmp96, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp97, err := thisIo.ReadBytes(int(tmp96))
+			if err != nil {
+				return nil, err
+			}
+			tmp97 = tmp97
+			this._raw_data = tmp97
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp98 := NewExif_ExifBody_Rationals()
+			err = tmp98.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp98
+		case Exif_FieldType__Sbyte:
+			tmp99, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp100, err := thisIo.ReadBytes(int(tmp99))
+			if err != nil {
+				return nil, err
+			}
+			tmp100 = tmp100
+			this._raw_data = tmp100
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp101 := NewExif_ExifBody_Sbytes()
+			err = tmp101.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp101
+		case Exif_FieldType__Short:
+			tmp102, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp103, err := thisIo.ReadBytes(int(tmp102))
+			if err != nil {
+				return nil, err
+			}
+			tmp103 = tmp103
+			this._raw_data = tmp103
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp104 := NewExif_ExifBody_Shorts()
+			err = tmp104.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp104
+		case Exif_FieldType__Slong:
+			tmp105, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp106, err := thisIo.ReadBytes(int(tmp105))
+			if err != nil {
+				return nil, err
+			}
+			tmp106 = tmp106
+			this._raw_data = tmp106
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp107 := NewExif_ExifBody_Slongs()
+			err = tmp107.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp107
+		case Exif_FieldType__Srational:
+			tmp108, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp109, err := thisIo.ReadBytes(int(tmp108))
+			if err != nil {
+				return nil, err
+			}
+			tmp109 = tmp109
+			this._raw_data = tmp109
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp110 := NewExif_ExifBody_Srationals()
+			err = tmp110.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp110
+		case Exif_FieldType__Sshort:
+			tmp111, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp112, err := thisIo.ReadBytes(int(tmp111))
+			if err != nil {
+				return nil, err
+			}
+			tmp112 = tmp112
+			this._raw_data = tmp112
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp113 := NewExif_ExifBody_Sshorts()
+			err = tmp113.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp113
+		case Exif_FieldType__Utf8:
+			tmp114, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp115, err := thisIo.ReadBytes(int(tmp114))
+			if err != nil {
+				return nil, err
+			}
+			tmp115 = tmp115
+			this._raw_data = tmp115
+			_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+			tmp116 := NewExif_ExifBody_Utf8String()
+			err = tmp116.Read(_io__raw_data, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.data = tmp116
+		default:
+			tmp117, err := this.LenData()
+			if err != nil {
+				return nil, err
+			}
+			tmp118, err := thisIo.ReadBytes(int(tmp117))
+			if err != nil {
+				return nil, err
+			}
+			tmp118 = tmp118
+			this._raw_data = tmp118
+		}
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.data, nil
+}
+func (this *Exif_ExifBody_IfdField) GpsTag() (v Exif_GpsTag, err error) {
+	if (this._f_gpsTag) {
+		return this.gpsTag, nil
+	}
+	this._f_gpsTag = true
+	if (this._parent.IsGpsIfd) {
+		this.gpsTag = Exif_GpsTag(Exif_GpsTag(this.TagRaw))
+	}
+	return this.gpsTag, nil
+}
+func (this *Exif_ExifBody_IfdField) HasImmediateData() (v bool, err error) {
+	if (this._f_hasImmediateData) {
+		return this.hasImmediateData, nil
+	}
+	this._f_hasImmediateData = true
+	tmp119, err := this.LenData()
+	if err != nil {
+		return false, err
+	}
+	this.hasImmediateData = bool(tmp119 <= 4)
+	return this.hasImmediateData, nil
+}
+func (this *Exif_ExifBody_IfdField) LenData() (v int, err error) {
+	if (this._f_lenData) {
+		return this.lenData, nil
+	}
+	this._f_lenData = true
+	tmp120, err := this.BytesPerValue()
+	if err != nil {
+		return 0, err
+	}
+	this.lenData = int(tmp120 * this.NumValues)
+	return this.lenData, nil
+}
+
+/**
+ * All the "IFD Pointer" tags (as the core Exif standard calls them),
+ * i.e. `ExifOffset`, `InteropOffset` and `GPSInfo` (using the
+ * [ExifTool's
+ * names](https://exiftool.sourceforge.net/TagNames/EXIF.html)),
+ * should be of type `LONG` (`field_type::long`). However, the type
+ * `SLONG` (`field_type::slong`) type has also been observed:
+ * <https://github.com/Exiv2/exiv2/blob/2cd987a731236037b6b78cbff897d08685a8ef49/test/data/FurnaceCreekInn.jpg>
+ * 
+ * Both ExifTool and Exiv2 accept `LONG`, `SLONG` and also `IFD`.
+ * Exiv2 specifically supports only these three types - see
+ * <https://github.com/Exiv2/exiv2/blob/2cd987a731236037b6b78cbff897d08685a8ef49/src/tiffvisitor_int.cpp#L1141>
+ * (Git tag "v0.28.8"). ExifTool is more lenient - it even accepts
+ * any integer type. In practice, real files most likely only use one
+ * of the three types supported by Exiv2, so we stick with that.
+ */
+func (this *Exif_ExifBody_IfdField) SubIfd() (v *Exif_ExifBody_Ifd, err error) {
+	if (this._f_subIfd) {
+		return this.subIfd, nil
+	}
+	this._f_subIfd = true
+	tmp121, err := this.Data()
+	if err != nil {
+		return nil, err
+	}
+	tmp122, err := this.Tag()
+	if err != nil {
+		return nil, err
+	}
+	tmp123, err := this.Tag()
+	if err != nil {
+		return nil, err
+	}
+	tmp124, err := this.Tag()
+	if err != nil {
+		return nil, err
+	}
+	if ( ((this.NumValues == 1) && ( ((this.FieldType == Exif_FieldType__Long) || (this.FieldType == Exif_FieldType__Ifd) || ( ((this.FieldType == Exif_FieldType__Slong) && (tmp121.(*Exif_ExifBody_Slongs).Values[0] >= 0)) )) ) && ( ((tmp122 == Exif_Tag__ExifOffset) || (tmp123 == Exif_Tag__InteropOffset) || (tmp124 == Exif_Tag__GpsInfo)) )) ) {
 		thisIo := this._root._io
 		_pos, err := thisIo.Pos()
 		if err != nil {
 			return nil, err
 		}
-		_, err = thisIo.Seek(int64(this.OfsOrData), io.SeekStart)
+		var tmp125 uint32;
+		if (this.FieldType == Exif_FieldType__Slong) {
+			tmp126, err := this.Data()
+			if err != nil {
+				return nil, err
+			}
+			tmp125 = uint32(tmp126.(*Exif_ExifBody_Slongs).Values[0])
+		} else {
+			tmp127, err := this.Data()
+			if err != nil {
+				return nil, err
+			}
+			tmp125 = tmp127.(*Exif_ExifBody_Longs).Values[0]
+		}
+		_, err = thisIo.Seek(int64(tmp125), io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
 		switch this._is_le {
 		case 0:
-			tmp27, err := this.ByteLength()
+			tmp128, err := this.Tag()
 			if err != nil {
 				return nil, err
 			}
-			tmp28, err := thisIo.ReadBytes(int(tmp27))
+			tmp129 := NewExif_ExifBody_Ifd(tmp128 == Exif_Tag__GpsInfo)
+			err = tmp129.Read(thisIo, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			tmp28 = tmp28
-			this.data = tmp28
+			this.subIfd = tmp129
 		case 1:
-			tmp29, err := this.ByteLength()
+			tmp130, err := this.Tag()
 			if err != nil {
 				return nil, err
 			}
-			tmp30, err := thisIo.ReadBytes(int(tmp29))
+			tmp131 := NewExif_ExifBody_Ifd(tmp130 == Exif_Tag__GpsInfo)
+			err = tmp131.Read(thisIo, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			tmp30 = tmp30
-			this.data = tmp30
+			this.subIfd = tmp131
 		default:
 			err = kaitai.UndecidedEndiannessError{}
 		}
@@ -917,37 +1817,657 @@ func (this *Exif_ExifBody_IfdField) Data() (v []byte, err error) {
 			return nil, err
 		}
 	}
-	return this.data, nil
+	return this.subIfd, nil
 }
-func (this *Exif_ExifBody_IfdField) IsImmediateData() (v bool, err error) {
-	if (this._f_isImmediateData) {
-		return this.isImmediateData, nil
+func (this *Exif_ExifBody_IfdField) Tag() (v Exif_Tag, err error) {
+	if (this._f_tag) {
+		return this.tag, nil
 	}
-	this._f_isImmediateData = true
-	tmp31, err := this.ByteLength()
-	if err != nil {
-		return false, err
+	this._f_tag = true
+	if (!(this._parent.IsGpsIfd)) {
+		this.tag = Exif_Tag(Exif_Tag(this.TagRaw))
 	}
-	this.isImmediateData = bool(tmp31 <= 4)
-	return this.isImmediateData, nil
+	return this.tag, nil
 }
-func (this *Exif_ExifBody_IfdField) TypeByteLength() (v int8, err error) {
-	if (this._f_typeByteLength) {
-		return this.typeByteLength, nil
+
+/**
+ * Raw numeric tag. Don't read this field - access `tag` or `gps_tag`
+ * instead.
+ */
+type Exif_ExifBody_Longs struct {
+	Values []uint32
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Longs() *Exif_ExifBody_Longs {
+	return &Exif_ExifBody_Longs{
 	}
-	this._f_typeByteLength = true
-	var tmp32 int8;
-	if (this.FieldType == Exif_ExifBody_IfdField_FieldTypeEnum__Word) {
-		tmp32 = 2
-	} else {
-		var tmp33 int8;
-		if (this.FieldType == Exif_ExifBody_IfdField_FieldTypeEnum__Dword) {
-			tmp33 = 4
-		} else {
-			tmp33 = 1
+}
+
+func (this Exif_ExifBody_Longs) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Longs) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Longs) _read_le() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp132, err := this._io.ReadU4le()
+		if err != nil {
+			return err
 		}
-		tmp32 = tmp33
+		this.Values = append(this.Values, tmp132)
 	}
-	this.typeByteLength = int8(tmp32)
-	return this.typeByteLength, nil
+	return err
+}
+
+func (this *Exif_ExifBody_Longs) _read_be() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp133, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp133)
+	}
+	return err
+}
+type Exif_ExifBody_Rational struct {
+	ValueNum uint32
+	ValueDen uint32
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_Rationals
+	_f_value bool
+	value float64
+	_is_le int
+}
+func NewExif_ExifBody_Rational() *Exif_ExifBody_Rational {
+	return &Exif_ExifBody_Rational{
+	}
+}
+
+func (this Exif_ExifBody_Rational) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Rational) Read(io *kaitai.Stream, parent *Exif_ExifBody_Rationals, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Rational) _read_le() (err error) {
+	tmp134, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ValueNum = uint32(tmp134)
+	tmp135, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ValueDen = uint32(tmp135)
+	return err
+}
+
+func (this *Exif_ExifBody_Rational) _read_be() (err error) {
+	tmp136, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.ValueNum = uint32(tmp136)
+	tmp137, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.ValueDen = uint32(tmp137)
+	return err
+}
+
+/**
+ * If denominator is zero, this instance is disabled to prevent
+ * `ZeroDivisionError` in Python.
+ * 
+ * Here's a sample file with a zero denominator in the IFD fields
+ * `tag::x_resolution` and `tag::y_resolution` (both of which are of
+ * type `field_type::rational`):
+ * <https://github.com/python-pillow/Pillow/blob/807d689a83738027b6f6e0f219a6a6dd30e01c08/Tests/images/exif-dpi-zerodivision.jpg>
+ */
+func (this *Exif_ExifBody_Rational) Value() (v float64, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	if (this.ValueDen != 0) {
+		this.value = float64((this.ValueNum + 0.0) / this.ValueDen)
+	}
+	return this.value, nil
+}
+
+/**
+ * Numerator
+ */
+
+/**
+ * Denominator
+ */
+type Exif_ExifBody_Rationals struct {
+	Values []*Exif_ExifBody_Rational
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Rationals() *Exif_ExifBody_Rationals {
+	return &Exif_ExifBody_Rationals{
+	}
+}
+
+func (this Exif_ExifBody_Rationals) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Rationals) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Rationals) _read_le() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp138 := NewExif_ExifBody_Rational()
+		err = tmp138.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp138)
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Rationals) _read_be() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp139 := NewExif_ExifBody_Rational()
+		err = tmp139.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp139)
+	}
+	return err
+}
+type Exif_ExifBody_Sbytes struct {
+	Values []int8
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Sbytes() *Exif_ExifBody_Sbytes {
+	return &Exif_ExifBody_Sbytes{
+	}
+}
+
+func (this Exif_ExifBody_Sbytes) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Sbytes) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Sbytes) _read_le() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp140, err := this._io.ReadS1()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp140)
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Sbytes) _read_be() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp141, err := this._io.ReadS1()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp141)
+	}
+	return err
+}
+type Exif_ExifBody_Shorts struct {
+	Values []uint16
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Shorts() *Exif_ExifBody_Shorts {
+	return &Exif_ExifBody_Shorts{
+	}
+}
+
+func (this Exif_ExifBody_Shorts) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Shorts) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Shorts) _read_le() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp142, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp142)
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Shorts) _read_be() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp143, err := this._io.ReadU2be()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp143)
+	}
+	return err
+}
+type Exif_ExifBody_Slongs struct {
+	Values []int32
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Slongs() *Exif_ExifBody_Slongs {
+	return &Exif_ExifBody_Slongs{
+	}
+}
+
+func (this Exif_ExifBody_Slongs) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Slongs) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Slongs) _read_le() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp144, err := this._io.ReadS4le()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp144)
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Slongs) _read_be() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp145, err := this._io.ReadS4be()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp145)
+	}
+	return err
+}
+type Exif_ExifBody_Srational struct {
+	ValueNum int32
+	ValueDen int32
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_Srationals
+	_f_value bool
+	value float64
+	_is_le int
+}
+func NewExif_ExifBody_Srational() *Exif_ExifBody_Srational {
+	return &Exif_ExifBody_Srational{
+	}
+}
+
+func (this Exif_ExifBody_Srational) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Srational) Read(io *kaitai.Stream, parent *Exif_ExifBody_Srationals, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Srational) _read_le() (err error) {
+	tmp146, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.ValueNum = int32(tmp146)
+	tmp147, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.ValueDen = int32(tmp147)
+	return err
+}
+
+func (this *Exif_ExifBody_Srational) _read_be() (err error) {
+	tmp148, err := this._io.ReadS4be()
+	if err != nil {
+		return err
+	}
+	this.ValueNum = int32(tmp148)
+	tmp149, err := this._io.ReadS4be()
+	if err != nil {
+		return err
+	}
+	this.ValueDen = int32(tmp149)
+	return err
+}
+
+/**
+ * If denominator is zero, this instance is disabled to prevent
+ * `ZeroDivisionError` in Python.
+ * 
+ * Here's a sample file with a zero denominator in the IFD field
+ * `tag::exposure_compensation` of type `field_type::srational`:
+ * <https://github.com/drewnoakes/metadata-extractor-images/blob/651ad0e67aa8d43d358ad05f9bc07b52d8b9ac6e/jpg/Reconyx%20Hyperfire%20HP4K.jpg>
+ */
+func (this *Exif_ExifBody_Srational) Value() (v float64, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	if (this.ValueDen != 0) {
+		this.value = float64((this.ValueNum + 0.0) / this.ValueDen)
+	}
+	return this.value, nil
+}
+
+/**
+ * Numerator
+ */
+
+/**
+ * Denominator
+ */
+type Exif_ExifBody_Srationals struct {
+	Values []*Exif_ExifBody_Srational
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Srationals() *Exif_ExifBody_Srationals {
+	return &Exif_ExifBody_Srationals{
+	}
+}
+
+func (this Exif_ExifBody_Srationals) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Srationals) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Srationals) _read_le() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp150 := NewExif_ExifBody_Srational()
+		err = tmp150.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp150)
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Srationals) _read_be() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp151 := NewExif_ExifBody_Srational()
+		err = tmp151.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp151)
+	}
+	return err
+}
+type Exif_ExifBody_Sshorts struct {
+	Values []int16
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Sshorts() *Exif_ExifBody_Sshorts {
+	return &Exif_ExifBody_Sshorts{
+	}
+}
+
+func (this Exif_ExifBody_Sshorts) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Sshorts) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Sshorts) _read_le() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp152, err := this._io.ReadS2le()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp152)
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Sshorts) _read_be() (err error) {
+	for i := 0; i < int(this._parent.NumValues); i++ {
+		_ = i
+		tmp153, err := this._io.ReadS2be()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp153)
+	}
+	return err
+}
+type Exif_ExifBody_Utf8String struct {
+	Value string
+	_io *kaitai.Stream
+	_root *Exif
+	_parent *Exif_ExifBody_IfdField
+	_is_le int
+}
+func NewExif_ExifBody_Utf8String() *Exif_ExifBody_Utf8String {
+	return &Exif_ExifBody_Utf8String{
+	}
+}
+
+func (this Exif_ExifBody_Utf8String) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Utf8String) Read(io *kaitai.Stream, parent *Exif_ExifBody_IfdField, root *Exif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Exif_ExifBody_Utf8String) _read_le() (err error) {
+	tmp154, err := this._io.ReadBytesTerm(0, false, true, false)
+	if err != nil {
+		return err
+	}
+	this.Value = string(tmp154)
+	return err
+}
+
+func (this *Exif_ExifBody_Utf8String) _read_be() (err error) {
+	tmp155, err := this._io.ReadBytesTerm(0, false, true, false)
+	if err != nil {
+		return err
+	}
+	this.Value = string(tmp155)
+	return err
 }

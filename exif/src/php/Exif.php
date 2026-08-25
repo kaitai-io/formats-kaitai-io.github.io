@@ -1,6 +1,18 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * Sample files (numbers in parentheses show how many files per extension contain
+ * Exif metadata out of the total):
+ * 
+ * * <https://github.com/ianare/exif-py/tree/a69bf74770caf6b333221658f5092ed69f99faac/tests/resources/jpg> (84/93 .jpg, 1/1 .jpeg)
+ * * <https://github.com/exiftool/exiftool/tree/2200871d9cef988051d2a99d67df3bda6cbb30a8/t/images> (34/41 .jpg, 0/1 .png)
+ * * <https://github.com/Exiv2/exiv2/tree/648ada43dcb35ce6077f38183ace52d5e2071f64/test/data> (85/155 .jpg, 5/23 .png)
+ * * <https://github.com/python-pillow/Pillow/tree/807d689a83738027b6f6e0f219a6a6dd30e01c08/Tests/images> (36/55 .jpg, 3/420 .png)
+ * * <https://github.com/drewnoakes/metadata-extractor-images/tree/651ad0e67aa8d43d358ad05f9bc07b52d8b9ac6e/jpg> (335/430 .jpg)
+ * * <https://github.com/libexif/libexif-testsuite/tree/8c1f5bbc18d2cbc80b01b3f9b3eb29546310acf2> (15/18 .jpg)
+ */
+
 namespace {
     class Exif extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Exif $_root = null) {
@@ -48,40 +60,46 @@ namespace Exif {
         }
 
         private function _readLE() {
-            $this->_m_version = $this->_io->readU2le();
-            $this->_m_ifd0Ofs = $this->_io->readU4le();
+            $this->_m_magic = $this->_io->readU2le();
+            if (!($this->_m_magic == 42)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(42, $this->_m_magic, $this->_io, "/types/exif_body/seq/0");
+            }
+            $this->_m_ofsIfd0 = $this->_io->readU4le();
         }
 
         private function _readBE() {
-            $this->_m_version = $this->_io->readU2be();
-            $this->_m_ifd0Ofs = $this->_io->readU4be();
+            $this->_m_magic = $this->_io->readU2be();
+            if (!($this->_m_magic == 42)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(42, $this->_m_magic, $this->_io, "/types/exif_body/seq/0");
+            }
+            $this->_m_ofsIfd0 = $this->_io->readU4be();
         }
         protected $_m_ifd0;
         public function ifd0() {
             if ($this->_m_ifd0 !== null)
                 return $this->_m_ifd0;
             $_pos = $this->_io->pos();
-            $this->_io->seek($this->ifd0Ofs());
+            $this->_io->seek($this->ofsIfd0());
             if ($this->_m__is_le) {
-                $this->_m_ifd0 = new \Exif\ExifBody\Ifd($this->_io, $this, $this->_root, $this->_m__is_le);
+                $this->_m_ifd0 = new \Exif\ExifBody\Ifd(false, $this->_io, $this, $this->_root, $this->_m__is_le);
             } else {
-                $this->_m_ifd0 = new \Exif\ExifBody\Ifd($this->_io, $this, $this->_root, $this->_m__is_le);
+                $this->_m_ifd0 = new \Exif\ExifBody\Ifd(false, $this->_io, $this, $this->_root, $this->_m__is_le);
             }
             $this->_io->seek($_pos);
             return $this->_m_ifd0;
         }
-        protected $_m_version;
-        protected $_m_ifd0Ofs;
-        public function version() { return $this->_m_version; }
-        public function ifd0Ofs() { return $this->_m_ifd0Ofs; }
+        protected $_m_magic;
+        protected $_m_ofsIfd0;
+        public function magic() { return $this->_m_magic; }
+        public function ofsIfd0() { return $this->_m_ofsIfd0; }
     }
 }
 
 namespace Exif\ExifBody {
-    class Ifd extends \Kaitai\Struct\Struct {
+    class AsciiString extends \Kaitai\Struct\Struct {
         protected $_m__is_le;
 
-        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Exif $_root = null, $is_le = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m__is_le = $is_le;
             $this->_read();
@@ -99,35 +117,183 @@ namespace Exif\ExifBody {
         }
 
         private function _readLE() {
+            $this->_m_value = $this->_io->readBytesTerm(0, false, true, false);
+        }
+
+        private function _readBE() {
+            $this->_m_value = $this->_io->readBytesTerm(0, false, true, false);
+        }
+        protected $_m_value;
+
+        /**
+         * According to the core Exif standard, this should be ASCII, but in
+         * practice, this is not always the case. From
+         * [ExifTool FAQ](https://exiftool.sourceforge.net/faq.html#Q10):
+         * 
+         * > However, it is not uncommon for applications to write UTF-8 or
+         * other encodings where ASCII is expected.
+         * 
+         * Therefore, this field is a byte array, not a string. This is to
+         * avoid non-ASCII characters being treated as errors in some target
+         * languages, such as Python. The only assumption is that a null byte
+         * terminates the value (although sometimes the null byte is missing,
+         * which we tolerate thanks to the `eos-error: false` setting).
+         * 
+         * Here is a sample JPEG file with a `tag::image_description` IFD
+         * field of type `field_type::ascii` that actually contains UTF-8:
+         * <https://github.com/Exiv2/exiv2/blob/2cd987a731236037b6b78cbff897d08685a8ef49/test/data/exiv2-bug501.jpg>
+         * 
+         * It seems that most modern applications (e.g. GIMP 3.0.6) always
+         * use UTF-8 when storing Exif metadata. However, there are also
+         * files with a non-UTF-8 encoding, for example
+         * <https://github.com/drewnoakes/metadata-extractor-images/blob/651ad0e67aa8d43d358ad05f9bc07b52d8b9ac6e/jpg/Ricoh%20DC-3Z%20(low%20res).jpg>
+         * has a `tag::copyright` IFD field with a value encoded in
+         * ISO-8859-1 (Latin-1).
+         */
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Doubles extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readF8le();
+            }
+        }
+
+        private function _readBE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readF8be();
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Floats extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readF4le();
+            }
+        }
+
+        private function _readBE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readF4be();
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Ifd extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(bool $isGpsIfd, \Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_m_isGpsIfd = $isGpsIfd;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
             $this->_m_numFields = $this->_io->readU2le();
+            $this->_m__raw_fields = [];
             $this->_m_fields = [];
             $n = $this->numFields();
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_fields[] = new \Exif\ExifBody\IfdField($this->_io, $this, $this->_root, $this->_m__is_le);
+                $this->_m__raw_fields[] = $this->_io->readBytes(12);
+                $_io__raw_fields = new \Kaitai\Struct\Stream(end($this->_m__raw_fields));
+                $this->_m_fields[] = new \Exif\ExifBody\IfdField($_io__raw_fields, $this, $this->_root, $this->_m__is_le);
             }
-            $this->_m_nextIfdOfs = $this->_io->readU4le();
+            $this->_m_ofsNextIfd = $this->_io->readU4le();
         }
 
         private function _readBE() {
             $this->_m_numFields = $this->_io->readU2be();
+            $this->_m__raw_fields = [];
             $this->_m_fields = [];
             $n = $this->numFields();
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_fields[] = new \Exif\ExifBody\IfdField($this->_io, $this, $this->_root, $this->_m__is_le);
+                $this->_m__raw_fields[] = $this->_io->readBytes(12);
+                $_io__raw_fields = new \Kaitai\Struct\Stream(end($this->_m__raw_fields));
+                $this->_m_fields[] = new \Exif\ExifBody\IfdField($_io__raw_fields, $this, $this->_root, $this->_m__is_le);
             }
-            $this->_m_nextIfdOfs = $this->_io->readU4be();
+            $this->_m_ofsNextIfd = $this->_io->readU4be();
         }
         protected $_m_nextIfd;
         public function nextIfd() {
             if ($this->_m_nextIfd !== null)
                 return $this->_m_nextIfd;
-            if ($this->nextIfdOfs() != 0) {
+            if ($this->ofsNextIfd() != 0) {
                 $_pos = $this->_io->pos();
-                $this->_io->seek($this->nextIfdOfs());
+                $this->_io->seek($this->ofsNextIfd());
                 if ($this->_m__is_le) {
-                    $this->_m_nextIfd = new \Exif\ExifBody\Ifd($this->_io, $this, $this->_root, $this->_m__is_le);
+                    $this->_m_nextIfd = new \Exif\ExifBody\Ifd($this->isGpsIfd(), $this->_io, $this, $this->_root, $this->_m__is_le);
                 } else {
-                    $this->_m_nextIfd = new \Exif\ExifBody\Ifd($this->_io, $this, $this->_root, $this->_m__is_le);
+                    $this->_m_nextIfd = new \Exif\ExifBody\Ifd($this->isGpsIfd(), $this->_io, $this, $this->_root, $this->_m__is_le);
                 }
                 $this->_io->seek($_pos);
             }
@@ -135,10 +301,14 @@ namespace Exif\ExifBody {
         }
         protected $_m_numFields;
         protected $_m_fields;
-        protected $_m_nextIfdOfs;
+        protected $_m_ofsNextIfd;
+        protected $_m_isGpsIfd;
+        protected $_m__raw_fields;
         public function numFields() { return $this->_m_numFields; }
         public function fields() { return $this->_m_fields; }
-        public function nextIfdOfs() { return $this->_m_nextIfdOfs; }
+        public function ofsNextIfd() { return $this->_m_ofsNextIfd; }
+        public function isGpsIfd() { return $this->_m_isGpsIfd; }
+        public function _raw_fields() { return $this->_m__raw_fields; }
     }
 }
 
@@ -164,79 +334,784 @@ namespace Exif\ExifBody {
         }
 
         private function _readLE() {
-            $this->_m_tag = $this->_io->readU2le();
+            $this->_m_tagRaw = $this->_io->readU2le();
             $this->_m_fieldType = $this->_io->readU2le();
-            $this->_m_length = $this->_io->readU4le();
-            $this->_m_ofsOrData = $this->_io->readU4le();
+            $this->_m_numValues = $this->_io->readU4le();
+            if (!($this->hasImmediateData())) {
+                $this->_m_ofsData = $this->_io->readU4le();
+            }
         }
 
         private function _readBE() {
-            $this->_m_tag = $this->_io->readU2be();
+            $this->_m_tagRaw = $this->_io->readU2be();
             $this->_m_fieldType = $this->_io->readU2be();
-            $this->_m_length = $this->_io->readU4be();
-            $this->_m_ofsOrData = $this->_io->readU4be();
+            $this->_m_numValues = $this->_io->readU4be();
+            if (!($this->hasImmediateData())) {
+                $this->_m_ofsData = $this->_io->readU4be();
+            }
         }
-        protected $_m_byteLength;
-        public function byteLength() {
-            if ($this->_m_byteLength !== null)
-                return $this->_m_byteLength;
-            $this->_m_byteLength = $this->length() * $this->typeByteLength();
-            return $this->_m_byteLength;
+        protected $_m_bytesPerValue;
+
+        /**
+         * Size in bytes of a single value of type `field_type`, or 0 if
+         * `field_type` is not one of the known types (in which case the size
+         * cannot be determined and `data` will be empty).
+         */
+        public function bytesPerValue() {
+            if ($this->_m_bytesPerValue !== null)
+                return $this->_m_bytesPerValue;
+            $this->_m_bytesPerValue = ( (($this->fieldType() == \Exif\FieldType::BYTE) || ($this->fieldType() == \Exif\FieldType::ASCII) || ($this->fieldType() == \Exif\FieldType::SBYTE) || ($this->fieldType() == \Exif\FieldType::UNDEFINED) || ($this->fieldType() == \Exif\FieldType::UTF8))  ? 1 : ( (($this->fieldType() == \Exif\FieldType::SHORT) || ($this->fieldType() == \Exif\FieldType::SSHORT))  ? 2 : ( (($this->fieldType() == \Exif\FieldType::LONG) || ($this->fieldType() == \Exif\FieldType::SLONG) || ($this->fieldType() == \Exif\FieldType::FLOAT) || ($this->fieldType() == \Exif\FieldType::IFD))  ? 4 : ( (($this->fieldType() == \Exif\FieldType::RATIONAL) || ($this->fieldType() == \Exif\FieldType::SRATIONAL) || ($this->fieldType() == \Exif\FieldType::DOUBLE))  ? 8 : 0))));
+            return $this->_m_bytesPerValue;
         }
         protected $_m_data;
         public function data() {
             if ($this->_m_data !== null)
                 return $this->_m_data;
-            if (!($this->isImmediateData())) {
+            $io = ($this->hasImmediateData() ? $this->_io() : $this->_root()->_io());
+            $_pos = $io->pos();
+            $io->seek(($this->hasImmediateData() ? 8 : $this->ofsData()));
+            if ($this->_m__is_le) {
+                switch ($this->fieldType()) {
+                    case \Exif\FieldType::ASCII:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\AsciiString($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::DOUBLE:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Doubles($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::FLOAT:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Floats($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::IFD:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Longs($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::LONG:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Longs($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::RATIONAL:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Rationals($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SBYTE:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Sbytes($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SHORT:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Shorts($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SLONG:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Slongs($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SRATIONAL:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Srationals($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SSHORT:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Sshorts($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::UTF8:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Utf8String($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    default:
+                        $this->_m_data = $io->readBytes($this->lenData());
+                        break;
+                }
+            } else {
+                switch ($this->fieldType()) {
+                    case \Exif\FieldType::ASCII:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\AsciiString($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::DOUBLE:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Doubles($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::FLOAT:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Floats($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::IFD:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Longs($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::LONG:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Longs($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::RATIONAL:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Rationals($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SBYTE:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Sbytes($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SHORT:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Shorts($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SLONG:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Slongs($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SRATIONAL:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Srationals($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::SSHORT:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Sshorts($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    case \Exif\FieldType::UTF8:
+                        $this->_m__raw_data = $io->readBytes($this->lenData());
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Exif\ExifBody\Utf8String($_io__raw_data, $this, $this->_root, $this->_m__is_le);
+                        break;
+                    default:
+                        $this->_m_data = $io->readBytes($this->lenData());
+                        break;
+                }
+            }
+            $io->seek($_pos);
+            return $this->_m_data;
+        }
+        protected $_m_gpsTag;
+        public function gpsTag() {
+            if ($this->_m_gpsTag !== null)
+                return $this->_m_gpsTag;
+            if ($this->_parent()->isGpsIfd()) {
+                $this->_m_gpsTag = $this->tagRaw();
+            }
+            return $this->_m_gpsTag;
+        }
+        protected $_m_hasImmediateData;
+        public function hasImmediateData() {
+            if ($this->_m_hasImmediateData !== null)
+                return $this->_m_hasImmediateData;
+            $this->_m_hasImmediateData = $this->lenData() <= 4;
+            return $this->_m_hasImmediateData;
+        }
+        protected $_m_lenData;
+        public function lenData() {
+            if ($this->_m_lenData !== null)
+                return $this->_m_lenData;
+            $this->_m_lenData = $this->bytesPerValue() * $this->numValues();
+            return $this->_m_lenData;
+        }
+        protected $_m_subIfd;
+
+        /**
+         * All the "IFD Pointer" tags (as the core Exif standard calls them),
+         * i.e. `ExifOffset`, `InteropOffset` and `GPSInfo` (using the
+         * [ExifTool's
+         * names](https://exiftool.sourceforge.net/TagNames/EXIF.html)),
+         * should be of type `LONG` (`field_type::long`). However, the type
+         * `SLONG` (`field_type::slong`) type has also been observed:
+         * <https://github.com/Exiv2/exiv2/blob/2cd987a731236037b6b78cbff897d08685a8ef49/test/data/FurnaceCreekInn.jpg>
+         * 
+         * Both ExifTool and Exiv2 accept `LONG`, `SLONG` and also `IFD`.
+         * Exiv2 specifically supports only these three types - see
+         * <https://github.com/Exiv2/exiv2/blob/2cd987a731236037b6b78cbff897d08685a8ef49/src/tiffvisitor_int.cpp#L1141>
+         * (Git tag "v0.28.8"). ExifTool is more lenient - it even accepts
+         * any integer type. In practice, real files most likely only use one
+         * of the three types supported by Exiv2, so we stick with that.
+         */
+        public function subIfd() {
+            if ($this->_m_subIfd !== null)
+                return $this->_m_subIfd;
+            if ( (($this->numValues() == 1) && ( (($this->fieldType() == \Exif\FieldType::LONG) || ($this->fieldType() == \Exif\FieldType::IFD) || ( (($this->fieldType() == \Exif\FieldType::SLONG) && ($this->data()->values()[0] >= 0)) )) ) && ( (($this->tag() == \Exif\Tag::EXIF_OFFSET) || ($this->tag() == \Exif\Tag::INTEROP_OFFSET) || ($this->tag() == \Exif\Tag::GPS_INFO)) )) ) {
                 $io = $this->_root()->_io();
                 $_pos = $io->pos();
-                $io->seek($this->ofsOrData());
+                $io->seek(($this->fieldType() == \Exif\FieldType::SLONG ? $this->data()->values()[0] : $this->data()->values()[0]));
                 if ($this->_m__is_le) {
-                    $this->_m_data = $io->readBytes($this->byteLength());
+                    $this->_m_subIfd = new \Exif\ExifBody\Ifd($this->tag() == \Exif\Tag::GPS_INFO, $io, $this, $this->_root, $this->_m__is_le);
                 } else {
-                    $this->_m_data = $io->readBytes($this->byteLength());
+                    $this->_m_subIfd = new \Exif\ExifBody\Ifd($this->tag() == \Exif\Tag::GPS_INFO, $io, $this, $this->_root, $this->_m__is_le);
                 }
                 $io->seek($_pos);
             }
-            return $this->_m_data;
-        }
-        protected $_m_isImmediateData;
-        public function isImmediateData() {
-            if ($this->_m_isImmediateData !== null)
-                return $this->_m_isImmediateData;
-            $this->_m_isImmediateData = $this->byteLength() <= 4;
-            return $this->_m_isImmediateData;
-        }
-        protected $_m_typeByteLength;
-        public function typeByteLength() {
-            if ($this->_m_typeByteLength !== null)
-                return $this->_m_typeByteLength;
-            $this->_m_typeByteLength = ($this->fieldType() == \Exif\ExifBody\IfdField\FieldTypeEnum::WORD ? 2 : ($this->fieldType() == \Exif\ExifBody\IfdField\FieldTypeEnum::DWORD ? 4 : 1));
-            return $this->_m_typeByteLength;
+            return $this->_m_subIfd;
         }
         protected $_m_tag;
+        public function tag() {
+            if ($this->_m_tag !== null)
+                return $this->_m_tag;
+            if (!($this->_parent()->isGpsIfd())) {
+                $this->_m_tag = $this->tagRaw();
+            }
+            return $this->_m_tag;
+        }
+        protected $_m_tagRaw;
         protected $_m_fieldType;
-        protected $_m_length;
-        protected $_m_ofsOrData;
-        public function tag() { return $this->_m_tag; }
+        protected $_m_numValues;
+        protected $_m_ofsData;
+        protected $_m__raw_data;
+
+        /**
+         * Raw numeric tag. Don't read this field - access `tag` or `gps_tag`
+         * instead.
+         */
+        public function tagRaw() { return $this->_m_tagRaw; }
         public function fieldType() { return $this->_m_fieldType; }
-        public function length() { return $this->_m_length; }
-        public function ofsOrData() { return $this->_m_ofsOrData; }
+        public function numValues() { return $this->_m_numValues; }
+        public function ofsData() { return $this->_m_ofsData; }
+        public function _raw_data() { return $this->_m__raw_data; }
     }
 }
 
-namespace Exif\ExifBody\IfdField {
-    class FieldTypeEnum {
+namespace Exif\ExifBody {
+    class Longs extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readU4le();
+            }
+        }
+
+        private function _readBE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readU4be();
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Rational extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\Rationals $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_valueNum = $this->_io->readU4le();
+            $this->_m_valueDen = $this->_io->readU4le();
+        }
+
+        private function _readBE() {
+            $this->_m_valueNum = $this->_io->readU4be();
+            $this->_m_valueDen = $this->_io->readU4be();
+        }
+        protected $_m_value;
+
+        /**
+         * If denominator is zero, this instance is disabled to prevent
+         * `ZeroDivisionError` in Python.
+         * 
+         * Here's a sample file with a zero denominator in the IFD fields
+         * `tag::x_resolution` and `tag::y_resolution` (both of which are of
+         * type `field_type::rational`):
+         * <https://github.com/python-pillow/Pillow/blob/807d689a83738027b6f6e0f219a6a6dd30e01c08/Tests/images/exif-dpi-zerodivision.jpg>
+         */
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            if ($this->valueDen() != 0) {
+                $this->_m_value = ($this->valueNum() + 0.0) / $this->valueDen();
+            }
+            return $this->_m_value;
+        }
+        protected $_m_valueNum;
+        protected $_m_valueDen;
+
+        /**
+         * Numerator
+         */
+        public function valueNum() { return $this->_m_valueNum; }
+
+        /**
+         * Denominator
+         */
+        public function valueDen() { return $this->_m_valueDen; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Rationals extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = new \Exif\ExifBody\Rational($this->_io, $this, $this->_root, $this->_m__is_le);
+            }
+        }
+
+        private function _readBE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = new \Exif\ExifBody\Rational($this->_io, $this, $this->_root, $this->_m__is_le);
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Sbytes extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readS1();
+            }
+        }
+
+        private function _readBE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readS1();
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Shorts extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readU2le();
+            }
+        }
+
+        private function _readBE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readU2be();
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Slongs extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readS4le();
+            }
+        }
+
+        private function _readBE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readS4be();
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Srational extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\Srationals $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_valueNum = $this->_io->readS4le();
+            $this->_m_valueDen = $this->_io->readS4le();
+        }
+
+        private function _readBE() {
+            $this->_m_valueNum = $this->_io->readS4be();
+            $this->_m_valueDen = $this->_io->readS4be();
+        }
+        protected $_m_value;
+
+        /**
+         * If denominator is zero, this instance is disabled to prevent
+         * `ZeroDivisionError` in Python.
+         * 
+         * Here's a sample file with a zero denominator in the IFD field
+         * `tag::exposure_compensation` of type `field_type::srational`:
+         * <https://github.com/drewnoakes/metadata-extractor-images/blob/651ad0e67aa8d43d358ad05f9bc07b52d8b9ac6e/jpg/Reconyx%20Hyperfire%20HP4K.jpg>
+         */
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            if ($this->valueDen() != 0) {
+                $this->_m_value = ($this->valueNum() + 0.0) / $this->valueDen();
+            }
+            return $this->_m_value;
+        }
+        protected $_m_valueNum;
+        protected $_m_valueDen;
+
+        /**
+         * Numerator
+         */
+        public function valueNum() { return $this->_m_valueNum; }
+
+        /**
+         * Denominator
+         */
+        public function valueDen() { return $this->_m_valueDen; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Srationals extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = new \Exif\ExifBody\Srational($this->_io, $this, $this->_root, $this->_m__is_le);
+            }
+        }
+
+        private function _readBE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = new \Exif\ExifBody\Srational($this->_io, $this, $this->_root, $this->_m__is_le);
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Sshorts extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readS2le();
+            }
+        }
+
+        private function _readBE() {
+            $this->_m_values = [];
+            $n = $this->_parent()->numValues();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readS2be();
+            }
+        }
+        protected $_m_values;
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Exif\ExifBody {
+    class Utf8String extends \Kaitai\Struct\Struct {
+        protected $_m__is_le;
+
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\IfdField $_parent = null, ?\Exif $_root = null, $is_le = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m__is_le = $is_le;
+            $this->_read();
+        }
+
+        private function _read() {
+
+            if (is_null($this->_m__is_le)) {
+                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
+            } else if ($this->_m__is_le) {
+                $this->_readLE();
+            } else {
+                $this->_readBE();
+            }
+        }
+
+        private function _readLE() {
+            $this->_m_value = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, false), "UTF-8");
+        }
+
+        private function _readBE() {
+            $this->_m_value = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, false), "UTF-8");
+        }
+        protected $_m_value;
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace Exif {
+    class FieldType {
         const BYTE = 1;
-        const ASCII_STRING = 2;
-        const WORD = 3;
-        const DWORD = 4;
+        const ASCII = 2;
+        const SHORT = 3;
+        const LONG = 4;
         const RATIONAL = 5;
+
+        /**
+         * 8-bit signed integer.
+         * 
+         * This type is missing from the official Exif specification, but
+         * it's part of TIFF 6.0. There's no known Exif tag of this type in
+         * the [standard
+         * namespace](https://exiftool.sourceforge.net/TagNames/EXIF.html)
+         * (there's no occurrence of `int8s` on the page), but it's used by
+         * many vendor-specific tags in `MakerNote` sub-IFDs, for example
+         * [Nikon](https://exiftool.sourceforge.net/TagNames/Nikon.html)
+         * (search for `int8s`).
+         * 
+         * Unfortunately, this implementation doesn't parse the contents of
+         * `MakerNote` tags (`tag::maker_note`) yet.
+         */
+        const SBYTE = 6;
         const UNDEFINED = 7;
+
+        /**
+         * 16-bit signed integer.
+         * 
+         * This type is missing from the official Exif specification, but
+         * it's part of TIFF 6.0 and some tags use it, for example
+         * `TimeZoneOffset` (`tag::time_zone_offset`).
+         */
+        const SSHORT = 8;
         const SLONG = 9;
         const SRATIONAL = 10;
 
-        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 7 => true, 9 => true, 10 => true];
+        /**
+         * Single precision (4-byte) IEEE 754 float.
+         * 
+         * This type is missing from the official Exif specification, but
+         * it's part of TIFF 6.0 and some tags use it, for example
+         * `ProfileToneCurve` (`tag::profile_tone_curve`).
+         */
+        const FLOAT = 11;
+
+        /**
+         * Double precision (8-byte) IEEE 754 float.
+         * 
+         * This type is missing from the official Exif specification, but
+         * it's part of TIFF 6.0 and some tags use it, for example
+         * `NoiseProfile` (`tag::noise_profile`).
+         */
+        const DOUBLE = 12;
+
+        /**
+         * Offset of an IFD (32-bit unsigned integer).
+         * 
+         * This type is missing from the official Exif specification, but
+         * it was defined in the [TIFF Technical Note
+         * 1](https://www.alternatiff.com/resources/TIFFPM6.pdf) (page 4).
+         * There's no known Exif tag of this type in the [standard
+         * namespace](https://exiftool.sourceforge.net/TagNames/EXIF.html)
+         * (there's no occurrence of `ifd` on the page), but there are some
+         * Olympus-specific tags in `MakerNote` sub-IFDs, e.g.
+         * `EquipmentIFD` or `CameraSettingsIFD`. See
+         * <https://github.com/exiftool/exiftool/blob/2200871d9cef988051d2a99d67df3bda6cbb30a8/lib/Image/ExifTool/Olympus.pm>
+         * (Git tag "13.59") - search for `'ifd'`. See also the sample file
+         * <https://github.com/exiftool/exiftool/blob/2200871d9cef988051d2a99d67df3bda6cbb30a8/t/images/Olympus2.jpg>,
+         * which contains these tags.
+         */
+        const IFD = 13;
+        const UTF8 = 129;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 129 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);
@@ -244,8 +1119,57 @@ namespace Exif\ExifBody\IfdField {
     }
 }
 
-namespace Exif\ExifBody\IfdField {
-    class TagEnum {
+namespace Exif {
+    class GpsTag {
+        const GPS_VERSION_ID = 0;
+        const GPS_LATITUDE_REF = 1;
+        const GPS_LATITUDE = 2;
+        const GPS_LONGITUDE_REF = 3;
+        const GPS_LONGITUDE = 4;
+        const GPS_ALTITUDE_REF = 5;
+        const GPS_ALTITUDE = 6;
+        const GPS_TIME_STAMP = 7;
+        const GPS_SATELLITES = 8;
+        const GPS_STATUS = 9;
+        const GPS_MEASURE_MODE = 10;
+        const GPS_DOP = 11;
+        const GPS_SPEED_REF = 12;
+        const GPS_SPEED = 13;
+        const GPS_TRACK_REF = 14;
+        const GPS_TRACK = 15;
+        const GPS_IMG_DIRECTION_REF = 16;
+        const GPS_IMG_DIRECTION = 17;
+        const GPS_MAP_DATUM = 18;
+        const GPS_DEST_LATITUDE_REF = 19;
+        const GPS_DEST_LATITUDE = 20;
+        const GPS_DEST_LONGITUDE_REF = 21;
+        const GPS_DEST_LONGITUDE = 22;
+        const GPS_DEST_BEARING_REF = 23;
+        const GPS_DEST_BEARING = 24;
+        const GPS_DEST_DISTANCE_REF = 25;
+        const GPS_DEST_DISTANCE = 26;
+        const GPS_PROCESSING_METHOD = 27;
+        const GPS_AREA_INFORMATION = 28;
+        const GPS_DATE_STAMP = 29;
+        const GPS_DIFFERENTIAL = 30;
+        const GPS_H_POSITIONING_ERROR = 31;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Exif {
+    class Tag {
+        const INTEROP_INDEX = 1;
+
+        /**
+         * Interoperability Version (not in the Exif spec, but used in practice)
+         */
+        const INTEROP_VERSION = 2;
         const IMAGE_WIDTH = 256;
         const IMAGE_HEIGHT = 257;
         const BITS_PER_SAMPLE = 258;
@@ -705,7 +1629,7 @@ namespace Exif\ExifBody\IfdField {
         const SMOOTHNESS = 65111;
         const MOIRE_FILTER = 65112;
 
-        private const _VALUES = [256 => true, 257 => true, 258 => true, 259 => true, 262 => true, 263 => true, 264 => true, 265 => true, 266 => true, 269 => true, 270 => true, 271 => true, 272 => true, 273 => true, 274 => true, 277 => true, 278 => true, 279 => true, 280 => true, 281 => true, 282 => true, 283 => true, 284 => true, 285 => true, 286 => true, 287 => true, 288 => true, 289 => true, 290 => true, 291 => true, 292 => true, 293 => true, 296 => true, 297 => true, 300 => true, 301 => true, 305 => true, 306 => true, 315 => true, 316 => true, 317 => true, 318 => true, 319 => true, 320 => true, 321 => true, 322 => true, 323 => true, 324 => true, 325 => true, 326 => true, 327 => true, 328 => true, 330 => true, 332 => true, 333 => true, 334 => true, 336 => true, 337 => true, 338 => true, 339 => true, 340 => true, 341 => true, 342 => true, 343 => true, 344 => true, 345 => true, 346 => true, 347 => true, 351 => true, 400 => true, 401 => true, 402 => true, 403 => true, 404 => true, 405 => true, 433 => true, 434 => true, 435 => true, 437 => true, 512 => true, 513 => true, 514 => true, 515 => true, 517 => true, 518 => true, 519 => true, 520 => true, 521 => true, 529 => true, 530 => true, 531 => true, 532 => true, 559 => true, 700 => true, 999 => true, 4096 => true, 4097 => true, 4098 => true, 18246 => true, 18247 => true, 18248 => true, 18249 => true, 28672 => true, 28722 => true, 28725 => true, 28727 => true, 32781 => true, 32931 => true, 32932 => true, 32933 => true, 32934 => true, 32953 => true, 32954 => true, 32955 => true, 32956 => true, 32995 => true, 32996 => true, 32997 => true, 32998 => true, 33300 => true, 33301 => true, 33302 => true, 33303 => true, 33304 => true, 33305 => true, 33306 => true, 33405 => true, 33421 => true, 33422 => true, 33423 => true, 33424 => true, 33432 => true, 33434 => true, 33437 => true, 33445 => true, 33446 => true, 33447 => true, 33448 => true, 33449 => true, 33450 => true, 33451 => true, 33452 => true, 33550 => true, 33589 => true, 33590 => true, 33628 => true, 33629 => true, 33630 => true, 33631 => true, 33723 => true, 33918 => true, 33919 => true, 33920 => true, 33921 => true, 33922 => true, 34016 => true, 34017 => true, 34018 => true, 34019 => true, 34020 => true, 34021 => true, 34022 => true, 34023 => true, 34024 => true, 34025 => true, 34026 => true, 34027 => true, 34028 => true, 34029 => true, 34030 => true, 34031 => true, 34032 => true, 34118 => true, 34152 => true, 34232 => true, 34263 => true, 34264 => true, 34306 => true, 34310 => true, 34377 => true, 34665 => true, 34675 => true, 34687 => true, 34688 => true, 34689 => true, 34690 => true, 34732 => true, 34735 => true, 34736 => true, 34737 => true, 34750 => true, 34850 => true, 34852 => true, 34853 => true, 34855 => true, 34856 => true, 34857 => true, 34858 => true, 34859 => true, 34864 => true, 34865 => true, 34866 => true, 34867 => true, 34868 => true, 34869 => true, 34908 => true, 34909 => true, 34910 => true, 34929 => true, 34954 => true, 36864 => true, 36867 => true, 36868 => true, 36873 => true, 36880 => true, 36881 => true, 36882 => true, 37121 => true, 37122 => true, 37377 => true, 37378 => true, 37379 => true, 37380 => true, 37381 => true, 37382 => true, 37383 => true, 37384 => true, 37385 => true, 37386 => true, 37387 => true, 37388 => true, 37389 => true, 37390 => true, 37391 => true, 37392 => true, 37393 => true, 37394 => true, 37395 => true, 37396 => true, 37397 => true, 37398 => true, 37399 => true, 37434 => true, 37435 => true, 37436 => true, 37439 => true, 37500 => true, 37510 => true, 37520 => true, 37521 => true, 37522 => true, 37679 => true, 37680 => true, 37681 => true, 37724 => true, 37888 => true, 37889 => true, 37890 => true, 37891 => true, 37892 => true, 37893 => true, 40091 => true, 40092 => true, 40093 => true, 40094 => true, 40095 => true, 40960 => true, 40961 => true, 40962 => true, 40963 => true, 40964 => true, 40965 => true, 40976 => true, 40977 => true, 41217 => true, 41218 => true, 41483 => true, 41484 => true, 41485 => true, 41486 => true, 41487 => true, 41488 => true, 41489 => true, 41490 => true, 41491 => true, 41492 => true, 41493 => true, 41494 => true, 41495 => true, 41728 => true, 41729 => true, 41730 => true, 41985 => true, 41986 => true, 41987 => true, 41988 => true, 41989 => true, 41990 => true, 41991 => true, 41992 => true, 41993 => true, 41994 => true, 41995 => true, 41996 => true, 42016 => true, 42032 => true, 42033 => true, 42034 => true, 42035 => true, 42036 => true, 42037 => true, 42112 => true, 42113 => true, 42240 => true, 44992 => true, 44993 => true, 44994 => true, 44995 => true, 44996 => true, 44997 => true, 48129 => true, 48130 => true, 48131 => true, 48132 => true, 48256 => true, 48257 => true, 48258 => true, 48259 => true, 48320 => true, 48321 => true, 48322 => true, 48323 => true, 48324 => true, 48325 => true, 50215 => true, 50216 => true, 50217 => true, 50218 => true, 50255 => true, 50341 => true, 50547 => true, 50560 => true, 50706 => true, 50707 => true, 50708 => true, 50709 => true, 50710 => true, 50711 => true, 50712 => true, 50713 => true, 50714 => true, 50715 => true, 50716 => true, 50717 => true, 50718 => true, 50719 => true, 50720 => true, 50721 => true, 50722 => true, 50723 => true, 50724 => true, 50725 => true, 50726 => true, 50727 => true, 50728 => true, 50729 => true, 50730 => true, 50731 => true, 50732 => true, 50733 => true, 50734 => true, 50735 => true, 50736 => true, 50737 => true, 50738 => true, 50739 => true, 50740 => true, 50741 => true, 50752 => true, 50778 => true, 50779 => true, 50780 => true, 50781 => true, 50784 => true, 50827 => true, 50828 => true, 50829 => true, 50830 => true, 50831 => true, 50832 => true, 50833 => true, 50834 => true, 50879 => true, 50885 => true, 50898 => true, 50899 => true, 50931 => true, 50932 => true, 50933 => true, 50934 => true, 50935 => true, 50936 => true, 50937 => true, 50938 => true, 50939 => true, 50940 => true, 50941 => true, 50942 => true, 50964 => true, 50965 => true, 50966 => true, 50967 => true, 50968 => true, 50969 => true, 50970 => true, 50971 => true, 50972 => true, 50973 => true, 50974 => true, 50975 => true, 50981 => true, 50982 => true, 51008 => true, 51009 => true, 51022 => true, 51041 => true, 51043 => true, 51044 => true, 51058 => true, 51081 => true, 51089 => true, 51090 => true, 51091 => true, 51105 => true, 51107 => true, 51108 => true, 51109 => true, 51110 => true, 51111 => true, 51112 => true, 51125 => true, 59932 => true, 59933 => true, 65000 => true, 65001 => true, 65002 => true, 65024 => true, 65100 => true, 65101 => true, 65102 => true, 65105 => true, 65106 => true, 65107 => true, 65108 => true, 65109 => true, 65110 => true, 65111 => true, 65112 => true];
+        private const _VALUES = [1 => true, 2 => true, 256 => true, 257 => true, 258 => true, 259 => true, 262 => true, 263 => true, 264 => true, 265 => true, 266 => true, 269 => true, 270 => true, 271 => true, 272 => true, 273 => true, 274 => true, 277 => true, 278 => true, 279 => true, 280 => true, 281 => true, 282 => true, 283 => true, 284 => true, 285 => true, 286 => true, 287 => true, 288 => true, 289 => true, 290 => true, 291 => true, 292 => true, 293 => true, 296 => true, 297 => true, 300 => true, 301 => true, 305 => true, 306 => true, 315 => true, 316 => true, 317 => true, 318 => true, 319 => true, 320 => true, 321 => true, 322 => true, 323 => true, 324 => true, 325 => true, 326 => true, 327 => true, 328 => true, 330 => true, 332 => true, 333 => true, 334 => true, 336 => true, 337 => true, 338 => true, 339 => true, 340 => true, 341 => true, 342 => true, 343 => true, 344 => true, 345 => true, 346 => true, 347 => true, 351 => true, 400 => true, 401 => true, 402 => true, 403 => true, 404 => true, 405 => true, 433 => true, 434 => true, 435 => true, 437 => true, 512 => true, 513 => true, 514 => true, 515 => true, 517 => true, 518 => true, 519 => true, 520 => true, 521 => true, 529 => true, 530 => true, 531 => true, 532 => true, 559 => true, 700 => true, 999 => true, 4096 => true, 4097 => true, 4098 => true, 18246 => true, 18247 => true, 18248 => true, 18249 => true, 28672 => true, 28722 => true, 28725 => true, 28727 => true, 32781 => true, 32931 => true, 32932 => true, 32933 => true, 32934 => true, 32953 => true, 32954 => true, 32955 => true, 32956 => true, 32995 => true, 32996 => true, 32997 => true, 32998 => true, 33300 => true, 33301 => true, 33302 => true, 33303 => true, 33304 => true, 33305 => true, 33306 => true, 33405 => true, 33421 => true, 33422 => true, 33423 => true, 33424 => true, 33432 => true, 33434 => true, 33437 => true, 33445 => true, 33446 => true, 33447 => true, 33448 => true, 33449 => true, 33450 => true, 33451 => true, 33452 => true, 33550 => true, 33589 => true, 33590 => true, 33628 => true, 33629 => true, 33630 => true, 33631 => true, 33723 => true, 33918 => true, 33919 => true, 33920 => true, 33921 => true, 33922 => true, 34016 => true, 34017 => true, 34018 => true, 34019 => true, 34020 => true, 34021 => true, 34022 => true, 34023 => true, 34024 => true, 34025 => true, 34026 => true, 34027 => true, 34028 => true, 34029 => true, 34030 => true, 34031 => true, 34032 => true, 34118 => true, 34152 => true, 34232 => true, 34263 => true, 34264 => true, 34306 => true, 34310 => true, 34377 => true, 34665 => true, 34675 => true, 34687 => true, 34688 => true, 34689 => true, 34690 => true, 34732 => true, 34735 => true, 34736 => true, 34737 => true, 34750 => true, 34850 => true, 34852 => true, 34853 => true, 34855 => true, 34856 => true, 34857 => true, 34858 => true, 34859 => true, 34864 => true, 34865 => true, 34866 => true, 34867 => true, 34868 => true, 34869 => true, 34908 => true, 34909 => true, 34910 => true, 34929 => true, 34954 => true, 36864 => true, 36867 => true, 36868 => true, 36873 => true, 36880 => true, 36881 => true, 36882 => true, 37121 => true, 37122 => true, 37377 => true, 37378 => true, 37379 => true, 37380 => true, 37381 => true, 37382 => true, 37383 => true, 37384 => true, 37385 => true, 37386 => true, 37387 => true, 37388 => true, 37389 => true, 37390 => true, 37391 => true, 37392 => true, 37393 => true, 37394 => true, 37395 => true, 37396 => true, 37397 => true, 37398 => true, 37399 => true, 37434 => true, 37435 => true, 37436 => true, 37439 => true, 37500 => true, 37510 => true, 37520 => true, 37521 => true, 37522 => true, 37679 => true, 37680 => true, 37681 => true, 37724 => true, 37888 => true, 37889 => true, 37890 => true, 37891 => true, 37892 => true, 37893 => true, 40091 => true, 40092 => true, 40093 => true, 40094 => true, 40095 => true, 40960 => true, 40961 => true, 40962 => true, 40963 => true, 40964 => true, 40965 => true, 40976 => true, 40977 => true, 41217 => true, 41218 => true, 41483 => true, 41484 => true, 41485 => true, 41486 => true, 41487 => true, 41488 => true, 41489 => true, 41490 => true, 41491 => true, 41492 => true, 41493 => true, 41494 => true, 41495 => true, 41728 => true, 41729 => true, 41730 => true, 41985 => true, 41986 => true, 41987 => true, 41988 => true, 41989 => true, 41990 => true, 41991 => true, 41992 => true, 41993 => true, 41994 => true, 41995 => true, 41996 => true, 42016 => true, 42032 => true, 42033 => true, 42034 => true, 42035 => true, 42036 => true, 42037 => true, 42112 => true, 42113 => true, 42240 => true, 44992 => true, 44993 => true, 44994 => true, 44995 => true, 44996 => true, 44997 => true, 48129 => true, 48130 => true, 48131 => true, 48132 => true, 48256 => true, 48257 => true, 48258 => true, 48259 => true, 48320 => true, 48321 => true, 48322 => true, 48323 => true, 48324 => true, 48325 => true, 50215 => true, 50216 => true, 50217 => true, 50218 => true, 50255 => true, 50341 => true, 50547 => true, 50560 => true, 50706 => true, 50707 => true, 50708 => true, 50709 => true, 50710 => true, 50711 => true, 50712 => true, 50713 => true, 50714 => true, 50715 => true, 50716 => true, 50717 => true, 50718 => true, 50719 => true, 50720 => true, 50721 => true, 50722 => true, 50723 => true, 50724 => true, 50725 => true, 50726 => true, 50727 => true, 50728 => true, 50729 => true, 50730 => true, 50731 => true, 50732 => true, 50733 => true, 50734 => true, 50735 => true, 50736 => true, 50737 => true, 50738 => true, 50739 => true, 50740 => true, 50741 => true, 50752 => true, 50778 => true, 50779 => true, 50780 => true, 50781 => true, 50784 => true, 50827 => true, 50828 => true, 50829 => true, 50830 => true, 50831 => true, 50832 => true, 50833 => true, 50834 => true, 50879 => true, 50885 => true, 50898 => true, 50899 => true, 50931 => true, 50932 => true, 50933 => true, 50934 => true, 50935 => true, 50936 => true, 50937 => true, 50938 => true, 50939 => true, 50940 => true, 50941 => true, 50942 => true, 50964 => true, 50965 => true, 50966 => true, 50967 => true, 50968 => true, 50969 => true, 50970 => true, 50971 => true, 50972 => true, 50973 => true, 50974 => true, 50975 => true, 50981 => true, 50982 => true, 51008 => true, 51009 => true, 51022 => true, 51041 => true, 51043 => true, 51044 => true, 51058 => true, 51081 => true, 51089 => true, 51090 => true, 51091 => true, 51105 => true, 51107 => true, 51108 => true, 51109 => true, 51110 => true, 51111 => true, 51112 => true, 51125 => true, 59932 => true, 59933 => true, 65000 => true, 65001 => true, 65002 => true, 65024 => true, 65100 => true, 65101 => true, 65102 => true, 65105 => true, 65106 => true, 65107 => true, 65108 => true, 65109 => true, 65110 => true, 65111 => true, 65112 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);

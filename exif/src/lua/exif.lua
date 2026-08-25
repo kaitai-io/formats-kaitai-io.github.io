@@ -5,9 +5,20 @@
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
+local stringstream = require("string_stream")
 local utils = require("utils")
+local str_decode = require("string_decode")
 
 -- 
+-- Sample files (numbers in parentheses show how many files per extension contain
+-- Exif metadata out of the total):
+-- 
+-- * <https://github.com/ianare/exif-py/tree/a69bf74770caf6b333221658f5092ed69f99faac/tests/resources/jpg> (84/93 .jpg, 1/1 .jpeg)
+-- * <https://github.com/exiftool/exiftool/tree/2200871d9cef988051d2a99d67df3bda6cbb30a8/t/images> (34/41 .jpg, 0/1 .png)
+-- * <https://github.com/Exiv2/exiv2/tree/648ada43dcb35ce6077f38183ace52d5e2071f64/test/data> (85/155 .jpg, 5/23 .png)
+-- * <https://github.com/python-pillow/Pillow/tree/807d689a83738027b6f6e0f219a6a6dd30e01c08/Tests/images> (36/55 .jpg, 3/420 .png)
+-- * <https://github.com/drewnoakes/metadata-extractor-images/tree/651ad0e67aa8d43d358ad05f9bc07b52d8b9ac6e/jpg> (335/430 .jpg)
+-- * <https://github.com/libexif/libexif-testsuite/tree/8c1f5bbc18d2cbc80b01b3f9b3eb29546310acf2> (15/18 .jpg)
 -- See also: Exif Version 3.1 (https://www.cipa.jp/std/documents/download_e.html?CIPA_DC-008-2026-E)
 -- See also: Exif Version 3.0 (https://www.cipa.jp/std/documents/download_e.html?CIPA_DC-008-2024-E)
 -- See also: Exif Version 2.32 (https://web.archive.org/web/20190624045241id_/https://www.cipa.jp/std/documents/e/DC-008-Translation-2019-E.pdf)
@@ -18,146 +29,61 @@ local utils = require("utils")
 -- See also: Exif Version 2.1 (https://web.archive.org/web/20131111073619id_/https://exif.org/Exif2-1.PDF)
 Exif = class.class(KaitaiStruct)
 
-function Exif:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Exif:_read()
-  self.endianness = self._io:read_u2le()
-  self.body = Exif.ExifBody(self._io, self, self._root)
-end
-
-
-Exif.ExifBody = class.class(KaitaiStruct)
-
-function Exif.ExifBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root
-  self:_read()
-end
-
-function Exif.ExifBody:_read()
-  local _on = self._root.endianness
-  if _on == 18761 then
-    self._is_le = true
-  elseif _on == 19789 then
-    self._is_le = false
-  end
-
-  if self._is_le == true then
-    self:_read_le()
-  elseif self._is_le == false then
-    self:_read_be()
-  else
-    error("unable to decide endianness")
-  end
-end
-
-function Exif.ExifBody:_read_le()
-  self.version = self._io:read_u2le()
-  self.ifd0_ofs = self._io:read_u4le()
-end
-
-function Exif.ExifBody:_read_be()
-  self.version = self._io:read_u2be()
-  self.ifd0_ofs = self._io:read_u4be()
-end
-
-Exif.ExifBody.property.ifd0 = {}
-function Exif.ExifBody.property.ifd0:get()
-  if self._m_ifd0 ~= nil then
-    return self._m_ifd0
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(self.ifd0_ofs)
-  if self._is_le then
-    self._m_ifd0 = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
-  else
-    self._m_ifd0 = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
-  end
-  self._io:seek(_pos)
-  return self._m_ifd0
-end
-
-
-Exif.ExifBody.Ifd = class.class(KaitaiStruct)
-
-function Exif.ExifBody.Ifd:_init(io, parent, root, is_le)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root
-  self._is_le = is_le
-  self:_read()
-end
-
-function Exif.ExifBody.Ifd:_read()
-
-  if self._is_le == true then
-    self:_read_le()
-  elseif self._is_le == false then
-    self:_read_be()
-  else
-    error("unable to decide endianness")
-  end
-end
-
-function Exif.ExifBody.Ifd:_read_le()
-  self.num_fields = self._io:read_u2le()
-  self.fields = {}
-  for i = 0, self.num_fields - 1 do
-    self.fields[i + 1] = Exif.ExifBody.IfdField(self._io, self, self._root, self._is_le)
-  end
-  self.next_ifd_ofs = self._io:read_u4le()
-end
-
-function Exif.ExifBody.Ifd:_read_be()
-  self.num_fields = self._io:read_u2be()
-  self.fields = {}
-  for i = 0, self.num_fields - 1 do
-    self.fields[i + 1] = Exif.ExifBody.IfdField(self._io, self, self._root, self._is_le)
-  end
-  self.next_ifd_ofs = self._io:read_u4be()
-end
-
-Exif.ExifBody.Ifd.property.next_ifd = {}
-function Exif.ExifBody.Ifd.property.next_ifd:get()
-  if self._m_next_ifd ~= nil then
-    return self._m_next_ifd
-  end
-
-  if self.next_ifd_ofs ~= 0 then
-    local _pos = self._io:pos()
-    self._io:seek(self.next_ifd_ofs)
-    if self._is_le then
-      self._m_next_ifd = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
-    else
-      self._m_next_ifd = Exif.ExifBody.Ifd(self._io, self, self._root, self._is_le)
-    end
-    self._io:seek(_pos)
-  end
-  return self._m_next_ifd
-end
-
-
-Exif.ExifBody.IfdField = class.class(KaitaiStruct)
-
-Exif.ExifBody.IfdField.FieldTypeEnum = enum.Enum {
+Exif.FieldType = enum.Enum {
   byte = 1,
-  ascii_string = 2,
-  word = 3,
-  dword = 4,
+  ascii = 2,
+  short = 3,
+  long = 4,
   rational = 5,
+  sbyte = 6,
   undefined = 7,
+  sshort = 8,
   slong = 9,
   srational = 10,
+  float = 11,
+  double = 12,
+  ifd = 13,
+  utf8 = 129,
 }
 
-Exif.ExifBody.IfdField.TagEnum = enum.Enum {
+Exif.GpsTag = enum.Enum {
+  gps_version_id = 0,
+  gps_latitude_ref = 1,
+  gps_latitude = 2,
+  gps_longitude_ref = 3,
+  gps_longitude = 4,
+  gps_altitude_ref = 5,
+  gps_altitude = 6,
+  gps_time_stamp = 7,
+  gps_satellites = 8,
+  gps_status = 9,
+  gps_measure_mode = 10,
+  gps_dop = 11,
+  gps_speed_ref = 12,
+  gps_speed = 13,
+  gps_track_ref = 14,
+  gps_track = 15,
+  gps_img_direction_ref = 16,
+  gps_img_direction = 17,
+  gps_map_datum = 18,
+  gps_dest_latitude_ref = 19,
+  gps_dest_latitude = 20,
+  gps_dest_longitude_ref = 21,
+  gps_dest_longitude = 22,
+  gps_dest_bearing_ref = 23,
+  gps_dest_bearing = 24,
+  gps_dest_distance_ref = 25,
+  gps_dest_distance = 26,
+  gps_processing_method = 27,
+  gps_area_information = 28,
+  gps_date_stamp = 29,
+  gps_differential = 30,
+  gps_h_positioning_error = 31,
+}
+
+Exif.Tag = enum.Enum {
+  interop_index = 1,
+  interop_version = 2,
   image_width = 256,
   image_height = 257,
   bits_per_sample = 258,
@@ -618,6 +544,273 @@ Exif.ExifBody.IfdField.TagEnum = enum.Enum {
   moire_filter = 65112,
 }
 
+function Exif:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Exif:_read()
+  self.endianness = self._io:read_u2le()
+  self.body = Exif.ExifBody(self._io, self, self._root)
+end
+
+
+Exif.ExifBody = class.class(KaitaiStruct)
+
+function Exif.ExifBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Exif.ExifBody:_read()
+  local _on = self._root.endianness
+  if _on == 18761 then
+    self._is_le = true
+  elseif _on == 19789 then
+    self._is_le = false
+  end
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody:_read_le()
+  self.magic = self._io:read_u2le()
+  if not(self.magic == 42) then
+    error("not equal, expected " .. 42 .. ", but got " .. self.magic)
+  end
+  self.ofs_ifd0 = self._io:read_u4le()
+end
+
+function Exif.ExifBody:_read_be()
+  self.magic = self._io:read_u2be()
+  if not(self.magic == 42) then
+    error("not equal, expected " .. 42 .. ", but got " .. self.magic)
+  end
+  self.ofs_ifd0 = self._io:read_u4be()
+end
+
+Exif.ExifBody.property.ifd0 = {}
+function Exif.ExifBody.property.ifd0:get()
+  if self._m_ifd0 ~= nil then
+    return self._m_ifd0
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.ofs_ifd0)
+  if self._is_le then
+    self._m_ifd0 = Exif.ExifBody.Ifd(false, self._io, self, self._root, self._is_le)
+  else
+    self._m_ifd0 = Exif.ExifBody.Ifd(false, self._io, self, self._root, self._is_le)
+  end
+  self._io:seek(_pos)
+  return self._m_ifd0
+end
+
+
+Exif.ExifBody.AsciiString = class.class(KaitaiStruct)
+
+function Exif.ExifBody.AsciiString:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.AsciiString:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.AsciiString:_read_le()
+  self.value = self._io:read_bytes_term(0, false, true, false)
+end
+
+function Exif.ExifBody.AsciiString:_read_be()
+  self.value = self._io:read_bytes_term(0, false, true, false)
+end
+
+-- 
+-- According to the core Exif standard, this should be ASCII, but in
+-- practice, this is not always the case. From
+-- [ExifTool FAQ](https://exiftool.sourceforge.net/faq.html#Q10):
+-- 
+-- > However, it is not uncommon for applications to write UTF-8 or
+-- other encodings where ASCII is expected.
+-- 
+-- Therefore, this field is a byte array, not a string. This is to
+-- avoid non-ASCII characters being treated as errors in some target
+-- languages, such as Python. The only assumption is that a null byte
+-- terminates the value (although sometimes the null byte is missing,
+-- which we tolerate thanks to the `eos-error: false` setting).
+-- 
+-- Here is a sample JPEG file with a `tag::image_description` IFD
+-- field of type `field_type::ascii` that actually contains UTF-8:
+-- <https://github.com/Exiv2/exiv2/blob/2cd987a731236037b6b78cbff897d08685a8ef49/test/data/exiv2-bug501.jpg>
+-- 
+-- It seems that most modern applications (e.g. GIMP 3.0.6) always
+-- use UTF-8 when storing Exif metadata. However, there are also
+-- files with a non-UTF-8 encoding, for example
+-- <https://github.com/drewnoakes/metadata-extractor-images/blob/651ad0e67aa8d43d358ad05f9bc07b52d8b9ac6e/jpg/Ricoh%20DC-3Z%20(low%20res).jpg>
+-- has a `tag::copyright` IFD field with a value encoded in
+-- ISO-8859-1 (Latin-1).
+
+Exif.ExifBody.Doubles = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Doubles:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Doubles:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Doubles:_read_le()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_f8le()
+  end
+end
+
+function Exif.ExifBody.Doubles:_read_be()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_f8be()
+  end
+end
+
+
+Exif.ExifBody.Floats = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Floats:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Floats:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Floats:_read_le()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_f4le()
+  end
+end
+
+function Exif.ExifBody.Floats:_read_be()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_f4be()
+  end
+end
+
+
+Exif.ExifBody.Ifd = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Ifd:_init(is_gps_ifd, io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self.is_gps_ifd = is_gps_ifd
+  self:_read()
+end
+
+function Exif.ExifBody.Ifd:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Ifd:_read_le()
+  self.num_fields = self._io:read_u2le()
+  self._raw_fields = {}
+  self.fields = {}
+  for i = 0, self.num_fields - 1 do
+    self._raw_fields[i + 1] = self._io:read_bytes(12)
+    local _io = KaitaiStream(stringstream(self._raw_fields[i + 1]))
+    self.fields[i + 1] = Exif.ExifBody.IfdField(_io, self, self._root, self._is_le)
+  end
+  self.ofs_next_ifd = self._io:read_u4le()
+end
+
+function Exif.ExifBody.Ifd:_read_be()
+  self.num_fields = self._io:read_u2be()
+  self._raw_fields = {}
+  self.fields = {}
+  for i = 0, self.num_fields - 1 do
+    self._raw_fields[i + 1] = self._io:read_bytes(12)
+    local _io = KaitaiStream(stringstream(self._raw_fields[i + 1]))
+    self.fields[i + 1] = Exif.ExifBody.IfdField(_io, self, self._root, self._is_le)
+  end
+  self.ofs_next_ifd = self._io:read_u4be()
+end
+
+Exif.ExifBody.Ifd.property.next_ifd = {}
+function Exif.ExifBody.Ifd.property.next_ifd:get()
+  if self._m_next_ifd ~= nil then
+    return self._m_next_ifd
+  end
+
+  if self.ofs_next_ifd ~= 0 then
+    local _pos = self._io:pos()
+    self._io:seek(self.ofs_next_ifd)
+    if self._is_le then
+      self._m_next_ifd = Exif.ExifBody.Ifd(self.is_gps_ifd, self._io, self, self._root, self._is_le)
+    else
+      self._m_next_ifd = Exif.ExifBody.Ifd(self.is_gps_ifd, self._io, self, self._root, self._is_le)
+    end
+    self._io:seek(_pos)
+  end
+  return self._m_next_ifd
+end
+
+
+Exif.ExifBody.IfdField = class.class(KaitaiStruct)
+
 function Exif.ExifBody.IfdField:_init(io, parent, root, is_le)
   KaitaiStruct._init(self, io)
   self._parent = parent
@@ -638,27 +831,36 @@ function Exif.ExifBody.IfdField:_read()
 end
 
 function Exif.ExifBody.IfdField:_read_le()
-  self.tag = Exif.ExifBody.IfdField.TagEnum(self._io:read_u2le())
-  self.field_type = Exif.ExifBody.IfdField.FieldTypeEnum(self._io:read_u2le())
-  self.length = self._io:read_u4le()
-  self.ofs_or_data = self._io:read_u4le()
+  self.tag_raw = self._io:read_u2le()
+  self.field_type = Exif.FieldType(self._io:read_u2le())
+  self.num_values = self._io:read_u4le()
+  if not(self.has_immediate_data) then
+    self.ofs_data = self._io:read_u4le()
+  end
 end
 
 function Exif.ExifBody.IfdField:_read_be()
-  self.tag = Exif.ExifBody.IfdField.TagEnum(self._io:read_u2be())
-  self.field_type = Exif.ExifBody.IfdField.FieldTypeEnum(self._io:read_u2be())
-  self.length = self._io:read_u4be()
-  self.ofs_or_data = self._io:read_u4be()
+  self.tag_raw = self._io:read_u2be()
+  self.field_type = Exif.FieldType(self._io:read_u2be())
+  self.num_values = self._io:read_u4be()
+  if not(self.has_immediate_data) then
+    self.ofs_data = self._io:read_u4be()
+  end
 end
 
-Exif.ExifBody.IfdField.property.byte_length = {}
-function Exif.ExifBody.IfdField.property.byte_length:get()
-  if self._m_byte_length ~= nil then
-    return self._m_byte_length
+-- 
+-- Size in bytes of a single value of type `field_type`, or 0 if
+-- `field_type` is not one of the known types (in which case the size
+-- cannot be determined and `data` will be empty).
+-- See also: Source (https://www.media.mit.edu/pia/Research/deepview/exif.html#DataForm)
+Exif.ExifBody.IfdField.property.bytes_per_value = {}
+function Exif.ExifBody.IfdField.property.bytes_per_value:get()
+  if self._m_bytes_per_value ~= nil then
+    return self._m_bytes_per_value
   end
 
-  self._m_byte_length = self.length * self.type_byte_length
-  return self._m_byte_length
+  self._m_bytes_per_value = utils.box_unwrap(( ((self.field_type == Exif.FieldType.byte) or (self.field_type == Exif.FieldType.ascii) or (self.field_type == Exif.FieldType.sbyte) or (self.field_type == Exif.FieldType.undefined) or (self.field_type == Exif.FieldType.utf8)) ) and utils.box_wrap(1) or (utils.box_unwrap(( ((self.field_type == Exif.FieldType.short) or (self.field_type == Exif.FieldType.sshort)) ) and utils.box_wrap(2) or (utils.box_unwrap(( ((self.field_type == Exif.FieldType.long) or (self.field_type == Exif.FieldType.slong) or (self.field_type == Exif.FieldType.float) or (self.field_type == Exif.FieldType.ifd)) ) and utils.box_wrap(4) or (utils.box_unwrap(( ((self.field_type == Exif.FieldType.rational) or (self.field_type == Exif.FieldType.srational) or (self.field_type == Exif.FieldType.double)) ) and utils.box_wrap(8) or (0))))))))
+  return self._m_bytes_per_value
 end
 
 Exif.ExifBody.IfdField.property.data = {}
@@ -667,38 +869,593 @@ function Exif.ExifBody.IfdField.property.data:get()
     return self._m_data
   end
 
-  if not(self.is_immediate_data) then
-    local _io = self._root._io
-    local _pos = _io:pos()
-    _io:seek(self.ofs_or_data)
-    if self._is_le then
-      self._m_data = _io:read_bytes(self.byte_length)
+  local _io = utils.box_unwrap((self.has_immediate_data) and utils.box_wrap(self._io) or (self._root._io))
+  local _pos = _io:pos()
+  _io:seek(utils.box_unwrap((self.has_immediate_data) and utils.box_wrap(8) or (self.ofs_data)))
+  if self._is_le then
+    local _on = self.field_type
+    if _on == Exif.FieldType.ascii then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.AsciiString(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.double then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Doubles(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.float then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Floats(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.ifd then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Longs(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.long then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Longs(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.rational then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Rationals(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.sbyte then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Sbytes(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.short then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Shorts(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.slong then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Slongs(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.srational then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Srationals(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.sshort then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Sshorts(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.utf8 then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Utf8String(_io, self, self._root, self._is_le)
     else
-      self._m_data = _io:read_bytes(self.byte_length)
+      self._m_data = _io:read_bytes(self.len_data)
     end
-    _io:seek(_pos)
+  else
+    local _on = self.field_type
+    if _on == Exif.FieldType.ascii then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.AsciiString(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.double then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Doubles(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.float then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Floats(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.ifd then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Longs(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.long then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Longs(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.rational then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Rationals(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.sbyte then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Sbytes(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.short then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Shorts(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.slong then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Slongs(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.srational then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Srationals(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.sshort then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Sshorts(_io, self, self._root, self._is_le)
+    elseif _on == Exif.FieldType.utf8 then
+      self._raw__m_data = _io:read_bytes(self.len_data)
+      local _io = KaitaiStream(stringstream(self._raw__m_data))
+      self._m_data = Exif.ExifBody.Utf8String(_io, self, self._root, self._is_le)
+    else
+      self._m_data = _io:read_bytes(self.len_data)
+    end
   end
+  _io:seek(_pos)
   return self._m_data
 end
 
-Exif.ExifBody.IfdField.property.is_immediate_data = {}
-function Exif.ExifBody.IfdField.property.is_immediate_data:get()
-  if self._m_is_immediate_data ~= nil then
-    return self._m_is_immediate_data
+Exif.ExifBody.IfdField.property.gps_tag = {}
+function Exif.ExifBody.IfdField.property.gps_tag:get()
+  if self._m_gps_tag ~= nil then
+    return self._m_gps_tag
   end
 
-  self._m_is_immediate_data = self.byte_length <= 4
-  return self._m_is_immediate_data
+  if self._parent.is_gps_ifd then
+    self._m_gps_tag = Exif.GpsTag(self.tag_raw)
+  end
+  return self._m_gps_tag
 end
 
-Exif.ExifBody.IfdField.property.type_byte_length = {}
-function Exif.ExifBody.IfdField.property.type_byte_length:get()
-  if self._m_type_byte_length ~= nil then
-    return self._m_type_byte_length
+Exif.ExifBody.IfdField.property.has_immediate_data = {}
+function Exif.ExifBody.IfdField.property.has_immediate_data:get()
+  if self._m_has_immediate_data ~= nil then
+    return self._m_has_immediate_data
   end
 
-  self._m_type_byte_length = utils.box_unwrap((self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.word) and utils.box_wrap(2) or (utils.box_unwrap((self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.dword) and utils.box_wrap(4) or (1))))
-  return self._m_type_byte_length
+  self._m_has_immediate_data = self.len_data <= 4
+  return self._m_has_immediate_data
+end
+
+Exif.ExifBody.IfdField.property.len_data = {}
+function Exif.ExifBody.IfdField.property.len_data:get()
+  if self._m_len_data ~= nil then
+    return self._m_len_data
+  end
+
+  self._m_len_data = self.bytes_per_value * self.num_values
+  return self._m_len_data
+end
+
+-- 
+-- All the "IFD Pointer" tags (as the core Exif standard calls them),
+-- i.e. `ExifOffset`, `InteropOffset` and `GPSInfo` (using the
+-- [ExifTool's
+-- names](https://exiftool.sourceforge.net/TagNames/EXIF.html)),
+-- should be of type `LONG` (`field_type::long`). However, the type
+-- `SLONG` (`field_type::slong`) type has also been observed:
+-- <https://github.com/Exiv2/exiv2/blob/2cd987a731236037b6b78cbff897d08685a8ef49/test/data/FurnaceCreekInn.jpg>
+-- 
+-- Both ExifTool and Exiv2 accept `LONG`, `SLONG` and also `IFD`.
+-- Exiv2 specifically supports only these three types - see
+-- <https://github.com/Exiv2/exiv2/blob/2cd987a731236037b6b78cbff897d08685a8ef49/src/tiffvisitor_int.cpp#L1141>
+-- (Git tag "v0.28.8"). ExifTool is more lenient - it even accepts
+-- any integer type. In practice, real files most likely only use one
+-- of the three types supported by Exiv2, so we stick with that.
+Exif.ExifBody.IfdField.property.sub_ifd = {}
+function Exif.ExifBody.IfdField.property.sub_ifd:get()
+  if self._m_sub_ifd ~= nil then
+    return self._m_sub_ifd
+  end
+
+  if  ((self.num_values == 1) and ( ((self.field_type == Exif.FieldType.long) or (self.field_type == Exif.FieldType.ifd) or ( ((self.field_type == Exif.FieldType.slong) and (self.data.values[1] >= 0)) )) ) and ( ((self.tag == Exif.Tag.exif_offset) or (self.tag == Exif.Tag.interop_offset) or (self.tag == Exif.Tag.gps_info)) ))  then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(utils.box_unwrap((self.field_type == Exif.FieldType.slong) and utils.box_wrap(self.data.values[1]) or (self.data.values[1])))
+    if self._is_le then
+      self._m_sub_ifd = Exif.ExifBody.Ifd(self.tag == Exif.Tag.gps_info, _io, self, self._root, self._is_le)
+    else
+      self._m_sub_ifd = Exif.ExifBody.Ifd(self.tag == Exif.Tag.gps_info, _io, self, self._root, self._is_le)
+    end
+    _io:seek(_pos)
+  end
+  return self._m_sub_ifd
+end
+
+Exif.ExifBody.IfdField.property.tag = {}
+function Exif.ExifBody.IfdField.property.tag:get()
+  if self._m_tag ~= nil then
+    return self._m_tag
+  end
+
+  if not(self._parent.is_gps_ifd) then
+    self._m_tag = Exif.Tag(self.tag_raw)
+  end
+  return self._m_tag
+end
+
+-- 
+-- Raw numeric tag. Don't read this field - access `tag` or `gps_tag`
+-- instead.
+
+Exif.ExifBody.Longs = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Longs:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Longs:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Longs:_read_le()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_u4le()
+  end
+end
+
+function Exif.ExifBody.Longs:_read_be()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_u4be()
+  end
+end
+
+
+Exif.ExifBody.Rational = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Rational:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Rational:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Rational:_read_le()
+  self.value_num = self._io:read_u4le()
+  self.value_den = self._io:read_u4le()
+end
+
+function Exif.ExifBody.Rational:_read_be()
+  self.value_num = self._io:read_u4be()
+  self.value_den = self._io:read_u4be()
+end
+
+-- 
+-- If denominator is zero, this instance is disabled to prevent
+-- `ZeroDivisionError` in Python.
+-- 
+-- Here's a sample file with a zero denominator in the IFD fields
+-- `tag::x_resolution` and `tag::y_resolution` (both of which are of
+-- type `field_type::rational`):
+-- <https://github.com/python-pillow/Pillow/blob/807d689a83738027b6f6e0f219a6a6dd30e01c08/Tests/images/exif-dpi-zerodivision.jpg>
+Exif.ExifBody.Rational.property.value = {}
+function Exif.ExifBody.Rational.property.value:get()
+  if self._m_value ~= nil then
+    return self._m_value
+  end
+
+  if self.value_den ~= 0 then
+    self._m_value = (self.value_num + 0.0) / self.value_den
+  end
+  return self._m_value
+end
+
+-- 
+-- Numerator.
+-- 
+-- Denominator.
+
+Exif.ExifBody.Rationals = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Rationals:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Rationals:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Rationals:_read_le()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = Exif.ExifBody.Rational(self._io, self, self._root, self._is_le)
+  end
+end
+
+function Exif.ExifBody.Rationals:_read_be()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = Exif.ExifBody.Rational(self._io, self, self._root, self._is_le)
+  end
+end
+
+
+Exif.ExifBody.Sbytes = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Sbytes:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Sbytes:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Sbytes:_read_le()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_s1()
+  end
+end
+
+function Exif.ExifBody.Sbytes:_read_be()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_s1()
+  end
+end
+
+
+Exif.ExifBody.Shorts = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Shorts:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Shorts:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Shorts:_read_le()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_u2le()
+  end
+end
+
+function Exif.ExifBody.Shorts:_read_be()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_u2be()
+  end
+end
+
+
+Exif.ExifBody.Slongs = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Slongs:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Slongs:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Slongs:_read_le()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_s4le()
+  end
+end
+
+function Exif.ExifBody.Slongs:_read_be()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_s4be()
+  end
+end
+
+
+Exif.ExifBody.Srational = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Srational:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Srational:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Srational:_read_le()
+  self.value_num = self._io:read_s4le()
+  self.value_den = self._io:read_s4le()
+end
+
+function Exif.ExifBody.Srational:_read_be()
+  self.value_num = self._io:read_s4be()
+  self.value_den = self._io:read_s4be()
+end
+
+-- 
+-- If denominator is zero, this instance is disabled to prevent
+-- `ZeroDivisionError` in Python.
+-- 
+-- Here's a sample file with a zero denominator in the IFD field
+-- `tag::exposure_compensation` of type `field_type::srational`:
+-- <https://github.com/drewnoakes/metadata-extractor-images/blob/651ad0e67aa8d43d358ad05f9bc07b52d8b9ac6e/jpg/Reconyx%20Hyperfire%20HP4K.jpg>
+Exif.ExifBody.Srational.property.value = {}
+function Exif.ExifBody.Srational.property.value:get()
+  if self._m_value ~= nil then
+    return self._m_value
+  end
+
+  if self.value_den ~= 0 then
+    self._m_value = (self.value_num + 0.0) / self.value_den
+  end
+  return self._m_value
+end
+
+-- 
+-- Numerator.
+-- 
+-- Denominator.
+
+Exif.ExifBody.Srationals = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Srationals:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Srationals:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Srationals:_read_le()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = Exif.ExifBody.Srational(self._io, self, self._root, self._is_le)
+  end
+end
+
+function Exif.ExifBody.Srationals:_read_be()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = Exif.ExifBody.Srational(self._io, self, self._root, self._is_le)
+  end
+end
+
+
+Exif.ExifBody.Sshorts = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Sshorts:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Sshorts:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Sshorts:_read_le()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_s2le()
+  end
+end
+
+function Exif.ExifBody.Sshorts:_read_be()
+  self.values = {}
+  for i = 0, self._parent.num_values - 1 do
+    self.values[i + 1] = self._io:read_s2be()
+  end
+end
+
+
+Exif.ExifBody.Utf8String = class.class(KaitaiStruct)
+
+function Exif.ExifBody.Utf8String:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function Exif.ExifBody.Utf8String:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Exif.ExifBody.Utf8String:_read_le()
+  self.value = str_decode.decode(self._io:read_bytes_term(0, false, true, false), "UTF-8")
+end
+
+function Exif.ExifBody.Utf8String:_read_be()
+  self.value = str_decode.decode(self._io:read_bytes_term(0, false, true, false), "UTF-8")
 end
 
 
