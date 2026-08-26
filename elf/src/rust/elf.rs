@@ -13,7 +13,7 @@ use std::cell::{Ref, Cell, RefCell};
 use std::rc::{Rc, Weak};
 
 /**
- * \sa https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532 Source
+ * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h Source
  * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source
  * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-application-binary-interface.html Source
  */
@@ -276,16 +276,28 @@ impl Default for Elf_Bits {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Elf_DynamicArrayTags {
+
+    /**
+     * Marks end of dynamic section
+     */
     Null,
     Needed,
     Pltrelsz,
     Pltgot,
     Hash,
+
+    /**
+     * Address of string table
+     */
     Strtab,
     Symtab,
     Rela,
     Relasz,
     Relaent,
+
+    /**
+     * Size of string table
+     */
     Strsz,
     Syment,
     Init,
@@ -393,8 +405,16 @@ pub enum Elf_DynamicArrayTags {
     Relcount,
     Flags1,
     Verdef,
+
+    /**
+     * Number of version definitions
+     */
     Verdefnum,
     Verneed,
+
+    /**
+     * Number of dependency versions
+     */
     Verneednum,
     SparcRegister,
     Auxiliary,
@@ -685,7 +705,7 @@ pub enum Elf_Machine {
     /**
      * Intel 80386
      */
-    X86,
+    I386,
 
     /**
      * Motorola m68k family
@@ -698,10 +718,17 @@ pub enum Elf_Machine {
     M88k,
 
     /**
-     * Intel MCU
+     * Intel MCU.
      * 
-     * was assigned to `EM_486` (for Intel i486), but that value was deprecated
-     * and replaced with this one
+     * This value was originally assigned as `EM_486` (for Intel i486), but was
+     * likely never used in that sense, or only briefly (in
+     * <https://www.sco.com/developers/gabi/2001-04-24/ch4.eheader.html>, it is
+     * marked as "Reserved for future use (was `EM_486`)" and there is an HTML
+     * comment `<!-- before 1994, was EM_486, Intel 80486 -->`). See also
+     * <https://landley.net/notes-2009.html#08-11-2009>. In 2015, this number
+     * was repurposed to `EM_IAMCU`, see
+     * <https://groups.google.com/g/generic-abi/c/pXfB_RXGY8Q/m/QntbSjBX7GkJ>.
+     * \sa https://groups.google.com/g/generic-abi/c/pXfB_RXGY8Q/m/QntbSjBX7GkJ Source
      * \sa https://sourceware.org/bugzilla/show_bug.cgi?id=18404 Source
      * \sa https://gcc.gnu.org/legacy-ml/gcc/2015-05/msg00090.html Source
      * \sa https://github.com/gcc-mirror/gcc/blob/240f07805d/libgo/go/debug/elf/elf.go#L389 Source
@@ -714,22 +741,46 @@ pub enum Elf_Machine {
     I860,
 
     /**
-     * MIPS R3000 big-endian
+     * MIPS I architecture.
+     * 
+     * Note: some sources describe this as "MIPS RS3000 big-endian", but that's
+     * outdated - in practice, it is used for little-endian binaries as well,
+     * see <https://github.com/radareorg/radare2/issues/2078>. Historically,
+     * there was a value `EM_MIPS_RS3_LE`, which stood for
+     * "MIPS R3000 little-endian", but it has long since fallen out of use
+     * (it's unclear whether it was ever used in practice at all).
      */
     Mips,
 
     /**
-     * IBM System/370
+     * IBM System/370 (S/370)
      */
     S370,
 
     /**
-     * MIPS R3000 little-endian
+     * MIPS R3000 little-endian (Oct 4 1999 Draft). Deprecated.
+     * 
+     * The Linux kernel source code (Git tag "v7.1") has the [following
+     * comment](https://github.com/torvalds/linux/blob/8cd9520d35a6c38db6567e97dd93b1f11f185dc6/include/uapi/linux/elf-em.h#L15-L19):
+     * 
+     * > Next two are historical and binaries and modules of these types will
+     * > be rejected by Linux.
+     * 
+     * <https://github.com/radareorg/radare2/issues/2078> shows that the
+     * `EM_MIPS` value is also used for little-endian binaries (not just
+     * big-endian).
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/commit/39834263784567c306fbccb8230ddd1badca53fe Source
      */
     MipsRs3Le,
 
     /**
-     * Hewlett-Packard PA-RISC
+     * Old version of Sparc v9, from before the ABI. Deprecated.
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L121 Source
+     */
+    OldSparcV9,
+
+    /**
+     * Hewlett-Packard PA-RISC (HP/PA or HPPA)
      */
     Parisc,
 
@@ -749,22 +800,22 @@ pub enum Elf_Machine {
     I960,
 
     /**
-     * PowerPC
+     * 32-bit PowerPC
      */
     Powerpc,
 
     /**
-     * PowerPC 64-bit
+     * 64-bit PowerPC
      */
     Powerpc64,
 
     /**
-     * IBM System/390
+     * IBM System/390 (S/390)
      */
     S390,
 
     /**
-     * IBM SPU/SPC
+     * STI (Sony, Toshiba and IBM) Cell BE SPU
      */
     Spu,
 
@@ -779,17 +830,20 @@ pub enum Elf_Machine {
     Fr20,
 
     /**
-     * TRW RH-32
+     * TRW RH32
      */
     Rh32,
 
     /**
-     * Motorola RCE
+     * Motorola M*Core (also spelled as MCore or M-Core)
+     * 
+     * `EM_RCE` is "Old name for MCore" according to
+     * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L152>
      */
-    Rce,
+    Mcore,
 
     /**
-     * ARM
+     * ARM 32-bit architecture (AArch32)
      */
     Arm,
 
@@ -799,7 +853,7 @@ pub enum Elf_Machine {
     OldAlpha,
 
     /**
-     * Hitachi SH
+     * Renesas (formerly Hitachi) SuperH SH
      */
     Superh,
 
@@ -809,7 +863,7 @@ pub enum Elf_Machine {
     SparcV9,
 
     /**
-     * Siemens TriCore
+     * Siemens TriCore embedded processor
      */
     Tricore,
 
@@ -819,22 +873,22 @@ pub enum Elf_Machine {
     Arc,
 
     /**
-     * Hitachi H8/300
+     * Renesas (formerly Hitachi) H8/300
      */
     H8300,
 
     /**
-     * Hitachi H8/300H
+     * Renesas (formerly Hitachi) H8/300H
      */
     H8300h,
 
     /**
-     * Hitachi H8S
+     * Renesas (formerly Hitachi) H8S
      */
     H8s,
 
     /**
-     * Hitachi H8/500
+     * Renesas (formerly Hitachi) H8/500
      */
     H8500,
 
@@ -936,22 +990,22 @@ pub enum Elf_Machine {
     /**
      * Motorola MC68HC16 microcontroller
      */
-    Mc68hc16,
+    M68hc16,
 
     /**
      * Motorola MC68HC11 microcontroller
      */
-    Mc68hc11,
+    M68hc11,
 
     /**
      * Motorola MC68HC08 microcontroller
      */
-    Mc68hc08,
+    M68hc08,
 
     /**
      * Motorola MC68HC05 microcontroller
      */
-    Mc68hc05,
+    M68hc05,
 
     /**
      * Silicon Graphics SVx
@@ -1024,22 +1078,22 @@ pub enum Elf_Machine {
     D30v,
 
     /**
-     * NEC v850
+     * Renesas V850 (formerly NEC V850)
      */
     V850,
 
     /**
-     * Mitsubishi M32R
+     * Renesas M32R (formerly Mitsubishi M32R)
      */
     M32r,
 
     /**
-     * Matsushita MN10300
+     * Panasonic MN10300 (formerly Matsushita MN10300)
      */
     Mn10300,
 
     /**
-     * Matsushita MN10200
+     * Panasonic MN10200 (formerly Matsushita MN10200)
      */
     Mn10200,
 
@@ -1049,17 +1103,19 @@ pub enum Elf_Machine {
     Picojava,
 
     /**
-     * OpenRISC 32-bit embedded processor
+     * OpenRISC 1000 32-bit embedded processor
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L205 Source
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L455 Source
      */
-    Openrisc,
+    Or1k,
 
     /**
-     * ARC International ARCompact processor (old spelling/synonym: EM_ARC_A5)
+     * ARC International ARCompact processor
      */
     ArcCompact,
 
     /**
-     * Tensilica Xtensa Architecture
+     * Tensilica Xtensa architecture
      */
     Xtensa,
 
@@ -1089,7 +1145,7 @@ pub enum Elf_Machine {
     Snp1k,
 
     /**
-     * STMicroelectronics ST200
+     * STMicroelectronics ST200 microcontroller
      */
     St200,
 
@@ -1106,7 +1162,7 @@ pub enum Elf_Machine {
     /**
      * National Semiconductor CompactRISC microprocessor
      */
-    CompactRisc,
+    Cr,
 
     /**
      * Fujitsu F2MC16
@@ -1119,7 +1175,7 @@ pub enum Elf_Machine {
     Msp430,
 
     /**
-     * Analog Devices Blackfin (DSP) processor
+     * Analog Devices, Inc. (ADI) Blackfin
      */
     Blackfin,
 
@@ -1139,7 +1195,7 @@ pub enum Elf_Machine {
     Arca,
 
     /**
-     * microprocessor series from PKU-Unity Ltd. and MPRC of Peking University
+     * Microprocessor series from PKU-Unity Ltd. and MPRC of Peking University
      */
     Unicore,
 
@@ -1204,7 +1260,7 @@ pub enum Elf_Machine {
     Rs08,
 
     /**
-     * Analog Devices SHARC family of 32-bit DSP processors
+     * Analog Devices, Inc. (ADI) SHARC family of 32-bit DSP processors
      */
     Sharc,
 
@@ -1284,7 +1340,7 @@ pub enum Elf_Machine {
     Trimedia,
 
     /**
-     * Qualcomm Hexagon processor
+     * Qualcomm Hexagon (QDSP6) processor
      */
     Qdsp6,
 
@@ -1326,7 +1382,7 @@ pub enum Elf_Machine {
     /**
      * Cray Inc. NV2 vector architecture
      */
-    Craynv2,
+    CrayNv2,
 
     /**
      * Renesas RX family
@@ -1364,19 +1420,29 @@ pub enum Elf_Machine {
     Sle9x,
 
     /**
-     * Intel L10M
+     * Intel L1OM
      */
-    L10m,
+    L1om,
 
     /**
-     * Intel K10M
+     * Intel K1OM
      */
-    K10m,
+    K1om,
 
     /**
-     * ARM AArch64
+     * Reserved by Intel
+     */
+    Intel182,
+
+    /**
+     * ARM 64-bit architecture
      */
     Aarch64,
+
+    /**
+     * Reserved by ARM
+     */
+    Arm184,
 
     /**
      * Atmel Corporation 32-bit microprocessor family
@@ -1429,9 +1495,9 @@ pub enum Elf_Machine {
     Corea2nd,
 
     /**
-     * Synopsys ARCv2 ISA
+     * Synopsys ARCompact V2 (ARCv2)
      */
-    Arcv2,
+    ArcCompact2,
 
     /**
      * Open8 8-bit RISC soft processor core
@@ -1449,9 +1515,9 @@ pub enum Elf_Machine {
     Videocore5,
 
     /**
-     * Renesas 78KOR family
+     * Renesas 78K0R family
      */
-    Renesas78kor,
+    Renesas78k0r,
 
     /**
      * Freescale 56800EX Digital Signal Controller (DSC)
@@ -1480,7 +1546,7 @@ pub enum Elf_Machine {
 
     /**
      * Intel Graphics Technology
-     * \sa https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532#l339 Source
+     * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L339 Source
      */
     Intelgt,
 
@@ -1560,24 +1626,24 @@ pub enum Elf_Machine {
     Z80,
 
     /**
-     * Controls and Data Services VISIUMcore
+     * Controls and Data Services VISIUMcore processor
      */
     Visium,
 
     /**
-     * FTDI Chip FT32
+     * FTDI Chip FT32 high performance 32-bit RISC architecture
      */
     Ft32,
 
     /**
-     * Moxie processor
+     * Moxie processor family
      */
     Moxie,
 
     /**
      * AMD GPU architecture
      */
-    AmdGpu,
+    Amdgpu,
 
     /**
      * RISC-V
@@ -1586,19 +1652,16 @@ pub enum Elf_Machine {
 
     /**
      * Lanai 32-bit processor
-     * \sa https://github.com/llvm/llvm-project/blob/f6928cf45516/llvm/include/llvm/BinaryFormat/ELF.h#L319 Source
      */
     Lanai,
 
     /**
      * CEVA Processor Architecture Family
-     * \sa https://groups.google.com/g/generic-abi/c/cmq1LFFpWqU Source
      */
     Ceva,
 
     /**
      * CEVA X2 Processor Family
-     * \sa https://groups.google.com/g/generic-abi/c/cmq1LFFpWqU Source
      */
     CevaX2,
 
@@ -1609,102 +1672,158 @@ pub enum Elf_Machine {
 
     /**
      * Graphcore Intelligent Processing Unit
-     * \sa https://groups.google.com/g/generic-abi/c/cmq1LFFpWqU Source
      */
     GraphcoreIpu,
 
     /**
      * Imagination Technologies
-     * \sa https://groups.google.com/g/generic-abi/c/cmq1LFFpWqU Source
      */
     Img1,
 
     /**
      * Netronome Flow Processor (NFP)
-     * \sa https://groups.google.com/g/generic-abi/c/cmq1LFFpWqU Source
      */
     Nfp,
 
     /**
      * NEC SX-Aurora Vector Engine (VE) processor
-     * \sa https://github.com/llvm/llvm-project/blob/f6928cf45516/llvm/include/llvm/BinaryFormat/ELF.h#L321 Source
      */
     Ve,
 
     /**
-     * C-SKY 32-bit processor
+     * C-SKY 32-bit processor family
      */
     Csky,
 
     /**
-     * Synopsys ARCv3 64-bit ISA/HS6x cores
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/4ffb22ec40/include/elf/common.h#L350 Source
-     * \sa https://github.com/file/file/blob/9b2538d/magic/Magdir/elf#L301 Source
-     * \sa https://bugs.astron.com/view.php?id=251 Source
+     * Synopsys ARCv3 64-bit.
+     * 
+     * Note: in the [official
+     * registry](https://gabi.xinuos.com/v42/elf/a-emachine.html), this is
+     * labeled "Synopsys ARCv2.3 64-bit". Nearly all implementations of the ELF
+     * format have adopted this description verbatim without verification.
+     * However, it seems that there is no such thing as "ARCv2.3". The only
+     * correct and official name from Synopsys is "ARCv3" - see the
+     * [ARCv3 ELF ABI specification](https://github.com/foss-for-synopsys-dwc-arc-processors/arc-ABI-manual/blob/8db91b9b7b92222cfb8972293b6d714ee2959248/arcv3-elf.md#-file-header):
+     * 
+     * > * e_machine: Identifies the machine this ELF file targets. Always
+     * >   contains:
+     * >   * EM_ARC_COMPACT3_64 (253 - 0xfd) for Synopsys ARCv3 64-bit
+     * >   * EM_ARC_COMPACT3 (255 - 0xff) for Synopsys ARCv3 32-bit
+     * 
+     * One of the few projects that recognized and fixed this error is the
+     * `file` command, see
+     * <https://github.com/file/file/commit/70200102a0be50d409dca5ef76d9cbc3703a0753>
      */
     ArcCompact364,
 
     /**
      * MOS Technology MCS 6502 processor
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/4ffb22ec40/include/elf/common.h#L351 Source
      */
     Mcs6502,
 
     /**
-     * Synopsys ARCv3 32-bit
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/4ffb22ec40/include/elf/common.h#L352 Source
-     * \sa https://github.com/file/file/blob/9b2538d/magic/Magdir/elf#L303 Source
-     * \sa https://bugs.astron.com/view.php?id=251 Source
+     * Synopsys ARCv3 32-bit.
+     * 
+     * Note: in the [official
+     * registry](https://gabi.xinuos.com/v42/elf/a-emachine.html), this is
+     * labeled "Synopsys ARCv2.3 32-bit". Nearly all implementations of the ELF
+     * format have adopted this description verbatim without verification.
+     * However, it seems that there is no such thing as "ARCv2.3". The only
+     * correct and official name from Synopsys is "ARCv3" - see the
+     * [ARCv3 ELF ABI specification](https://github.com/foss-for-synopsys-dwc-arc-processors/arc-ABI-manual/blob/8db91b9b7b92222cfb8972293b6d714ee2959248/arcv3-elf.md#-file-header):
+     * 
+     * > * e_machine: Identifies the machine this ELF file targets. Always
+     * >   contains:
+     * >   * EM_ARC_COMPACT3_64 (253 - 0xfd) for Synopsys ARCv3 64-bit
+     * >   * EM_ARC_COMPACT3 (255 - 0xff) for Synopsys ARCv3 32-bit
+     * 
+     * One of the few projects that recognized and fixed this error is the
+     * `file` command, see
+     * <https://github.com/file/file/commit/70200102a0be50d409dca5ef76d9cbc3703a0753>.
      */
     ArcCompact3,
 
     /**
      * Kalray VLIW core of the MPPA processor family
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/4ffb22ec40/include/elf/common.h#L353 Source
      */
     Kvx,
 
     /**
      * WDC 65816/65C816
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/4ffb22ec40/include/elf/common.h#L354 Source
      */
     Wdc65816,
 
     /**
      * LoongArch
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/4ffb22ec40/include/elf/common.h#L355 Source
      */
     Loongarch,
 
     /**
      * ChipON KungFu32
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/4ffb22ec40/include/elf/common.h#L356 Source
-     * \sa https://groups.google.com/g/generic-abi/c/n8tLQxj02YY Source
      */
     Kf32,
 
     /**
      * LAPIS nX-U16/U8
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/dfbcbf85ea/include/elf/common.h#L357 Source
      */
     U16U8core,
 
     /**
      * Tachyum
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/dfbcbf85ea/include/elf/common.h#L358 Source
      */
     Tachyum,
 
     /**
      * NXP 56800EF Digital Signal Controller (DSC)
-     * \sa https://gitlab.com/gnutools/binutils-gdb/-/blob/dfbcbf85ea/include/elf/common.h#L359 Source
      */
     Nxp56800ef,
+
+    /**
+     * Solana Bytecode Format
+     */
+    Sbf,
+
+    /**
+     * AMD/Xilinx AI Engine architecture
+     */
+    AiEngine,
+
+    /**
+     * SiMa MLA
+     */
+    SimaMla,
+
+    /**
+     * Cambricon BANG
+     */
+    Bang,
+
+    /**
+     * Loongson LoongGPU
+     */
+    Loonggpu,
+
+    /**
+     * Wuxi Institute of Advanced Technology SW64
+     */
+    Sw64,
+
+    /**
+     * AMD/Xilinx AI Engine ctrlcode
+     */
+    AiEngineCtrlcode,
+
+    /**
+     * T-Head PPU
+     * \sa https://groups.google.com/g/generic-abi/c/XKECxlRDvu8 Source
+     */
+    Ppu,
     AvrOld,
     Msp430Old,
 
     /**
-     * Adapteva's Epiphany architecture.
+     * Adapteva's Epiphany architecture
      */
     AdaptevaEpiphany,
 
@@ -1715,7 +1834,7 @@ pub enum Elf_Machine {
     CygnusFr30,
 
     /**
-     * Unofficial value for Web Assembly binaries, as used by LLVM.
+     * Unofficial value for WebAssembly (Wasm) binaries, as used by LLVM.
      */
     Webassembly,
 
@@ -1725,7 +1844,7 @@ pub enum Elf_Machine {
     Xc16x,
 
     /**
-     * The Freescale toolchain generates elf files with this value.
+     * Freescale S12Z. The Freescale toolchain generates ELF files with this value.
      */
     S12z,
     CygnusFrv,
@@ -1736,14 +1855,39 @@ pub enum Elf_Machine {
     Dlx,
     CygnusD10v,
     CygnusD30v,
+
+    /**
+     * Ubicom IP2xxx (old)
+     */
     Ip2kOld,
+
+    /**
+     * Cygnus PowerPC
+     */
     CygnusPowerpc,
     Alpha,
+
+    /**
+     * Cygnus M32R.
+     * 
+     * According to the Linux kernel (Git tag "v7.1") -
+     * <https://github.com/torvalds/linux/blob/8cd9520d35a6c38db6567e97dd93b1f11f185dc6/include/uapi/linux/elf-em.h#L63>:
+     * 
+     * > Bogus old m32r magic number, used by old tools.
+     */
     CygnusM32r,
     CygnusV850,
     S390Old,
+
+    /**
+     * Old, unofficial value for Xtensa
+     */
     XtensaOld,
     Xstormy16,
+
+    /**
+     * Old MicroBlaze
+     */
     MicroblazeOld,
     CygnusMn10300,
     CygnusMn10200,
@@ -1778,7 +1922,7 @@ impl TryFrom<i64> for Elf_Machine {
             0 => Ok(Elf_Machine::NoMachine),
             1 => Ok(Elf_Machine::M32),
             2 => Ok(Elf_Machine::Sparc),
-            3 => Ok(Elf_Machine::X86),
+            3 => Ok(Elf_Machine::I386),
             4 => Ok(Elf_Machine::M68k),
             5 => Ok(Elf_Machine::M88k),
             6 => Ok(Elf_Machine::Iamcu),
@@ -1786,6 +1930,7 @@ impl TryFrom<i64> for Elf_Machine {
             8 => Ok(Elf_Machine::Mips),
             9 => Ok(Elf_Machine::S370),
             10 => Ok(Elf_Machine::MipsRs3Le),
+            11 => Ok(Elf_Machine::OldSparcV9),
             15 => Ok(Elf_Machine::Parisc),
             17 => Ok(Elf_Machine::Vpp500),
             18 => Ok(Elf_Machine::Sparc32plus),
@@ -1797,7 +1942,7 @@ impl TryFrom<i64> for Elf_Machine {
             36 => Ok(Elf_Machine::V800),
             37 => Ok(Elf_Machine::Fr20),
             38 => Ok(Elf_Machine::Rh32),
-            39 => Ok(Elf_Machine::Rce),
+            39 => Ok(Elf_Machine::Mcore),
             40 => Ok(Elf_Machine::Arm),
             41 => Ok(Elf_Machine::OldAlpha),
             42 => Ok(Elf_Machine::Superh),
@@ -1827,10 +1972,10 @@ impl TryFrom<i64> for Elf_Machine {
             66 => Ok(Elf_Machine::Fx66),
             67 => Ok(Elf_Machine::St9plus),
             68 => Ok(Elf_Machine::St7),
-            69 => Ok(Elf_Machine::Mc68hc16),
-            70 => Ok(Elf_Machine::Mc68hc11),
-            71 => Ok(Elf_Machine::Mc68hc08),
-            72 => Ok(Elf_Machine::Mc68hc05),
+            69 => Ok(Elf_Machine::M68hc16),
+            70 => Ok(Elf_Machine::M68hc11),
+            71 => Ok(Elf_Machine::M68hc08),
+            72 => Ok(Elf_Machine::M68hc05),
             73 => Ok(Elf_Machine::Svx),
             74 => Ok(Elf_Machine::St19),
             75 => Ok(Elf_Machine::Vax),
@@ -1850,7 +1995,7 @@ impl TryFrom<i64> for Elf_Machine {
             89 => Ok(Elf_Machine::Mn10300),
             90 => Ok(Elf_Machine::Mn10200),
             91 => Ok(Elf_Machine::Picojava),
-            92 => Ok(Elf_Machine::Openrisc),
+            92 => Ok(Elf_Machine::Or1k),
             93 => Ok(Elf_Machine::ArcCompact),
             94 => Ok(Elf_Machine::Xtensa),
             95 => Ok(Elf_Machine::Videocore),
@@ -1861,7 +2006,7 @@ impl TryFrom<i64> for Elf_Machine {
             100 => Ok(Elf_Machine::St200),
             101 => Ok(Elf_Machine::Ip2k),
             102 => Ok(Elf_Machine::Max),
-            103 => Ok(Elf_Machine::CompactRisc),
+            103 => Ok(Elf_Machine::Cr),
             104 => Ok(Elf_Machine::F2mc16),
             105 => Ok(Elf_Machine::Msp430),
             106 => Ok(Elf_Machine::Blackfin),
@@ -1905,7 +2050,7 @@ impl TryFrom<i64> for Elf_Machine {
             169 => Ok(Elf_Machine::Maxq30),
             170 => Ok(Elf_Machine::Ximo16),
             171 => Ok(Elf_Machine::Manik),
-            172 => Ok(Elf_Machine::Craynv2),
+            172 => Ok(Elf_Machine::CrayNv2),
             173 => Ok(Elf_Machine::Rx),
             174 => Ok(Elf_Machine::Metag),
             175 => Ok(Elf_Machine::McstElbrus),
@@ -1913,9 +2058,11 @@ impl TryFrom<i64> for Elf_Machine {
             177 => Ok(Elf_Machine::Cr16),
             178 => Ok(Elf_Machine::Etpu),
             179 => Ok(Elf_Machine::Sle9x),
-            180 => Ok(Elf_Machine::L10m),
-            181 => Ok(Elf_Machine::K10m),
+            180 => Ok(Elf_Machine::L1om),
+            181 => Ok(Elf_Machine::K1om),
+            182 => Ok(Elf_Machine::Intel182),
             183 => Ok(Elf_Machine::Aarch64),
+            184 => Ok(Elf_Machine::Arm184),
             185 => Ok(Elf_Machine::Avr32),
             186 => Ok(Elf_Machine::Stm8),
             187 => Ok(Elf_Machine::Tile64),
@@ -1926,11 +2073,11 @@ impl TryFrom<i64> for Elf_Machine {
             192 => Ok(Elf_Machine::Cloudshield),
             193 => Ok(Elf_Machine::Corea1st),
             194 => Ok(Elf_Machine::Corea2nd),
-            195 => Ok(Elf_Machine::Arcv2),
+            195 => Ok(Elf_Machine::ArcCompact2),
             196 => Ok(Elf_Machine::Open8),
             197 => Ok(Elf_Machine::Rl78),
             198 => Ok(Elf_Machine::Videocore5),
-            199 => Ok(Elf_Machine::Renesas78kor),
+            199 => Ok(Elf_Machine::Renesas78k0r),
             200 => Ok(Elf_Machine::Freescale56800ex),
             201 => Ok(Elf_Machine::Ba1),
             202 => Ok(Elf_Machine::Ba2),
@@ -1955,7 +2102,7 @@ impl TryFrom<i64> for Elf_Machine {
             221 => Ok(Elf_Machine::Visium),
             222 => Ok(Elf_Machine::Ft32),
             223 => Ok(Elf_Machine::Moxie),
-            224 => Ok(Elf_Machine::AmdGpu),
+            224 => Ok(Elf_Machine::Amdgpu),
             243 => Ok(Elf_Machine::Riscv),
             244 => Ok(Elf_Machine::Lanai),
             245 => Ok(Elf_Machine::Ceva),
@@ -1976,6 +2123,14 @@ impl TryFrom<i64> for Elf_Machine {
             260 => Ok(Elf_Machine::U16U8core),
             261 => Ok(Elf_Machine::Tachyum),
             262 => Ok(Elf_Machine::Nxp56800ef),
+            263 => Ok(Elf_Machine::Sbf),
+            264 => Ok(Elf_Machine::AiEngine),
+            265 => Ok(Elf_Machine::SimaMla),
+            266 => Ok(Elf_Machine::Bang),
+            267 => Ok(Elf_Machine::Loonggpu),
+            268 => Ok(Elf_Machine::Sw64),
+            269 => Ok(Elf_Machine::AiEngineCtrlcode),
+            270 => Ok(Elf_Machine::Ppu),
             4183 => Ok(Elf_Machine::AvrOld),
             4185 => Ok(Elf_Machine::Msp430Old),
             4643 => Ok(Elf_Machine::AdaptevaEpiphany),
@@ -2015,7 +2170,7 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::NoMachine => 0,
             Elf_Machine::M32 => 1,
             Elf_Machine::Sparc => 2,
-            Elf_Machine::X86 => 3,
+            Elf_Machine::I386 => 3,
             Elf_Machine::M68k => 4,
             Elf_Machine::M88k => 5,
             Elf_Machine::Iamcu => 6,
@@ -2023,6 +2178,7 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::Mips => 8,
             Elf_Machine::S370 => 9,
             Elf_Machine::MipsRs3Le => 10,
+            Elf_Machine::OldSparcV9 => 11,
             Elf_Machine::Parisc => 15,
             Elf_Machine::Vpp500 => 17,
             Elf_Machine::Sparc32plus => 18,
@@ -2034,7 +2190,7 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::V800 => 36,
             Elf_Machine::Fr20 => 37,
             Elf_Machine::Rh32 => 38,
-            Elf_Machine::Rce => 39,
+            Elf_Machine::Mcore => 39,
             Elf_Machine::Arm => 40,
             Elf_Machine::OldAlpha => 41,
             Elf_Machine::Superh => 42,
@@ -2064,10 +2220,10 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::Fx66 => 66,
             Elf_Machine::St9plus => 67,
             Elf_Machine::St7 => 68,
-            Elf_Machine::Mc68hc16 => 69,
-            Elf_Machine::Mc68hc11 => 70,
-            Elf_Machine::Mc68hc08 => 71,
-            Elf_Machine::Mc68hc05 => 72,
+            Elf_Machine::M68hc16 => 69,
+            Elf_Machine::M68hc11 => 70,
+            Elf_Machine::M68hc08 => 71,
+            Elf_Machine::M68hc05 => 72,
             Elf_Machine::Svx => 73,
             Elf_Machine::St19 => 74,
             Elf_Machine::Vax => 75,
@@ -2087,7 +2243,7 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::Mn10300 => 89,
             Elf_Machine::Mn10200 => 90,
             Elf_Machine::Picojava => 91,
-            Elf_Machine::Openrisc => 92,
+            Elf_Machine::Or1k => 92,
             Elf_Machine::ArcCompact => 93,
             Elf_Machine::Xtensa => 94,
             Elf_Machine::Videocore => 95,
@@ -2098,7 +2254,7 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::St200 => 100,
             Elf_Machine::Ip2k => 101,
             Elf_Machine::Max => 102,
-            Elf_Machine::CompactRisc => 103,
+            Elf_Machine::Cr => 103,
             Elf_Machine::F2mc16 => 104,
             Elf_Machine::Msp430 => 105,
             Elf_Machine::Blackfin => 106,
@@ -2142,7 +2298,7 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::Maxq30 => 169,
             Elf_Machine::Ximo16 => 170,
             Elf_Machine::Manik => 171,
-            Elf_Machine::Craynv2 => 172,
+            Elf_Machine::CrayNv2 => 172,
             Elf_Machine::Rx => 173,
             Elf_Machine::Metag => 174,
             Elf_Machine::McstElbrus => 175,
@@ -2150,9 +2306,11 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::Cr16 => 177,
             Elf_Machine::Etpu => 178,
             Elf_Machine::Sle9x => 179,
-            Elf_Machine::L10m => 180,
-            Elf_Machine::K10m => 181,
+            Elf_Machine::L1om => 180,
+            Elf_Machine::K1om => 181,
+            Elf_Machine::Intel182 => 182,
             Elf_Machine::Aarch64 => 183,
+            Elf_Machine::Arm184 => 184,
             Elf_Machine::Avr32 => 185,
             Elf_Machine::Stm8 => 186,
             Elf_Machine::Tile64 => 187,
@@ -2163,11 +2321,11 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::Cloudshield => 192,
             Elf_Machine::Corea1st => 193,
             Elf_Machine::Corea2nd => 194,
-            Elf_Machine::Arcv2 => 195,
+            Elf_Machine::ArcCompact2 => 195,
             Elf_Machine::Open8 => 196,
             Elf_Machine::Rl78 => 197,
             Elf_Machine::Videocore5 => 198,
-            Elf_Machine::Renesas78kor => 199,
+            Elf_Machine::Renesas78k0r => 199,
             Elf_Machine::Freescale56800ex => 200,
             Elf_Machine::Ba1 => 201,
             Elf_Machine::Ba2 => 202,
@@ -2192,7 +2350,7 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::Visium => 221,
             Elf_Machine::Ft32 => 222,
             Elf_Machine::Moxie => 223,
-            Elf_Machine::AmdGpu => 224,
+            Elf_Machine::Amdgpu => 224,
             Elf_Machine::Riscv => 243,
             Elf_Machine::Lanai => 244,
             Elf_Machine::Ceva => 245,
@@ -2213,6 +2371,14 @@ impl From<&Elf_Machine> for i64 {
             Elf_Machine::U16U8core => 260,
             Elf_Machine::Tachyum => 261,
             Elf_Machine::Nxp56800ef => 262,
+            Elf_Machine::Sbf => 263,
+            Elf_Machine::AiEngine => 264,
+            Elf_Machine::SimaMla => 265,
+            Elf_Machine::Bang => 266,
+            Elf_Machine::Loonggpu => 267,
+            Elf_Machine::Sw64 => 268,
+            Elf_Machine::AiEngineCtrlcode => 269,
+            Elf_Machine::Ppu => 270,
             Elf_Machine::AvrOld => 4183,
             Elf_Machine::Msp430Old => 4185,
             Elf_Machine::AdaptevaEpiphany => 4643,
@@ -2293,23 +2459,126 @@ impl Default for Elf_ObjType {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Elf_OsAbi {
+
+    /**
+     * UNIX System V ABI
+     */
     SystemV,
+
+    /**
+     * HP-UX
+     */
     HpUx,
+
+    /**
+     * NetBSD
+     */
     Netbsd,
+
+    /**
+     * Object uses GNU ELF extensions.
+     */
     Gnu,
+
+    /**
+     * Solaris
+     */
     Solaris,
+
+    /**
+     * IBM AIX
+     */
     Aix,
+
+    /**
+     * IRIX by Silicon Graphics (SGI)
+     */
     Irix,
+
+    /**
+     * FreeBSD
+     */
     Freebsd,
+
+    /**
+     * Compaq TRU64 UNIX
+     */
     Tru64,
+
+    /**
+     * Novell Modesto
+     */
     Modesto,
+
+    /**
+     * OpenBSD
+     */
     Openbsd,
+
+    /**
+     * OpenVMS
+     */
     Openvms,
+
+    /**
+     * Hewlett-Packard NonStop Kernel
+     */
     Nsk,
+
+    /**
+     * AROS Research Operating System
+     */
     Aros,
+
+    /**
+     * FenixOS
+     */
     Fenixos,
+
+    /**
+     * Nuxi CloudABI
+     */
     Cloudabi,
+
+    /**
+     * Stratus Technologies OpenVOS
+     */
     Openvos,
+
+    /**
+     * NVIDIA CUDA architecture
+     * \sa https://github.com/llvm/llvm-project/blob/ca7933e47d3a3451d81e72ac174dcb5aa28b59d1/llvm/include/llvm/BinaryFormat/ELF.h#L364 Git tag "llvmorg-22.1.8"
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L79 Source
+     * \sa https://docs.nvidia.com/cuda/cuda-binary-utilities/index.html search for `"ei_osabi": 51,`
+     */
+    Cuda,
+
+    /**
+     * ARM EABI (symbol versioning extensions)
+     */
+    ArmAeabi,
+
+    /**
+     * ARM FDPIC
+     * \sa https://github.com/llvm/llvm-project/blob/ca7933e47d3a3451d81e72ac174dcb5aa28b59d1/llvm/include/llvm/BinaryFormat/ELF.h#L371 Git tag "llvmorg-22.1.8"
+     */
+    ArmFdpic,
+
+    /**
+     * AMD GCN GPUs (GFX6+) for MESA runtime
+     * \sa https://github.com/llvm/llvm-project/blob/ca7933e47d3a3451d81e72ac174dcb5aa28b59d1/llvm/include/llvm/BinaryFormat/ELF.h#L369 Git tag "llvmorg-22.1.8"
+     */
+    AmdgpuMesa3d,
+
+    /**
+     * ARM
+     */
+    Arm,
+
+    /**
+     * Standalone (embedded) application
+     */
+    Standalone,
     Unknown(i64),
 }
 
@@ -2334,6 +2603,12 @@ impl TryFrom<i64> for Elf_OsAbi {
             16 => Ok(Elf_OsAbi::Fenixos),
             17 => Ok(Elf_OsAbi::Cloudabi),
             18 => Ok(Elf_OsAbi::Openvos),
+            51 => Ok(Elf_OsAbi::Cuda),
+            64 => Ok(Elf_OsAbi::ArmAeabi),
+            65 => Ok(Elf_OsAbi::ArmFdpic),
+            66 => Ok(Elf_OsAbi::AmdgpuMesa3d),
+            97 => Ok(Elf_OsAbi::Arm),
+            255 => Ok(Elf_OsAbi::Standalone),
             _ => Ok(Elf_OsAbi::Unknown(flag)),
         }
     }
@@ -2359,6 +2634,12 @@ impl From<&Elf_OsAbi> for i64 {
             Elf_OsAbi::Fenixos => 16,
             Elf_OsAbi::Cloudabi => 17,
             Elf_OsAbi::Openvos => 18,
+            Elf_OsAbi::Cuda => 51,
+            Elf_OsAbi::ArmAeabi => 64,
+            Elf_OsAbi::ArmFdpic => 65,
+            Elf_OsAbi::AmdgpuMesa3d => 66,
+            Elf_OsAbi::Arm => 97,
+            Elf_OsAbi::Standalone => 255,
             Elf_OsAbi::Unknown(v) => v
         }
     }
@@ -2370,20 +2651,170 @@ impl Default for Elf_OsAbi {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Elf_PhType {
+
+    /**
+     * Program header table entry unused
+     */
     NullType,
+
+    /**
+     * Loadable program segment
+     */
     Load,
+
+    /**
+     * Dynamic linking information
+     */
     Dynamic,
+
+    /**
+     * Program interpreter (i.e. runtime/dynamic linker)
+     */
     Interp,
+
+    /**
+     * Auxiliary information
+     */
     Note,
+
+    /**
+     * Reserved
+     */
     Shlib,
+
+    /**
+     * Segment for the program header table itself
+     */
     Phdr,
+
+    /**
+     * Thread-local storage segment
+     */
     Tls,
+
+    /**
+     * Equivalent to `PT_SUNW_EH_FRAME` (`ph_type::gnu_eh_frame`)
+     * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/program-header.html#GUID-49F99618-9CDC-4A08-A94C-E2AA264AA01A__CHAPTER6-69880 Source
+     */
+    SunwUnwind,
+
+    /**
+     * Exception unwind tables (`.eh_frame_hdr` section)
+     */
     GnuEhFrame,
+
+    /**
+     * Indicates stack executability
+     */
     GnuStack,
+
+    /**
+     * Read-only after relocation
+     */
     GnuRelro,
+
+    /**
+     * Segment containing the `.note.gnu.property` section
+     */
     GnuProperty,
+
+    /**
+     * GNU SFrame stack trace segment (`.sframe` section)
+     */
+    GnuSframe,
+
+    /**
+     * PaX flags
+     */
     PaxFlags,
+
+    /**
+     * Like bss, but not immutable
+     */
+    OpenbsdMutable,
+
+    /**
+     * Fill with random data
+     */
+    OpenbsdRandomize,
+
+    /**
+     * Program does W^X violations
+     */
+    OpenbsdWxneeded,
+
+    /**
+     * No branch target CFI
+     */
+    OpenbsdNobtcfi,
+
+    /**
+     * System call sites
+     */
+    OpenbsdSyscalls,
+
+    /**
+     * Section for boot arguments
+     */
+    OpenbsdBootdata,
+
+    /**
+     * Reserved for internal use
+     * \sa `/usr/include/sys/elf.h` on Oracle Solaris 11.4
+     */
+    SunwSysstatZone,
+
+    /**
+     * Reserved for internal use
+     */
+    SunwSysstat,
+
+    /**
+     * Memory reservation
+     */
+    SunwReserve,
+    SunwBss,
+
+    /**
+     * Describes the stack segment
+     */
+    SunwStack,
+
+    /**
+     * Reserved for internal use by `dtrace(8)`
+     */
+    SunwDtrace,
+
+    /**
+     * Capability requirements
+     */
+    SunwCap,
+
+    /**
+     * Platform architecture compatibility information
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/arm.h#L40 Source
+     * \sa https://github.com/ARM-software/abi-aa/blob/daa7a94ca55973736c0e434a67a6e4bbcd35d7fa/aaelf32/aaelf32.rst#61program-header Git tag "2025Q4"
+     */
+    ArmArchext,
+
+    /**
+     * Exception unwind tables
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/arm.h#L41 Source
+     * \sa https://github.com/ARM-software/abi-aa/blob/daa7a94ca55973736c0e434a67a6e4bbcd35d7fa/aaelf32/aaelf32.rst#61program-header Git tag "2025Q4"
+     */
     ArmExidx,
+
+    /**
+     * MTE memory tags
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/aarch64.h#L31 Source
+     */
+    Aarch64MemtagMte,
+
+    /**
+     * RISC-V ELF attribute section (deprecated)
+     * \sa https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/01017c343cd6d89ed4d1d568b1c75fac79d2a689/riscv-elf.adoc#program-header-table Source
+     */
+    RiscvAttributes,
     Unknown(i64),
 }
 
@@ -2399,12 +2830,30 @@ impl TryFrom<i64> for Elf_PhType {
             5 => Ok(Elf_PhType::Shlib),
             6 => Ok(Elf_PhType::Phdr),
             7 => Ok(Elf_PhType::Tls),
+            1684333904 => Ok(Elf_PhType::SunwUnwind),
             1685382480 => Ok(Elf_PhType::GnuEhFrame),
             1685382481 => Ok(Elf_PhType::GnuStack),
             1685382482 => Ok(Elf_PhType::GnuRelro),
             1685382483 => Ok(Elf_PhType::GnuProperty),
+            1685382484 => Ok(Elf_PhType::GnuSframe),
             1694766464 => Ok(Elf_PhType::PaxFlags),
+            1705237477 => Ok(Elf_PhType::OpenbsdMutable),
+            1705237478 => Ok(Elf_PhType::OpenbsdRandomize),
+            1705237479 => Ok(Elf_PhType::OpenbsdWxneeded),
+            1705237480 => Ok(Elf_PhType::OpenbsdNobtcfi),
+            1705237481 => Ok(Elf_PhType::OpenbsdSyscalls),
+            1705253862 => Ok(Elf_PhType::OpenbsdBootdata),
+            1879048183 => Ok(Elf_PhType::SunwSysstatZone),
+            1879048184 => Ok(Elf_PhType::SunwSysstat),
+            1879048185 => Ok(Elf_PhType::SunwReserve),
+            1879048186 => Ok(Elf_PhType::SunwBss),
+            1879048187 => Ok(Elf_PhType::SunwStack),
+            1879048188 => Ok(Elf_PhType::SunwDtrace),
+            1879048189 => Ok(Elf_PhType::SunwCap),
+            1879048192 => Ok(Elf_PhType::ArmArchext),
             1879048193 => Ok(Elf_PhType::ArmExidx),
+            1879048194 => Ok(Elf_PhType::Aarch64MemtagMte),
+            1879048195 => Ok(Elf_PhType::RiscvAttributes),
             _ => Ok(Elf_PhType::Unknown(flag)),
         }
     }
@@ -2421,12 +2870,30 @@ impl From<&Elf_PhType> for i64 {
             Elf_PhType::Shlib => 5,
             Elf_PhType::Phdr => 6,
             Elf_PhType::Tls => 7,
+            Elf_PhType::SunwUnwind => 1684333904,
             Elf_PhType::GnuEhFrame => 1685382480,
             Elf_PhType::GnuStack => 1685382481,
             Elf_PhType::GnuRelro => 1685382482,
             Elf_PhType::GnuProperty => 1685382483,
+            Elf_PhType::GnuSframe => 1685382484,
             Elf_PhType::PaxFlags => 1694766464,
+            Elf_PhType::OpenbsdMutable => 1705237477,
+            Elf_PhType::OpenbsdRandomize => 1705237478,
+            Elf_PhType::OpenbsdWxneeded => 1705237479,
+            Elf_PhType::OpenbsdNobtcfi => 1705237480,
+            Elf_PhType::OpenbsdSyscalls => 1705237481,
+            Elf_PhType::OpenbsdBootdata => 1705253862,
+            Elf_PhType::SunwSysstatZone => 1879048183,
+            Elf_PhType::SunwSysstat => 1879048184,
+            Elf_PhType::SunwReserve => 1879048185,
+            Elf_PhType::SunwBss => 1879048186,
+            Elf_PhType::SunwStack => 1879048187,
+            Elf_PhType::SunwDtrace => 1879048188,
+            Elf_PhType::SunwCap => 1879048189,
+            Elf_PhType::ArmArchext => 1879048192,
             Elf_PhType::ArmExidx => 1879048193,
+            Elf_PhType::Aarch64MemtagMte => 1879048194,
+            Elf_PhType::RiscvAttributes => 1879048195,
             Elf_PhType::Unknown(v) => v
         }
     }
@@ -2488,24 +2955,199 @@ impl Default for Elf_SectionHeaderIdxSpecial {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Elf_ShType {
+
+    /**
+     * Section header table entry unused
+     */
     NullType,
+
+    /**
+     * Program specific (private) data
+     */
     Progbits,
+
+    /**
+     * Link editing symbol table
+     */
     Symtab,
+
+    /**
+     * String table
+     */
     Strtab,
+
+    /**
+     * Relocation entries with addends
+     */
     Rela,
+
+    /**
+     * Symbol hash table
+     */
     Hash,
+
+    /**
+     * Dynamic linking information
+     */
     Dynamic,
+
+    /**
+     * Information that marks the file in some way
+     */
     Note,
+
+    /**
+     * Section occupies no space in file
+     */
     Nobits,
+
+    /**
+     * Relocation entries, no addends
+     */
     Rel,
+
+    /**
+     * Reserved, unspecified semantics
+     */
     Shlib,
+
+    /**
+     * Dynamic linking symbol table
+     */
     Dynsym,
+
+    /**
+     * Pointers to initialization functions
+     */
     InitArray,
+
+    /**
+     * Pointers to termination functions
+     */
     FiniArray,
+
+    /**
+     * Pointers to pre-init functions
+     */
     PreinitArray,
+
+    /**
+     * Section contains a section group
+     */
     Group,
+
+    /**
+     * Indices for `SHN_XINDEX` entries
+     */
     SymtabShndx,
+
+    /**
+     * Relative relocations (only offsets)
+     */
     Relr,
+
+    /**
+     * Android packed relocation entries, no addends
+     */
+    AndroidRel,
+
+    /**
+     * Android packed relocation entries with addends
+     */
+    AndroidRela,
+
+    /**
+     * Incremental build data
+     */
+    GnuIncrementalInputs,
+
+    /**
+     * LLVM ODR table
+     */
+    LlvmOdrtab,
+
+    /**
+     * LLVM Linker Options
+     */
+    LlvmLinkerOptions,
+
+    /**
+     * List of address-significant symbols for safe ICF
+     */
+    LlvmAddrsig,
+
+    /**
+     * LLVM Dependent Library Specifiers
+     */
+    LlvmDependentLibraries,
+
+    /**
+     * Symbol partition specification
+     */
+    LlvmSympart,
+
+    /**
+     * ELF header for loadable partition
+     */
+    LlvmPartEhdr,
+
+    /**
+     * Phdrs for loadable partition
+     */
+    LlvmPartPhdr,
+
+    /**
+     * LLVM Basic Block Address Map, version 0.
+     * 
+     * Superseded by `sh_type::llvm_bb_addr_map` (`SHT_LLVM_BB_ADDR_MAP`).
+     * LLVM 21.1.0 removed support for this value - see
+     * <https://github.com/llvm/llvm-project/commit/6b623a6622707ea47d84ab0069f766215a6fec44>
+     * and [LLVM 21.1.0 Release Notes](https://releases.llvm.org/21.1.0/docs/ReleaseNotes.html#changes-to-the-llvm-tools).
+     */
+    LlvmBbAddrMapV0,
+
+    /**
+     * LLVM Call Graph Profile
+     */
+    LlvmCallGraphProfile,
+
+    /**
+     * LLVM Basic Block Address Map
+     */
+    LlvmBbAddrMap,
+
+    /**
+     * LLVM device offloading data
+     */
+    LlvmOffloading,
+
+    /**
+     * `.llvm.lto` section for fat LTO
+     */
+    LlvmLto,
+
+    /**
+     * LLVM jump tables sizes
+     */
+    LlvmJtSizes,
+
+    /**
+     * LLVM CFI jump table
+     */
+    LlvmCfiJumpTable,
+
+    /**
+     * LLVM Call Graph Section
+     */
+    LlvmCallGraph,
+
+    /**
+     * LLVM Dynamic Debugging ELF
+     * \sa https://github.com/llvm/llvm-project/blob/30ad5cc8f094a248b883e613f523925c63c666b8/llvm/include/llvm/BinaryFormat/ELF.h#L1200 Source
+     */
+    LlvmDyndbgElf,
+    AndroidRelr,
+    SunwCtf,
     SunwSymnsort,
     SunwPhname,
     SunwAncillary,
@@ -2514,24 +3156,88 @@ pub enum Elf_ShType {
     SunwSymsort,
     SunwTlssort,
     SunwLdynsym,
-    SunwDof,
-    SunwCap,
-    SunwSignature,
-    SunwAnnotate,
-    SunwDebugstr,
-    SunwDebug,
+
+    /**
+     * SFrame stack trace information (added in GNU Binutils 2.45)
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L571 Source
+     */
+    GnuSframe,
+
+    /**
+     * Object attributes
+     */
+    GnuAttributes,
+
+    /**
+     * GNU style symbol hash table
+     */
+    GnuHash,
+
+    /**
+     * List of prelink dependencies
+     */
+    GnuLiblist,
+
+    /**
+     * Checksum for DSO content
+     */
+    Checksum,
+
+    /**
+     * Object only
+     */
+    GnuObjectOnly,
     SunwMove,
     SunwComdat,
     SunwSyminfo,
-    SunwVerdef,
-    SunwVerneed,
-    SunwVersym,
+
+    /**
+     * Versions defined by file
+     */
+    GnuVerdef,
+
+    /**
+     * Versions needed by file
+     */
+    GnuVerneed,
+
+    /**
+     * Symbol versions
+     */
+    GnuVersym,
     SparcGotdata,
-    Amd64Unwind,
+
+    /**
+     * Unwind information
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/x86-64.h#L121 Source
+     */
+    X8664Unwind,
+
+    /**
+     * Preemption details
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/arm.h#L81 Source
+     */
     ArmPreemptmap,
+
+    /**
+     * ARM build attributes
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/arm.h#L82 Source
+     */
     ArmAttributes,
+
+    /**
+     * Overlay debug info
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/arm.h#L83 Source
+     */
     ArmDebugoverlay,
+
+    /**
+     * GDB and overlay integration info
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/arm.h#L84 Source
+     */
     ArmOverlaysection,
+    Aarch64MemtagGlobalsStatic,
+    Aarch64MemtagGlobalsDynamic,
     Unknown(i64),
 }
 
@@ -2557,6 +3263,27 @@ impl TryFrom<i64> for Elf_ShType {
             17 => Ok(Elf_ShType::Group),
             18 => Ok(Elf_ShType::SymtabShndx),
             19 => Ok(Elf_ShType::Relr),
+            1610612737 => Ok(Elf_ShType::AndroidRel),
+            1610612738 => Ok(Elf_ShType::AndroidRela),
+            1879000832 => Ok(Elf_ShType::GnuIncrementalInputs),
+            1879002112 => Ok(Elf_ShType::LlvmOdrtab),
+            1879002113 => Ok(Elf_ShType::LlvmLinkerOptions),
+            1879002115 => Ok(Elf_ShType::LlvmAddrsig),
+            1879002116 => Ok(Elf_ShType::LlvmDependentLibraries),
+            1879002117 => Ok(Elf_ShType::LlvmSympart),
+            1879002118 => Ok(Elf_ShType::LlvmPartEhdr),
+            1879002119 => Ok(Elf_ShType::LlvmPartPhdr),
+            1879002120 => Ok(Elf_ShType::LlvmBbAddrMapV0),
+            1879002121 => Ok(Elf_ShType::LlvmCallGraphProfile),
+            1879002122 => Ok(Elf_ShType::LlvmBbAddrMap),
+            1879002123 => Ok(Elf_ShType::LlvmOffloading),
+            1879002124 => Ok(Elf_ShType::LlvmLto),
+            1879002125 => Ok(Elf_ShType::LlvmJtSizes),
+            1879002126 => Ok(Elf_ShType::LlvmCfiJumpTable),
+            1879002127 => Ok(Elf_ShType::LlvmCallGraph),
+            1879002128 => Ok(Elf_ShType::LlvmDyndbgElf),
+            1879047936 => Ok(Elf_ShType::AndroidRelr),
+            1879048171 => Ok(Elf_ShType::SunwCtf),
             1879048172 => Ok(Elf_ShType::SunwSymnsort),
             1879048173 => Ok(Elf_ShType::SunwPhname),
             1879048174 => Ok(Elf_ShType::SunwAncillary),
@@ -2565,24 +3292,26 @@ impl TryFrom<i64> for Elf_ShType {
             1879048177 => Ok(Elf_ShType::SunwSymsort),
             1879048178 => Ok(Elf_ShType::SunwTlssort),
             1879048179 => Ok(Elf_ShType::SunwLdynsym),
-            1879048180 => Ok(Elf_ShType::SunwDof),
-            1879048181 => Ok(Elf_ShType::SunwCap),
-            1879048182 => Ok(Elf_ShType::SunwSignature),
-            1879048183 => Ok(Elf_ShType::SunwAnnotate),
-            1879048184 => Ok(Elf_ShType::SunwDebugstr),
-            1879048185 => Ok(Elf_ShType::SunwDebug),
+            1879048180 => Ok(Elf_ShType::GnuSframe),
+            1879048181 => Ok(Elf_ShType::GnuAttributes),
+            1879048182 => Ok(Elf_ShType::GnuHash),
+            1879048183 => Ok(Elf_ShType::GnuLiblist),
+            1879048184 => Ok(Elf_ShType::Checksum),
+            1879048185 => Ok(Elf_ShType::GnuObjectOnly),
             1879048186 => Ok(Elf_ShType::SunwMove),
             1879048187 => Ok(Elf_ShType::SunwComdat),
             1879048188 => Ok(Elf_ShType::SunwSyminfo),
-            1879048189 => Ok(Elf_ShType::SunwVerdef),
-            1879048190 => Ok(Elf_ShType::SunwVerneed),
-            1879048191 => Ok(Elf_ShType::SunwVersym),
+            1879048189 => Ok(Elf_ShType::GnuVerdef),
+            1879048190 => Ok(Elf_ShType::GnuVerneed),
+            1879048191 => Ok(Elf_ShType::GnuVersym),
             1879048192 => Ok(Elf_ShType::SparcGotdata),
-            1879048193 => Ok(Elf_ShType::Amd64Unwind),
+            1879048193 => Ok(Elf_ShType::X8664Unwind),
             1879048194 => Ok(Elf_ShType::ArmPreemptmap),
             1879048195 => Ok(Elf_ShType::ArmAttributes),
             1879048196 => Ok(Elf_ShType::ArmDebugoverlay),
             1879048197 => Ok(Elf_ShType::ArmOverlaysection),
+            1879048199 => Ok(Elf_ShType::Aarch64MemtagGlobalsStatic),
+            1879048200 => Ok(Elf_ShType::Aarch64MemtagGlobalsDynamic),
             _ => Ok(Elf_ShType::Unknown(flag)),
         }
     }
@@ -2609,6 +3338,27 @@ impl From<&Elf_ShType> for i64 {
             Elf_ShType::Group => 17,
             Elf_ShType::SymtabShndx => 18,
             Elf_ShType::Relr => 19,
+            Elf_ShType::AndroidRel => 1610612737,
+            Elf_ShType::AndroidRela => 1610612738,
+            Elf_ShType::GnuIncrementalInputs => 1879000832,
+            Elf_ShType::LlvmOdrtab => 1879002112,
+            Elf_ShType::LlvmLinkerOptions => 1879002113,
+            Elf_ShType::LlvmAddrsig => 1879002115,
+            Elf_ShType::LlvmDependentLibraries => 1879002116,
+            Elf_ShType::LlvmSympart => 1879002117,
+            Elf_ShType::LlvmPartEhdr => 1879002118,
+            Elf_ShType::LlvmPartPhdr => 1879002119,
+            Elf_ShType::LlvmBbAddrMapV0 => 1879002120,
+            Elf_ShType::LlvmCallGraphProfile => 1879002121,
+            Elf_ShType::LlvmBbAddrMap => 1879002122,
+            Elf_ShType::LlvmOffloading => 1879002123,
+            Elf_ShType::LlvmLto => 1879002124,
+            Elf_ShType::LlvmJtSizes => 1879002125,
+            Elf_ShType::LlvmCfiJumpTable => 1879002126,
+            Elf_ShType::LlvmCallGraph => 1879002127,
+            Elf_ShType::LlvmDyndbgElf => 1879002128,
+            Elf_ShType::AndroidRelr => 1879047936,
+            Elf_ShType::SunwCtf => 1879048171,
             Elf_ShType::SunwSymnsort => 1879048172,
             Elf_ShType::SunwPhname => 1879048173,
             Elf_ShType::SunwAncillary => 1879048174,
@@ -2617,24 +3367,26 @@ impl From<&Elf_ShType> for i64 {
             Elf_ShType::SunwSymsort => 1879048177,
             Elf_ShType::SunwTlssort => 1879048178,
             Elf_ShType::SunwLdynsym => 1879048179,
-            Elf_ShType::SunwDof => 1879048180,
-            Elf_ShType::SunwCap => 1879048181,
-            Elf_ShType::SunwSignature => 1879048182,
-            Elf_ShType::SunwAnnotate => 1879048183,
-            Elf_ShType::SunwDebugstr => 1879048184,
-            Elf_ShType::SunwDebug => 1879048185,
+            Elf_ShType::GnuSframe => 1879048180,
+            Elf_ShType::GnuAttributes => 1879048181,
+            Elf_ShType::GnuHash => 1879048182,
+            Elf_ShType::GnuLiblist => 1879048183,
+            Elf_ShType::Checksum => 1879048184,
+            Elf_ShType::GnuObjectOnly => 1879048185,
             Elf_ShType::SunwMove => 1879048186,
             Elf_ShType::SunwComdat => 1879048187,
             Elf_ShType::SunwSyminfo => 1879048188,
-            Elf_ShType::SunwVerdef => 1879048189,
-            Elf_ShType::SunwVerneed => 1879048190,
-            Elf_ShType::SunwVersym => 1879048191,
+            Elf_ShType::GnuVerdef => 1879048189,
+            Elf_ShType::GnuVerneed => 1879048190,
+            Elf_ShType::GnuVersym => 1879048191,
             Elf_ShType::SparcGotdata => 1879048192,
-            Elf_ShType::Amd64Unwind => 1879048193,
+            Elf_ShType::X8664Unwind => 1879048193,
             Elf_ShType::ArmPreemptmap => 1879048194,
             Elf_ShType::ArmAttributes => 1879048195,
             Elf_ShType::ArmDebugoverlay => 1879048196,
             Elf_ShType::ArmOverlaysection => 1879048197,
+            Elf_ShType::Aarch64MemtagGlobalsStatic => 1879048199,
+            Elf_ShType::Aarch64MemtagGlobalsDynamic => 1879048200,
             Elf_ShType::Unknown(v) => v
         }
     }
@@ -2772,13 +3524,13 @@ pub enum Elf_SymbolType {
 
     /**
      * complex relocation expression
-     * \sa https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=include/elf/common.h;h=0d381f0d27;hb=HEAD#l1009 Source
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L1155 Source
      */
     Relc,
 
     /**
      * signed complex relocation expression
-     * \sa https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=include/elf/common.h;h=0d381f0d27;hb=HEAD#l1010 Source
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L1156 Source
      */
     Srelc,
 
@@ -2914,54 +3666,119 @@ impl Default for Elf_SymbolVisibility {
     fn default() -> Self { Elf_SymbolVisibility::Unknown(0) }
 }
 
+#[derive(Debug, PartialEq, Clone)]
+pub enum Elf_VersionIndexSpecial {
+
+    /**
+     * The symbol is local, not available outside the object.
+     */
+    Local,
+
+    /**
+     * The symbol is defined in this object and is globally available. It's
+     * assigned to the base version definition. This value is used for
+     * unversioned symbols.
+     * 
+     * As of KSC 0.9, this enum key can't be called `global` because it would
+     * cause a syntax error in Python (it is a keyword).
+     */
+    GlobalSymbol,
+
+    /**
+     * Symbol is to be eliminated.
+     * 
+     * This appears to be a Solaris-specific value - as far as I know, no GNU
+     * software (such as glibc or binutils) uses it.
+     * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1092 Source
+     */
+    Eliminate,
+    Unknown(i64),
+}
+
+impl TryFrom<i64> for Elf_VersionIndexSpecial {
+    type Error = KError;
+    fn try_from(flag: i64) -> KResult<Elf_VersionIndexSpecial> {
+        match flag {
+            0 => Ok(Elf_VersionIndexSpecial::Local),
+            1 => Ok(Elf_VersionIndexSpecial::GlobalSymbol),
+            65281 => Ok(Elf_VersionIndexSpecial::Eliminate),
+            _ => Ok(Elf_VersionIndexSpecial::Unknown(flag)),
+        }
+    }
+}
+
+impl From<&Elf_VersionIndexSpecial> for i64 {
+    fn from(v: &Elf_VersionIndexSpecial) -> Self {
+        match *v {
+            Elf_VersionIndexSpecial::Local => 0,
+            Elf_VersionIndexSpecial::GlobalSymbol => 1,
+            Elf_VersionIndexSpecial::Eliminate => 65281,
+            Elf_VersionIndexSpecial::Unknown(v) => v
+        }
+    }
+}
+
+impl Default for Elf_VersionIndexSpecial {
+    fn default() -> Self { Elf_VersionIndexSpecial::Unknown(0) }
+}
+
+
+/**
+ * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1008 Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER6-TBL-53 Source
+ */
 
 #[derive(Default, Debug, Clone)]
 pub struct Elf_DtFlag1Values {
     pub _root: SharedType<Elf>,
-    pub _parent: SharedType<Elf_EndianElf_DynamicSectionEntry>,
+    pub _parent: SharedType<KStructUnit>,
     pub _self: SharedType<Self>,
     value: RefCell<u32>,
     _io: RefCell<BytesReader>,
-    f_confalt: Cell<bool>,
-    confalt: RefCell<bool>,
+    f_conf_alt: Cell<bool>,
+    conf_alt: RefCell<bool>,
     f_direct: Cell<bool>,
     direct: RefCell<bool>,
-    f_dispreldne: Cell<bool>,
-    dispreldne: RefCell<bool>,
-    f_disprelpnd: Cell<bool>,
-    disprelpnd: RefCell<bool>,
+    f_disp_rel_dne: Cell<bool>,
+    disp_rel_dne: RefCell<bool>,
+    f_disp_rel_pnd: Cell<bool>,
+    disp_rel_pnd: RefCell<bool>,
     f_edited: Cell<bool>,
     edited: RefCell<bool>,
-    f_endfiltee: Cell<bool>,
-    endfiltee: RefCell<bool>,
-    f_globaudit: Cell<bool>,
-    globaudit: RefCell<bool>,
+    f_end_filtee: Cell<bool>,
+    end_filtee: RefCell<bool>,
+    f_glob_audit: Cell<bool>,
+    glob_audit: RefCell<bool>,
     f_group: Cell<bool>,
     group: RefCell<bool>,
-    f_ignmuldef: Cell<bool>,
-    ignmuldef: RefCell<bool>,
-    f_initfirst: Cell<bool>,
-    initfirst: RefCell<bool>,
+    f_ign_mul_def: Cell<bool>,
+    ign_mul_def: RefCell<bool>,
+    f_init_first: Cell<bool>,
+    init_first: RefCell<bool>,
     f_interpose: Cell<bool>,
     interpose: RefCell<bool>,
-    f_loadfltr: Cell<bool>,
-    loadfltr: RefCell<bool>,
-    f_nodeflib: Cell<bool>,
-    nodeflib: RefCell<bool>,
-    f_nodelete: Cell<bool>,
-    nodelete: RefCell<bool>,
-    f_nodirect: Cell<bool>,
-    nodirect: RefCell<bool>,
-    f_nodump: Cell<bool>,
-    nodump: RefCell<bool>,
-    f_nohdr: Cell<bool>,
-    nohdr: RefCell<bool>,
-    f_noksyms: Cell<bool>,
-    noksyms: RefCell<bool>,
-    f_noopen: Cell<bool>,
-    noopen: RefCell<bool>,
-    f_noreloc: Cell<bool>,
-    noreloc: RefCell<bool>,
+    f_kmod: Cell<bool>,
+    kmod: RefCell<bool>,
+    f_load_fltr: Cell<bool>,
+    load_fltr: RefCell<bool>,
+    f_no_common: Cell<bool>,
+    no_common: RefCell<bool>,
+    f_no_def_lib: Cell<bool>,
+    no_def_lib: RefCell<bool>,
+    f_no_delete: Cell<bool>,
+    no_delete: RefCell<bool>,
+    f_no_direct: Cell<bool>,
+    no_direct: RefCell<bool>,
+    f_no_dump: Cell<bool>,
+    no_dump: RefCell<bool>,
+    f_no_hdr: Cell<bool>,
+    no_hdr: RefCell<bool>,
+    f_no_ksyms: Cell<bool>,
+    no_ksyms: RefCell<bool>,
+    f_no_open: Cell<bool>,
+    no_open: RefCell<bool>,
+    f_no_reloc: Cell<bool>,
+    no_reloc: RefCell<bool>,
     f_now: Cell<bool>,
     now: RefCell<bool>,
     f_origin: Cell<bool>,
@@ -2974,14 +3791,16 @@ pub struct Elf_DtFlag1Values {
     singleton: RefCell<bool>,
     f_stub: Cell<bool>,
     stub: RefCell<bool>,
-    f_symintpose: Cell<bool>,
-    symintpose: RefCell<bool>,
+    f_sym_intpose: Cell<bool>,
+    sym_intpose: RefCell<bool>,
     f_trans: Cell<bool>,
     trans: RefCell<bool>,
+    f_weak_filter: Cell<bool>,
+    weak_filter: RefCell<bool>,
 }
 impl KStruct for Elf_DtFlag1Values {
     type Root = Elf;
-    type Parent = Elf_EndianElf_DynamicSectionEntry;
+    type Parent = KStructUnit;
 
     fn read<S: KStream>(
         self_rc: &OptRc<Self>,
@@ -3013,20 +3832,21 @@ impl Elf_DtFlag1Values {
 
     /**
      * Configuration alternative created.
+     * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1023 Source
      */
-    pub fn confalt(
+    pub fn conf_alt(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_confalt.get() {
-            return Ok(self.confalt.borrow());
+        if self.f_conf_alt.get() {
+            return Ok(self.conf_alt.borrow());
         }
-        self.f_confalt.set(true);
-        *self.confalt.borrow_mut() = (((((*self.value() as i32) & (8192 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.confalt.borrow())
+        self.f_conf_alt.set(true);
+        *self.conf_alt.borrow_mut() = (((((*self.value() as i32) & (8192 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.conf_alt.borrow())
     }
 
     /**
@@ -3048,39 +3868,39 @@ impl Elf_DtFlag1Values {
     }
 
     /**
-     * Disp reloc applied at build time.
+     * Displacement relocation done (applied at build time).
      */
-    pub fn dispreldne(
+    pub fn disp_rel_dne(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_dispreldne.get() {
-            return Ok(self.dispreldne.borrow());
+        if self.f_disp_rel_dne.get() {
+            return Ok(self.disp_rel_dne.borrow());
         }
-        self.f_dispreldne.set(true);
-        *self.dispreldne.borrow_mut() = (((((*self.value() as i32) & (32768 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.dispreldne.borrow())
+        self.f_disp_rel_dne.set(true);
+        *self.disp_rel_dne.borrow_mut() = (((((*self.value() as i32) & (32768 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.disp_rel_dne.borrow())
     }
 
     /**
-     * Disp reloc applied at run-time.
+     * Displacement relocation pending (applied at runtime).
      */
-    pub fn disprelpnd(
+    pub fn disp_rel_pnd(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_disprelpnd.get() {
-            return Ok(self.disprelpnd.borrow());
+        if self.f_disp_rel_pnd.get() {
+            return Ok(self.disp_rel_pnd.borrow());
         }
-        self.f_disprelpnd.set(true);
-        *self.disprelpnd.borrow_mut() = (((((*self.value() as i32) & (65536 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.disprelpnd.borrow())
+        self.f_disp_rel_pnd.set(true);
+        *self.disp_rel_pnd.borrow_mut() = (((((*self.value() as i32) & (65536 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.disp_rel_pnd.borrow())
     }
 
     /**
@@ -3104,41 +3924,41 @@ impl Elf_DtFlag1Values {
     /**
      * Filtee terminates filters search.
      */
-    pub fn endfiltee(
+    pub fn end_filtee(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_endfiltee.get() {
-            return Ok(self.endfiltee.borrow());
+        if self.f_end_filtee.get() {
+            return Ok(self.end_filtee.borrow());
         }
-        self.f_endfiltee.set(true);
-        *self.endfiltee.borrow_mut() = (((((*self.value() as i32) & (16384 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.endfiltee.borrow())
+        self.f_end_filtee.set(true);
+        *self.end_filtee.borrow_mut() = (((((*self.value() as i32) & (16384 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.end_filtee.borrow())
     }
 
     /**
      * Global auditing required.
      */
-    pub fn globaudit(
+    pub fn glob_audit(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_globaudit.get() {
-            return Ok(self.globaudit.borrow());
+        if self.f_glob_audit.get() {
+            return Ok(self.glob_audit.borrow());
         }
-        self.f_globaudit.set(true);
-        *self.globaudit.borrow_mut() = (((((*self.value() as i32) & (16777216 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.globaudit.borrow())
+        self.f_glob_audit.set(true);
+        *self.glob_audit.borrow_mut() = (((((*self.value() as i32) & (16777216 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.glob_audit.borrow())
     }
 
     /**
-     * Set RTLD_GROUP for this object.
+     * Set `RTLD_GROUP` for this object.
      */
     pub fn group(
         &self
@@ -3154,37 +3974,37 @@ impl Elf_DtFlag1Values {
         *self.group.borrow_mut() = (((((*self.value() as u32) & (4 as u32)) as i32) != (0 as i32))) as bool;
         Ok(self.group.borrow())
     }
-    pub fn ignmuldef(
+    pub fn ign_mul_def(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_ignmuldef.get() {
-            return Ok(self.ignmuldef.borrow());
+        if self.f_ign_mul_def.get() {
+            return Ok(self.ign_mul_def.borrow());
         }
-        self.f_ignmuldef.set(true);
-        *self.ignmuldef.borrow_mut() = (((((*self.value() as i32) & (262144 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.ignmuldef.borrow())
+        self.f_ign_mul_def.set(true);
+        *self.ign_mul_def.borrow_mut() = (((((*self.value() as i32) & (262144 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.ign_mul_def.borrow())
     }
 
     /**
-     * Set RTLD_INITFIRST for this object
+     * Set `RTLD_INITFIRST` for this object.
      */
-    pub fn initfirst(
+    pub fn init_first(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_initfirst.get() {
-            return Ok(self.initfirst.borrow());
+        if self.f_init_first.get() {
+            return Ok(self.init_first.borrow());
         }
-        self.f_initfirst.set(true);
-        *self.initfirst.borrow_mut() = (((((*self.value() as u32) & (32 as u32)) as i32) != (0 as i32))) as bool;
-        Ok(self.initfirst.borrow())
+        self.f_init_first.set(true);
+        *self.init_first.borrow_mut() = (((((*self.value() as u32) & (32 as u32)) as i32) != (0 as i32))) as bool;
+        Ok(self.init_first.borrow())
     }
 
     /**
@@ -3206,157 +4026,194 @@ impl Elf_DtFlag1Values {
     }
 
     /**
+     * Object is a kernel module.
+     */
+    pub fn kmod(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_kmod.get() {
+            return Ok(self.kmod.borrow());
+        }
+        self.f_kmod.set(true);
+        *self.kmod.borrow_mut() = (((((*self.value() as i32) & (268435456 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.kmod.borrow())
+    }
+
+    /**
      * Trigger filtee loading at runtime.
      */
-    pub fn loadfltr(
+    pub fn load_fltr(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_loadfltr.get() {
-            return Ok(self.loadfltr.borrow());
+        if self.f_load_fltr.get() {
+            return Ok(self.load_fltr.borrow());
         }
-        self.f_loadfltr.set(true);
-        *self.loadfltr.borrow_mut() = (((((*self.value() as u32) & (16 as u32)) as i32) != (0 as i32))) as bool;
-        Ok(self.loadfltr.borrow())
+        self.f_load_fltr.set(true);
+        *self.load_fltr.borrow_mut() = (((((*self.value() as u32) & (16 as u32)) as i32) != (0 as i32))) as bool;
+        Ok(self.load_fltr.borrow())
     }
 
     /**
-     * Ignore default lib search path.
+     * No COMMON symbols exist.
+     * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1040 Source
      */
-    pub fn nodeflib(
+    pub fn no_common(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_nodeflib.get() {
-            return Ok(self.nodeflib.borrow());
+        if self.f_no_common.get() {
+            return Ok(self.no_common.borrow());
         }
-        self.f_nodeflib.set(true);
-        *self.nodeflib.borrow_mut() = (((((*self.value() as i32) & (2048 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.nodeflib.borrow())
+        self.f_no_common.set(true);
+        *self.no_common.borrow_mut() = (((((*self.value() as i32) & (1073741824 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.no_common.borrow())
     }
 
     /**
-     * Set RTLD_NODELETE for this object.
+     * Ignore the default library search path.
      */
-    pub fn nodelete(
+    pub fn no_def_lib(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_nodelete.get() {
-            return Ok(self.nodelete.borrow());
+        if self.f_no_def_lib.get() {
+            return Ok(self.no_def_lib.borrow());
         }
-        self.f_nodelete.set(true);
-        *self.nodelete.borrow_mut() = (((((*self.value() as u32) & (8 as u32)) as i32) != (0 as i32))) as bool;
-        Ok(self.nodelete.borrow())
+        self.f_no_def_lib.set(true);
+        *self.no_def_lib.borrow_mut() = (((((*self.value() as i32) & (2048 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.no_def_lib.borrow())
     }
 
     /**
-     * Object has no-direct binding.
+     * Set `RTLD_NODELETE` for this object.
      */
-    pub fn nodirect(
+    pub fn no_delete(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_nodirect.get() {
-            return Ok(self.nodirect.borrow());
+        if self.f_no_delete.get() {
+            return Ok(self.no_delete.borrow());
         }
-        self.f_nodirect.set(true);
-        *self.nodirect.borrow_mut() = (((((*self.value() as i32) & (131072 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.nodirect.borrow())
+        self.f_no_delete.set(true);
+        *self.no_delete.borrow_mut() = (((((*self.value() as u32) & (8 as u32)) as i32) != (0 as i32))) as bool;
+        Ok(self.no_delete.borrow())
+    }
+
+    /**
+     * Object contains non-direct bindings.
+     */
+    pub fn no_direct(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_no_direct.get() {
+            return Ok(self.no_direct.borrow());
+        }
+        self.f_no_direct.set(true);
+        *self.no_direct.borrow_mut() = (((((*self.value() as i32) & (131072 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.no_direct.borrow())
     }
 
     /**
      * Object can't be dldump'ed.
      */
-    pub fn nodump(
+    pub fn no_dump(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_nodump.get() {
-            return Ok(self.nodump.borrow());
+        if self.f_no_dump.get() {
+            return Ok(self.no_dump.borrow());
         }
-        self.f_nodump.set(true);
-        *self.nodump.borrow_mut() = (((((*self.value() as i32) & (4096 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.nodump.borrow())
+        self.f_no_dump.set(true);
+        *self.no_dump.borrow_mut() = (((((*self.value() as i32) & (4096 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.no_dump.borrow())
     }
-    pub fn nohdr(
+    pub fn no_hdr(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_nohdr.get() {
-            return Ok(self.nohdr.borrow());
+        if self.f_no_hdr.get() {
+            return Ok(self.no_hdr.borrow());
         }
-        self.f_nohdr.set(true);
-        *self.nohdr.borrow_mut() = (((((*self.value() as i32) & (1048576 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.nohdr.borrow())
+        self.f_no_hdr.set(true);
+        *self.no_hdr.borrow_mut() = (((((*self.value() as i32) & (1048576 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.no_hdr.borrow())
     }
-    pub fn noksyms(
+    pub fn no_ksyms(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_noksyms.get() {
-            return Ok(self.noksyms.borrow());
+        if self.f_no_ksyms.get() {
+            return Ok(self.no_ksyms.borrow());
         }
-        self.f_noksyms.set(true);
-        *self.noksyms.borrow_mut() = (((((*self.value() as i32) & (524288 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.noksyms.borrow())
+        self.f_no_ksyms.set(true);
+        *self.no_ksyms.borrow_mut() = (((((*self.value() as i32) & (524288 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.no_ksyms.borrow())
     }
 
     /**
-     * Set RTLD_NOOPEN for this object.
+     * Set `RTLD_NOOPEN` for this object.
      */
-    pub fn noopen(
+    pub fn no_open(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_noopen.get() {
-            return Ok(self.noopen.borrow());
+        if self.f_no_open.get() {
+            return Ok(self.no_open.borrow());
         }
-        self.f_noopen.set(true);
-        *self.noopen.borrow_mut() = (((((*self.value() as u32) & (64 as u32)) as i32) != (0 as i32))) as bool;
-        Ok(self.noopen.borrow())
+        self.f_no_open.set(true);
+        *self.no_open.borrow_mut() = (((((*self.value() as u32) & (64 as u32)) as i32) != (0 as i32))) as bool;
+        Ok(self.no_open.borrow())
     }
-    pub fn noreloc(
+    pub fn no_reloc(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_noreloc.get() {
-            return Ok(self.noreloc.borrow());
+        if self.f_no_reloc.get() {
+            return Ok(self.no_reloc.borrow());
         }
-        self.f_noreloc.set(true);
-        *self.noreloc.borrow_mut() = (((((*self.value() as i32) & (4194304 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.noreloc.borrow())
+        self.f_no_reloc.set(true);
+        *self.no_reloc.borrow_mut() = (((((*self.value() as i32) & (4194304 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.no_reloc.borrow())
     }
 
     /**
-     * Set RTLD_NOW for this object.
+     * Set `RTLD_NOW` for this object.
      */
     pub fn now(
         &self
@@ -3374,7 +4231,7 @@ impl Elf_DtFlag1Values {
     }
 
     /**
-     * $ORIGIN must be handled.
+     * `$ORIGIN` must be handled.
      */
     pub fn origin(
         &self
@@ -3390,6 +4247,10 @@ impl Elf_DtFlag1Values {
         *self.origin.borrow_mut() = (((((*self.value() as u32) & (128 as u32)) as i32) != (0 as i32))) as bool;
         Ok(self.origin.borrow())
     }
+
+    /**
+     * Object is a Position Independent Executable (PIE).
+     */
     pub fn pie(
         &self
     ) -> KResult<Ref<'_, bool>> {
@@ -3406,7 +4267,7 @@ impl Elf_DtFlag1Values {
     }
 
     /**
-     * Set RTLD_GLOBAL for this object.
+     * Set `RTLD_GLOBAL` for this object.
      */
     pub fn rtld_global(
         &self
@@ -3440,6 +4301,11 @@ impl Elf_DtFlag1Values {
         *self.singleton.borrow_mut() = (((((*self.value() as i32) & (33554432 as i32)) as i32) != (0 as i32))) as bool;
         Ok(self.singleton.borrow())
     }
+
+    /**
+     * Object is a stub.
+     * See [Stub Objects](https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/stub-objects.html).
+     */
     pub fn stub(
         &self
     ) -> KResult<Ref<'_, bool>> {
@@ -3456,22 +4322,26 @@ impl Elf_DtFlag1Values {
     }
 
     /**
-     * Object has individual interposers.
+     * Object has individual symbol interposers.
      */
-    pub fn symintpose(
+    pub fn sym_intpose(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_symintpose.get() {
-            return Ok(self.symintpose.borrow());
+        if self.f_sym_intpose.get() {
+            return Ok(self.sym_intpose.borrow());
         }
-        self.f_symintpose.set(true);
-        *self.symintpose.borrow_mut() = (((((*self.value() as i32) & (8388608 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.symintpose.borrow())
+        self.f_sym_intpose.set(true);
+        *self.sym_intpose.borrow_mut() = (((((*self.value() as i32) & (8388608 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.sym_intpose.borrow())
     }
+
+    /**
+     * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1019 Source
+     */
     pub fn trans(
         &self
     ) -> KResult<Ref<'_, bool>> {
@@ -3485,6 +4355,24 @@ impl Elf_DtFlag1Values {
         self.f_trans.set(true);
         *self.trans.borrow_mut() = (((((*self.value() as i32) & (512 as i32)) as i32) != (0 as i32))) as bool;
         Ok(self.trans.borrow())
+    }
+
+    /**
+     * Object is a weak standard filter.
+     */
+    pub fn weak_filter(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_weak_filter.get() {
+            return Ok(self.weak_filter.borrow());
+        }
+        self.f_weak_filter.set(true);
+        *self.weak_filter.borrow_mut() = (((((*self.value() as i32) & (536870912 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.weak_filter.borrow())
     }
 }
 impl Elf_DtFlag1Values {
@@ -3502,7 +4390,7 @@ impl Elf_DtFlag1Values {
 #[derive(Default, Debug, Clone)]
 pub struct Elf_DtFlagValues {
     pub _root: SharedType<Elf>,
-    pub _parent: SharedType<Elf_EndianElf_DynamicSectionEntry>,
+    pub _parent: SharedType<KStructUnit>,
     pub _self: SharedType<Self>,
     value: RefCell<u32>,
     _io: RefCell<BytesReader>,
@@ -3519,7 +4407,7 @@ pub struct Elf_DtFlagValues {
 }
 impl KStruct for Elf_DtFlagValues {
     type Root = Elf;
-    type Parent = Elf_EndianElf_DynamicSectionEntry;
+    type Parent = KStructUnit;
 
     fn read<S: KStream>(
         self_rc: &OptRc<Self>,
@@ -3645,6 +4533,11 @@ impl Elf_DtFlagValues {
         self._io.borrow()
     }
 }
+
+/**
+ * \sa https://gabi.xinuos.com/v42/elf/02-eheader.html Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-header.html Source
+ */
 
 #[derive(Default, Debug, Clone)]
 pub struct Elf_EndianElf {
@@ -4045,333 +4938,6 @@ impl Elf_EndianElf {
 }
 
 #[derive(Default, Debug, Clone)]
-pub struct Elf_EndianElf_DynamicSection {
-    pub _root: SharedType<Elf>,
-    pub _parent: SharedType<Elf_EndianElf_SectionHeader>,
-    pub _self: SharedType<Self>,
-    entries: RefCell<Vec<OptRc<Elf_EndianElf_DynamicSectionEntry>>>,
-    _io: RefCell<BytesReader>,
-    f_is_string_table_linked: Cell<bool>,
-    is_string_table_linked: RefCell<bool>,
-    _is_le: RefCell<i32>,
-}
-impl KStruct for Elf_EndianElf_DynamicSection {
-    type Root = Elf;
-    type Parent = Elf_EndianElf_SectionHeader;
-
-    fn read<S: KStream>(
-        self_rc: &OptRc<Self>,
-        _io: &S,
-        _root: SharedType<Self::Root>,
-        _parent: SharedType<Self::Parent>,
-    ) -> KResult<()> {
-        *self_rc._io.borrow_mut() = _io.clone();
-        self_rc._root.set(_root.get());
-        self_rc._parent.set(_parent.get());
-        self_rc._self.set(Ok(self_rc.clone()));
-        let _rrc = self_rc._root.get_value().borrow().upgrade();
-        let _prc = self_rc._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        *self_rc.entries.borrow_mut() = Vec::new();
-        {
-            let mut _i = 0;
-            while !_io.is_eof() {
-                let f = |t : &mut Elf_EndianElf_DynamicSectionEntry| Ok(t.set_endian(*self_rc._is_le.borrow()));
-                let t = Self::read_into_with_init::<_, Elf_EndianElf_DynamicSectionEntry>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
-                self_rc.entries.borrow_mut().push(t);
-                _i += 1;
-            }
-        }
-        Ok(())
-    }
-}
-impl Elf_EndianElf_DynamicSection {
-    pub fn set_endian(&mut self, _is_le: i32) {
-        *self._is_le.borrow_mut() = _is_le;
-    }
-}
-impl Elf_EndianElf_DynamicSection {
-    pub fn is_string_table_linked(
-        &self
-    ) -> KResult<Ref<'_, bool>> {
-        let _io = self._io.borrow();
-        let _rrc = self._root.get_value().borrow().upgrade();
-        let _prc = self._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        if self.f_is_string_table_linked.get() {
-            return Ok(self.is_string_table_linked.borrow());
-        }
-        self.f_is_string_table_linked.set(true);
-        *self.is_string_table_linked.borrow_mut() = (*_prc.as_ref().unwrap().linked_section()?.type() == Elf_ShType::Strtab) as bool;
-        Ok(self.is_string_table_linked.borrow())
-    }
-}
-impl Elf_EndianElf_DynamicSection {
-    pub fn entries(&self) -> Ref<'_, Vec<OptRc<Elf_EndianElf_DynamicSectionEntry>>> {
-        self.entries.borrow()
-    }
-}
-impl Elf_EndianElf_DynamicSection {
-    pub fn _io(&self) -> Ref<'_, BytesReader> {
-        self._io.borrow()
-    }
-}
-
-/**
- * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html Source
- * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source
- */
-
-#[derive(Default, Debug, Clone)]
-pub struct Elf_EndianElf_DynamicSectionEntry {
-    pub _root: SharedType<Elf>,
-    pub _parent: SharedType<Elf_EndianElf_DynamicSection>,
-    pub _self: SharedType<Self>,
-    tag: RefCell<Option<Elf_EndianElf_DynamicSectionEntry_Tag>>,
-    value_or_ptr: RefCell<Option<Elf_EndianElf_DynamicSectionEntry_ValueOrPtr>>,
-    _io: RefCell<BytesReader>,
-    f_flag_1_values: Cell<bool>,
-    flag_1_values: RefCell<OptRc<Elf_DtFlag1Values>>,
-    f_flag_values: Cell<bool>,
-    flag_values: RefCell<OptRc<Elf_DtFlagValues>>,
-    f_is_value_str: Cell<bool>,
-    is_value_str: RefCell<bool>,
-    f_tag_enum: Cell<bool>,
-    tag_enum: RefCell<Elf_DynamicArrayTags>,
-    f_value_str: Cell<bool>,
-    value_str: RefCell<String>,
-    _is_le: RefCell<i32>,
-}
-#[derive(Debug, Clone)]
-pub enum Elf_EndianElf_DynamicSectionEntry_Tag {
-    U4(u32),
-    U8(u64),
-}
-impl From<u32> for Elf_EndianElf_DynamicSectionEntry_Tag {
-    fn from(v: u32) -> Self {
-        Self::U4(v)
-    }
-}
-impl From<&Elf_EndianElf_DynamicSectionEntry_Tag> for u32 {
-    fn from(e: &Elf_EndianElf_DynamicSectionEntry_Tag) -> Self {
-        if let Elf_EndianElf_DynamicSectionEntry_Tag::U4(v) = e {
-            return *v
-        }
-        panic!("trying to convert from enum Elf_EndianElf_DynamicSectionEntry_Tag::U4 to u32, enum value {:?}", e)
-    }
-}
-impl From<u64> for Elf_EndianElf_DynamicSectionEntry_Tag {
-    fn from(v: u64) -> Self {
-        Self::U8(v)
-    }
-}
-impl From<&Elf_EndianElf_DynamicSectionEntry_Tag> for u64 {
-    fn from(e: &Elf_EndianElf_DynamicSectionEntry_Tag) -> Self {
-        if let Elf_EndianElf_DynamicSectionEntry_Tag::U8(v) = e {
-            return *v
-        }
-        panic!("trying to convert from enum Elf_EndianElf_DynamicSectionEntry_Tag::U8 to u64, enum value {:?}", e)
-    }
-}
-impl From<&Elf_EndianElf_DynamicSectionEntry_Tag> for usize {
-    fn from(e: &Elf_EndianElf_DynamicSectionEntry_Tag) -> Self {
-        match e {
-            Elf_EndianElf_DynamicSectionEntry_Tag::U4(v) => *v as usize,
-            Elf_EndianElf_DynamicSectionEntry_Tag::U8(v) => *v as usize,
-        }
-    }
-}
-
-#[derive(Debug, Clone)]
-pub enum Elf_EndianElf_DynamicSectionEntry_ValueOrPtr {
-    U4(u32),
-    U8(u64),
-}
-impl From<u32> for Elf_EndianElf_DynamicSectionEntry_ValueOrPtr {
-    fn from(v: u32) -> Self {
-        Self::U4(v)
-    }
-}
-impl From<&Elf_EndianElf_DynamicSectionEntry_ValueOrPtr> for u32 {
-    fn from(e: &Elf_EndianElf_DynamicSectionEntry_ValueOrPtr) -> Self {
-        if let Elf_EndianElf_DynamicSectionEntry_ValueOrPtr::U4(v) = e {
-            return *v
-        }
-        panic!("trying to convert from enum Elf_EndianElf_DynamicSectionEntry_ValueOrPtr::U4 to u32, enum value {:?}", e)
-    }
-}
-impl From<u64> for Elf_EndianElf_DynamicSectionEntry_ValueOrPtr {
-    fn from(v: u64) -> Self {
-        Self::U8(v)
-    }
-}
-impl From<&Elf_EndianElf_DynamicSectionEntry_ValueOrPtr> for u64 {
-    fn from(e: &Elf_EndianElf_DynamicSectionEntry_ValueOrPtr) -> Self {
-        if let Elf_EndianElf_DynamicSectionEntry_ValueOrPtr::U8(v) = e {
-            return *v
-        }
-        panic!("trying to convert from enum Elf_EndianElf_DynamicSectionEntry_ValueOrPtr::U8 to u64, enum value {:?}", e)
-    }
-}
-impl From<&Elf_EndianElf_DynamicSectionEntry_ValueOrPtr> for usize {
-    fn from(e: &Elf_EndianElf_DynamicSectionEntry_ValueOrPtr) -> Self {
-        match e {
-            Elf_EndianElf_DynamicSectionEntry_ValueOrPtr::U4(v) => *v as usize,
-            Elf_EndianElf_DynamicSectionEntry_ValueOrPtr::U8(v) => *v as usize,
-        }
-    }
-}
-
-impl KStruct for Elf_EndianElf_DynamicSectionEntry {
-    type Root = Elf;
-    type Parent = Elf_EndianElf_DynamicSection;
-
-    fn read<S: KStream>(
-        self_rc: &OptRc<Self>,
-        _io: &S,
-        _root: SharedType<Self::Root>,
-        _parent: SharedType<Self::Parent>,
-    ) -> KResult<()> {
-        *self_rc._io.borrow_mut() = _io.clone();
-        self_rc._root.set(_root.get());
-        self_rc._parent.set(_parent.get());
-        self_rc._self.set(Ok(self_rc.clone()));
-        let _rrc = self_rc._root.get_value().borrow().upgrade();
-        let _prc = self_rc._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        match *_r.bits() {
-            Elf_Bits::B32 => {
-                *self_rc.tag.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
-            }
-            Elf_Bits::B64 => {
-                *self_rc.tag.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
-            }
-            _ => {}
-        }
-        match *_r.bits() {
-            Elf_Bits::B32 => {
-                *self_rc.value_or_ptr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
-            }
-            Elf_Bits::B64 => {
-                *self_rc.value_or_ptr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
-            }
-            _ => {}
-        }
-        Ok(())
-    }
-}
-impl Elf_EndianElf_DynamicSectionEntry {
-    pub fn set_endian(&mut self, _is_le: i32) {
-        *self._is_le.borrow_mut() = _is_le;
-    }
-}
-impl Elf_EndianElf_DynamicSectionEntry {
-    pub fn flag_1_values(
-        &self
-    ) -> KResult<Ref<'_, OptRc<Elf_DtFlag1Values>>> {
-        let _io = self._io.borrow();
-        let _rrc = self._root.get_value().borrow().upgrade();
-        let _prc = self._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        if self.f_flag_1_values.get() {
-            return Ok(self.flag_1_values.borrow());
-        }
-        if *self.tag_enum()? == Elf_DynamicArrayTags::Flags1 {
-            let f = |t : &mut Elf_DtFlag1Values| Ok(t.set_params((self.value_or_ptr()).try_into().map_err(|_| KError::CastError)?));
-            let t = Self::read_into_with_init::<_, Elf_DtFlag1Values>(&*_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
-            *self.flag_1_values.borrow_mut() = t;
-        }
-        Ok(self.flag_1_values.borrow())
-    }
-    pub fn flag_values(
-        &self
-    ) -> KResult<Ref<'_, OptRc<Elf_DtFlagValues>>> {
-        let _io = self._io.borrow();
-        let _rrc = self._root.get_value().borrow().upgrade();
-        let _prc = self._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        if self.f_flag_values.get() {
-            return Ok(self.flag_values.borrow());
-        }
-        if *self.tag_enum()? == Elf_DynamicArrayTags::Flags {
-            let f = |t : &mut Elf_DtFlagValues| Ok(t.set_params((self.value_or_ptr()).try_into().map_err(|_| KError::CastError)?));
-            let t = Self::read_into_with_init::<_, Elf_DtFlagValues>(&*_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
-            *self.flag_values.borrow_mut() = t;
-        }
-        Ok(self.flag_values.borrow())
-    }
-    pub fn is_value_str(
-        &self
-    ) -> KResult<Ref<'_, bool>> {
-        let _io = self._io.borrow();
-        let _rrc = self._root.get_value().borrow().upgrade();
-        let _prc = self._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        if self.f_is_value_str.get() {
-            return Ok(self.is_value_str.borrow());
-        }
-        self.f_is_value_str.set(true);
-        *self.is_value_str.borrow_mut() = ( ((((self.value_or_ptr() as u64) != (0 as u64))) && ( ((*self.tag_enum()? == Elf_DynamicArrayTags::Needed) || (*self.tag_enum()? == Elf_DynamicArrayTags::Soname) || (*self.tag_enum()? == Elf_DynamicArrayTags::Rpath) || (*self.tag_enum()? == Elf_DynamicArrayTags::Runpath) || (*self.tag_enum()? == Elf_DynamicArrayTags::SunwAuxiliary) || (*self.tag_enum()? == Elf_DynamicArrayTags::SunwFilter) || (*self.tag_enum()? == Elf_DynamicArrayTags::Auxiliary) || (*self.tag_enum()? == Elf_DynamicArrayTags::Filter) || (*self.tag_enum()? == Elf_DynamicArrayTags::Config) || (*self.tag_enum()? == Elf_DynamicArrayTags::Depaudit) || (*self.tag_enum()? == Elf_DynamicArrayTags::Audit)) )) ) as bool;
-        Ok(self.is_value_str.borrow())
-    }
-    pub fn tag_enum(
-        &self
-    ) -> KResult<Ref<'_, Elf_DynamicArrayTags>> {
-        let _io = self._io.borrow();
-        let _rrc = self._root.get_value().borrow().upgrade();
-        let _prc = self._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        if self.f_tag_enum.get() {
-            return Ok(self.tag_enum.borrow());
-        }
-        self.f_tag_enum.set(true);
-        *self.tag_enum.borrow_mut() = (self.tag() as i64).try_into()?;
-        Ok(self.tag_enum.borrow())
-    }
-    pub fn value_str(
-        &self
-    ) -> KResult<Ref<'_, String>> {
-        let _io = self._io.borrow();
-        let _rrc = self._root.get_value().borrow().upgrade();
-        let _prc = self._parent.get_value().borrow().upgrade();
-        let _r = _rrc.as_ref().unwrap();
-        if self.f_value_str.get() {
-            return Ok(self.value_str.borrow());
-        }
-        self.f_value_str.set(true);
-        if  ((*self.is_value_str()?) && (*_prc.as_ref().unwrap().is_string_table_linked()?))  {
-            let io = Clone::clone(&*Into::<OptRc<Elf_EndianElf_StringsStruct>>::into(&*_prc.as_ref().unwrap()._parent.get_value().borrow().upgrade().as_ref().unwrap().linked_section()?.body()?.as_ref().unwrap())._io());
-            let _pos = io.pos();
-            io.seek(self.value_or_ptr() as usize)?;
-            *self.value_str.borrow_mut() = bytes_to_str(&io.read_bytes_term(0, false, true, true)?.into(), "ASCII")?;
-            io.seek(_pos)?;
-        }
-        Ok(self.value_str.borrow())
-    }
-}
-impl Elf_EndianElf_DynamicSectionEntry {
-    pub fn tag(&self) -> usize {
-        self.tag.borrow().as_ref().unwrap().into()
-    }
-    pub fn tag_enum(&self) -> Ref<'_, Option<Elf_EndianElf_DynamicSectionEntry_Tag>> {
-        self.tag.borrow()
-    }
-}
-impl Elf_EndianElf_DynamicSectionEntry {
-    pub fn value_or_ptr(&self) -> usize {
-        self.value_or_ptr.borrow().as_ref().unwrap().into()
-    }
-    pub fn value_or_ptr_enum(&self) -> Ref<'_, Option<Elf_EndianElf_DynamicSectionEntry_ValueOrPtr>> {
-        self.value_or_ptr.borrow()
-    }
-}
-impl Elf_EndianElf_DynamicSectionEntry {
-    pub fn _io(&self) -> Ref<'_, BytesReader> {
-        self._io.borrow()
-    }
-}
-
-#[derive(Default, Debug, Clone)]
 pub struct Elf_EndianElf_DynsymSection {
     pub _root: SharedType<Elf>,
     pub _parent: SharedType<Elf_EndianElf_SectionHeader>,
@@ -4445,8 +5011,8 @@ impl Elf_EndianElf_DynsymSection {
 }
 
 /**
+ * \sa https://gabi.xinuos.com/elf/05-symtab.html Source
  * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html Source
- * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source
  */
 
 #[derive(Default, Debug, Clone)]
@@ -4630,6 +5196,10 @@ impl Elf_EndianElf_DynsymSectionEntry {
         *self.value.borrow_mut() = (if *_r.bits() == Elf_Bits::B32 { *self.value_b32() } else { if *_r.bits() == Elf_Bits::B64 { *self.value_b64() } else { 0 } }) as u64;
         Ok(self.value.borrow())
     }
+
+    /**
+     * \sa https://github.com/xinuos/gabi/commit/acd5ebb2962cf243dca4983bc934442b42ef96f5 Source
+     */
     pub fn visibility(
         &self
     ) -> KResult<Ref<'_, Elf_SymbolVisibility>> {
@@ -4641,7 +5211,7 @@ impl Elf_EndianElf_DynsymSectionEntry {
             return Ok(self.visibility.borrow());
         }
         self.f_visibility.set(true);
-        *self.visibility.borrow_mut() = (((*self.other() as u8) & (3 as u8)) as i64).try_into()?;
+        *self.visibility.borrow_mut() = (((*self.other() as u8) & (7 as u8)) as i64).try_into()?;
         Ok(self.visibility.borrow())
     }
 }
@@ -4707,7 +5277,7 @@ impl Elf_EndianElf_DynsymSectionEntry {
 #[derive(Default, Debug, Clone)]
 pub struct Elf_EndianElf_NoteSection {
     pub _root: SharedType<Elf>,
-    pub _parent: SharedType<Elf_EndianElf_SectionHeader>,
+    pub _parent: SharedType<KStructUnit>,
     pub _self: SharedType<Self>,
     entries: RefCell<Vec<OptRc<Elf_EndianElf_NoteSectionEntry>>>,
     _io: RefCell<BytesReader>,
@@ -4715,7 +5285,7 @@ pub struct Elf_EndianElf_NoteSection {
 }
 impl KStruct for Elf_EndianElf_NoteSection {
     type Root = Elf;
-    type Parent = Elf_EndianElf_SectionHeader;
+    type Parent = KStructUnit;
 
     fn read<S: KStream>(
         self_rc: &OptRc<Self>,
@@ -4863,6 +5433,337 @@ impl Elf_EndianElf_NoteSectionEntry {
     }
 }
 
+/**
+ * Same type as `sh_dynamic_section`, but it does not use
+ * `_parent.linked_section`, which is available only in section headers
+ * (i.e. when `_parent` is of type `section_header`). This allows it to
+ * be used in program headers (i.e. from the `program_header` type).
+ * 
+ * The inability to access `linked_section` means that offsets in the
+ * string table (which should be stored in the `.dynstr` section) will
+ * not be resolved to strings and will be provided only in raw form in
+ * the `value_or_ptr` field. In other words, the
+ * `ph_dynamic_section_entry` type has no `value_str` instance, unlike
+ * the `sh_dynamic_section_entry` type.
+ * 
+ * There is another way to find the string table referenced by the
+ * dynamic section entries that does not rely on `linked_section`, but is
+ * a bit more complex (and is therefore considered out of scope of this
+ * .ksy spec): the mandatory dynamic tag `dynamic_array_tags::strtab`
+ * (`DT_STRTAB`) specifies the virtual address of the string table, and
+ * `dynamic_array_tags::strsz` (`DT_STRSZ`) specifies its size in bytes.
+ * The virtual address can be converted to a file offset by reading the
+ * program headers - see the source code for the `readelf` command:
+ * 
+ * 1. [`offset_from_vma` call site with an address from `DT_STRTAB` as an
+ *   argument](https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13018)
+ * 2. [`offset_from_vma` function
+ *   definition](https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L7788)
+ * \sa https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_PhDynamicSection {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_ProgramHeader>,
+    pub _self: SharedType<Self>,
+    entries: RefCell<Vec<OptRc<Elf_EndianElf_PhDynamicSectionEntry>>>,
+    _io: RefCell<BytesReader>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_PhDynamicSection {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_ProgramHeader;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.entries.borrow_mut() = Vec::new();
+        {
+            let mut _i = 0;
+            while {
+                let f = |t : &mut Elf_EndianElf_PhDynamicSectionEntry| Ok(t.set_endian(*self_rc._is_le.borrow()));
+                let t = Self::read_into_with_init::<_, Elf_EndianElf_PhDynamicSectionEntry>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+                self_rc.entries.borrow_mut().push(t);
+                let _t_entries = self_rc.entries.borrow();
+                let _tmpa = _t_entries.last().unwrap();
+                _i += 1;
+                let x = !(*_tmpa.tag_enum()? == Elf_DynamicArrayTags::Null);
+                x
+            } {}
+        }
+        Ok(())
+    }
+}
+impl Elf_EndianElf_PhDynamicSection {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_PhDynamicSection {
+}
+impl Elf_EndianElf_PhDynamicSection {
+    pub fn entries(&self) -> Ref<'_, Vec<OptRc<Elf_EndianElf_PhDynamicSectionEntry>>> {
+        self.entries.borrow()
+    }
+}
+impl Elf_EndianElf_PhDynamicSection {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Same type as `sh_dynamic_section_entry`, but without the `value_str`
+ * instance - see the documentation for `ph_dynamic_section` for more
+ * details.
+ * \sa https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_PhDynamicSectionEntry {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_PhDynamicSection>,
+    pub _self: SharedType<Self>,
+    tag: RefCell<Option<Elf_EndianElf_PhDynamicSectionEntry_Tag>>,
+    value_or_ptr: RefCell<Option<Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr>>,
+    _io: RefCell<BytesReader>,
+    f_flag_1_values: Cell<bool>,
+    flag_1_values: RefCell<OptRc<Elf_DtFlag1Values>>,
+    f_flag_values: Cell<bool>,
+    flag_values: RefCell<OptRc<Elf_DtFlagValues>>,
+    f_is_value_str: Cell<bool>,
+    is_value_str: RefCell<bool>,
+    f_tag_enum: Cell<bool>,
+    tag_enum: RefCell<Elf_DynamicArrayTags>,
+    _is_le: RefCell<i32>,
+}
+#[derive(Debug, Clone)]
+pub enum Elf_EndianElf_PhDynamicSectionEntry_Tag {
+    U4(u32),
+    U8(u64),
+}
+impl From<u32> for Elf_EndianElf_PhDynamicSectionEntry_Tag {
+    fn from(v: u32) -> Self {
+        Self::U4(v)
+    }
+}
+impl From<&Elf_EndianElf_PhDynamicSectionEntry_Tag> for u32 {
+    fn from(e: &Elf_EndianElf_PhDynamicSectionEntry_Tag) -> Self {
+        if let Elf_EndianElf_PhDynamicSectionEntry_Tag::U4(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Elf_EndianElf_PhDynamicSectionEntry_Tag::U4 to u32, enum value {:?}", e)
+    }
+}
+impl From<u64> for Elf_EndianElf_PhDynamicSectionEntry_Tag {
+    fn from(v: u64) -> Self {
+        Self::U8(v)
+    }
+}
+impl From<&Elf_EndianElf_PhDynamicSectionEntry_Tag> for u64 {
+    fn from(e: &Elf_EndianElf_PhDynamicSectionEntry_Tag) -> Self {
+        if let Elf_EndianElf_PhDynamicSectionEntry_Tag::U8(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Elf_EndianElf_PhDynamicSectionEntry_Tag::U8 to u64, enum value {:?}", e)
+    }
+}
+impl From<&Elf_EndianElf_PhDynamicSectionEntry_Tag> for usize {
+    fn from(e: &Elf_EndianElf_PhDynamicSectionEntry_Tag) -> Self {
+        match e {
+            Elf_EndianElf_PhDynamicSectionEntry_Tag::U4(v) => *v as usize,
+            Elf_EndianElf_PhDynamicSectionEntry_Tag::U8(v) => *v as usize,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr {
+    U4(u32),
+    U8(u64),
+}
+impl From<u32> for Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr {
+    fn from(v: u32) -> Self {
+        Self::U4(v)
+    }
+}
+impl From<&Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr> for u32 {
+    fn from(e: &Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr) -> Self {
+        if let Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr::U4(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr::U4 to u32, enum value {:?}", e)
+    }
+}
+impl From<u64> for Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr {
+    fn from(v: u64) -> Self {
+        Self::U8(v)
+    }
+}
+impl From<&Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr> for u64 {
+    fn from(e: &Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr) -> Self {
+        if let Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr::U8(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr::U8 to u64, enum value {:?}", e)
+    }
+}
+impl From<&Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr> for usize {
+    fn from(e: &Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr) -> Self {
+        match e {
+            Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr::U4(v) => *v as usize,
+            Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr::U8(v) => *v as usize,
+        }
+    }
+}
+
+impl KStruct for Elf_EndianElf_PhDynamicSectionEntry {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_PhDynamicSection;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        match *_r.bits() {
+            Elf_Bits::B32 => {
+                *self_rc.tag.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
+            }
+            Elf_Bits::B64 => {
+                *self_rc.tag.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
+            }
+            _ => {}
+        }
+        match *_r.bits() {
+            Elf_Bits::B32 => {
+                *self_rc.value_or_ptr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
+            }
+            Elf_Bits::B64 => {
+                *self_rc.value_or_ptr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+}
+impl Elf_EndianElf_PhDynamicSectionEntry {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_PhDynamicSectionEntry {
+    pub fn flag_1_values(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_DtFlag1Values>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_flag_1_values.get() {
+            return Ok(self.flag_1_values.borrow());
+        }
+        if *self.tag_enum()? == Elf_DynamicArrayTags::Flags1 {
+            let f = |t : &mut Elf_DtFlag1Values| Ok(t.set_params((self.value_or_ptr()).try_into().map_err(|_| KError::CastError)?));
+            let t = Self::read_into_with_init::<_, Elf_DtFlag1Values>(&*_io, Some(self._root.clone()), None, &f)?.into();
+            *self.flag_1_values.borrow_mut() = t;
+        }
+        Ok(self.flag_1_values.borrow())
+    }
+    pub fn flag_values(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_DtFlagValues>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_flag_values.get() {
+            return Ok(self.flag_values.borrow());
+        }
+        if *self.tag_enum()? == Elf_DynamicArrayTags::Flags {
+            let f = |t : &mut Elf_DtFlagValues| Ok(t.set_params((self.value_or_ptr()).try_into().map_err(|_| KError::CastError)?));
+            let t = Self::read_into_with_init::<_, Elf_DtFlagValues>(&*_io, Some(self._root.clone()), None, &f)?.into();
+            *self.flag_values.borrow_mut() = t;
+        }
+        Ok(self.flag_values.borrow())
+    }
+    pub fn is_value_str(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_is_value_str.get() {
+            return Ok(self.is_value_str.borrow());
+        }
+        self.f_is_value_str.set(true);
+        *self.is_value_str.borrow_mut() = ( ((((self.value_or_ptr() as u64) != (0 as u64))) && ( ((*self.tag_enum()? == Elf_DynamicArrayTags::Needed) || (*self.tag_enum()? == Elf_DynamicArrayTags::Soname) || (*self.tag_enum()? == Elf_DynamicArrayTags::Rpath) || (*self.tag_enum()? == Elf_DynamicArrayTags::Runpath) || (*self.tag_enum()? == Elf_DynamicArrayTags::SunwAuxiliary) || (*self.tag_enum()? == Elf_DynamicArrayTags::SunwFilter) || (*self.tag_enum()? == Elf_DynamicArrayTags::Auxiliary) || (*self.tag_enum()? == Elf_DynamicArrayTags::Filter) || (*self.tag_enum()? == Elf_DynamicArrayTags::Config) || (*self.tag_enum()? == Elf_DynamicArrayTags::Depaudit) || (*self.tag_enum()? == Elf_DynamicArrayTags::Audit)) )) ) as bool;
+        Ok(self.is_value_str.borrow())
+    }
+    pub fn tag_enum(
+        &self
+    ) -> KResult<Ref<'_, Elf_DynamicArrayTags>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_tag_enum.get() {
+            return Ok(self.tag_enum.borrow());
+        }
+        self.f_tag_enum.set(true);
+        *self.tag_enum.borrow_mut() = (self.tag() as i64).try_into()?;
+        Ok(self.tag_enum.borrow())
+    }
+}
+impl Elf_EndianElf_PhDynamicSectionEntry {
+    pub fn tag(&self) -> usize {
+        self.tag.borrow().as_ref().unwrap().into()
+    }
+    pub fn tag_enum(&self) -> Ref<'_, Option<Elf_EndianElf_PhDynamicSectionEntry_Tag>> {
+        self.tag.borrow()
+    }
+}
+impl Elf_EndianElf_PhDynamicSectionEntry {
+    pub fn value_or_ptr(&self) -> usize {
+        self.value_or_ptr.borrow().as_ref().unwrap().into()
+    }
+    pub fn value_or_ptr_enum(&self) -> Ref<'_, Option<Elf_EndianElf_PhDynamicSectionEntry_ValueOrPtr>> {
+        self.value_or_ptr.borrow()
+    }
+}
+impl Elf_EndianElf_PhDynamicSectionEntry {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * \sa https://gabi.xinuos.com/v42/elf/07-pheader.html#program-header-entry Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/program-header.html Source
+ */
+
 #[derive(Default, Debug, Clone)]
 pub struct Elf_EndianElf_ProgramHeader {
     pub _root: SharedType<Elf>,
@@ -4870,214 +5771,217 @@ pub struct Elf_EndianElf_ProgramHeader {
     pub _self: SharedType<Self>,
     type: RefCell<Elf_PhType>,
     flags64: RefCell<u32>,
-    offset: RefCell<Option<Elf_EndianElf_ProgramHeader_Offset>>,
-    vaddr: RefCell<Option<Elf_EndianElf_ProgramHeader_Vaddr>>,
-    paddr: RefCell<Option<Elf_EndianElf_ProgramHeader_Paddr>>,
-    filesz: RefCell<Option<Elf_EndianElf_ProgramHeader_Filesz>>,
-    memsz: RefCell<Option<Elf_EndianElf_ProgramHeader_Memsz>>,
+    ofs_body: RefCell<Option<Elf_EndianElf_ProgramHeader_OfsBody>>,
+    virt_addr: RefCell<Option<Elf_EndianElf_ProgramHeader_VirtAddr>>,
+    phys_addr: RefCell<Option<Elf_EndianElf_ProgramHeader_PhysAddr>>,
+    len_body: RefCell<Option<Elf_EndianElf_ProgramHeader_LenBody>>,
+    memory_size: RefCell<Option<Elf_EndianElf_ProgramHeader_MemorySize>>,
     flags32: RefCell<u32>,
     align: RefCell<Option<Elf_EndianElf_ProgramHeader_Align>>,
     _io: RefCell<BytesReader>,
+    body_raw: RefCell<Vec<u8>>,
+    f_body: Cell<bool>,
+    body: RefCell<Option<Elf_EndianElf_ProgramHeader_Body>>,
     f_flags_obj: Cell<bool>,
     flags_obj: RefCell<Option<Elf_EndianElf_ProgramHeader_FlagsObj>>,
     _is_le: RefCell<i32>,
 }
 #[derive(Debug, Clone)]
-pub enum Elf_EndianElf_ProgramHeader_Offset {
+pub enum Elf_EndianElf_ProgramHeader_OfsBody {
     U4(u32),
     U8(u64),
 }
-impl From<u32> for Elf_EndianElf_ProgramHeader_Offset {
+impl From<u32> for Elf_EndianElf_ProgramHeader_OfsBody {
     fn from(v: u32) -> Self {
         Self::U4(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Offset> for u32 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Offset) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Offset::U4(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_OfsBody> for u32 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_OfsBody) -> Self {
+        if let Elf_EndianElf_ProgramHeader_OfsBody::U4(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Offset::U4 to u32, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_OfsBody::U4 to u32, enum value {:?}", e)
     }
 }
-impl From<u64> for Elf_EndianElf_ProgramHeader_Offset {
+impl From<u64> for Elf_EndianElf_ProgramHeader_OfsBody {
     fn from(v: u64) -> Self {
         Self::U8(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Offset> for u64 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Offset) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Offset::U8(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_OfsBody> for u64 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_OfsBody) -> Self {
+        if let Elf_EndianElf_ProgramHeader_OfsBody::U8(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Offset::U8 to u64, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_OfsBody::U8 to u64, enum value {:?}", e)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Offset> for usize {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Offset) -> Self {
+impl From<&Elf_EndianElf_ProgramHeader_OfsBody> for usize {
+    fn from(e: &Elf_EndianElf_ProgramHeader_OfsBody) -> Self {
         match e {
-            Elf_EndianElf_ProgramHeader_Offset::U4(v) => *v as usize,
-            Elf_EndianElf_ProgramHeader_Offset::U8(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_OfsBody::U4(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_OfsBody::U8(v) => *v as usize,
         }
     }
 }
 
 #[derive(Debug, Clone)]
-pub enum Elf_EndianElf_ProgramHeader_Vaddr {
+pub enum Elf_EndianElf_ProgramHeader_VirtAddr {
     U4(u32),
     U8(u64),
 }
-impl From<u32> for Elf_EndianElf_ProgramHeader_Vaddr {
+impl From<u32> for Elf_EndianElf_ProgramHeader_VirtAddr {
     fn from(v: u32) -> Self {
         Self::U4(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Vaddr> for u32 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Vaddr) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Vaddr::U4(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_VirtAddr> for u32 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_VirtAddr) -> Self {
+        if let Elf_EndianElf_ProgramHeader_VirtAddr::U4(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Vaddr::U4 to u32, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_VirtAddr::U4 to u32, enum value {:?}", e)
     }
 }
-impl From<u64> for Elf_EndianElf_ProgramHeader_Vaddr {
+impl From<u64> for Elf_EndianElf_ProgramHeader_VirtAddr {
     fn from(v: u64) -> Self {
         Self::U8(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Vaddr> for u64 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Vaddr) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Vaddr::U8(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_VirtAddr> for u64 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_VirtAddr) -> Self {
+        if let Elf_EndianElf_ProgramHeader_VirtAddr::U8(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Vaddr::U8 to u64, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_VirtAddr::U8 to u64, enum value {:?}", e)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Vaddr> for usize {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Vaddr) -> Self {
+impl From<&Elf_EndianElf_ProgramHeader_VirtAddr> for usize {
+    fn from(e: &Elf_EndianElf_ProgramHeader_VirtAddr) -> Self {
         match e {
-            Elf_EndianElf_ProgramHeader_Vaddr::U4(v) => *v as usize,
-            Elf_EndianElf_ProgramHeader_Vaddr::U8(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_VirtAddr::U4(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_VirtAddr::U8(v) => *v as usize,
         }
     }
 }
 
 #[derive(Debug, Clone)]
-pub enum Elf_EndianElf_ProgramHeader_Paddr {
+pub enum Elf_EndianElf_ProgramHeader_PhysAddr {
     U4(u32),
     U8(u64),
 }
-impl From<u32> for Elf_EndianElf_ProgramHeader_Paddr {
+impl From<u32> for Elf_EndianElf_ProgramHeader_PhysAddr {
     fn from(v: u32) -> Self {
         Self::U4(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Paddr> for u32 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Paddr) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Paddr::U4(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_PhysAddr> for u32 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_PhysAddr) -> Self {
+        if let Elf_EndianElf_ProgramHeader_PhysAddr::U4(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Paddr::U4 to u32, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_PhysAddr::U4 to u32, enum value {:?}", e)
     }
 }
-impl From<u64> for Elf_EndianElf_ProgramHeader_Paddr {
+impl From<u64> for Elf_EndianElf_ProgramHeader_PhysAddr {
     fn from(v: u64) -> Self {
         Self::U8(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Paddr> for u64 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Paddr) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Paddr::U8(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_PhysAddr> for u64 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_PhysAddr) -> Self {
+        if let Elf_EndianElf_ProgramHeader_PhysAddr::U8(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Paddr::U8 to u64, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_PhysAddr::U8 to u64, enum value {:?}", e)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Paddr> for usize {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Paddr) -> Self {
+impl From<&Elf_EndianElf_ProgramHeader_PhysAddr> for usize {
+    fn from(e: &Elf_EndianElf_ProgramHeader_PhysAddr) -> Self {
         match e {
-            Elf_EndianElf_ProgramHeader_Paddr::U4(v) => *v as usize,
-            Elf_EndianElf_ProgramHeader_Paddr::U8(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_PhysAddr::U4(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_PhysAddr::U8(v) => *v as usize,
         }
     }
 }
 
 #[derive(Debug, Clone)]
-pub enum Elf_EndianElf_ProgramHeader_Filesz {
+pub enum Elf_EndianElf_ProgramHeader_LenBody {
     U4(u32),
     U8(u64),
 }
-impl From<u32> for Elf_EndianElf_ProgramHeader_Filesz {
+impl From<u32> for Elf_EndianElf_ProgramHeader_LenBody {
     fn from(v: u32) -> Self {
         Self::U4(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Filesz> for u32 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Filesz) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Filesz::U4(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_LenBody> for u32 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_LenBody) -> Self {
+        if let Elf_EndianElf_ProgramHeader_LenBody::U4(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Filesz::U4 to u32, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_LenBody::U4 to u32, enum value {:?}", e)
     }
 }
-impl From<u64> for Elf_EndianElf_ProgramHeader_Filesz {
+impl From<u64> for Elf_EndianElf_ProgramHeader_LenBody {
     fn from(v: u64) -> Self {
         Self::U8(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Filesz> for u64 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Filesz) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Filesz::U8(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_LenBody> for u64 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_LenBody) -> Self {
+        if let Elf_EndianElf_ProgramHeader_LenBody::U8(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Filesz::U8 to u64, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_LenBody::U8 to u64, enum value {:?}", e)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Filesz> for usize {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Filesz) -> Self {
+impl From<&Elf_EndianElf_ProgramHeader_LenBody> for usize {
+    fn from(e: &Elf_EndianElf_ProgramHeader_LenBody) -> Self {
         match e {
-            Elf_EndianElf_ProgramHeader_Filesz::U4(v) => *v as usize,
-            Elf_EndianElf_ProgramHeader_Filesz::U8(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_LenBody::U4(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_LenBody::U8(v) => *v as usize,
         }
     }
 }
 
 #[derive(Debug, Clone)]
-pub enum Elf_EndianElf_ProgramHeader_Memsz {
+pub enum Elf_EndianElf_ProgramHeader_MemorySize {
     U4(u32),
     U8(u64),
 }
-impl From<u32> for Elf_EndianElf_ProgramHeader_Memsz {
+impl From<u32> for Elf_EndianElf_ProgramHeader_MemorySize {
     fn from(v: u32) -> Self {
         Self::U4(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Memsz> for u32 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Memsz) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Memsz::U4(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_MemorySize> for u32 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_MemorySize) -> Self {
+        if let Elf_EndianElf_ProgramHeader_MemorySize::U4(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Memsz::U4 to u32, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_MemorySize::U4 to u32, enum value {:?}", e)
     }
 }
-impl From<u64> for Elf_EndianElf_ProgramHeader_Memsz {
+impl From<u64> for Elf_EndianElf_ProgramHeader_MemorySize {
     fn from(v: u64) -> Self {
         Self::U8(v)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Memsz> for u64 {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Memsz) -> Self {
-        if let Elf_EndianElf_ProgramHeader_Memsz::U8(v) = e {
+impl From<&Elf_EndianElf_ProgramHeader_MemorySize> for u64 {
+    fn from(e: &Elf_EndianElf_ProgramHeader_MemorySize) -> Self {
+        if let Elf_EndianElf_ProgramHeader_MemorySize::U8(v) = e {
             return *v
         }
-        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_Memsz::U8 to u64, enum value {:?}", e)
+        panic!("trying to convert from enum Elf_EndianElf_ProgramHeader_MemorySize::U8 to u64, enum value {:?}", e)
     }
 }
-impl From<&Elf_EndianElf_ProgramHeader_Memsz> for usize {
-    fn from(e: &Elf_EndianElf_ProgramHeader_Memsz) -> Self {
+impl From<&Elf_EndianElf_ProgramHeader_MemorySize> for usize {
+    fn from(e: &Elf_EndianElf_ProgramHeader_MemorySize) -> Self {
         match e {
-            Elf_EndianElf_ProgramHeader_Memsz::U4(v) => *v as usize,
-            Elf_EndianElf_ProgramHeader_Memsz::U8(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_MemorySize::U4(v) => *v as usize,
+            Elf_EndianElf_ProgramHeader_MemorySize::U8(v) => *v as usize,
         }
     }
 }
@@ -5123,6 +6027,65 @@ impl From<&Elf_EndianElf_ProgramHeader_Align> for usize {
 }
 
 #[derive(Debug, Clone)]
+pub enum Elf_EndianElf_ProgramHeader_Body {
+    Elf_EndianElf_PhDynamicSection(OptRc<Elf_EndianElf_PhDynamicSection>),
+    Elf_EndianElf_ProgramHeader_PhInterpreter(OptRc<Elf_EndianElf_ProgramHeader_PhInterpreter>),
+    Elf_EndianElf_NoteSection(OptRc<Elf_EndianElf_NoteSection>),
+    Bytes(Vec<u8>),
+}
+impl From<&Elf_EndianElf_ProgramHeader_Body> for OptRc<Elf_EndianElf_PhDynamicSection> {
+    fn from(v: &Elf_EndianElf_ProgramHeader_Body) -> Self {
+        if let Elf_EndianElf_ProgramHeader_Body::Elf_EndianElf_PhDynamicSection(x) = v {
+            return x.clone();
+        }
+        panic!("expected Elf_EndianElf_ProgramHeader_Body::Elf_EndianElf_PhDynamicSection, got {:?}", v)
+    }
+}
+impl From<OptRc<Elf_EndianElf_PhDynamicSection>> for Elf_EndianElf_ProgramHeader_Body {
+    fn from(v: OptRc<Elf_EndianElf_PhDynamicSection>) -> Self {
+        Self::Elf_EndianElf_PhDynamicSection(v)
+    }
+}
+impl From<&Elf_EndianElf_ProgramHeader_Body> for OptRc<Elf_EndianElf_ProgramHeader_PhInterpreter> {
+    fn from(v: &Elf_EndianElf_ProgramHeader_Body) -> Self {
+        if let Elf_EndianElf_ProgramHeader_Body::Elf_EndianElf_ProgramHeader_PhInterpreter(x) = v {
+            return x.clone();
+        }
+        panic!("expected Elf_EndianElf_ProgramHeader_Body::Elf_EndianElf_ProgramHeader_PhInterpreter, got {:?}", v)
+    }
+}
+impl From<OptRc<Elf_EndianElf_ProgramHeader_PhInterpreter>> for Elf_EndianElf_ProgramHeader_Body {
+    fn from(v: OptRc<Elf_EndianElf_ProgramHeader_PhInterpreter>) -> Self {
+        Self::Elf_EndianElf_ProgramHeader_PhInterpreter(v)
+    }
+}
+impl From<&Elf_EndianElf_ProgramHeader_Body> for OptRc<Elf_EndianElf_NoteSection> {
+    fn from(v: &Elf_EndianElf_ProgramHeader_Body) -> Self {
+        if let Elf_EndianElf_ProgramHeader_Body::Elf_EndianElf_NoteSection(x) = v {
+            return x.clone();
+        }
+        panic!("expected Elf_EndianElf_ProgramHeader_Body::Elf_EndianElf_NoteSection, got {:?}", v)
+    }
+}
+impl From<OptRc<Elf_EndianElf_NoteSection>> for Elf_EndianElf_ProgramHeader_Body {
+    fn from(v: OptRc<Elf_EndianElf_NoteSection>) -> Self {
+        Self::Elf_EndianElf_NoteSection(v)
+    }
+}
+impl From<&Elf_EndianElf_ProgramHeader_Body> for Vec<u8> {
+    fn from(v: &Elf_EndianElf_ProgramHeader_Body) -> Self {
+        if let Elf_EndianElf_ProgramHeader_Body::Bytes(x) = v {
+            return x.clone();
+        }
+        panic!("expected Elf_EndianElf_ProgramHeader_Body::Bytes, got {:?}", v)
+    }
+}
+impl From<Vec<u8>> for Elf_EndianElf_ProgramHeader_Body {
+    fn from(v: Vec<u8>) -> Self {
+        Self::Bytes(v)
+    }
+}
+#[derive(Debug, Clone)]
 pub enum Elf_EndianElf_ProgramHeader_FlagsObj {
     Elf_PhdrTypeFlags(OptRc<Elf_PhdrTypeFlags>),
 }
@@ -5162,46 +6125,46 @@ impl KStruct for Elf_EndianElf_ProgramHeader {
         }
         match *_r.bits() {
             Elf_Bits::B32 => {
-                *self_rc.offset.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
+                *self_rc.ofs_body.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
             }
             Elf_Bits::B64 => {
-                *self_rc.offset.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
+                *self_rc.ofs_body.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
             }
             _ => {}
         }
         match *_r.bits() {
             Elf_Bits::B32 => {
-                *self_rc.vaddr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
+                *self_rc.virt_addr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
             }
             Elf_Bits::B64 => {
-                *self_rc.vaddr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
+                *self_rc.virt_addr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
             }
             _ => {}
         }
         match *_r.bits() {
             Elf_Bits::B32 => {
-                *self_rc.paddr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
+                *self_rc.phys_addr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
             }
             Elf_Bits::B64 => {
-                *self_rc.paddr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
+                *self_rc.phys_addr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
             }
             _ => {}
         }
         match *_r.bits() {
             Elf_Bits::B32 => {
-                *self_rc.filesz.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
+                *self_rc.len_body.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
             }
             Elf_Bits::B64 => {
-                *self_rc.filesz.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
+                *self_rc.len_body.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
             }
             _ => {}
         }
         match *_r.bits() {
             Elf_Bits::B32 => {
-                *self_rc.memsz.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
+                *self_rc.memory_size.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
             }
             Elf_Bits::B64 => {
-                *self_rc.memsz.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
+                *self_rc.memory_size.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
             }
             _ => {}
         }
@@ -5226,6 +6189,78 @@ impl Elf_EndianElf_ProgramHeader {
     }
 }
 impl Elf_EndianElf_ProgramHeader {
+
+    /**
+     * Note: a program header may not have a valid body in the same ELF
+     * file, so accessing `body` may result in reading garbage or
+     * triggering EOF errors.
+     * 
+     * In particular, `*.debug` files produced by elfutils'
+     * `eu-strip --strip-debug` (as used by Fedora/RHEL and other
+     * RPM-based distros for their `*-debuginfo` packages, e.g.
+     * `glibc-debuginfo`) copy the original binary's program header table
+     * verbatim, including `ofs_body`/`len_body` (i.e.
+     * `p_offset`/`p_filesz`), while dropping the actual contents of most
+     * segments. Such segments can be recognized by the fact that the
+     * corresponding section headers have type `sh_type::nobits`
+     * (`SHT_NOBITS`). However, this Kaitai Struct implementation doesn't
+     * know the mapping between program headers and section headers, so
+     * this must be handled externally.
+     * 
+     * `*.debug` files from Debian/Ubuntu `*-dbg` packages (e.g.
+     * `libc6-dbg`) are usually not affected by this issue, because they
+     * are produced using GNU Binutils (`objcopy --only-keep-debug`),
+     * which zeroes `len_body` for segments whose contents were omitted
+     * (which reliably tells us that there is no `body`).
+     */
+    pub fn body(
+        &self
+    ) -> KResult<Ref<'_, Option<Elf_EndianElf_ProgramHeader_Body>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_body.get() {
+            return Ok(self.body.borrow());
+        }
+        self.f_body.set(true);
+        if ((self.len_body() as u64) != (0 as u64)) {
+            let io = Clone::clone(&*_r._io());
+            let _pos = io.pos();
+            io.seek(self.ofs_body() as usize)?;
+            match *self.type() {
+                Elf_PhType::Dynamic => {
+                    *self.body_raw.borrow_mut() = io.read_bytes(self.len_body() as usize)?.into();
+                    let body_raw = self.body_raw.borrow();
+                    let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                    let f = |t : &mut Elf_EndianElf_PhDynamicSection| Ok(t.set_endian(*self._is_le.borrow()));
+                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_PhDynamicSection>(&_t_body_raw_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
+                    *self.body.borrow_mut() = Some(t);
+                }
+                Elf_PhType::Interp => {
+                    *self.body_raw.borrow_mut() = io.read_bytes(self.len_body() as usize)?.into();
+                    let body_raw = self.body_raw.borrow();
+                    let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                    let f = |t : &mut Elf_EndianElf_ProgramHeader_PhInterpreter| Ok(t.set_endian(*self._is_le.borrow()));
+                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_ProgramHeader_PhInterpreter>(&_t_body_raw_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
+                    *self.body.borrow_mut() = Some(t);
+                }
+                Elf_PhType::Note => {
+                    *self.body_raw.borrow_mut() = io.read_bytes(self.len_body() as usize)?.into();
+                    let body_raw = self.body_raw.borrow();
+                    let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                    let f = |t : &mut Elf_EndianElf_NoteSection| Ok(t.set_endian(*self._is_le.borrow()));
+                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_NoteSection>(&_t_body_raw_io, Some(self._root.clone()), None, &f)?.into();
+                    *self.body.borrow_mut() = Some(t);
+                }
+                _ => {
+                    *self.body.borrow_mut() = Some(io.read_bytes(self.len_body() as usize)?.into());
+                }
+            }
+            io.seek(_pos)?;
+        }
+        Ok(self.body.borrow())
+    }
     pub fn flags_obj(
         &self
     ) -> KResult<Ref<'_, Option<Elf_EndianElf_ProgramHeader_FlagsObj>>> {
@@ -5264,43 +6299,43 @@ impl Elf_EndianElf_ProgramHeader {
     }
 }
 impl Elf_EndianElf_ProgramHeader {
-    pub fn offset(&self) -> usize {
-        self.offset.borrow().as_ref().unwrap().into()
+    pub fn ofs_body(&self) -> usize {
+        self.ofs_body.borrow().as_ref().unwrap().into()
     }
-    pub fn offset_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_Offset>> {
-        self.offset.borrow()
-    }
-}
-impl Elf_EndianElf_ProgramHeader {
-    pub fn vaddr(&self) -> usize {
-        self.vaddr.borrow().as_ref().unwrap().into()
-    }
-    pub fn vaddr_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_Vaddr>> {
-        self.vaddr.borrow()
+    pub fn ofs_body_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_OfsBody>> {
+        self.ofs_body.borrow()
     }
 }
 impl Elf_EndianElf_ProgramHeader {
-    pub fn paddr(&self) -> usize {
-        self.paddr.borrow().as_ref().unwrap().into()
+    pub fn virt_addr(&self) -> usize {
+        self.virt_addr.borrow().as_ref().unwrap().into()
     }
-    pub fn paddr_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_Paddr>> {
-        self.paddr.borrow()
-    }
-}
-impl Elf_EndianElf_ProgramHeader {
-    pub fn filesz(&self) -> usize {
-        self.filesz.borrow().as_ref().unwrap().into()
-    }
-    pub fn filesz_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_Filesz>> {
-        self.filesz.borrow()
+    pub fn virt_addr_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_VirtAddr>> {
+        self.virt_addr.borrow()
     }
 }
 impl Elf_EndianElf_ProgramHeader {
-    pub fn memsz(&self) -> usize {
-        self.memsz.borrow().as_ref().unwrap().into()
+    pub fn phys_addr(&self) -> usize {
+        self.phys_addr.borrow().as_ref().unwrap().into()
     }
-    pub fn memsz_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_Memsz>> {
-        self.memsz.borrow()
+    pub fn phys_addr_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_PhysAddr>> {
+        self.phys_addr.borrow()
+    }
+}
+impl Elf_EndianElf_ProgramHeader {
+    pub fn len_body(&self) -> usize {
+        self.len_body.borrow().as_ref().unwrap().into()
+    }
+    pub fn len_body_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_LenBody>> {
+        self.len_body.borrow()
+    }
+}
+impl Elf_EndianElf_ProgramHeader {
+    pub fn memory_size(&self) -> usize {
+        self.memory_size.borrow().as_ref().unwrap().into()
+    }
+    pub fn memory_size_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ProgramHeader_MemorySize>> {
+        self.memory_size.borrow()
     }
 }
 impl Elf_EndianElf_ProgramHeader {
@@ -5317,6 +6352,64 @@ impl Elf_EndianElf_ProgramHeader {
     }
 }
 impl Elf_EndianElf_ProgramHeader {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+impl Elf_EndianElf_ProgramHeader {
+    pub fn body_raw(&self) -> Ref<'_, Vec<u8>> {
+        self.body_raw.borrow()
+    }
+}
+
+/**
+ * \sa https://gabi.xinuos.com/v42/elf/08-dynamic.html#program-interpreter Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/program-interpreter.html Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_ProgramHeader_PhInterpreter {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_ProgramHeader>,
+    pub _self: SharedType<Self>,
+    path_name: RefCell<String>,
+    _io: RefCell<BytesReader>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_ProgramHeader_PhInterpreter {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_ProgramHeader;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.path_name.borrow_mut() = bytes_to_str(&_io.read_bytes_term(0, false, true, true)?.into(), "ASCII")?;
+        Ok(())
+    }
+}
+impl Elf_EndianElf_ProgramHeader_PhInterpreter {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_ProgramHeader_PhInterpreter {
+}
+impl Elf_EndianElf_ProgramHeader_PhInterpreter {
+    pub fn path_name(&self) -> Ref<'_, String> {
+        self.path_name.borrow()
+    }
+}
+impl Elf_EndianElf_ProgramHeader_PhInterpreter {
     pub fn _io(&self) -> Ref<'_, BytesReader> {
         self._io.borrow()
     }
@@ -5612,6 +6705,11 @@ impl Elf_EndianElf_RelocationSectionEntry {
     }
 }
 
+/**
+ * \sa https://gabi.xinuos.com/v42/elf/03-sheader.html#section-header-table-entry Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html Source
+ */
+
 #[derive(Default, Debug, Clone)]
 pub struct Elf_EndianElf_SectionHeader {
     pub _root: SharedType<Elf>,
@@ -5624,7 +6722,7 @@ pub struct Elf_EndianElf_SectionHeader {
     ofs_body: RefCell<Option<Elf_EndianElf_SectionHeader_OfsBody>>,
     len_body: RefCell<Option<Elf_EndianElf_SectionHeader_LenBody>>,
     linked_section_idx: RefCell<u32>,
-    info: RefCell<Vec<u8>>,
+    info: RefCell<u32>,
     align: RefCell<Option<Elf_EndianElf_SectionHeader_Align>>,
     entry_size: RefCell<Option<Elf_EndianElf_SectionHeader_EntrySize>>,
     _io: RefCell<BytesReader>,
@@ -5882,11 +6980,14 @@ impl From<&Elf_EndianElf_SectionHeader_EntrySize> for usize {
 #[derive(Debug, Clone)]
 pub enum Elf_EndianElf_SectionHeader_Body {
     Elf_EndianElf_DynsymSection(OptRc<Elf_EndianElf_DynsymSection>),
+    Elf_EndianElf_VerneedSection(OptRc<Elf_EndianElf_VerneedSection>),
     Elf_EndianElf_NoteSection(OptRc<Elf_EndianElf_NoteSection>),
     Bytes(Vec<u8>),
     Elf_EndianElf_StringsStruct(OptRc<Elf_EndianElf_StringsStruct>),
+    Elf_EndianElf_VerdefSection(OptRc<Elf_EndianElf_VerdefSection>),
     Elf_EndianElf_RelocationSection(OptRc<Elf_EndianElf_RelocationSection>),
-    Elf_EndianElf_DynamicSection(OptRc<Elf_EndianElf_DynamicSection>),
+    Elf_EndianElf_ShDynamicSection(OptRc<Elf_EndianElf_ShDynamicSection>),
+    Elf_EndianElf_VersymSection(OptRc<Elf_EndianElf_VersymSection>),
 }
 impl From<&Elf_EndianElf_SectionHeader_Body> for OptRc<Elf_EndianElf_DynsymSection> {
     fn from(v: &Elf_EndianElf_SectionHeader_Body) -> Self {
@@ -5899,6 +7000,19 @@ impl From<&Elf_EndianElf_SectionHeader_Body> for OptRc<Elf_EndianElf_DynsymSecti
 impl From<OptRc<Elf_EndianElf_DynsymSection>> for Elf_EndianElf_SectionHeader_Body {
     fn from(v: OptRc<Elf_EndianElf_DynsymSection>) -> Self {
         Self::Elf_EndianElf_DynsymSection(v)
+    }
+}
+impl From<&Elf_EndianElf_SectionHeader_Body> for OptRc<Elf_EndianElf_VerneedSection> {
+    fn from(v: &Elf_EndianElf_SectionHeader_Body) -> Self {
+        if let Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_VerneedSection(x) = v {
+            return x.clone();
+        }
+        panic!("expected Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_VerneedSection, got {:?}", v)
+    }
+}
+impl From<OptRc<Elf_EndianElf_VerneedSection>> for Elf_EndianElf_SectionHeader_Body {
+    fn from(v: OptRc<Elf_EndianElf_VerneedSection>) -> Self {
+        Self::Elf_EndianElf_VerneedSection(v)
     }
 }
 impl From<&Elf_EndianElf_SectionHeader_Body> for OptRc<Elf_EndianElf_NoteSection> {
@@ -5940,6 +7054,19 @@ impl From<OptRc<Elf_EndianElf_StringsStruct>> for Elf_EndianElf_SectionHeader_Bo
         Self::Elf_EndianElf_StringsStruct(v)
     }
 }
+impl From<&Elf_EndianElf_SectionHeader_Body> for OptRc<Elf_EndianElf_VerdefSection> {
+    fn from(v: &Elf_EndianElf_SectionHeader_Body) -> Self {
+        if let Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_VerdefSection(x) = v {
+            return x.clone();
+        }
+        panic!("expected Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_VerdefSection, got {:?}", v)
+    }
+}
+impl From<OptRc<Elf_EndianElf_VerdefSection>> for Elf_EndianElf_SectionHeader_Body {
+    fn from(v: OptRc<Elf_EndianElf_VerdefSection>) -> Self {
+        Self::Elf_EndianElf_VerdefSection(v)
+    }
+}
 impl From<&Elf_EndianElf_SectionHeader_Body> for OptRc<Elf_EndianElf_RelocationSection> {
     fn from(v: &Elf_EndianElf_SectionHeader_Body) -> Self {
         if let Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_RelocationSection(x) = v {
@@ -5953,17 +7080,30 @@ impl From<OptRc<Elf_EndianElf_RelocationSection>> for Elf_EndianElf_SectionHeade
         Self::Elf_EndianElf_RelocationSection(v)
     }
 }
-impl From<&Elf_EndianElf_SectionHeader_Body> for OptRc<Elf_EndianElf_DynamicSection> {
+impl From<&Elf_EndianElf_SectionHeader_Body> for OptRc<Elf_EndianElf_ShDynamicSection> {
     fn from(v: &Elf_EndianElf_SectionHeader_Body) -> Self {
-        if let Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_DynamicSection(x) = v {
+        if let Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_ShDynamicSection(x) = v {
             return x.clone();
         }
-        panic!("expected Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_DynamicSection, got {:?}", v)
+        panic!("expected Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_ShDynamicSection, got {:?}", v)
     }
 }
-impl From<OptRc<Elf_EndianElf_DynamicSection>> for Elf_EndianElf_SectionHeader_Body {
-    fn from(v: OptRc<Elf_EndianElf_DynamicSection>) -> Self {
-        Self::Elf_EndianElf_DynamicSection(v)
+impl From<OptRc<Elf_EndianElf_ShDynamicSection>> for Elf_EndianElf_SectionHeader_Body {
+    fn from(v: OptRc<Elf_EndianElf_ShDynamicSection>) -> Self {
+        Self::Elf_EndianElf_ShDynamicSection(v)
+    }
+}
+impl From<&Elf_EndianElf_SectionHeader_Body> for OptRc<Elf_EndianElf_VersymSection> {
+    fn from(v: &Elf_EndianElf_SectionHeader_Body) -> Self {
+        if let Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_VersymSection(x) = v {
+            return x.clone();
+        }
+        panic!("expected Elf_EndianElf_SectionHeader_Body::Elf_EndianElf_VersymSection, got {:?}", v)
+    }
+}
+impl From<OptRc<Elf_EndianElf_VersymSection>> for Elf_EndianElf_SectionHeader_Body {
+    fn from(v: OptRc<Elf_EndianElf_VersymSection>) -> Self {
+        Self::Elf_EndianElf_VersymSection(v)
     }
 }
 impl KStruct for Elf_EndianElf_SectionHeader {
@@ -6022,7 +7162,7 @@ impl KStruct for Elf_EndianElf_SectionHeader {
             _ => {}
         }
         *self_rc.linked_section_idx.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
-        *self_rc.info.borrow_mut() = _io.read_bytes(4 as usize)?.into();
+        *self_rc.info.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
         match *_r.bits() {
             Elf_Bits::B32 => {
                 *self_rc.align.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
@@ -6070,8 +7210,8 @@ impl Elf_EndianElf_SectionHeader {
                     *self.body_raw.borrow_mut() = io.read_bytes(self.len_body() as usize)?.into();
                     let body_raw = self.body_raw.borrow();
                     let _t_body_raw_io = BytesReader::from(body_raw.clone());
-                    let f = |t : &mut Elf_EndianElf_DynamicSection| Ok(t.set_endian(*self._is_le.borrow()));
-                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_DynamicSection>(&_t_body_raw_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
+                    let f = |t : &mut Elf_EndianElf_ShDynamicSection| Ok(t.set_endian(*self._is_le.borrow()));
+                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_ShDynamicSection>(&_t_body_raw_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
                     *self.body.borrow_mut() = Some(t);
                 }
                 Elf_ShType::Dynsym => {
@@ -6082,12 +7222,36 @@ impl Elf_EndianElf_SectionHeader {
                     let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_DynsymSection>(&_t_body_raw_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
                     *self.body.borrow_mut() = Some(t);
                 }
+                Elf_ShType::GnuVerdef => {
+                    *self.body_raw.borrow_mut() = io.read_bytes(self.len_body() as usize)?.into();
+                    let body_raw = self.body_raw.borrow();
+                    let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                    let f = |t : &mut Elf_EndianElf_VerdefSection| Ok(t.set_endian(*self._is_le.borrow()));
+                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_VerdefSection>(&_t_body_raw_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
+                    *self.body.borrow_mut() = Some(t);
+                }
+                Elf_ShType::GnuVerneed => {
+                    *self.body_raw.borrow_mut() = io.read_bytes(self.len_body() as usize)?.into();
+                    let body_raw = self.body_raw.borrow();
+                    let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                    let f = |t : &mut Elf_EndianElf_VerneedSection| Ok(t.set_endian(*self._is_le.borrow()));
+                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_VerneedSection>(&_t_body_raw_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
+                    *self.body.borrow_mut() = Some(t);
+                }
+                Elf_ShType::GnuVersym => {
+                    *self.body_raw.borrow_mut() = io.read_bytes(self.len_body() as usize)?.into();
+                    let body_raw = self.body_raw.borrow();
+                    let _t_body_raw_io = BytesReader::from(body_raw.clone());
+                    let f = |t : &mut Elf_EndianElf_VersymSection| Ok(t.set_endian(*self._is_le.borrow()));
+                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_VersymSection>(&_t_body_raw_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
+                    *self.body.borrow_mut() = Some(t);
+                }
                 Elf_ShType::Note => {
                     *self.body_raw.borrow_mut() = io.read_bytes(self.len_body() as usize)?.into();
                     let body_raw = self.body_raw.borrow();
                     let _t_body_raw_io = BytesReader::from(body_raw.clone());
                     let f = |t : &mut Elf_EndianElf_NoteSection| Ok(t.set_endian(*self._is_le.borrow()));
-                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_NoteSection>(&_t_body_raw_io, Some(self._root.clone()), Some(self._self.clone()), &f)?.into();
+                    let t = Self::read_into_with_init::<BytesReader, Elf_EndianElf_NoteSection>(&_t_body_raw_io, Some(self._root.clone()), None, &f)?.into();
                     *self.body.borrow_mut() = Some(t);
                 }
                 Elf_ShType::Rel => {
@@ -6232,7 +7396,7 @@ impl Elf_EndianElf_SectionHeader {
     }
 }
 impl Elf_EndianElf_SectionHeader {
-    pub fn info(&self) -> Ref<'_, Vec<u8>> {
+    pub fn info(&self) -> Ref<'_, u32> {
         self.info.borrow()
     }
 }
@@ -6260,6 +7424,349 @@ impl Elf_EndianElf_SectionHeader {
 impl Elf_EndianElf_SectionHeader {
     pub fn body_raw(&self) -> Ref<'_, Vec<u8>> {
         self.body_raw.borrow()
+    }
+}
+
+/**
+ * Same type as `ph_dynamic_section`, but it depends on
+ * `_parent.linked_section`, so it can be used only in the
+ * `section_header` type. See the documentation for `ph_dynamic_section`
+ * for more details.
+ * \sa https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_ShDynamicSection {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_SectionHeader>,
+    pub _self: SharedType<Self>,
+    entries: RefCell<Vec<OptRc<Elf_EndianElf_ShDynamicSectionEntry>>>,
+    _io: RefCell<BytesReader>,
+    f_is_string_table_linked: Cell<bool>,
+    is_string_table_linked: RefCell<bool>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_ShDynamicSection {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_SectionHeader;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.entries.borrow_mut() = Vec::new();
+        {
+            let mut _i = 0;
+            while {
+                let f = |t : &mut Elf_EndianElf_ShDynamicSectionEntry| Ok(t.set_endian(*self_rc._is_le.borrow()));
+                let t = Self::read_into_with_init::<_, Elf_EndianElf_ShDynamicSectionEntry>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+                self_rc.entries.borrow_mut().push(t);
+                let _t_entries = self_rc.entries.borrow();
+                let _tmpa = _t_entries.last().unwrap();
+                _i += 1;
+                let x = !(*_tmpa.tag_enum()? == Elf_DynamicArrayTags::Null);
+                x
+            } {}
+        }
+        Ok(())
+    }
+}
+impl Elf_EndianElf_ShDynamicSection {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_ShDynamicSection {
+    pub fn is_string_table_linked(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_is_string_table_linked.get() {
+            return Ok(self.is_string_table_linked.borrow());
+        }
+        self.f_is_string_table_linked.set(true);
+        *self.is_string_table_linked.borrow_mut() = (*_prc.as_ref().unwrap().linked_section()?.type() == Elf_ShType::Strtab) as bool;
+        Ok(self.is_string_table_linked.borrow())
+    }
+}
+impl Elf_EndianElf_ShDynamicSection {
+    pub fn entries(&self) -> Ref<'_, Vec<OptRc<Elf_EndianElf_ShDynamicSectionEntry>>> {
+        self.entries.borrow()
+    }
+}
+impl Elf_EndianElf_ShDynamicSection {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Same type as `ph_dynamic_section_entry`, but with the `value_str`
+ * instance - see the documentation for `ph_dynamic_section` for more
+ * details.
+ * \sa https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_ShDynamicSectionEntry {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_ShDynamicSection>,
+    pub _self: SharedType<Self>,
+    tag: RefCell<Option<Elf_EndianElf_ShDynamicSectionEntry_Tag>>,
+    value_or_ptr: RefCell<Option<Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr>>,
+    _io: RefCell<BytesReader>,
+    f_flag_1_values: Cell<bool>,
+    flag_1_values: RefCell<OptRc<Elf_DtFlag1Values>>,
+    f_flag_values: Cell<bool>,
+    flag_values: RefCell<OptRc<Elf_DtFlagValues>>,
+    f_is_value_str: Cell<bool>,
+    is_value_str: RefCell<bool>,
+    f_tag_enum: Cell<bool>,
+    tag_enum: RefCell<Elf_DynamicArrayTags>,
+    f_value_str: Cell<bool>,
+    value_str: RefCell<String>,
+    _is_le: RefCell<i32>,
+}
+#[derive(Debug, Clone)]
+pub enum Elf_EndianElf_ShDynamicSectionEntry_Tag {
+    U4(u32),
+    U8(u64),
+}
+impl From<u32> for Elf_EndianElf_ShDynamicSectionEntry_Tag {
+    fn from(v: u32) -> Self {
+        Self::U4(v)
+    }
+}
+impl From<&Elf_EndianElf_ShDynamicSectionEntry_Tag> for u32 {
+    fn from(e: &Elf_EndianElf_ShDynamicSectionEntry_Tag) -> Self {
+        if let Elf_EndianElf_ShDynamicSectionEntry_Tag::U4(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Elf_EndianElf_ShDynamicSectionEntry_Tag::U4 to u32, enum value {:?}", e)
+    }
+}
+impl From<u64> for Elf_EndianElf_ShDynamicSectionEntry_Tag {
+    fn from(v: u64) -> Self {
+        Self::U8(v)
+    }
+}
+impl From<&Elf_EndianElf_ShDynamicSectionEntry_Tag> for u64 {
+    fn from(e: &Elf_EndianElf_ShDynamicSectionEntry_Tag) -> Self {
+        if let Elf_EndianElf_ShDynamicSectionEntry_Tag::U8(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Elf_EndianElf_ShDynamicSectionEntry_Tag::U8 to u64, enum value {:?}", e)
+    }
+}
+impl From<&Elf_EndianElf_ShDynamicSectionEntry_Tag> for usize {
+    fn from(e: &Elf_EndianElf_ShDynamicSectionEntry_Tag) -> Self {
+        match e {
+            Elf_EndianElf_ShDynamicSectionEntry_Tag::U4(v) => *v as usize,
+            Elf_EndianElf_ShDynamicSectionEntry_Tag::U8(v) => *v as usize,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr {
+    U4(u32),
+    U8(u64),
+}
+impl From<u32> for Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr {
+    fn from(v: u32) -> Self {
+        Self::U4(v)
+    }
+}
+impl From<&Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr> for u32 {
+    fn from(e: &Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr) -> Self {
+        if let Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr::U4(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr::U4 to u32, enum value {:?}", e)
+    }
+}
+impl From<u64> for Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr {
+    fn from(v: u64) -> Self {
+        Self::U8(v)
+    }
+}
+impl From<&Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr> for u64 {
+    fn from(e: &Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr) -> Self {
+        if let Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr::U8(v) = e {
+            return *v
+        }
+        panic!("trying to convert from enum Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr::U8 to u64, enum value {:?}", e)
+    }
+}
+impl From<&Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr> for usize {
+    fn from(e: &Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr) -> Self {
+        match e {
+            Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr::U4(v) => *v as usize,
+            Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr::U8(v) => *v as usize,
+        }
+    }
+}
+
+impl KStruct for Elf_EndianElf_ShDynamicSectionEntry {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_ShDynamicSection;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        match *_r.bits() {
+            Elf_Bits::B32 => {
+                *self_rc.tag.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
+            }
+            Elf_Bits::B64 => {
+                *self_rc.tag.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
+            }
+            _ => {}
+        }
+        match *_r.bits() {
+            Elf_Bits::B32 => {
+                *self_rc.value_or_ptr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() });
+            }
+            Elf_Bits::B64 => {
+                *self_rc.value_or_ptr.borrow_mut() = Some(if *self_rc._is_le.borrow() == 1 { _io.read_u8le()?.into() } else { _io.read_u8be()?.into() });
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+}
+impl Elf_EndianElf_ShDynamicSectionEntry {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_ShDynamicSectionEntry {
+    pub fn flag_1_values(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_DtFlag1Values>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_flag_1_values.get() {
+            return Ok(self.flag_1_values.borrow());
+        }
+        if *self.tag_enum()? == Elf_DynamicArrayTags::Flags1 {
+            let f = |t : &mut Elf_DtFlag1Values| Ok(t.set_params((self.value_or_ptr()).try_into().map_err(|_| KError::CastError)?));
+            let t = Self::read_into_with_init::<_, Elf_DtFlag1Values>(&*_io, Some(self._root.clone()), None, &f)?.into();
+            *self.flag_1_values.borrow_mut() = t;
+        }
+        Ok(self.flag_1_values.borrow())
+    }
+    pub fn flag_values(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_DtFlagValues>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_flag_values.get() {
+            return Ok(self.flag_values.borrow());
+        }
+        if *self.tag_enum()? == Elf_DynamicArrayTags::Flags {
+            let f = |t : &mut Elf_DtFlagValues| Ok(t.set_params((self.value_or_ptr()).try_into().map_err(|_| KError::CastError)?));
+            let t = Self::read_into_with_init::<_, Elf_DtFlagValues>(&*_io, Some(self._root.clone()), None, &f)?.into();
+            *self.flag_values.borrow_mut() = t;
+        }
+        Ok(self.flag_values.borrow())
+    }
+    pub fn is_value_str(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_is_value_str.get() {
+            return Ok(self.is_value_str.borrow());
+        }
+        self.f_is_value_str.set(true);
+        *self.is_value_str.borrow_mut() = ( ((((self.value_or_ptr() as u64) != (0 as u64))) && ( ((*self.tag_enum()? == Elf_DynamicArrayTags::Needed) || (*self.tag_enum()? == Elf_DynamicArrayTags::Soname) || (*self.tag_enum()? == Elf_DynamicArrayTags::Rpath) || (*self.tag_enum()? == Elf_DynamicArrayTags::Runpath) || (*self.tag_enum()? == Elf_DynamicArrayTags::SunwAuxiliary) || (*self.tag_enum()? == Elf_DynamicArrayTags::SunwFilter) || (*self.tag_enum()? == Elf_DynamicArrayTags::Auxiliary) || (*self.tag_enum()? == Elf_DynamicArrayTags::Filter) || (*self.tag_enum()? == Elf_DynamicArrayTags::Config) || (*self.tag_enum()? == Elf_DynamicArrayTags::Depaudit) || (*self.tag_enum()? == Elf_DynamicArrayTags::Audit)) )) ) as bool;
+        Ok(self.is_value_str.borrow())
+    }
+    pub fn tag_enum(
+        &self
+    ) -> KResult<Ref<'_, Elf_DynamicArrayTags>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_tag_enum.get() {
+            return Ok(self.tag_enum.borrow());
+        }
+        self.f_tag_enum.set(true);
+        *self.tag_enum.borrow_mut() = (self.tag() as i64).try_into()?;
+        Ok(self.tag_enum.borrow())
+    }
+    pub fn value_str(
+        &self
+    ) -> KResult<Ref<'_, String>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_value_str.get() {
+            return Ok(self.value_str.borrow());
+        }
+        self.f_value_str.set(true);
+        if  ((*self.is_value_str()?) && (*_prc.as_ref().unwrap().is_string_table_linked()?))  {
+            let io = Clone::clone(&*Into::<OptRc<Elf_EndianElf_StringsStruct>>::into(&*_prc.as_ref().unwrap()._parent.get_value().borrow().upgrade().as_ref().unwrap().linked_section()?.body()?.as_ref().unwrap())._io());
+            let _pos = io.pos();
+            io.seek(self.value_or_ptr() as usize)?;
+            *self.value_str.borrow_mut() = bytes_to_str(&io.read_bytes_term(0, false, true, true)?.into(), "ASCII")?;
+            io.seek(_pos)?;
+        }
+        Ok(self.value_str.borrow())
+    }
+}
+impl Elf_EndianElf_ShDynamicSectionEntry {
+    pub fn tag(&self) -> usize {
+        self.tag.borrow().as_ref().unwrap().into()
+    }
+    pub fn tag_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ShDynamicSectionEntry_Tag>> {
+        self.tag.borrow()
+    }
+}
+impl Elf_EndianElf_ShDynamicSectionEntry {
+    pub fn value_or_ptr(&self) -> usize {
+        self.value_or_ptr.borrow().as_ref().unwrap().into()
+    }
+    pub fn value_or_ptr_enum(&self) -> Ref<'_, Option<Elf_EndianElf_ShDynamicSectionEntry_ValueOrPtr>> {
+        self.value_or_ptr.borrow()
+    }
+}
+impl Elf_EndianElf_ShDynamicSectionEntry {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
     }
 }
 
@@ -6313,6 +7820,1393 @@ impl Elf_EndianElf_StringsStruct {
     }
 }
 impl Elf_EndianElf_StringsStruct {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * \sa https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFEXTS Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html Source
+ * \sa https://www.akkadia.org/drepper/symbol-versioning Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_VerdauxEntry {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_VerdefSection>,
+    pub _self: SharedType<Self>,
+    unnamed0: RefCell<Vec<u8>>,
+    ofs_name: RefCell<u32>,
+    ofs_next: RefCell<u32>,
+    _io: RefCell<BytesReader>,
+    f_name: Cell<bool>,
+    name: RefCell<String>,
+    f_next: Cell<bool>,
+    next: RefCell<OptRc<Elf_EndianElf_VerdauxEntry>>,
+    f_ofs_start: Cell<bool>,
+    ofs_start: RefCell<i32>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_VerdauxEntry {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_VerdefSection;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if ((*self_rc.ofs_start()? as i32) < (0 as i32)) {
+            *self_rc.unnamed0.borrow_mut() = _io.read_bytes(0 as usize)?.into();
+        }
+        *self_rc.ofs_name.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.ofs_next.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        let _tmpa = *self_rc.ofs_next();
+        if !( ((((_tmpa as u32) == (0 as u32))) || (((_tmpa as i32) >= (8 as i32)))) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/endian_elf/types/verdaux_entry/seq/2".to_string() }));
+        }
+        Ok(())
+    }
+}
+impl Elf_EndianElf_VerdauxEntry {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_VerdauxEntry {
+    pub fn name(
+        &self
+    ) -> KResult<Ref<'_, String>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_name.get() {
+            return Ok(self.name.borrow());
+        }
+        self.f_name.set(true);
+        if *_prc.as_ref().unwrap().is_string_table_linked()? {
+            let io = Clone::clone(&*Into::<OptRc<Elf_EndianElf_StringsStruct>>::into(&*_prc.as_ref().unwrap()._parent.get_value().borrow().upgrade().as_ref().unwrap().linked_section()?.body()?.as_ref().unwrap())._io());
+            let _pos = io.pos();
+            io.seek(*self.ofs_name() as usize)?;
+            *self.name.borrow_mut() = bytes_to_str(&io.read_bytes_term(0, false, true, true)?.into(), "UTF-8")?;
+            io.seek(_pos)?;
+        }
+        Ok(self.name.borrow())
+    }
+    pub fn next(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_EndianElf_VerdauxEntry>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_next.get() {
+            return Ok(self.next.borrow());
+        }
+        if ((*self.ofs_next() as u32) != (0 as u32)) {
+            let _pos = _io.pos();
+            _io.seek(((*self.ofs_start()? as i32) + (*self.ofs_next() as i32)) as usize)?;
+            let f = |t : &mut Elf_EndianElf_VerdauxEntry| Ok(t.set_endian(*self._is_le.borrow()));
+            let t = Self::read_into_with_init::<_, Elf_EndianElf_VerdauxEntry>(&*_io, Some(self._root.clone()), Some(SharedType::new(_prc.as_ref().unwrap().clone())), &f)?.into();
+            *self.next.borrow_mut() = t;
+            _io.seek(_pos)?;
+        }
+        Ok(self.next.borrow())
+    }
+    pub fn ofs_start(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_ofs_start.get() {
+            return Ok(self.ofs_start.borrow());
+        }
+        self.f_ofs_start.set(true);
+        *self.ofs_start.borrow_mut() = (_io.pos()) as i32;
+        Ok(self.ofs_start.borrow())
+    }
+}
+impl Elf_EndianElf_VerdauxEntry {
+    pub fn unnamed0(&self) -> Ref<'_, Vec<u8>> {
+        self.unnamed0.borrow()
+    }
+}
+
+/**
+ * Byte offset to the version or dependency name string in the linked
+ * string table.
+ */
+impl Elf_EndianElf_VerdauxEntry {
+    pub fn ofs_name(&self) -> Ref<'_, u32> {
+        self.ofs_name.borrow()
+    }
+}
+
+/**
+ * Byte offset to the next verdaux entry, relative to the start of
+ * this `verdaux_entry`. A value of zero means that there is no next
+ * entry.
+ */
+impl Elf_EndianElf_VerdauxEntry {
+    pub fn ofs_next(&self) -> Ref<'_, u32> {
+        self.ofs_next.borrow()
+    }
+}
+impl Elf_EndianElf_VerdauxEntry {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Version Definitions, contained in the special section named
+ * `.gnu.version_d` with the section type `sh_type::gnu_verdef`
+ * (`SHT_GNU_verdef`).
+ * 
+ * The number of entries in this section must match the value of the
+ * dynamic tag `dynamic_array_tags::verdefnum` (`DT_VERDEFNUM`) in the
+ * Dynamic Section (`.dynamic`).
+ * 
+ * `_parent.linked_section` must be the string table that contains the
+ * strings referenced by this section. Specifically, the string table in
+ * the `.dynstr` section should be used (side note: the `readelf` command
+ * doesn't even check which string table `sh_link` points to, and always
+ * uses `.dynstr` for the lookups - see
+ * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13787>).
+ * 
+ * The `is_string_table_linked` value instance indicates whether the
+ * string table is linked. If it is not, version names (the `name`
+ * instance in the `verdaux_entry` type) will not be available.
+ * \sa https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERDEFS Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html Source
+ * \sa https://www.akkadia.org/drepper/symbol-versioning Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_VerdefSection {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_SectionHeader>,
+    pub _self: SharedType<Self>,
+    first_entry: RefCell<OptRc<Elf_EndianElf_VerdefSectionEntry>>,
+    _io: RefCell<BytesReader>,
+    f_is_string_table_linked: Cell<bool>,
+    is_string_table_linked: RefCell<bool>,
+    f_num_entries: Cell<bool>,
+    num_entries: RefCell<u32>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_VerdefSection {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_SectionHeader;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        let f = |t : &mut Elf_EndianElf_VerdefSectionEntry| Ok(t.set_endian(*self_rc._is_le.borrow()));
+        let t = Self::read_into_with_init::<_, Elf_EndianElf_VerdefSectionEntry>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+        *self_rc.first_entry.borrow_mut() = t;
+        Ok(())
+    }
+}
+impl Elf_EndianElf_VerdefSection {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_VerdefSection {
+
+    /**
+     * Indicates whether a string table is linked. This should always be
+     * `true` in spec-compliant ELF files. If it is `false`, the string
+     * offsets in this section will not be resolved to strings.
+     */
+    pub fn is_string_table_linked(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_is_string_table_linked.get() {
+            return Ok(self.is_string_table_linked.borrow());
+        }
+        self.f_is_string_table_linked.set(true);
+        *self.is_string_table_linked.borrow_mut() = (*_prc.as_ref().unwrap().linked_section()?.type() == Elf_ShType::Strtab) as bool;
+        Ok(self.is_string_table_linked.borrow())
+    }
+
+    /**
+     * Number of entries (version definitions)
+     * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-47976 Source
+     */
+    pub fn num_entries(
+        &self
+    ) -> KResult<Ref<'_, u32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_num_entries.get() {
+            return Ok(self.num_entries.borrow());
+        }
+        self.f_num_entries.set(true);
+        *self.num_entries.borrow_mut() = (_prc.as_ref().unwrap().info()) as u32;
+        Ok(self.num_entries.borrow())
+    }
+}
+impl Elf_EndianElf_VerdefSection {
+    pub fn first_entry(&self) -> Ref<'_, OptRc<Elf_EndianElf_VerdefSectionEntry>> {
+        self.first_entry.borrow()
+    }
+}
+impl Elf_EndianElf_VerdefSection {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * \sa https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFENTRIES Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html Source
+ * \sa https://www.akkadia.org/drepper/symbol-versioning Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_VerdefSectionEntry {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_VerdefSection>,
+    pub _self: SharedType<Self>,
+    unnamed0: RefCell<Vec<u8>>,
+    version: RefCell<u16>,
+    flags: RefCell<u16>,
+    version_index: RefCell<u16>,
+    num_aux_entries: RefCell<u16>,
+    hash: RefCell<u32>,
+    ofs_first_aux: RefCell<u32>,
+    ofs_next: RefCell<u32>,
+    _io: RefCell<BytesReader>,
+    f_first_aux: Cell<bool>,
+    first_aux: RefCell<OptRc<Elf_EndianElf_VerdauxEntry>>,
+    f_flags_obj: Cell<bool>,
+    flags_obj: RefCell<OptRc<Elf_EndianElf_VersionFlags>>,
+    f_next: Cell<bool>,
+    next: RefCell<OptRc<Elf_EndianElf_VerdefSectionEntry>>,
+    f_ofs_start: Cell<bool>,
+    ofs_start: RefCell<i32>,
+    f_version_index_special: Cell<bool>,
+    version_index_special: RefCell<Elf_VersionIndexSpecial>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_VerdefSectionEntry {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_VerdefSection;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if ((*self_rc.ofs_start()? as i32) < (0 as i32)) {
+            *self_rc.unnamed0.borrow_mut() = _io.read_bytes(0 as usize)?.into();
+        }
+        *self_rc.version.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        if !(((*self_rc.version() as u16) == (1 as u16))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotEqual, src_path: "/types/endian_elf/types/verdef_section_entry/seq/1".to_string() }));
+        }
+        *self_rc.flags.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        *self_rc.version_index.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        let _tmpa = *self_rc.version_index();
+        if !(((((_tmpa as i32) & (32768 as i32)) as i32) == (0 as i32))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/endian_elf/types/verdef_section_entry/seq/3".to_string() }));
+        }
+        *self_rc.num_aux_entries.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        if !(((*self_rc.num_aux_entries() as u16) >= (1 as u16))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/endian_elf/types/verdef_section_entry/seq/4".to_string() }));
+        }
+        *self_rc.hash.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.ofs_first_aux.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        if !(((*self_rc.ofs_first_aux() as i32) >= (20 as i32))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/endian_elf/types/verdef_section_entry/seq/6".to_string() }));
+        }
+        *self_rc.ofs_next.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        let _tmpa = *self_rc.ofs_next();
+        if !( ((((_tmpa as u32) == (0 as u32))) || (((_tmpa as i32) >= (20 as i32)))) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/endian_elf/types/verdef_section_entry/seq/7".to_string() }));
+        }
+        Ok(())
+    }
+}
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_VerdefSectionEntry {
+
+    /**
+     * First auxiliary entry of type `verdaux_entry` (`Elfxx_Verdaux`).
+     * The rest follow its `next` instance.
+     */
+    pub fn first_aux(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_EndianElf_VerdauxEntry>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_first_aux.get() {
+            return Ok(self.first_aux.borrow());
+        }
+        let _pos = _io.pos();
+        _io.seek(((*self.ofs_start()? as i32) + (*self.ofs_first_aux() as i32)) as usize)?;
+        let f = |t : &mut Elf_EndianElf_VerdauxEntry| Ok(t.set_endian(*self._is_le.borrow()));
+        let t = Self::read_into_with_init::<_, Elf_EndianElf_VerdauxEntry>(&*_io, Some(self._root.clone()), Some(SharedType::new(_prc.as_ref().unwrap().clone())), &f)?.into();
+        *self.first_aux.borrow_mut() = t;
+        _io.seek(_pos)?;
+        Ok(self.first_aux.borrow())
+    }
+    pub fn flags_obj(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_EndianElf_VersionFlags>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_flags_obj.get() {
+            return Ok(self.flags_obj.borrow());
+        }
+        let f = |t : &mut Elf_EndianElf_VersionFlags| Ok(t.set_params((*self.flags()).try_into().map_err(|_| KError::CastError)?));
+        let t = Self::read_into_with_init::<_, Elf_EndianElf_VersionFlags>(&*_io, Some(self._root.clone()), None, &f)?.into();
+        *self.flags_obj.borrow_mut() = t;
+        Ok(self.flags_obj.borrow())
+    }
+    pub fn next(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_EndianElf_VerdefSectionEntry>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_next.get() {
+            return Ok(self.next.borrow());
+        }
+        if ((*self.ofs_next() as u32) != (0 as u32)) {
+            let _pos = _io.pos();
+            _io.seek(((*self.ofs_start()? as i32) + (*self.ofs_next() as i32)) as usize)?;
+            let f = |t : &mut Elf_EndianElf_VerdefSectionEntry| Ok(t.set_endian(*self._is_le.borrow()));
+            let t = Self::read_into_with_init::<_, Elf_EndianElf_VerdefSectionEntry>(&*_io, Some(self._root.clone()), Some(SharedType::new(_prc.as_ref().unwrap().clone())), &f)?.into();
+            *self.next.borrow_mut() = t;
+            _io.seek(_pos)?;
+        }
+        Ok(self.next.borrow())
+    }
+    pub fn ofs_start(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_ofs_start.get() {
+            return Ok(self.ofs_start.borrow());
+        }
+        self.f_ofs_start.set(true);
+        *self.ofs_start.borrow_mut() = (_io.pos()) as i32;
+        Ok(self.ofs_start.borrow())
+    }
+    pub fn version_index_special(
+        &self
+    ) -> KResult<Ref<'_, Elf_VersionIndexSpecial>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_version_index_special.get() {
+            return Ok(self.version_index_special.borrow());
+        }
+        self.f_version_index_special.set(true);
+        *self.version_index_special.borrow_mut() = (*self.version_index() as i64).try_into()?;
+        Ok(self.version_index_special.borrow())
+    }
+}
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn unnamed0(&self) -> Ref<'_, Vec<u8>> {
+        self.unnamed0.borrow()
+    }
+}
+
+/**
+ * Version of the structure. Must be set to 1.
+ */
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn version(&self) -> Ref<'_, u16> {
+        self.version.borrow()
+    }
+}
+
+/**
+ * Version information flag bitmask. Access `flags_obj` instead.
+ */
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn flags(&self) -> Ref<'_, u16> {
+        self.flags.borrow()
+    }
+}
+
+/**
+ * Version index assigned to this version definition. A unique index
+ * that entries in the Symbol Version Table (the `versym_section`
+ * type) use to reference the corresponding version definition.
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html Source
+ */
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn version_index(&self) -> Ref<'_, u16> {
+        self.version_index.borrow()
+    }
+}
+
+/**
+ * Number of associated auxiliary entries.
+ */
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn num_aux_entries(&self) -> Ref<'_, u16> {
+        self.num_aux_entries.borrow()
+    }
+}
+
+/**
+ * Version name hash value (ELF hash function).
+ */
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn hash(&self) -> Ref<'_, u32> {
+        self.hash.borrow()
+    }
+}
+
+/**
+ * Byte offset to the first `verdaux_entry` (`Elfxx_Verdaux`)
+ * associated with this version definition. The offset is relative to
+ * the start of this `verdef_section_entry`.
+ */
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn ofs_first_aux(&self) -> Ref<'_, u32> {
+        self.ofs_first_aux.borrow()
+    }
+}
+
+/**
+ * Byte offset to the next verdef entry, relative to the start of
+ * this `verdef_section_entry`. A value of zero means that there is
+ * no next entry.
+ */
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn ofs_next(&self) -> Ref<'_, u32> {
+        self.ofs_next.borrow()
+    }
+}
+impl Elf_EndianElf_VerdefSectionEntry {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * \sa https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERNEEDEXTFIG Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html Source
+ * \sa https://www.akkadia.org/drepper/symbol-versioning Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_VernauxEntry {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_VerneedSection>,
+    pub _self: SharedType<Self>,
+    unnamed0: RefCell<Vec<u8>>,
+    hash: RefCell<u32>,
+    flags: RefCell<u16>,
+    version_index: RefCell<OptRc<Elf_EndianElf_VersionIndex>>,
+    ofs_name: RefCell<u32>,
+    ofs_next: RefCell<u32>,
+    _io: RefCell<BytesReader>,
+    f_flags_obj: Cell<bool>,
+    flags_obj: RefCell<OptRc<Elf_EndianElf_VersionFlags>>,
+    f_name: Cell<bool>,
+    name: RefCell<String>,
+    f_next: Cell<bool>,
+    next: RefCell<OptRc<Elf_EndianElf_VernauxEntry>>,
+    f_ofs_start: Cell<bool>,
+    ofs_start: RefCell<i32>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_VernauxEntry {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_VerneedSection;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if ((*self_rc.ofs_start()? as i32) < (0 as i32)) {
+            *self_rc.unnamed0.borrow_mut() = _io.read_bytes(0 as usize)?.into();
+        }
+        *self_rc.hash.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.flags.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        let f = |t : &mut Elf_EndianElf_VersionIndex| Ok(t.set_endian(*self_rc._is_le.borrow()));
+        let t = Self::read_into_with_init::<_, Elf_EndianElf_VersionIndex>(&*_io, Some(self_rc._root.clone()), None, &f)?.into();
+        *self_rc.version_index.borrow_mut() = t;
+        *self_rc.ofs_name.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.ofs_next.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        let _tmpa = *self_rc.ofs_next();
+        if !( ((((_tmpa as u32) == (0 as u32))) || (((_tmpa as i32) >= (16 as i32)))) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/endian_elf/types/vernaux_entry/seq/5".to_string() }));
+        }
+        Ok(())
+    }
+}
+impl Elf_EndianElf_VernauxEntry {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_VernauxEntry {
+    pub fn flags_obj(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_EndianElf_VersionFlags>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_flags_obj.get() {
+            return Ok(self.flags_obj.borrow());
+        }
+        let f = |t : &mut Elf_EndianElf_VersionFlags| Ok(t.set_params((*self.flags()).try_into().map_err(|_| KError::CastError)?));
+        let t = Self::read_into_with_init::<_, Elf_EndianElf_VersionFlags>(&*_io, Some(self._root.clone()), None, &f)?.into();
+        *self.flags_obj.borrow_mut() = t;
+        Ok(self.flags_obj.borrow())
+    }
+    pub fn name(
+        &self
+    ) -> KResult<Ref<'_, String>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_name.get() {
+            return Ok(self.name.borrow());
+        }
+        self.f_name.set(true);
+        if *_prc.as_ref().unwrap().is_string_table_linked()? {
+            let io = Clone::clone(&*Into::<OptRc<Elf_EndianElf_StringsStruct>>::into(&*_prc.as_ref().unwrap()._parent.get_value().borrow().upgrade().as_ref().unwrap().linked_section()?.body()?.as_ref().unwrap())._io());
+            let _pos = io.pos();
+            io.seek(*self.ofs_name() as usize)?;
+            *self.name.borrow_mut() = bytes_to_str(&io.read_bytes_term(0, false, true, true)?.into(), "UTF-8")?;
+            io.seek(_pos)?;
+        }
+        Ok(self.name.borrow())
+    }
+    pub fn next(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_EndianElf_VernauxEntry>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_next.get() {
+            return Ok(self.next.borrow());
+        }
+        if ((*self.ofs_next() as u32) != (0 as u32)) {
+            let _pos = _io.pos();
+            _io.seek(((*self.ofs_start()? as i32) + (*self.ofs_next() as i32)) as usize)?;
+            let f = |t : &mut Elf_EndianElf_VernauxEntry| Ok(t.set_endian(*self._is_le.borrow()));
+            let t = Self::read_into_with_init::<_, Elf_EndianElf_VernauxEntry>(&*_io, Some(self._root.clone()), Some(SharedType::new(_prc.as_ref().unwrap().clone())), &f)?.into();
+            *self.next.borrow_mut() = t;
+            _io.seek(_pos)?;
+        }
+        Ok(self.next.borrow())
+    }
+    pub fn ofs_start(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_ofs_start.get() {
+            return Ok(self.ofs_start.borrow());
+        }
+        self.f_ofs_start.set(true);
+        *self.ofs_start.borrow_mut() = (_io.pos()) as i32;
+        Ok(self.ofs_start.borrow())
+    }
+}
+impl Elf_EndianElf_VernauxEntry {
+    pub fn unnamed0(&self) -> Ref<'_, Vec<u8>> {
+        self.unnamed0.borrow()
+    }
+}
+
+/**
+ * Dependency name hash value (ELF hash function).
+ */
+impl Elf_EndianElf_VernauxEntry {
+    pub fn hash(&self) -> Ref<'_, u32> {
+        self.hash.borrow()
+    }
+}
+
+/**
+ * Dependency information flag bitmask. Access `flags_obj` instead.
+ */
+impl Elf_EndianElf_VernauxEntry {
+    pub fn flags(&self) -> Ref<'_, u16> {
+        self.flags.borrow()
+    }
+}
+
+/**
+ * Version index assigned to this dependency version. A unique index
+ * that entries in the Symbol Version Table (the `versym_section`
+ * type) use to reference the corresponding dependency version.
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html Source
+ */
+impl Elf_EndianElf_VernauxEntry {
+    pub fn version_index(&self) -> Ref<'_, OptRc<Elf_EndianElf_VersionIndex>> {
+        self.version_index.borrow()
+    }
+}
+
+/**
+ * Byte offset to the dependency name string in the linked string
+ * table.
+ */
+impl Elf_EndianElf_VernauxEntry {
+    pub fn ofs_name(&self) -> Ref<'_, u32> {
+        self.ofs_name.borrow()
+    }
+}
+
+/**
+ * Byte offset to the next vernaux entry, relative to the start of
+ * this `vernaux_entry`. A value of zero means that there is no next
+ * entry.
+ */
+impl Elf_EndianElf_VernauxEntry {
+    pub fn ofs_next(&self) -> Ref<'_, u32> {
+        self.ofs_next.borrow()
+    }
+}
+impl Elf_EndianElf_VernauxEntry {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Version Requirements, contained in the special section named
+ * `.gnu.version_r` with the section type `sh_type::gnu_verneed`
+ * (`SHT_GNU_verneed`). This section defines the required versions of
+ * dynamic symbols from other shared objects.
+ * 
+ * The number of entries in this section must match the value of the
+ * dynamic tag `dynamic_array_tags::verneednum` (`DT_VERNEEDNUM`) in the
+ * Dynamic Section (`.dynamic`).
+ * 
+ * `_parent.linked_section` must be the string table that contains the
+ * strings referenced by this section. Specifically, the string table in
+ * the `.dynstr` section should be used (side note: the `readelf` command
+ * doesn't even check which string table `sh_link` points to, and always
+ * uses `.dynstr` for the lookups - see
+ * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13941>).
+ * 
+ * The `is_string_table_linked` value instance indicates whether the
+ * string table is linked. If it is not, file names (the `file_name`
+ * instance in the `verneed_section_entry` type) or version names (the
+ * `name` instance in the `vernaux_entry` type) will not be available.
+ * \sa https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERRQMTS Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html Source
+ * \sa https://www.akkadia.org/drepper/symbol-versioning Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_VerneedSection {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_SectionHeader>,
+    pub _self: SharedType<Self>,
+    first_entry: RefCell<OptRc<Elf_EndianElf_VerneedSectionEntry>>,
+    _io: RefCell<BytesReader>,
+    f_is_string_table_linked: Cell<bool>,
+    is_string_table_linked: RefCell<bool>,
+    f_num_entries: Cell<bool>,
+    num_entries: RefCell<u32>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_VerneedSection {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_SectionHeader;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        let f = |t : &mut Elf_EndianElf_VerneedSectionEntry| Ok(t.set_endian(*self_rc._is_le.borrow()));
+        let t = Self::read_into_with_init::<_, Elf_EndianElf_VerneedSectionEntry>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+        *self_rc.first_entry.borrow_mut() = t;
+        Ok(())
+    }
+}
+impl Elf_EndianElf_VerneedSection {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_VerneedSection {
+
+    /**
+     * Indicates whether a string table is linked. This should always be
+     * `true` in spec-compliant ELF files. If it is `false`, the string
+     * offsets in this section will not be resolved to strings.
+     */
+    pub fn is_string_table_linked(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_is_string_table_linked.get() {
+            return Ok(self.is_string_table_linked.borrow());
+        }
+        self.f_is_string_table_linked.set(true);
+        *self.is_string_table_linked.borrow_mut() = (*_prc.as_ref().unwrap().linked_section()?.type() == Elf_ShType::Strtab) as bool;
+        Ok(self.is_string_table_linked.borrow())
+    }
+
+    /**
+     * Number of entries (dependency versions)
+     * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-47976 Source
+     */
+    pub fn num_entries(
+        &self
+    ) -> KResult<Ref<'_, u32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_num_entries.get() {
+            return Ok(self.num_entries.borrow());
+        }
+        self.f_num_entries.set(true);
+        *self.num_entries.borrow_mut() = (_prc.as_ref().unwrap().info()) as u32;
+        Ok(self.num_entries.borrow())
+    }
+}
+impl Elf_EndianElf_VerneedSection {
+    pub fn first_entry(&self) -> Ref<'_, OptRc<Elf_EndianElf_VerneedSectionEntry>> {
+        self.first_entry.borrow()
+    }
+}
+impl Elf_EndianElf_VerneedSection {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * \sa https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERNEEDFIG Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html Source
+ * \sa https://www.akkadia.org/drepper/symbol-versioning Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_VerneedSectionEntry {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_VerneedSection>,
+    pub _self: SharedType<Self>,
+    unnamed0: RefCell<Vec<u8>>,
+    version: RefCell<u16>,
+    num_aux_entries: RefCell<u16>,
+    ofs_file_name: RefCell<u32>,
+    ofs_first_aux: RefCell<u32>,
+    ofs_next: RefCell<u32>,
+    _io: RefCell<BytesReader>,
+    f_file_name: Cell<bool>,
+    file_name: RefCell<String>,
+    f_first_aux: Cell<bool>,
+    first_aux: RefCell<OptRc<Elf_EndianElf_VernauxEntry>>,
+    f_next: Cell<bool>,
+    next: RefCell<OptRc<Elf_EndianElf_VerneedSectionEntry>>,
+    f_ofs_start: Cell<bool>,
+    ofs_start: RefCell<i32>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_VerneedSectionEntry {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_VerneedSection;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if ((*self_rc.ofs_start()? as i32) < (0 as i32)) {
+            *self_rc.unnamed0.borrow_mut() = _io.read_bytes(0 as usize)?.into();
+        }
+        *self_rc.version.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        if !(((*self_rc.version() as u16) == (1 as u16))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::NotEqual, src_path: "/types/endian_elf/types/verneed_section_entry/seq/1".to_string() }));
+        }
+        *self_rc.num_aux_entries.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        if !(((*self_rc.num_aux_entries() as u16) >= (1 as u16))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/endian_elf/types/verneed_section_entry/seq/2".to_string() }));
+        }
+        *self_rc.ofs_file_name.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        *self_rc.ofs_first_aux.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        if !(((*self_rc.ofs_first_aux() as i32) >= (16 as i32))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/endian_elf/types/verneed_section_entry/seq/4".to_string() }));
+        }
+        *self_rc.ofs_next.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u4le()?.into() } else { _io.read_u4be()?.into() };
+        let _tmpa = *self_rc.ofs_next();
+        if !( ((((_tmpa as u32) == (0 as u32))) || (((_tmpa as i32) >= (16 as i32)))) ) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::Expr, src_path: "/types/endian_elf/types/verneed_section_entry/seq/5".to_string() }));
+        }
+        Ok(())
+    }
+}
+impl Elf_EndianElf_VerneedSectionEntry {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_VerneedSectionEntry {
+    pub fn file_name(
+        &self
+    ) -> KResult<Ref<'_, String>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_file_name.get() {
+            return Ok(self.file_name.borrow());
+        }
+        self.f_file_name.set(true);
+        if *_prc.as_ref().unwrap().is_string_table_linked()? {
+            let io = Clone::clone(&*Into::<OptRc<Elf_EndianElf_StringsStruct>>::into(&*_prc.as_ref().unwrap()._parent.get_value().borrow().upgrade().as_ref().unwrap().linked_section()?.body()?.as_ref().unwrap())._io());
+            let _pos = io.pos();
+            io.seek(*self.ofs_file_name() as usize)?;
+            *self.file_name.borrow_mut() = bytes_to_str(&io.read_bytes_term(0, false, true, true)?.into(), "UTF-8")?;
+            io.seek(_pos)?;
+        }
+        Ok(self.file_name.borrow())
+    }
+
+    /**
+     * First auxiliary entry of type `vernaux_entry` (`Elfxx_Vernaux`).
+     * The rest follow its `next` instance.
+     */
+    pub fn first_aux(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_EndianElf_VernauxEntry>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_first_aux.get() {
+            return Ok(self.first_aux.borrow());
+        }
+        let _pos = _io.pos();
+        _io.seek(((*self.ofs_start()? as i32) + (*self.ofs_first_aux() as i32)) as usize)?;
+        let f = |t : &mut Elf_EndianElf_VernauxEntry| Ok(t.set_endian(*self._is_le.borrow()));
+        let t = Self::read_into_with_init::<_, Elf_EndianElf_VernauxEntry>(&*_io, Some(self._root.clone()), Some(SharedType::new(_prc.as_ref().unwrap().clone())), &f)?.into();
+        *self.first_aux.borrow_mut() = t;
+        _io.seek(_pos)?;
+        Ok(self.first_aux.borrow())
+    }
+    pub fn next(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Elf_EndianElf_VerneedSectionEntry>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_next.get() {
+            return Ok(self.next.borrow());
+        }
+        if ((*self.ofs_next() as u32) != (0 as u32)) {
+            let _pos = _io.pos();
+            _io.seek(((*self.ofs_start()? as i32) + (*self.ofs_next() as i32)) as usize)?;
+            let f = |t : &mut Elf_EndianElf_VerneedSectionEntry| Ok(t.set_endian(*self._is_le.borrow()));
+            let t = Self::read_into_with_init::<_, Elf_EndianElf_VerneedSectionEntry>(&*_io, Some(self._root.clone()), Some(SharedType::new(_prc.as_ref().unwrap().clone())), &f)?.into();
+            *self.next.borrow_mut() = t;
+            _io.seek(_pos)?;
+        }
+        Ok(self.next.borrow())
+    }
+    pub fn ofs_start(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_ofs_start.get() {
+            return Ok(self.ofs_start.borrow());
+        }
+        self.f_ofs_start.set(true);
+        *self.ofs_start.borrow_mut() = (_io.pos()) as i32;
+        Ok(self.ofs_start.borrow())
+    }
+}
+impl Elf_EndianElf_VerneedSectionEntry {
+    pub fn unnamed0(&self) -> Ref<'_, Vec<u8>> {
+        self.unnamed0.borrow()
+    }
+}
+
+/**
+ * Version of the structure. Must be set to 1.
+ */
+impl Elf_EndianElf_VerneedSectionEntry {
+    pub fn version(&self) -> Ref<'_, u16> {
+        self.version.borrow()
+    }
+}
+
+/**
+ * Number of associated auxiliary entries.
+ */
+impl Elf_EndianElf_VerneedSectionEntry {
+    pub fn num_aux_entries(&self) -> Ref<'_, u16> {
+        self.num_aux_entries.borrow()
+    }
+}
+
+/**
+ * Byte offset to the file name string in the linked string table.
+ */
+impl Elf_EndianElf_VerneedSectionEntry {
+    pub fn ofs_file_name(&self) -> Ref<'_, u32> {
+        self.ofs_file_name.borrow()
+    }
+}
+
+/**
+ * Byte offset to the first associated `vernaux_entry`
+ * (`Elfxx_Vernaux`). The offset is relative to the start of this
+ * `verneed_section_entry`.
+ */
+impl Elf_EndianElf_VerneedSectionEntry {
+    pub fn ofs_first_aux(&self) -> Ref<'_, u32> {
+        self.ofs_first_aux.borrow()
+    }
+}
+
+/**
+ * Byte offset to the next verneed entry, relative to the start of
+ * this `verneed_section_entry`. A value of zero means that there is
+ * no next entry.
+ */
+impl Elf_EndianElf_VerneedSectionEntry {
+    pub fn ofs_next(&self) -> Ref<'_, u32> {
+        self.ofs_next.borrow()
+    }
+}
+impl Elf_EndianElf_VerneedSectionEntry {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Version information flag bitmask, shared by the `flags` (`vd_flags`)
+ * field of `verdef_section_entry` (`Elfxx_Verdef`) and the `flags`
+ * (`vna_flags`) field of `vernaux_entry` (`Elfxx_Vernaux`).
+ * \sa https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMSTARTSEQ Source
+ * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1078 Source
+ * \sa https://www.akkadia.org/drepper/symbol-versioning Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_VersionFlags {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<KStructUnit>,
+    pub _self: SharedType<Self>,
+    value: RefCell<u16>,
+    _io: RefCell<BytesReader>,
+    f_base: Cell<bool>,
+    base: RefCell<bool>,
+    f_info: Cell<bool>,
+    info: RefCell<bool>,
+    f_weak: Cell<bool>,
+    weak: RefCell<bool>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_VersionFlags {
+    type Root = Elf;
+    type Parent = KStructUnit;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        Ok(())
+    }
+}
+impl Elf_EndianElf_VersionFlags {
+    pub fn value(&self) -> Ref<'_, u16> {
+        self.value.borrow()
+    }
+}
+impl Elf_EndianElf_VersionFlags {
+    pub fn set_params(&mut self, value: u16) {
+        *self.value.borrow_mut() = value;
+    }
+}
+impl Elf_EndianElf_VersionFlags {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_VersionFlags {
+
+    /**
+     * Version definition of the file itself (the base definition).
+     */
+    pub fn base(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_base.get() {
+            return Ok(self.base.borrow());
+        }
+        self.f_base.set(true);
+        *self.base.borrow_mut() = (((((*self.value() as u16) & (1 as u16)) as i32) != (0 as i32))) as bool;
+        Ok(self.base.borrow())
+    }
+
+    /**
+     * Version reference exists for informational purposes and does not
+     * need to be validated at runtime.
+     * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html Source
+     */
+    pub fn info(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_info.get() {
+            return Ok(self.info.borrow());
+        }
+        self.f_info.set(true);
+        *self.info.borrow_mut() = (((((*self.value() as u16) & (4 as u16)) as i32) != (0 as i32))) as bool;
+        Ok(self.info.borrow())
+    }
+
+    /**
+     * Weak version identifier.
+     * 
+     * A weak version definition has no symbols associated with the
+     * version. See [Creating a Weak Version
+     * Definition](https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/creating-weak-version-definition.html).
+     */
+    pub fn weak(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_weak.get() {
+            return Ok(self.weak.borrow());
+        }
+        self.f_weak.set(true);
+        *self.weak.borrow_mut() = (((((*self.value() as u16) & (2 as u16)) as i32) != (0 as i32))) as bool;
+        Ok(self.weak.borrow())
+    }
+}
+impl Elf_EndianElf_VersionFlags {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_VersionIndex {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<KStructUnit>,
+    pub _self: SharedType<Self>,
+    raw: RefCell<u16>,
+    _io: RefCell<BytesReader>,
+    f_is_hidden: Cell<bool>,
+    is_hidden: RefCell<bool>,
+    f_value: Cell<bool>,
+    value: RefCell<i32>,
+    f_version_index_special: Cell<bool>,
+    version_index_special: RefCell<Elf_VersionIndexSpecial>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_VersionIndex {
+    type Root = Elf;
+    type Parent = KStructUnit;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.raw.borrow_mut() = if *self_rc._is_le.borrow() == 1 { _io.read_u2le()?.into() } else { _io.read_u2be()?.into() };
+        Ok(())
+    }
+}
+impl Elf_EndianElf_VersionIndex {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_VersionIndex {
+
+    /**
+     * This bit is set if the symbol is hidden, and is only visible with
+     * an explicit version number. This is a GNU extension.
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L1379 Source
+     */
+    pub fn is_hidden(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_is_hidden.get() {
+            return Ok(self.is_hidden.borrow());
+        }
+        self.f_is_hidden.set(true);
+        *self.is_hidden.borrow_mut() = (((((*self.raw() as i32) & (32768 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.is_hidden.borrow())
+    }
+
+    /**
+     * The values `version_index_special::local` (0) and
+     * `version_index_special::global_symbol` (1) have special meanings.
+     * The `version_index_special` value instance converts the integer
+     * value to the `version_index_special` enum.
+     */
+    pub fn value(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_value.get() {
+            return Ok(self.value.borrow());
+        }
+        self.f_value.set(true);
+        *self.value.borrow_mut() = (((*self.raw() as i32) & (32767 as i32))) as i32;
+        Ok(self.value.borrow())
+    }
+
+    /**
+     * Note: we match special constants against the full 16-bit integer
+     * value (called `raw` in this .ksy implementation), because that's
+     * what the `readelf` command does when deciding whether to print
+     * `0 (*local*)` or `1 (*global*)` in the `.gnu.version`
+     * (`SHT_GNU_versym`) section - see
+     * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L14079>.
+     * 
+     * Besides, `version_index_special::eliminate` (`VER_NDX_ELIMINATE`)
+     * has a value of `0xff01`, which is a 16-bit value. If we matched
+     * against `value` instead, `version_index_special::eliminate` would
+     * be unreachable, because `value` contains only the lower 15 bits,
+     * so its maximum possible value is `0x7fff`.
+     */
+    pub fn version_index_special(
+        &self
+    ) -> KResult<Ref<'_, Elf_VersionIndexSpecial>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_version_index_special.get() {
+            return Ok(self.version_index_special.borrow());
+        }
+        self.f_version_index_special.set(true);
+        *self.version_index_special.borrow_mut() = (*self.raw() as i64).try_into()?;
+        Ok(self.version_index_special.borrow())
+    }
+}
+
+/**
+ * Raw value, don't read this field - access `value`,
+ * `version_index_special` and `is_hidden` instead.
+ */
+impl Elf_EndianElf_VersionIndex {
+    pub fn raw(&self) -> Ref<'_, u16> {
+        self.raw.borrow()
+    }
+}
+impl Elf_EndianElf_VersionIndex {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * Symbol Version Table, contained in the special section named
+ * `.gnu.version` with the section type `sh_type::gnu_versym`
+ * (`SHT_GNU_versym`).
+ * 
+ * This section must have the same number of entries as the Dynamic
+ * Symbol Table in the `.dynsym` section (section type `sh_type::dynsym`
+ * / `SHT_DYNSYM`). Each entry specifies the version defined for or
+ * required by the corresponding symbol in the Dynamic Symbol Table.
+ * \sa https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERTBL Source
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-symbol-section.html Source
+ * \sa https://www.akkadia.org/drepper/symbol-versioning Source
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Elf_EndianElf_VersymSection {
+    pub _root: SharedType<Elf>,
+    pub _parent: SharedType<Elf_EndianElf_SectionHeader>,
+    pub _self: SharedType<Self>,
+    entries: RefCell<Vec<OptRc<Elf_EndianElf_VersionIndex>>>,
+    _io: RefCell<BytesReader>,
+    _is_le: RefCell<i32>,
+}
+impl KStruct for Elf_EndianElf_VersymSection {
+    type Root = Elf;
+    type Parent = Elf_EndianElf_SectionHeader;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        *self_rc.entries.borrow_mut() = Vec::new();
+        {
+            let mut _i = 0;
+            while !_io.is_eof() {
+                let f = |t : &mut Elf_EndianElf_VersionIndex| Ok(t.set_endian(*self_rc._is_le.borrow()));
+                let t = Self::read_into_with_init::<_, Elf_EndianElf_VersionIndex>(&*_io, Some(self_rc._root.clone()), None, &f)?.into();
+                self_rc.entries.borrow_mut().push(t);
+                _i += 1;
+            }
+        }
+        Ok(())
+    }
+}
+impl Elf_EndianElf_VersymSection {
+    pub fn set_endian(&mut self, _is_le: i32) {
+        *self._is_le.borrow_mut() = _is_le;
+    }
+}
+impl Elf_EndianElf_VersymSection {
+}
+
+/**
+ * Version indexes for the corresponding symbols in the Dynamic
+ * Symbol Table (`.dynsym` section).
+ * 
+ * These values are not the versions themselves: they are keys that
+ * are matched against the `version_index` (`vd_ndx`) field of the
+ * `verdef_section_entry` (`Elfxx_Verdef`) type if the symbol is
+ * defined in this object, or the `version_index` (`vna_other`) field
+ * of the `vernaux_entry` (`Elfxx_Vernaux`) type if the symbol is
+ * required from another object. The `name` instance of the matched
+ * entry specifies the version of the symbol.
+ */
+impl Elf_EndianElf_VersymSection {
+    pub fn entries(&self) -> Ref<'_, Vec<OptRc<Elf_EndianElf_VersionIndex>>> {
+        self.entries.borrow()
+    }
+}
+impl Elf_EndianElf_VersymSection {
     pub fn _io(&self) -> Ref<'_, BytesReader> {
         self._io.borrow()
     }
@@ -6428,6 +9322,12 @@ impl Elf_PhdrTypeFlags {
     }
 }
 
+/**
+ * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675 Source
+ * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L614 Source
+ * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L468 Source
+ */
+
 #[derive(Default, Debug, Clone)]
 pub struct Elf_SectionHeaderFlags {
     pub _root: SharedType<Elf>,
@@ -6437,10 +9337,14 @@ pub struct Elf_SectionHeaderFlags {
     _io: RefCell<BytesReader>,
     f_alloc: Cell<bool>,
     alloc: RefCell<bool>,
+    f_compressed: Cell<bool>,
+    compressed: RefCell<bool>,
     f_exclude: Cell<bool>,
     exclude: RefCell<bool>,
     f_exec_instr: Cell<bool>,
     exec_instr: RefCell<bool>,
+    f_gnu_mbind: Cell<bool>,
+    gnu_mbind: RefCell<bool>,
     f_group: Cell<bool>,
     group: RefCell<bool>,
     f_info_link: Cell<bool>,
@@ -6455,8 +9359,10 @@ pub struct Elf_SectionHeaderFlags {
     merge: RefCell<bool>,
     f_ordered: Cell<bool>,
     ordered: RefCell<bool>,
-    f_os_non_conforming: Cell<bool>,
-    os_non_conforming: RefCell<bool>,
+    f_os_nonconforming: Cell<bool>,
+    os_nonconforming: RefCell<bool>,
+    f_retain: Cell<bool>,
+    retain: RefCell<bool>,
     f_strings: Cell<bool>,
     strings: RefCell<bool>,
     f_tls: Cell<bool>,
@@ -6497,7 +9403,7 @@ impl Elf_SectionHeaderFlags {
 impl Elf_SectionHeaderFlags {
 
     /**
-     * occupies memory during execution
+     * Occupies memory during execution
      */
     pub fn alloc(
         &self
@@ -6515,7 +9421,25 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * section is excluded unless referenced or allocated (Solaris)
+     * Section with compressed data
+     */
+    pub fn compressed(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_compressed.get() {
+            return Ok(self.compressed.borrow());
+        }
+        self.f_compressed.set(true);
+        *self.compressed.borrow_mut() = (((((*self.value() as i32) & (2048 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.compressed.borrow())
+    }
+
+    /**
+     * Section is excluded unless referenced or allocated (Solaris)
      */
     pub fn exclude(
         &self
@@ -6528,12 +9452,12 @@ impl Elf_SectionHeaderFlags {
             return Ok(self.exclude.borrow());
         }
         self.f_exclude.set(true);
-        *self.exclude.borrow_mut() = (((((*self.value() as i32) & (134217728 as i32)) as i32) != (0 as i32))) as bool;
+        *self.exclude.borrow_mut() = (((((*self.value() as i32) & (2147483648 as i32)) as i32) != (0 as i32))) as bool;
         Ok(self.exclude.borrow())
     }
 
     /**
-     * executable
+     * Executable machine instructions
      */
     pub fn exec_instr(
         &self
@@ -6551,7 +9475,26 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * section is member of a group
+     * Mbind section
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L631 Source
+     */
+    pub fn gnu_mbind(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_gnu_mbind.get() {
+            return Ok(self.gnu_mbind.borrow());
+        }
+        self.f_gnu_mbind.set(true);
+        *self.gnu_mbind.borrow_mut() = (((((*self.value() as i32) & (16777216 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.gnu_mbind.borrow())
+    }
+
+    /**
+     * Member of a section group
      */
     pub fn group(
         &self
@@ -6569,7 +9512,7 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * 'sh_info' contains SHT index
+     * Section header's `sh_info` field holds a section header table index
      */
     pub fn info_link(
         &self
@@ -6587,7 +9530,7 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * preserve order after combining
+     * Preserve section ordering when linking
      */
     pub fn link_order(
         &self
@@ -6605,7 +9548,7 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * OS-specific
+     * OS-specific semantics
      */
     pub fn mask_os(
         &self
@@ -6623,7 +9566,7 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * Processor-specific
+     * Processor-specific semantics
      */
     pub fn mask_proc(
         &self
@@ -6641,7 +9584,7 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * might be merged
+     * Data in this section can be merged to eliminate duplication
      */
     pub fn merge(
         &self
@@ -6659,7 +9602,15 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * special ordering requirement (Solaris)
+     * Special ordering requirement (Solaris)
+     * 
+     * From <https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675>:
+     * 
+     * > `SHF_ORDERED` is an older version of the functionality provided by
+     * > `SHF_LINK_ORDER`, and has been superseded by `SHF_LINK_ORDER`.
+     * > `SHF_ORDERED` is no longer supported.
+     * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L485 Source
+     * \sa https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675 Source
      */
     pub fn ordered(
         &self
@@ -6672,30 +9623,50 @@ impl Elf_SectionHeaderFlags {
             return Ok(self.ordered.borrow());
         }
         self.f_ordered.set(true);
-        *self.ordered.borrow_mut() = (((((*self.value() as i32) & (67108864 as i32)) as i32) != (0 as i32))) as bool;
+        *self.ordered.borrow_mut() = (((((*self.value() as i32) & (1073741824 as i32)) as i32) != (0 as i32))) as bool;
         Ok(self.ordered.borrow())
     }
 
     /**
-     * non-standard OS specific handling required
+     * Special OS-specific handling required
      */
-    pub fn os_non_conforming(
+    pub fn os_nonconforming(
         &self
     ) -> KResult<Ref<'_, bool>> {
         let _io = self._io.borrow();
         let _rrc = self._root.get_value().borrow().upgrade();
         let _prc = self._parent.get_value().borrow().upgrade();
         let _r = _rrc.as_ref().unwrap();
-        if self.f_os_non_conforming.get() {
-            return Ok(self.os_non_conforming.borrow());
+        if self.f_os_nonconforming.get() {
+            return Ok(self.os_nonconforming.borrow());
         }
-        self.f_os_non_conforming.set(true);
-        *self.os_non_conforming.borrow_mut() = (((((*self.value() as i32) & (256 as i32)) as i32) != (0 as i32))) as bool;
-        Ok(self.os_non_conforming.borrow())
+        self.f_os_nonconforming.set(true);
+        *self.os_nonconforming.borrow_mut() = (((((*self.value() as i32) & (256 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.os_nonconforming.borrow())
     }
 
     /**
-     * contains nul-terminated strings
+     * Section should not be garbage collected by the linker
+     * \sa https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L630 Source
+     * \sa https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L484 Source
+     */
+    pub fn retain(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_retain.get() {
+            return Ok(self.retain.borrow());
+        }
+        self.f_retain.set(true);
+        *self.retain.borrow_mut() = (((((*self.value() as i32) & (2097152 as i32)) as i32) != (0 as i32))) as bool;
+        Ok(self.retain.borrow())
+    }
+
+    /**
+     * Contains null-terminated character strings
      */
     pub fn strings(
         &self
@@ -6713,7 +9684,9 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * section hold thread-local data
+     * Thread-local storage section (`.tbss` or `.tdata` according to [ELF
+     * Handling For Thread-Local
+     * Storage](https://www.akkadia.org/drepper/tls.pdf))
      */
     pub fn tls(
         &self
@@ -6731,7 +9704,7 @@ impl Elf_SectionHeaderFlags {
     }
 
     /**
-     * writable
+     * Writable during execution
      */
     pub fn write(
         &self

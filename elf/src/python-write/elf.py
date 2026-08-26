@@ -12,7 +12,7 @@ if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
 class Elf(ReadWriteKaitaiStruct):
     """
     .. seealso::
-       Source - https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532
+       Source - https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h
     
     
     .. seealso::
@@ -141,7 +141,7 @@ class Elf(ReadWriteKaitaiStruct):
         no_machine = 0
         m32 = 1
         sparc = 2
-        x86 = 3
+        i386 = 3
         m68k = 4
         m88k = 5
         iamcu = 6
@@ -149,6 +149,7 @@ class Elf(ReadWriteKaitaiStruct):
         mips = 8
         s370 = 9
         mips_rs3_le = 10
+        old_sparc_v9 = 11
         parisc = 15
         vpp500 = 17
         sparc32plus = 18
@@ -160,7 +161,7 @@ class Elf(ReadWriteKaitaiStruct):
         v800 = 36
         fr20 = 37
         rh32 = 38
-        rce = 39
+        mcore = 39
         arm = 40
         old_alpha = 41
         superh = 42
@@ -190,10 +191,10 @@ class Elf(ReadWriteKaitaiStruct):
         fx66 = 66
         st9plus = 67
         st7 = 68
-        mc68hc16 = 69
-        mc68hc11 = 70
-        mc68hc08 = 71
-        mc68hc05 = 72
+        m68hc16 = 69
+        m68hc11 = 70
+        m68hc08 = 71
+        m68hc05 = 72
         svx = 73
         st19 = 74
         vax = 75
@@ -213,7 +214,7 @@ class Elf(ReadWriteKaitaiStruct):
         mn10300 = 89
         mn10200 = 90
         picojava = 91
-        openrisc = 92
+        or1k = 92
         arc_compact = 93
         xtensa = 94
         videocore = 95
@@ -224,7 +225,7 @@ class Elf(ReadWriteKaitaiStruct):
         st200 = 100
         ip2k = 101
         max = 102
-        compact_risc = 103
+        cr = 103
         f2mc16 = 104
         msp430 = 105
         blackfin = 106
@@ -268,7 +269,7 @@ class Elf(ReadWriteKaitaiStruct):
         maxq30 = 169
         ximo16 = 170
         manik = 171
-        craynv2 = 172
+        cray_nv2 = 172
         rx = 173
         metag = 174
         mcst_elbrus = 175
@@ -276,9 +277,11 @@ class Elf(ReadWriteKaitaiStruct):
         cr16 = 177
         etpu = 178
         sle9x = 179
-        l10m = 180
-        k10m = 181
+        l1om = 180
+        k1om = 181
+        intel182 = 182
         aarch64 = 183
+        arm184 = 184
         avr32 = 185
         stm8 = 186
         tile64 = 187
@@ -289,11 +292,11 @@ class Elf(ReadWriteKaitaiStruct):
         cloudshield = 192
         corea_1st = 193
         corea_2nd = 194
-        arcv2 = 195
+        arc_compact2 = 195
         open8 = 196
         rl78 = 197
         videocore5 = 198
-        renesas_78kor = 199
+        renesas_78k0r = 199
         freescale_56800ex = 200
         ba1 = 201
         ba2 = 202
@@ -318,7 +321,7 @@ class Elf(ReadWriteKaitaiStruct):
         visium = 221
         ft32 = 222
         moxie = 223
-        amd_gpu = 224
+        amdgpu = 224
         riscv = 243
         lanai = 244
         ceva = 245
@@ -333,12 +336,20 @@ class Elf(ReadWriteKaitaiStruct):
         mcs6502 = 254
         arc_compact3 = 255
         kvx = 256
-        wdc65816 = 257
+        wdc_65816 = 257
         loongarch = 258
         kf32 = 259
         u16_u8core = 260
         tachyum = 261
         nxp_56800ef = 262
+        sbf = 263
+        ai_engine = 264
+        sima_mla = 265
+        bang = 266
+        loonggpu = 267
+        sw64 = 268
+        ai_engine_ctrlcode = 269
+        ppu = 270
         avr_old = 4183
         msp430_old = 4185
         adapteva_epiphany = 4643
@@ -393,6 +404,12 @@ class Elf(ReadWriteKaitaiStruct):
         fenixos = 16
         cloudabi = 17
         openvos = 18
+        cuda = 51
+        arm_aeabi = 64
+        arm_fdpic = 65
+        amdgpu_mesa3d = 66
+        arm = 97
+        standalone = 255
 
     class PhType(IntEnum):
         null_type = 0
@@ -403,12 +420,30 @@ class Elf(ReadWriteKaitaiStruct):
         shlib = 5
         phdr = 6
         tls = 7
+        sunw_unwind = 1684333904
         gnu_eh_frame = 1685382480
         gnu_stack = 1685382481
         gnu_relro = 1685382482
         gnu_property = 1685382483
+        gnu_sframe = 1685382484
         pax_flags = 1694766464
+        openbsd_mutable = 1705237477
+        openbsd_randomize = 1705237478
+        openbsd_wxneeded = 1705237479
+        openbsd_nobtcfi = 1705237480
+        openbsd_syscalls = 1705237481
+        openbsd_bootdata = 1705253862
+        sunw_sysstat_zone = 1879048183
+        sunw_sysstat = 1879048184
+        sunw_reserve = 1879048185
+        sunw_bss = 1879048186
+        sunw_stack = 1879048187
+        sunw_dtrace = 1879048188
+        sunw_cap = 1879048189
+        arm_archext = 1879048192
         arm_exidx = 1879048193
+        aarch64_memtag_mte = 1879048194
+        riscv_attributes = 1879048195
 
     class SectionHeaderIdxSpecial(IntEnum):
         undefined = 0
@@ -439,6 +474,27 @@ class Elf(ReadWriteKaitaiStruct):
         group = 17
         symtab_shndx = 18
         relr = 19
+        android_rel = 1610612737
+        android_rela = 1610612738
+        gnu_incremental_inputs = 1879000832
+        llvm_odrtab = 1879002112
+        llvm_linker_options = 1879002113
+        llvm_addrsig = 1879002115
+        llvm_dependent_libraries = 1879002116
+        llvm_sympart = 1879002117
+        llvm_part_ehdr = 1879002118
+        llvm_part_phdr = 1879002119
+        llvm_bb_addr_map_v0 = 1879002120
+        llvm_call_graph_profile = 1879002121
+        llvm_bb_addr_map = 1879002122
+        llvm_offloading = 1879002123
+        llvm_lto = 1879002124
+        llvm_jt_sizes = 1879002125
+        llvm_cfi_jump_table = 1879002126
+        llvm_call_graph = 1879002127
+        llvm_dyndbg_elf = 1879002128
+        android_relr = 1879047936
+        sunw_ctf = 1879048171
         sunw_symnsort = 1879048172
         sunw_phname = 1879048173
         sunw_ancillary = 1879048174
@@ -447,24 +503,26 @@ class Elf(ReadWriteKaitaiStruct):
         sunw_symsort = 1879048177
         sunw_tlssort = 1879048178
         sunw_ldynsym = 1879048179
-        sunw_dof = 1879048180
-        sunw_cap = 1879048181
-        sunw_signature = 1879048182
-        sunw_annotate = 1879048183
-        sunw_debugstr = 1879048184
-        sunw_debug = 1879048185
+        gnu_sframe = 1879048180
+        gnu_attributes = 1879048181
+        gnu_hash = 1879048182
+        gnu_liblist = 1879048183
+        checksum = 1879048184
+        gnu_object_only = 1879048185
         sunw_move = 1879048186
         sunw_comdat = 1879048187
         sunw_syminfo = 1879048188
-        sunw_verdef = 1879048189
-        sunw_verneed = 1879048190
-        sunw_versym = 1879048191
+        gnu_verdef = 1879048189
+        gnu_verneed = 1879048190
+        gnu_versym = 1879048191
         sparc_gotdata = 1879048192
-        amd64_unwind = 1879048193
+        x86_64_unwind = 1879048193
         arm_preemptmap = 1879048194
         arm_attributes = 1879048195
         arm_debugoverlay = 1879048196
         arm_overlaysection = 1879048197
+        aarch64_memtag_globals_static = 1879048199
+        aarch64_memtag_globals_dynamic = 1879048200
 
     class SymbolBinding(IntEnum):
         local = 0
@@ -502,6 +560,11 @@ class Elf(ReadWriteKaitaiStruct):
         exported = 4
         singleton = 5
         eliminate = 6
+
+    class VersionIndexSpecial(IntEnum):
+        local = 0
+        global_symbol = 1
+        eliminate = 65281
     def __init__(self, _io=None, _parent=None, _root=None):
         super(Elf, self).__init__(_io)
         self._parent = _parent
@@ -561,6 +624,14 @@ class Elf(ReadWriteKaitaiStruct):
         self._dirty = False
 
     class DtFlag1Values(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1008
+        
+        
+        .. seealso::
+           Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER6-TBL-53
+        """
         def __init__(self, value, _io=None, _parent=None, _root=None):
             super(Elf.DtFlag1Values, self).__init__(_io)
             self._parent = _parent
@@ -584,16 +655,20 @@ class Elf(ReadWriteKaitaiStruct):
             self._dirty = False
 
         @property
-        def confalt(self):
-            """Configuration alternative created."""
-            if hasattr(self, '_m_confalt'):
-                return self._m_confalt
+        def conf_alt(self):
+            """Configuration alternative created.
+            
+            .. seealso::
+               Source - https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1023
+            """
+            if hasattr(self, '_m_conf_alt'):
+                return self._m_conf_alt
 
-            self._m_confalt = self.value & 8192 != 0
-            return getattr(self, '_m_confalt', None)
+            self._m_conf_alt = self.value & 8192 != 0
+            return getattr(self, '_m_conf_alt', None)
 
-        def _invalidate_confalt(self):
-            del self._m_confalt
+        def _invalidate_conf_alt(self):
+            del self._m_conf_alt
         @property
         def direct(self):
             """Direct binding enabled."""
@@ -606,27 +681,27 @@ class Elf(ReadWriteKaitaiStruct):
         def _invalidate_direct(self):
             del self._m_direct
         @property
-        def dispreldne(self):
-            """Disp reloc applied at build time."""
-            if hasattr(self, '_m_dispreldne'):
-                return self._m_dispreldne
+        def disp_rel_dne(self):
+            """Displacement relocation done (applied at build time)."""
+            if hasattr(self, '_m_disp_rel_dne'):
+                return self._m_disp_rel_dne
 
-            self._m_dispreldne = self.value & 32768 != 0
-            return getattr(self, '_m_dispreldne', None)
+            self._m_disp_rel_dne = self.value & 32768 != 0
+            return getattr(self, '_m_disp_rel_dne', None)
 
-        def _invalidate_dispreldne(self):
-            del self._m_dispreldne
+        def _invalidate_disp_rel_dne(self):
+            del self._m_disp_rel_dne
         @property
-        def disprelpnd(self):
-            """Disp reloc applied at run-time."""
-            if hasattr(self, '_m_disprelpnd'):
-                return self._m_disprelpnd
+        def disp_rel_pnd(self):
+            """Displacement relocation pending (applied at runtime)."""
+            if hasattr(self, '_m_disp_rel_pnd'):
+                return self._m_disp_rel_pnd
 
-            self._m_disprelpnd = self.value & 65536 != 0
-            return getattr(self, '_m_disprelpnd', None)
+            self._m_disp_rel_pnd = self.value & 65536 != 0
+            return getattr(self, '_m_disp_rel_pnd', None)
 
-        def _invalidate_disprelpnd(self):
-            del self._m_disprelpnd
+        def _invalidate_disp_rel_pnd(self):
+            del self._m_disp_rel_pnd
         @property
         def edited(self):
             """Object is modified after built."""
@@ -639,30 +714,30 @@ class Elf(ReadWriteKaitaiStruct):
         def _invalidate_edited(self):
             del self._m_edited
         @property
-        def endfiltee(self):
+        def end_filtee(self):
             """Filtee terminates filters search."""
-            if hasattr(self, '_m_endfiltee'):
-                return self._m_endfiltee
+            if hasattr(self, '_m_end_filtee'):
+                return self._m_end_filtee
 
-            self._m_endfiltee = self.value & 16384 != 0
-            return getattr(self, '_m_endfiltee', None)
+            self._m_end_filtee = self.value & 16384 != 0
+            return getattr(self, '_m_end_filtee', None)
 
-        def _invalidate_endfiltee(self):
-            del self._m_endfiltee
+        def _invalidate_end_filtee(self):
+            del self._m_end_filtee
         @property
-        def globaudit(self):
+        def glob_audit(self):
             """Global auditing required."""
-            if hasattr(self, '_m_globaudit'):
-                return self._m_globaudit
+            if hasattr(self, '_m_glob_audit'):
+                return self._m_glob_audit
 
-            self._m_globaudit = self.value & 16777216 != 0
-            return getattr(self, '_m_globaudit', None)
+            self._m_glob_audit = self.value & 16777216 != 0
+            return getattr(self, '_m_glob_audit', None)
 
-        def _invalidate_globaudit(self):
-            del self._m_globaudit
+        def _invalidate_glob_audit(self):
+            del self._m_glob_audit
         @property
         def group(self):
-            """Set RTLD_GROUP for this object."""
+            """Set `RTLD_GROUP` for this object."""
             if hasattr(self, '_m_group'):
                 return self._m_group
 
@@ -672,26 +747,26 @@ class Elf(ReadWriteKaitaiStruct):
         def _invalidate_group(self):
             del self._m_group
         @property
-        def ignmuldef(self):
-            if hasattr(self, '_m_ignmuldef'):
-                return self._m_ignmuldef
+        def ign_mul_def(self):
+            if hasattr(self, '_m_ign_mul_def'):
+                return self._m_ign_mul_def
 
-            self._m_ignmuldef = self.value & 262144 != 0
-            return getattr(self, '_m_ignmuldef', None)
+            self._m_ign_mul_def = self.value & 262144 != 0
+            return getattr(self, '_m_ign_mul_def', None)
 
-        def _invalidate_ignmuldef(self):
-            del self._m_ignmuldef
+        def _invalidate_ign_mul_def(self):
+            del self._m_ign_mul_def
         @property
-        def initfirst(self):
-            """Set RTLD_INITFIRST for this object."""
-            if hasattr(self, '_m_initfirst'):
-                return self._m_initfirst
+        def init_first(self):
+            """Set `RTLD_INITFIRST` for this object."""
+            if hasattr(self, '_m_init_first'):
+                return self._m_init_first
 
-            self._m_initfirst = self.value & 32 != 0
-            return getattr(self, '_m_initfirst', None)
+            self._m_init_first = self.value & 32 != 0
+            return getattr(self, '_m_init_first', None)
 
-        def _invalidate_initfirst(self):
-            del self._m_initfirst
+        def _invalidate_init_first(self):
+            del self._m_init_first
         @property
         def interpose(self):
             """Object is used to interpose."""
@@ -704,104 +779,130 @@ class Elf(ReadWriteKaitaiStruct):
         def _invalidate_interpose(self):
             del self._m_interpose
         @property
-        def loadfltr(self):
+        def kmod(self):
+            """Object is a kernel module."""
+            if hasattr(self, '_m_kmod'):
+                return self._m_kmod
+
+            self._m_kmod = self.value & 268435456 != 0
+            return getattr(self, '_m_kmod', None)
+
+        def _invalidate_kmod(self):
+            del self._m_kmod
+        @property
+        def load_fltr(self):
             """Trigger filtee loading at runtime."""
-            if hasattr(self, '_m_loadfltr'):
-                return self._m_loadfltr
+            if hasattr(self, '_m_load_fltr'):
+                return self._m_load_fltr
 
-            self._m_loadfltr = self.value & 16 != 0
-            return getattr(self, '_m_loadfltr', None)
+            self._m_load_fltr = self.value & 16 != 0
+            return getattr(self, '_m_load_fltr', None)
 
-        def _invalidate_loadfltr(self):
-            del self._m_loadfltr
+        def _invalidate_load_fltr(self):
+            del self._m_load_fltr
         @property
-        def nodeflib(self):
-            """Ignore default lib search path."""
-            if hasattr(self, '_m_nodeflib'):
-                return self._m_nodeflib
+        def no_common(self):
+            """No COMMON symbols exist.
+            
+            .. seealso::
+               Source - https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1040
+            """
+            if hasattr(self, '_m_no_common'):
+                return self._m_no_common
 
-            self._m_nodeflib = self.value & 2048 != 0
-            return getattr(self, '_m_nodeflib', None)
+            self._m_no_common = self.value & 1073741824 != 0
+            return getattr(self, '_m_no_common', None)
 
-        def _invalidate_nodeflib(self):
-            del self._m_nodeflib
+        def _invalidate_no_common(self):
+            del self._m_no_common
         @property
-        def nodelete(self):
-            """Set RTLD_NODELETE for this object."""
-            if hasattr(self, '_m_nodelete'):
-                return self._m_nodelete
+        def no_def_lib(self):
+            """Ignore the default library search path."""
+            if hasattr(self, '_m_no_def_lib'):
+                return self._m_no_def_lib
 
-            self._m_nodelete = self.value & 8 != 0
-            return getattr(self, '_m_nodelete', None)
+            self._m_no_def_lib = self.value & 2048 != 0
+            return getattr(self, '_m_no_def_lib', None)
 
-        def _invalidate_nodelete(self):
-            del self._m_nodelete
+        def _invalidate_no_def_lib(self):
+            del self._m_no_def_lib
         @property
-        def nodirect(self):
-            """Object has no-direct binding."""
-            if hasattr(self, '_m_nodirect'):
-                return self._m_nodirect
+        def no_delete(self):
+            """Set `RTLD_NODELETE` for this object."""
+            if hasattr(self, '_m_no_delete'):
+                return self._m_no_delete
 
-            self._m_nodirect = self.value & 131072 != 0
-            return getattr(self, '_m_nodirect', None)
+            self._m_no_delete = self.value & 8 != 0
+            return getattr(self, '_m_no_delete', None)
 
-        def _invalidate_nodirect(self):
-            del self._m_nodirect
+        def _invalidate_no_delete(self):
+            del self._m_no_delete
         @property
-        def nodump(self):
+        def no_direct(self):
+            """Object contains non-direct bindings."""
+            if hasattr(self, '_m_no_direct'):
+                return self._m_no_direct
+
+            self._m_no_direct = self.value & 131072 != 0
+            return getattr(self, '_m_no_direct', None)
+
+        def _invalidate_no_direct(self):
+            del self._m_no_direct
+        @property
+        def no_dump(self):
             """Object can't be dldump'ed."""
-            if hasattr(self, '_m_nodump'):
-                return self._m_nodump
+            if hasattr(self, '_m_no_dump'):
+                return self._m_no_dump
 
-            self._m_nodump = self.value & 4096 != 0
-            return getattr(self, '_m_nodump', None)
+            self._m_no_dump = self.value & 4096 != 0
+            return getattr(self, '_m_no_dump', None)
 
-        def _invalidate_nodump(self):
-            del self._m_nodump
+        def _invalidate_no_dump(self):
+            del self._m_no_dump
         @property
-        def nohdr(self):
-            if hasattr(self, '_m_nohdr'):
-                return self._m_nohdr
+        def no_hdr(self):
+            if hasattr(self, '_m_no_hdr'):
+                return self._m_no_hdr
 
-            self._m_nohdr = self.value & 1048576 != 0
-            return getattr(self, '_m_nohdr', None)
+            self._m_no_hdr = self.value & 1048576 != 0
+            return getattr(self, '_m_no_hdr', None)
 
-        def _invalidate_nohdr(self):
-            del self._m_nohdr
+        def _invalidate_no_hdr(self):
+            del self._m_no_hdr
         @property
-        def noksyms(self):
-            if hasattr(self, '_m_noksyms'):
-                return self._m_noksyms
+        def no_ksyms(self):
+            if hasattr(self, '_m_no_ksyms'):
+                return self._m_no_ksyms
 
-            self._m_noksyms = self.value & 524288 != 0
-            return getattr(self, '_m_noksyms', None)
+            self._m_no_ksyms = self.value & 524288 != 0
+            return getattr(self, '_m_no_ksyms', None)
 
-        def _invalidate_noksyms(self):
-            del self._m_noksyms
+        def _invalidate_no_ksyms(self):
+            del self._m_no_ksyms
         @property
-        def noopen(self):
-            """Set RTLD_NOOPEN for this object."""
-            if hasattr(self, '_m_noopen'):
-                return self._m_noopen
+        def no_open(self):
+            """Set `RTLD_NOOPEN` for this object."""
+            if hasattr(self, '_m_no_open'):
+                return self._m_no_open
 
-            self._m_noopen = self.value & 64 != 0
-            return getattr(self, '_m_noopen', None)
+            self._m_no_open = self.value & 64 != 0
+            return getattr(self, '_m_no_open', None)
 
-        def _invalidate_noopen(self):
-            del self._m_noopen
+        def _invalidate_no_open(self):
+            del self._m_no_open
         @property
-        def noreloc(self):
-            if hasattr(self, '_m_noreloc'):
-                return self._m_noreloc
+        def no_reloc(self):
+            if hasattr(self, '_m_no_reloc'):
+                return self._m_no_reloc
 
-            self._m_noreloc = self.value & 4194304 != 0
-            return getattr(self, '_m_noreloc', None)
+            self._m_no_reloc = self.value & 4194304 != 0
+            return getattr(self, '_m_no_reloc', None)
 
-        def _invalidate_noreloc(self):
-            del self._m_noreloc
+        def _invalidate_no_reloc(self):
+            del self._m_no_reloc
         @property
         def now(self):
-            """Set RTLD_NOW for this object."""
+            """Set `RTLD_NOW` for this object."""
             if hasattr(self, '_m_now'):
                 return self._m_now
 
@@ -812,7 +913,8 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_now
         @property
         def origin(self):
-            """$ORIGIN must be handled."""
+            """`$ORIGIN` must be handled.
+            """
             if hasattr(self, '_m_origin'):
                 return self._m_origin
 
@@ -823,6 +925,7 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_origin
         @property
         def pie(self):
+            """Object is a Position Independent Executable (PIE)."""
             if hasattr(self, '_m_pie'):
                 return self._m_pie
 
@@ -833,7 +936,7 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_pie
         @property
         def rtld_global(self):
-            """Set RTLD_GLOBAL for this object."""
+            """Set `RTLD_GLOBAL` for this object."""
             if hasattr(self, '_m_rtld_global'):
                 return self._m_rtld_global
 
@@ -855,6 +958,9 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_singleton
         @property
         def stub(self):
+            """Object is a stub.
+            See [Stub Objects](https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/stub-objects.html).
+            """
             if hasattr(self, '_m_stub'):
                 return self._m_stub
 
@@ -864,18 +970,22 @@ class Elf(ReadWriteKaitaiStruct):
         def _invalidate_stub(self):
             del self._m_stub
         @property
-        def symintpose(self):
-            """Object has individual interposers."""
-            if hasattr(self, '_m_symintpose'):
-                return self._m_symintpose
+        def sym_intpose(self):
+            """Object has individual symbol interposers."""
+            if hasattr(self, '_m_sym_intpose'):
+                return self._m_sym_intpose
 
-            self._m_symintpose = self.value & 8388608 != 0
-            return getattr(self, '_m_symintpose', None)
+            self._m_sym_intpose = self.value & 8388608 != 0
+            return getattr(self, '_m_sym_intpose', None)
 
-        def _invalidate_symintpose(self):
-            del self._m_symintpose
+        def _invalidate_sym_intpose(self):
+            del self._m_sym_intpose
         @property
         def trans(self):
+            """
+            .. seealso::
+               Source - https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1019
+            """
             if hasattr(self, '_m_trans'):
                 return self._m_trans
 
@@ -884,6 +994,17 @@ class Elf(ReadWriteKaitaiStruct):
 
         def _invalidate_trans(self):
             del self._m_trans
+        @property
+        def weak_filter(self):
+            """Object is a weak standard filter."""
+            if hasattr(self, '_m_weak_filter'):
+                return self._m_weak_filter
+
+            self._m_weak_filter = self.value & 536870912 != 0
+            return getattr(self, '_m_weak_filter', None)
+
+        def _invalidate_weak_filter(self):
+            del self._m_weak_filter
 
     class DtFlagValues(ReadWriteKaitaiStruct):
         """
@@ -979,6 +1100,14 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_textrel
 
     class EndianElf(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://gabi.xinuos.com/v42/elf/02-eheader.html
+        
+        
+        .. seealso::
+           Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-header.html
+        """
         def __init__(self, _io=None, _parent=None, _root=None):
             super(Elf.EndianElf, self).__init__(_io)
             self._parent = _parent
@@ -1009,6 +1138,8 @@ class Elf(ReadWriteKaitaiStruct):
         def _read_le(self):
             self.e_type = KaitaiStream.resolve_enum(Elf.ObjType, self._io.read_u2le())
             self.machine = KaitaiStream.resolve_enum(Elf.Machine, self._io.read_u2le())
+            if not isinstance(self.machine, Elf.Machine):
+                raise kaitaistruct.ValidationNotInEnumError(self.machine, self._io, u"/types/endian_elf/seq/1")
             self.e_version = self._io.read_u4le()
             _on = self._root.bits
             if _on == Elf.Bits.b32:
@@ -1043,6 +1174,8 @@ class Elf(ReadWriteKaitaiStruct):
         def _read_be(self):
             self.e_type = KaitaiStream.resolve_enum(Elf.ObjType, self._io.read_u2be())
             self.machine = KaitaiStream.resolve_enum(Elf.Machine, self._io.read_u2be())
+            if not isinstance(self.machine, Elf.Machine):
+                raise kaitaistruct.ValidationNotInEnumError(self.machine, self._io, u"/types/endian_elf/seq/1")
             self.e_version = self._io.read_u4be()
             _on = self._root.bits
             if _on == Elf.Bits.b32:
@@ -1200,6 +1333,8 @@ class Elf(ReadWriteKaitaiStruct):
 
 
         def _check(self):
+            if not isinstance(self.machine, Elf.Machine):
+                raise kaitaistruct.ValidationNotInEnumError(self.machine, None, u"/types/endian_elf/seq/1")
             _on = self._root.bits
             if _on == Elf.Bits.b32:
                 pass
@@ -1252,435 +1387,6 @@ class Elf(ReadWriteKaitaiStruct):
 
 
             self._dirty = False
-
-        class DynamicSection(ReadWriteKaitaiStruct):
-            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
-                super(Elf.EndianElf.DynamicSection, self).__init__(_io)
-                self._parent = _parent
-                self._root = _root
-                self._is_le = _is_le
-
-            def _read(self):
-                if not hasattr(self, '_is_le'):
-                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/dynamic_section")
-                elif self._is_le == True:
-                    self._read_le()
-                elif self._is_le == False:
-                    self._read_be()
-                self._dirty = False
-
-            def _read_le(self):
-                self.entries = []
-                i = 0
-                while not self._io.is_eof():
-                    _t_entries = Elf.EndianElf.DynamicSectionEntry(self._io, self, self._root, self._is_le)
-                    try:
-                        _t_entries._read()
-                    finally:
-                        self.entries.append(_t_entries)
-                    i += 1
-
-                self._dirty = False
-
-            def _read_be(self):
-                self.entries = []
-                i = 0
-                while not self._io.is_eof():
-                    _t_entries = Elf.EndianElf.DynamicSectionEntry(self._io, self, self._root, self._is_le)
-                    try:
-                        _t_entries._read()
-                    finally:
-                        self.entries.append(_t_entries)
-                    i += 1
-
-                self._dirty = False
-
-
-            def _fetch_instances(self):
-                pass
-                for i in range(len(self.entries)):
-                    pass
-                    self.entries[i]._fetch_instances()
-
-
-
-            def _write__seq(self, io=None):
-                super(Elf.EndianElf.DynamicSection, self)._write__seq(io)
-                if not hasattr(self, '_is_le'):
-                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/dynamic_section")
-                elif self._is_le == True:
-                    self._write__seq_le()
-                elif self._is_le == False:
-                    self._write__seq_be()
-
-
-            def _write__seq_le(self):
-                for i in range(len(self.entries)):
-                    pass
-                    if self._io.is_eof():
-                        raise kaitaistruct.ConsistencyError(u"entries", 0, self._io.size() - self._io.pos())
-                    self.entries[i]._write__seq(self._io)
-
-                if not self._io.is_eof():
-                    raise kaitaistruct.ConsistencyError(u"entries", 0, self._io.size() - self._io.pos())
-
-
-            def _write__seq_be(self):
-                for i in range(len(self.entries)):
-                    pass
-                    if self._io.is_eof():
-                        raise kaitaistruct.ConsistencyError(u"entries", 0, self._io.size() - self._io.pos())
-                    self.entries[i]._write__seq(self._io)
-
-                if not self._io.is_eof():
-                    raise kaitaistruct.ConsistencyError(u"entries", 0, self._io.size() - self._io.pos())
-
-
-            def _check(self):
-                for i in range(len(self.entries)):
-                    pass
-                    if self.entries[i]._root != self._root:
-                        raise kaitaistruct.ConsistencyError(u"entries", self._root, self.entries[i]._root)
-                    if self.entries[i]._parent != self:
-                        raise kaitaistruct.ConsistencyError(u"entries", self, self.entries[i]._parent)
-
-                self._dirty = False
-
-            @property
-            def is_string_table_linked(self):
-                if hasattr(self, '_m_is_string_table_linked'):
-                    return self._m_is_string_table_linked
-
-                self._m_is_string_table_linked = self._parent.linked_section.type == Elf.ShType.strtab
-                return getattr(self, '_m_is_string_table_linked', None)
-
-            def _invalidate_is_string_table_linked(self):
-                del self._m_is_string_table_linked
-
-        class DynamicSectionEntry(ReadWriteKaitaiStruct):
-            """
-            .. seealso::
-               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html
-            
-            
-            .. seealso::
-               Source - https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section
-            """
-            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
-                super(Elf.EndianElf.DynamicSectionEntry, self).__init__(_io)
-                self._parent = _parent
-                self._root = _root
-                self._is_le = _is_le
-                self._should_write_flag_1_values = False
-                self.flag_1_values__enabled = True
-                self._should_write_flag_values = False
-                self.flag_values__enabled = True
-                self._should_write_value_str = False
-                self.value_str__enabled = True
-
-            def _read(self):
-                if not hasattr(self, '_is_le'):
-                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/dynamic_section_entry")
-                elif self._is_le == True:
-                    self._read_le()
-                elif self._is_le == False:
-                    self._read_be()
-                self._dirty = False
-
-            def _read_le(self):
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                    self.tag = self._io.read_u4le()
-                elif _on == Elf.Bits.b64:
-                    pass
-                    self.tag = self._io.read_u8le()
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                    self.value_or_ptr = self._io.read_u4le()
-                elif _on == Elf.Bits.b64:
-                    pass
-                    self.value_or_ptr = self._io.read_u8le()
-                self._dirty = False
-
-            def _read_be(self):
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                    self.tag = self._io.read_u4be()
-                elif _on == Elf.Bits.b64:
-                    pass
-                    self.tag = self._io.read_u8be()
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                    self.value_or_ptr = self._io.read_u4be()
-                elif _on == Elf.Bits.b64:
-                    pass
-                    self.value_or_ptr = self._io.read_u8be()
-                self._dirty = False
-
-
-            def _fetch_instances(self):
-                pass
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                elif _on == Elf.Bits.b64:
-                    pass
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                elif _on == Elf.Bits.b64:
-                    pass
-                _ = self.flag_1_values
-                if hasattr(self, '_m_flag_1_values'):
-                    pass
-                    self._m_flag_1_values._fetch_instances()
-
-                _ = self.flag_values
-                if hasattr(self, '_m_flag_values'):
-                    pass
-                    self._m_flag_values._fetch_instances()
-
-                _ = self.value_str
-                if hasattr(self, '_m_value_str'):
-                    pass
-
-
-
-            def _write__seq(self, io=None):
-                super(Elf.EndianElf.DynamicSectionEntry, self)._write__seq(io)
-                if not hasattr(self, '_is_le'):
-                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/dynamic_section_entry")
-                elif self._is_le == True:
-                    self._write__seq_le()
-                elif self._is_le == False:
-                    self._write__seq_be()
-
-
-            def _write__seq_le(self):
-                self._should_write_flag_1_values = self.flag_1_values__enabled
-                self._should_write_flag_values = self.flag_values__enabled
-                self._should_write_value_str = self.value_str__enabled
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                    self._io.write_u4le(self.tag)
-                elif _on == Elf.Bits.b64:
-                    pass
-                    self._io.write_u8le(self.tag)
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                    self._io.write_u4le(self.value_or_ptr)
-                elif _on == Elf.Bits.b64:
-                    pass
-                    self._io.write_u8le(self.value_or_ptr)
-
-
-            def _write__seq_be(self):
-                self._should_write_flag_1_values = self.flag_1_values__enabled
-                self._should_write_flag_values = self.flag_values__enabled
-                self._should_write_value_str = self.value_str__enabled
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                    self._io.write_u4be(self.tag)
-                elif _on == Elf.Bits.b64:
-                    pass
-                    self._io.write_u8be(self.tag)
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                    self._io.write_u4be(self.value_or_ptr)
-                elif _on == Elf.Bits.b64:
-                    pass
-                    self._io.write_u8be(self.value_or_ptr)
-
-
-            def _check(self):
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                elif _on == Elf.Bits.b64:
-                    pass
-                _on = self._root.bits
-                if _on == Elf.Bits.b32:
-                    pass
-                elif _on == Elf.Bits.b64:
-                    pass
-                if self.flag_1_values__enabled:
-                    pass
-                    if self.tag_enum == Elf.DynamicArrayTags.flags_1:
-                        pass
-                        if self._m_flag_1_values._root != self._root:
-                            raise kaitaistruct.ConsistencyError(u"flag_1_values", self._root, self._m_flag_1_values._root)
-                        if self._m_flag_1_values._parent != self:
-                            raise kaitaistruct.ConsistencyError(u"flag_1_values", self, self._m_flag_1_values._parent)
-                        if self._m_flag_1_values.value != self.value_or_ptr:
-                            raise kaitaistruct.ConsistencyError(u"flag_1_values", self.value_or_ptr, self._m_flag_1_values.value)
-
-
-                if self.flag_values__enabled:
-                    pass
-                    if self.tag_enum == Elf.DynamicArrayTags.flags:
-                        pass
-                        if self._m_flag_values._root != self._root:
-                            raise kaitaistruct.ConsistencyError(u"flag_values", self._root, self._m_flag_values._root)
-                        if self._m_flag_values._parent != self:
-                            raise kaitaistruct.ConsistencyError(u"flag_values", self, self._m_flag_values._parent)
-                        if self._m_flag_values.value != self.value_or_ptr:
-                            raise kaitaistruct.ConsistencyError(u"flag_values", self.value_or_ptr, self._m_flag_values.value)
-
-
-                if self.value_str__enabled:
-                    pass
-                    if  ((self.is_value_str) and (self._parent.is_string_table_linked)) :
-                        pass
-                        if KaitaiStream.byte_array_index_of((self._m_value_str).encode(u"ASCII"), 0) != -1:
-                            raise kaitaistruct.ConsistencyError(u"value_str", -1, KaitaiStream.byte_array_index_of((self._m_value_str).encode(u"ASCII"), 0))
-
-
-                self._dirty = False
-
-            @property
-            def flag_1_values(self):
-                if self._should_write_flag_1_values:
-                    self._write_flag_1_values()
-                if hasattr(self, '_m_flag_1_values'):
-                    return self._m_flag_1_values
-
-                if not self.flag_1_values__enabled:
-                    return None
-
-                if self.tag_enum == Elf.DynamicArrayTags.flags_1:
-                    pass
-                    if self._is_le:
-                        self._m_flag_1_values = Elf.DtFlag1Values(self.value_or_ptr, self._io, self, self._root)
-                        self._m_flag_1_values._read()
-                    else:
-                        self._m_flag_1_values = Elf.DtFlag1Values(self.value_or_ptr, self._io, self, self._root)
-                        self._m_flag_1_values._read()
-
-                return getattr(self, '_m_flag_1_values', None)
-
-            @flag_1_values.setter
-            def flag_1_values(self, v):
-                self._dirty = True
-                self._m_flag_1_values = v
-
-            def _write_flag_1_values(self):
-                self._should_write_flag_1_values = False
-                if self.tag_enum == Elf.DynamicArrayTags.flags_1:
-                    pass
-                    if self._is_le:
-                        self._m_flag_1_values._write__seq(self._io)
-                    else:
-                        self._m_flag_1_values._write__seq(self._io)
-
-
-            @property
-            def flag_values(self):
-                if self._should_write_flag_values:
-                    self._write_flag_values()
-                if hasattr(self, '_m_flag_values'):
-                    return self._m_flag_values
-
-                if not self.flag_values__enabled:
-                    return None
-
-                if self.tag_enum == Elf.DynamicArrayTags.flags:
-                    pass
-                    if self._is_le:
-                        self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
-                        self._m_flag_values._read()
-                    else:
-                        self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
-                        self._m_flag_values._read()
-
-                return getattr(self, '_m_flag_values', None)
-
-            @flag_values.setter
-            def flag_values(self, v):
-                self._dirty = True
-                self._m_flag_values = v
-
-            def _write_flag_values(self):
-                self._should_write_flag_values = False
-                if self.tag_enum == Elf.DynamicArrayTags.flags:
-                    pass
-                    if self._is_le:
-                        self._m_flag_values._write__seq(self._io)
-                    else:
-                        self._m_flag_values._write__seq(self._io)
-
-
-            @property
-            def is_value_str(self):
-                if hasattr(self, '_m_is_value_str'):
-                    return self._m_is_value_str
-
-                self._m_is_value_str =  ((self.value_or_ptr != 0) and ( ((self.tag_enum == Elf.DynamicArrayTags.needed) or (self.tag_enum == Elf.DynamicArrayTags.soname) or (self.tag_enum == Elf.DynamicArrayTags.rpath) or (self.tag_enum == Elf.DynamicArrayTags.runpath) or (self.tag_enum == Elf.DynamicArrayTags.sunw_auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.sunw_filter) or (self.tag_enum == Elf.DynamicArrayTags.auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.filter) or (self.tag_enum == Elf.DynamicArrayTags.config) or (self.tag_enum == Elf.DynamicArrayTags.depaudit) or (self.tag_enum == Elf.DynamicArrayTags.audit)) )) 
-                return getattr(self, '_m_is_value_str', None)
-
-            def _invalidate_is_value_str(self):
-                del self._m_is_value_str
-            @property
-            def tag_enum(self):
-                if hasattr(self, '_m_tag_enum'):
-                    return self._m_tag_enum
-
-                self._m_tag_enum = KaitaiStream.resolve_enum(Elf.DynamicArrayTags, self.tag)
-                return getattr(self, '_m_tag_enum', None)
-
-            def _invalidate_tag_enum(self):
-                del self._m_tag_enum
-            @property
-            def value_str(self):
-                if self._should_write_value_str:
-                    self._write_value_str()
-                if hasattr(self, '_m_value_str'):
-                    return self._m_value_str
-
-                if not self.value_str__enabled:
-                    return None
-
-                if  ((self.is_value_str) and (self._parent.is_string_table_linked)) :
-                    pass
-                    io = self._parent._parent.linked_section.body._io
-                    _pos = io.pos()
-                    io.seek(self.value_or_ptr)
-                    if self._is_le:
-                        self._m_value_str = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
-                    else:
-                        self._m_value_str = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
-                    io.seek(_pos)
-
-                return getattr(self, '_m_value_str', None)
-
-            @value_str.setter
-            def value_str(self, v):
-                self._dirty = True
-                self._m_value_str = v
-
-            def _write_value_str(self):
-                self._should_write_value_str = False
-                if  ((self.is_value_str) and (self._parent.is_string_table_linked)) :
-                    pass
-                    io = self._parent._parent.linked_section.body._io
-                    _pos = io.pos()
-                    io.seek(self.value_or_ptr)
-                    if self._is_le:
-                        io.write_bytes((self._m_value_str).encode(u"ASCII"))
-                        io.write_u1(0)
-                    else:
-                        io.write_bytes((self._m_value_str).encode(u"ASCII"))
-                        io.write_u1(0)
-                    io.seek(_pos)
-
-
 
         class DynsymSection(ReadWriteKaitaiStruct):
             def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
@@ -1789,11 +1495,11 @@ class Elf(ReadWriteKaitaiStruct):
         class DynsymSectionEntry(ReadWriteKaitaiStruct):
             """
             .. seealso::
-               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html
+               Source - https://gabi.xinuos.com/elf/05-symtab.html
             
             
             .. seealso::
-               Source - https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html
             """
             def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
                 super(Elf.EndianElf.DynsymSectionEntry, self).__init__(_io)
@@ -2070,10 +1776,14 @@ class Elf(ReadWriteKaitaiStruct):
                 del self._m_value
             @property
             def visibility(self):
+                """
+                .. seealso::
+                   Source - https://github.com/xinuos/gabi/commit/acd5ebb2962cf243dca4983bc934442b42ef96f5
+                """
                 if hasattr(self, '_m_visibility'):
                     return self._m_visibility
 
-                self._m_visibility = KaitaiStream.resolve_enum(Elf.SymbolVisibility, self.other & 3)
+                self._m_visibility = KaitaiStream.resolve_enum(Elf.SymbolVisibility, self.other & 7)
                 return getattr(self, '_m_visibility', None)
 
             def _invalidate_visibility(self):
@@ -2266,12 +1976,418 @@ class Elf(ReadWriteKaitaiStruct):
                 self._dirty = False
 
 
+        class PhDynamicSection(ReadWriteKaitaiStruct):
+            """Same type as `sh_dynamic_section`, but it does not use
+            `_parent.linked_section`, which is available only in section headers
+            (i.e. when `_parent` is of type `section_header`). This allows it to
+            be used in program headers (i.e. from the `program_header` type).
+            
+            The inability to access `linked_section` means that offsets in the
+            string table (which should be stored in the `.dynstr` section) will
+            not be resolved to strings and will be provided only in raw form in
+            the `value_or_ptr` field. In other words, the
+            `ph_dynamic_section_entry` type has no `value_str` instance, unlike
+            the `sh_dynamic_section_entry` type.
+            
+            There is another way to find the string table referenced by the
+            dynamic section entries that does not rely on `linked_section`, but is
+            a bit more complex (and is therefore considered out of scope of this
+            .ksy spec): the mandatory dynamic tag `dynamic_array_tags::strtab`
+            (`DT_STRTAB`) specifies the virtual address of the string table, and
+            `dynamic_array_tags::strsz` (`DT_STRSZ`) specifies its size in bytes.
+            The virtual address can be converted to a file offset by reading the
+            program headers - see the source code for the `readelf` command:
+            
+            1. [`offset_from_vma` call site with an address from `DT_STRTAB` as an
+              argument](https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13018)
+            2. [`offset_from_vma` function
+              definition](https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L7788)
+            
+            .. seealso::
+               Source - https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.PhDynamicSection, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/ph_dynamic_section")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                self.entries = []
+                i = 0
+                while True:
+                    _t_entries = Elf.EndianElf.PhDynamicSectionEntry(self._io, self, self._root, self._is_le)
+                    try:
+                        _t_entries._read()
+                    finally:
+                        _ = _t_entries
+                        self.entries.append(_)
+                    if _.tag_enum == Elf.DynamicArrayTags.null:
+                        break
+                    i += 1
+                self._dirty = False
+
+            def _read_be(self):
+                self.entries = []
+                i = 0
+                while True:
+                    _t_entries = Elf.EndianElf.PhDynamicSectionEntry(self._io, self, self._root, self._is_le)
+                    try:
+                        _t_entries._read()
+                    finally:
+                        _ = _t_entries
+                        self.entries.append(_)
+                    if _.tag_enum == Elf.DynamicArrayTags.null:
+                        break
+                    i += 1
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                for i in range(len(self.entries)):
+                    pass
+                    self.entries[i]._fetch_instances()
+
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.PhDynamicSection, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/ph_dynamic_section")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                for i in range(len(self.entries)):
+                    pass
+                    self.entries[i]._write__seq(self._io)
+
+
+
+            def _write__seq_be(self):
+                for i in range(len(self.entries)):
+                    pass
+                    self.entries[i]._write__seq(self._io)
+
+
+
+            def _check(self):
+                if len(self.entries) == 0:
+                    raise kaitaistruct.ConsistencyError(u"entries", 0, len(self.entries))
+                for i in range(len(self.entries)):
+                    pass
+                    if self.entries[i]._root != self._root:
+                        raise kaitaistruct.ConsistencyError(u"entries", self._root, self.entries[i]._root)
+                    if self.entries[i]._parent != self:
+                        raise kaitaistruct.ConsistencyError(u"entries", self, self.entries[i]._parent)
+                    _ = self.entries[i]
+                    if (_.tag_enum == Elf.DynamicArrayTags.null) != (i == len(self.entries) - 1):
+                        raise kaitaistruct.ConsistencyError(u"entries", i == len(self.entries) - 1, _.tag_enum == Elf.DynamicArrayTags.null)
+
+                self._dirty = False
+
+
+        class PhDynamicSectionEntry(ReadWriteKaitaiStruct):
+            """Same type as `sh_dynamic_section_entry`, but without the `value_str`
+            instance - see the documentation for `ph_dynamic_section` for more
+            details.
+            
+            .. seealso::
+               Source - https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.PhDynamicSectionEntry, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+                self._should_write_flag_1_values = False
+                self.flag_1_values__enabled = True
+                self._should_write_flag_values = False
+                self.flag_values__enabled = True
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/ph_dynamic_section_entry")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self.tag = self._io.read_u4le()
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self.tag = self._io.read_u8le()
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self.value_or_ptr = self._io.read_u4le()
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self.value_or_ptr = self._io.read_u8le()
+                self._dirty = False
+
+            def _read_be(self):
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self.tag = self._io.read_u4be()
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self.tag = self._io.read_u8be()
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self.value_or_ptr = self._io.read_u4be()
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self.value_or_ptr = self._io.read_u8be()
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                elif _on == Elf.Bits.b64:
+                    pass
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                elif _on == Elf.Bits.b64:
+                    pass
+                _ = self.flag_1_values
+                if hasattr(self, '_m_flag_1_values'):
+                    pass
+                    self._m_flag_1_values._fetch_instances()
+
+                _ = self.flag_values
+                if hasattr(self, '_m_flag_values'):
+                    pass
+                    self._m_flag_values._fetch_instances()
+
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.PhDynamicSectionEntry, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/ph_dynamic_section_entry")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                self._should_write_flag_1_values = self.flag_1_values__enabled
+                self._should_write_flag_values = self.flag_values__enabled
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self._io.write_u4le(self.tag)
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self._io.write_u8le(self.tag)
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self._io.write_u4le(self.value_or_ptr)
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self._io.write_u8le(self.value_or_ptr)
+
+
+            def _write__seq_be(self):
+                self._should_write_flag_1_values = self.flag_1_values__enabled
+                self._should_write_flag_values = self.flag_values__enabled
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self._io.write_u4be(self.tag)
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self._io.write_u8be(self.tag)
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self._io.write_u4be(self.value_or_ptr)
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self._io.write_u8be(self.value_or_ptr)
+
+
+            def _check(self):
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                elif _on == Elf.Bits.b64:
+                    pass
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                elif _on == Elf.Bits.b64:
+                    pass
+                if self.flag_1_values__enabled:
+                    pass
+                    if self.tag_enum == Elf.DynamicArrayTags.flags_1:
+                        pass
+                        if self._m_flag_1_values._root != self._root:
+                            raise kaitaistruct.ConsistencyError(u"flag_1_values", self._root, self._m_flag_1_values._root)
+                        if self._m_flag_1_values._parent != self:
+                            raise kaitaistruct.ConsistencyError(u"flag_1_values", self, self._m_flag_1_values._parent)
+                        if self._m_flag_1_values.value != self.value_or_ptr:
+                            raise kaitaistruct.ConsistencyError(u"flag_1_values", self.value_or_ptr, self._m_flag_1_values.value)
+
+
+                if self.flag_values__enabled:
+                    pass
+                    if self.tag_enum == Elf.DynamicArrayTags.flags:
+                        pass
+                        if self._m_flag_values._root != self._root:
+                            raise kaitaistruct.ConsistencyError(u"flag_values", self._root, self._m_flag_values._root)
+                        if self._m_flag_values._parent != self:
+                            raise kaitaistruct.ConsistencyError(u"flag_values", self, self._m_flag_values._parent)
+                        if self._m_flag_values.value != self.value_or_ptr:
+                            raise kaitaistruct.ConsistencyError(u"flag_values", self.value_or_ptr, self._m_flag_values.value)
+
+
+                self._dirty = False
+
+            @property
+            def flag_1_values(self):
+                if self._should_write_flag_1_values:
+                    self._write_flag_1_values()
+                if hasattr(self, '_m_flag_1_values'):
+                    return self._m_flag_1_values
+
+                if not self.flag_1_values__enabled:
+                    return None
+
+                if self.tag_enum == Elf.DynamicArrayTags.flags_1:
+                    pass
+                    if self._is_le:
+                        self._m_flag_1_values = Elf.DtFlag1Values(self.value_or_ptr, self._io, self, self._root)
+                        self._m_flag_1_values._read()
+                    else:
+                        self._m_flag_1_values = Elf.DtFlag1Values(self.value_or_ptr, self._io, self, self._root)
+                        self._m_flag_1_values._read()
+
+                return getattr(self, '_m_flag_1_values', None)
+
+            @flag_1_values.setter
+            def flag_1_values(self, v):
+                self._dirty = True
+                self._m_flag_1_values = v
+
+            def _write_flag_1_values(self):
+                self._should_write_flag_1_values = False
+                if self.tag_enum == Elf.DynamicArrayTags.flags_1:
+                    pass
+                    if self._is_le:
+                        self._m_flag_1_values._write__seq(self._io)
+                    else:
+                        self._m_flag_1_values._write__seq(self._io)
+
+
+            @property
+            def flag_values(self):
+                if self._should_write_flag_values:
+                    self._write_flag_values()
+                if hasattr(self, '_m_flag_values'):
+                    return self._m_flag_values
+
+                if not self.flag_values__enabled:
+                    return None
+
+                if self.tag_enum == Elf.DynamicArrayTags.flags:
+                    pass
+                    if self._is_le:
+                        self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
+                        self._m_flag_values._read()
+                    else:
+                        self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
+                        self._m_flag_values._read()
+
+                return getattr(self, '_m_flag_values', None)
+
+            @flag_values.setter
+            def flag_values(self, v):
+                self._dirty = True
+                self._m_flag_values = v
+
+            def _write_flag_values(self):
+                self._should_write_flag_values = False
+                if self.tag_enum == Elf.DynamicArrayTags.flags:
+                    pass
+                    if self._is_le:
+                        self._m_flag_values._write__seq(self._io)
+                    else:
+                        self._m_flag_values._write__seq(self._io)
+
+
+            @property
+            def is_value_str(self):
+                if hasattr(self, '_m_is_value_str'):
+                    return self._m_is_value_str
+
+                self._m_is_value_str =  ((self.value_or_ptr != 0) and ( ((self.tag_enum == Elf.DynamicArrayTags.needed) or (self.tag_enum == Elf.DynamicArrayTags.soname) or (self.tag_enum == Elf.DynamicArrayTags.rpath) or (self.tag_enum == Elf.DynamicArrayTags.runpath) or (self.tag_enum == Elf.DynamicArrayTags.sunw_auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.sunw_filter) or (self.tag_enum == Elf.DynamicArrayTags.auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.filter) or (self.tag_enum == Elf.DynamicArrayTags.config) or (self.tag_enum == Elf.DynamicArrayTags.depaudit) or (self.tag_enum == Elf.DynamicArrayTags.audit)) )) 
+                return getattr(self, '_m_is_value_str', None)
+
+            def _invalidate_is_value_str(self):
+                del self._m_is_value_str
+            @property
+            def tag_enum(self):
+                if hasattr(self, '_m_tag_enum'):
+                    return self._m_tag_enum
+
+                self._m_tag_enum = KaitaiStream.resolve_enum(Elf.DynamicArrayTags, self.tag)
+                return getattr(self, '_m_tag_enum', None)
+
+            def _invalidate_tag_enum(self):
+                del self._m_tag_enum
+
         class ProgramHeader(ReadWriteKaitaiStruct):
+            """
+            .. seealso::
+               Source - https://gabi.xinuos.com/v42/elf/07-pheader.html#program-header-entry
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/program-header.html
+            """
             def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
                 super(Elf.EndianElf.ProgramHeader, self).__init__(_io)
                 self._parent = _parent
                 self._root = _root
                 self._is_le = _is_le
+                self._should_write_body = False
+                self.body__enabled = True
                 self._should_write_flags_obj = False
                 self.flags_obj__enabled = True
 
@@ -2293,38 +2409,38 @@ class Elf(ReadWriteKaitaiStruct):
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.offset = self._io.read_u4le()
+                    self.ofs_body = self._io.read_u4le()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.offset = self._io.read_u8le()
+                    self.ofs_body = self._io.read_u8le()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.vaddr = self._io.read_u4le()
+                    self.virt_addr = self._io.read_u4le()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.vaddr = self._io.read_u8le()
+                    self.virt_addr = self._io.read_u8le()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.paddr = self._io.read_u4le()
+                    self.phys_addr = self._io.read_u4le()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.paddr = self._io.read_u8le()
+                    self.phys_addr = self._io.read_u8le()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.filesz = self._io.read_u4le()
+                    self.len_body = self._io.read_u4le()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.filesz = self._io.read_u8le()
+                    self.len_body = self._io.read_u8le()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.memsz = self._io.read_u4le()
+                    self.memory_size = self._io.read_u4le()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.memsz = self._io.read_u8le()
+                    self.memory_size = self._io.read_u8le()
                 if self._root.bits == Elf.Bits.b32:
                     pass
                     self.flags32 = self._io.read_u4le()
@@ -2347,38 +2463,38 @@ class Elf(ReadWriteKaitaiStruct):
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.offset = self._io.read_u4be()
+                    self.ofs_body = self._io.read_u4be()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.offset = self._io.read_u8be()
+                    self.ofs_body = self._io.read_u8be()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.vaddr = self._io.read_u4be()
+                    self.virt_addr = self._io.read_u4be()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.vaddr = self._io.read_u8be()
+                    self.virt_addr = self._io.read_u8be()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.paddr = self._io.read_u4be()
+                    self.phys_addr = self._io.read_u4be()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.paddr = self._io.read_u8be()
+                    self.phys_addr = self._io.read_u8be()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.filesz = self._io.read_u4be()
+                    self.len_body = self._io.read_u4be()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.filesz = self._io.read_u8be()
+                    self.len_body = self._io.read_u8be()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self.memsz = self._io.read_u4be()
+                    self.memory_size = self._io.read_u4be()
                 elif _on == Elf.Bits.b64:
                     pass
-                    self.memsz = self._io.read_u8be()
+                    self.memory_size = self._io.read_u8be()
                 if self._root.bits == Elf.Bits.b32:
                     pass
                     self.flags32 = self._io.read_u4be()
@@ -2431,6 +2547,22 @@ class Elf(ReadWriteKaitaiStruct):
                     pass
                 elif _on == Elf.Bits.b64:
                     pass
+                _ = self.body
+                if hasattr(self, '_m_body'):
+                    pass
+                    _on = self.type
+                    if _on == Elf.PhType.dynamic:
+                        pass
+                        self._m_body._fetch_instances()
+                    elif _on == Elf.PhType.interp:
+                        pass
+                        self._m_body._fetch_instances()
+                    elif _on == Elf.PhType.note:
+                        pass
+                        self._m_body._fetch_instances()
+                    else:
+                        pass
+
                 _ = self.flags_obj
                 if hasattr(self, '_m_flags_obj'):
                     pass
@@ -2455,6 +2587,7 @@ class Elf(ReadWriteKaitaiStruct):
 
 
             def _write__seq_le(self):
+                self._should_write_body = self.body__enabled
                 self._should_write_flags_obj = self.flags_obj__enabled
                 self._io.write_u4le(int(self.type))
                 if self._root.bits == Elf.Bits.b64:
@@ -2464,38 +2597,38 @@ class Elf(ReadWriteKaitaiStruct):
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4le(self.offset)
+                    self._io.write_u4le(self.ofs_body)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8le(self.offset)
+                    self._io.write_u8le(self.ofs_body)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4le(self.vaddr)
+                    self._io.write_u4le(self.virt_addr)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8le(self.vaddr)
+                    self._io.write_u8le(self.virt_addr)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4le(self.paddr)
+                    self._io.write_u4le(self.phys_addr)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8le(self.paddr)
+                    self._io.write_u8le(self.phys_addr)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4le(self.filesz)
+                    self._io.write_u4le(self.len_body)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8le(self.filesz)
+                    self._io.write_u8le(self.len_body)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4le(self.memsz)
+                    self._io.write_u4le(self.memory_size)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8le(self.memsz)
+                    self._io.write_u8le(self.memory_size)
                 if self._root.bits == Elf.Bits.b32:
                     pass
                     self._io.write_u4le(self.flags32)
@@ -2510,6 +2643,7 @@ class Elf(ReadWriteKaitaiStruct):
 
 
             def _write__seq_be(self):
+                self._should_write_body = self.body__enabled
                 self._should_write_flags_obj = self.flags_obj__enabled
                 self._io.write_u4be(int(self.type))
                 if self._root.bits == Elf.Bits.b64:
@@ -2519,38 +2653,38 @@ class Elf(ReadWriteKaitaiStruct):
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4be(self.offset)
+                    self._io.write_u4be(self.ofs_body)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8be(self.offset)
+                    self._io.write_u8be(self.ofs_body)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4be(self.vaddr)
+                    self._io.write_u4be(self.virt_addr)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8be(self.vaddr)
+                    self._io.write_u8be(self.virt_addr)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4be(self.paddr)
+                    self._io.write_u4be(self.phys_addr)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8be(self.paddr)
+                    self._io.write_u8be(self.phys_addr)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4be(self.filesz)
+                    self._io.write_u4be(self.len_body)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8be(self.filesz)
+                    self._io.write_u8be(self.len_body)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
-                    self._io.write_u4be(self.memsz)
+                    self._io.write_u4be(self.memory_size)
                 elif _on == Elf.Bits.b64:
                     pass
-                    self._io.write_u8be(self.memsz)
+                    self._io.write_u8be(self.memory_size)
                 if self._root.bits == Elf.Bits.b32:
                     pass
                     self._io.write_u4be(self.flags32)
@@ -2601,6 +2735,35 @@ class Elf(ReadWriteKaitaiStruct):
                     pass
                 elif _on == Elf.Bits.b64:
                     pass
+                if self.body__enabled:
+                    pass
+                    if self.len_body != 0:
+                        pass
+                        _on = self.type
+                        if _on == Elf.PhType.dynamic:
+                            pass
+                            if self._m_body._root != self._root:
+                                raise kaitaistruct.ConsistencyError(u"body", self._root, self._m_body._root)
+                            if self._m_body._parent != self:
+                                raise kaitaistruct.ConsistencyError(u"body", self, self._m_body._parent)
+                        elif _on == Elf.PhType.interp:
+                            pass
+                            if self._m_body._root != self._root:
+                                raise kaitaistruct.ConsistencyError(u"body", self._root, self._m_body._root)
+                            if self._m_body._parent != self:
+                                raise kaitaistruct.ConsistencyError(u"body", self, self._m_body._parent)
+                        elif _on == Elf.PhType.note:
+                            pass
+                            if self._m_body._root != self._root:
+                                raise kaitaistruct.ConsistencyError(u"body", self._root, self._m_body._root)
+                            if self._m_body._parent != self:
+                                raise kaitaistruct.ConsistencyError(u"body", self, self._m_body._parent)
+                        else:
+                            pass
+                            if len(self._m_body) != self.len_body:
+                                raise kaitaistruct.ConsistencyError(u"body", self.len_body, len(self._m_body))
+
+
                 if self.flags_obj__enabled:
                     pass
                     _on = self._root.bits
@@ -2622,6 +2785,259 @@ class Elf(ReadWriteKaitaiStruct):
                             raise kaitaistruct.ConsistencyError(u"flags_obj", self.flags64, self._m_flags_obj.value)
 
                 self._dirty = False
+
+            class PhInterpreter(ReadWriteKaitaiStruct):
+                """
+                .. seealso::
+                   Source - https://gabi.xinuos.com/v42/elf/08-dynamic.html#program-interpreter
+                
+                
+                .. seealso::
+                   Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/program-interpreter.html
+                """
+                def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                    super(Elf.EndianElf.ProgramHeader.PhInterpreter, self).__init__(_io)
+                    self._parent = _parent
+                    self._root = _root
+                    self._is_le = _is_le
+
+                def _read(self):
+                    if not hasattr(self, '_is_le'):
+                        raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/program_header/types/ph_interpreter")
+                    elif self._is_le == True:
+                        self._read_le()
+                    elif self._is_le == False:
+                        self._read_be()
+                    self._dirty = False
+
+                def _read_le(self):
+                    self.path_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                    self._dirty = False
+
+                def _read_be(self):
+                    self.path_name = (self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                    self._dirty = False
+
+
+                def _fetch_instances(self):
+                    pass
+
+
+                def _write__seq(self, io=None):
+                    super(Elf.EndianElf.ProgramHeader.PhInterpreter, self)._write__seq(io)
+                    if not hasattr(self, '_is_le'):
+                        raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/program_header/types/ph_interpreter")
+                    elif self._is_le == True:
+                        self._write__seq_le()
+                    elif self._is_le == False:
+                        self._write__seq_be()
+
+
+                def _write__seq_le(self):
+                    self._io.write_bytes((self.path_name).encode(u"ASCII"))
+                    self._io.write_u1(0)
+
+
+                def _write__seq_be(self):
+                    self._io.write_bytes((self.path_name).encode(u"ASCII"))
+                    self._io.write_u1(0)
+
+
+                def _check(self):
+                    if KaitaiStream.byte_array_index_of((self.path_name).encode(u"ASCII"), 0) != -1:
+                        raise kaitaistruct.ConsistencyError(u"path_name", -1, KaitaiStream.byte_array_index_of((self.path_name).encode(u"ASCII"), 0))
+                    self._dirty = False
+
+
+            @property
+            def body(self):
+                """Note: a program header may not have a valid body in the same ELF
+                file, so accessing `body` may result in reading garbage or
+                triggering EOF errors.
+                
+                In particular, `*.debug` files produced by elfutils'
+                `eu-strip --strip-debug` (as used by Fedora/RHEL and other
+                RPM-based distros for their `*-debuginfo` packages, e.g.
+                `glibc-debuginfo`) copy the original binary's program header table
+                verbatim, including `ofs_body`/`len_body` (i.e.
+                `p_offset`/`p_filesz`), while dropping the actual contents of most
+                segments. Such segments can be recognized by the fact that the
+                corresponding section headers have type `sh_type::nobits`
+                (`SHT_NOBITS`). However, this Kaitai Struct implementation doesn't
+                know the mapping between program headers and section headers, so
+                this must be handled externally.
+                
+                `*.debug` files from Debian/Ubuntu `*-dbg` packages (e.g.
+                `libc6-dbg`) are usually not affected by this issue, because they
+                are produced using GNU Binutils (`objcopy --only-keep-debug`),
+                which zeroes `len_body` for segments whose contents were omitted
+                (which reliably tells us that there is no `body`).
+                """
+                if self._should_write_body:
+                    self._write_body()
+                if hasattr(self, '_m_body'):
+                    return self._m_body
+
+                if not self.body__enabled:
+                    return None
+
+                if self.len_body != 0:
+                    pass
+                    io = self._root._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_body)
+                    if self._is_le:
+                        _on = self.type
+                        if _on == Elf.PhType.dynamic:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.PhDynamicSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.PhType.interp:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.ProgramHeader.PhInterpreter(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.PhType.note:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.NoteSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        else:
+                            pass
+                            self._m_body = io.read_bytes(self.len_body)
+                    else:
+                        _on = self.type
+                        if _on == Elf.PhType.dynamic:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.PhDynamicSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.PhType.interp:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.ProgramHeader.PhInterpreter(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.PhType.note:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.NoteSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        else:
+                            pass
+                            self._m_body = io.read_bytes(self.len_body)
+                    io.seek(_pos)
+
+                return getattr(self, '_m_body', None)
+
+            @body.setter
+            def body(self, v):
+                self._dirty = True
+                self._m_body = v
+
+            def _write_body(self):
+                self._should_write_body = False
+                if self.len_body != 0:
+                    pass
+                    io = self._root._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_body)
+                    if self._is_le:
+                        _on = self.type
+                        if _on == Elf.PhType.dynamic:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.PhType.interp:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.PhType.note:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        else:
+                            pass
+                            io.write_bytes(self._m_body)
+                    else:
+                        _on = self.type
+                        if _on == Elf.PhType.dynamic:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.PhType.interp:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.PhType.note:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        else:
+                            pass
+                            io.write_bytes(self._m_body)
+                    io.seek(_pos)
+
 
             @property
             def flags_obj(self):
@@ -2963,6 +3379,14 @@ class Elf(ReadWriteKaitaiStruct):
 
 
         class SectionHeader(ReadWriteKaitaiStruct):
+            """
+            .. seealso::
+               Source - https://gabi.xinuos.com/v42/elf/03-sheader.html#section-header-table-entry
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html
+            """
             def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
                 super(Elf.EndianElf.SectionHeader, self).__init__(_io)
                 self._parent = _parent
@@ -3016,7 +3440,7 @@ class Elf(ReadWriteKaitaiStruct):
                     pass
                     self.len_body = self._io.read_u8le()
                 self.linked_section_idx = self._io.read_u4le()
-                self.info = self._io.read_bytes(4)
+                self.info = self._io.read_u4le()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
@@ -3065,7 +3489,7 @@ class Elf(ReadWriteKaitaiStruct):
                     pass
                     self.len_body = self._io.read_u8be()
                 self.linked_section_idx = self._io.read_u4be()
-                self.info = self._io.read_bytes(4)
+                self.info = self._io.read_u4be()
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
@@ -3123,6 +3547,15 @@ class Elf(ReadWriteKaitaiStruct):
                         pass
                         self._m_body._fetch_instances()
                     elif _on == Elf.ShType.dynsym:
+                        pass
+                        self._m_body._fetch_instances()
+                    elif _on == Elf.ShType.gnu_verdef:
+                        pass
+                        self._m_body._fetch_instances()
+                    elif _on == Elf.ShType.gnu_verneed:
+                        pass
+                        self._m_body._fetch_instances()
+                    elif _on == Elf.ShType.gnu_versym:
                         pass
                         self._m_body._fetch_instances()
                     elif _on == Elf.ShType.note:
@@ -3199,7 +3632,7 @@ class Elf(ReadWriteKaitaiStruct):
                     pass
                     self._io.write_u8le(self.len_body)
                 self._io.write_u4le(self.linked_section_idx)
-                self._io.write_bytes(self.info)
+                self._io.write_u4le(self.info)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
@@ -3251,7 +3684,7 @@ class Elf(ReadWriteKaitaiStruct):
                     pass
                     self._io.write_u8be(self.len_body)
                 self._io.write_u4be(self.linked_section_idx)
-                self._io.write_bytes(self.info)
+                self._io.write_u4be(self.info)
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
@@ -3289,8 +3722,6 @@ class Elf(ReadWriteKaitaiStruct):
                     pass
                 elif _on == Elf.Bits.b64:
                     pass
-                if len(self.info) != 4:
-                    raise kaitaistruct.ConsistencyError(u"info", 4, len(self.info))
                 _on = self._root.bits
                 if _on == Elf.Bits.b32:
                     pass
@@ -3313,6 +3744,24 @@ class Elf(ReadWriteKaitaiStruct):
                             if self._m_body._parent != self:
                                 raise kaitaistruct.ConsistencyError(u"body", self, self._m_body._parent)
                         elif _on == Elf.ShType.dynsym:
+                            pass
+                            if self._m_body._root != self._root:
+                                raise kaitaistruct.ConsistencyError(u"body", self._root, self._m_body._root)
+                            if self._m_body._parent != self:
+                                raise kaitaistruct.ConsistencyError(u"body", self, self._m_body._parent)
+                        elif _on == Elf.ShType.gnu_verdef:
+                            pass
+                            if self._m_body._root != self._root:
+                                raise kaitaistruct.ConsistencyError(u"body", self._root, self._m_body._root)
+                            if self._m_body._parent != self:
+                                raise kaitaistruct.ConsistencyError(u"body", self, self._m_body._parent)
+                        elif _on == Elf.ShType.gnu_verneed:
+                            pass
+                            if self._m_body._root != self._root:
+                                raise kaitaistruct.ConsistencyError(u"body", self._root, self._m_body._root)
+                            if self._m_body._parent != self:
+                                raise kaitaistruct.ConsistencyError(u"body", self, self._m_body._parent)
+                        elif _on == Elf.ShType.gnu_versym:
                             pass
                             if self._m_body._root != self._root:
                                 raise kaitaistruct.ConsistencyError(u"body", self._root, self._m_body._root)
@@ -3395,13 +3844,31 @@ class Elf(ReadWriteKaitaiStruct):
                             pass
                             self._raw__m_body = io.read_bytes(self.len_body)
                             _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
-                            self._m_body = Elf.EndianElf.DynamicSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body = Elf.EndianElf.ShDynamicSection(_io__raw__m_body, self, self._root, self._is_le)
                             self._m_body._read()
                         elif _on == Elf.ShType.dynsym:
                             pass
                             self._raw__m_body = io.read_bytes(self.len_body)
                             _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
                             self._m_body = Elf.EndianElf.DynsymSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.ShType.gnu_verdef:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.VerdefSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.ShType.gnu_verneed:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.VerneedSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.ShType.gnu_versym:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.VersymSection(_io__raw__m_body, self, self._root, self._is_le)
                             self._m_body._read()
                         elif _on == Elf.ShType.note:
                             pass
@@ -3442,13 +3909,31 @@ class Elf(ReadWriteKaitaiStruct):
                             pass
                             self._raw__m_body = io.read_bytes(self.len_body)
                             _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
-                            self._m_body = Elf.EndianElf.DynamicSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body = Elf.EndianElf.ShDynamicSection(_io__raw__m_body, self, self._root, self._is_le)
                             self._m_body._read()
                         elif _on == Elf.ShType.dynsym:
                             pass
                             self._raw__m_body = io.read_bytes(self.len_body)
                             _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
                             self._m_body = Elf.EndianElf.DynsymSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.ShType.gnu_verdef:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.VerdefSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.ShType.gnu_verneed:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.VerneedSection(_io__raw__m_body, self, self._root, self._is_le)
+                            self._m_body._read()
+                        elif _on == Elf.ShType.gnu_versym:
+                            pass
+                            self._raw__m_body = io.read_bytes(self.len_body)
+                            _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                            self._m_body = Elf.EndianElf.VersymSection(_io__raw__m_body, self, self._root, self._is_le)
                             self._m_body._read()
                         elif _on == Elf.ShType.note:
                             pass
@@ -3515,6 +4000,45 @@ class Elf(ReadWriteKaitaiStruct):
                             _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
                             self._m_body._write__seq(_io__raw__m_body)
                         elif _on == Elf.ShType.dynsym:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.ShType.gnu_verdef:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.ShType.gnu_verneed:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.ShType.gnu_versym:
                             pass
                             _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
                             io.add_child_stream(_io__raw__m_body)
@@ -3611,6 +4135,45 @@ class Elf(ReadWriteKaitaiStruct):
                             _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
                             self._m_body._write__seq(_io__raw__m_body)
                         elif _on == Elf.ShType.dynsym:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.ShType.gnu_verdef:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.ShType.gnu_verneed:
+                            pass
+                            _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
+                            io.add_child_stream(_io__raw__m_body)
+                            _pos2 = io.pos()
+                            io.seek(io.pos() + (self.len_body))
+                            def handler(parent, _io__raw__m_body=_io__raw__m_body):
+                                self._raw__m_body = _io__raw__m_body.to_byte_array()
+                                if len(self._raw__m_body) != self.len_body:
+                                    raise kaitaistruct.ConsistencyError(u"raw(body)", self.len_body, len(self._raw__m_body))
+                                parent.write_bytes(self._raw__m_body)
+                            _io__raw__m_body.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+                            self._m_body._write__seq(_io__raw__m_body)
+                        elif _on == Elf.ShType.gnu_versym:
                             pass
                             _io__raw__m_body = KaitaiStream(BytesIO(bytearray(self.len_body)))
                             io.add_child_stream(_io__raw__m_body)
@@ -3781,6 +4344,451 @@ class Elf(ReadWriteKaitaiStruct):
                 io.seek(_pos)
 
 
+        class ShDynamicSection(ReadWriteKaitaiStruct):
+            """Same type as `ph_dynamic_section`, but it depends on
+            `_parent.linked_section`, so it can be used only in the
+            `section_header` type. See the documentation for `ph_dynamic_section`
+            for more details.
+            
+            .. seealso::
+               Source - https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.ShDynamicSection, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/sh_dynamic_section")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                self.entries = []
+                i = 0
+                while True:
+                    _t_entries = Elf.EndianElf.ShDynamicSectionEntry(self._io, self, self._root, self._is_le)
+                    try:
+                        _t_entries._read()
+                    finally:
+                        _ = _t_entries
+                        self.entries.append(_)
+                    if _.tag_enum == Elf.DynamicArrayTags.null:
+                        break
+                    i += 1
+                self._dirty = False
+
+            def _read_be(self):
+                self.entries = []
+                i = 0
+                while True:
+                    _t_entries = Elf.EndianElf.ShDynamicSectionEntry(self._io, self, self._root, self._is_le)
+                    try:
+                        _t_entries._read()
+                    finally:
+                        _ = _t_entries
+                        self.entries.append(_)
+                    if _.tag_enum == Elf.DynamicArrayTags.null:
+                        break
+                    i += 1
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                for i in range(len(self.entries)):
+                    pass
+                    self.entries[i]._fetch_instances()
+
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.ShDynamicSection, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/sh_dynamic_section")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                for i in range(len(self.entries)):
+                    pass
+                    self.entries[i]._write__seq(self._io)
+
+
+
+            def _write__seq_be(self):
+                for i in range(len(self.entries)):
+                    pass
+                    self.entries[i]._write__seq(self._io)
+
+
+
+            def _check(self):
+                if len(self.entries) == 0:
+                    raise kaitaistruct.ConsistencyError(u"entries", 0, len(self.entries))
+                for i in range(len(self.entries)):
+                    pass
+                    if self.entries[i]._root != self._root:
+                        raise kaitaistruct.ConsistencyError(u"entries", self._root, self.entries[i]._root)
+                    if self.entries[i]._parent != self:
+                        raise kaitaistruct.ConsistencyError(u"entries", self, self.entries[i]._parent)
+                    _ = self.entries[i]
+                    if (_.tag_enum == Elf.DynamicArrayTags.null) != (i == len(self.entries) - 1):
+                        raise kaitaistruct.ConsistencyError(u"entries", i == len(self.entries) - 1, _.tag_enum == Elf.DynamicArrayTags.null)
+
+                self._dirty = False
+
+            @property
+            def is_string_table_linked(self):
+                if hasattr(self, '_m_is_string_table_linked'):
+                    return self._m_is_string_table_linked
+
+                self._m_is_string_table_linked = self._parent.linked_section.type == Elf.ShType.strtab
+                return getattr(self, '_m_is_string_table_linked', None)
+
+            def _invalidate_is_string_table_linked(self):
+                del self._m_is_string_table_linked
+
+        class ShDynamicSectionEntry(ReadWriteKaitaiStruct):
+            """Same type as `ph_dynamic_section_entry`, but with the `value_str`
+            instance - see the documentation for `ph_dynamic_section` for more
+            details.
+            
+            .. seealso::
+               Source - https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.ShDynamicSectionEntry, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+                self._should_write_flag_1_values = False
+                self.flag_1_values__enabled = True
+                self._should_write_flag_values = False
+                self.flag_values__enabled = True
+                self._should_write_value_str = False
+                self.value_str__enabled = True
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/sh_dynamic_section_entry")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self.tag = self._io.read_u4le()
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self.tag = self._io.read_u8le()
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self.value_or_ptr = self._io.read_u4le()
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self.value_or_ptr = self._io.read_u8le()
+                self._dirty = False
+
+            def _read_be(self):
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self.tag = self._io.read_u4be()
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self.tag = self._io.read_u8be()
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self.value_or_ptr = self._io.read_u4be()
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self.value_or_ptr = self._io.read_u8be()
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                elif _on == Elf.Bits.b64:
+                    pass
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                elif _on == Elf.Bits.b64:
+                    pass
+                _ = self.flag_1_values
+                if hasattr(self, '_m_flag_1_values'):
+                    pass
+                    self._m_flag_1_values._fetch_instances()
+
+                _ = self.flag_values
+                if hasattr(self, '_m_flag_values'):
+                    pass
+                    self._m_flag_values._fetch_instances()
+
+                _ = self.value_str
+                if hasattr(self, '_m_value_str'):
+                    pass
+
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.ShDynamicSectionEntry, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/sh_dynamic_section_entry")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                self._should_write_flag_1_values = self.flag_1_values__enabled
+                self._should_write_flag_values = self.flag_values__enabled
+                self._should_write_value_str = self.value_str__enabled
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self._io.write_u4le(self.tag)
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self._io.write_u8le(self.tag)
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self._io.write_u4le(self.value_or_ptr)
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self._io.write_u8le(self.value_or_ptr)
+
+
+            def _write__seq_be(self):
+                self._should_write_flag_1_values = self.flag_1_values__enabled
+                self._should_write_flag_values = self.flag_values__enabled
+                self._should_write_value_str = self.value_str__enabled
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self._io.write_u4be(self.tag)
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self._io.write_u8be(self.tag)
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                    self._io.write_u4be(self.value_or_ptr)
+                elif _on == Elf.Bits.b64:
+                    pass
+                    self._io.write_u8be(self.value_or_ptr)
+
+
+            def _check(self):
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                elif _on == Elf.Bits.b64:
+                    pass
+                _on = self._root.bits
+                if _on == Elf.Bits.b32:
+                    pass
+                elif _on == Elf.Bits.b64:
+                    pass
+                if self.flag_1_values__enabled:
+                    pass
+                    if self.tag_enum == Elf.DynamicArrayTags.flags_1:
+                        pass
+                        if self._m_flag_1_values._root != self._root:
+                            raise kaitaistruct.ConsistencyError(u"flag_1_values", self._root, self._m_flag_1_values._root)
+                        if self._m_flag_1_values._parent != self:
+                            raise kaitaistruct.ConsistencyError(u"flag_1_values", self, self._m_flag_1_values._parent)
+                        if self._m_flag_1_values.value != self.value_or_ptr:
+                            raise kaitaistruct.ConsistencyError(u"flag_1_values", self.value_or_ptr, self._m_flag_1_values.value)
+
+
+                if self.flag_values__enabled:
+                    pass
+                    if self.tag_enum == Elf.DynamicArrayTags.flags:
+                        pass
+                        if self._m_flag_values._root != self._root:
+                            raise kaitaistruct.ConsistencyError(u"flag_values", self._root, self._m_flag_values._root)
+                        if self._m_flag_values._parent != self:
+                            raise kaitaistruct.ConsistencyError(u"flag_values", self, self._m_flag_values._parent)
+                        if self._m_flag_values.value != self.value_or_ptr:
+                            raise kaitaistruct.ConsistencyError(u"flag_values", self.value_or_ptr, self._m_flag_values.value)
+
+
+                if self.value_str__enabled:
+                    pass
+                    if  ((self.is_value_str) and (self._parent.is_string_table_linked)) :
+                        pass
+                        if KaitaiStream.byte_array_index_of((self._m_value_str).encode(u"ASCII"), 0) != -1:
+                            raise kaitaistruct.ConsistencyError(u"value_str", -1, KaitaiStream.byte_array_index_of((self._m_value_str).encode(u"ASCII"), 0))
+
+
+                self._dirty = False
+
+            @property
+            def flag_1_values(self):
+                if self._should_write_flag_1_values:
+                    self._write_flag_1_values()
+                if hasattr(self, '_m_flag_1_values'):
+                    return self._m_flag_1_values
+
+                if not self.flag_1_values__enabled:
+                    return None
+
+                if self.tag_enum == Elf.DynamicArrayTags.flags_1:
+                    pass
+                    if self._is_le:
+                        self._m_flag_1_values = Elf.DtFlag1Values(self.value_or_ptr, self._io, self, self._root)
+                        self._m_flag_1_values._read()
+                    else:
+                        self._m_flag_1_values = Elf.DtFlag1Values(self.value_or_ptr, self._io, self, self._root)
+                        self._m_flag_1_values._read()
+
+                return getattr(self, '_m_flag_1_values', None)
+
+            @flag_1_values.setter
+            def flag_1_values(self, v):
+                self._dirty = True
+                self._m_flag_1_values = v
+
+            def _write_flag_1_values(self):
+                self._should_write_flag_1_values = False
+                if self.tag_enum == Elf.DynamicArrayTags.flags_1:
+                    pass
+                    if self._is_le:
+                        self._m_flag_1_values._write__seq(self._io)
+                    else:
+                        self._m_flag_1_values._write__seq(self._io)
+
+
+            @property
+            def flag_values(self):
+                if self._should_write_flag_values:
+                    self._write_flag_values()
+                if hasattr(self, '_m_flag_values'):
+                    return self._m_flag_values
+
+                if not self.flag_values__enabled:
+                    return None
+
+                if self.tag_enum == Elf.DynamicArrayTags.flags:
+                    pass
+                    if self._is_le:
+                        self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
+                        self._m_flag_values._read()
+                    else:
+                        self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
+                        self._m_flag_values._read()
+
+                return getattr(self, '_m_flag_values', None)
+
+            @flag_values.setter
+            def flag_values(self, v):
+                self._dirty = True
+                self._m_flag_values = v
+
+            def _write_flag_values(self):
+                self._should_write_flag_values = False
+                if self.tag_enum == Elf.DynamicArrayTags.flags:
+                    pass
+                    if self._is_le:
+                        self._m_flag_values._write__seq(self._io)
+                    else:
+                        self._m_flag_values._write__seq(self._io)
+
+
+            @property
+            def is_value_str(self):
+                if hasattr(self, '_m_is_value_str'):
+                    return self._m_is_value_str
+
+                self._m_is_value_str =  ((self.value_or_ptr != 0) and ( ((self.tag_enum == Elf.DynamicArrayTags.needed) or (self.tag_enum == Elf.DynamicArrayTags.soname) or (self.tag_enum == Elf.DynamicArrayTags.rpath) or (self.tag_enum == Elf.DynamicArrayTags.runpath) or (self.tag_enum == Elf.DynamicArrayTags.sunw_auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.sunw_filter) or (self.tag_enum == Elf.DynamicArrayTags.auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.filter) or (self.tag_enum == Elf.DynamicArrayTags.config) or (self.tag_enum == Elf.DynamicArrayTags.depaudit) or (self.tag_enum == Elf.DynamicArrayTags.audit)) )) 
+                return getattr(self, '_m_is_value_str', None)
+
+            def _invalidate_is_value_str(self):
+                del self._m_is_value_str
+            @property
+            def tag_enum(self):
+                if hasattr(self, '_m_tag_enum'):
+                    return self._m_tag_enum
+
+                self._m_tag_enum = KaitaiStream.resolve_enum(Elf.DynamicArrayTags, self.tag)
+                return getattr(self, '_m_tag_enum', None)
+
+            def _invalidate_tag_enum(self):
+                del self._m_tag_enum
+            @property
+            def value_str(self):
+                if self._should_write_value_str:
+                    self._write_value_str()
+                if hasattr(self, '_m_value_str'):
+                    return self._m_value_str
+
+                if not self.value_str__enabled:
+                    return None
+
+                if  ((self.is_value_str) and (self._parent.is_string_table_linked)) :
+                    pass
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.value_or_ptr)
+                    if self._is_le:
+                        self._m_value_str = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                    else:
+                        self._m_value_str = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                    io.seek(_pos)
+
+                return getattr(self, '_m_value_str', None)
+
+            @value_str.setter
+            def value_str(self, v):
+                self._dirty = True
+                self._m_value_str = v
+
+            def _write_value_str(self):
+                self._should_write_value_str = False
+                if  ((self.is_value_str) and (self._parent.is_string_table_linked)) :
+                    pass
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.value_or_ptr)
+                    if self._is_le:
+                        io.write_bytes((self._m_value_str).encode(u"ASCII"))
+                        io.write_u1(0)
+                    else:
+                        io.write_bytes((self._m_value_str).encode(u"ASCII"))
+                        io.write_u1(0)
+                    io.seek(_pos)
+
+
+
         class StringsStruct(ReadWriteKaitaiStruct):
             def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
                 super(Elf.EndianElf.StringsStruct, self).__init__(_io)
@@ -3862,6 +4870,1743 @@ class Elf(ReadWriteKaitaiStruct):
                     pass
                     if KaitaiStream.byte_array_index_of((self.entries[i]).encode(u"UTF-8"), 0) != -1:
                         raise kaitaistruct.ConsistencyError(u"entries", -1, KaitaiStream.byte_array_index_of((self.entries[i]).encode(u"UTF-8"), 0))
+
+                self._dirty = False
+
+
+        class VerdauxEntry(ReadWriteKaitaiStruct):
+            """
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFEXTS
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html
+            
+            
+            .. seealso::
+               Source - https://www.akkadia.org/drepper/symbol-versioning
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.VerdauxEntry, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+                self._should_write_name = False
+                self.name__enabled = True
+                self._should_write_next = False
+                self.next__enabled = True
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verdaux_entry")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                if self.ofs_start < 0:
+                    pass
+                    self._unnamed0 = self._io.read_bytes(0)
+
+                self.ofs_name = self._io.read_u4le()
+                self.ofs_next = self._io.read_u4le()
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 8)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, self._io, u"/types/endian_elf/types/verdaux_entry/seq/2")
+                self._dirty = False
+
+            def _read_be(self):
+                if self.ofs_start < 0:
+                    pass
+                    self._unnamed0 = self._io.read_bytes(0)
+
+                self.ofs_name = self._io.read_u4be()
+                self.ofs_next = self._io.read_u4be()
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 8)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, self._io, u"/types/endian_elf/types/verdaux_entry/seq/2")
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                if self.ofs_start < 0:
+                    pass
+
+                _ = self.name
+                if hasattr(self, '_m_name'):
+                    pass
+
+                _ = self.next
+                if hasattr(self, '_m_next'):
+                    pass
+                    self._m_next._fetch_instances()
+
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.VerdauxEntry, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verdaux_entry")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                self._should_write_name = self.name__enabled
+                self._should_write_next = self.next__enabled
+                if self.ofs_start < 0:
+                    pass
+                    if len(self._unnamed0) != 0:
+                        raise kaitaistruct.ConsistencyError(u"_unnamed0", 0, len(self._unnamed0))
+                    self._io.write_bytes(self._unnamed0)
+
+                self._io.write_u4le(self.ofs_name)
+                self._io.write_u4le(self.ofs_next)
+
+
+            def _write__seq_be(self):
+                self._should_write_name = self.name__enabled
+                self._should_write_next = self.next__enabled
+                if self.ofs_start < 0:
+                    pass
+                    if len(self._unnamed0) != 0:
+                        raise kaitaistruct.ConsistencyError(u"_unnamed0", 0, len(self._unnamed0))
+                    self._io.write_bytes(self._unnamed0)
+
+                self._io.write_u4be(self.ofs_name)
+                self._io.write_u4be(self.ofs_next)
+
+
+            def _check(self):
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 8)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, None, u"/types/endian_elf/types/verdaux_entry/seq/2")
+                if self.name__enabled:
+                    pass
+                    if self._parent.is_string_table_linked:
+                        pass
+                        if KaitaiStream.byte_array_index_of((self._m_name).encode(u"UTF-8"), 0) != -1:
+                            raise kaitaistruct.ConsistencyError(u"name", -1, KaitaiStream.byte_array_index_of((self._m_name).encode(u"UTF-8"), 0))
+
+
+                if self.next__enabled:
+                    pass
+                    if self.ofs_next != 0:
+                        pass
+                        if self._m_next._root != self._root:
+                            raise kaitaistruct.ConsistencyError(u"next", self._root, self._m_next._root)
+                        if self._m_next._parent != self._parent:
+                            raise kaitaistruct.ConsistencyError(u"next", self._parent, self._m_next._parent)
+
+
+                self._dirty = False
+
+            @property
+            def name(self):
+                if self._should_write_name:
+                    self._write_name()
+                if hasattr(self, '_m_name'):
+                    return self._m_name
+
+                if not self.name__enabled:
+                    return None
+
+                if self._parent.is_string_table_linked:
+                    pass
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_name)
+                    if self._is_le:
+                        self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+                    else:
+                        self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+                    io.seek(_pos)
+
+                return getattr(self, '_m_name', None)
+
+            @name.setter
+            def name(self, v):
+                self._dirty = True
+                self._m_name = v
+
+            def _write_name(self):
+                self._should_write_name = False
+                if self._parent.is_string_table_linked:
+                    pass
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_name)
+                    if self._is_le:
+                        io.write_bytes((self._m_name).encode(u"UTF-8"))
+                        io.write_u1(0)
+                    else:
+                        io.write_bytes((self._m_name).encode(u"UTF-8"))
+                        io.write_u1(0)
+                    io.seek(_pos)
+
+
+            @property
+            def next(self):
+                if self._should_write_next:
+                    self._write_next()
+                if hasattr(self, '_m_next'):
+                    return self._m_next
+
+                if not self.next__enabled:
+                    return None
+
+                if self.ofs_next != 0:
+                    pass
+                    _pos = self._io.pos()
+                    self._io.seek(self.ofs_start + self.ofs_next)
+                    if self._is_le:
+                        self._m_next = Elf.EndianElf.VerdauxEntry(self._io, self._parent, self._root, self._is_le)
+                        self._m_next._read()
+                    else:
+                        self._m_next = Elf.EndianElf.VerdauxEntry(self._io, self._parent, self._root, self._is_le)
+                        self._m_next._read()
+                    self._io.seek(_pos)
+
+                return getattr(self, '_m_next', None)
+
+            @next.setter
+            def next(self, v):
+                self._dirty = True
+                self._m_next = v
+
+            def _write_next(self):
+                self._should_write_next = False
+                if self.ofs_next != 0:
+                    pass
+                    _pos = self._io.pos()
+                    self._io.seek(self.ofs_start + self.ofs_next)
+                    if self._is_le:
+                        self._m_next._write__seq(self._io)
+                    else:
+                        self._m_next._write__seq(self._io)
+                    self._io.seek(_pos)
+
+
+            @property
+            def ofs_start(self):
+                if hasattr(self, '_m_ofs_start'):
+                    return self._m_ofs_start
+
+                self._m_ofs_start = self._io.pos()
+                return getattr(self, '_m_ofs_start', None)
+
+            def _invalidate_ofs_start(self):
+                del self._m_ofs_start
+
+        class VerdefSection(ReadWriteKaitaiStruct):
+            """Version Definitions, contained in the special section named
+            `.gnu.version_d` with the section type `sh_type::gnu_verdef`
+            (`SHT_GNU_verdef`).
+            
+            The number of entries in this section must match the value of the
+            dynamic tag `dynamic_array_tags::verdefnum` (`DT_VERDEFNUM`) in the
+            Dynamic Section (`.dynamic`).
+            
+            `_parent.linked_section` must be the string table that contains the
+            strings referenced by this section. Specifically, the string table in
+            the `.dynstr` section should be used (side note: the `readelf` command
+            doesn't even check which string table `sh_link` points to, and always
+            uses `.dynstr` for the lookups - see
+            <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13787>).
+            
+            The `is_string_table_linked` value instance indicates whether the
+            string table is linked. If it is not, version names (the `name`
+            instance in the `verdaux_entry` type) will not be available.
+            
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERDEFS
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html
+            
+            
+            .. seealso::
+               Source - https://www.akkadia.org/drepper/symbol-versioning
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.VerdefSection, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verdef_section")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                self.first_entry = Elf.EndianElf.VerdefSectionEntry(self._io, self, self._root, self._is_le)
+                self.first_entry._read()
+                self._dirty = False
+
+            def _read_be(self):
+                self.first_entry = Elf.EndianElf.VerdefSectionEntry(self._io, self, self._root, self._is_le)
+                self.first_entry._read()
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                self.first_entry._fetch_instances()
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.VerdefSection, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verdef_section")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                self.first_entry._write__seq(self._io)
+
+
+            def _write__seq_be(self):
+                self.first_entry._write__seq(self._io)
+
+
+            def _check(self):
+                if self.first_entry._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"first_entry", self._root, self.first_entry._root)
+                if self.first_entry._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"first_entry", self, self.first_entry._parent)
+                self._dirty = False
+
+            @property
+            def is_string_table_linked(self):
+                """Indicates whether a string table is linked. This should always be
+                `true` in spec-compliant ELF files. If it is `false`, the string
+                offsets in this section will not be resolved to strings.
+                """
+                if hasattr(self, '_m_is_string_table_linked'):
+                    return self._m_is_string_table_linked
+
+                self._m_is_string_table_linked = self._parent.linked_section.type == Elf.ShType.strtab
+                return getattr(self, '_m_is_string_table_linked', None)
+
+            def _invalidate_is_string_table_linked(self):
+                del self._m_is_string_table_linked
+            @property
+            def num_entries(self):
+                """Number of entries (version definitions).
+                
+                .. seealso::
+                   Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-47976
+                """
+                if hasattr(self, '_m_num_entries'):
+                    return self._m_num_entries
+
+                self._m_num_entries = self._parent.info
+                return getattr(self, '_m_num_entries', None)
+
+            def _invalidate_num_entries(self):
+                del self._m_num_entries
+
+        class VerdefSectionEntry(ReadWriteKaitaiStruct):
+            """
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFENTRIES
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html
+            
+            
+            .. seealso::
+               Source - https://www.akkadia.org/drepper/symbol-versioning
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.VerdefSectionEntry, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+                self._should_write_first_aux = False
+                self.first_aux__enabled = True
+                self._should_write_flags_obj = False
+                self.flags_obj__enabled = True
+                self._should_write_next = False
+                self.next__enabled = True
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verdef_section_entry")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                if self.ofs_start < 0:
+                    pass
+                    self._unnamed0 = self._io.read_bytes(0)
+
+                self.version = self._io.read_u2le()
+                if not self.version == 1:
+                    raise kaitaistruct.ValidationNotEqualError(1, self.version, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/1")
+                self.flags = self._io.read_u2le()
+                self.version_index = self._io.read_u2le()
+                _ = self.version_index
+                if not _ & 32768 == 0:
+                    raise kaitaistruct.ValidationExprError(self.version_index, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/3")
+                self.num_aux_entries = self._io.read_u2le()
+                if not self.num_aux_entries >= 1:
+                    raise kaitaistruct.ValidationLessThanError(1, self.num_aux_entries, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/4")
+                self.hash = self._io.read_u4le()
+                self.ofs_first_aux = self._io.read_u4le()
+                if not self.ofs_first_aux >= 20:
+                    raise kaitaistruct.ValidationLessThanError(20, self.ofs_first_aux, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/6")
+                self.ofs_next = self._io.read_u4le()
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 20)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/7")
+                self._dirty = False
+
+            def _read_be(self):
+                if self.ofs_start < 0:
+                    pass
+                    self._unnamed0 = self._io.read_bytes(0)
+
+                self.version = self._io.read_u2be()
+                if not self.version == 1:
+                    raise kaitaistruct.ValidationNotEqualError(1, self.version, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/1")
+                self.flags = self._io.read_u2be()
+                self.version_index = self._io.read_u2be()
+                _ = self.version_index
+                if not _ & 32768 == 0:
+                    raise kaitaistruct.ValidationExprError(self.version_index, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/3")
+                self.num_aux_entries = self._io.read_u2be()
+                if not self.num_aux_entries >= 1:
+                    raise kaitaistruct.ValidationLessThanError(1, self.num_aux_entries, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/4")
+                self.hash = self._io.read_u4be()
+                self.ofs_first_aux = self._io.read_u4be()
+                if not self.ofs_first_aux >= 20:
+                    raise kaitaistruct.ValidationLessThanError(20, self.ofs_first_aux, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/6")
+                self.ofs_next = self._io.read_u4be()
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 20)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, self._io, u"/types/endian_elf/types/verdef_section_entry/seq/7")
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                if self.ofs_start < 0:
+                    pass
+
+                _ = self.first_aux
+                if hasattr(self, '_m_first_aux'):
+                    pass
+                    self._m_first_aux._fetch_instances()
+
+                _ = self.flags_obj
+                if hasattr(self, '_m_flags_obj'):
+                    pass
+                    self._m_flags_obj._fetch_instances()
+
+                _ = self.next
+                if hasattr(self, '_m_next'):
+                    pass
+                    self._m_next._fetch_instances()
+
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.VerdefSectionEntry, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verdef_section_entry")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                self._should_write_first_aux = self.first_aux__enabled
+                self._should_write_flags_obj = self.flags_obj__enabled
+                self._should_write_next = self.next__enabled
+                if self.ofs_start < 0:
+                    pass
+                    if len(self._unnamed0) != 0:
+                        raise kaitaistruct.ConsistencyError(u"_unnamed0", 0, len(self._unnamed0))
+                    self._io.write_bytes(self._unnamed0)
+
+                self._io.write_u2le(self.version)
+                self._io.write_u2le(self.flags)
+                self._io.write_u2le(self.version_index)
+                self._io.write_u2le(self.num_aux_entries)
+                self._io.write_u4le(self.hash)
+                self._io.write_u4le(self.ofs_first_aux)
+                self._io.write_u4le(self.ofs_next)
+
+
+            def _write__seq_be(self):
+                self._should_write_first_aux = self.first_aux__enabled
+                self._should_write_flags_obj = self.flags_obj__enabled
+                self._should_write_next = self.next__enabled
+                if self.ofs_start < 0:
+                    pass
+                    if len(self._unnamed0) != 0:
+                        raise kaitaistruct.ConsistencyError(u"_unnamed0", 0, len(self._unnamed0))
+                    self._io.write_bytes(self._unnamed0)
+
+                self._io.write_u2be(self.version)
+                self._io.write_u2be(self.flags)
+                self._io.write_u2be(self.version_index)
+                self._io.write_u2be(self.num_aux_entries)
+                self._io.write_u4be(self.hash)
+                self._io.write_u4be(self.ofs_first_aux)
+                self._io.write_u4be(self.ofs_next)
+
+
+            def _check(self):
+                if not self.version == 1:
+                    raise kaitaistruct.ValidationNotEqualError(1, self.version, None, u"/types/endian_elf/types/verdef_section_entry/seq/1")
+                _ = self.version_index
+                if not _ & 32768 == 0:
+                    raise kaitaistruct.ValidationExprError(self.version_index, None, u"/types/endian_elf/types/verdef_section_entry/seq/3")
+                if not self.num_aux_entries >= 1:
+                    raise kaitaistruct.ValidationLessThanError(1, self.num_aux_entries, None, u"/types/endian_elf/types/verdef_section_entry/seq/4")
+                if not self.ofs_first_aux >= 20:
+                    raise kaitaistruct.ValidationLessThanError(20, self.ofs_first_aux, None, u"/types/endian_elf/types/verdef_section_entry/seq/6")
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 20)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, None, u"/types/endian_elf/types/verdef_section_entry/seq/7")
+                if self.first_aux__enabled:
+                    pass
+                    if self._m_first_aux._root != self._root:
+                        raise kaitaistruct.ConsistencyError(u"first_aux", self._root, self._m_first_aux._root)
+                    if self._m_first_aux._parent != self._parent:
+                        raise kaitaistruct.ConsistencyError(u"first_aux", self._parent, self._m_first_aux._parent)
+
+                if self.flags_obj__enabled:
+                    pass
+                    if self._m_flags_obj._root != self._root:
+                        raise kaitaistruct.ConsistencyError(u"flags_obj", self._root, self._m_flags_obj._root)
+                    if self._m_flags_obj._parent != self:
+                        raise kaitaistruct.ConsistencyError(u"flags_obj", self, self._m_flags_obj._parent)
+                    if self._m_flags_obj.value != self.flags:
+                        raise kaitaistruct.ConsistencyError(u"flags_obj", self.flags, self._m_flags_obj.value)
+
+                if self.next__enabled:
+                    pass
+                    if self.ofs_next != 0:
+                        pass
+                        if self._m_next._root != self._root:
+                            raise kaitaistruct.ConsistencyError(u"next", self._root, self._m_next._root)
+                        if self._m_next._parent != self._parent:
+                            raise kaitaistruct.ConsistencyError(u"next", self._parent, self._m_next._parent)
+
+
+                self._dirty = False
+
+            @property
+            def first_aux(self):
+                """First auxiliary entry of type `verdaux_entry` (`Elfxx_Verdaux`).
+                The rest follow its `next` instance.
+                """
+                if self._should_write_first_aux:
+                    self._write_first_aux()
+                if hasattr(self, '_m_first_aux'):
+                    return self._m_first_aux
+
+                if not self.first_aux__enabled:
+                    return None
+
+                _pos = self._io.pos()
+                self._io.seek(self.ofs_start + self.ofs_first_aux)
+                if self._is_le:
+                    self._m_first_aux = Elf.EndianElf.VerdauxEntry(self._io, self._parent, self._root, self._is_le)
+                    self._m_first_aux._read()
+                else:
+                    self._m_first_aux = Elf.EndianElf.VerdauxEntry(self._io, self._parent, self._root, self._is_le)
+                    self._m_first_aux._read()
+                self._io.seek(_pos)
+                return getattr(self, '_m_first_aux', None)
+
+            @first_aux.setter
+            def first_aux(self, v):
+                self._dirty = True
+                self._m_first_aux = v
+
+            def _write_first_aux(self):
+                self._should_write_first_aux = False
+                _pos = self._io.pos()
+                self._io.seek(self.ofs_start + self.ofs_first_aux)
+                if self._is_le:
+                    self._m_first_aux._write__seq(self._io)
+                else:
+                    self._m_first_aux._write__seq(self._io)
+                self._io.seek(_pos)
+
+            @property
+            def flags_obj(self):
+                if self._should_write_flags_obj:
+                    self._write_flags_obj()
+                if hasattr(self, '_m_flags_obj'):
+                    return self._m_flags_obj
+
+                if not self.flags_obj__enabled:
+                    return None
+
+                if self._is_le:
+                    self._m_flags_obj = Elf.EndianElf.VersionFlags(self.flags, self._io, self, self._root, self._is_le)
+                    self._m_flags_obj._read()
+                else:
+                    self._m_flags_obj = Elf.EndianElf.VersionFlags(self.flags, self._io, self, self._root, self._is_le)
+                    self._m_flags_obj._read()
+                return getattr(self, '_m_flags_obj', None)
+
+            @flags_obj.setter
+            def flags_obj(self, v):
+                self._dirty = True
+                self._m_flags_obj = v
+
+            def _write_flags_obj(self):
+                self._should_write_flags_obj = False
+                if self._is_le:
+                    self._m_flags_obj._write__seq(self._io)
+                else:
+                    self._m_flags_obj._write__seq(self._io)
+
+            @property
+            def next(self):
+                if self._should_write_next:
+                    self._write_next()
+                if hasattr(self, '_m_next'):
+                    return self._m_next
+
+                if not self.next__enabled:
+                    return None
+
+                if self.ofs_next != 0:
+                    pass
+                    _pos = self._io.pos()
+                    self._io.seek(self.ofs_start + self.ofs_next)
+                    if self._is_le:
+                        self._m_next = Elf.EndianElf.VerdefSectionEntry(self._io, self._parent, self._root, self._is_le)
+                        self._m_next._read()
+                    else:
+                        self._m_next = Elf.EndianElf.VerdefSectionEntry(self._io, self._parent, self._root, self._is_le)
+                        self._m_next._read()
+                    self._io.seek(_pos)
+
+                return getattr(self, '_m_next', None)
+
+            @next.setter
+            def next(self, v):
+                self._dirty = True
+                self._m_next = v
+
+            def _write_next(self):
+                self._should_write_next = False
+                if self.ofs_next != 0:
+                    pass
+                    _pos = self._io.pos()
+                    self._io.seek(self.ofs_start + self.ofs_next)
+                    if self._is_le:
+                        self._m_next._write__seq(self._io)
+                    else:
+                        self._m_next._write__seq(self._io)
+                    self._io.seek(_pos)
+
+
+            @property
+            def ofs_start(self):
+                if hasattr(self, '_m_ofs_start'):
+                    return self._m_ofs_start
+
+                self._m_ofs_start = self._io.pos()
+                return getattr(self, '_m_ofs_start', None)
+
+            def _invalidate_ofs_start(self):
+                del self._m_ofs_start
+            @property
+            def version_index_special(self):
+                if hasattr(self, '_m_version_index_special'):
+                    return self._m_version_index_special
+
+                self._m_version_index_special = KaitaiStream.resolve_enum(Elf.VersionIndexSpecial, self.version_index)
+                return getattr(self, '_m_version_index_special', None)
+
+            def _invalidate_version_index_special(self):
+                del self._m_version_index_special
+
+        class VernauxEntry(ReadWriteKaitaiStruct):
+            """
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERNEEDEXTFIG
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html
+            
+            
+            .. seealso::
+               Source - https://www.akkadia.org/drepper/symbol-versioning
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.VernauxEntry, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+                self._should_write_flags_obj = False
+                self.flags_obj__enabled = True
+                self._should_write_name = False
+                self.name__enabled = True
+                self._should_write_next = False
+                self.next__enabled = True
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/vernaux_entry")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                if self.ofs_start < 0:
+                    pass
+                    self._unnamed0 = self._io.read_bytes(0)
+
+                self.hash = self._io.read_u4le()
+                self.flags = self._io.read_u2le()
+                self.version_index = Elf.EndianElf.VersionIndex(self._io, self, self._root, self._is_le)
+                self.version_index._read()
+                self.ofs_name = self._io.read_u4le()
+                self.ofs_next = self._io.read_u4le()
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 16)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, self._io, u"/types/endian_elf/types/vernaux_entry/seq/5")
+                self._dirty = False
+
+            def _read_be(self):
+                if self.ofs_start < 0:
+                    pass
+                    self._unnamed0 = self._io.read_bytes(0)
+
+                self.hash = self._io.read_u4be()
+                self.flags = self._io.read_u2be()
+                self.version_index = Elf.EndianElf.VersionIndex(self._io, self, self._root, self._is_le)
+                self.version_index._read()
+                self.ofs_name = self._io.read_u4be()
+                self.ofs_next = self._io.read_u4be()
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 16)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, self._io, u"/types/endian_elf/types/vernaux_entry/seq/5")
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                if self.ofs_start < 0:
+                    pass
+
+                self.version_index._fetch_instances()
+                _ = self.flags_obj
+                if hasattr(self, '_m_flags_obj'):
+                    pass
+                    self._m_flags_obj._fetch_instances()
+
+                _ = self.name
+                if hasattr(self, '_m_name'):
+                    pass
+
+                _ = self.next
+                if hasattr(self, '_m_next'):
+                    pass
+                    self._m_next._fetch_instances()
+
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.VernauxEntry, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/vernaux_entry")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                self._should_write_flags_obj = self.flags_obj__enabled
+                self._should_write_name = self.name__enabled
+                self._should_write_next = self.next__enabled
+                if self.ofs_start < 0:
+                    pass
+                    if len(self._unnamed0) != 0:
+                        raise kaitaistruct.ConsistencyError(u"_unnamed0", 0, len(self._unnamed0))
+                    self._io.write_bytes(self._unnamed0)
+
+                self._io.write_u4le(self.hash)
+                self._io.write_u2le(self.flags)
+                self.version_index._write__seq(self._io)
+                self._io.write_u4le(self.ofs_name)
+                self._io.write_u4le(self.ofs_next)
+
+
+            def _write__seq_be(self):
+                self._should_write_flags_obj = self.flags_obj__enabled
+                self._should_write_name = self.name__enabled
+                self._should_write_next = self.next__enabled
+                if self.ofs_start < 0:
+                    pass
+                    if len(self._unnamed0) != 0:
+                        raise kaitaistruct.ConsistencyError(u"_unnamed0", 0, len(self._unnamed0))
+                    self._io.write_bytes(self._unnamed0)
+
+                self._io.write_u4be(self.hash)
+                self._io.write_u2be(self.flags)
+                self.version_index._write__seq(self._io)
+                self._io.write_u4be(self.ofs_name)
+                self._io.write_u4be(self.ofs_next)
+
+
+            def _check(self):
+                if self.version_index._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"version_index", self._root, self.version_index._root)
+                if self.version_index._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"version_index", self, self.version_index._parent)
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 16)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, None, u"/types/endian_elf/types/vernaux_entry/seq/5")
+                if self.flags_obj__enabled:
+                    pass
+                    if self._m_flags_obj._root != self._root:
+                        raise kaitaistruct.ConsistencyError(u"flags_obj", self._root, self._m_flags_obj._root)
+                    if self._m_flags_obj._parent != self:
+                        raise kaitaistruct.ConsistencyError(u"flags_obj", self, self._m_flags_obj._parent)
+                    if self._m_flags_obj.value != self.flags:
+                        raise kaitaistruct.ConsistencyError(u"flags_obj", self.flags, self._m_flags_obj.value)
+
+                if self.name__enabled:
+                    pass
+                    if self._parent.is_string_table_linked:
+                        pass
+                        if KaitaiStream.byte_array_index_of((self._m_name).encode(u"UTF-8"), 0) != -1:
+                            raise kaitaistruct.ConsistencyError(u"name", -1, KaitaiStream.byte_array_index_of((self._m_name).encode(u"UTF-8"), 0))
+
+
+                if self.next__enabled:
+                    pass
+                    if self.ofs_next != 0:
+                        pass
+                        if self._m_next._root != self._root:
+                            raise kaitaistruct.ConsistencyError(u"next", self._root, self._m_next._root)
+                        if self._m_next._parent != self._parent:
+                            raise kaitaistruct.ConsistencyError(u"next", self._parent, self._m_next._parent)
+
+
+                self._dirty = False
+
+            @property
+            def flags_obj(self):
+                if self._should_write_flags_obj:
+                    self._write_flags_obj()
+                if hasattr(self, '_m_flags_obj'):
+                    return self._m_flags_obj
+
+                if not self.flags_obj__enabled:
+                    return None
+
+                if self._is_le:
+                    self._m_flags_obj = Elf.EndianElf.VersionFlags(self.flags, self._io, self, self._root, self._is_le)
+                    self._m_flags_obj._read()
+                else:
+                    self._m_flags_obj = Elf.EndianElf.VersionFlags(self.flags, self._io, self, self._root, self._is_le)
+                    self._m_flags_obj._read()
+                return getattr(self, '_m_flags_obj', None)
+
+            @flags_obj.setter
+            def flags_obj(self, v):
+                self._dirty = True
+                self._m_flags_obj = v
+
+            def _write_flags_obj(self):
+                self._should_write_flags_obj = False
+                if self._is_le:
+                    self._m_flags_obj._write__seq(self._io)
+                else:
+                    self._m_flags_obj._write__seq(self._io)
+
+            @property
+            def name(self):
+                if self._should_write_name:
+                    self._write_name()
+                if hasattr(self, '_m_name'):
+                    return self._m_name
+
+                if not self.name__enabled:
+                    return None
+
+                if self._parent.is_string_table_linked:
+                    pass
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_name)
+                    if self._is_le:
+                        self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+                    else:
+                        self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+                    io.seek(_pos)
+
+                return getattr(self, '_m_name', None)
+
+            @name.setter
+            def name(self, v):
+                self._dirty = True
+                self._m_name = v
+
+            def _write_name(self):
+                self._should_write_name = False
+                if self._parent.is_string_table_linked:
+                    pass
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_name)
+                    if self._is_le:
+                        io.write_bytes((self._m_name).encode(u"UTF-8"))
+                        io.write_u1(0)
+                    else:
+                        io.write_bytes((self._m_name).encode(u"UTF-8"))
+                        io.write_u1(0)
+                    io.seek(_pos)
+
+
+            @property
+            def next(self):
+                if self._should_write_next:
+                    self._write_next()
+                if hasattr(self, '_m_next'):
+                    return self._m_next
+
+                if not self.next__enabled:
+                    return None
+
+                if self.ofs_next != 0:
+                    pass
+                    _pos = self._io.pos()
+                    self._io.seek(self.ofs_start + self.ofs_next)
+                    if self._is_le:
+                        self._m_next = Elf.EndianElf.VernauxEntry(self._io, self._parent, self._root, self._is_le)
+                        self._m_next._read()
+                    else:
+                        self._m_next = Elf.EndianElf.VernauxEntry(self._io, self._parent, self._root, self._is_le)
+                        self._m_next._read()
+                    self._io.seek(_pos)
+
+                return getattr(self, '_m_next', None)
+
+            @next.setter
+            def next(self, v):
+                self._dirty = True
+                self._m_next = v
+
+            def _write_next(self):
+                self._should_write_next = False
+                if self.ofs_next != 0:
+                    pass
+                    _pos = self._io.pos()
+                    self._io.seek(self.ofs_start + self.ofs_next)
+                    if self._is_le:
+                        self._m_next._write__seq(self._io)
+                    else:
+                        self._m_next._write__seq(self._io)
+                    self._io.seek(_pos)
+
+
+            @property
+            def ofs_start(self):
+                if hasattr(self, '_m_ofs_start'):
+                    return self._m_ofs_start
+
+                self._m_ofs_start = self._io.pos()
+                return getattr(self, '_m_ofs_start', None)
+
+            def _invalidate_ofs_start(self):
+                del self._m_ofs_start
+
+        class VerneedSection(ReadWriteKaitaiStruct):
+            """Version Requirements, contained in the special section named
+            `.gnu.version_r` with the section type `sh_type::gnu_verneed`
+            (`SHT_GNU_verneed`). This section defines the required versions of
+            dynamic symbols from other shared objects.
+            
+            The number of entries in this section must match the value of the
+            dynamic tag `dynamic_array_tags::verneednum` (`DT_VERNEEDNUM`) in the
+            Dynamic Section (`.dynamic`).
+            
+            `_parent.linked_section` must be the string table that contains the
+            strings referenced by this section. Specifically, the string table in
+            the `.dynstr` section should be used (side note: the `readelf` command
+            doesn't even check which string table `sh_link` points to, and always
+            uses `.dynstr` for the lookups - see
+            <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13941>).
+            
+            The `is_string_table_linked` value instance indicates whether the
+            string table is linked. If it is not, file names (the `file_name`
+            instance in the `verneed_section_entry` type) or version names (the
+            `name` instance in the `vernaux_entry` type) will not be available.
+            
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERRQMTS
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html
+            
+            
+            .. seealso::
+               Source - https://www.akkadia.org/drepper/symbol-versioning
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.VerneedSection, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verneed_section")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                self.first_entry = Elf.EndianElf.VerneedSectionEntry(self._io, self, self._root, self._is_le)
+                self.first_entry._read()
+                self._dirty = False
+
+            def _read_be(self):
+                self.first_entry = Elf.EndianElf.VerneedSectionEntry(self._io, self, self._root, self._is_le)
+                self.first_entry._read()
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                self.first_entry._fetch_instances()
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.VerneedSection, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verneed_section")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                self.first_entry._write__seq(self._io)
+
+
+            def _write__seq_be(self):
+                self.first_entry._write__seq(self._io)
+
+
+            def _check(self):
+                if self.first_entry._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"first_entry", self._root, self.first_entry._root)
+                if self.first_entry._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"first_entry", self, self.first_entry._parent)
+                self._dirty = False
+
+            @property
+            def is_string_table_linked(self):
+                """Indicates whether a string table is linked. This should always be
+                `true` in spec-compliant ELF files. If it is `false`, the string
+                offsets in this section will not be resolved to strings.
+                """
+                if hasattr(self, '_m_is_string_table_linked'):
+                    return self._m_is_string_table_linked
+
+                self._m_is_string_table_linked = self._parent.linked_section.type == Elf.ShType.strtab
+                return getattr(self, '_m_is_string_table_linked', None)
+
+            def _invalidate_is_string_table_linked(self):
+                del self._m_is_string_table_linked
+            @property
+            def num_entries(self):
+                """Number of entries (dependency versions).
+                
+                .. seealso::
+                   Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-47976
+                """
+                if hasattr(self, '_m_num_entries'):
+                    return self._m_num_entries
+
+                self._m_num_entries = self._parent.info
+                return getattr(self, '_m_num_entries', None)
+
+            def _invalidate_num_entries(self):
+                del self._m_num_entries
+
+        class VerneedSectionEntry(ReadWriteKaitaiStruct):
+            """
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERNEEDFIG
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html
+            
+            
+            .. seealso::
+               Source - https://www.akkadia.org/drepper/symbol-versioning
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.VerneedSectionEntry, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+                self._should_write_file_name = False
+                self.file_name__enabled = True
+                self._should_write_first_aux = False
+                self.first_aux__enabled = True
+                self._should_write_next = False
+                self.next__enabled = True
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verneed_section_entry")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                if self.ofs_start < 0:
+                    pass
+                    self._unnamed0 = self._io.read_bytes(0)
+
+                self.version = self._io.read_u2le()
+                if not self.version == 1:
+                    raise kaitaistruct.ValidationNotEqualError(1, self.version, self._io, u"/types/endian_elf/types/verneed_section_entry/seq/1")
+                self.num_aux_entries = self._io.read_u2le()
+                if not self.num_aux_entries >= 1:
+                    raise kaitaistruct.ValidationLessThanError(1, self.num_aux_entries, self._io, u"/types/endian_elf/types/verneed_section_entry/seq/2")
+                self.ofs_file_name = self._io.read_u4le()
+                self.ofs_first_aux = self._io.read_u4le()
+                if not self.ofs_first_aux >= 16:
+                    raise kaitaistruct.ValidationLessThanError(16, self.ofs_first_aux, self._io, u"/types/endian_elf/types/verneed_section_entry/seq/4")
+                self.ofs_next = self._io.read_u4le()
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 16)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, self._io, u"/types/endian_elf/types/verneed_section_entry/seq/5")
+                self._dirty = False
+
+            def _read_be(self):
+                if self.ofs_start < 0:
+                    pass
+                    self._unnamed0 = self._io.read_bytes(0)
+
+                self.version = self._io.read_u2be()
+                if not self.version == 1:
+                    raise kaitaistruct.ValidationNotEqualError(1, self.version, self._io, u"/types/endian_elf/types/verneed_section_entry/seq/1")
+                self.num_aux_entries = self._io.read_u2be()
+                if not self.num_aux_entries >= 1:
+                    raise kaitaistruct.ValidationLessThanError(1, self.num_aux_entries, self._io, u"/types/endian_elf/types/verneed_section_entry/seq/2")
+                self.ofs_file_name = self._io.read_u4be()
+                self.ofs_first_aux = self._io.read_u4be()
+                if not self.ofs_first_aux >= 16:
+                    raise kaitaistruct.ValidationLessThanError(16, self.ofs_first_aux, self._io, u"/types/endian_elf/types/verneed_section_entry/seq/4")
+                self.ofs_next = self._io.read_u4be()
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 16)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, self._io, u"/types/endian_elf/types/verneed_section_entry/seq/5")
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                if self.ofs_start < 0:
+                    pass
+
+                _ = self.file_name
+                if hasattr(self, '_m_file_name'):
+                    pass
+
+                _ = self.first_aux
+                if hasattr(self, '_m_first_aux'):
+                    pass
+                    self._m_first_aux._fetch_instances()
+
+                _ = self.next
+                if hasattr(self, '_m_next'):
+                    pass
+                    self._m_next._fetch_instances()
+
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.VerneedSectionEntry, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/verneed_section_entry")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                self._should_write_file_name = self.file_name__enabled
+                self._should_write_first_aux = self.first_aux__enabled
+                self._should_write_next = self.next__enabled
+                if self.ofs_start < 0:
+                    pass
+                    if len(self._unnamed0) != 0:
+                        raise kaitaistruct.ConsistencyError(u"_unnamed0", 0, len(self._unnamed0))
+                    self._io.write_bytes(self._unnamed0)
+
+                self._io.write_u2le(self.version)
+                self._io.write_u2le(self.num_aux_entries)
+                self._io.write_u4le(self.ofs_file_name)
+                self._io.write_u4le(self.ofs_first_aux)
+                self._io.write_u4le(self.ofs_next)
+
+
+            def _write__seq_be(self):
+                self._should_write_file_name = self.file_name__enabled
+                self._should_write_first_aux = self.first_aux__enabled
+                self._should_write_next = self.next__enabled
+                if self.ofs_start < 0:
+                    pass
+                    if len(self._unnamed0) != 0:
+                        raise kaitaistruct.ConsistencyError(u"_unnamed0", 0, len(self._unnamed0))
+                    self._io.write_bytes(self._unnamed0)
+
+                self._io.write_u2be(self.version)
+                self._io.write_u2be(self.num_aux_entries)
+                self._io.write_u4be(self.ofs_file_name)
+                self._io.write_u4be(self.ofs_first_aux)
+                self._io.write_u4be(self.ofs_next)
+
+
+            def _check(self):
+                if not self.version == 1:
+                    raise kaitaistruct.ValidationNotEqualError(1, self.version, None, u"/types/endian_elf/types/verneed_section_entry/seq/1")
+                if not self.num_aux_entries >= 1:
+                    raise kaitaistruct.ValidationLessThanError(1, self.num_aux_entries, None, u"/types/endian_elf/types/verneed_section_entry/seq/2")
+                if not self.ofs_first_aux >= 16:
+                    raise kaitaistruct.ValidationLessThanError(16, self.ofs_first_aux, None, u"/types/endian_elf/types/verneed_section_entry/seq/4")
+                _ = self.ofs_next
+                if not  ((_ == 0) or (_ >= 16)) :
+                    raise kaitaistruct.ValidationExprError(self.ofs_next, None, u"/types/endian_elf/types/verneed_section_entry/seq/5")
+                if self.file_name__enabled:
+                    pass
+                    if self._parent.is_string_table_linked:
+                        pass
+                        if KaitaiStream.byte_array_index_of((self._m_file_name).encode(u"UTF-8"), 0) != -1:
+                            raise kaitaistruct.ConsistencyError(u"file_name", -1, KaitaiStream.byte_array_index_of((self._m_file_name).encode(u"UTF-8"), 0))
+
+
+                if self.first_aux__enabled:
+                    pass
+                    if self._m_first_aux._root != self._root:
+                        raise kaitaistruct.ConsistencyError(u"first_aux", self._root, self._m_first_aux._root)
+                    if self._m_first_aux._parent != self._parent:
+                        raise kaitaistruct.ConsistencyError(u"first_aux", self._parent, self._m_first_aux._parent)
+
+                if self.next__enabled:
+                    pass
+                    if self.ofs_next != 0:
+                        pass
+                        if self._m_next._root != self._root:
+                            raise kaitaistruct.ConsistencyError(u"next", self._root, self._m_next._root)
+                        if self._m_next._parent != self._parent:
+                            raise kaitaistruct.ConsistencyError(u"next", self._parent, self._m_next._parent)
+
+
+                self._dirty = False
+
+            @property
+            def file_name(self):
+                if self._should_write_file_name:
+                    self._write_file_name()
+                if hasattr(self, '_m_file_name'):
+                    return self._m_file_name
+
+                if not self.file_name__enabled:
+                    return None
+
+                if self._parent.is_string_table_linked:
+                    pass
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_file_name)
+                    if self._is_le:
+                        self._m_file_name = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+                    else:
+                        self._m_file_name = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+                    io.seek(_pos)
+
+                return getattr(self, '_m_file_name', None)
+
+            @file_name.setter
+            def file_name(self, v):
+                self._dirty = True
+                self._m_file_name = v
+
+            def _write_file_name(self):
+                self._should_write_file_name = False
+                if self._parent.is_string_table_linked:
+                    pass
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_file_name)
+                    if self._is_le:
+                        io.write_bytes((self._m_file_name).encode(u"UTF-8"))
+                        io.write_u1(0)
+                    else:
+                        io.write_bytes((self._m_file_name).encode(u"UTF-8"))
+                        io.write_u1(0)
+                    io.seek(_pos)
+
+
+            @property
+            def first_aux(self):
+                """First auxiliary entry of type `vernaux_entry` (`Elfxx_Vernaux`).
+                The rest follow its `next` instance.
+                """
+                if self._should_write_first_aux:
+                    self._write_first_aux()
+                if hasattr(self, '_m_first_aux'):
+                    return self._m_first_aux
+
+                if not self.first_aux__enabled:
+                    return None
+
+                _pos = self._io.pos()
+                self._io.seek(self.ofs_start + self.ofs_first_aux)
+                if self._is_le:
+                    self._m_first_aux = Elf.EndianElf.VernauxEntry(self._io, self._parent, self._root, self._is_le)
+                    self._m_first_aux._read()
+                else:
+                    self._m_first_aux = Elf.EndianElf.VernauxEntry(self._io, self._parent, self._root, self._is_le)
+                    self._m_first_aux._read()
+                self._io.seek(_pos)
+                return getattr(self, '_m_first_aux', None)
+
+            @first_aux.setter
+            def first_aux(self, v):
+                self._dirty = True
+                self._m_first_aux = v
+
+            def _write_first_aux(self):
+                self._should_write_first_aux = False
+                _pos = self._io.pos()
+                self._io.seek(self.ofs_start + self.ofs_first_aux)
+                if self._is_le:
+                    self._m_first_aux._write__seq(self._io)
+                else:
+                    self._m_first_aux._write__seq(self._io)
+                self._io.seek(_pos)
+
+            @property
+            def next(self):
+                if self._should_write_next:
+                    self._write_next()
+                if hasattr(self, '_m_next'):
+                    return self._m_next
+
+                if not self.next__enabled:
+                    return None
+
+                if self.ofs_next != 0:
+                    pass
+                    _pos = self._io.pos()
+                    self._io.seek(self.ofs_start + self.ofs_next)
+                    if self._is_le:
+                        self._m_next = Elf.EndianElf.VerneedSectionEntry(self._io, self._parent, self._root, self._is_le)
+                        self._m_next._read()
+                    else:
+                        self._m_next = Elf.EndianElf.VerneedSectionEntry(self._io, self._parent, self._root, self._is_le)
+                        self._m_next._read()
+                    self._io.seek(_pos)
+
+                return getattr(self, '_m_next', None)
+
+            @next.setter
+            def next(self, v):
+                self._dirty = True
+                self._m_next = v
+
+            def _write_next(self):
+                self._should_write_next = False
+                if self.ofs_next != 0:
+                    pass
+                    _pos = self._io.pos()
+                    self._io.seek(self.ofs_start + self.ofs_next)
+                    if self._is_le:
+                        self._m_next._write__seq(self._io)
+                    else:
+                        self._m_next._write__seq(self._io)
+                    self._io.seek(_pos)
+
+
+            @property
+            def ofs_start(self):
+                if hasattr(self, '_m_ofs_start'):
+                    return self._m_ofs_start
+
+                self._m_ofs_start = self._io.pos()
+                return getattr(self, '_m_ofs_start', None)
+
+            def _invalidate_ofs_start(self):
+                del self._m_ofs_start
+
+        class VersionFlags(ReadWriteKaitaiStruct):
+            """Version information flag bitmask, shared by the `flags` (`vd_flags`)
+            field of `verdef_section_entry` (`Elfxx_Verdef`) and the `flags`
+            (`vna_flags`) field of `vernaux_entry` (`Elfxx_Vernaux`).
+            
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMSTARTSEQ
+            
+            
+            .. seealso::
+               Source - https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1078
+            
+            
+            .. seealso::
+               Source - https://www.akkadia.org/drepper/symbol-versioning
+            """
+            def __init__(self, value, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.VersionFlags, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+                self.value = value
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/version_flags")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                pass
+                self._dirty = False
+
+            def _read_be(self):
+                pass
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.VersionFlags, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/version_flags")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                pass
+
+
+            def _write__seq_be(self):
+                pass
+
+
+            def _check(self):
+                self._dirty = False
+
+            @property
+            def base(self):
+                """Version definition of the file itself (the base definition)."""
+                if hasattr(self, '_m_base'):
+                    return self._m_base
+
+                self._m_base = self.value & 1 != 0
+                return getattr(self, '_m_base', None)
+
+            def _invalidate_base(self):
+                del self._m_base
+            @property
+            def info(self):
+                """Version reference exists for informational purposes and does not
+                need to be validated at runtime.
+                
+                .. seealso::
+                   Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html
+                """
+                if hasattr(self, '_m_info'):
+                    return self._m_info
+
+                self._m_info = self.value & 4 != 0
+                return getattr(self, '_m_info', None)
+
+            def _invalidate_info(self):
+                del self._m_info
+            @property
+            def weak(self):
+                """Weak version identifier.
+                
+                A weak version definition has no symbols associated with the
+                version. See [Creating a Weak Version
+                Definition](https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/creating-weak-version-definition.html).
+                """
+                if hasattr(self, '_m_weak'):
+                    return self._m_weak
+
+                self._m_weak = self.value & 2 != 0
+                return getattr(self, '_m_weak', None)
+
+            def _invalidate_weak(self):
+                del self._m_weak
+
+        class VersionIndex(ReadWriteKaitaiStruct):
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.VersionIndex, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/version_index")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                self.raw = self._io.read_u2le()
+                self._dirty = False
+
+            def _read_be(self):
+                self.raw = self._io.read_u2be()
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.VersionIndex, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/version_index")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                self._io.write_u2le(self.raw)
+
+
+            def _write__seq_be(self):
+                self._io.write_u2be(self.raw)
+
+
+            def _check(self):
+                self._dirty = False
+
+            @property
+            def is_hidden(self):
+                """This bit is set if the symbol is hidden, and is only visible with
+                an explicit version number. This is a GNU extension.
+                
+                .. seealso::
+                   Source - https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L1379
+                """
+                if hasattr(self, '_m_is_hidden'):
+                    return self._m_is_hidden
+
+                self._m_is_hidden = self.raw & 32768 != 0
+                return getattr(self, '_m_is_hidden', None)
+
+            def _invalidate_is_hidden(self):
+                del self._m_is_hidden
+            @property
+            def value(self):
+                """The values `version_index_special::local` (0) and
+                `version_index_special::global_symbol` (1) have special meanings.
+                The `version_index_special` value instance converts the integer
+                value to the `version_index_special` enum.
+                """
+                if hasattr(self, '_m_value'):
+                    return self._m_value
+
+                self._m_value = self.raw & 32767
+                return getattr(self, '_m_value', None)
+
+            def _invalidate_value(self):
+                del self._m_value
+            @property
+            def version_index_special(self):
+                """Note: we match special constants against the full 16-bit integer
+                value (called `raw` in this .ksy implementation), because that's
+                what the `readelf` command does when deciding whether to print
+                `0 (*local*)` or `1 (*global*)` in the `.gnu.version`
+                (`SHT_GNU_versym`) section - see
+                <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L14079>.
+                
+                Besides, `version_index_special::eliminate` (`VER_NDX_ELIMINATE`)
+                has a value of `0xff01`, which is a 16-bit value. If we matched
+                against `value` instead, `version_index_special::eliminate` would
+                be unreachable, because `value` contains only the lower 15 bits,
+                so its maximum possible value is `0x7fff`.
+                """
+                if hasattr(self, '_m_version_index_special'):
+                    return self._m_version_index_special
+
+                self._m_version_index_special = KaitaiStream.resolve_enum(Elf.VersionIndexSpecial, self.raw)
+                return getattr(self, '_m_version_index_special', None)
+
+            def _invalidate_version_index_special(self):
+                del self._m_version_index_special
+
+        class VersymSection(ReadWriteKaitaiStruct):
+            """Symbol Version Table, contained in the special section named
+            `.gnu.version` with the section type `sh_type::gnu_versym`
+            (`SHT_GNU_versym`).
+            
+            This section must have the same number of entries as the Dynamic
+            Symbol Table in the `.dynsym` section (section type `sh_type::dynsym`
+            / `SHT_DYNSYM`). Each entry specifies the version defined for or
+            required by the corresponding symbol in the Dynamic Symbol Table.
+            
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERTBL
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-symbol-section.html
+            
+            
+            .. seealso::
+               Source - https://www.akkadia.org/drepper/symbol-versioning
+            """
+            def __init__(self, _io=None, _parent=None, _root=None, _is_le=None):
+                super(Elf.EndianElf.VersymSection, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/versym_section")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+                self._dirty = False
+
+            def _read_le(self):
+                self.entries = []
+                i = 0
+                while not self._io.is_eof():
+                    _t_entries = Elf.EndianElf.VersionIndex(self._io, self, self._root, self._is_le)
+                    try:
+                        _t_entries._read()
+                    finally:
+                        self.entries.append(_t_entries)
+                    i += 1
+
+                self._dirty = False
+
+            def _read_be(self):
+                self.entries = []
+                i = 0
+                while not self._io.is_eof():
+                    _t_entries = Elf.EndianElf.VersionIndex(self._io, self, self._root, self._is_le)
+                    try:
+                        _t_entries._read()
+                    finally:
+                        self.entries.append(_t_entries)
+                    i += 1
+
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                for i in range(len(self.entries)):
+                    pass
+                    self.entries[i]._fetch_instances()
+
+
+
+            def _write__seq(self, io=None):
+                super(Elf.EndianElf.VersymSection, self)._write__seq(io)
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/versym_section")
+                elif self._is_le == True:
+                    self._write__seq_le()
+                elif self._is_le == False:
+                    self._write__seq_be()
+
+
+            def _write__seq_le(self):
+                for i in range(len(self.entries)):
+                    pass
+                    if self._io.is_eof():
+                        raise kaitaistruct.ConsistencyError(u"entries", 0, self._io.size() - self._io.pos())
+                    self.entries[i]._write__seq(self._io)
+
+                if not self._io.is_eof():
+                    raise kaitaistruct.ConsistencyError(u"entries", 0, self._io.size() - self._io.pos())
+
+
+            def _write__seq_be(self):
+                for i in range(len(self.entries)):
+                    pass
+                    if self._io.is_eof():
+                        raise kaitaistruct.ConsistencyError(u"entries", 0, self._io.size() - self._io.pos())
+                    self.entries[i]._write__seq(self._io)
+
+                if not self._io.is_eof():
+                    raise kaitaistruct.ConsistencyError(u"entries", 0, self._io.size() - self._io.pos())
+
+
+            def _check(self):
+                for i in range(len(self.entries)):
+                    pass
+                    if self.entries[i]._root != self._root:
+                        raise kaitaistruct.ConsistencyError(u"entries", self._root, self.entries[i]._root)
+                    if self.entries[i]._parent != self:
+                        raise kaitaistruct.ConsistencyError(u"entries", self, self.entries[i]._parent)
 
                 self._dirty = False
 
@@ -4162,6 +6907,18 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_write
 
     class SectionHeaderFlags(ReadWriteKaitaiStruct):
+        """
+        .. seealso::
+           Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675
+        
+        
+        .. seealso::
+           Source - https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L614
+        
+        
+        .. seealso::
+           Source - https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L468
+        """
         def __init__(self, value, _io=None, _parent=None, _root=None):
             super(Elf.SectionHeaderFlags, self).__init__(_io)
             self._parent = _parent
@@ -4186,7 +6943,7 @@ class Elf(ReadWriteKaitaiStruct):
 
         @property
         def alloc(self):
-            """occupies memory during execution."""
+            """Occupies memory during execution."""
             if hasattr(self, '_m_alloc'):
                 return self._m_alloc
 
@@ -4196,19 +6953,30 @@ class Elf(ReadWriteKaitaiStruct):
         def _invalidate_alloc(self):
             del self._m_alloc
         @property
+        def compressed(self):
+            """Section with compressed data."""
+            if hasattr(self, '_m_compressed'):
+                return self._m_compressed
+
+            self._m_compressed = self.value & 2048 != 0
+            return getattr(self, '_m_compressed', None)
+
+        def _invalidate_compressed(self):
+            del self._m_compressed
+        @property
         def exclude(self):
-            """section is excluded unless referenced or allocated (Solaris)."""
+            """Section is excluded unless referenced or allocated (Solaris)."""
             if hasattr(self, '_m_exclude'):
                 return self._m_exclude
 
-            self._m_exclude = self.value & 134217728 != 0
+            self._m_exclude = self.value & 2147483648 != 0
             return getattr(self, '_m_exclude', None)
 
         def _invalidate_exclude(self):
             del self._m_exclude
         @property
         def exec_instr(self):
-            """executable."""
+            """Executable machine instructions."""
             if hasattr(self, '_m_exec_instr'):
                 return self._m_exec_instr
 
@@ -4218,8 +6986,23 @@ class Elf(ReadWriteKaitaiStruct):
         def _invalidate_exec_instr(self):
             del self._m_exec_instr
         @property
+        def gnu_mbind(self):
+            """Mbind section.
+            
+            .. seealso::
+               Source - https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L631
+            """
+            if hasattr(self, '_m_gnu_mbind'):
+                return self._m_gnu_mbind
+
+            self._m_gnu_mbind = self.value & 16777216 != 0
+            return getattr(self, '_m_gnu_mbind', None)
+
+        def _invalidate_gnu_mbind(self):
+            del self._m_gnu_mbind
+        @property
         def group(self):
-            """section is member of a group."""
+            """Member of a section group."""
             if hasattr(self, '_m_group'):
                 return self._m_group
 
@@ -4230,7 +7013,8 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_group
         @property
         def info_link(self):
-            """'sh_info' contains SHT index."""
+            """Section header's `sh_info` field holds a section header table index
+            """
             if hasattr(self, '_m_info_link'):
                 return self._m_info_link
 
@@ -4241,7 +7025,7 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_info_link
         @property
         def link_order(self):
-            """preserve order after combining."""
+            """Preserve section ordering when linking."""
             if hasattr(self, '_m_link_order'):
                 return self._m_link_order
 
@@ -4252,7 +7036,7 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_link_order
         @property
         def mask_os(self):
-            """OS-specific."""
+            """OS-specific semantics."""
             if hasattr(self, '_m_mask_os'):
                 return self._m_mask_os
 
@@ -4263,7 +7047,7 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_mask_os
         @property
         def mask_proc(self):
-            """Processor-specific."""
+            """Processor-specific semantics."""
             if hasattr(self, '_m_mask_proc'):
                 return self._m_mask_proc
 
@@ -4274,7 +7058,7 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_mask_proc
         @property
         def merge(self):
-            """might be merged."""
+            """Data in this section can be merged to eliminate duplication."""
             if hasattr(self, '_m_merge'):
                 return self._m_merge
 
@@ -4285,29 +7069,63 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_merge
         @property
         def ordered(self):
-            """special ordering requirement (Solaris)."""
+            """Special ordering requirement (Solaris)
+            
+            From <https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675>:
+            
+            > `SHF_ORDERED` is an older version of the functionality provided by
+            > `SHF_LINK_ORDER`, and has been superseded by `SHF_LINK_ORDER`.
+            > `SHF_ORDERED` is no longer supported.
+            
+            .. seealso::
+               Source - https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L485
+            
+            
+            .. seealso::
+               Source - https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675
+            """
             if hasattr(self, '_m_ordered'):
                 return self._m_ordered
 
-            self._m_ordered = self.value & 67108864 != 0
+            self._m_ordered = self.value & 1073741824 != 0
             return getattr(self, '_m_ordered', None)
 
         def _invalidate_ordered(self):
             del self._m_ordered
         @property
-        def os_non_conforming(self):
-            """non-standard OS specific handling required."""
-            if hasattr(self, '_m_os_non_conforming'):
-                return self._m_os_non_conforming
+        def os_nonconforming(self):
+            """Special OS-specific handling required."""
+            if hasattr(self, '_m_os_nonconforming'):
+                return self._m_os_nonconforming
 
-            self._m_os_non_conforming = self.value & 256 != 0
-            return getattr(self, '_m_os_non_conforming', None)
+            self._m_os_nonconforming = self.value & 256 != 0
+            return getattr(self, '_m_os_nonconforming', None)
 
-        def _invalidate_os_non_conforming(self):
-            del self._m_os_non_conforming
+        def _invalidate_os_nonconforming(self):
+            del self._m_os_nonconforming
+        @property
+        def retain(self):
+            """Section should not be garbage collected by the linker.
+            
+            .. seealso::
+               Source - https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L630
+            
+            
+            
+            .. seealso::
+               Source - https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L484
+            """
+            if hasattr(self, '_m_retain'):
+                return self._m_retain
+
+            self._m_retain = self.value & 2097152 != 0
+            return getattr(self, '_m_retain', None)
+
+        def _invalidate_retain(self):
+            del self._m_retain
         @property
         def strings(self):
-            """contains nul-terminated strings."""
+            """Contains null-terminated character strings."""
             if hasattr(self, '_m_strings'):
                 return self._m_strings
 
@@ -4318,7 +7136,10 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_strings
         @property
         def tls(self):
-            """section hold thread-local data."""
+            """Thread-local storage section (`.tbss` or `.tdata` according to [ELF
+            Handling For Thread-Local
+            Storage](https://www.akkadia.org/drepper/tls.pdf))
+            """
             if hasattr(self, '_m_tls'):
                 return self._m_tls
 
@@ -4329,7 +7150,7 @@ class Elf(ReadWriteKaitaiStruct):
             del self._m_tls
         @property
         def write(self):
-            """writable."""
+            """Writable during execution."""
             if hasattr(self, '_m_write'):
                 return self._m_write
 

@@ -133,7 +133,7 @@ our $ENDIAN_BE = 2;
 our $MACHINE_NO_MACHINE = 0;
 our $MACHINE_M32 = 1;
 our $MACHINE_SPARC = 2;
-our $MACHINE_X86 = 3;
+our $MACHINE_I386 = 3;
 our $MACHINE_M68K = 4;
 our $MACHINE_M88K = 5;
 our $MACHINE_IAMCU = 6;
@@ -141,6 +141,7 @@ our $MACHINE_I860 = 7;
 our $MACHINE_MIPS = 8;
 our $MACHINE_S370 = 9;
 our $MACHINE_MIPS_RS3_LE = 10;
+our $MACHINE_OLD_SPARC_V9 = 11;
 our $MACHINE_PARISC = 15;
 our $MACHINE_VPP500 = 17;
 our $MACHINE_SPARC32PLUS = 18;
@@ -152,7 +153,7 @@ our $MACHINE_SPU = 23;
 our $MACHINE_V800 = 36;
 our $MACHINE_FR20 = 37;
 our $MACHINE_RH32 = 38;
-our $MACHINE_RCE = 39;
+our $MACHINE_MCORE = 39;
 our $MACHINE_ARM = 40;
 our $MACHINE_OLD_ALPHA = 41;
 our $MACHINE_SUPERH = 42;
@@ -182,10 +183,10 @@ our $MACHINE_PDP11 = 65;
 our $MACHINE_FX66 = 66;
 our $MACHINE_ST9PLUS = 67;
 our $MACHINE_ST7 = 68;
-our $MACHINE_MC68HC16 = 69;
-our $MACHINE_MC68HC11 = 70;
-our $MACHINE_MC68HC08 = 71;
-our $MACHINE_MC68HC05 = 72;
+our $MACHINE_M68HC16 = 69;
+our $MACHINE_M68HC11 = 70;
+our $MACHINE_M68HC08 = 71;
+our $MACHINE_M68HC05 = 72;
 our $MACHINE_SVX = 73;
 our $MACHINE_ST19 = 74;
 our $MACHINE_VAX = 75;
@@ -205,7 +206,7 @@ our $MACHINE_M32R = 88;
 our $MACHINE_MN10300 = 89;
 our $MACHINE_MN10200 = 90;
 our $MACHINE_PICOJAVA = 91;
-our $MACHINE_OPENRISC = 92;
+our $MACHINE_OR1K = 92;
 our $MACHINE_ARC_COMPACT = 93;
 our $MACHINE_XTENSA = 94;
 our $MACHINE_VIDEOCORE = 95;
@@ -216,7 +217,7 @@ our $MACHINE_SNP1K = 99;
 our $MACHINE_ST200 = 100;
 our $MACHINE_IP2K = 101;
 our $MACHINE_MAX = 102;
-our $MACHINE_COMPACT_RISC = 103;
+our $MACHINE_CR = 103;
 our $MACHINE_F2MC16 = 104;
 our $MACHINE_MSP430 = 105;
 our $MACHINE_BLACKFIN = 106;
@@ -260,7 +261,7 @@ our $MACHINE_ECOG1X = 168;
 our $MACHINE_MAXQ30 = 169;
 our $MACHINE_XIMO16 = 170;
 our $MACHINE_MANIK = 171;
-our $MACHINE_CRAYNV2 = 172;
+our $MACHINE_CRAY_NV2 = 172;
 our $MACHINE_RX = 173;
 our $MACHINE_METAG = 174;
 our $MACHINE_MCST_ELBRUS = 175;
@@ -268,9 +269,11 @@ our $MACHINE_ECOG16 = 176;
 our $MACHINE_CR16 = 177;
 our $MACHINE_ETPU = 178;
 our $MACHINE_SLE9X = 179;
-our $MACHINE_L10M = 180;
-our $MACHINE_K10M = 181;
+our $MACHINE_L1OM = 180;
+our $MACHINE_K1OM = 181;
+our $MACHINE_INTEL182 = 182;
 our $MACHINE_AARCH64 = 183;
+our $MACHINE_ARM184 = 184;
 our $MACHINE_AVR32 = 185;
 our $MACHINE_STM8 = 186;
 our $MACHINE_TILE64 = 187;
@@ -281,11 +284,11 @@ our $MACHINE_TILEGX = 191;
 our $MACHINE_CLOUDSHIELD = 192;
 our $MACHINE_COREA_1ST = 193;
 our $MACHINE_COREA_2ND = 194;
-our $MACHINE_ARCV2 = 195;
+our $MACHINE_ARC_COMPACT2 = 195;
 our $MACHINE_OPEN8 = 196;
 our $MACHINE_RL78 = 197;
 our $MACHINE_VIDEOCORE5 = 198;
-our $MACHINE_RENESAS_78KOR = 199;
+our $MACHINE_RENESAS_78K0R = 199;
 our $MACHINE_FREESCALE_56800EX = 200;
 our $MACHINE_BA1 = 201;
 our $MACHINE_BA2 = 202;
@@ -310,7 +313,7 @@ our $MACHINE_Z80 = 220;
 our $MACHINE_VISIUM = 221;
 our $MACHINE_FT32 = 222;
 our $MACHINE_MOXIE = 223;
-our $MACHINE_AMD_GPU = 224;
+our $MACHINE_AMDGPU = 224;
 our $MACHINE_RISCV = 243;
 our $MACHINE_LANAI = 244;
 our $MACHINE_CEVA = 245;
@@ -325,12 +328,20 @@ our $MACHINE_ARC_COMPACT3_64 = 253;
 our $MACHINE_MCS6502 = 254;
 our $MACHINE_ARC_COMPACT3 = 255;
 our $MACHINE_KVX = 256;
-our $MACHINE_WDC65816 = 257;
+our $MACHINE_WDC_65816 = 257;
 our $MACHINE_LOONGARCH = 258;
 our $MACHINE_KF32 = 259;
 our $MACHINE_U16_U8CORE = 260;
 our $MACHINE_TACHYUM = 261;
 our $MACHINE_NXP_56800EF = 262;
+our $MACHINE_SBF = 263;
+our $MACHINE_AI_ENGINE = 264;
+our $MACHINE_SIMA_MLA = 265;
+our $MACHINE_BANG = 266;
+our $MACHINE_LOONGGPU = 267;
+our $MACHINE_SW64 = 268;
+our $MACHINE_AI_ENGINE_CTRLCODE = 269;
+our $MACHINE_PPU = 270;
 our $MACHINE_AVR_OLD = 4183;
 our $MACHINE_MSP430_OLD = 4185;
 our $MACHINE_ADAPTEVA_EPIPHANY = 4643;
@@ -383,6 +394,12 @@ our $OS_ABI_AROS = 15;
 our $OS_ABI_FENIXOS = 16;
 our $OS_ABI_CLOUDABI = 17;
 our $OS_ABI_OPENVOS = 18;
+our $OS_ABI_CUDA = 51;
+our $OS_ABI_ARM_AEABI = 64;
+our $OS_ABI_ARM_FDPIC = 65;
+our $OS_ABI_AMDGPU_MESA3D = 66;
+our $OS_ABI_ARM = 97;
+our $OS_ABI_STANDALONE = 255;
 
 our $PH_TYPE_NULL_TYPE = 0;
 our $PH_TYPE_LOAD = 1;
@@ -392,12 +409,30 @@ our $PH_TYPE_NOTE = 4;
 our $PH_TYPE_SHLIB = 5;
 our $PH_TYPE_PHDR = 6;
 our $PH_TYPE_TLS = 7;
+our $PH_TYPE_SUNW_UNWIND = 1684333904;
 our $PH_TYPE_GNU_EH_FRAME = 1685382480;
 our $PH_TYPE_GNU_STACK = 1685382481;
 our $PH_TYPE_GNU_RELRO = 1685382482;
 our $PH_TYPE_GNU_PROPERTY = 1685382483;
+our $PH_TYPE_GNU_SFRAME = 1685382484;
 our $PH_TYPE_PAX_FLAGS = 1694766464;
+our $PH_TYPE_OPENBSD_MUTABLE = 1705237477;
+our $PH_TYPE_OPENBSD_RANDOMIZE = 1705237478;
+our $PH_TYPE_OPENBSD_WXNEEDED = 1705237479;
+our $PH_TYPE_OPENBSD_NOBTCFI = 1705237480;
+our $PH_TYPE_OPENBSD_SYSCALLS = 1705237481;
+our $PH_TYPE_OPENBSD_BOOTDATA = 1705253862;
+our $PH_TYPE_SUNW_SYSSTAT_ZONE = 1879048183;
+our $PH_TYPE_SUNW_SYSSTAT = 1879048184;
+our $PH_TYPE_SUNW_RESERVE = 1879048185;
+our $PH_TYPE_SUNW_BSS = 1879048186;
+our $PH_TYPE_SUNW_STACK = 1879048187;
+our $PH_TYPE_SUNW_DTRACE = 1879048188;
+our $PH_TYPE_SUNW_CAP = 1879048189;
+our $PH_TYPE_ARM_ARCHEXT = 1879048192;
 our $PH_TYPE_ARM_EXIDX = 1879048193;
+our $PH_TYPE_AARCH64_MEMTAG_MTE = 1879048194;
+our $PH_TYPE_RISCV_ATTRIBUTES = 1879048195;
 
 our $SECTION_HEADER_IDX_SPECIAL_UNDEFINED = 0;
 our $SECTION_HEADER_IDX_SPECIAL_BEFORE = 65280;
@@ -426,6 +461,27 @@ our $SH_TYPE_PREINIT_ARRAY = 16;
 our $SH_TYPE_GROUP = 17;
 our $SH_TYPE_SYMTAB_SHNDX = 18;
 our $SH_TYPE_RELR = 19;
+our $SH_TYPE_ANDROID_REL = 1610612737;
+our $SH_TYPE_ANDROID_RELA = 1610612738;
+our $SH_TYPE_GNU_INCREMENTAL_INPUTS = 1879000832;
+our $SH_TYPE_LLVM_ODRTAB = 1879002112;
+our $SH_TYPE_LLVM_LINKER_OPTIONS = 1879002113;
+our $SH_TYPE_LLVM_ADDRSIG = 1879002115;
+our $SH_TYPE_LLVM_DEPENDENT_LIBRARIES = 1879002116;
+our $SH_TYPE_LLVM_SYMPART = 1879002117;
+our $SH_TYPE_LLVM_PART_EHDR = 1879002118;
+our $SH_TYPE_LLVM_PART_PHDR = 1879002119;
+our $SH_TYPE_LLVM_BB_ADDR_MAP_V0 = 1879002120;
+our $SH_TYPE_LLVM_CALL_GRAPH_PROFILE = 1879002121;
+our $SH_TYPE_LLVM_BB_ADDR_MAP = 1879002122;
+our $SH_TYPE_LLVM_OFFLOADING = 1879002123;
+our $SH_TYPE_LLVM_LTO = 1879002124;
+our $SH_TYPE_LLVM_JT_SIZES = 1879002125;
+our $SH_TYPE_LLVM_CFI_JUMP_TABLE = 1879002126;
+our $SH_TYPE_LLVM_CALL_GRAPH = 1879002127;
+our $SH_TYPE_LLVM_DYNDBG_ELF = 1879002128;
+our $SH_TYPE_ANDROID_RELR = 1879047936;
+our $SH_TYPE_SUNW_CTF = 1879048171;
 our $SH_TYPE_SUNW_SYMNSORT = 1879048172;
 our $SH_TYPE_SUNW_PHNAME = 1879048173;
 our $SH_TYPE_SUNW_ANCILLARY = 1879048174;
@@ -434,24 +490,26 @@ our $SH_TYPE_SUNW_CAPINFO = 1879048176;
 our $SH_TYPE_SUNW_SYMSORT = 1879048177;
 our $SH_TYPE_SUNW_TLSSORT = 1879048178;
 our $SH_TYPE_SUNW_LDYNSYM = 1879048179;
-our $SH_TYPE_SUNW_DOF = 1879048180;
-our $SH_TYPE_SUNW_CAP = 1879048181;
-our $SH_TYPE_SUNW_SIGNATURE = 1879048182;
-our $SH_TYPE_SUNW_ANNOTATE = 1879048183;
-our $SH_TYPE_SUNW_DEBUGSTR = 1879048184;
-our $SH_TYPE_SUNW_DEBUG = 1879048185;
+our $SH_TYPE_GNU_SFRAME = 1879048180;
+our $SH_TYPE_GNU_ATTRIBUTES = 1879048181;
+our $SH_TYPE_GNU_HASH = 1879048182;
+our $SH_TYPE_GNU_LIBLIST = 1879048183;
+our $SH_TYPE_CHECKSUM = 1879048184;
+our $SH_TYPE_GNU_OBJECT_ONLY = 1879048185;
 our $SH_TYPE_SUNW_MOVE = 1879048186;
 our $SH_TYPE_SUNW_COMDAT = 1879048187;
 our $SH_TYPE_SUNW_SYMINFO = 1879048188;
-our $SH_TYPE_SUNW_VERDEF = 1879048189;
-our $SH_TYPE_SUNW_VERNEED = 1879048190;
-our $SH_TYPE_SUNW_VERSYM = 1879048191;
+our $SH_TYPE_GNU_VERDEF = 1879048189;
+our $SH_TYPE_GNU_VERNEED = 1879048190;
+our $SH_TYPE_GNU_VERSYM = 1879048191;
 our $SH_TYPE_SPARC_GOTDATA = 1879048192;
-our $SH_TYPE_AMD64_UNWIND = 1879048193;
+our $SH_TYPE_X86_64_UNWIND = 1879048193;
 our $SH_TYPE_ARM_PREEMPTMAP = 1879048194;
 our $SH_TYPE_ARM_ATTRIBUTES = 1879048195;
 our $SH_TYPE_ARM_DEBUGOVERLAY = 1879048196;
 our $SH_TYPE_ARM_OVERLAYSECTION = 1879048197;
+our $SH_TYPE_AARCH64_MEMTAG_GLOBALS_STATIC = 1879048199;
+our $SH_TYPE_AARCH64_MEMTAG_GLOBALS_DYNAMIC = 1879048200;
 
 our $SYMBOL_BINDING_LOCAL = 0;
 our $SYMBOL_BINDING_GLOBAL_SYMBOL = 1;
@@ -486,6 +544,10 @@ our $SYMBOL_VISIBILITY_PROTECTED = 3;
 our $SYMBOL_VISIBILITY_EXPORTED = 4;
 our $SYMBOL_VISIBILITY_SINGLETON = 5;
 our $SYMBOL_VISIBILITY_ELIMINATE = 6;
+
+our $VERSION_INDEX_SPECIAL_LOCAL = 0;
+our $VERSION_INDEX_SPECIAL_GLOBAL_SYMBOL = 1;
+our $VERSION_INDEX_SPECIAL_ELIMINATE = 65281;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -627,11 +689,11 @@ sub _read {
 
 }
 
-sub confalt {
+sub conf_alt {
     my ($self) = @_;
-    return $self->{confalt} if ($self->{confalt});
-    $self->{confalt} = ($self->value() & 8192) != 0;
-    return $self->{confalt};
+    return $self->{conf_alt} if ($self->{conf_alt});
+    $self->{conf_alt} = ($self->value() & 8192) != 0;
+    return $self->{conf_alt};
 }
 
 sub direct {
@@ -641,18 +703,18 @@ sub direct {
     return $self->{direct};
 }
 
-sub dispreldne {
+sub disp_rel_dne {
     my ($self) = @_;
-    return $self->{dispreldne} if ($self->{dispreldne});
-    $self->{dispreldne} = ($self->value() & 32768) != 0;
-    return $self->{dispreldne};
+    return $self->{disp_rel_dne} if ($self->{disp_rel_dne});
+    $self->{disp_rel_dne} = ($self->value() & 32768) != 0;
+    return $self->{disp_rel_dne};
 }
 
-sub disprelpnd {
+sub disp_rel_pnd {
     my ($self) = @_;
-    return $self->{disprelpnd} if ($self->{disprelpnd});
-    $self->{disprelpnd} = ($self->value() & 65536) != 0;
-    return $self->{disprelpnd};
+    return $self->{disp_rel_pnd} if ($self->{disp_rel_pnd});
+    $self->{disp_rel_pnd} = ($self->value() & 65536) != 0;
+    return $self->{disp_rel_pnd};
 }
 
 sub edited {
@@ -662,18 +724,18 @@ sub edited {
     return $self->{edited};
 }
 
-sub endfiltee {
+sub end_filtee {
     my ($self) = @_;
-    return $self->{endfiltee} if ($self->{endfiltee});
-    $self->{endfiltee} = ($self->value() & 16384) != 0;
-    return $self->{endfiltee};
+    return $self->{end_filtee} if ($self->{end_filtee});
+    $self->{end_filtee} = ($self->value() & 16384) != 0;
+    return $self->{end_filtee};
 }
 
-sub globaudit {
+sub glob_audit {
     my ($self) = @_;
-    return $self->{globaudit} if ($self->{globaudit});
-    $self->{globaudit} = ($self->value() & 16777216) != 0;
-    return $self->{globaudit};
+    return $self->{glob_audit} if ($self->{glob_audit});
+    $self->{glob_audit} = ($self->value() & 16777216) != 0;
+    return $self->{glob_audit};
 }
 
 sub group {
@@ -683,18 +745,18 @@ sub group {
     return $self->{group};
 }
 
-sub ignmuldef {
+sub ign_mul_def {
     my ($self) = @_;
-    return $self->{ignmuldef} if ($self->{ignmuldef});
-    $self->{ignmuldef} = ($self->value() & 262144) != 0;
-    return $self->{ignmuldef};
+    return $self->{ign_mul_def} if ($self->{ign_mul_def});
+    $self->{ign_mul_def} = ($self->value() & 262144) != 0;
+    return $self->{ign_mul_def};
 }
 
-sub initfirst {
+sub init_first {
     my ($self) = @_;
-    return $self->{initfirst} if ($self->{initfirst});
-    $self->{initfirst} = ($self->value() & 32) != 0;
-    return $self->{initfirst};
+    return $self->{init_first} if ($self->{init_first});
+    $self->{init_first} = ($self->value() & 32) != 0;
+    return $self->{init_first};
 }
 
 sub interpose {
@@ -704,67 +766,81 @@ sub interpose {
     return $self->{interpose};
 }
 
-sub loadfltr {
+sub kmod {
     my ($self) = @_;
-    return $self->{loadfltr} if ($self->{loadfltr});
-    $self->{loadfltr} = ($self->value() & 16) != 0;
-    return $self->{loadfltr};
+    return $self->{kmod} if ($self->{kmod});
+    $self->{kmod} = ($self->value() & 268435456) != 0;
+    return $self->{kmod};
 }
 
-sub nodeflib {
+sub load_fltr {
     my ($self) = @_;
-    return $self->{nodeflib} if ($self->{nodeflib});
-    $self->{nodeflib} = ($self->value() & 2048) != 0;
-    return $self->{nodeflib};
+    return $self->{load_fltr} if ($self->{load_fltr});
+    $self->{load_fltr} = ($self->value() & 16) != 0;
+    return $self->{load_fltr};
 }
 
-sub nodelete {
+sub no_common {
     my ($self) = @_;
-    return $self->{nodelete} if ($self->{nodelete});
-    $self->{nodelete} = ($self->value() & 8) != 0;
-    return $self->{nodelete};
+    return $self->{no_common} if ($self->{no_common});
+    $self->{no_common} = ($self->value() & 1073741824) != 0;
+    return $self->{no_common};
 }
 
-sub nodirect {
+sub no_def_lib {
     my ($self) = @_;
-    return $self->{nodirect} if ($self->{nodirect});
-    $self->{nodirect} = ($self->value() & 131072) != 0;
-    return $self->{nodirect};
+    return $self->{no_def_lib} if ($self->{no_def_lib});
+    $self->{no_def_lib} = ($self->value() & 2048) != 0;
+    return $self->{no_def_lib};
 }
 
-sub nodump {
+sub no_delete {
     my ($self) = @_;
-    return $self->{nodump} if ($self->{nodump});
-    $self->{nodump} = ($self->value() & 4096) != 0;
-    return $self->{nodump};
+    return $self->{no_delete} if ($self->{no_delete});
+    $self->{no_delete} = ($self->value() & 8) != 0;
+    return $self->{no_delete};
 }
 
-sub nohdr {
+sub no_direct {
     my ($self) = @_;
-    return $self->{nohdr} if ($self->{nohdr});
-    $self->{nohdr} = ($self->value() & 1048576) != 0;
-    return $self->{nohdr};
+    return $self->{no_direct} if ($self->{no_direct});
+    $self->{no_direct} = ($self->value() & 131072) != 0;
+    return $self->{no_direct};
 }
 
-sub noksyms {
+sub no_dump {
     my ($self) = @_;
-    return $self->{noksyms} if ($self->{noksyms});
-    $self->{noksyms} = ($self->value() & 524288) != 0;
-    return $self->{noksyms};
+    return $self->{no_dump} if ($self->{no_dump});
+    $self->{no_dump} = ($self->value() & 4096) != 0;
+    return $self->{no_dump};
 }
 
-sub noopen {
+sub no_hdr {
     my ($self) = @_;
-    return $self->{noopen} if ($self->{noopen});
-    $self->{noopen} = ($self->value() & 64) != 0;
-    return $self->{noopen};
+    return $self->{no_hdr} if ($self->{no_hdr});
+    $self->{no_hdr} = ($self->value() & 1048576) != 0;
+    return $self->{no_hdr};
 }
 
-sub noreloc {
+sub no_ksyms {
     my ($self) = @_;
-    return $self->{noreloc} if ($self->{noreloc});
-    $self->{noreloc} = ($self->value() & 4194304) != 0;
-    return $self->{noreloc};
+    return $self->{no_ksyms} if ($self->{no_ksyms});
+    $self->{no_ksyms} = ($self->value() & 524288) != 0;
+    return $self->{no_ksyms};
+}
+
+sub no_open {
+    my ($self) = @_;
+    return $self->{no_open} if ($self->{no_open});
+    $self->{no_open} = ($self->value() & 64) != 0;
+    return $self->{no_open};
+}
+
+sub no_reloc {
+    my ($self) = @_;
+    return $self->{no_reloc} if ($self->{no_reloc});
+    $self->{no_reloc} = ($self->value() & 4194304) != 0;
+    return $self->{no_reloc};
 }
 
 sub now {
@@ -809,11 +885,11 @@ sub stub {
     return $self->{stub};
 }
 
-sub symintpose {
+sub sym_intpose {
     my ($self) = @_;
-    return $self->{symintpose} if ($self->{symintpose});
-    $self->{symintpose} = ($self->value() & 8388608) != 0;
-    return $self->{symintpose};
+    return $self->{sym_intpose} if ($self->{sym_intpose});
+    $self->{sym_intpose} = ($self->value() & 8388608) != 0;
+    return $self->{sym_intpose};
 }
 
 sub trans {
@@ -821,6 +897,13 @@ sub trans {
     return $self->{trans} if ($self->{trans});
     $self->{trans} = ($self->value() & 512) != 0;
     return $self->{trans};
+}
+
+sub weak_filter {
+    my ($self) = @_;
+    return $self->{weak_filter} if ($self->{weak_filter});
+    $self->{weak_filter} = ($self->value() & 536870912) != 0;
+    return $self->{weak_filter};
 }
 
 sub value {
@@ -1175,221 +1258,6 @@ sub _raw_section_names {
 }
 
 ########################################################################
-package Elf::EndianElf::DynamicSection;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root;
-    $self->{_is_le} = $_is_le;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    if (!(defined $self->{_is_le})) {
-        die "Unable to decide on endianness";
-    } elsif ($self->{_is_le}) {
-        $self->_read_le();
-    } else {
-        $self->_read_be();
-    }
-}
-
-sub _read_le {
-    my ($self) = @_;
-
-    $self->{entries} = [];
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, Elf::EndianElf::DynamicSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
-    }
-}
-
-sub _read_be {
-    my ($self) = @_;
-
-    $self->{entries} = [];
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, Elf::EndianElf::DynamicSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
-    }
-}
-
-sub is_string_table_linked {
-    my ($self) = @_;
-    return $self->{is_string_table_linked} if ($self->{is_string_table_linked});
-    $self->{is_string_table_linked} = $self->_parent()->linked_section()->type() == $Elf::SH_TYPE_STRTAB;
-    return $self->{is_string_table_linked};
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self->{entries};
-}
-
-########################################################################
-package Elf::EndianElf::DynamicSectionEntry;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root;
-    $self->{_is_le} = $_is_le;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    if (!(defined $self->{_is_le})) {
-        die "Unable to decide on endianness";
-    } elsif ($self->{_is_le}) {
-        $self->_read_le();
-    } else {
-        $self->_read_be();
-    }
-}
-
-sub _read_le {
-    my ($self) = @_;
-
-    my $_on = $self->_root()->bits();
-    if ($_on == $Elf::BITS_B32) {
-        $self->{tag} = $self->{_io}->read_u4le();
-    }
-    elsif ($_on == $Elf::BITS_B64) {
-        $self->{tag} = $self->{_io}->read_u8le();
-    }
-    my $_on = $self->_root()->bits();
-    if ($_on == $Elf::BITS_B32) {
-        $self->{value_or_ptr} = $self->{_io}->read_u4le();
-    }
-    elsif ($_on == $Elf::BITS_B64) {
-        $self->{value_or_ptr} = $self->{_io}->read_u8le();
-    }
-}
-
-sub _read_be {
-    my ($self) = @_;
-
-    my $_on = $self->_root()->bits();
-    if ($_on == $Elf::BITS_B32) {
-        $self->{tag} = $self->{_io}->read_u4be();
-    }
-    elsif ($_on == $Elf::BITS_B64) {
-        $self->{tag} = $self->{_io}->read_u8be();
-    }
-    my $_on = $self->_root()->bits();
-    if ($_on == $Elf::BITS_B32) {
-        $self->{value_or_ptr} = $self->{_io}->read_u4be();
-    }
-    elsif ($_on == $Elf::BITS_B64) {
-        $self->{value_or_ptr} = $self->{_io}->read_u8be();
-    }
-}
-
-sub flag_1_values {
-    my ($self) = @_;
-    return $self->{flag_1_values} if ($self->{flag_1_values});
-    if ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FLAGS_1) {
-        if ($self->{_is_le}) {
-            $self->{flag_1_values} = Elf::DtFlag1Values->new($self->{_io}, $self, $self->{_root});
-        } else {
-            $self->{flag_1_values} = Elf::DtFlag1Values->new($self->{_io}, $self, $self->{_root});
-        }
-    }
-    return $self->{flag_1_values};
-}
-
-sub flag_values {
-    my ($self) = @_;
-    return $self->{flag_values} if ($self->{flag_values});
-    if ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FLAGS) {
-        if ($self->{_is_le}) {
-            $self->{flag_values} = Elf::DtFlagValues->new($self->{_io}, $self, $self->{_root});
-        } else {
-            $self->{flag_values} = Elf::DtFlagValues->new($self->{_io}, $self, $self->{_root});
-        }
-    }
-    return $self->{flag_values};
-}
-
-sub is_value_str {
-    my ($self) = @_;
-    return $self->{is_value_str} if ($self->{is_value_str});
-    $self->{is_value_str} =  (($self->value_or_ptr() != 0) && ( (($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_NEEDED) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SONAME) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_RPATH) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_RUNPATH) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SUNW_FILTER) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_AUXILIARY) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FILTER) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_CONFIG) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_DEPAUDIT) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_AUDIT)) )) ;
-    return $self->{is_value_str};
-}
-
-sub tag_enum {
-    my ($self) = @_;
-    return $self->{tag_enum} if ($self->{tag_enum});
-    $self->{tag_enum} = $self->tag();
-    return $self->{tag_enum};
-}
-
-sub value_str {
-    my ($self) = @_;
-    return $self->{value_str} if ($self->{value_str});
-    if ( (($self->is_value_str()) && ($self->_parent()->is_string_table_linked())) ) {
-        my $io = $self->_parent()->_parent()->linked_section()->body()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->value_or_ptr());
-        if ($self->{_is_le}) {
-            $self->{value_str} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
-        } else {
-            $self->{value_str} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
-        }
-        $io->seek($_pos);
-    }
-    return $self->{value_str};
-}
-
-sub tag {
-    my ($self) = @_;
-    return $self->{tag};
-}
-
-sub value_or_ptr {
-    my ($self) = @_;
-    return $self->{value_or_ptr};
-}
-
-########################################################################
 package Elf::EndianElf::DynsymSection;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1607,7 +1475,7 @@ sub value {
 sub visibility {
     my ($self) = @_;
     return $self->{visibility} if ($self->{visibility});
-    $self->{visibility} = $self->other() & 3;
+    $self->{visibility} = $self->other() & 7;
     return $self->{visibility};
 }
 
@@ -1819,6 +1687,205 @@ sub descriptor_padding {
 }
 
 ########################################################################
+package Elf::EndianElf::PhDynamicSection;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    {
+        my $_it;
+        do {
+            $_it = Elf::EndianElf::PhDynamicSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{entries}}, $_it;
+        } until ($_it->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_NULL);
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    {
+        my $_it;
+        do {
+            $_it = Elf::EndianElf::PhDynamicSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{entries}}, $_it;
+        } until ($_it->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_NULL);
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+########################################################################
+package Elf::EndianElf::PhDynamicSectionEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{tag} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{tag} = $self->{_io}->read_u8le();
+    }
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{value_or_ptr} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{value_or_ptr} = $self->{_io}->read_u8le();
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{tag} = $self->{_io}->read_u4be();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{tag} = $self->{_io}->read_u8be();
+    }
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{value_or_ptr} = $self->{_io}->read_u4be();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{value_or_ptr} = $self->{_io}->read_u8be();
+    }
+}
+
+sub flag_1_values {
+    my ($self) = @_;
+    return $self->{flag_1_values} if ($self->{flag_1_values});
+    if ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FLAGS_1) {
+        if ($self->{_is_le}) {
+            $self->{flag_1_values} = Elf::DtFlag1Values->new($self->{_io}, $self, $self->{_root});
+        } else {
+            $self->{flag_1_values} = Elf::DtFlag1Values->new($self->{_io}, $self, $self->{_root});
+        }
+    }
+    return $self->{flag_1_values};
+}
+
+sub flag_values {
+    my ($self) = @_;
+    return $self->{flag_values} if ($self->{flag_values});
+    if ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FLAGS) {
+        if ($self->{_is_le}) {
+            $self->{flag_values} = Elf::DtFlagValues->new($self->{_io}, $self, $self->{_root});
+        } else {
+            $self->{flag_values} = Elf::DtFlagValues->new($self->{_io}, $self, $self->{_root});
+        }
+    }
+    return $self->{flag_values};
+}
+
+sub is_value_str {
+    my ($self) = @_;
+    return $self->{is_value_str} if ($self->{is_value_str});
+    $self->{is_value_str} =  (($self->value_or_ptr() != 0) && ( (($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_NEEDED) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SONAME) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_RPATH) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_RUNPATH) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SUNW_FILTER) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_AUXILIARY) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FILTER) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_CONFIG) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_DEPAUDIT) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_AUDIT)) )) ;
+    return $self->{is_value_str};
+}
+
+sub tag_enum {
+    my ($self) = @_;
+    return $self->{tag_enum} if ($self->{tag_enum});
+    $self->{tag_enum} = $self->tag();
+    return $self->{tag_enum};
+}
+
+sub tag {
+    my ($self) = @_;
+    return $self->{tag};
+}
+
+sub value_or_ptr {
+    my ($self) = @_;
+    return $self->{value_or_ptr};
+}
+
+########################################################################
 package Elf::EndianElf::ProgramHeader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1867,38 +1934,38 @@ sub _read_le {
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{offset} = $self->{_io}->read_u4le();
+        $self->{ofs_body} = $self->{_io}->read_u4le();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{offset} = $self->{_io}->read_u8le();
+        $self->{ofs_body} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{vaddr} = $self->{_io}->read_u4le();
+        $self->{virt_addr} = $self->{_io}->read_u4le();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{vaddr} = $self->{_io}->read_u8le();
+        $self->{virt_addr} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{paddr} = $self->{_io}->read_u4le();
+        $self->{phys_addr} = $self->{_io}->read_u4le();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{paddr} = $self->{_io}->read_u8le();
+        $self->{phys_addr} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{filesz} = $self->{_io}->read_u4le();
+        $self->{len_body} = $self->{_io}->read_u4le();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{filesz} = $self->{_io}->read_u8le();
+        $self->{len_body} = $self->{_io}->read_u8le();
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{memsz} = $self->{_io}->read_u4le();
+        $self->{memory_size} = $self->{_io}->read_u4le();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{memsz} = $self->{_io}->read_u8le();
+        $self->{memory_size} = $self->{_io}->read_u8le();
     }
     if ($self->_root()->bits() == $Elf::BITS_B32) {
         $self->{flags32} = $self->{_io}->read_u4le();
@@ -1921,38 +1988,38 @@ sub _read_be {
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{offset} = $self->{_io}->read_u4be();
+        $self->{ofs_body} = $self->{_io}->read_u4be();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{offset} = $self->{_io}->read_u8be();
+        $self->{ofs_body} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{vaddr} = $self->{_io}->read_u4be();
+        $self->{virt_addr} = $self->{_io}->read_u4be();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{vaddr} = $self->{_io}->read_u8be();
+        $self->{virt_addr} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{paddr} = $self->{_io}->read_u4be();
+        $self->{phys_addr} = $self->{_io}->read_u4be();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{paddr} = $self->{_io}->read_u8be();
+        $self->{phys_addr} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{filesz} = $self->{_io}->read_u4be();
+        $self->{len_body} = $self->{_io}->read_u4be();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{filesz} = $self->{_io}->read_u8be();
+        $self->{len_body} = $self->{_io}->read_u8be();
     }
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
-        $self->{memsz} = $self->{_io}->read_u4be();
+        $self->{memory_size} = $self->{_io}->read_u4be();
     }
     elsif ($_on == $Elf::BITS_B64) {
-        $self->{memsz} = $self->{_io}->read_u8be();
+        $self->{memory_size} = $self->{_io}->read_u8be();
     }
     if ($self->_root()->bits() == $Elf::BITS_B32) {
         $self->{flags32} = $self->{_io}->read_u4be();
@@ -1964,6 +2031,59 @@ sub _read_be {
     elsif ($_on == $Elf::BITS_B64) {
         $self->{align} = $self->{_io}->read_u8be();
     }
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body} if ($self->{body});
+    if ($self->len_body() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_body());
+        if ($self->{_is_le}) {
+            my $_on = $self->type();
+            if ($_on == $Elf::PH_TYPE_DYNAMIC) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::PhDynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::PH_TYPE_INTERP) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::ProgramHeader::PhInterpreter->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::PH_TYPE_NOTE) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::NoteSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            else {
+                $self->{body} = $io->read_bytes($self->len_body());
+            }
+        } else {
+            my $_on = $self->type();
+            if ($_on == $Elf::PH_TYPE_DYNAMIC) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::PhDynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::PH_TYPE_INTERP) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::ProgramHeader::PhInterpreter->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::PH_TYPE_NOTE) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::NoteSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            else {
+                $self->{body} = $io->read_bytes($self->len_body());
+            }
+        }
+        $io->seek($_pos);
+    }
+    return $self->{body};
 }
 
 sub flags_obj {
@@ -1999,29 +2119,29 @@ sub flags64 {
     return $self->{flags64};
 }
 
-sub offset {
+sub ofs_body {
     my ($self) = @_;
-    return $self->{offset};
+    return $self->{ofs_body};
 }
 
-sub vaddr {
+sub virt_addr {
     my ($self) = @_;
-    return $self->{vaddr};
+    return $self->{virt_addr};
 }
 
-sub paddr {
+sub phys_addr {
     my ($self) = @_;
-    return $self->{paddr};
+    return $self->{phys_addr};
 }
 
-sub filesz {
+sub len_body {
     my ($self) = @_;
-    return $self->{filesz};
+    return $self->{len_body};
 }
 
-sub memsz {
+sub memory_size {
     my ($self) = @_;
-    return $self->{memsz};
+    return $self->{memory_size};
 }
 
 sub flags32 {
@@ -2032,6 +2152,68 @@ sub flags32 {
 sub align {
     my ($self) = @_;
     return $self->{align};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self->{_raw_body};
+}
+
+########################################################################
+package Elf::EndianElf::ProgramHeader::PhInterpreter;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{path_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{path_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+}
+
+sub path_name {
+    my ($self) = @_;
+    return $self->{path_name};
 }
 
 ########################################################################
@@ -2287,7 +2469,7 @@ sub _read_le {
         $self->{len_body} = $self->{_io}->read_u8le();
     }
     $self->{linked_section_idx} = $self->{_io}->read_u4le();
-    $self->{info} = $self->{_io}->read_bytes(4);
+    $self->{info} = $self->{_io}->read_u4le();
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
         $self->{align} = $self->{_io}->read_u4le();
@@ -2338,7 +2520,7 @@ sub _read_be {
         $self->{len_body} = $self->{_io}->read_u8be();
     }
     $self->{linked_section_idx} = $self->{_io}->read_u4be();
-    $self->{info} = $self->{_io}->read_bytes(4);
+    $self->{info} = $self->{_io}->read_u4be();
     my $_on = $self->_root()->bits();
     if ($_on == $Elf::BITS_B32) {
         $self->{align} = $self->{_io}->read_u4be();
@@ -2367,12 +2549,27 @@ sub body {
             if ($_on == $Elf::SH_TYPE_DYNAMIC) {
                 $self->{_raw_body} = $io->read_bytes($self->len_body());
                 my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-                $self->{body} = Elf::EndianElf::DynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+                $self->{body} = Elf::EndianElf::ShDynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
             }
             elsif ($_on == $Elf::SH_TYPE_DYNSYM) {
                 $self->{_raw_body} = $io->read_bytes($self->len_body());
                 my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
                 $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_GNU_VERDEF) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::VerdefSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_GNU_VERNEED) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::VerneedSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_GNU_VERSYM) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::VersymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
             }
             elsif ($_on == $Elf::SH_TYPE_NOTE) {
                 $self->{_raw_body} = $io->read_bytes($self->len_body());
@@ -2407,12 +2604,27 @@ sub body {
             if ($_on == $Elf::SH_TYPE_DYNAMIC) {
                 $self->{_raw_body} = $io->read_bytes($self->len_body());
                 my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-                $self->{body} = Elf::EndianElf::DynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+                $self->{body} = Elf::EndianElf::ShDynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
             }
             elsif ($_on == $Elf::SH_TYPE_DYNSYM) {
                 $self->{_raw_body} = $io->read_bytes($self->len_body());
                 my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
                 $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_GNU_VERDEF) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::VerdefSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_GNU_VERNEED) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::VerneedSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_GNU_VERSYM) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::VersymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
             }
             elsif ($_on == $Elf::SH_TYPE_NOTE) {
                 $self->{_raw_body} = $io->read_bytes($self->len_body());
@@ -2539,6 +2751,229 @@ sub _raw_body {
 }
 
 ########################################################################
+package Elf::EndianElf::ShDynamicSection;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    {
+        my $_it;
+        do {
+            $_it = Elf::EndianElf::ShDynamicSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{entries}}, $_it;
+        } until ($_it->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_NULL);
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    {
+        my $_it;
+        do {
+            $_it = Elf::EndianElf::ShDynamicSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+            push @{$self->{entries}}, $_it;
+        } until ($_it->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_NULL);
+    }
+}
+
+sub is_string_table_linked {
+    my ($self) = @_;
+    return $self->{is_string_table_linked} if ($self->{is_string_table_linked});
+    $self->{is_string_table_linked} = $self->_parent()->linked_section()->type() == $Elf::SH_TYPE_STRTAB;
+    return $self->{is_string_table_linked};
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+########################################################################
+package Elf::EndianElf::ShDynamicSectionEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{tag} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{tag} = $self->{_io}->read_u8le();
+    }
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{value_or_ptr} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{value_or_ptr} = $self->{_io}->read_u8le();
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{tag} = $self->{_io}->read_u4be();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{tag} = $self->{_io}->read_u8be();
+    }
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{value_or_ptr} = $self->{_io}->read_u4be();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{value_or_ptr} = $self->{_io}->read_u8be();
+    }
+}
+
+sub flag_1_values {
+    my ($self) = @_;
+    return $self->{flag_1_values} if ($self->{flag_1_values});
+    if ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FLAGS_1) {
+        if ($self->{_is_le}) {
+            $self->{flag_1_values} = Elf::DtFlag1Values->new($self->{_io}, $self, $self->{_root});
+        } else {
+            $self->{flag_1_values} = Elf::DtFlag1Values->new($self->{_io}, $self, $self->{_root});
+        }
+    }
+    return $self->{flag_1_values};
+}
+
+sub flag_values {
+    my ($self) = @_;
+    return $self->{flag_values} if ($self->{flag_values});
+    if ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FLAGS) {
+        if ($self->{_is_le}) {
+            $self->{flag_values} = Elf::DtFlagValues->new($self->{_io}, $self, $self->{_root});
+        } else {
+            $self->{flag_values} = Elf::DtFlagValues->new($self->{_io}, $self, $self->{_root});
+        }
+    }
+    return $self->{flag_values};
+}
+
+sub is_value_str {
+    my ($self) = @_;
+    return $self->{is_value_str} if ($self->{is_value_str});
+    $self->{is_value_str} =  (($self->value_or_ptr() != 0) && ( (($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_NEEDED) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SONAME) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_RPATH) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_RUNPATH) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SUNW_FILTER) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_AUXILIARY) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FILTER) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_CONFIG) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_DEPAUDIT) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_AUDIT)) )) ;
+    return $self->{is_value_str};
+}
+
+sub tag_enum {
+    my ($self) = @_;
+    return $self->{tag_enum} if ($self->{tag_enum});
+    $self->{tag_enum} = $self->tag();
+    return $self->{tag_enum};
+}
+
+sub value_str {
+    my ($self) = @_;
+    return $self->{value_str} if ($self->{value_str});
+    if ( (($self->is_value_str()) && ($self->_parent()->is_string_table_linked())) ) {
+        my $io = $self->_parent()->_parent()->linked_section()->body()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->value_or_ptr());
+        if ($self->{_is_le}) {
+            $self->{value_str} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
+        } else {
+            $self->{value_str} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
+        }
+        $io->seek($_pos);
+    }
+    return $self->{value_str};
+}
+
+sub tag {
+    my ($self) = @_;
+    return $self->{tag};
+}
+
+sub value_or_ptr {
+    my ($self) = @_;
+    return $self->{value_or_ptr};
+}
+
+########################################################################
 package Elf::EndianElf::StringsStruct;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -2593,6 +3028,972 @@ sub _read_be {
     $self->{entries} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{entries}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+########################################################################
+package Elf::EndianElf::VerdauxEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    if ($self->ofs_start() < 0) {
+        $self->{_unnamed0} = $self->{_io}->read_bytes(0);
+    }
+    $self->{ofs_name} = $self->{_io}->read_u4le();
+    $self->{ofs_next} = $self->{_io}->read_u4le();
+    {
+        my $_it = $self->{ofs_next};
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    if ($self->ofs_start() < 0) {
+        $self->{_unnamed0} = $self->{_io}->read_bytes(0);
+    }
+    $self->{ofs_name} = $self->{_io}->read_u4be();
+    $self->{ofs_next} = $self->{_io}->read_u4be();
+    {
+        my $_it = $self->{ofs_next};
+    }
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name} if ($self->{name});
+    if ($self->_parent()->is_string_table_linked()) {
+        my $io = $self->_parent()->_parent()->linked_section()->body()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_name());
+        if ($self->{_is_le}) {
+            $self->{name} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
+        } else {
+            $self->{name} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
+        }
+        $io->seek($_pos);
+    }
+    return $self->{name};
+}
+
+sub next {
+    my ($self) = @_;
+    return $self->{next} if ($self->{next});
+    if ($self->ofs_next() != 0) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek($self->ofs_start() + $self->ofs_next());
+        if ($self->{_is_le}) {
+            $self->{next} = Elf::EndianElf::VerdauxEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{next} = Elf::EndianElf::VerdauxEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+        }
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{next};
+}
+
+sub ofs_start {
+    my ($self) = @_;
+    return $self->{ofs_start} if ($self->{ofs_start});
+    $self->{ofs_start} = $self->_io()->pos();
+    return $self->{ofs_start};
+}
+
+sub _unnamed0 {
+    my ($self) = @_;
+    return $self->{_unnamed0};
+}
+
+sub ofs_name {
+    my ($self) = @_;
+    return $self->{ofs_name};
+}
+
+sub ofs_next {
+    my ($self) = @_;
+    return $self->{ofs_next};
+}
+
+########################################################################
+package Elf::EndianElf::VerdefSection;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{first_entry} = Elf::EndianElf::VerdefSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{first_entry} = Elf::EndianElf::VerdefSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+}
+
+sub is_string_table_linked {
+    my ($self) = @_;
+    return $self->{is_string_table_linked} if ($self->{is_string_table_linked});
+    $self->{is_string_table_linked} = $self->_parent()->linked_section()->type() == $Elf::SH_TYPE_STRTAB;
+    return $self->{is_string_table_linked};
+}
+
+sub num_entries {
+    my ($self) = @_;
+    return $self->{num_entries} if ($self->{num_entries});
+    $self->{num_entries} = $self->_parent()->info();
+    return $self->{num_entries};
+}
+
+sub first_entry {
+    my ($self) = @_;
+    return $self->{first_entry};
+}
+
+########################################################################
+package Elf::EndianElf::VerdefSectionEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    if ($self->ofs_start() < 0) {
+        $self->{_unnamed0} = $self->{_io}->read_bytes(0);
+    }
+    $self->{version} = $self->{_io}->read_u2le();
+    $self->{flags} = $self->{_io}->read_u2le();
+    $self->{version_index} = $self->{_io}->read_u2le();
+    {
+        my $_it = $self->{version_index};
+    }
+    $self->{num_aux_entries} = $self->{_io}->read_u2le();
+    $self->{hash} = $self->{_io}->read_u4le();
+    $self->{ofs_first_aux} = $self->{_io}->read_u4le();
+    $self->{ofs_next} = $self->{_io}->read_u4le();
+    {
+        my $_it = $self->{ofs_next};
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    if ($self->ofs_start() < 0) {
+        $self->{_unnamed0} = $self->{_io}->read_bytes(0);
+    }
+    $self->{version} = $self->{_io}->read_u2be();
+    $self->{flags} = $self->{_io}->read_u2be();
+    $self->{version_index} = $self->{_io}->read_u2be();
+    {
+        my $_it = $self->{version_index};
+    }
+    $self->{num_aux_entries} = $self->{_io}->read_u2be();
+    $self->{hash} = $self->{_io}->read_u4be();
+    $self->{ofs_first_aux} = $self->{_io}->read_u4be();
+    $self->{ofs_next} = $self->{_io}->read_u4be();
+    {
+        my $_it = $self->{ofs_next};
+    }
+}
+
+sub first_aux {
+    my ($self) = @_;
+    return $self->{first_aux} if ($self->{first_aux});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->ofs_start() + $self->ofs_first_aux());
+    if ($self->{_is_le}) {
+        $self->{first_aux} = Elf::EndianElf::VerdauxEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+    } else {
+        $self->{first_aux} = Elf::EndianElf::VerdauxEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+    }
+    $self->{_io}->seek($_pos);
+    return $self->{first_aux};
+}
+
+sub flags_obj {
+    my ($self) = @_;
+    return $self->{flags_obj} if ($self->{flags_obj});
+    if ($self->{_is_le}) {
+        $self->{flags_obj} = Elf::EndianElf::VersionFlags->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    } else {
+        $self->{flags_obj} = Elf::EndianElf::VersionFlags->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    }
+    return $self->{flags_obj};
+}
+
+sub next {
+    my ($self) = @_;
+    return $self->{next} if ($self->{next});
+    if ($self->ofs_next() != 0) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek($self->ofs_start() + $self->ofs_next());
+        if ($self->{_is_le}) {
+            $self->{next} = Elf::EndianElf::VerdefSectionEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{next} = Elf::EndianElf::VerdefSectionEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+        }
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{next};
+}
+
+sub ofs_start {
+    my ($self) = @_;
+    return $self->{ofs_start} if ($self->{ofs_start});
+    $self->{ofs_start} = $self->_io()->pos();
+    return $self->{ofs_start};
+}
+
+sub version_index_special {
+    my ($self) = @_;
+    return $self->{version_index_special} if ($self->{version_index_special});
+    $self->{version_index_special} = $self->version_index();
+    return $self->{version_index_special};
+}
+
+sub _unnamed0 {
+    my ($self) = @_;
+    return $self->{_unnamed0};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self->{flags};
+}
+
+sub version_index {
+    my ($self) = @_;
+    return $self->{version_index};
+}
+
+sub num_aux_entries {
+    my ($self) = @_;
+    return $self->{num_aux_entries};
+}
+
+sub hash {
+    my ($self) = @_;
+    return $self->{hash};
+}
+
+sub ofs_first_aux {
+    my ($self) = @_;
+    return $self->{ofs_first_aux};
+}
+
+sub ofs_next {
+    my ($self) = @_;
+    return $self->{ofs_next};
+}
+
+########################################################################
+package Elf::EndianElf::VernauxEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    if ($self->ofs_start() < 0) {
+        $self->{_unnamed0} = $self->{_io}->read_bytes(0);
+    }
+    $self->{hash} = $self->{_io}->read_u4le();
+    $self->{flags} = $self->{_io}->read_u2le();
+    $self->{version_index} = Elf::EndianElf::VersionIndex->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    $self->{ofs_name} = $self->{_io}->read_u4le();
+    $self->{ofs_next} = $self->{_io}->read_u4le();
+    {
+        my $_it = $self->{ofs_next};
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    if ($self->ofs_start() < 0) {
+        $self->{_unnamed0} = $self->{_io}->read_bytes(0);
+    }
+    $self->{hash} = $self->{_io}->read_u4be();
+    $self->{flags} = $self->{_io}->read_u2be();
+    $self->{version_index} = Elf::EndianElf::VersionIndex->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    $self->{ofs_name} = $self->{_io}->read_u4be();
+    $self->{ofs_next} = $self->{_io}->read_u4be();
+    {
+        my $_it = $self->{ofs_next};
+    }
+}
+
+sub flags_obj {
+    my ($self) = @_;
+    return $self->{flags_obj} if ($self->{flags_obj});
+    if ($self->{_is_le}) {
+        $self->{flags_obj} = Elf::EndianElf::VersionFlags->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    } else {
+        $self->{flags_obj} = Elf::EndianElf::VersionFlags->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    }
+    return $self->{flags_obj};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name} if ($self->{name});
+    if ($self->_parent()->is_string_table_linked()) {
+        my $io = $self->_parent()->_parent()->linked_section()->body()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_name());
+        if ($self->{_is_le}) {
+            $self->{name} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
+        } else {
+            $self->{name} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
+        }
+        $io->seek($_pos);
+    }
+    return $self->{name};
+}
+
+sub next {
+    my ($self) = @_;
+    return $self->{next} if ($self->{next});
+    if ($self->ofs_next() != 0) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek($self->ofs_start() + $self->ofs_next());
+        if ($self->{_is_le}) {
+            $self->{next} = Elf::EndianElf::VernauxEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{next} = Elf::EndianElf::VernauxEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+        }
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{next};
+}
+
+sub ofs_start {
+    my ($self) = @_;
+    return $self->{ofs_start} if ($self->{ofs_start});
+    $self->{ofs_start} = $self->_io()->pos();
+    return $self->{ofs_start};
+}
+
+sub _unnamed0 {
+    my ($self) = @_;
+    return $self->{_unnamed0};
+}
+
+sub hash {
+    my ($self) = @_;
+    return $self->{hash};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self->{flags};
+}
+
+sub version_index {
+    my ($self) = @_;
+    return $self->{version_index};
+}
+
+sub ofs_name {
+    my ($self) = @_;
+    return $self->{ofs_name};
+}
+
+sub ofs_next {
+    my ($self) = @_;
+    return $self->{ofs_next};
+}
+
+########################################################################
+package Elf::EndianElf::VerneedSection;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{first_entry} = Elf::EndianElf::VerneedSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{first_entry} = Elf::EndianElf::VerneedSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+}
+
+sub is_string_table_linked {
+    my ($self) = @_;
+    return $self->{is_string_table_linked} if ($self->{is_string_table_linked});
+    $self->{is_string_table_linked} = $self->_parent()->linked_section()->type() == $Elf::SH_TYPE_STRTAB;
+    return $self->{is_string_table_linked};
+}
+
+sub num_entries {
+    my ($self) = @_;
+    return $self->{num_entries} if ($self->{num_entries});
+    $self->{num_entries} = $self->_parent()->info();
+    return $self->{num_entries};
+}
+
+sub first_entry {
+    my ($self) = @_;
+    return $self->{first_entry};
+}
+
+########################################################################
+package Elf::EndianElf::VerneedSectionEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    if ($self->ofs_start() < 0) {
+        $self->{_unnamed0} = $self->{_io}->read_bytes(0);
+    }
+    $self->{version} = $self->{_io}->read_u2le();
+    $self->{num_aux_entries} = $self->{_io}->read_u2le();
+    $self->{ofs_file_name} = $self->{_io}->read_u4le();
+    $self->{ofs_first_aux} = $self->{_io}->read_u4le();
+    $self->{ofs_next} = $self->{_io}->read_u4le();
+    {
+        my $_it = $self->{ofs_next};
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    if ($self->ofs_start() < 0) {
+        $self->{_unnamed0} = $self->{_io}->read_bytes(0);
+    }
+    $self->{version} = $self->{_io}->read_u2be();
+    $self->{num_aux_entries} = $self->{_io}->read_u2be();
+    $self->{ofs_file_name} = $self->{_io}->read_u4be();
+    $self->{ofs_first_aux} = $self->{_io}->read_u4be();
+    $self->{ofs_next} = $self->{_io}->read_u4be();
+    {
+        my $_it = $self->{ofs_next};
+    }
+}
+
+sub file_name {
+    my ($self) = @_;
+    return $self->{file_name} if ($self->{file_name});
+    if ($self->_parent()->is_string_table_linked()) {
+        my $io = $self->_parent()->_parent()->linked_section()->body()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_file_name());
+        if ($self->{_is_le}) {
+            $self->{file_name} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
+        } else {
+            $self->{file_name} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
+        }
+        $io->seek($_pos);
+    }
+    return $self->{file_name};
+}
+
+sub first_aux {
+    my ($self) = @_;
+    return $self->{first_aux} if ($self->{first_aux});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->ofs_start() + $self->ofs_first_aux());
+    if ($self->{_is_le}) {
+        $self->{first_aux} = Elf::EndianElf::VernauxEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+    } else {
+        $self->{first_aux} = Elf::EndianElf::VernauxEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+    }
+    $self->{_io}->seek($_pos);
+    return $self->{first_aux};
+}
+
+sub next {
+    my ($self) = @_;
+    return $self->{next} if ($self->{next});
+    if ($self->ofs_next() != 0) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek($self->ofs_start() + $self->ofs_next());
+        if ($self->{_is_le}) {
+            $self->{next} = Elf::EndianElf::VerneedSectionEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{next} = Elf::EndianElf::VerneedSectionEntry->new($self->{_io}, $self->_parent(), $self->{_root}, $self->{_is_le});
+        }
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{next};
+}
+
+sub ofs_start {
+    my ($self) = @_;
+    return $self->{ofs_start} if ($self->{ofs_start});
+    $self->{ofs_start} = $self->_io()->pos();
+    return $self->{ofs_start};
+}
+
+sub _unnamed0 {
+    my ($self) = @_;
+    return $self->{_unnamed0};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
+}
+
+sub num_aux_entries {
+    my ($self) = @_;
+    return $self->{num_aux_entries};
+}
+
+sub ofs_file_name {
+    my ($self) = @_;
+    return $self->{ofs_file_name};
+}
+
+sub ofs_first_aux {
+    my ($self) = @_;
+    return $self->{ofs_first_aux};
+}
+
+sub ofs_next {
+    my ($self) = @_;
+    return $self->{ofs_next};
+}
+
+########################################################################
+package Elf::EndianElf::VersionFlags;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+}
+
+sub base {
+    my ($self) = @_;
+    return $self->{base} if ($self->{base});
+    $self->{base} = ($self->value() & 1) != 0;
+    return $self->{base};
+}
+
+sub info {
+    my ($self) = @_;
+    return $self->{info} if ($self->{info});
+    $self->{info} = ($self->value() & 4) != 0;
+    return $self->{info};
+}
+
+sub weak {
+    my ($self) = @_;
+    return $self->{weak} if ($self->{weak});
+    $self->{weak} = ($self->value() & 2) != 0;
+    return $self->{weak};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+########################################################################
+package Elf::EndianElf::VersionIndex;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{raw} = $self->{_io}->read_u2le();
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{raw} = $self->{_io}->read_u2be();
+}
+
+sub is_hidden {
+    my ($self) = @_;
+    return $self->{is_hidden} if ($self->{is_hidden});
+    $self->{is_hidden} = ($self->raw() & 32768) != 0;
+    return $self->{is_hidden};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value} if ($self->{value});
+    $self->{value} = $self->raw() & 32767;
+    return $self->{value};
+}
+
+sub version_index_special {
+    my ($self) = @_;
+    return $self->{version_index_special} if ($self->{version_index_special});
+    $self->{version_index_special} = $self->raw();
+    return $self->{version_index_special};
+}
+
+sub raw {
+    my ($self) = @_;
+    return $self->{raw};
+}
+
+########################################################################
+package Elf::EndianElf::VersymSection;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Elf::EndianElf::VersionIndex->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Elf::EndianElf::VersionIndex->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
     }
 }
 
@@ -2705,10 +4106,17 @@ sub alloc {
     return $self->{alloc};
 }
 
+sub compressed {
+    my ($self) = @_;
+    return $self->{compressed} if ($self->{compressed});
+    $self->{compressed} = ($self->value() & 2048) != 0;
+    return $self->{compressed};
+}
+
 sub exclude {
     my ($self) = @_;
     return $self->{exclude} if ($self->{exclude});
-    $self->{exclude} = ($self->value() & 134217728) != 0;
+    $self->{exclude} = ($self->value() & 2147483648) != 0;
     return $self->{exclude};
 }
 
@@ -2717,6 +4125,13 @@ sub exec_instr {
     return $self->{exec_instr} if ($self->{exec_instr});
     $self->{exec_instr} = ($self->value() & 4) != 0;
     return $self->{exec_instr};
+}
+
+sub gnu_mbind {
+    my ($self) = @_;
+    return $self->{gnu_mbind} if ($self->{gnu_mbind});
+    $self->{gnu_mbind} = ($self->value() & 16777216) != 0;
+    return $self->{gnu_mbind};
 }
 
 sub group {
@@ -2764,15 +4179,22 @@ sub merge {
 sub ordered {
     my ($self) = @_;
     return $self->{ordered} if ($self->{ordered});
-    $self->{ordered} = ($self->value() & 67108864) != 0;
+    $self->{ordered} = ($self->value() & 1073741824) != 0;
     return $self->{ordered};
 }
 
-sub os_non_conforming {
+sub os_nonconforming {
     my ($self) = @_;
-    return $self->{os_non_conforming} if ($self->{os_non_conforming});
-    $self->{os_non_conforming} = ($self->value() & 256) != 0;
-    return $self->{os_non_conforming};
+    return $self->{os_nonconforming} if ($self->{os_nonconforming});
+    $self->{os_nonconforming} = ($self->value() & 256) != 0;
+    return $self->{os_nonconforming};
+}
+
+sub retain {
+    my ($self) = @_;
+    return $self->{retain} if ($self->{retain});
+    $self->{retain} = ($self->value() & 2097152) != 0;
+    return $self->{retain};
 }
 
 sub strings {

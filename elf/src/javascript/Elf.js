@@ -10,7 +10,7 @@
   }
 })(typeof self !== 'undefined' ? self : this, function (Elf_, KaitaiStream) {
 /**
- * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532|Source}
+ * @see {@link https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h|Source}
  * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html|Source}
  * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-application-binary-interface.html|Source}
  */
@@ -248,7 +248,7 @@ var Elf = (function() {
     NO_MACHINE: 0,
     M32: 1,
     SPARC: 2,
-    X86: 3,
+    I386: 3,
     M68K: 4,
     M88K: 5,
     IAMCU: 6,
@@ -256,6 +256,7 @@ var Elf = (function() {
     MIPS: 8,
     S370: 9,
     MIPS_RS3_LE: 10,
+    OLD_SPARC_V9: 11,
     PARISC: 15,
     VPP500: 17,
     SPARC32PLUS: 18,
@@ -267,7 +268,7 @@ var Elf = (function() {
     V800: 36,
     FR20: 37,
     RH32: 38,
-    RCE: 39,
+    MCORE: 39,
     ARM: 40,
     OLD_ALPHA: 41,
     SUPERH: 42,
@@ -297,10 +298,10 @@ var Elf = (function() {
     FX66: 66,
     ST9PLUS: 67,
     ST7: 68,
-    MC68HC16: 69,
-    MC68HC11: 70,
-    MC68HC08: 71,
-    MC68HC05: 72,
+    M68HC16: 69,
+    M68HC11: 70,
+    M68HC08: 71,
+    M68HC05: 72,
     SVX: 73,
     ST19: 74,
     VAX: 75,
@@ -320,7 +321,7 @@ var Elf = (function() {
     MN10300: 89,
     MN10200: 90,
     PICOJAVA: 91,
-    OPENRISC: 92,
+    OR1K: 92,
     ARC_COMPACT: 93,
     XTENSA: 94,
     VIDEOCORE: 95,
@@ -331,7 +332,7 @@ var Elf = (function() {
     ST200: 100,
     IP2K: 101,
     MAX: 102,
-    COMPACT_RISC: 103,
+    CR: 103,
     F2MC16: 104,
     MSP430: 105,
     BLACKFIN: 106,
@@ -375,7 +376,7 @@ var Elf = (function() {
     MAXQ30: 169,
     XIMO16: 170,
     MANIK: 171,
-    CRAYNV2: 172,
+    CRAY_NV2: 172,
     RX: 173,
     METAG: 174,
     MCST_ELBRUS: 175,
@@ -383,9 +384,11 @@ var Elf = (function() {
     CR16: 177,
     ETPU: 178,
     SLE9X: 179,
-    L10M: 180,
-    K10M: 181,
+    L1OM: 180,
+    K1OM: 181,
+    INTEL182: 182,
     AARCH64: 183,
+    ARM184: 184,
     AVR32: 185,
     STM8: 186,
     TILE64: 187,
@@ -396,11 +399,11 @@ var Elf = (function() {
     CLOUDSHIELD: 192,
     COREA_1ST: 193,
     COREA_2ND: 194,
-    ARCV2: 195,
+    ARC_COMPACT2: 195,
     OPEN8: 196,
     RL78: 197,
     VIDEOCORE5: 198,
-    RENESAS_78KOR: 199,
+    RENESAS_78K0R: 199,
     FREESCALE_56800EX: 200,
     BA1: 201,
     BA2: 202,
@@ -425,7 +428,7 @@ var Elf = (function() {
     VISIUM: 221,
     FT32: 222,
     MOXIE: 223,
-    AMD_GPU: 224,
+    AMDGPU: 224,
     RISCV: 243,
     LANAI: 244,
     CEVA: 245,
@@ -440,12 +443,20 @@ var Elf = (function() {
     MCS6502: 254,
     ARC_COMPACT3: 255,
     KVX: 256,
-    WDC65816: 257,
+    WDC_65816: 257,
     LOONGARCH: 258,
     KF32: 259,
     U16_U8CORE: 260,
     TACHYUM: 261,
     NXP_56800EF: 262,
+    SBF: 263,
+    AI_ENGINE: 264,
+    SIMA_MLA: 265,
+    BANG: 266,
+    LOONGGPU: 267,
+    SW64: 268,
+    AI_ENGINE_CTRLCODE: 269,
+    PPU: 270,
     AVR_OLD: 4183,
     MSP430_OLD: 4185,
     ADAPTEVA_EPIPHANY: 4643,
@@ -478,7 +489,7 @@ var Elf = (function() {
     0: "NO_MACHINE",
     1: "M32",
     2: "SPARC",
-    3: "X86",
+    3: "I386",
     4: "M68K",
     5: "M88K",
     6: "IAMCU",
@@ -486,6 +497,7 @@ var Elf = (function() {
     8: "MIPS",
     9: "S370",
     10: "MIPS_RS3_LE",
+    11: "OLD_SPARC_V9",
     15: "PARISC",
     17: "VPP500",
     18: "SPARC32PLUS",
@@ -497,7 +509,7 @@ var Elf = (function() {
     36: "V800",
     37: "FR20",
     38: "RH32",
-    39: "RCE",
+    39: "MCORE",
     40: "ARM",
     41: "OLD_ALPHA",
     42: "SUPERH",
@@ -527,10 +539,10 @@ var Elf = (function() {
     66: "FX66",
     67: "ST9PLUS",
     68: "ST7",
-    69: "MC68HC16",
-    70: "MC68HC11",
-    71: "MC68HC08",
-    72: "MC68HC05",
+    69: "M68HC16",
+    70: "M68HC11",
+    71: "M68HC08",
+    72: "M68HC05",
     73: "SVX",
     74: "ST19",
     75: "VAX",
@@ -550,7 +562,7 @@ var Elf = (function() {
     89: "MN10300",
     90: "MN10200",
     91: "PICOJAVA",
-    92: "OPENRISC",
+    92: "OR1K",
     93: "ARC_COMPACT",
     94: "XTENSA",
     95: "VIDEOCORE",
@@ -561,7 +573,7 @@ var Elf = (function() {
     100: "ST200",
     101: "IP2K",
     102: "MAX",
-    103: "COMPACT_RISC",
+    103: "CR",
     104: "F2MC16",
     105: "MSP430",
     106: "BLACKFIN",
@@ -605,7 +617,7 @@ var Elf = (function() {
     169: "MAXQ30",
     170: "XIMO16",
     171: "MANIK",
-    172: "CRAYNV2",
+    172: "CRAY_NV2",
     173: "RX",
     174: "METAG",
     175: "MCST_ELBRUS",
@@ -613,9 +625,11 @@ var Elf = (function() {
     177: "CR16",
     178: "ETPU",
     179: "SLE9X",
-    180: "L10M",
-    181: "K10M",
+    180: "L1OM",
+    181: "K1OM",
+    182: "INTEL182",
     183: "AARCH64",
+    184: "ARM184",
     185: "AVR32",
     186: "STM8",
     187: "TILE64",
@@ -626,11 +640,11 @@ var Elf = (function() {
     192: "CLOUDSHIELD",
     193: "COREA_1ST",
     194: "COREA_2ND",
-    195: "ARCV2",
+    195: "ARC_COMPACT2",
     196: "OPEN8",
     197: "RL78",
     198: "VIDEOCORE5",
-    199: "RENESAS_78KOR",
+    199: "RENESAS_78K0R",
     200: "FREESCALE_56800EX",
     201: "BA1",
     202: "BA2",
@@ -655,7 +669,7 @@ var Elf = (function() {
     221: "VISIUM",
     222: "FT32",
     223: "MOXIE",
-    224: "AMD_GPU",
+    224: "AMDGPU",
     243: "RISCV",
     244: "LANAI",
     245: "CEVA",
@@ -670,12 +684,20 @@ var Elf = (function() {
     254: "MCS6502",
     255: "ARC_COMPACT3",
     256: "KVX",
-    257: "WDC65816",
+    257: "WDC_65816",
     258: "LOONGARCH",
     259: "KF32",
     260: "U16_U8CORE",
     261: "TACHYUM",
     262: "NXP_56800EF",
+    263: "SBF",
+    264: "AI_ENGINE",
+    265: "SIMA_MLA",
+    266: "BANG",
+    267: "LOONGGPU",
+    268: "SW64",
+    269: "AI_ENGINE_CTRLCODE",
+    270: "PPU",
     4183: "AVR_OLD",
     4185: "MSP430_OLD",
     4643: "ADAPTEVA_EPIPHANY",
@@ -738,6 +760,12 @@ var Elf = (function() {
     FENIXOS: 16,
     CLOUDABI: 17,
     OPENVOS: 18,
+    CUDA: 51,
+    ARM_AEABI: 64,
+    ARM_FDPIC: 65,
+    AMDGPU_MESA3D: 66,
+    ARM: 97,
+    STANDALONE: 255,
 
     0: "SYSTEM_V",
     1: "HP_UX",
@@ -756,6 +784,12 @@ var Elf = (function() {
     16: "FENIXOS",
     17: "CLOUDABI",
     18: "OPENVOS",
+    51: "CUDA",
+    64: "ARM_AEABI",
+    65: "ARM_FDPIC",
+    66: "AMDGPU_MESA3D",
+    97: "ARM",
+    255: "STANDALONE",
   });
 
   Elf.PhType = Object.freeze({
@@ -767,12 +801,30 @@ var Elf = (function() {
     SHLIB: 5,
     PHDR: 6,
     TLS: 7,
+    SUNW_UNWIND: 1684333904,
     GNU_EH_FRAME: 1685382480,
     GNU_STACK: 1685382481,
     GNU_RELRO: 1685382482,
     GNU_PROPERTY: 1685382483,
+    GNU_SFRAME: 1685382484,
     PAX_FLAGS: 1694766464,
+    OPENBSD_MUTABLE: 1705237477,
+    OPENBSD_RANDOMIZE: 1705237478,
+    OPENBSD_WXNEEDED: 1705237479,
+    OPENBSD_NOBTCFI: 1705237480,
+    OPENBSD_SYSCALLS: 1705237481,
+    OPENBSD_BOOTDATA: 1705253862,
+    SUNW_SYSSTAT_ZONE: 1879048183,
+    SUNW_SYSSTAT: 1879048184,
+    SUNW_RESERVE: 1879048185,
+    SUNW_BSS: 1879048186,
+    SUNW_STACK: 1879048187,
+    SUNW_DTRACE: 1879048188,
+    SUNW_CAP: 1879048189,
+    ARM_ARCHEXT: 1879048192,
     ARM_EXIDX: 1879048193,
+    AARCH64_MEMTAG_MTE: 1879048194,
+    RISCV_ATTRIBUTES: 1879048195,
 
     0: "NULL_TYPE",
     1: "LOAD",
@@ -782,12 +834,30 @@ var Elf = (function() {
     5: "SHLIB",
     6: "PHDR",
     7: "TLS",
+    1684333904: "SUNW_UNWIND",
     1685382480: "GNU_EH_FRAME",
     1685382481: "GNU_STACK",
     1685382482: "GNU_RELRO",
     1685382483: "GNU_PROPERTY",
+    1685382484: "GNU_SFRAME",
     1694766464: "PAX_FLAGS",
+    1705237477: "OPENBSD_MUTABLE",
+    1705237478: "OPENBSD_RANDOMIZE",
+    1705237479: "OPENBSD_WXNEEDED",
+    1705237480: "OPENBSD_NOBTCFI",
+    1705237481: "OPENBSD_SYSCALLS",
+    1705253862: "OPENBSD_BOOTDATA",
+    1879048183: "SUNW_SYSSTAT_ZONE",
+    1879048184: "SUNW_SYSSTAT",
+    1879048185: "SUNW_RESERVE",
+    1879048186: "SUNW_BSS",
+    1879048187: "SUNW_STACK",
+    1879048188: "SUNW_DTRACE",
+    1879048189: "SUNW_CAP",
+    1879048192: "ARM_ARCHEXT",
     1879048193: "ARM_EXIDX",
+    1879048194: "AARCH64_MEMTAG_MTE",
+    1879048195: "RISCV_ATTRIBUTES",
   });
 
   Elf.SectionHeaderIdxSpecial = Object.freeze({
@@ -829,6 +899,27 @@ var Elf = (function() {
     GROUP: 17,
     SYMTAB_SHNDX: 18,
     RELR: 19,
+    ANDROID_REL: 1610612737,
+    ANDROID_RELA: 1610612738,
+    GNU_INCREMENTAL_INPUTS: 1879000832,
+    LLVM_ODRTAB: 1879002112,
+    LLVM_LINKER_OPTIONS: 1879002113,
+    LLVM_ADDRSIG: 1879002115,
+    LLVM_DEPENDENT_LIBRARIES: 1879002116,
+    LLVM_SYMPART: 1879002117,
+    LLVM_PART_EHDR: 1879002118,
+    LLVM_PART_PHDR: 1879002119,
+    LLVM_BB_ADDR_MAP_V0: 1879002120,
+    LLVM_CALL_GRAPH_PROFILE: 1879002121,
+    LLVM_BB_ADDR_MAP: 1879002122,
+    LLVM_OFFLOADING: 1879002123,
+    LLVM_LTO: 1879002124,
+    LLVM_JT_SIZES: 1879002125,
+    LLVM_CFI_JUMP_TABLE: 1879002126,
+    LLVM_CALL_GRAPH: 1879002127,
+    LLVM_DYNDBG_ELF: 1879002128,
+    ANDROID_RELR: 1879047936,
+    SUNW_CTF: 1879048171,
     SUNW_SYMNSORT: 1879048172,
     SUNW_PHNAME: 1879048173,
     SUNW_ANCILLARY: 1879048174,
@@ -837,24 +928,26 @@ var Elf = (function() {
     SUNW_SYMSORT: 1879048177,
     SUNW_TLSSORT: 1879048178,
     SUNW_LDYNSYM: 1879048179,
-    SUNW_DOF: 1879048180,
-    SUNW_CAP: 1879048181,
-    SUNW_SIGNATURE: 1879048182,
-    SUNW_ANNOTATE: 1879048183,
-    SUNW_DEBUGSTR: 1879048184,
-    SUNW_DEBUG: 1879048185,
+    GNU_SFRAME: 1879048180,
+    GNU_ATTRIBUTES: 1879048181,
+    GNU_HASH: 1879048182,
+    GNU_LIBLIST: 1879048183,
+    CHECKSUM: 1879048184,
+    GNU_OBJECT_ONLY: 1879048185,
     SUNW_MOVE: 1879048186,
     SUNW_COMDAT: 1879048187,
     SUNW_SYMINFO: 1879048188,
-    SUNW_VERDEF: 1879048189,
-    SUNW_VERNEED: 1879048190,
-    SUNW_VERSYM: 1879048191,
+    GNU_VERDEF: 1879048189,
+    GNU_VERNEED: 1879048190,
+    GNU_VERSYM: 1879048191,
     SPARC_GOTDATA: 1879048192,
-    AMD64_UNWIND: 1879048193,
+    X86_64_UNWIND: 1879048193,
     ARM_PREEMPTMAP: 1879048194,
     ARM_ATTRIBUTES: 1879048195,
     ARM_DEBUGOVERLAY: 1879048196,
     ARM_OVERLAYSECTION: 1879048197,
+    AARCH64_MEMTAG_GLOBALS_STATIC: 1879048199,
+    AARCH64_MEMTAG_GLOBALS_DYNAMIC: 1879048200,
 
     0: "NULL_TYPE",
     1: "PROGBITS",
@@ -874,6 +967,27 @@ var Elf = (function() {
     17: "GROUP",
     18: "SYMTAB_SHNDX",
     19: "RELR",
+    1610612737: "ANDROID_REL",
+    1610612738: "ANDROID_RELA",
+    1879000832: "GNU_INCREMENTAL_INPUTS",
+    1879002112: "LLVM_ODRTAB",
+    1879002113: "LLVM_LINKER_OPTIONS",
+    1879002115: "LLVM_ADDRSIG",
+    1879002116: "LLVM_DEPENDENT_LIBRARIES",
+    1879002117: "LLVM_SYMPART",
+    1879002118: "LLVM_PART_EHDR",
+    1879002119: "LLVM_PART_PHDR",
+    1879002120: "LLVM_BB_ADDR_MAP_V0",
+    1879002121: "LLVM_CALL_GRAPH_PROFILE",
+    1879002122: "LLVM_BB_ADDR_MAP",
+    1879002123: "LLVM_OFFLOADING",
+    1879002124: "LLVM_LTO",
+    1879002125: "LLVM_JT_SIZES",
+    1879002126: "LLVM_CFI_JUMP_TABLE",
+    1879002127: "LLVM_CALL_GRAPH",
+    1879002128: "LLVM_DYNDBG_ELF",
+    1879047936: "ANDROID_RELR",
+    1879048171: "SUNW_CTF",
     1879048172: "SUNW_SYMNSORT",
     1879048173: "SUNW_PHNAME",
     1879048174: "SUNW_ANCILLARY",
@@ -882,24 +996,26 @@ var Elf = (function() {
     1879048177: "SUNW_SYMSORT",
     1879048178: "SUNW_TLSSORT",
     1879048179: "SUNW_LDYNSYM",
-    1879048180: "SUNW_DOF",
-    1879048181: "SUNW_CAP",
-    1879048182: "SUNW_SIGNATURE",
-    1879048183: "SUNW_ANNOTATE",
-    1879048184: "SUNW_DEBUGSTR",
-    1879048185: "SUNW_DEBUG",
+    1879048180: "GNU_SFRAME",
+    1879048181: "GNU_ATTRIBUTES",
+    1879048182: "GNU_HASH",
+    1879048183: "GNU_LIBLIST",
+    1879048184: "CHECKSUM",
+    1879048185: "GNU_OBJECT_ONLY",
     1879048186: "SUNW_MOVE",
     1879048187: "SUNW_COMDAT",
     1879048188: "SUNW_SYMINFO",
-    1879048189: "SUNW_VERDEF",
-    1879048190: "SUNW_VERNEED",
-    1879048191: "SUNW_VERSYM",
+    1879048189: "GNU_VERDEF",
+    1879048190: "GNU_VERNEED",
+    1879048191: "GNU_VERSYM",
     1879048192: "SPARC_GOTDATA",
-    1879048193: "AMD64_UNWIND",
+    1879048193: "X86_64_UNWIND",
     1879048194: "ARM_PREEMPTMAP",
     1879048195: "ARM_ATTRIBUTES",
     1879048196: "ARM_DEBUGOVERLAY",
     1879048197: "ARM_OVERLAYSECTION",
+    1879048199: "AARCH64_MEMTAG_GLOBALS_STATIC",
+    1879048200: "AARCH64_MEMTAG_GLOBALS_DYNAMIC",
   });
 
   Elf.SymbolBinding = Object.freeze({
@@ -976,6 +1092,16 @@ var Elf = (function() {
     6: "ELIMINATE",
   });
 
+  Elf.VersionIndexSpecial = Object.freeze({
+    LOCAL: 0,
+    GLOBAL_SYMBOL: 1,
+    ELIMINATE: 65281,
+
+    0: "LOCAL",
+    1: "GLOBAL_SYMBOL",
+    65281: "ELIMINATE",
+  });
+
   function Elf(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -1003,6 +1129,11 @@ var Elf = (function() {
     this.header = new EndianElf(this._io, this, this._root);
   }
 
+  /**
+   * @see {@link https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1008|Source}
+   * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER6-TBL-53|Source}
+   */
+
   var DtFlag1Values = Elf.DtFlag1Values = (function() {
     function DtFlag1Values(_io, _parent, _root, value) {
       this._io = _io;
@@ -1017,13 +1148,14 @@ var Elf = (function() {
 
     /**
      * Configuration alternative created.
+     * @see {@link https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1023|Source}
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'confalt', {
+    Object.defineProperty(DtFlag1Values.prototype, 'confAlt', {
       get: function() {
-        if (this._m_confalt !== undefined)
-          return this._m_confalt;
-        this._m_confalt = (this.value & 8192) != 0;
-        return this._m_confalt;
+        if (this._m_confAlt !== undefined)
+          return this._m_confAlt;
+        this._m_confAlt = (this.value & 8192) != 0;
+        return this._m_confAlt;
       }
     });
 
@@ -1040,26 +1172,26 @@ var Elf = (function() {
     });
 
     /**
-     * Disp reloc applied at build time.
+     * Displacement relocation done (applied at build time).
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'dispreldne', {
+    Object.defineProperty(DtFlag1Values.prototype, 'dispRelDne', {
       get: function() {
-        if (this._m_dispreldne !== undefined)
-          return this._m_dispreldne;
-        this._m_dispreldne = (this.value & 32768) != 0;
-        return this._m_dispreldne;
+        if (this._m_dispRelDne !== undefined)
+          return this._m_dispRelDne;
+        this._m_dispRelDne = (this.value & 32768) != 0;
+        return this._m_dispRelDne;
       }
     });
 
     /**
-     * Disp reloc applied at run-time.
+     * Displacement relocation pending (applied at runtime).
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'disprelpnd', {
+    Object.defineProperty(DtFlag1Values.prototype, 'dispRelPnd', {
       get: function() {
-        if (this._m_disprelpnd !== undefined)
-          return this._m_disprelpnd;
-        this._m_disprelpnd = (this.value & 65536) != 0;
-        return this._m_disprelpnd;
+        if (this._m_dispRelPnd !== undefined)
+          return this._m_dispRelPnd;
+        this._m_dispRelPnd = (this.value & 65536) != 0;
+        return this._m_dispRelPnd;
       }
     });
 
@@ -1078,29 +1210,29 @@ var Elf = (function() {
     /**
      * Filtee terminates filters search.
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'endfiltee', {
+    Object.defineProperty(DtFlag1Values.prototype, 'endFiltee', {
       get: function() {
-        if (this._m_endfiltee !== undefined)
-          return this._m_endfiltee;
-        this._m_endfiltee = (this.value & 16384) != 0;
-        return this._m_endfiltee;
+        if (this._m_endFiltee !== undefined)
+          return this._m_endFiltee;
+        this._m_endFiltee = (this.value & 16384) != 0;
+        return this._m_endFiltee;
       }
     });
 
     /**
      * Global auditing required.
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'globaudit', {
+    Object.defineProperty(DtFlag1Values.prototype, 'globAudit', {
       get: function() {
-        if (this._m_globaudit !== undefined)
-          return this._m_globaudit;
-        this._m_globaudit = (this.value & 16777216) != 0;
-        return this._m_globaudit;
+        if (this._m_globAudit !== undefined)
+          return this._m_globAudit;
+        this._m_globAudit = (this.value & 16777216) != 0;
+        return this._m_globAudit;
       }
     });
 
     /**
-     * Set RTLD_GROUP for this object.
+     * Set `RTLD_GROUP` for this object.
      */
     Object.defineProperty(DtFlag1Values.prototype, 'group', {
       get: function() {
@@ -1110,24 +1242,24 @@ var Elf = (function() {
         return this._m_group;
       }
     });
-    Object.defineProperty(DtFlag1Values.prototype, 'ignmuldef', {
+    Object.defineProperty(DtFlag1Values.prototype, 'ignMulDef', {
       get: function() {
-        if (this._m_ignmuldef !== undefined)
-          return this._m_ignmuldef;
-        this._m_ignmuldef = (this.value & 262144) != 0;
-        return this._m_ignmuldef;
+        if (this._m_ignMulDef !== undefined)
+          return this._m_ignMulDef;
+        this._m_ignMulDef = (this.value & 262144) != 0;
+        return this._m_ignMulDef;
       }
     });
 
     /**
-     * Set RTLD_INITFIRST for this object
+     * Set `RTLD_INITFIRST` for this object.
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'initfirst', {
+    Object.defineProperty(DtFlag1Values.prototype, 'initFirst', {
       get: function() {
-        if (this._m_initfirst !== undefined)
-          return this._m_initfirst;
-        this._m_initfirst = (this.value & 32) != 0;
-        return this._m_initfirst;
+        if (this._m_initFirst !== undefined)
+          return this._m_initFirst;
+        this._m_initFirst = (this.value & 32) != 0;
+        return this._m_initFirst;
       }
     });
 
@@ -1144,103 +1276,128 @@ var Elf = (function() {
     });
 
     /**
+     * Object is a kernel module.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'kmod', {
+      get: function() {
+        if (this._m_kmod !== undefined)
+          return this._m_kmod;
+        this._m_kmod = (this.value & 268435456) != 0;
+        return this._m_kmod;
+      }
+    });
+
+    /**
      * Trigger filtee loading at runtime.
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'loadfltr', {
+    Object.defineProperty(DtFlag1Values.prototype, 'loadFltr', {
       get: function() {
-        if (this._m_loadfltr !== undefined)
-          return this._m_loadfltr;
-        this._m_loadfltr = (this.value & 16) != 0;
-        return this._m_loadfltr;
+        if (this._m_loadFltr !== undefined)
+          return this._m_loadFltr;
+        this._m_loadFltr = (this.value & 16) != 0;
+        return this._m_loadFltr;
       }
     });
 
     /**
-     * Ignore default lib search path.
+     * No COMMON symbols exist.
+     * @see {@link https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1040|Source}
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'nodeflib', {
+    Object.defineProperty(DtFlag1Values.prototype, 'noCommon', {
       get: function() {
-        if (this._m_nodeflib !== undefined)
-          return this._m_nodeflib;
-        this._m_nodeflib = (this.value & 2048) != 0;
-        return this._m_nodeflib;
+        if (this._m_noCommon !== undefined)
+          return this._m_noCommon;
+        this._m_noCommon = (this.value & 1073741824) != 0;
+        return this._m_noCommon;
       }
     });
 
     /**
-     * Set RTLD_NODELETE for this object.
+     * Ignore the default library search path.
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'nodelete', {
+    Object.defineProperty(DtFlag1Values.prototype, 'noDefLib', {
       get: function() {
-        if (this._m_nodelete !== undefined)
-          return this._m_nodelete;
-        this._m_nodelete = (this.value & 8) != 0;
-        return this._m_nodelete;
+        if (this._m_noDefLib !== undefined)
+          return this._m_noDefLib;
+        this._m_noDefLib = (this.value & 2048) != 0;
+        return this._m_noDefLib;
       }
     });
 
     /**
-     * Object has no-direct binding.
+     * Set `RTLD_NODELETE` for this object.
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'nodirect', {
+    Object.defineProperty(DtFlag1Values.prototype, 'noDelete', {
       get: function() {
-        if (this._m_nodirect !== undefined)
-          return this._m_nodirect;
-        this._m_nodirect = (this.value & 131072) != 0;
-        return this._m_nodirect;
+        if (this._m_noDelete !== undefined)
+          return this._m_noDelete;
+        this._m_noDelete = (this.value & 8) != 0;
+        return this._m_noDelete;
+      }
+    });
+
+    /**
+     * Object contains non-direct bindings.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'noDirect', {
+      get: function() {
+        if (this._m_noDirect !== undefined)
+          return this._m_noDirect;
+        this._m_noDirect = (this.value & 131072) != 0;
+        return this._m_noDirect;
       }
     });
 
     /**
      * Object can't be dldump'ed.
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'nodump', {
+    Object.defineProperty(DtFlag1Values.prototype, 'noDump', {
       get: function() {
-        if (this._m_nodump !== undefined)
-          return this._m_nodump;
-        this._m_nodump = (this.value & 4096) != 0;
-        return this._m_nodump;
+        if (this._m_noDump !== undefined)
+          return this._m_noDump;
+        this._m_noDump = (this.value & 4096) != 0;
+        return this._m_noDump;
       }
     });
-    Object.defineProperty(DtFlag1Values.prototype, 'nohdr', {
+    Object.defineProperty(DtFlag1Values.prototype, 'noHdr', {
       get: function() {
-        if (this._m_nohdr !== undefined)
-          return this._m_nohdr;
-        this._m_nohdr = (this.value & 1048576) != 0;
-        return this._m_nohdr;
+        if (this._m_noHdr !== undefined)
+          return this._m_noHdr;
+        this._m_noHdr = (this.value & 1048576) != 0;
+        return this._m_noHdr;
       }
     });
-    Object.defineProperty(DtFlag1Values.prototype, 'noksyms', {
+    Object.defineProperty(DtFlag1Values.prototype, 'noKsyms', {
       get: function() {
-        if (this._m_noksyms !== undefined)
-          return this._m_noksyms;
-        this._m_noksyms = (this.value & 524288) != 0;
-        return this._m_noksyms;
+        if (this._m_noKsyms !== undefined)
+          return this._m_noKsyms;
+        this._m_noKsyms = (this.value & 524288) != 0;
+        return this._m_noKsyms;
       }
     });
 
     /**
-     * Set RTLD_NOOPEN for this object.
+     * Set `RTLD_NOOPEN` for this object.
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'noopen', {
+    Object.defineProperty(DtFlag1Values.prototype, 'noOpen', {
       get: function() {
-        if (this._m_noopen !== undefined)
-          return this._m_noopen;
-        this._m_noopen = (this.value & 64) != 0;
-        return this._m_noopen;
+        if (this._m_noOpen !== undefined)
+          return this._m_noOpen;
+        this._m_noOpen = (this.value & 64) != 0;
+        return this._m_noOpen;
       }
     });
-    Object.defineProperty(DtFlag1Values.prototype, 'noreloc', {
+    Object.defineProperty(DtFlag1Values.prototype, 'noReloc', {
       get: function() {
-        if (this._m_noreloc !== undefined)
-          return this._m_noreloc;
-        this._m_noreloc = (this.value & 4194304) != 0;
-        return this._m_noreloc;
+        if (this._m_noReloc !== undefined)
+          return this._m_noReloc;
+        this._m_noReloc = (this.value & 4194304) != 0;
+        return this._m_noReloc;
       }
     });
 
     /**
-     * Set RTLD_NOW for this object.
+     * Set `RTLD_NOW` for this object.
      */
     Object.defineProperty(DtFlag1Values.prototype, 'now', {
       get: function() {
@@ -1252,7 +1409,7 @@ var Elf = (function() {
     });
 
     /**
-     * $ORIGIN must be handled.
+     * `$ORIGIN` must be handled.
      */
     Object.defineProperty(DtFlag1Values.prototype, 'origin', {
       get: function() {
@@ -1262,6 +1419,10 @@ var Elf = (function() {
         return this._m_origin;
       }
     });
+
+    /**
+     * Object is a Position Independent Executable (PIE).
+     */
     Object.defineProperty(DtFlag1Values.prototype, 'pie', {
       get: function() {
         if (this._m_pie !== undefined)
@@ -1272,7 +1433,7 @@ var Elf = (function() {
     });
 
     /**
-     * Set RTLD_GLOBAL for this object.
+     * Set `RTLD_GLOBAL` for this object.
      */
     Object.defineProperty(DtFlag1Values.prototype, 'rtldGlobal', {
       get: function() {
@@ -1294,6 +1455,11 @@ var Elf = (function() {
         return this._m_singleton;
       }
     });
+
+    /**
+     * Object is a stub.
+     * See [Stub Objects](https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/stub-objects.html).
+     */
     Object.defineProperty(DtFlag1Values.prototype, 'stub', {
       get: function() {
         if (this._m_stub !== undefined)
@@ -1304,22 +1470,38 @@ var Elf = (function() {
     });
 
     /**
-     * Object has individual interposers.
+     * Object has individual symbol interposers.
      */
-    Object.defineProperty(DtFlag1Values.prototype, 'symintpose', {
+    Object.defineProperty(DtFlag1Values.prototype, 'symIntpose', {
       get: function() {
-        if (this._m_symintpose !== undefined)
-          return this._m_symintpose;
-        this._m_symintpose = (this.value & 8388608) != 0;
-        return this._m_symintpose;
+        if (this._m_symIntpose !== undefined)
+          return this._m_symIntpose;
+        this._m_symIntpose = (this.value & 8388608) != 0;
+        return this._m_symIntpose;
       }
     });
+
+    /**
+     * @see {@link https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1019|Source}
+     */
     Object.defineProperty(DtFlag1Values.prototype, 'trans', {
       get: function() {
         if (this._m_trans !== undefined)
           return this._m_trans;
         this._m_trans = (this.value & 512) != 0;
         return this._m_trans;
+      }
+    });
+
+    /**
+     * Object is a weak standard filter.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'weakFilter', {
+      get: function() {
+        if (this._m_weakFilter !== undefined)
+          return this._m_weakFilter;
+        this._m_weakFilter = (this.value & 536870912) != 0;
+        return this._m_weakFilter;
       }
     });
 
@@ -1408,6 +1590,11 @@ var Elf = (function() {
     return DtFlagValues;
   })();
 
+  /**
+   * @see {@link https://gabi.xinuos.com/v42/elf/02-eheader.html|Source}
+   * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-header.html|Source}
+   */
+
   var EndianElf = Elf.EndianElf = (function() {
     function EndianElf(_io, _parent, _root) {
       this._io = _io;
@@ -1437,6 +1624,9 @@ var Elf = (function() {
     EndianElf.prototype._readLE = function() {
       this.eType = this._io.readU2le();
       this.machine = this._io.readU2le();
+      if (!Object.prototype.hasOwnProperty.call(Elf.Machine, this.machine)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.machine, this._io, "/types/endian_elf/seq/1");
+      }
       this.eVersion = this._io.readU4le();
       switch (this._root.bits) {
       case Elf.Bits.B32:
@@ -1473,6 +1663,9 @@ var Elf = (function() {
     EndianElf.prototype._readBE = function() {
       this.eType = this._io.readU2be();
       this.machine = this._io.readU2be();
+      if (!Object.prototype.hasOwnProperty.call(Elf.Machine, this.machine)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.machine, this._io, "/types/endian_elf/seq/1");
+      }
       this.eVersion = this._io.readU4be();
       switch (this._root.bits) {
       case Elf.Bits.B32:
@@ -1506,179 +1699,6 @@ var Elf = (function() {
       this.numSectionHeaders = this._io.readU2be();
       this.sectionNamesIdx = this._io.readU2be();
     }
-
-    var DynamicSection = EndianElf.DynamicSection = (function() {
-      function DynamicSection(_io, _parent, _root, _is_le) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root;
-        this._is_le = _is_le;
-
-        this._read();
-      }
-      DynamicSection.prototype._read = function() {
-
-        if (this._is_le === true) {
-          this._readLE();
-        } else if (this._is_le === false) {
-          this._readBE();
-        } else {
-          throw new KaitaiStream.UndecidedEndiannessError();
-        }
-      }
-      DynamicSection.prototype._readLE = function() {
-        this.entries = [];
-        var i = 0;
-        while (!this._io.isEof()) {
-          this.entries.push(new DynamicSectionEntry(this._io, this, this._root, this._is_le));
-          i++;
-        }
-      }
-      DynamicSection.prototype._readBE = function() {
-        this.entries = [];
-        var i = 0;
-        while (!this._io.isEof()) {
-          this.entries.push(new DynamicSectionEntry(this._io, this, this._root, this._is_le));
-          i++;
-        }
-      }
-      Object.defineProperty(DynamicSection.prototype, 'isStringTableLinked', {
-        get: function() {
-          if (this._m_isStringTableLinked !== undefined)
-            return this._m_isStringTableLinked;
-          this._m_isStringTableLinked = this._parent.linkedSection.type == Elf.ShType.STRTAB;
-          return this._m_isStringTableLinked;
-        }
-      });
-
-      return DynamicSection;
-    })();
-
-    /**
-     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html|Source}
-     * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section|Source}
-     */
-
-    var DynamicSectionEntry = EndianElf.DynamicSectionEntry = (function() {
-      function DynamicSectionEntry(_io, _parent, _root, _is_le) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root;
-        this._is_le = _is_le;
-
-        this._read();
-      }
-      DynamicSectionEntry.prototype._read = function() {
-
-        if (this._is_le === true) {
-          this._readLE();
-        } else if (this._is_le === false) {
-          this._readBE();
-        } else {
-          throw new KaitaiStream.UndecidedEndiannessError();
-        }
-      }
-      DynamicSectionEntry.prototype._readLE = function() {
-        switch (this._root.bits) {
-        case Elf.Bits.B32:
-          this.tag = this._io.readU4le();
-          break;
-        case Elf.Bits.B64:
-          this.tag = this._io.readU8le();
-          break;
-        }
-        switch (this._root.bits) {
-        case Elf.Bits.B32:
-          this.valueOrPtr = this._io.readU4le();
-          break;
-        case Elf.Bits.B64:
-          this.valueOrPtr = this._io.readU8le();
-          break;
-        }
-      }
-      DynamicSectionEntry.prototype._readBE = function() {
-        switch (this._root.bits) {
-        case Elf.Bits.B32:
-          this.tag = this._io.readU4be();
-          break;
-        case Elf.Bits.B64:
-          this.tag = this._io.readU8be();
-          break;
-        }
-        switch (this._root.bits) {
-        case Elf.Bits.B32:
-          this.valueOrPtr = this._io.readU4be();
-          break;
-        case Elf.Bits.B64:
-          this.valueOrPtr = this._io.readU8be();
-          break;
-        }
-      }
-      Object.defineProperty(DynamicSectionEntry.prototype, 'flag1Values', {
-        get: function() {
-          if (this._m_flag1Values !== undefined)
-            return this._m_flag1Values;
-          if (this.tagEnum == Elf.DynamicArrayTags.FLAGS_1) {
-            if (this._is_le) {
-              this._m_flag1Values = new DtFlag1Values(this._io, this, this._root, this.valueOrPtr);
-            } else {
-              this._m_flag1Values = new DtFlag1Values(this._io, this, this._root, this.valueOrPtr);
-            }
-          }
-          return this._m_flag1Values;
-        }
-      });
-      Object.defineProperty(DynamicSectionEntry.prototype, 'flagValues', {
-        get: function() {
-          if (this._m_flagValues !== undefined)
-            return this._m_flagValues;
-          if (this.tagEnum == Elf.DynamicArrayTags.FLAGS) {
-            if (this._is_le) {
-              this._m_flagValues = new DtFlagValues(this._io, this, this._root, this.valueOrPtr);
-            } else {
-              this._m_flagValues = new DtFlagValues(this._io, this, this._root, this.valueOrPtr);
-            }
-          }
-          return this._m_flagValues;
-        }
-      });
-      Object.defineProperty(DynamicSectionEntry.prototype, 'isValueStr', {
-        get: function() {
-          if (this._m_isValueStr !== undefined)
-            return this._m_isValueStr;
-          this._m_isValueStr =  ((this.valueOrPtr != 0) && ( ((this.tagEnum == Elf.DynamicArrayTags.NEEDED) || (this.tagEnum == Elf.DynamicArrayTags.SONAME) || (this.tagEnum == Elf.DynamicArrayTags.RPATH) || (this.tagEnum == Elf.DynamicArrayTags.RUNPATH) || (this.tagEnum == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (this.tagEnum == Elf.DynamicArrayTags.SUNW_FILTER) || (this.tagEnum == Elf.DynamicArrayTags.AUXILIARY) || (this.tagEnum == Elf.DynamicArrayTags.FILTER) || (this.tagEnum == Elf.DynamicArrayTags.CONFIG) || (this.tagEnum == Elf.DynamicArrayTags.DEPAUDIT) || (this.tagEnum == Elf.DynamicArrayTags.AUDIT)) )) ;
-          return this._m_isValueStr;
-        }
-      });
-      Object.defineProperty(DynamicSectionEntry.prototype, 'tagEnum', {
-        get: function() {
-          if (this._m_tagEnum !== undefined)
-            return this._m_tagEnum;
-          this._m_tagEnum = this.tag;
-          return this._m_tagEnum;
-        }
-      });
-      Object.defineProperty(DynamicSectionEntry.prototype, 'valueStr', {
-        get: function() {
-          if (this._m_valueStr !== undefined)
-            return this._m_valueStr;
-          if ( ((this.isValueStr) && (this._parent.isStringTableLinked)) ) {
-            var io = this._parent._parent.linkedSection.body._io;
-            var _pos = io.pos;
-            io.seek(this.valueOrPtr);
-            if (this._is_le) {
-              this._m_valueStr = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
-            } else {
-              this._m_valueStr = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
-            }
-            io.seek(_pos);
-          }
-          return this._m_valueStr;
-        }
-      });
-
-      return DynamicSectionEntry;
-    })();
 
     var DynsymSection = EndianElf.DynsymSection = (function() {
       function DynsymSection(_io, _parent, _root, _is_le) {
@@ -1728,8 +1748,8 @@ var Elf = (function() {
     })();
 
     /**
+     * @see {@link https://gabi.xinuos.com/elf/05-symtab.html|Source}
      * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html|Source}
-     * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html|Source}
      */
 
     var DynsymSectionEntry = EndianElf.DynsymSectionEntry = (function() {
@@ -1857,11 +1877,15 @@ var Elf = (function() {
           return this._m_value;
         }
       });
+
+      /**
+       * @see {@link https://github.com/xinuos/gabi/commit/acd5ebb2962cf243dca4983bc934442b42ef96f5|Source}
+       */
       Object.defineProperty(DynsymSectionEntry.prototype, 'visibility', {
         get: function() {
           if (this._m_visibility !== undefined)
             return this._m_visibility;
-          this._m_visibility = this.other & 3;
+          this._m_visibility = this.other & 7;
           return this._m_visibility;
         }
       });
@@ -1969,6 +1993,193 @@ var Elf = (function() {
       return NoteSectionEntry;
     })();
 
+    /**
+     * Same type as `sh_dynamic_section`, but it does not use
+     * `_parent.linked_section`, which is available only in section headers
+     * (i.e. when `_parent` is of type `section_header`). This allows it to
+     * be used in program headers (i.e. from the `program_header` type).
+     * 
+     * The inability to access `linked_section` means that offsets in the
+     * string table (which should be stored in the `.dynstr` section) will
+     * not be resolved to strings and will be provided only in raw form in
+     * the `value_or_ptr` field. In other words, the
+     * `ph_dynamic_section_entry` type has no `value_str` instance, unlike
+     * the `sh_dynamic_section_entry` type.
+     * 
+     * There is another way to find the string table referenced by the
+     * dynamic section entries that does not rely on `linked_section`, but is
+     * a bit more complex (and is therefore considered out of scope of this
+     * .ksy spec): the mandatory dynamic tag `dynamic_array_tags::strtab`
+     * (`DT_STRTAB`) specifies the virtual address of the string table, and
+     * `dynamic_array_tags::strsz` (`DT_STRSZ`) specifies its size in bytes.
+     * The virtual address can be converted to a file offset by reading the
+     * program headers - see the source code for the `readelf` command:
+     * 
+     * 1. [`offset_from_vma` call site with an address from `DT_STRTAB` as an
+     *   argument](https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13018)
+     * 2. [`offset_from_vma` function
+     *   definition](https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L7788)
+     * @see {@link https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html|Source}
+     */
+
+    var PhDynamicSection = EndianElf.PhDynamicSection = (function() {
+      function PhDynamicSection(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      PhDynamicSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      PhDynamicSection.prototype._readLE = function() {
+        this.entries = [];
+        var i = 0;
+        do {
+          var _ = new PhDynamicSectionEntry(this._io, this, this._root, this._is_le);
+          this.entries.push(_);
+          i++;
+        } while (!(_.tagEnum == Elf.DynamicArrayTags.NULL));
+      }
+      PhDynamicSection.prototype._readBE = function() {
+        this.entries = [];
+        var i = 0;
+        do {
+          var _ = new PhDynamicSectionEntry(this._io, this, this._root, this._is_le);
+          this.entries.push(_);
+          i++;
+        } while (!(_.tagEnum == Elf.DynamicArrayTags.NULL));
+      }
+
+      return PhDynamicSection;
+    })();
+
+    /**
+     * Same type as `sh_dynamic_section_entry`, but without the `value_str`
+     * instance - see the documentation for `ph_dynamic_section` for more
+     * details.
+     * @see {@link https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html|Source}
+     */
+
+    var PhDynamicSectionEntry = EndianElf.PhDynamicSectionEntry = (function() {
+      function PhDynamicSectionEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      PhDynamicSectionEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      PhDynamicSectionEntry.prototype._readLE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.tag = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.tag = this._io.readU8le();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.valueOrPtr = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.valueOrPtr = this._io.readU8le();
+          break;
+        }
+      }
+      PhDynamicSectionEntry.prototype._readBE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.tag = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.tag = this._io.readU8be();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.valueOrPtr = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.valueOrPtr = this._io.readU8be();
+          break;
+        }
+      }
+      Object.defineProperty(PhDynamicSectionEntry.prototype, 'flag1Values', {
+        get: function() {
+          if (this._m_flag1Values !== undefined)
+            return this._m_flag1Values;
+          if (this.tagEnum == Elf.DynamicArrayTags.FLAGS_1) {
+            if (this._is_le) {
+              this._m_flag1Values = new DtFlag1Values(this._io, this, this._root, this.valueOrPtr);
+            } else {
+              this._m_flag1Values = new DtFlag1Values(this._io, this, this._root, this.valueOrPtr);
+            }
+          }
+          return this._m_flag1Values;
+        }
+      });
+      Object.defineProperty(PhDynamicSectionEntry.prototype, 'flagValues', {
+        get: function() {
+          if (this._m_flagValues !== undefined)
+            return this._m_flagValues;
+          if (this.tagEnum == Elf.DynamicArrayTags.FLAGS) {
+            if (this._is_le) {
+              this._m_flagValues = new DtFlagValues(this._io, this, this._root, this.valueOrPtr);
+            } else {
+              this._m_flagValues = new DtFlagValues(this._io, this, this._root, this.valueOrPtr);
+            }
+          }
+          return this._m_flagValues;
+        }
+      });
+      Object.defineProperty(PhDynamicSectionEntry.prototype, 'isValueStr', {
+        get: function() {
+          if (this._m_isValueStr !== undefined)
+            return this._m_isValueStr;
+          this._m_isValueStr =  ((this.valueOrPtr != 0) && ( ((this.tagEnum == Elf.DynamicArrayTags.NEEDED) || (this.tagEnum == Elf.DynamicArrayTags.SONAME) || (this.tagEnum == Elf.DynamicArrayTags.RPATH) || (this.tagEnum == Elf.DynamicArrayTags.RUNPATH) || (this.tagEnum == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (this.tagEnum == Elf.DynamicArrayTags.SUNW_FILTER) || (this.tagEnum == Elf.DynamicArrayTags.AUXILIARY) || (this.tagEnum == Elf.DynamicArrayTags.FILTER) || (this.tagEnum == Elf.DynamicArrayTags.CONFIG) || (this.tagEnum == Elf.DynamicArrayTags.DEPAUDIT) || (this.tagEnum == Elf.DynamicArrayTags.AUDIT)) )) ;
+          return this._m_isValueStr;
+        }
+      });
+      Object.defineProperty(PhDynamicSectionEntry.prototype, 'tagEnum', {
+        get: function() {
+          if (this._m_tagEnum !== undefined)
+            return this._m_tagEnum;
+          this._m_tagEnum = this.tag;
+          return this._m_tagEnum;
+        }
+      });
+
+      return PhDynamicSectionEntry;
+    })();
+
+    /**
+     * @see {@link https://gabi.xinuos.com/v42/elf/07-pheader.html#program-header-entry|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/program-header.html|Source}
+     */
+
     var ProgramHeader = EndianElf.ProgramHeader = (function() {
       function ProgramHeader(_io, _parent, _root, _is_le) {
         this._io = _io;
@@ -1995,42 +2206,42 @@ var Elf = (function() {
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.offset = this._io.readU4le();
+          this.ofsBody = this._io.readU4le();
           break;
         case Elf.Bits.B64:
-          this.offset = this._io.readU8le();
+          this.ofsBody = this._io.readU8le();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.vaddr = this._io.readU4le();
+          this.virtAddr = this._io.readU4le();
           break;
         case Elf.Bits.B64:
-          this.vaddr = this._io.readU8le();
+          this.virtAddr = this._io.readU8le();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.paddr = this._io.readU4le();
+          this.physAddr = this._io.readU4le();
           break;
         case Elf.Bits.B64:
-          this.paddr = this._io.readU8le();
+          this.physAddr = this._io.readU8le();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.filesz = this._io.readU4le();
+          this.lenBody = this._io.readU4le();
           break;
         case Elf.Bits.B64:
-          this.filesz = this._io.readU8le();
+          this.lenBody = this._io.readU8le();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.memsz = this._io.readU4le();
+          this.memorySize = this._io.readU4le();
           break;
         case Elf.Bits.B64:
-          this.memsz = this._io.readU8le();
+          this.memorySize = this._io.readU8le();
           break;
         }
         if (this._root.bits == Elf.Bits.B32) {
@@ -2052,42 +2263,42 @@ var Elf = (function() {
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.offset = this._io.readU4be();
+          this.ofsBody = this._io.readU4be();
           break;
         case Elf.Bits.B64:
-          this.offset = this._io.readU8be();
+          this.ofsBody = this._io.readU8be();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.vaddr = this._io.readU4be();
+          this.virtAddr = this._io.readU4be();
           break;
         case Elf.Bits.B64:
-          this.vaddr = this._io.readU8be();
+          this.virtAddr = this._io.readU8be();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.paddr = this._io.readU4be();
+          this.physAddr = this._io.readU4be();
           break;
         case Elf.Bits.B64:
-          this.paddr = this._io.readU8be();
+          this.physAddr = this._io.readU8be();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.filesz = this._io.readU4be();
+          this.lenBody = this._io.readU4be();
           break;
         case Elf.Bits.B64:
-          this.filesz = this._io.readU8be();
+          this.lenBody = this._io.readU8be();
           break;
         }
         switch (this._root.bits) {
         case Elf.Bits.B32:
-          this.memsz = this._io.readU4be();
+          this.memorySize = this._io.readU4be();
           break;
         case Elf.Bits.B64:
-          this.memsz = this._io.readU8be();
+          this.memorySize = this._io.readU8be();
           break;
         }
         if (this._root.bits == Elf.Bits.B32) {
@@ -2102,6 +2313,120 @@ var Elf = (function() {
           break;
         }
       }
+
+      /**
+       * @see {@link https://gabi.xinuos.com/v42/elf/08-dynamic.html#program-interpreter|Source}
+       * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/program-interpreter.html|Source}
+       */
+
+      var PhInterpreter = ProgramHeader.PhInterpreter = (function() {
+        function PhInterpreter(_io, _parent, _root, _is_le) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+          this._is_le = _is_le;
+
+          this._read();
+        }
+        PhInterpreter.prototype._read = function() {
+
+          if (this._is_le === true) {
+            this._readLE();
+          } else if (this._is_le === false) {
+            this._readBE();
+          } else {
+            throw new KaitaiStream.UndecidedEndiannessError();
+          }
+        }
+        PhInterpreter.prototype._readLE = function() {
+          this.pathName = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
+        }
+        PhInterpreter.prototype._readBE = function() {
+          this.pathName = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
+        }
+
+        return PhInterpreter;
+      })();
+
+      /**
+       * Note: a program header may not have a valid body in the same ELF
+       * file, so accessing `body` may result in reading garbage or
+       * triggering EOF errors.
+       * 
+       * In particular, `*.debug` files produced by elfutils'
+       * `eu-strip --strip-debug` (as used by Fedora/RHEL and other
+       * RPM-based distros for their `*-debuginfo` packages, e.g.
+       * `glibc-debuginfo`) copy the original binary's program header table
+       * verbatim, including `ofs_body`/`len_body` (i.e.
+       * `p_offset`/`p_filesz`), while dropping the actual contents of most
+       * segments. Such segments can be recognized by the fact that the
+       * corresponding section headers have type `sh_type::nobits`
+       * (`SHT_NOBITS`). However, this Kaitai Struct implementation doesn't
+       * know the mapping between program headers and section headers, so
+       * this must be handled externally.
+       * 
+       * `*.debug` files from Debian/Ubuntu `*-dbg` packages (e.g.
+       * `libc6-dbg`) are usually not affected by this issue, because they
+       * are produced using GNU Binutils (`objcopy --only-keep-debug`),
+       * which zeroes `len_body` for segments whose contents were omitted
+       * (which reliably tells us that there is no `body`).
+       */
+      Object.defineProperty(ProgramHeader.prototype, 'body', {
+        get: function() {
+          if (this._m_body !== undefined)
+            return this._m_body;
+          if (this.lenBody != 0) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.ofsBody);
+            if (this._is_le) {
+              switch (this.type) {
+              case Elf.PhType.DYNAMIC:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new PhDynamicSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.PhType.INTERP:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new PhInterpreter(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.PhType.NOTE:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new NoteSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              default:
+                this._m_body = io.readBytes(this.lenBody);
+                break;
+              }
+            } else {
+              switch (this.type) {
+              case Elf.PhType.DYNAMIC:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new PhDynamicSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.PhType.INTERP:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new PhInterpreter(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.PhType.NOTE:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new NoteSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              default:
+                this._m_body = io.readBytes(this.lenBody);
+                break;
+              }
+            }
+            io.seek(_pos);
+          }
+          return this._m_body;
+        }
+      });
       Object.defineProperty(ProgramHeader.prototype, 'flagsObj', {
         get: function() {
           if (this._m_flagsObj !== undefined)
@@ -2256,6 +2581,11 @@ var Elf = (function() {
       return RelocationSectionEntry;
     })();
 
+    /**
+     * @see {@link https://gabi.xinuos.com/v42/elf/03-sheader.html#section-header-table-entry|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html|Source}
+     */
+
     var SectionHeader = EndianElf.SectionHeader = (function() {
       function SectionHeader(_io, _parent, _root, _is_le) {
         this._io = _io;
@@ -2311,7 +2641,7 @@ var Elf = (function() {
           break;
         }
         this.linkedSectionIdx = this._io.readU4le();
-        this.info = this._io.readBytes(4);
+        this.info = this._io.readU4le();
         switch (this._root.bits) {
         case Elf.Bits.B32:
           this.align = this._io.readU4le();
@@ -2365,7 +2695,7 @@ var Elf = (function() {
           break;
         }
         this.linkedSectionIdx = this._io.readU4be();
-        this.info = this._io.readBytes(4);
+        this.info = this._io.readU4be();
         switch (this._root.bits) {
         case Elf.Bits.B32:
           this.align = this._io.readU4be();
@@ -2396,12 +2726,27 @@ var Elf = (function() {
               case Elf.ShType.DYNAMIC:
                 this._raw__m_body = io.readBytes(this.lenBody);
                 var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-                this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
+                this._m_body = new ShDynamicSection(_io__raw__m_body, this, this._root, this._is_le);
                 break;
               case Elf.ShType.DYNSYM:
                 this._raw__m_body = io.readBytes(this.lenBody);
                 var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
                 this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.GNU_VERDEF:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new VerdefSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.GNU_VERNEED:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new VerneedSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.GNU_VERSYM:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new VersymSection(_io__raw__m_body, this, this._root, this._is_le);
                 break;
               case Elf.ShType.NOTE:
                 this._raw__m_body = io.readBytes(this.lenBody);
@@ -2437,12 +2782,27 @@ var Elf = (function() {
               case Elf.ShType.DYNAMIC:
                 this._raw__m_body = io.readBytes(this.lenBody);
                 var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-                this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
+                this._m_body = new ShDynamicSection(_io__raw__m_body, this, this._root, this._is_le);
                 break;
               case Elf.ShType.DYNSYM:
                 this._raw__m_body = io.readBytes(this.lenBody);
                 var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
                 this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.GNU_VERDEF:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new VerdefSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.GNU_VERNEED:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new VerneedSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.GNU_VERSYM:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new VersymSection(_io__raw__m_body, this, this._root, this._is_le);
                 break;
               case Elf.ShType.NOTE:
                 this._raw__m_body = io.readBytes(this.lenBody);
@@ -2526,6 +2886,193 @@ var Elf = (function() {
       return SectionHeader;
     })();
 
+    /**
+     * Same type as `ph_dynamic_section`, but it depends on
+     * `_parent.linked_section`, so it can be used only in the
+     * `section_header` type. See the documentation for `ph_dynamic_section`
+     * for more details.
+     * @see {@link https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html|Source}
+     */
+
+    var ShDynamicSection = EndianElf.ShDynamicSection = (function() {
+      function ShDynamicSection(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      ShDynamicSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      ShDynamicSection.prototype._readLE = function() {
+        this.entries = [];
+        var i = 0;
+        do {
+          var _ = new ShDynamicSectionEntry(this._io, this, this._root, this._is_le);
+          this.entries.push(_);
+          i++;
+        } while (!(_.tagEnum == Elf.DynamicArrayTags.NULL));
+      }
+      ShDynamicSection.prototype._readBE = function() {
+        this.entries = [];
+        var i = 0;
+        do {
+          var _ = new ShDynamicSectionEntry(this._io, this, this._root, this._is_le);
+          this.entries.push(_);
+          i++;
+        } while (!(_.tagEnum == Elf.DynamicArrayTags.NULL));
+      }
+      Object.defineProperty(ShDynamicSection.prototype, 'isStringTableLinked', {
+        get: function() {
+          if (this._m_isStringTableLinked !== undefined)
+            return this._m_isStringTableLinked;
+          this._m_isStringTableLinked = this._parent.linkedSection.type == Elf.ShType.STRTAB;
+          return this._m_isStringTableLinked;
+        }
+      });
+
+      return ShDynamicSection;
+    })();
+
+    /**
+     * Same type as `ph_dynamic_section_entry`, but with the `value_str`
+     * instance - see the documentation for `ph_dynamic_section` for more
+     * details.
+     * @see {@link https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html|Source}
+     */
+
+    var ShDynamicSectionEntry = EndianElf.ShDynamicSectionEntry = (function() {
+      function ShDynamicSectionEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      ShDynamicSectionEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      ShDynamicSectionEntry.prototype._readLE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.tag = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.tag = this._io.readU8le();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.valueOrPtr = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.valueOrPtr = this._io.readU8le();
+          break;
+        }
+      }
+      ShDynamicSectionEntry.prototype._readBE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.tag = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.tag = this._io.readU8be();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.valueOrPtr = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.valueOrPtr = this._io.readU8be();
+          break;
+        }
+      }
+      Object.defineProperty(ShDynamicSectionEntry.prototype, 'flag1Values', {
+        get: function() {
+          if (this._m_flag1Values !== undefined)
+            return this._m_flag1Values;
+          if (this.tagEnum == Elf.DynamicArrayTags.FLAGS_1) {
+            if (this._is_le) {
+              this._m_flag1Values = new DtFlag1Values(this._io, this, this._root, this.valueOrPtr);
+            } else {
+              this._m_flag1Values = new DtFlag1Values(this._io, this, this._root, this.valueOrPtr);
+            }
+          }
+          return this._m_flag1Values;
+        }
+      });
+      Object.defineProperty(ShDynamicSectionEntry.prototype, 'flagValues', {
+        get: function() {
+          if (this._m_flagValues !== undefined)
+            return this._m_flagValues;
+          if (this.tagEnum == Elf.DynamicArrayTags.FLAGS) {
+            if (this._is_le) {
+              this._m_flagValues = new DtFlagValues(this._io, this, this._root, this.valueOrPtr);
+            } else {
+              this._m_flagValues = new DtFlagValues(this._io, this, this._root, this.valueOrPtr);
+            }
+          }
+          return this._m_flagValues;
+        }
+      });
+      Object.defineProperty(ShDynamicSectionEntry.prototype, 'isValueStr', {
+        get: function() {
+          if (this._m_isValueStr !== undefined)
+            return this._m_isValueStr;
+          this._m_isValueStr =  ((this.valueOrPtr != 0) && ( ((this.tagEnum == Elf.DynamicArrayTags.NEEDED) || (this.tagEnum == Elf.DynamicArrayTags.SONAME) || (this.tagEnum == Elf.DynamicArrayTags.RPATH) || (this.tagEnum == Elf.DynamicArrayTags.RUNPATH) || (this.tagEnum == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (this.tagEnum == Elf.DynamicArrayTags.SUNW_FILTER) || (this.tagEnum == Elf.DynamicArrayTags.AUXILIARY) || (this.tagEnum == Elf.DynamicArrayTags.FILTER) || (this.tagEnum == Elf.DynamicArrayTags.CONFIG) || (this.tagEnum == Elf.DynamicArrayTags.DEPAUDIT) || (this.tagEnum == Elf.DynamicArrayTags.AUDIT)) )) ;
+          return this._m_isValueStr;
+        }
+      });
+      Object.defineProperty(ShDynamicSectionEntry.prototype, 'tagEnum', {
+        get: function() {
+          if (this._m_tagEnum !== undefined)
+            return this._m_tagEnum;
+          this._m_tagEnum = this.tag;
+          return this._m_tagEnum;
+        }
+      });
+      Object.defineProperty(ShDynamicSectionEntry.prototype, 'valueStr', {
+        get: function() {
+          if (this._m_valueStr !== undefined)
+            return this._m_valueStr;
+          if ( ((this.isValueStr) && (this._parent.isStringTableLinked)) ) {
+            var io = this._parent._parent.linkedSection.body._io;
+            var _pos = io.pos;
+            io.seek(this.valueOrPtr);
+            if (this._is_le) {
+              this._m_valueStr = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+            } else {
+              this._m_valueStr = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+            }
+            io.seek(_pos);
+          }
+          return this._m_valueStr;
+        }
+      });
+
+      return ShDynamicSectionEntry;
+    })();
+
     var StringsStruct = EndianElf.StringsStruct = (function() {
       function StringsStruct(_io, _parent, _root, _is_le) {
         this._io = _io;
@@ -2563,6 +3110,991 @@ var Elf = (function() {
       }
 
       return StringsStruct;
+    })();
+
+    /**
+     * @see {@link https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFEXTS|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html|Source}
+     * @see {@link https://www.akkadia.org/drepper/symbol-versioning|Source}
+     */
+
+    var VerdauxEntry = EndianElf.VerdauxEntry = (function() {
+      function VerdauxEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      VerdauxEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      VerdauxEntry.prototype._readLE = function() {
+        if (this.ofsStart < 0) {
+          this._unnamed0 = this._io.readBytes(0);
+        }
+        this.ofsName = this._io.readU4le();
+        this.ofsNext = this._io.readU4le();
+        var _ = this.ofsNext;
+        if (!( ((_ == 0) || (_ >= 8)) )) {
+          throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verdaux_entry/seq/2");
+        }
+      }
+      VerdauxEntry.prototype._readBE = function() {
+        if (this.ofsStart < 0) {
+          this._unnamed0 = this._io.readBytes(0);
+        }
+        this.ofsName = this._io.readU4be();
+        this.ofsNext = this._io.readU4be();
+        var _ = this.ofsNext;
+        if (!( ((_ == 0) || (_ >= 8)) )) {
+          throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verdaux_entry/seq/2");
+        }
+      }
+      Object.defineProperty(VerdauxEntry.prototype, 'name', {
+        get: function() {
+          if (this._m_name !== undefined)
+            return this._m_name;
+          if (this._parent.isStringTableLinked) {
+            var io = this._parent._parent.linkedSection.body._io;
+            var _pos = io.pos;
+            io.seek(this.ofsName);
+            if (this._is_le) {
+              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
+            } else {
+              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
+            }
+            io.seek(_pos);
+          }
+          return this._m_name;
+        }
+      });
+      Object.defineProperty(VerdauxEntry.prototype, 'next', {
+        get: function() {
+          if (this._m_next !== undefined)
+            return this._m_next;
+          if (this.ofsNext != 0) {
+            var _pos = this._io.pos;
+            this._io.seek(this.ofsStart + this.ofsNext);
+            if (this._is_le) {
+              this._m_next = new VerdauxEntry(this._io, this._parent, this._root, this._is_le);
+            } else {
+              this._m_next = new VerdauxEntry(this._io, this._parent, this._root, this._is_le);
+            }
+            this._io.seek(_pos);
+          }
+          return this._m_next;
+        }
+      });
+      Object.defineProperty(VerdauxEntry.prototype, 'ofsStart', {
+        get: function() {
+          if (this._m_ofsStart !== undefined)
+            return this._m_ofsStart;
+          this._m_ofsStart = this._io.pos;
+          return this._m_ofsStart;
+        }
+      });
+
+      /**
+       * Byte offset to the version or dependency name string in the linked
+       * string table.
+       */
+
+      /**
+       * Byte offset to the next verdaux entry, relative to the start of
+       * this `verdaux_entry`. A value of zero means that there is no next
+       * entry.
+       */
+
+      return VerdauxEntry;
+    })();
+
+    /**
+     * Version Definitions, contained in the special section named
+     * `.gnu.version_d` with the section type `sh_type::gnu_verdef`
+     * (`SHT_GNU_verdef`).
+     * 
+     * The number of entries in this section must match the value of the
+     * dynamic tag `dynamic_array_tags::verdefnum` (`DT_VERDEFNUM`) in the
+     * Dynamic Section (`.dynamic`).
+     * 
+     * `_parent.linked_section` must be the string table that contains the
+     * strings referenced by this section. Specifically, the string table in
+     * the `.dynstr` section should be used (side note: the `readelf` command
+     * doesn't even check which string table `sh_link` points to, and always
+     * uses `.dynstr` for the lookups - see
+     * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13787>).
+     * 
+     * The `is_string_table_linked` value instance indicates whether the
+     * string table is linked. If it is not, version names (the `name`
+     * instance in the `verdaux_entry` type) will not be available.
+     * @see {@link https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERDEFS|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html|Source}
+     * @see {@link https://www.akkadia.org/drepper/symbol-versioning|Source}
+     */
+
+    var VerdefSection = EndianElf.VerdefSection = (function() {
+      function VerdefSection(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      VerdefSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      VerdefSection.prototype._readLE = function() {
+        this.firstEntry = new VerdefSectionEntry(this._io, this, this._root, this._is_le);
+      }
+      VerdefSection.prototype._readBE = function() {
+        this.firstEntry = new VerdefSectionEntry(this._io, this, this._root, this._is_le);
+      }
+
+      /**
+       * Indicates whether a string table is linked. This should always be
+       * `true` in spec-compliant ELF files. If it is `false`, the string
+       * offsets in this section will not be resolved to strings.
+       */
+      Object.defineProperty(VerdefSection.prototype, 'isStringTableLinked', {
+        get: function() {
+          if (this._m_isStringTableLinked !== undefined)
+            return this._m_isStringTableLinked;
+          this._m_isStringTableLinked = this._parent.linkedSection.type == Elf.ShType.STRTAB;
+          return this._m_isStringTableLinked;
+        }
+      });
+
+      /**
+       * Number of entries (version definitions)
+       * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-47976|Source}
+       */
+      Object.defineProperty(VerdefSection.prototype, 'numEntries', {
+        get: function() {
+          if (this._m_numEntries !== undefined)
+            return this._m_numEntries;
+          this._m_numEntries = this._parent.info;
+          return this._m_numEntries;
+        }
+      });
+
+      return VerdefSection;
+    })();
+
+    /**
+     * @see {@link https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFENTRIES|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html|Source}
+     * @see {@link https://www.akkadia.org/drepper/symbol-versioning|Source}
+     */
+
+    var VerdefSectionEntry = EndianElf.VerdefSectionEntry = (function() {
+      function VerdefSectionEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      VerdefSectionEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      VerdefSectionEntry.prototype._readLE = function() {
+        if (this.ofsStart < 0) {
+          this._unnamed0 = this._io.readBytes(0);
+        }
+        this.version = this._io.readU2le();
+        if (!(this.version == 1)) {
+          throw new KaitaiStream.ValidationNotEqualError(1, this.version, this._io, "/types/endian_elf/types/verdef_section_entry/seq/1");
+        }
+        this.flags = this._io.readU2le();
+        this.versionIndex = this._io.readU2le();
+        var _ = this.versionIndex;
+        if (!((_ & 32768) == 0)) {
+          throw new KaitaiStream.ValidationExprError(this.versionIndex, this._io, "/types/endian_elf/types/verdef_section_entry/seq/3");
+        }
+        this.numAuxEntries = this._io.readU2le();
+        if (!(this.numAuxEntries >= 1)) {
+          throw new KaitaiStream.ValidationLessThanError(1, this.numAuxEntries, this._io, "/types/endian_elf/types/verdef_section_entry/seq/4");
+        }
+        this.hash = this._io.readU4le();
+        this.ofsFirstAux = this._io.readU4le();
+        if (!(this.ofsFirstAux >= 20)) {
+          throw new KaitaiStream.ValidationLessThanError(20, this.ofsFirstAux, this._io, "/types/endian_elf/types/verdef_section_entry/seq/6");
+        }
+        this.ofsNext = this._io.readU4le();
+        var _ = this.ofsNext;
+        if (!( ((_ == 0) || (_ >= 20)) )) {
+          throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verdef_section_entry/seq/7");
+        }
+      }
+      VerdefSectionEntry.prototype._readBE = function() {
+        if (this.ofsStart < 0) {
+          this._unnamed0 = this._io.readBytes(0);
+        }
+        this.version = this._io.readU2be();
+        if (!(this.version == 1)) {
+          throw new KaitaiStream.ValidationNotEqualError(1, this.version, this._io, "/types/endian_elf/types/verdef_section_entry/seq/1");
+        }
+        this.flags = this._io.readU2be();
+        this.versionIndex = this._io.readU2be();
+        var _ = this.versionIndex;
+        if (!((_ & 32768) == 0)) {
+          throw new KaitaiStream.ValidationExprError(this.versionIndex, this._io, "/types/endian_elf/types/verdef_section_entry/seq/3");
+        }
+        this.numAuxEntries = this._io.readU2be();
+        if (!(this.numAuxEntries >= 1)) {
+          throw new KaitaiStream.ValidationLessThanError(1, this.numAuxEntries, this._io, "/types/endian_elf/types/verdef_section_entry/seq/4");
+        }
+        this.hash = this._io.readU4be();
+        this.ofsFirstAux = this._io.readU4be();
+        if (!(this.ofsFirstAux >= 20)) {
+          throw new KaitaiStream.ValidationLessThanError(20, this.ofsFirstAux, this._io, "/types/endian_elf/types/verdef_section_entry/seq/6");
+        }
+        this.ofsNext = this._io.readU4be();
+        var _ = this.ofsNext;
+        if (!( ((_ == 0) || (_ >= 20)) )) {
+          throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verdef_section_entry/seq/7");
+        }
+      }
+
+      /**
+       * First auxiliary entry of type `verdaux_entry` (`Elfxx_Verdaux`).
+       * The rest follow its `next` instance.
+       */
+      Object.defineProperty(VerdefSectionEntry.prototype, 'firstAux', {
+        get: function() {
+          if (this._m_firstAux !== undefined)
+            return this._m_firstAux;
+          var _pos = this._io.pos;
+          this._io.seek(this.ofsStart + this.ofsFirstAux);
+          if (this._is_le) {
+            this._m_firstAux = new VerdauxEntry(this._io, this._parent, this._root, this._is_le);
+          } else {
+            this._m_firstAux = new VerdauxEntry(this._io, this._parent, this._root, this._is_le);
+          }
+          this._io.seek(_pos);
+          return this._m_firstAux;
+        }
+      });
+      Object.defineProperty(VerdefSectionEntry.prototype, 'flagsObj', {
+        get: function() {
+          if (this._m_flagsObj !== undefined)
+            return this._m_flagsObj;
+          if (this._is_le) {
+            this._m_flagsObj = new VersionFlags(this._io, this, this._root, this._is_le, this.flags);
+          } else {
+            this._m_flagsObj = new VersionFlags(this._io, this, this._root, this._is_le, this.flags);
+          }
+          return this._m_flagsObj;
+        }
+      });
+      Object.defineProperty(VerdefSectionEntry.prototype, 'next', {
+        get: function() {
+          if (this._m_next !== undefined)
+            return this._m_next;
+          if (this.ofsNext != 0) {
+            var _pos = this._io.pos;
+            this._io.seek(this.ofsStart + this.ofsNext);
+            if (this._is_le) {
+              this._m_next = new VerdefSectionEntry(this._io, this._parent, this._root, this._is_le);
+            } else {
+              this._m_next = new VerdefSectionEntry(this._io, this._parent, this._root, this._is_le);
+            }
+            this._io.seek(_pos);
+          }
+          return this._m_next;
+        }
+      });
+      Object.defineProperty(VerdefSectionEntry.prototype, 'ofsStart', {
+        get: function() {
+          if (this._m_ofsStart !== undefined)
+            return this._m_ofsStart;
+          this._m_ofsStart = this._io.pos;
+          return this._m_ofsStart;
+        }
+      });
+      Object.defineProperty(VerdefSectionEntry.prototype, 'versionIndexSpecial', {
+        get: function() {
+          if (this._m_versionIndexSpecial !== undefined)
+            return this._m_versionIndexSpecial;
+          this._m_versionIndexSpecial = this.versionIndex;
+          return this._m_versionIndexSpecial;
+        }
+      });
+
+      /**
+       * Version of the structure. Must be set to 1.
+       */
+
+      /**
+       * Version information flag bitmask. Access `flags_obj` instead.
+       */
+
+      /**
+       * Version index assigned to this version definition. A unique index
+       * that entries in the Symbol Version Table (the `versym_section`
+       * type) use to reference the corresponding version definition.
+       * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html|Source}
+       */
+
+      /**
+       * Number of associated auxiliary entries.
+       */
+
+      /**
+       * Version name hash value (ELF hash function).
+       */
+
+      /**
+       * Byte offset to the first `verdaux_entry` (`Elfxx_Verdaux`)
+       * associated with this version definition. The offset is relative to
+       * the start of this `verdef_section_entry`.
+       */
+
+      /**
+       * Byte offset to the next verdef entry, relative to the start of
+       * this `verdef_section_entry`. A value of zero means that there is
+       * no next entry.
+       */
+
+      return VerdefSectionEntry;
+    })();
+
+    /**
+     * @see {@link https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERNEEDEXTFIG|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html|Source}
+     * @see {@link https://www.akkadia.org/drepper/symbol-versioning|Source}
+     */
+
+    var VernauxEntry = EndianElf.VernauxEntry = (function() {
+      function VernauxEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      VernauxEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      VernauxEntry.prototype._readLE = function() {
+        if (this.ofsStart < 0) {
+          this._unnamed0 = this._io.readBytes(0);
+        }
+        this.hash = this._io.readU4le();
+        this.flags = this._io.readU2le();
+        this.versionIndex = new VersionIndex(this._io, this, this._root, this._is_le);
+        this.ofsName = this._io.readU4le();
+        this.ofsNext = this._io.readU4le();
+        var _ = this.ofsNext;
+        if (!( ((_ == 0) || (_ >= 16)) )) {
+          throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/vernaux_entry/seq/5");
+        }
+      }
+      VernauxEntry.prototype._readBE = function() {
+        if (this.ofsStart < 0) {
+          this._unnamed0 = this._io.readBytes(0);
+        }
+        this.hash = this._io.readU4be();
+        this.flags = this._io.readU2be();
+        this.versionIndex = new VersionIndex(this._io, this, this._root, this._is_le);
+        this.ofsName = this._io.readU4be();
+        this.ofsNext = this._io.readU4be();
+        var _ = this.ofsNext;
+        if (!( ((_ == 0) || (_ >= 16)) )) {
+          throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/vernaux_entry/seq/5");
+        }
+      }
+      Object.defineProperty(VernauxEntry.prototype, 'flagsObj', {
+        get: function() {
+          if (this._m_flagsObj !== undefined)
+            return this._m_flagsObj;
+          if (this._is_le) {
+            this._m_flagsObj = new VersionFlags(this._io, this, this._root, this._is_le, this.flags);
+          } else {
+            this._m_flagsObj = new VersionFlags(this._io, this, this._root, this._is_le, this.flags);
+          }
+          return this._m_flagsObj;
+        }
+      });
+      Object.defineProperty(VernauxEntry.prototype, 'name', {
+        get: function() {
+          if (this._m_name !== undefined)
+            return this._m_name;
+          if (this._parent.isStringTableLinked) {
+            var io = this._parent._parent.linkedSection.body._io;
+            var _pos = io.pos;
+            io.seek(this.ofsName);
+            if (this._is_le) {
+              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
+            } else {
+              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
+            }
+            io.seek(_pos);
+          }
+          return this._m_name;
+        }
+      });
+      Object.defineProperty(VernauxEntry.prototype, 'next', {
+        get: function() {
+          if (this._m_next !== undefined)
+            return this._m_next;
+          if (this.ofsNext != 0) {
+            var _pos = this._io.pos;
+            this._io.seek(this.ofsStart + this.ofsNext);
+            if (this._is_le) {
+              this._m_next = new VernauxEntry(this._io, this._parent, this._root, this._is_le);
+            } else {
+              this._m_next = new VernauxEntry(this._io, this._parent, this._root, this._is_le);
+            }
+            this._io.seek(_pos);
+          }
+          return this._m_next;
+        }
+      });
+      Object.defineProperty(VernauxEntry.prototype, 'ofsStart', {
+        get: function() {
+          if (this._m_ofsStart !== undefined)
+            return this._m_ofsStart;
+          this._m_ofsStart = this._io.pos;
+          return this._m_ofsStart;
+        }
+      });
+
+      /**
+       * Dependency name hash value (ELF hash function).
+       */
+
+      /**
+       * Dependency information flag bitmask. Access `flags_obj` instead.
+       */
+
+      /**
+       * Version index assigned to this dependency version. A unique index
+       * that entries in the Symbol Version Table (the `versym_section`
+       * type) use to reference the corresponding dependency version.
+       * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html|Source}
+       */
+
+      /**
+       * Byte offset to the dependency name string in the linked string
+       * table.
+       */
+
+      /**
+       * Byte offset to the next vernaux entry, relative to the start of
+       * this `vernaux_entry`. A value of zero means that there is no next
+       * entry.
+       */
+
+      return VernauxEntry;
+    })();
+
+    /**
+     * Version Requirements, contained in the special section named
+     * `.gnu.version_r` with the section type `sh_type::gnu_verneed`
+     * (`SHT_GNU_verneed`). This section defines the required versions of
+     * dynamic symbols from other shared objects.
+     * 
+     * The number of entries in this section must match the value of the
+     * dynamic tag `dynamic_array_tags::verneednum` (`DT_VERNEEDNUM`) in the
+     * Dynamic Section (`.dynamic`).
+     * 
+     * `_parent.linked_section` must be the string table that contains the
+     * strings referenced by this section. Specifically, the string table in
+     * the `.dynstr` section should be used (side note: the `readelf` command
+     * doesn't even check which string table `sh_link` points to, and always
+     * uses `.dynstr` for the lookups - see
+     * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13941>).
+     * 
+     * The `is_string_table_linked` value instance indicates whether the
+     * string table is linked. If it is not, file names (the `file_name`
+     * instance in the `verneed_section_entry` type) or version names (the
+     * `name` instance in the `vernaux_entry` type) will not be available.
+     * @see {@link https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERRQMTS|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html|Source}
+     * @see {@link https://www.akkadia.org/drepper/symbol-versioning|Source}
+     */
+
+    var VerneedSection = EndianElf.VerneedSection = (function() {
+      function VerneedSection(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      VerneedSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      VerneedSection.prototype._readLE = function() {
+        this.firstEntry = new VerneedSectionEntry(this._io, this, this._root, this._is_le);
+      }
+      VerneedSection.prototype._readBE = function() {
+        this.firstEntry = new VerneedSectionEntry(this._io, this, this._root, this._is_le);
+      }
+
+      /**
+       * Indicates whether a string table is linked. This should always be
+       * `true` in spec-compliant ELF files. If it is `false`, the string
+       * offsets in this section will not be resolved to strings.
+       */
+      Object.defineProperty(VerneedSection.prototype, 'isStringTableLinked', {
+        get: function() {
+          if (this._m_isStringTableLinked !== undefined)
+            return this._m_isStringTableLinked;
+          this._m_isStringTableLinked = this._parent.linkedSection.type == Elf.ShType.STRTAB;
+          return this._m_isStringTableLinked;
+        }
+      });
+
+      /**
+       * Number of entries (dependency versions)
+       * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-47976|Source}
+       */
+      Object.defineProperty(VerneedSection.prototype, 'numEntries', {
+        get: function() {
+          if (this._m_numEntries !== undefined)
+            return this._m_numEntries;
+          this._m_numEntries = this._parent.info;
+          return this._m_numEntries;
+        }
+      });
+
+      return VerneedSection;
+    })();
+
+    /**
+     * @see {@link https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERNEEDFIG|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html|Source}
+     * @see {@link https://www.akkadia.org/drepper/symbol-versioning|Source}
+     */
+
+    var VerneedSectionEntry = EndianElf.VerneedSectionEntry = (function() {
+      function VerneedSectionEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      VerneedSectionEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      VerneedSectionEntry.prototype._readLE = function() {
+        if (this.ofsStart < 0) {
+          this._unnamed0 = this._io.readBytes(0);
+        }
+        this.version = this._io.readU2le();
+        if (!(this.version == 1)) {
+          throw new KaitaiStream.ValidationNotEqualError(1, this.version, this._io, "/types/endian_elf/types/verneed_section_entry/seq/1");
+        }
+        this.numAuxEntries = this._io.readU2le();
+        if (!(this.numAuxEntries >= 1)) {
+          throw new KaitaiStream.ValidationLessThanError(1, this.numAuxEntries, this._io, "/types/endian_elf/types/verneed_section_entry/seq/2");
+        }
+        this.ofsFileName = this._io.readU4le();
+        this.ofsFirstAux = this._io.readU4le();
+        if (!(this.ofsFirstAux >= 16)) {
+          throw new KaitaiStream.ValidationLessThanError(16, this.ofsFirstAux, this._io, "/types/endian_elf/types/verneed_section_entry/seq/4");
+        }
+        this.ofsNext = this._io.readU4le();
+        var _ = this.ofsNext;
+        if (!( ((_ == 0) || (_ >= 16)) )) {
+          throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verneed_section_entry/seq/5");
+        }
+      }
+      VerneedSectionEntry.prototype._readBE = function() {
+        if (this.ofsStart < 0) {
+          this._unnamed0 = this._io.readBytes(0);
+        }
+        this.version = this._io.readU2be();
+        if (!(this.version == 1)) {
+          throw new KaitaiStream.ValidationNotEqualError(1, this.version, this._io, "/types/endian_elf/types/verneed_section_entry/seq/1");
+        }
+        this.numAuxEntries = this._io.readU2be();
+        if (!(this.numAuxEntries >= 1)) {
+          throw new KaitaiStream.ValidationLessThanError(1, this.numAuxEntries, this._io, "/types/endian_elf/types/verneed_section_entry/seq/2");
+        }
+        this.ofsFileName = this._io.readU4be();
+        this.ofsFirstAux = this._io.readU4be();
+        if (!(this.ofsFirstAux >= 16)) {
+          throw new KaitaiStream.ValidationLessThanError(16, this.ofsFirstAux, this._io, "/types/endian_elf/types/verneed_section_entry/seq/4");
+        }
+        this.ofsNext = this._io.readU4be();
+        var _ = this.ofsNext;
+        if (!( ((_ == 0) || (_ >= 16)) )) {
+          throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verneed_section_entry/seq/5");
+        }
+      }
+      Object.defineProperty(VerneedSectionEntry.prototype, 'fileName', {
+        get: function() {
+          if (this._m_fileName !== undefined)
+            return this._m_fileName;
+          if (this._parent.isStringTableLinked) {
+            var io = this._parent._parent.linkedSection.body._io;
+            var _pos = io.pos;
+            io.seek(this.ofsFileName);
+            if (this._is_le) {
+              this._m_fileName = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
+            } else {
+              this._m_fileName = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
+            }
+            io.seek(_pos);
+          }
+          return this._m_fileName;
+        }
+      });
+
+      /**
+       * First auxiliary entry of type `vernaux_entry` (`Elfxx_Vernaux`).
+       * The rest follow its `next` instance.
+       */
+      Object.defineProperty(VerneedSectionEntry.prototype, 'firstAux', {
+        get: function() {
+          if (this._m_firstAux !== undefined)
+            return this._m_firstAux;
+          var _pos = this._io.pos;
+          this._io.seek(this.ofsStart + this.ofsFirstAux);
+          if (this._is_le) {
+            this._m_firstAux = new VernauxEntry(this._io, this._parent, this._root, this._is_le);
+          } else {
+            this._m_firstAux = new VernauxEntry(this._io, this._parent, this._root, this._is_le);
+          }
+          this._io.seek(_pos);
+          return this._m_firstAux;
+        }
+      });
+      Object.defineProperty(VerneedSectionEntry.prototype, 'next', {
+        get: function() {
+          if (this._m_next !== undefined)
+            return this._m_next;
+          if (this.ofsNext != 0) {
+            var _pos = this._io.pos;
+            this._io.seek(this.ofsStart + this.ofsNext);
+            if (this._is_le) {
+              this._m_next = new VerneedSectionEntry(this._io, this._parent, this._root, this._is_le);
+            } else {
+              this._m_next = new VerneedSectionEntry(this._io, this._parent, this._root, this._is_le);
+            }
+            this._io.seek(_pos);
+          }
+          return this._m_next;
+        }
+      });
+      Object.defineProperty(VerneedSectionEntry.prototype, 'ofsStart', {
+        get: function() {
+          if (this._m_ofsStart !== undefined)
+            return this._m_ofsStart;
+          this._m_ofsStart = this._io.pos;
+          return this._m_ofsStart;
+        }
+      });
+
+      /**
+       * Version of the structure. Must be set to 1.
+       */
+
+      /**
+       * Number of associated auxiliary entries.
+       */
+
+      /**
+       * Byte offset to the file name string in the linked string table.
+       */
+
+      /**
+       * Byte offset to the first associated `vernaux_entry`
+       * (`Elfxx_Vernaux`). The offset is relative to the start of this
+       * `verneed_section_entry`.
+       */
+
+      /**
+       * Byte offset to the next verneed entry, relative to the start of
+       * this `verneed_section_entry`. A value of zero means that there is
+       * no next entry.
+       */
+
+      return VerneedSectionEntry;
+    })();
+
+    /**
+     * Version information flag bitmask, shared by the `flags` (`vd_flags`)
+     * field of `verdef_section_entry` (`Elfxx_Verdef`) and the `flags`
+     * (`vna_flags`) field of `vernaux_entry` (`Elfxx_Vernaux`).
+     * @see {@link https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMSTARTSEQ|Source}
+     * @see {@link https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1078|Source}
+     * @see {@link https://www.akkadia.org/drepper/symbol-versioning|Source}
+     */
+
+    var VersionFlags = EndianElf.VersionFlags = (function() {
+      function VersionFlags(_io, _parent, _root, _is_le, value) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+        this.value = value;
+
+        this._read();
+      }
+      VersionFlags.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      VersionFlags.prototype._readLE = function() {
+      }
+      VersionFlags.prototype._readBE = function() {
+      }
+
+      /**
+       * Version definition of the file itself (the base definition).
+       */
+      Object.defineProperty(VersionFlags.prototype, 'base', {
+        get: function() {
+          if (this._m_base !== undefined)
+            return this._m_base;
+          this._m_base = (this.value & 1) != 0;
+          return this._m_base;
+        }
+      });
+
+      /**
+       * Version reference exists for informational purposes and does not
+       * need to be validated at runtime.
+       * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html|Source}
+       */
+      Object.defineProperty(VersionFlags.prototype, 'info', {
+        get: function() {
+          if (this._m_info !== undefined)
+            return this._m_info;
+          this._m_info = (this.value & 4) != 0;
+          return this._m_info;
+        }
+      });
+
+      /**
+       * Weak version identifier.
+       * 
+       * A weak version definition has no symbols associated with the
+       * version. See [Creating a Weak Version
+       * Definition](https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/creating-weak-version-definition.html).
+       */
+      Object.defineProperty(VersionFlags.prototype, 'weak', {
+        get: function() {
+          if (this._m_weak !== undefined)
+            return this._m_weak;
+          this._m_weak = (this.value & 2) != 0;
+          return this._m_weak;
+        }
+      });
+
+      return VersionFlags;
+    })();
+
+    var VersionIndex = EndianElf.VersionIndex = (function() {
+      function VersionIndex(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      VersionIndex.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      VersionIndex.prototype._readLE = function() {
+        this.raw = this._io.readU2le();
+      }
+      VersionIndex.prototype._readBE = function() {
+        this.raw = this._io.readU2be();
+      }
+
+      /**
+       * This bit is set if the symbol is hidden, and is only visible with
+       * an explicit version number. This is a GNU extension.
+       * @see {@link https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L1379|Source}
+       */
+      Object.defineProperty(VersionIndex.prototype, 'isHidden', {
+        get: function() {
+          if (this._m_isHidden !== undefined)
+            return this._m_isHidden;
+          this._m_isHidden = (this.raw & 32768) != 0;
+          return this._m_isHidden;
+        }
+      });
+
+      /**
+       * The values `version_index_special::local` (0) and
+       * `version_index_special::global_symbol` (1) have special meanings.
+       * The `version_index_special` value instance converts the integer
+       * value to the `version_index_special` enum.
+       */
+      Object.defineProperty(VersionIndex.prototype, 'value', {
+        get: function() {
+          if (this._m_value !== undefined)
+            return this._m_value;
+          this._m_value = this.raw & 32767;
+          return this._m_value;
+        }
+      });
+
+      /**
+       * Note: we match special constants against the full 16-bit integer
+       * value (called `raw` in this .ksy implementation), because that's
+       * what the `readelf` command does when deciding whether to print
+       * `0 (*local*)` or `1 (*global*)` in the `.gnu.version`
+       * (`SHT_GNU_versym`) section - see
+       * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L14079>.
+       * 
+       * Besides, `version_index_special::eliminate` (`VER_NDX_ELIMINATE`)
+       * has a value of `0xff01`, which is a 16-bit value. If we matched
+       * against `value` instead, `version_index_special::eliminate` would
+       * be unreachable, because `value` contains only the lower 15 bits,
+       * so its maximum possible value is `0x7fff`.
+       */
+      Object.defineProperty(VersionIndex.prototype, 'versionIndexSpecial', {
+        get: function() {
+          if (this._m_versionIndexSpecial !== undefined)
+            return this._m_versionIndexSpecial;
+          this._m_versionIndexSpecial = this.raw;
+          return this._m_versionIndexSpecial;
+        }
+      });
+
+      /**
+       * Raw value, don't read this field - access `value`,
+       * `version_index_special` and `is_hidden` instead.
+       */
+
+      return VersionIndex;
+    })();
+
+    /**
+     * Symbol Version Table, contained in the special section named
+     * `.gnu.version` with the section type `sh_type::gnu_versym`
+     * (`SHT_GNU_versym`).
+     * 
+     * This section must have the same number of entries as the Dynamic
+     * Symbol Table in the `.dynsym` section (section type `sh_type::dynsym`
+     * / `SHT_DYNSYM`). Each entry specifies the version defined for or
+     * required by the corresponding symbol in the Dynamic Symbol Table.
+     * @see {@link https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERTBL|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-symbol-section.html|Source}
+     * @see {@link https://www.akkadia.org/drepper/symbol-versioning|Source}
+     */
+
+    var VersymSection = EndianElf.VersymSection = (function() {
+      function VersymSection(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      VersymSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      VersymSection.prototype._readLE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new VersionIndex(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+      VersymSection.prototype._readBE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new VersionIndex(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+
+      /**
+       * Version indexes for the corresponding symbols in the Dynamic
+       * Symbol Table (`.dynsym` section).
+       * 
+       * These values are not the versions themselves: they are keys that
+       * are matched against the `version_index` (`vd_ndx`) field of the
+       * `verdef_section_entry` (`Elfxx_Verdef`) type if the symbol is
+       * defined in this object, or the `version_index` (`vna_other`) field
+       * of the `vernaux_entry` (`Elfxx_Vernaux`) type if the symbol is
+       * required from another object. The `name` instance of the matched
+       * entry specifies the version of the symbol.
+       */
+
+      return VersymSection;
     })();
     Object.defineProperty(EndianElf.prototype, 'programHeaders', {
       get: function() {
@@ -2690,6 +4222,12 @@ var Elf = (function() {
     return PhdrTypeFlags;
   })();
 
+  /**
+   * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675|Source}
+   * @see {@link https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L614|Source}
+   * @see {@link https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L468|Source}
+   */
+
   var SectionHeaderFlags = Elf.SectionHeaderFlags = (function() {
     function SectionHeaderFlags(_io, _parent, _root, value) {
       this._io = _io;
@@ -2703,7 +4241,7 @@ var Elf = (function() {
     }
 
     /**
-     * occupies memory during execution
+     * Occupies memory during execution
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'alloc', {
       get: function() {
@@ -2715,19 +4253,31 @@ var Elf = (function() {
     });
 
     /**
-     * section is excluded unless referenced or allocated (Solaris)
+     * Section with compressed data
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'compressed', {
+      get: function() {
+        if (this._m_compressed !== undefined)
+          return this._m_compressed;
+        this._m_compressed = (this.value & 2048) != 0;
+        return this._m_compressed;
+      }
+    });
+
+    /**
+     * Section is excluded unless referenced or allocated (Solaris)
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'exclude', {
       get: function() {
         if (this._m_exclude !== undefined)
           return this._m_exclude;
-        this._m_exclude = (this.value & 134217728) != 0;
+        this._m_exclude = (this.value & 2147483648) != 0;
         return this._m_exclude;
       }
     });
 
     /**
-     * executable
+     * Executable machine instructions
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'execInstr', {
       get: function() {
@@ -2739,7 +4289,20 @@ var Elf = (function() {
     });
 
     /**
-     * section is member of a group
+     * Mbind section
+     * @see {@link https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L631|Source}
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'gnuMbind', {
+      get: function() {
+        if (this._m_gnuMbind !== undefined)
+          return this._m_gnuMbind;
+        this._m_gnuMbind = (this.value & 16777216) != 0;
+        return this._m_gnuMbind;
+      }
+    });
+
+    /**
+     * Member of a section group
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'group', {
       get: function() {
@@ -2751,7 +4314,7 @@ var Elf = (function() {
     });
 
     /**
-     * 'sh_info' contains SHT index
+     * Section header's `sh_info` field holds a section header table index
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'infoLink', {
       get: function() {
@@ -2763,7 +4326,7 @@ var Elf = (function() {
     });
 
     /**
-     * preserve order after combining
+     * Preserve section ordering when linking
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'linkOrder', {
       get: function() {
@@ -2775,7 +4338,7 @@ var Elf = (function() {
     });
 
     /**
-     * OS-specific
+     * OS-specific semantics
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'maskOs', {
       get: function() {
@@ -2787,7 +4350,7 @@ var Elf = (function() {
     });
 
     /**
-     * Processor-specific
+     * Processor-specific semantics
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'maskProc', {
       get: function() {
@@ -2799,7 +4362,7 @@ var Elf = (function() {
     });
 
     /**
-     * might be merged
+     * Data in this section can be merged to eliminate duplication
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'merge', {
       get: function() {
@@ -2811,31 +4374,53 @@ var Elf = (function() {
     });
 
     /**
-     * special ordering requirement (Solaris)
+     * Special ordering requirement (Solaris)
+     * 
+     * From <https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675>:
+     * 
+     * > `SHF_ORDERED` is an older version of the functionality provided by
+     * > `SHF_LINK_ORDER`, and has been superseded by `SHF_LINK_ORDER`.
+     * > `SHF_ORDERED` is no longer supported.
+     * @see {@link https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L485|Source}
+     * @see {@link https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675|Source}
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'ordered', {
       get: function() {
         if (this._m_ordered !== undefined)
           return this._m_ordered;
-        this._m_ordered = (this.value & 67108864) != 0;
+        this._m_ordered = (this.value & 1073741824) != 0;
         return this._m_ordered;
       }
     });
 
     /**
-     * non-standard OS specific handling required
+     * Special OS-specific handling required
      */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'osNonConforming', {
+    Object.defineProperty(SectionHeaderFlags.prototype, 'osNonconforming', {
       get: function() {
-        if (this._m_osNonConforming !== undefined)
-          return this._m_osNonConforming;
-        this._m_osNonConforming = (this.value & 256) != 0;
-        return this._m_osNonConforming;
+        if (this._m_osNonconforming !== undefined)
+          return this._m_osNonconforming;
+        this._m_osNonconforming = (this.value & 256) != 0;
+        return this._m_osNonconforming;
       }
     });
 
     /**
-     * contains nul-terminated strings
+     * Section should not be garbage collected by the linker
+     * @see {@link https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L630|Source}
+     * @see {@link https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L484|Source}
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'retain', {
+      get: function() {
+        if (this._m_retain !== undefined)
+          return this._m_retain;
+        this._m_retain = (this.value & 2097152) != 0;
+        return this._m_retain;
+      }
+    });
+
+    /**
+     * Contains null-terminated character strings
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'strings', {
       get: function() {
@@ -2847,7 +4432,9 @@ var Elf = (function() {
     });
 
     /**
-     * section hold thread-local data
+     * Thread-local storage section (`.tbss` or `.tdata` according to [ELF
+     * Handling For Thread-Local
+     * Storage](https://www.akkadia.org/drepper/tls.pdf))
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'tls', {
       get: function() {
@@ -2859,7 +4446,7 @@ var Elf = (function() {
     });
 
     /**
-     * writable
+     * Writable during execution
      */
     Object.defineProperty(SectionHeaderFlags.prototype, 'write', {
       get: function() {

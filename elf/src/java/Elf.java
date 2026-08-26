@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 
 /**
- * @see <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532">Source</a>
+ * @see <a href="https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h">Source</a>
  * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
  * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-application-binary-interface.html">Source</a>
  */
@@ -173,7 +173,7 @@ public class Elf extends KaitaiStruct {
         NO_MACHINE(0),
         M32(1),
         SPARC(2),
-        X86(3),
+        I386(3),
         M68K(4),
         M88K(5),
         IAMCU(6),
@@ -181,6 +181,7 @@ public class Elf extends KaitaiStruct {
         MIPS(8),
         S370(9),
         MIPS_RS3_LE(10),
+        OLD_SPARC_V9(11),
         PARISC(15),
         VPP500(17),
         SPARC32PLUS(18),
@@ -192,7 +193,7 @@ public class Elf extends KaitaiStruct {
         V800(36),
         FR20(37),
         RH32(38),
-        RCE(39),
+        MCORE(39),
         ARM(40),
         OLD_ALPHA(41),
         SUPERH(42),
@@ -222,10 +223,10 @@ public class Elf extends KaitaiStruct {
         FX66(66),
         ST9PLUS(67),
         ST7(68),
-        MC68HC16(69),
-        MC68HC11(70),
-        MC68HC08(71),
-        MC68HC05(72),
+        M68HC16(69),
+        M68HC11(70),
+        M68HC08(71),
+        M68HC05(72),
         SVX(73),
         ST19(74),
         VAX(75),
@@ -245,7 +246,7 @@ public class Elf extends KaitaiStruct {
         MN10300(89),
         MN10200(90),
         PICOJAVA(91),
-        OPENRISC(92),
+        OR1K(92),
         ARC_COMPACT(93),
         XTENSA(94),
         VIDEOCORE(95),
@@ -256,7 +257,7 @@ public class Elf extends KaitaiStruct {
         ST200(100),
         IP2K(101),
         MAX(102),
-        COMPACT_RISC(103),
+        CR(103),
         F2MC16(104),
         MSP430(105),
         BLACKFIN(106),
@@ -300,7 +301,7 @@ public class Elf extends KaitaiStruct {
         MAXQ30(169),
         XIMO16(170),
         MANIK(171),
-        CRAYNV2(172),
+        CRAY_NV2(172),
         RX(173),
         METAG(174),
         MCST_ELBRUS(175),
@@ -308,9 +309,11 @@ public class Elf extends KaitaiStruct {
         CR16(177),
         ETPU(178),
         SLE9X(179),
-        L10M(180),
-        K10M(181),
+        L1OM(180),
+        K1OM(181),
+        INTEL182(182),
         AARCH64(183),
+        ARM184(184),
         AVR32(185),
         STM8(186),
         TILE64(187),
@@ -321,11 +324,11 @@ public class Elf extends KaitaiStruct {
         CLOUDSHIELD(192),
         COREA_1ST(193),
         COREA_2ND(194),
-        ARCV2(195),
+        ARC_COMPACT2(195),
         OPEN8(196),
         RL78(197),
         VIDEOCORE5(198),
-        RENESAS_78KOR(199),
+        RENESAS_78K0R(199),
         FREESCALE_56800EX(200),
         BA1(201),
         BA2(202),
@@ -350,7 +353,7 @@ public class Elf extends KaitaiStruct {
         VISIUM(221),
         FT32(222),
         MOXIE(223),
-        AMD_GPU(224),
+        AMDGPU(224),
         RISCV(243),
         LANAI(244),
         CEVA(245),
@@ -365,12 +368,20 @@ public class Elf extends KaitaiStruct {
         MCS6502(254),
         ARC_COMPACT3(255),
         KVX(256),
-        WDC65816(257),
+        WDC_65816(257),
         LOONGARCH(258),
         KF32(259),
         U16_U8CORE(260),
         TACHYUM(261),
         NXP_56800EF(262),
+        SBF(263),
+        AI_ENGINE(264),
+        SIMA_MLA(265),
+        BANG(266),
+        LOONGGPU(267),
+        SW64(268),
+        AI_ENGINE_CTRLCODE(269),
+        PPU(270),
         AVR_OLD(4183),
         MSP430_OLD(4185),
         ADAPTEVA_EPIPHANY(4643),
@@ -403,7 +414,7 @@ public class Elf extends KaitaiStruct {
         private final long id;
         Machine(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(229);
+        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(240);
         static {
             for (Machine e : Machine.values())
                 byId.put(e.id(), e);
@@ -446,12 +457,18 @@ public class Elf extends KaitaiStruct {
         AROS(15),
         FENIXOS(16),
         CLOUDABI(17),
-        OPENVOS(18);
+        OPENVOS(18),
+        CUDA(51),
+        ARM_AEABI(64),
+        ARM_FDPIC(65),
+        AMDGPU_MESA3D(66),
+        ARM(97),
+        STANDALONE(255);
 
         private final long id;
         OsAbi(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, OsAbi> byId = new HashMap<Long, OsAbi>(17);
+        private static final Map<Long, OsAbi> byId = new HashMap<Long, OsAbi>(23);
         static {
             for (OsAbi e : OsAbi.values())
                 byId.put(e.id(), e);
@@ -468,17 +485,35 @@ public class Elf extends KaitaiStruct {
         SHLIB(5),
         PHDR(6),
         TLS(7),
+        SUNW_UNWIND(1684333904),
         GNU_EH_FRAME(1685382480),
         GNU_STACK(1685382481),
         GNU_RELRO(1685382482),
         GNU_PROPERTY(1685382483),
+        GNU_SFRAME(1685382484),
         PAX_FLAGS(1694766464),
-        ARM_EXIDX(1879048193);
+        OPENBSD_MUTABLE(1705237477),
+        OPENBSD_RANDOMIZE(1705237478),
+        OPENBSD_WXNEEDED(1705237479),
+        OPENBSD_NOBTCFI(1705237480),
+        OPENBSD_SYSCALLS(1705237481),
+        OPENBSD_BOOTDATA(1705253862),
+        SUNW_SYSSTAT_ZONE(1879048183),
+        SUNW_SYSSTAT(1879048184),
+        SUNW_RESERVE(1879048185),
+        SUNW_BSS(1879048186),
+        SUNW_STACK(1879048187),
+        SUNW_DTRACE(1879048188),
+        SUNW_CAP(1879048189),
+        ARM_ARCHEXT(1879048192),
+        ARM_EXIDX(1879048193),
+        AARCH64_MEMTAG_MTE(1879048194),
+        RISCV_ATTRIBUTES(1879048195);
 
         private final long id;
         PhType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, PhType> byId = new HashMap<Long, PhType>(14);
+        private static final Map<Long, PhType> byId = new HashMap<Long, PhType>(32);
         static {
             for (PhType e : PhType.values())
                 byId.put(e.id(), e);
@@ -526,6 +561,27 @@ public class Elf extends KaitaiStruct {
         GROUP(17),
         SYMTAB_SHNDX(18),
         RELR(19),
+        ANDROID_REL(1610612737),
+        ANDROID_RELA(1610612738),
+        GNU_INCREMENTAL_INPUTS(1879000832),
+        LLVM_ODRTAB(1879002112),
+        LLVM_LINKER_OPTIONS(1879002113),
+        LLVM_ADDRSIG(1879002115),
+        LLVM_DEPENDENT_LIBRARIES(1879002116),
+        LLVM_SYMPART(1879002117),
+        LLVM_PART_EHDR(1879002118),
+        LLVM_PART_PHDR(1879002119),
+        LLVM_BB_ADDR_MAP_V0(1879002120),
+        LLVM_CALL_GRAPH_PROFILE(1879002121),
+        LLVM_BB_ADDR_MAP(1879002122),
+        LLVM_OFFLOADING(1879002123),
+        LLVM_LTO(1879002124),
+        LLVM_JT_SIZES(1879002125),
+        LLVM_CFI_JUMP_TABLE(1879002126),
+        LLVM_CALL_GRAPH(1879002127),
+        LLVM_DYNDBG_ELF(1879002128),
+        ANDROID_RELR(1879047936),
+        SUNW_CTF(1879048171),
         SUNW_SYMNSORT(1879048172),
         SUNW_PHNAME(1879048173),
         SUNW_ANCILLARY(1879048174),
@@ -534,29 +590,31 @@ public class Elf extends KaitaiStruct {
         SUNW_SYMSORT(1879048177),
         SUNW_TLSSORT(1879048178),
         SUNW_LDYNSYM(1879048179),
-        SUNW_DOF(1879048180),
-        SUNW_CAP(1879048181),
-        SUNW_SIGNATURE(1879048182),
-        SUNW_ANNOTATE(1879048183),
-        SUNW_DEBUGSTR(1879048184),
-        SUNW_DEBUG(1879048185),
+        GNU_SFRAME(1879048180),
+        GNU_ATTRIBUTES(1879048181),
+        GNU_HASH(1879048182),
+        GNU_LIBLIST(1879048183),
+        CHECKSUM(1879048184),
+        GNU_OBJECT_ONLY(1879048185),
         SUNW_MOVE(1879048186),
         SUNW_COMDAT(1879048187),
         SUNW_SYMINFO(1879048188),
-        SUNW_VERDEF(1879048189),
-        SUNW_VERNEED(1879048190),
-        SUNW_VERSYM(1879048191),
+        GNU_VERDEF(1879048189),
+        GNU_VERNEED(1879048190),
+        GNU_VERSYM(1879048191),
         SPARC_GOTDATA(1879048192),
-        AMD64_UNWIND(1879048193),
+        X86_64_UNWIND(1879048193),
         ARM_PREEMPTMAP(1879048194),
         ARM_ATTRIBUTES(1879048195),
         ARM_DEBUGOVERLAY(1879048196),
-        ARM_OVERLAYSECTION(1879048197);
+        ARM_OVERLAYSECTION(1879048197),
+        AARCH64_MEMTAG_GLOBALS_STATIC(1879048199),
+        AARCH64_MEMTAG_GLOBALS_DYNAMIC(1879048200);
 
         private final long id;
         ShType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(44);
+        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(67);
         static {
             for (ShType e : ShType.values())
                 byId.put(e.id(), e);
@@ -634,6 +692,22 @@ public class Elf extends KaitaiStruct {
         public static SymbolVisibility byId(long id) { return byId.get(id); }
     }
 
+    public enum VersionIndexSpecial {
+        LOCAL(0),
+        GLOBAL_SYMBOL(1),
+        ELIMINATE(65281);
+
+        private final long id;
+        VersionIndexSpecial(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, VersionIndexSpecial> byId = new HashMap<Long, VersionIndexSpecial>(3);
+        static {
+            for (VersionIndexSpecial e : VersionIndexSpecial.values())
+                byId.put(e.id(), e);
+        }
+        public static VersionIndexSpecial byId(long id) { return byId.get(id); }
+    }
+
     public Elf(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -671,17 +745,22 @@ public class Elf extends KaitaiStruct {
     public void _fetchInstances() {
         this.header._fetchInstances();
     }
+
+    /**
+     * @see <a href="https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1008">Source</a>
+     * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER6-TBL-53">Source</a>
+     */
     public static class DtFlag1Values extends KaitaiStruct {
 
         public DtFlag1Values(KaitaiStream _io, long value) {
             this(_io, null, null, value);
         }
 
-        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, long value) {
+        public DtFlag1Values(KaitaiStream _io, KaitaiStruct _parent, long value) {
             this(_io, _parent, null, value);
         }
 
-        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, Elf _root, long value) {
+        public DtFlag1Values(KaitaiStream _io, KaitaiStruct _parent, Elf _root, long value) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -693,16 +772,17 @@ public class Elf extends KaitaiStruct {
 
         public void _fetchInstances() {
         }
-        private Boolean confalt;
+        private Boolean confAlt;
 
         /**
          * Configuration alternative created.
+         * @see <a href="https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1023">Source</a>
          */
-        public Boolean confalt() {
-            if (this.confalt != null)
-                return this.confalt;
-            this.confalt = (value() & 8192) != 0;
-            return this.confalt;
+        public Boolean confAlt() {
+            if (this.confAlt != null)
+                return this.confAlt;
+            this.confAlt = (value() & 8192) != 0;
+            return this.confAlt;
         }
         private Boolean direct;
 
@@ -715,27 +795,27 @@ public class Elf extends KaitaiStruct {
             this.direct = (value() & 256) != 0;
             return this.direct;
         }
-        private Boolean dispreldne;
+        private Boolean dispRelDne;
 
         /**
-         * Disp reloc applied at build time.
+         * Displacement relocation done (applied at build time).
          */
-        public Boolean dispreldne() {
-            if (this.dispreldne != null)
-                return this.dispreldne;
-            this.dispreldne = (value() & 32768) != 0;
-            return this.dispreldne;
+        public Boolean dispRelDne() {
+            if (this.dispRelDne != null)
+                return this.dispRelDne;
+            this.dispRelDne = (value() & 32768) != 0;
+            return this.dispRelDne;
         }
-        private Boolean disprelpnd;
+        private Boolean dispRelPnd;
 
         /**
-         * Disp reloc applied at run-time.
+         * Displacement relocation pending (applied at runtime).
          */
-        public Boolean disprelpnd() {
-            if (this.disprelpnd != null)
-                return this.disprelpnd;
-            this.disprelpnd = (value() & 65536) != 0;
-            return this.disprelpnd;
+        public Boolean dispRelPnd() {
+            if (this.dispRelPnd != null)
+                return this.dispRelPnd;
+            this.dispRelPnd = (value() & 65536) != 0;
+            return this.dispRelPnd;
         }
         private Boolean edited;
 
@@ -748,32 +828,32 @@ public class Elf extends KaitaiStruct {
             this.edited = (value() & 2097152) != 0;
             return this.edited;
         }
-        private Boolean endfiltee;
+        private Boolean endFiltee;
 
         /**
          * Filtee terminates filters search.
          */
-        public Boolean endfiltee() {
-            if (this.endfiltee != null)
-                return this.endfiltee;
-            this.endfiltee = (value() & 16384) != 0;
-            return this.endfiltee;
+        public Boolean endFiltee() {
+            if (this.endFiltee != null)
+                return this.endFiltee;
+            this.endFiltee = (value() & 16384) != 0;
+            return this.endFiltee;
         }
-        private Boolean globaudit;
+        private Boolean globAudit;
 
         /**
          * Global auditing required.
          */
-        public Boolean globaudit() {
-            if (this.globaudit != null)
-                return this.globaudit;
-            this.globaudit = (value() & 16777216) != 0;
-            return this.globaudit;
+        public Boolean globAudit() {
+            if (this.globAudit != null)
+                return this.globAudit;
+            this.globAudit = (value() & 16777216) != 0;
+            return this.globAudit;
         }
         private Boolean group;
 
         /**
-         * Set RTLD_GROUP for this object.
+         * Set `RTLD_GROUP` for this object.
          */
         public Boolean group() {
             if (this.group != null)
@@ -781,23 +861,23 @@ public class Elf extends KaitaiStruct {
             this.group = (value() & 4) != 0;
             return this.group;
         }
-        private Boolean ignmuldef;
-        public Boolean ignmuldef() {
-            if (this.ignmuldef != null)
-                return this.ignmuldef;
-            this.ignmuldef = (value() & 262144) != 0;
-            return this.ignmuldef;
+        private Boolean ignMulDef;
+        public Boolean ignMulDef() {
+            if (this.ignMulDef != null)
+                return this.ignMulDef;
+            this.ignMulDef = (value() & 262144) != 0;
+            return this.ignMulDef;
         }
-        private Boolean initfirst;
+        private Boolean initFirst;
 
         /**
-         * Set RTLD_INITFIRST for this object
+         * Set `RTLD_INITFIRST` for this object.
          */
-        public Boolean initfirst() {
-            if (this.initfirst != null)
-                return this.initfirst;
-            this.initfirst = (value() & 32) != 0;
-            return this.initfirst;
+        public Boolean initFirst() {
+            if (this.initFirst != null)
+                return this.initFirst;
+            this.initFirst = (value() & 32) != 0;
+            return this.initFirst;
         }
         private Boolean interpose;
 
@@ -810,97 +890,120 @@ public class Elf extends KaitaiStruct {
             this.interpose = (value() & 1024) != 0;
             return this.interpose;
         }
-        private Boolean loadfltr;
+        private Boolean kmod;
+
+        /**
+         * Object is a kernel module.
+         */
+        public Boolean kmod() {
+            if (this.kmod != null)
+                return this.kmod;
+            this.kmod = (value() & 268435456) != 0;
+            return this.kmod;
+        }
+        private Boolean loadFltr;
 
         /**
          * Trigger filtee loading at runtime.
          */
-        public Boolean loadfltr() {
-            if (this.loadfltr != null)
-                return this.loadfltr;
-            this.loadfltr = (value() & 16) != 0;
-            return this.loadfltr;
+        public Boolean loadFltr() {
+            if (this.loadFltr != null)
+                return this.loadFltr;
+            this.loadFltr = (value() & 16) != 0;
+            return this.loadFltr;
         }
-        private Boolean nodeflib;
+        private Boolean noCommon;
 
         /**
-         * Ignore default lib search path.
+         * No COMMON symbols exist.
+         * @see <a href="https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1040">Source</a>
          */
-        public Boolean nodeflib() {
-            if (this.nodeflib != null)
-                return this.nodeflib;
-            this.nodeflib = (value() & 2048) != 0;
-            return this.nodeflib;
+        public Boolean noCommon() {
+            if (this.noCommon != null)
+                return this.noCommon;
+            this.noCommon = (value() & 1073741824) != 0;
+            return this.noCommon;
         }
-        private Boolean nodelete;
+        private Boolean noDefLib;
 
         /**
-         * Set RTLD_NODELETE for this object.
+         * Ignore the default library search path.
          */
-        public Boolean nodelete() {
-            if (this.nodelete != null)
-                return this.nodelete;
-            this.nodelete = (value() & 8) != 0;
-            return this.nodelete;
+        public Boolean noDefLib() {
+            if (this.noDefLib != null)
+                return this.noDefLib;
+            this.noDefLib = (value() & 2048) != 0;
+            return this.noDefLib;
         }
-        private Boolean nodirect;
+        private Boolean noDelete;
 
         /**
-         * Object has no-direct binding.
+         * Set `RTLD_NODELETE` for this object.
          */
-        public Boolean nodirect() {
-            if (this.nodirect != null)
-                return this.nodirect;
-            this.nodirect = (value() & 131072) != 0;
-            return this.nodirect;
+        public Boolean noDelete() {
+            if (this.noDelete != null)
+                return this.noDelete;
+            this.noDelete = (value() & 8) != 0;
+            return this.noDelete;
         }
-        private Boolean nodump;
+        private Boolean noDirect;
+
+        /**
+         * Object contains non-direct bindings.
+         */
+        public Boolean noDirect() {
+            if (this.noDirect != null)
+                return this.noDirect;
+            this.noDirect = (value() & 131072) != 0;
+            return this.noDirect;
+        }
+        private Boolean noDump;
 
         /**
          * Object can't be dldump'ed.
          */
-        public Boolean nodump() {
-            if (this.nodump != null)
-                return this.nodump;
-            this.nodump = (value() & 4096) != 0;
-            return this.nodump;
+        public Boolean noDump() {
+            if (this.noDump != null)
+                return this.noDump;
+            this.noDump = (value() & 4096) != 0;
+            return this.noDump;
         }
-        private Boolean nohdr;
-        public Boolean nohdr() {
-            if (this.nohdr != null)
-                return this.nohdr;
-            this.nohdr = (value() & 1048576) != 0;
-            return this.nohdr;
+        private Boolean noHdr;
+        public Boolean noHdr() {
+            if (this.noHdr != null)
+                return this.noHdr;
+            this.noHdr = (value() & 1048576) != 0;
+            return this.noHdr;
         }
-        private Boolean noksyms;
-        public Boolean noksyms() {
-            if (this.noksyms != null)
-                return this.noksyms;
-            this.noksyms = (value() & 524288) != 0;
-            return this.noksyms;
+        private Boolean noKsyms;
+        public Boolean noKsyms() {
+            if (this.noKsyms != null)
+                return this.noKsyms;
+            this.noKsyms = (value() & 524288) != 0;
+            return this.noKsyms;
         }
-        private Boolean noopen;
+        private Boolean noOpen;
 
         /**
-         * Set RTLD_NOOPEN for this object.
+         * Set `RTLD_NOOPEN` for this object.
          */
-        public Boolean noopen() {
-            if (this.noopen != null)
-                return this.noopen;
-            this.noopen = (value() & 64) != 0;
-            return this.noopen;
+        public Boolean noOpen() {
+            if (this.noOpen != null)
+                return this.noOpen;
+            this.noOpen = (value() & 64) != 0;
+            return this.noOpen;
         }
-        private Boolean noreloc;
-        public Boolean noreloc() {
-            if (this.noreloc != null)
-                return this.noreloc;
-            this.noreloc = (value() & 4194304) != 0;
-            return this.noreloc;
+        private Boolean noReloc;
+        public Boolean noReloc() {
+            if (this.noReloc != null)
+                return this.noReloc;
+            this.noReloc = (value() & 4194304) != 0;
+            return this.noReloc;
         }
         private Boolean now;
 
         /**
-         * Set RTLD_NOW for this object.
+         * Set `RTLD_NOW` for this object.
          */
         public Boolean now() {
             if (this.now != null)
@@ -911,7 +1014,7 @@ public class Elf extends KaitaiStruct {
         private Boolean origin;
 
         /**
-         * $ORIGIN must be handled.
+         * `$ORIGIN` must be handled.
          */
         public Boolean origin() {
             if (this.origin != null)
@@ -920,6 +1023,10 @@ public class Elf extends KaitaiStruct {
             return this.origin;
         }
         private Boolean pie;
+
+        /**
+         * Object is a Position Independent Executable (PIE).
+         */
         public Boolean pie() {
             if (this.pie != null)
                 return this.pie;
@@ -929,7 +1036,7 @@ public class Elf extends KaitaiStruct {
         private Boolean rtldGlobal;
 
         /**
-         * Set RTLD_GLOBAL for this object.
+         * Set `RTLD_GLOBAL` for this object.
          */
         public Boolean rtldGlobal() {
             if (this.rtldGlobal != null)
@@ -949,36 +1056,56 @@ public class Elf extends KaitaiStruct {
             return this.singleton;
         }
         private Boolean stub;
+
+        /**
+         * Object is a stub.
+         * See [Stub Objects](https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/stub-objects.html).
+         */
         public Boolean stub() {
             if (this.stub != null)
                 return this.stub;
             this.stub = (value() & 67108864) != 0;
             return this.stub;
         }
-        private Boolean symintpose;
+        private Boolean symIntpose;
 
         /**
-         * Object has individual interposers.
+         * Object has individual symbol interposers.
          */
-        public Boolean symintpose() {
-            if (this.symintpose != null)
-                return this.symintpose;
-            this.symintpose = (value() & 8388608) != 0;
-            return this.symintpose;
+        public Boolean symIntpose() {
+            if (this.symIntpose != null)
+                return this.symIntpose;
+            this.symIntpose = (value() & 8388608) != 0;
+            return this.symIntpose;
         }
         private Boolean trans;
+
+        /**
+         * @see <a href="https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1019">Source</a>
+         */
         public Boolean trans() {
             if (this.trans != null)
                 return this.trans;
             this.trans = (value() & 512) != 0;
             return this.trans;
         }
+        private Boolean weakFilter;
+
+        /**
+         * Object is a weak standard filter.
+         */
+        public Boolean weakFilter() {
+            if (this.weakFilter != null)
+                return this.weakFilter;
+            this.weakFilter = (value() & 536870912) != 0;
+            return this.weakFilter;
+        }
         private long value;
         private Elf _root;
-        private Elf.EndianElf.DynamicSectionEntry _parent;
+        private KaitaiStruct _parent;
         public long value() { return value; }
         public Elf _root() { return _root; }
-        public Elf.EndianElf.DynamicSectionEntry _parent() { return _parent; }
+        public KaitaiStruct _parent() { return _parent; }
     }
 
     /**
@@ -992,11 +1119,11 @@ public class Elf extends KaitaiStruct {
             this(_io, null, null, value);
         }
 
-        public DtFlagValues(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, long value) {
+        public DtFlagValues(KaitaiStream _io, KaitaiStruct _parent, long value) {
             this(_io, _parent, null, value);
         }
 
-        public DtFlagValues(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, Elf _root, long value) {
+        public DtFlagValues(KaitaiStream _io, KaitaiStruct _parent, Elf _root, long value) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -1066,11 +1193,16 @@ public class Elf extends KaitaiStruct {
         }
         private long value;
         private Elf _root;
-        private Elf.EndianElf.DynamicSectionEntry _parent;
+        private KaitaiStruct _parent;
         public long value() { return value; }
         public Elf _root() { return _root; }
-        public Elf.EndianElf.DynamicSectionEntry _parent() { return _parent; }
+        public KaitaiStruct _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://gabi.xinuos.com/v42/elf/02-eheader.html">Source</a>
+     * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-header.html">Source</a>
+     */
     public static class EndianElf extends KaitaiStruct {
         public static EndianElf fromFile(String fileName) throws IOException {
             return new EndianElf(new ByteBufferKaitaiStream(fileName));
@@ -1119,6 +1251,9 @@ public class Elf extends KaitaiStruct {
         private void _readLE() {
             this.eType = Elf.ObjType.byId(this._io.readU2le());
             this.machine = Elf.Machine.byId(this._io.readU2le());
+            if (this.machine == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.machine, this._io, "/types/endian_elf/seq/1");
+            }
             this.eVersion = this._io.readU4le();
             {
                 Bits on = _root().bits();
@@ -1176,6 +1311,9 @@ public class Elf extends KaitaiStruct {
         private void _readBE() {
             this.eType = Elf.ObjType.byId(this._io.readU2be());
             this.machine = Elf.Machine.byId(this._io.readU2be());
+            if (this.machine == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.machine, this._io, "/types/endian_elf/seq/1");
+            }
             this.eVersion = this._io.readU4be();
             {
                 Bits on = _root().bits();
@@ -1288,261 +1426,6 @@ public class Elf extends KaitaiStruct {
                 this.sectionNames._fetchInstances();
             }
         }
-        public static class DynamicSection extends KaitaiStruct {
-            private Boolean _is_le;
-
-            public DynamicSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this._is_le = _is_le;
-                _read();
-            }
-            private void _read() {
-
-                if (_is_le == null) {
-                    throw new KaitaiStream.UndecidedEndiannessError();
-                } else if (_is_le) {
-                    _readLE();
-                } else {
-                    _readBE();
-                }
-            }
-            private void _readLE() {
-                this.entries = new ArrayList<DynamicSectionEntry>();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this.entries.add(new DynamicSectionEntry(this._io, this, _root, _is_le));
-                        i++;
-                    }
-                }
-            }
-            private void _readBE() {
-                this.entries = new ArrayList<DynamicSectionEntry>();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this.entries.add(new DynamicSectionEntry(this._io, this, _root, _is_le));
-                        i++;
-                    }
-                }
-            }
-
-            public void _fetchInstances() {
-                for (int i = 0; i < this.entries.size(); i++) {
-                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
-                }
-            }
-            private Boolean isStringTableLinked;
-            public Boolean isStringTableLinked() {
-                if (this.isStringTableLinked != null)
-                    return this.isStringTableLinked;
-                this.isStringTableLinked = _parent().linkedSection().type() == Elf.ShType.STRTAB;
-                return this.isStringTableLinked;
-            }
-            private List<DynamicSectionEntry> entries;
-            private Elf _root;
-            private Elf.EndianElf.SectionHeader _parent;
-            public List<DynamicSectionEntry> entries() { return entries; }
-            public Elf _root() { return _root; }
-            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
-        }
-
-        /**
-         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html">Source</a>
-         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section">Source</a>
-         */
-        public static class DynamicSectionEntry extends KaitaiStruct {
-            private Boolean _is_le;
-
-            public DynamicSectionEntry(KaitaiStream _io, Elf.EndianElf.DynamicSection _parent, Elf _root, boolean _is_le) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this._is_le = _is_le;
-                _read();
-            }
-            private void _read() {
-
-                if (_is_le == null) {
-                    throw new KaitaiStream.UndecidedEndiannessError();
-                } else if (_is_le) {
-                    _readLE();
-                } else {
-                    _readBE();
-                }
-            }
-            private void _readLE() {
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.tag = ((Number) (this._io.readU4le())).longValue();
-                            break;
-                        }
-                        case B64: {
-                            this.tag = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.valueOrPtr = ((Number) (this._io.readU4le())).longValue();
-                            break;
-                        }
-                        case B64: {
-                            this.valueOrPtr = this._io.readU8le();
-                            break;
-                        }
-                        }
-                    }
-                }
-            }
-            private void _readBE() {
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.tag = ((Number) (this._io.readU4be())).longValue();
-                            break;
-                        }
-                        case B64: {
-                            this.tag = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            this.valueOrPtr = ((Number) (this._io.readU4be())).longValue();
-                            break;
-                        }
-                        case B64: {
-                            this.valueOrPtr = this._io.readU8be();
-                            break;
-                        }
-                        }
-                    }
-                }
-            }
-
-            public void _fetchInstances() {
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            break;
-                        }
-                        case B64: {
-                            break;
-                        }
-                        }
-                    }
-                }
-                {
-                    Bits on = _root().bits();
-                    if (on != null) {
-                        switch (_root().bits()) {
-                        case B32: {
-                            break;
-                        }
-                        case B64: {
-                            break;
-                        }
-                        }
-                    }
-                }
-                flag1Values();
-                if (this.flag1Values != null) {
-                    this.flag1Values._fetchInstances();
-                }
-                flagValues();
-                if (this.flagValues != null) {
-                    this.flagValues._fetchInstances();
-                }
-                valueStr();
-                if (this.valueStr != null) {
-                }
-            }
-            private DtFlag1Values flag1Values;
-            public DtFlag1Values flag1Values() {
-                if (this.flag1Values != null)
-                    return this.flag1Values;
-                if (tagEnum() == Elf.DynamicArrayTags.FLAGS_1) {
-                    if (_is_le) {
-                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
-                    } else {
-                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
-                    }
-                }
-                return this.flag1Values;
-            }
-            private DtFlagValues flagValues;
-            public DtFlagValues flagValues() {
-                if (this.flagValues != null)
-                    return this.flagValues;
-                if (tagEnum() == Elf.DynamicArrayTags.FLAGS) {
-                    if (_is_le) {
-                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
-                    } else {
-                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
-                    }
-                }
-                return this.flagValues;
-            }
-            private Boolean isValueStr;
-            public Boolean isValueStr() {
-                if (this.isValueStr != null)
-                    return this.isValueStr;
-                this.isValueStr =  ((valueOrPtr() != 0) && ( ((tagEnum() == Elf.DynamicArrayTags.NEEDED) || (tagEnum() == Elf.DynamicArrayTags.SONAME) || (tagEnum() == Elf.DynamicArrayTags.RPATH) || (tagEnum() == Elf.DynamicArrayTags.RUNPATH) || (tagEnum() == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.SUNW_FILTER) || (tagEnum() == Elf.DynamicArrayTags.AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.FILTER) || (tagEnum() == Elf.DynamicArrayTags.CONFIG) || (tagEnum() == Elf.DynamicArrayTags.DEPAUDIT) || (tagEnum() == Elf.DynamicArrayTags.AUDIT)) )) ;
-                return this.isValueStr;
-            }
-            private DynamicArrayTags tagEnum;
-            public DynamicArrayTags tagEnum() {
-                if (this.tagEnum != null)
-                    return this.tagEnum;
-                this.tagEnum = Elf.DynamicArrayTags.byId(tag());
-                return this.tagEnum;
-            }
-            private String valueStr;
-            public String valueStr() {
-                if (this.valueStr != null)
-                    return this.valueStr;
-                if ( ((isValueStr()) && (_parent().isStringTableLinked())) ) {
-                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
-                    long _pos = io.pos();
-                    io.seek(valueOrPtr());
-                    if (_is_le) {
-                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
-                    } else {
-                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
-                    }
-                    io.seek(_pos);
-                }
-                return this.valueStr;
-            }
-            private Long tag;
-            private Long valueOrPtr;
-            private Elf _root;
-            private Elf.EndianElf.DynamicSection _parent;
-            public Long tag() { return tag; }
-            public Long valueOrPtr() { return valueOrPtr; }
-            public Elf _root() { return _root; }
-            public Elf.EndianElf.DynamicSection _parent() { return _parent; }
-        }
         public static class DynsymSection extends KaitaiStruct {
             private Boolean _is_le;
 
@@ -1605,8 +1488,8 @@ public class Elf extends KaitaiStruct {
         }
 
         /**
+         * @see <a href="https://gabi.xinuos.com/elf/05-symtab.html">Source</a>
          * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html">Source</a>
-         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html">Source</a>
          */
         public static class DynsymSectionEntry extends KaitaiStruct {
             private Boolean _is_le;
@@ -1740,10 +1623,14 @@ public class Elf extends KaitaiStruct {
                 return this.value;
             }
             private SymbolVisibility visibility;
+
+            /**
+             * @see <a href="https://github.com/xinuos/gabi/commit/acd5ebb2962cf243dca4983bc934442b42ef96f5">Source</a>
+             */
             public SymbolVisibility visibility() {
                 if (this.visibility != null)
                     return this.visibility;
-                this.visibility = Elf.SymbolVisibility.byId(other() & 3);
+                this.visibility = Elf.SymbolVisibility.byId(other() & 7);
                 return this.visibility;
             }
             private long ofsName;
@@ -1780,7 +1667,7 @@ public class Elf extends KaitaiStruct {
         public static class NoteSection extends KaitaiStruct {
             private Boolean _is_le;
 
-            public NoteSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
+            public NoteSection(KaitaiStream _io, KaitaiStruct _parent, Elf _root, boolean _is_le) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
@@ -1825,10 +1712,10 @@ public class Elf extends KaitaiStruct {
             }
             private List<NoteSectionEntry> entries;
             private Elf _root;
-            private Elf.EndianElf.SectionHeader _parent;
+            private KaitaiStruct _parent;
             public List<NoteSectionEntry> entries() { return entries; }
             public Elf _root() { return _root; }
-            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
+            public KaitaiStruct _parent() { return _parent; }
         }
 
         /**
@@ -1902,6 +1789,276 @@ public class Elf extends KaitaiStruct {
             public Elf _root() { return _root; }
             public Elf.EndianElf.NoteSection _parent() { return _parent; }
         }
+
+        /**
+         * Same type as `sh_dynamic_section`, but it does not use
+         * `_parent.linked_section`, which is available only in section headers
+         * (i.e. when `_parent` is of type `section_header`). This allows it to
+         * be used in program headers (i.e. from the `program_header` type).
+         * 
+         * The inability to access `linked_section` means that offsets in the
+         * string table (which should be stored in the `.dynstr` section) will
+         * not be resolved to strings and will be provided only in raw form in
+         * the `value_or_ptr` field. In other words, the
+         * `ph_dynamic_section_entry` type has no `value_str` instance, unlike
+         * the `sh_dynamic_section_entry` type.
+         * 
+         * There is another way to find the string table referenced by the
+         * dynamic section entries that does not rely on `linked_section`, but is
+         * a bit more complex (and is therefore considered out of scope of this
+         * .ksy spec): the mandatory dynamic tag `dynamic_array_tags::strtab`
+         * (`DT_STRTAB`) specifies the virtual address of the string table, and
+         * `dynamic_array_tags::strsz` (`DT_STRSZ`) specifies its size in bytes.
+         * The virtual address can be converted to a file offset by reading the
+         * program headers - see the source code for the `readelf` command:
+         * 
+         * 1. [`offset_from_vma` call site with an address from `DT_STRTAB` as an
+         *   argument](https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13018)
+         * 2. [`offset_from_vma` function
+         *   definition](https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L7788)
+         * @see <a href="https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html">Source</a>
+         */
+        public static class PhDynamicSection extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public PhDynamicSection(KaitaiStream _io, Elf.EndianElf.ProgramHeader _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.entries = new ArrayList<PhDynamicSectionEntry>();
+                {
+                    PhDynamicSectionEntry _it;
+                    int i = 0;
+                    do {
+                        _it = new PhDynamicSectionEntry(this._io, this, _root, _is_le);
+                        this.entries.add(_it);
+                        i++;
+                    } while (!(_it.tagEnum() == Elf.DynamicArrayTags.NULL));
+                }
+            }
+            private void _readBE() {
+                this.entries = new ArrayList<PhDynamicSectionEntry>();
+                {
+                    PhDynamicSectionEntry _it;
+                    int i = 0;
+                    do {
+                        _it = new PhDynamicSectionEntry(this._io, this, _root, _is_le);
+                        this.entries.add(_it);
+                        i++;
+                    } while (!(_it.tagEnum() == Elf.DynamicArrayTags.NULL));
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.entries.size(); i++) {
+                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private List<PhDynamicSectionEntry> entries;
+            private Elf _root;
+            private Elf.EndianElf.ProgramHeader _parent;
+            public List<PhDynamicSectionEntry> entries() { return entries; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.ProgramHeader _parent() { return _parent; }
+        }
+
+        /**
+         * Same type as `sh_dynamic_section_entry`, but without the `value_str`
+         * instance - see the documentation for `ph_dynamic_section` for more
+         * details.
+         * @see <a href="https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html">Source</a>
+         */
+        public static class PhDynamicSectionEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public PhDynamicSectionEntry(KaitaiStream _io, Elf.EndianElf.PhDynamicSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.tag = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.tag = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.valueOrPtr = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.valueOrPtr = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
+            private void _readBE() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.tag = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.tag = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.valueOrPtr = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.valueOrPtr = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                flag1Values();
+                if (this.flag1Values != null) {
+                    this.flag1Values._fetchInstances();
+                }
+                flagValues();
+                if (this.flagValues != null) {
+                    this.flagValues._fetchInstances();
+                }
+            }
+            private DtFlag1Values flag1Values;
+            public DtFlag1Values flag1Values() {
+                if (this.flag1Values != null)
+                    return this.flag1Values;
+                if (tagEnum() == Elf.DynamicArrayTags.FLAGS_1) {
+                    if (_is_le) {
+                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
+                    } else {
+                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
+                    }
+                }
+                return this.flag1Values;
+            }
+            private DtFlagValues flagValues;
+            public DtFlagValues flagValues() {
+                if (this.flagValues != null)
+                    return this.flagValues;
+                if (tagEnum() == Elf.DynamicArrayTags.FLAGS) {
+                    if (_is_le) {
+                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
+                    } else {
+                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
+                    }
+                }
+                return this.flagValues;
+            }
+            private Boolean isValueStr;
+            public Boolean isValueStr() {
+                if (this.isValueStr != null)
+                    return this.isValueStr;
+                this.isValueStr =  ((valueOrPtr() != 0) && ( ((tagEnum() == Elf.DynamicArrayTags.NEEDED) || (tagEnum() == Elf.DynamicArrayTags.SONAME) || (tagEnum() == Elf.DynamicArrayTags.RPATH) || (tagEnum() == Elf.DynamicArrayTags.RUNPATH) || (tagEnum() == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.SUNW_FILTER) || (tagEnum() == Elf.DynamicArrayTags.AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.FILTER) || (tagEnum() == Elf.DynamicArrayTags.CONFIG) || (tagEnum() == Elf.DynamicArrayTags.DEPAUDIT) || (tagEnum() == Elf.DynamicArrayTags.AUDIT)) )) ;
+                return this.isValueStr;
+            }
+            private DynamicArrayTags tagEnum;
+            public DynamicArrayTags tagEnum() {
+                if (this.tagEnum != null)
+                    return this.tagEnum;
+                this.tagEnum = Elf.DynamicArrayTags.byId(tag());
+                return this.tagEnum;
+            }
+            private Long tag;
+            private Long valueOrPtr;
+            private Elf _root;
+            private Elf.EndianElf.PhDynamicSection _parent;
+            public Long tag() { return tag; }
+            public Long valueOrPtr() { return valueOrPtr; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.PhDynamicSection _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://gabi.xinuos.com/v42/elf/07-pheader.html#program-header-entry">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/program-header.html">Source</a>
+         */
         public static class ProgramHeader extends KaitaiStruct {
             private Boolean _is_le;
 
@@ -1932,11 +2089,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.offset = ((Number) (this._io.readU4le())).longValue();
+                            this.ofsBody = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
-                            this.offset = this._io.readU8le();
+                            this.ofsBody = this._io.readU8le();
                             break;
                         }
                         }
@@ -1947,11 +2104,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.vaddr = ((Number) (this._io.readU4le())).longValue();
+                            this.virtAddr = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
-                            this.vaddr = this._io.readU8le();
+                            this.virtAddr = this._io.readU8le();
                             break;
                         }
                         }
@@ -1962,11 +2119,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.paddr = ((Number) (this._io.readU4le())).longValue();
+                            this.physAddr = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
-                            this.paddr = this._io.readU8le();
+                            this.physAddr = this._io.readU8le();
                             break;
                         }
                         }
@@ -1977,11 +2134,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.filesz = ((Number) (this._io.readU4le())).longValue();
+                            this.lenBody = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
-                            this.filesz = this._io.readU8le();
+                            this.lenBody = this._io.readU8le();
                             break;
                         }
                         }
@@ -1992,11 +2149,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.memsz = ((Number) (this._io.readU4le())).longValue();
+                            this.memorySize = ((Number) (this._io.readU4le())).longValue();
                             break;
                         }
                         case B64: {
-                            this.memsz = this._io.readU8le();
+                            this.memorySize = this._io.readU8le();
                             break;
                         }
                         }
@@ -2031,11 +2188,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.offset = ((Number) (this._io.readU4be())).longValue();
+                            this.ofsBody = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
-                            this.offset = this._io.readU8be();
+                            this.ofsBody = this._io.readU8be();
                             break;
                         }
                         }
@@ -2046,11 +2203,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.vaddr = ((Number) (this._io.readU4be())).longValue();
+                            this.virtAddr = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
-                            this.vaddr = this._io.readU8be();
+                            this.virtAddr = this._io.readU8be();
                             break;
                         }
                         }
@@ -2061,11 +2218,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.paddr = ((Number) (this._io.readU4be())).longValue();
+                            this.physAddr = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
-                            this.paddr = this._io.readU8be();
+                            this.physAddr = this._io.readU8be();
                             break;
                         }
                         }
@@ -2076,11 +2233,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.filesz = ((Number) (this._io.readU4be())).longValue();
+                            this.lenBody = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
-                            this.filesz = this._io.readU8be();
+                            this.lenBody = this._io.readU8be();
                             break;
                         }
                         }
@@ -2091,11 +2248,11 @@ public class Elf extends KaitaiStruct {
                     if (on != null) {
                         switch (_root().bits()) {
                         case B32: {
-                            this.memsz = ((Number) (this._io.readU4be())).longValue();
+                            this.memorySize = ((Number) (this._io.readU4be())).longValue();
                             break;
                         }
                         case B64: {
-                            this.memsz = this._io.readU8be();
+                            this.memorySize = this._io.readU8be();
                             break;
                         }
                         }
@@ -2204,6 +2361,32 @@ public class Elf extends KaitaiStruct {
                         }
                     }
                 }
+                body();
+                if (this.body != null) {
+                    {
+                        PhType on = type();
+                        if (on != null) {
+                            switch (type()) {
+                            case DYNAMIC: {
+                                ((PhDynamicSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case INTERP: {
+                                ((PhInterpreter) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case NOTE: {
+                                ((NoteSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            default: {
+                                break;
+                            }
+                            }
+                        } else {
+                        }
+                    }
+                }
                 flagsObj();
                 if (this.flagsObj != null) {
                     {
@@ -2222,6 +2405,142 @@ public class Elf extends KaitaiStruct {
                         }
                     }
                 }
+            }
+
+            /**
+             * @see <a href="https://gabi.xinuos.com/v42/elf/08-dynamic.html#program-interpreter">Source</a>
+             * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/program-interpreter.html">Source</a>
+             */
+            public static class PhInterpreter extends KaitaiStruct {
+                private Boolean _is_le;
+
+                public PhInterpreter(KaitaiStream _io, Elf.EndianElf.ProgramHeader _parent, Elf _root, boolean _is_le) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    this._is_le = _is_le;
+                    _read();
+                }
+                private void _read() {
+
+                    if (_is_le == null) {
+                        throw new KaitaiStream.UndecidedEndiannessError();
+                    } else if (_is_le) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE() {
+                    this.pathName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+                }
+                private void _readBE() {
+                    this.pathName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+                }
+
+                public void _fetchInstances() {
+                }
+                private String pathName;
+                private Elf _root;
+                private Elf.EndianElf.ProgramHeader _parent;
+                public String pathName() { return pathName; }
+                public Elf _root() { return _root; }
+                public Elf.EndianElf.ProgramHeader _parent() { return _parent; }
+            }
+            private Object body;
+
+            /**
+             * Note: a program header may not have a valid body in the same ELF
+             * file, so accessing `body` may result in reading garbage or
+             * triggering EOF errors.
+             * 
+             * In particular, `*.debug` files produced by elfutils'
+             * `eu-strip --strip-debug` (as used by Fedora/RHEL and other
+             * RPM-based distros for their `*-debuginfo` packages, e.g.
+             * `glibc-debuginfo`) copy the original binary's program header table
+             * verbatim, including `ofs_body`/`len_body` (i.e.
+             * `p_offset`/`p_filesz`), while dropping the actual contents of most
+             * segments. Such segments can be recognized by the fact that the
+             * corresponding section headers have type `sh_type::nobits`
+             * (`SHT_NOBITS`). However, this Kaitai Struct implementation doesn't
+             * know the mapping between program headers and section headers, so
+             * this must be handled externally.
+             * 
+             * `*.debug` files from Debian/Ubuntu `*-dbg` packages (e.g.
+             * `libc6-dbg`) are usually not affected by this issue, because they
+             * are produced using GNU Binutils (`objcopy --only-keep-debug`),
+             * which zeroes `len_body` for segments whose contents were omitted
+             * (which reliably tells us that there is no `body`).
+             */
+            public Object body() {
+                if (this.body != null)
+                    return this.body;
+                if (lenBody() != 0) {
+                    KaitaiStream io = _root()._io();
+                    long _pos = io.pos();
+                    io.seek(ofsBody());
+                    if (_is_le) {
+                        {
+                            PhType on = type();
+                            if (on != null) {
+                                switch (type()) {
+                                case DYNAMIC: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new PhDynamicSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case INTERP: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new PhInterpreter(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case NOTE: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new NoteSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                default: {
+                                    this.body = io.readBytes(lenBody());
+                                    break;
+                                }
+                                }
+                            } else {
+                                this.body = io.readBytes(lenBody());
+                            }
+                        }
+                    } else {
+                        {
+                            PhType on = type();
+                            if (on != null) {
+                                switch (type()) {
+                                case DYNAMIC: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new PhDynamicSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case INTERP: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new PhInterpreter(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case NOTE: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new NoteSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                default: {
+                                    this.body = io.readBytes(lenBody());
+                                    break;
+                                }
+                                }
+                            } else {
+                                this.body = io.readBytes(lenBody());
+                            }
+                        }
+                    }
+                    io.seek(_pos);
+                }
+                return this.body;
             }
             private PhdrTypeFlags flagsObj;
             public PhdrTypeFlags flagsObj() {
@@ -2264,22 +2583,22 @@ public class Elf extends KaitaiStruct {
             }
             private PhType type;
             private Long flags64;
-            private Long offset;
-            private Long vaddr;
-            private Long paddr;
-            private Long filesz;
-            private Long memsz;
+            private Long ofsBody;
+            private Long virtAddr;
+            private Long physAddr;
+            private Long lenBody;
+            private Long memorySize;
             private Long flags32;
             private Long align;
             private Elf _root;
             private Elf.EndianElf _parent;
             public PhType type() { return type; }
             public Long flags64() { return flags64; }
-            public Long offset() { return offset; }
-            public Long vaddr() { return vaddr; }
-            public Long paddr() { return paddr; }
-            public Long filesz() { return filesz; }
-            public Long memsz() { return memsz; }
+            public Long ofsBody() { return ofsBody; }
+            public Long virtAddr() { return virtAddr; }
+            public Long physAddr() { return physAddr; }
+            public Long lenBody() { return lenBody; }
+            public Long memorySize() { return memorySize; }
             public Long flags32() { return flags32; }
             public Long align() { return align; }
             public Elf _root() { return _root; }
@@ -2519,6 +2838,11 @@ public class Elf extends KaitaiStruct {
             public Elf _root() { return _root; }
             public Elf.EndianElf.RelocationSection _parent() { return _parent; }
         }
+
+        /**
+         * @see <a href="https://gabi.xinuos.com/v42/elf/03-sheader.html#section-header-table-entry">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html">Source</a>
+         */
         public static class SectionHeader extends KaitaiStruct {
             private Boolean _is_le;
 
@@ -2603,7 +2927,7 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 this.linkedSectionIdx = this._io.readU4le();
-                this.info = this._io.readBytes(4);
+                this.info = this._io.readU4le();
                 {
                     Bits on = _root().bits();
                     if (on != null) {
@@ -2699,7 +3023,7 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 this.linkedSectionIdx = this._io.readU4be();
-                this.info = this._io.readBytes(4);
+                this.info = this._io.readU4be();
                 {
                     Bits on = _root().bits();
                     if (on != null) {
@@ -2818,11 +3142,23 @@ public class Elf extends KaitaiStruct {
                         if (on != null) {
                             switch (type()) {
                             case DYNAMIC: {
-                                ((DynamicSection) (this.body))._fetchInstances();
+                                ((ShDynamicSection) (this.body))._fetchInstances();
                                 break;
                             }
                             case DYNSYM: {
                                 ((DynsymSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case GNU_VERDEF: {
+                                ((VerdefSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case GNU_VERNEED: {
+                                ((VerneedSection) (this.body))._fetchInstances();
+                                break;
+                            }
+                            case GNU_VERSYM: {
+                                ((VersymSection) (this.body))._fetchInstances();
                                 break;
                             }
                             case NOTE: {
@@ -2876,12 +3212,27 @@ public class Elf extends KaitaiStruct {
                                 switch (type()) {
                                 case DYNAMIC: {
                                     KaitaiStream _io_body = io.substream(lenBody());
-                                    this.body = new DynamicSection(_io_body, this, _root, _is_le);
+                                    this.body = new ShDynamicSection(_io_body, this, _root, _is_le);
                                     break;
                                 }
                                 case DYNSYM: {
                                     KaitaiStream _io_body = io.substream(lenBody());
                                     this.body = new DynsymSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case GNU_VERDEF: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new VerdefSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case GNU_VERNEED: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new VerneedSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case GNU_VERSYM: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new VersymSection(_io_body, this, _root, _is_le);
                                     break;
                                 }
                                 case NOTE: {
@@ -2925,12 +3276,27 @@ public class Elf extends KaitaiStruct {
                                 switch (type()) {
                                 case DYNAMIC: {
                                     KaitaiStream _io_body = io.substream(lenBody());
-                                    this.body = new DynamicSection(_io_body, this, _root, _is_le);
+                                    this.body = new ShDynamicSection(_io_body, this, _root, _is_le);
                                     break;
                                 }
                                 case DYNSYM: {
                                     KaitaiStream _io_body = io.substream(lenBody());
                                     this.body = new DynsymSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case GNU_VERDEF: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new VerdefSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case GNU_VERNEED: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new VerneedSection(_io_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case GNU_VERSYM: {
+                                    KaitaiStream _io_body = io.substream(lenBody());
+                                    this.body = new VersymSection(_io_body, this, _root, _is_le);
                                     break;
                                 }
                                 case NOTE: {
@@ -3019,7 +3385,7 @@ public class Elf extends KaitaiStruct {
             private Long ofsBody;
             private Long lenBody;
             private long linkedSectionIdx;
-            private byte[] info;
+            private long info;
             private Long align;
             private Long entrySize;
             private Elf _root;
@@ -3031,11 +3397,282 @@ public class Elf extends KaitaiStruct {
             public Long ofsBody() { return ofsBody; }
             public Long lenBody() { return lenBody; }
             public long linkedSectionIdx() { return linkedSectionIdx; }
-            public byte[] info() { return info; }
+            public long info() { return info; }
             public Long align() { return align; }
             public Long entrySize() { return entrySize; }
             public Elf _root() { return _root; }
             public Elf.EndianElf _parent() { return _parent; }
+        }
+
+        /**
+         * Same type as `ph_dynamic_section`, but it depends on
+         * `_parent.linked_section`, so it can be used only in the
+         * `section_header` type. See the documentation for `ph_dynamic_section`
+         * for more details.
+         * @see <a href="https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html">Source</a>
+         */
+        public static class ShDynamicSection extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public ShDynamicSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.entries = new ArrayList<ShDynamicSectionEntry>();
+                {
+                    ShDynamicSectionEntry _it;
+                    int i = 0;
+                    do {
+                        _it = new ShDynamicSectionEntry(this._io, this, _root, _is_le);
+                        this.entries.add(_it);
+                        i++;
+                    } while (!(_it.tagEnum() == Elf.DynamicArrayTags.NULL));
+                }
+            }
+            private void _readBE() {
+                this.entries = new ArrayList<ShDynamicSectionEntry>();
+                {
+                    ShDynamicSectionEntry _it;
+                    int i = 0;
+                    do {
+                        _it = new ShDynamicSectionEntry(this._io, this, _root, _is_le);
+                        this.entries.add(_it);
+                        i++;
+                    } while (!(_it.tagEnum() == Elf.DynamicArrayTags.NULL));
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.entries.size(); i++) {
+                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private Boolean isStringTableLinked;
+            public Boolean isStringTableLinked() {
+                if (this.isStringTableLinked != null)
+                    return this.isStringTableLinked;
+                this.isStringTableLinked = _parent().linkedSection().type() == Elf.ShType.STRTAB;
+                return this.isStringTableLinked;
+            }
+            private List<ShDynamicSectionEntry> entries;
+            private Elf _root;
+            private Elf.EndianElf.SectionHeader _parent;
+            public List<ShDynamicSectionEntry> entries() { return entries; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
+        }
+
+        /**
+         * Same type as `ph_dynamic_section_entry`, but with the `value_str`
+         * instance - see the documentation for `ph_dynamic_section` for more
+         * details.
+         * @see <a href="https://gabi.xinuos.com/v42/elf/08-dynamic.html#dynamic-section">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html">Source</a>
+         */
+        public static class ShDynamicSectionEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public ShDynamicSectionEntry(KaitaiStream _io, Elf.EndianElf.ShDynamicSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.tag = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.tag = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.valueOrPtr = ((Number) (this._io.readU4le())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.valueOrPtr = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
+            private void _readBE() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.tag = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.tag = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            this.valueOrPtr = ((Number) (this._io.readU4be())).longValue();
+                            break;
+                        }
+                        case B64: {
+                            this.valueOrPtr = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root().bits();
+                    if (on != null) {
+                        switch (_root().bits()) {
+                        case B32: {
+                            break;
+                        }
+                        case B64: {
+                            break;
+                        }
+                        }
+                    }
+                }
+                flag1Values();
+                if (this.flag1Values != null) {
+                    this.flag1Values._fetchInstances();
+                }
+                flagValues();
+                if (this.flagValues != null) {
+                    this.flagValues._fetchInstances();
+                }
+                valueStr();
+                if (this.valueStr != null) {
+                }
+            }
+            private DtFlag1Values flag1Values;
+            public DtFlag1Values flag1Values() {
+                if (this.flag1Values != null)
+                    return this.flag1Values;
+                if (tagEnum() == Elf.DynamicArrayTags.FLAGS_1) {
+                    if (_is_le) {
+                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
+                    } else {
+                        this.flag1Values = new DtFlag1Values(this._io, this, _root, valueOrPtr());
+                    }
+                }
+                return this.flag1Values;
+            }
+            private DtFlagValues flagValues;
+            public DtFlagValues flagValues() {
+                if (this.flagValues != null)
+                    return this.flagValues;
+                if (tagEnum() == Elf.DynamicArrayTags.FLAGS) {
+                    if (_is_le) {
+                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
+                    } else {
+                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
+                    }
+                }
+                return this.flagValues;
+            }
+            private Boolean isValueStr;
+            public Boolean isValueStr() {
+                if (this.isValueStr != null)
+                    return this.isValueStr;
+                this.isValueStr =  ((valueOrPtr() != 0) && ( ((tagEnum() == Elf.DynamicArrayTags.NEEDED) || (tagEnum() == Elf.DynamicArrayTags.SONAME) || (tagEnum() == Elf.DynamicArrayTags.RPATH) || (tagEnum() == Elf.DynamicArrayTags.RUNPATH) || (tagEnum() == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.SUNW_FILTER) || (tagEnum() == Elf.DynamicArrayTags.AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.FILTER) || (tagEnum() == Elf.DynamicArrayTags.CONFIG) || (tagEnum() == Elf.DynamicArrayTags.DEPAUDIT) || (tagEnum() == Elf.DynamicArrayTags.AUDIT)) )) ;
+                return this.isValueStr;
+            }
+            private DynamicArrayTags tagEnum;
+            public DynamicArrayTags tagEnum() {
+                if (this.tagEnum != null)
+                    return this.tagEnum;
+                this.tagEnum = Elf.DynamicArrayTags.byId(tag());
+                return this.tagEnum;
+            }
+            private String valueStr;
+            public String valueStr() {
+                if (this.valueStr != null)
+                    return this.valueStr;
+                if ( ((isValueStr()) && (_parent().isStringTableLinked())) ) {
+                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
+                    long _pos = io.pos();
+                    io.seek(valueOrPtr());
+                    if (_is_le) {
+                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+                    } else {
+                        this.valueStr = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+                    }
+                    io.seek(_pos);
+                }
+                return this.valueStr;
+            }
+            private Long tag;
+            private Long valueOrPtr;
+            private Elf _root;
+            private Elf.EndianElf.ShDynamicSection _parent;
+            public Long tag() { return tag; }
+            public Long valueOrPtr() { return valueOrPtr; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.ShDynamicSection _parent() { return _parent; }
         }
         public static class StringsStruct extends KaitaiStruct {
             private Boolean _is_le;
@@ -3088,6 +3725,1145 @@ public class Elf extends KaitaiStruct {
             public List<String> entries() { return entries; }
             public Elf _root() { return _root; }
             public KaitaiStruct _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFEXTS">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html">Source</a>
+         * @see <a href="https://www.akkadia.org/drepper/symbol-versioning">Source</a>
+         */
+        public static class VerdauxEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public VerdauxEntry(KaitaiStream _io, Elf.EndianElf.VerdefSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                if (ofsStart() < 0) {
+                    this._unnamed0 = this._io.readBytes(0);
+                }
+                this.ofsName = this._io.readU4le();
+                this.ofsNext = this._io.readU4le();
+                {
+                    long _it = this.ofsNext;
+                    if (!( ((_it == 0) || (_it >= 8)) )) {
+                        throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verdaux_entry/seq/2");
+                    }
+                }
+            }
+            private void _readBE() {
+                if (ofsStart() < 0) {
+                    this._unnamed0 = this._io.readBytes(0);
+                }
+                this.ofsName = this._io.readU4be();
+                this.ofsNext = this._io.readU4be();
+                {
+                    long _it = this.ofsNext;
+                    if (!( ((_it == 0) || (_it >= 8)) )) {
+                        throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verdaux_entry/seq/2");
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                if (ofsStart() < 0) {
+                }
+                name();
+                if (this.name != null) {
+                }
+                next();
+                if (this.next != null) {
+                    this.next._fetchInstances();
+                }
+            }
+            private String name;
+            public String name() {
+                if (this.name != null)
+                    return this.name;
+                if (_parent().isStringTableLinked()) {
+                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
+                    long _pos = io.pos();
+                    io.seek(ofsName());
+                    if (_is_le) {
+                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+                    } else {
+                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+                    }
+                    io.seek(_pos);
+                }
+                return this.name;
+            }
+            private VerdauxEntry next;
+            public VerdauxEntry next() {
+                if (this.next != null)
+                    return this.next;
+                if (ofsNext() != 0) {
+                    long _pos = this._io.pos();
+                    this._io.seek(ofsStart() + ofsNext());
+                    if (_is_le) {
+                        this.next = new VerdauxEntry(this._io, _parent(), _root, _is_le);
+                    } else {
+                        this.next = new VerdauxEntry(this._io, _parent(), _root, _is_le);
+                    }
+                    this._io.seek(_pos);
+                }
+                return this.next;
+            }
+            private Integer ofsStart;
+            public Integer ofsStart() {
+                if (this.ofsStart != null)
+                    return this.ofsStart;
+                this.ofsStart = ((Number) (_io().pos())).intValue();
+                return this.ofsStart;
+            }
+            private byte[] _unnamed0;
+            private long ofsName;
+            private long ofsNext;
+            private Elf _root;
+            private Elf.EndianElf.VerdefSection _parent;
+            public byte[] _unnamed0() { return _unnamed0; }
+
+            /**
+             * Byte offset to the version or dependency name string in the linked
+             * string table.
+             */
+            public long ofsName() { return ofsName; }
+
+            /**
+             * Byte offset to the next verdaux entry, relative to the start of
+             * this `verdaux_entry`. A value of zero means that there is no next
+             * entry.
+             */
+            public long ofsNext() { return ofsNext; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.VerdefSection _parent() { return _parent; }
+        }
+
+        /**
+         * Version Definitions, contained in the special section named
+         * `.gnu.version_d` with the section type `sh_type::gnu_verdef`
+         * (`SHT_GNU_verdef`).
+         * 
+         * The number of entries in this section must match the value of the
+         * dynamic tag `dynamic_array_tags::verdefnum` (`DT_VERDEFNUM`) in the
+         * Dynamic Section (`.dynamic`).
+         * 
+         * `_parent.linked_section` must be the string table that contains the
+         * strings referenced by this section. Specifically, the string table in
+         * the `.dynstr` section should be used (side note: the `readelf` command
+         * doesn't even check which string table `sh_link` points to, and always
+         * uses `.dynstr` for the lookups - see
+         * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13787>).
+         * 
+         * The `is_string_table_linked` value instance indicates whether the
+         * string table is linked. If it is not, version names (the `name`
+         * instance in the `verdaux_entry` type) will not be available.
+         * @see <a href="https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERDEFS">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html">Source</a>
+         * @see <a href="https://www.akkadia.org/drepper/symbol-versioning">Source</a>
+         */
+        public static class VerdefSection extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public VerdefSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.firstEntry = new VerdefSectionEntry(this._io, this, _root, _is_le);
+            }
+            private void _readBE() {
+                this.firstEntry = new VerdefSectionEntry(this._io, this, _root, _is_le);
+            }
+
+            public void _fetchInstances() {
+                this.firstEntry._fetchInstances();
+            }
+            private Boolean isStringTableLinked;
+
+            /**
+             * Indicates whether a string table is linked. This should always be
+             * `true` in spec-compliant ELF files. If it is `false`, the string
+             * offsets in this section will not be resolved to strings.
+             */
+            public Boolean isStringTableLinked() {
+                if (this.isStringTableLinked != null)
+                    return this.isStringTableLinked;
+                this.isStringTableLinked = _parent().linkedSection().type() == Elf.ShType.STRTAB;
+                return this.isStringTableLinked;
+            }
+            private Long numEntries;
+
+            /**
+             * Number of entries (version definitions)
+             * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-47976">Source</a>
+             */
+            public Long numEntries() {
+                if (this.numEntries != null)
+                    return this.numEntries;
+                this.numEntries = ((Number) (_parent().info())).longValue();
+                return this.numEntries;
+            }
+            private VerdefSectionEntry firstEntry;
+            private Elf _root;
+            private Elf.EndianElf.SectionHeader _parent;
+            public VerdefSectionEntry firstEntry() { return firstEntry; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFENTRIES">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html">Source</a>
+         * @see <a href="https://www.akkadia.org/drepper/symbol-versioning">Source</a>
+         */
+        public static class VerdefSectionEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public VerdefSectionEntry(KaitaiStream _io, Elf.EndianElf.VerdefSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                if (ofsStart() < 0) {
+                    this._unnamed0 = this._io.readBytes(0);
+                }
+                this.version = this._io.readU2le();
+                if (!(this.version == 1)) {
+                    throw new KaitaiStream.ValidationNotEqualError(1, this.version, this._io, "/types/endian_elf/types/verdef_section_entry/seq/1");
+                }
+                this.flags = this._io.readU2le();
+                this.versionIndex = this._io.readU2le();
+                {
+                    int _it = this.versionIndex;
+                    if (!((_it & 32768) == 0)) {
+                        throw new KaitaiStream.ValidationExprError(this.versionIndex, this._io, "/types/endian_elf/types/verdef_section_entry/seq/3");
+                    }
+                }
+                this.numAuxEntries = this._io.readU2le();
+                if (!(this.numAuxEntries >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.numAuxEntries, this._io, "/types/endian_elf/types/verdef_section_entry/seq/4");
+                }
+                this.hash = this._io.readU4le();
+                this.ofsFirstAux = this._io.readU4le();
+                if (!(this.ofsFirstAux >= 20)) {
+                    throw new KaitaiStream.ValidationLessThanError(20, this.ofsFirstAux, this._io, "/types/endian_elf/types/verdef_section_entry/seq/6");
+                }
+                this.ofsNext = this._io.readU4le();
+                {
+                    long _it = this.ofsNext;
+                    if (!( ((_it == 0) || (_it >= 20)) )) {
+                        throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verdef_section_entry/seq/7");
+                    }
+                }
+            }
+            private void _readBE() {
+                if (ofsStart() < 0) {
+                    this._unnamed0 = this._io.readBytes(0);
+                }
+                this.version = this._io.readU2be();
+                if (!(this.version == 1)) {
+                    throw new KaitaiStream.ValidationNotEqualError(1, this.version, this._io, "/types/endian_elf/types/verdef_section_entry/seq/1");
+                }
+                this.flags = this._io.readU2be();
+                this.versionIndex = this._io.readU2be();
+                {
+                    int _it = this.versionIndex;
+                    if (!((_it & 32768) == 0)) {
+                        throw new KaitaiStream.ValidationExprError(this.versionIndex, this._io, "/types/endian_elf/types/verdef_section_entry/seq/3");
+                    }
+                }
+                this.numAuxEntries = this._io.readU2be();
+                if (!(this.numAuxEntries >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.numAuxEntries, this._io, "/types/endian_elf/types/verdef_section_entry/seq/4");
+                }
+                this.hash = this._io.readU4be();
+                this.ofsFirstAux = this._io.readU4be();
+                if (!(this.ofsFirstAux >= 20)) {
+                    throw new KaitaiStream.ValidationLessThanError(20, this.ofsFirstAux, this._io, "/types/endian_elf/types/verdef_section_entry/seq/6");
+                }
+                this.ofsNext = this._io.readU4be();
+                {
+                    long _it = this.ofsNext;
+                    if (!( ((_it == 0) || (_it >= 20)) )) {
+                        throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verdef_section_entry/seq/7");
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                if (ofsStart() < 0) {
+                }
+                firstAux();
+                if (this.firstAux != null) {
+                    this.firstAux._fetchInstances();
+                }
+                flagsObj();
+                if (this.flagsObj != null) {
+                    this.flagsObj._fetchInstances();
+                }
+                next();
+                if (this.next != null) {
+                    this.next._fetchInstances();
+                }
+            }
+            private VerdauxEntry firstAux;
+
+            /**
+             * First auxiliary entry of type `verdaux_entry` (`Elfxx_Verdaux`).
+             * The rest follow its `next` instance.
+             */
+            public VerdauxEntry firstAux() {
+                if (this.firstAux != null)
+                    return this.firstAux;
+                long _pos = this._io.pos();
+                this._io.seek(ofsStart() + ofsFirstAux());
+                if (_is_le) {
+                    this.firstAux = new VerdauxEntry(this._io, _parent(), _root, _is_le);
+                } else {
+                    this.firstAux = new VerdauxEntry(this._io, _parent(), _root, _is_le);
+                }
+                this._io.seek(_pos);
+                return this.firstAux;
+            }
+            private VersionFlags flagsObj;
+            public VersionFlags flagsObj() {
+                if (this.flagsObj != null)
+                    return this.flagsObj;
+                if (_is_le) {
+                    this.flagsObj = new VersionFlags(this._io, this, _root, _is_le, flags());
+                } else {
+                    this.flagsObj = new VersionFlags(this._io, this, _root, _is_le, flags());
+                }
+                return this.flagsObj;
+            }
+            private VerdefSectionEntry next;
+            public VerdefSectionEntry next() {
+                if (this.next != null)
+                    return this.next;
+                if (ofsNext() != 0) {
+                    long _pos = this._io.pos();
+                    this._io.seek(ofsStart() + ofsNext());
+                    if (_is_le) {
+                        this.next = new VerdefSectionEntry(this._io, _parent(), _root, _is_le);
+                    } else {
+                        this.next = new VerdefSectionEntry(this._io, _parent(), _root, _is_le);
+                    }
+                    this._io.seek(_pos);
+                }
+                return this.next;
+            }
+            private Integer ofsStart;
+            public Integer ofsStart() {
+                if (this.ofsStart != null)
+                    return this.ofsStart;
+                this.ofsStart = ((Number) (_io().pos())).intValue();
+                return this.ofsStart;
+            }
+            private VersionIndexSpecial versionIndexSpecial;
+            public VersionIndexSpecial versionIndexSpecial() {
+                if (this.versionIndexSpecial != null)
+                    return this.versionIndexSpecial;
+                this.versionIndexSpecial = Elf.VersionIndexSpecial.byId(versionIndex());
+                return this.versionIndexSpecial;
+            }
+            private byte[] _unnamed0;
+            private int version;
+            private int flags;
+            private int versionIndex;
+            private int numAuxEntries;
+            private long hash;
+            private long ofsFirstAux;
+            private long ofsNext;
+            private Elf _root;
+            private Elf.EndianElf.VerdefSection _parent;
+            public byte[] _unnamed0() { return _unnamed0; }
+
+            /**
+             * Version of the structure. Must be set to 1.
+             */
+            public int version() { return version; }
+
+            /**
+             * Version information flag bitmask. Access `flags_obj` instead.
+             */
+            public int flags() { return flags; }
+
+            /**
+             * Version index assigned to this version definition. A unique index
+             * that entries in the Symbol Version Table (the `versym_section`
+             * type) use to reference the corresponding version definition.
+             * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-definition-section.html">Source</a>
+             */
+            public int versionIndex() { return versionIndex; }
+
+            /**
+             * Number of associated auxiliary entries.
+             */
+            public int numAuxEntries() { return numAuxEntries; }
+
+            /**
+             * Version name hash value (ELF hash function).
+             */
+            public long hash() { return hash; }
+
+            /**
+             * Byte offset to the first `verdaux_entry` (`Elfxx_Verdaux`)
+             * associated with this version definition. The offset is relative to
+             * the start of this `verdef_section_entry`.
+             */
+            public long ofsFirstAux() { return ofsFirstAux; }
+
+            /**
+             * Byte offset to the next verdef entry, relative to the start of
+             * this `verdef_section_entry`. A value of zero means that there is
+             * no next entry.
+             */
+            public long ofsNext() { return ofsNext; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.VerdefSection _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERNEEDEXTFIG">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html">Source</a>
+         * @see <a href="https://www.akkadia.org/drepper/symbol-versioning">Source</a>
+         */
+        public static class VernauxEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public VernauxEntry(KaitaiStream _io, Elf.EndianElf.VerneedSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                if (ofsStart() < 0) {
+                    this._unnamed0 = this._io.readBytes(0);
+                }
+                this.hash = this._io.readU4le();
+                this.flags = this._io.readU2le();
+                this.versionIndex = new VersionIndex(this._io, this, _root, _is_le);
+                this.ofsName = this._io.readU4le();
+                this.ofsNext = this._io.readU4le();
+                {
+                    long _it = this.ofsNext;
+                    if (!( ((_it == 0) || (_it >= 16)) )) {
+                        throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/vernaux_entry/seq/5");
+                    }
+                }
+            }
+            private void _readBE() {
+                if (ofsStart() < 0) {
+                    this._unnamed0 = this._io.readBytes(0);
+                }
+                this.hash = this._io.readU4be();
+                this.flags = this._io.readU2be();
+                this.versionIndex = new VersionIndex(this._io, this, _root, _is_le);
+                this.ofsName = this._io.readU4be();
+                this.ofsNext = this._io.readU4be();
+                {
+                    long _it = this.ofsNext;
+                    if (!( ((_it == 0) || (_it >= 16)) )) {
+                        throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/vernaux_entry/seq/5");
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                if (ofsStart() < 0) {
+                }
+                this.versionIndex._fetchInstances();
+                flagsObj();
+                if (this.flagsObj != null) {
+                    this.flagsObj._fetchInstances();
+                }
+                name();
+                if (this.name != null) {
+                }
+                next();
+                if (this.next != null) {
+                    this.next._fetchInstances();
+                }
+            }
+            private VersionFlags flagsObj;
+            public VersionFlags flagsObj() {
+                if (this.flagsObj != null)
+                    return this.flagsObj;
+                if (_is_le) {
+                    this.flagsObj = new VersionFlags(this._io, this, _root, _is_le, flags());
+                } else {
+                    this.flagsObj = new VersionFlags(this._io, this, _root, _is_le, flags());
+                }
+                return this.flagsObj;
+            }
+            private String name;
+            public String name() {
+                if (this.name != null)
+                    return this.name;
+                if (_parent().isStringTableLinked()) {
+                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
+                    long _pos = io.pos();
+                    io.seek(ofsName());
+                    if (_is_le) {
+                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+                    } else {
+                        this.name = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+                    }
+                    io.seek(_pos);
+                }
+                return this.name;
+            }
+            private VernauxEntry next;
+            public VernauxEntry next() {
+                if (this.next != null)
+                    return this.next;
+                if (ofsNext() != 0) {
+                    long _pos = this._io.pos();
+                    this._io.seek(ofsStart() + ofsNext());
+                    if (_is_le) {
+                        this.next = new VernauxEntry(this._io, _parent(), _root, _is_le);
+                    } else {
+                        this.next = new VernauxEntry(this._io, _parent(), _root, _is_le);
+                    }
+                    this._io.seek(_pos);
+                }
+                return this.next;
+            }
+            private Integer ofsStart;
+            public Integer ofsStart() {
+                if (this.ofsStart != null)
+                    return this.ofsStart;
+                this.ofsStart = ((Number) (_io().pos())).intValue();
+                return this.ofsStart;
+            }
+            private byte[] _unnamed0;
+            private long hash;
+            private int flags;
+            private VersionIndex versionIndex;
+            private long ofsName;
+            private long ofsNext;
+            private Elf _root;
+            private Elf.EndianElf.VerneedSection _parent;
+            public byte[] _unnamed0() { return _unnamed0; }
+
+            /**
+             * Dependency name hash value (ELF hash function).
+             */
+            public long hash() { return hash; }
+
+            /**
+             * Dependency information flag bitmask. Access `flags_obj` instead.
+             */
+            public int flags() { return flags; }
+
+            /**
+             * Version index assigned to this dependency version. A unique index
+             * that entries in the Symbol Version Table (the `versym_section`
+             * type) use to reference the corresponding dependency version.
+             * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html">Source</a>
+             */
+            public VersionIndex versionIndex() { return versionIndex; }
+
+            /**
+             * Byte offset to the dependency name string in the linked string
+             * table.
+             */
+            public long ofsName() { return ofsName; }
+
+            /**
+             * Byte offset to the next vernaux entry, relative to the start of
+             * this `vernaux_entry`. A value of zero means that there is no next
+             * entry.
+             */
+            public long ofsNext() { return ofsNext; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.VerneedSection _parent() { return _parent; }
+        }
+
+        /**
+         * Version Requirements, contained in the special section named
+         * `.gnu.version_r` with the section type `sh_type::gnu_verneed`
+         * (`SHT_GNU_verneed`). This section defines the required versions of
+         * dynamic symbols from other shared objects.
+         * 
+         * The number of entries in this section must match the value of the
+         * dynamic tag `dynamic_array_tags::verneednum` (`DT_VERNEEDNUM`) in the
+         * Dynamic Section (`.dynamic`).
+         * 
+         * `_parent.linked_section` must be the string table that contains the
+         * strings referenced by this section. Specifically, the string table in
+         * the `.dynstr` section should be used (side note: the `readelf` command
+         * doesn't even check which string table `sh_link` points to, and always
+         * uses `.dynstr` for the lookups - see
+         * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L13941>).
+         * 
+         * The `is_string_table_linked` value instance indicates whether the
+         * string table is linked. If it is not, file names (the `file_name`
+         * instance in the `verneed_section_entry` type) or version names (the
+         * `name` instance in the `vernaux_entry` type) will not be available.
+         * @see <a href="https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERRQMTS">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html">Source</a>
+         * @see <a href="https://www.akkadia.org/drepper/symbol-versioning">Source</a>
+         */
+        public static class VerneedSection extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public VerneedSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.firstEntry = new VerneedSectionEntry(this._io, this, _root, _is_le);
+            }
+            private void _readBE() {
+                this.firstEntry = new VerneedSectionEntry(this._io, this, _root, _is_le);
+            }
+
+            public void _fetchInstances() {
+                this.firstEntry._fetchInstances();
+            }
+            private Boolean isStringTableLinked;
+
+            /**
+             * Indicates whether a string table is linked. This should always be
+             * `true` in spec-compliant ELF files. If it is `false`, the string
+             * offsets in this section will not be resolved to strings.
+             */
+            public Boolean isStringTableLinked() {
+                if (this.isStringTableLinked != null)
+                    return this.isStringTableLinked;
+                this.isStringTableLinked = _parent().linkedSection().type() == Elf.ShType.STRTAB;
+                return this.isStringTableLinked;
+            }
+            private Long numEntries;
+
+            /**
+             * Number of entries (dependency versions)
+             * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-47976">Source</a>
+             */
+            public Long numEntries() {
+                if (this.numEntries != null)
+                    return this.numEntries;
+                this.numEntries = ((Number) (_parent().info())).longValue();
+                return this.numEntries;
+            }
+            private VerneedSectionEntry firstEntry;
+            private Elf _root;
+            private Elf.EndianElf.SectionHeader _parent;
+            public VerneedSectionEntry firstEntry() { return firstEntry; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERNEEDFIG">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html">Source</a>
+         * @see <a href="https://www.akkadia.org/drepper/symbol-versioning">Source</a>
+         */
+        public static class VerneedSectionEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public VerneedSectionEntry(KaitaiStream _io, Elf.EndianElf.VerneedSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                if (ofsStart() < 0) {
+                    this._unnamed0 = this._io.readBytes(0);
+                }
+                this.version = this._io.readU2le();
+                if (!(this.version == 1)) {
+                    throw new KaitaiStream.ValidationNotEqualError(1, this.version, this._io, "/types/endian_elf/types/verneed_section_entry/seq/1");
+                }
+                this.numAuxEntries = this._io.readU2le();
+                if (!(this.numAuxEntries >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.numAuxEntries, this._io, "/types/endian_elf/types/verneed_section_entry/seq/2");
+                }
+                this.ofsFileName = this._io.readU4le();
+                this.ofsFirstAux = this._io.readU4le();
+                if (!(this.ofsFirstAux >= 16)) {
+                    throw new KaitaiStream.ValidationLessThanError(16, this.ofsFirstAux, this._io, "/types/endian_elf/types/verneed_section_entry/seq/4");
+                }
+                this.ofsNext = this._io.readU4le();
+                {
+                    long _it = this.ofsNext;
+                    if (!( ((_it == 0) || (_it >= 16)) )) {
+                        throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verneed_section_entry/seq/5");
+                    }
+                }
+            }
+            private void _readBE() {
+                if (ofsStart() < 0) {
+                    this._unnamed0 = this._io.readBytes(0);
+                }
+                this.version = this._io.readU2be();
+                if (!(this.version == 1)) {
+                    throw new KaitaiStream.ValidationNotEqualError(1, this.version, this._io, "/types/endian_elf/types/verneed_section_entry/seq/1");
+                }
+                this.numAuxEntries = this._io.readU2be();
+                if (!(this.numAuxEntries >= 1)) {
+                    throw new KaitaiStream.ValidationLessThanError(1, this.numAuxEntries, this._io, "/types/endian_elf/types/verneed_section_entry/seq/2");
+                }
+                this.ofsFileName = this._io.readU4be();
+                this.ofsFirstAux = this._io.readU4be();
+                if (!(this.ofsFirstAux >= 16)) {
+                    throw new KaitaiStream.ValidationLessThanError(16, this.ofsFirstAux, this._io, "/types/endian_elf/types/verneed_section_entry/seq/4");
+                }
+                this.ofsNext = this._io.readU4be();
+                {
+                    long _it = this.ofsNext;
+                    if (!( ((_it == 0) || (_it >= 16)) )) {
+                        throw new KaitaiStream.ValidationExprError(this.ofsNext, this._io, "/types/endian_elf/types/verneed_section_entry/seq/5");
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                if (ofsStart() < 0) {
+                }
+                fileName();
+                if (this.fileName != null) {
+                }
+                firstAux();
+                if (this.firstAux != null) {
+                    this.firstAux._fetchInstances();
+                }
+                next();
+                if (this.next != null) {
+                    this.next._fetchInstances();
+                }
+            }
+            private String fileName;
+            public String fileName() {
+                if (this.fileName != null)
+                    return this.fileName;
+                if (_parent().isStringTableLinked()) {
+                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
+                    long _pos = io.pos();
+                    io.seek(ofsFileName());
+                    if (_is_le) {
+                        this.fileName = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+                    } else {
+                        this.fileName = new String(io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+                    }
+                    io.seek(_pos);
+                }
+                return this.fileName;
+            }
+            private VernauxEntry firstAux;
+
+            /**
+             * First auxiliary entry of type `vernaux_entry` (`Elfxx_Vernaux`).
+             * The rest follow its `next` instance.
+             */
+            public VernauxEntry firstAux() {
+                if (this.firstAux != null)
+                    return this.firstAux;
+                long _pos = this._io.pos();
+                this._io.seek(ofsStart() + ofsFirstAux());
+                if (_is_le) {
+                    this.firstAux = new VernauxEntry(this._io, _parent(), _root, _is_le);
+                } else {
+                    this.firstAux = new VernauxEntry(this._io, _parent(), _root, _is_le);
+                }
+                this._io.seek(_pos);
+                return this.firstAux;
+            }
+            private VerneedSectionEntry next;
+            public VerneedSectionEntry next() {
+                if (this.next != null)
+                    return this.next;
+                if (ofsNext() != 0) {
+                    long _pos = this._io.pos();
+                    this._io.seek(ofsStart() + ofsNext());
+                    if (_is_le) {
+                        this.next = new VerneedSectionEntry(this._io, _parent(), _root, _is_le);
+                    } else {
+                        this.next = new VerneedSectionEntry(this._io, _parent(), _root, _is_le);
+                    }
+                    this._io.seek(_pos);
+                }
+                return this.next;
+            }
+            private Integer ofsStart;
+            public Integer ofsStart() {
+                if (this.ofsStart != null)
+                    return this.ofsStart;
+                this.ofsStart = ((Number) (_io().pos())).intValue();
+                return this.ofsStart;
+            }
+            private byte[] _unnamed0;
+            private int version;
+            private int numAuxEntries;
+            private long ofsFileName;
+            private long ofsFirstAux;
+            private long ofsNext;
+            private Elf _root;
+            private Elf.EndianElf.VerneedSection _parent;
+            public byte[] _unnamed0() { return _unnamed0; }
+
+            /**
+             * Version of the structure. Must be set to 1.
+             */
+            public int version() { return version; }
+
+            /**
+             * Number of associated auxiliary entries.
+             */
+            public int numAuxEntries() { return numAuxEntries; }
+
+            /**
+             * Byte offset to the file name string in the linked string table.
+             */
+            public long ofsFileName() { return ofsFileName; }
+
+            /**
+             * Byte offset to the first associated `vernaux_entry`
+             * (`Elfxx_Vernaux`). The offset is relative to the start of this
+             * `verneed_section_entry`.
+             */
+            public long ofsFirstAux() { return ofsFirstAux; }
+
+            /**
+             * Byte offset to the next verneed entry, relative to the start of
+             * this `verneed_section_entry`. A value of zero means that there is
+             * no next entry.
+             */
+            public long ofsNext() { return ofsNext; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.VerneedSection _parent() { return _parent; }
+        }
+
+        /**
+         * Version information flag bitmask, shared by the `flags` (`vd_flags`)
+         * field of `verdef_section_entry` (`Elfxx_Verdef`) and the `flags`
+         * (`vna_flags`) field of `vernaux_entry` (`Elfxx_Vernaux`).
+         * @see <a href="https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMSTARTSEQ">Source</a>
+         * @see <a href="https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L1078">Source</a>
+         * @see <a href="https://www.akkadia.org/drepper/symbol-versioning">Source</a>
+         */
+        public static class VersionFlags extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public VersionFlags(KaitaiStream _io, KaitaiStruct _parent, Elf _root, boolean _is_le, int value) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                this.value = value;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+            }
+            private void _readBE() {
+            }
+
+            public void _fetchInstances() {
+            }
+            private Boolean base;
+
+            /**
+             * Version definition of the file itself (the base definition).
+             */
+            public Boolean base() {
+                if (this.base != null)
+                    return this.base;
+                this.base = (value() & 1) != 0;
+                return this.base;
+            }
+            private Boolean info;
+
+            /**
+             * Version reference exists for informational purposes and does not
+             * need to be validated at runtime.
+             * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-dependency-section.html">Source</a>
+             */
+            public Boolean info() {
+                if (this.info != null)
+                    return this.info;
+                this.info = (value() & 4) != 0;
+                return this.info;
+            }
+            private Boolean weak;
+
+            /**
+             * Weak version identifier.
+             * 
+             * A weak version definition has no symbols associated with the
+             * version. See [Creating a Weak Version
+             * Definition](https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/creating-weak-version-definition.html).
+             */
+            public Boolean weak() {
+                if (this.weak != null)
+                    return this.weak;
+                this.weak = (value() & 2) != 0;
+                return this.weak;
+            }
+            private int value;
+            private Elf _root;
+            private KaitaiStruct _parent;
+            public int value() { return value; }
+            public Elf _root() { return _root; }
+            public KaitaiStruct _parent() { return _parent; }
+        }
+        public static class VersionIndex extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public VersionIndex(KaitaiStream _io, KaitaiStruct _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.raw = this._io.readU2le();
+            }
+            private void _readBE() {
+                this.raw = this._io.readU2be();
+            }
+
+            public void _fetchInstances() {
+            }
+            private Boolean isHidden;
+
+            /**
+             * This bit is set if the symbol is hidden, and is only visible with
+             * an explicit version number. This is a GNU extension.
+             * @see <a href="https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L1379">Source</a>
+             */
+            public Boolean isHidden() {
+                if (this.isHidden != null)
+                    return this.isHidden;
+                this.isHidden = (raw() & 32768) != 0;
+                return this.isHidden;
+            }
+            private Integer value;
+
+            /**
+             * The values `version_index_special::local` (0) and
+             * `version_index_special::global_symbol` (1) have special meanings.
+             * The `version_index_special` value instance converts the integer
+             * value to the `version_index_special` enum.
+             */
+            public Integer value() {
+                if (this.value != null)
+                    return this.value;
+                this.value = ((Number) (raw() & 32767)).intValue();
+                return this.value;
+            }
+            private VersionIndexSpecial versionIndexSpecial;
+
+            /**
+             * Note: we match special constants against the full 16-bit integer
+             * value (called `raw` in this .ksy implementation), because that's
+             * what the `readelf` command does when deciding whether to print
+             * `0 (*local*)` or `1 (*global*)` in the `.gnu.version`
+             * (`SHT_GNU_versym`) section - see
+             * <https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/binutils/readelf.c#L14079>.
+             * 
+             * Besides, `version_index_special::eliminate` (`VER_NDX_ELIMINATE`)
+             * has a value of `0xff01`, which is a 16-bit value. If we matched
+             * against `value` instead, `version_index_special::eliminate` would
+             * be unreachable, because `value` contains only the lower 15 bits,
+             * so its maximum possible value is `0x7fff`.
+             */
+            public VersionIndexSpecial versionIndexSpecial() {
+                if (this.versionIndexSpecial != null)
+                    return this.versionIndexSpecial;
+                this.versionIndexSpecial = Elf.VersionIndexSpecial.byId(raw());
+                return this.versionIndexSpecial;
+            }
+            private int raw;
+            private Elf _root;
+            private KaitaiStruct _parent;
+
+            /**
+             * Raw value, don't read this field - access `value`,
+             * `version_index_special` and `is_hidden` instead.
+             */
+            public int raw() { return raw; }
+            public Elf _root() { return _root; }
+            public KaitaiStruct _parent() { return _parent; }
+        }
+
+        /**
+         * Symbol Version Table, contained in the special section named
+         * `.gnu.version` with the section type `sh_type::gnu_versym`
+         * (`SHT_GNU_versym`).
+         * 
+         * This section must have the same number of entries as the Dynamic
+         * Symbol Table in the `.dynsym` section (section type `sh_type::dynsym`
+         * / `SHT_DYNSYM`). Each entry specifies the version defined for or
+         * required by the corresponding symbol in the Dynamic Symbol Table.
+         * @see <a href="https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#SYMVERTBL">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/version-symbol-section.html">Source</a>
+         * @see <a href="https://www.akkadia.org/drepper/symbol-versioning">Source</a>
+         */
+        public static class VersymSection extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public VersymSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.entries = new ArrayList<VersionIndex>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new VersionIndex(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+            private void _readBE() {
+                this.entries = new ArrayList<VersionIndex>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new VersionIndex(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.entries.size(); i++) {
+                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private List<VersionIndex> entries;
+            private Elf _root;
+            private Elf.EndianElf.SectionHeader _parent;
+
+            /**
+             * Version indexes for the corresponding symbols in the Dynamic
+             * Symbol Table (`.dynsym` section).
+             * 
+             * These values are not the versions themselves: they are keys that
+             * are matched against the `version_index` (`vd_ndx`) field of the
+             * `verdef_section_entry` (`Elfxx_Verdef`) type if the symbol is
+             * defined in this object, or the `version_index` (`vna_other`) field
+             * of the `vernaux_entry` (`Elfxx_Vernaux`) type if the symbol is
+             * required from another object. The `name` instance of the matched
+             * entry specifies the version of the symbol.
+             */
+            public List<VersionIndex> entries() { return entries; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
         }
         private List<ProgramHeader> programHeaders;
         public List<ProgramHeader> programHeaders() {
@@ -3239,6 +5015,12 @@ public class Elf extends KaitaiStruct {
         public Elf _root() { return _root; }
         public Elf.EndianElf.ProgramHeader _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675">Source</a>
+     * @see <a href="https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L614">Source</a>
+     * @see <a href="https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L468">Source</a>
+     */
     public static class SectionHeaderFlags extends KaitaiStruct {
 
         public SectionHeaderFlags(KaitaiStream _io, long value) {
@@ -3264,7 +5046,7 @@ public class Elf extends KaitaiStruct {
         private Boolean alloc;
 
         /**
-         * occupies memory during execution
+         * Occupies memory during execution
          */
         public Boolean alloc() {
             if (this.alloc != null)
@@ -3272,21 +5054,32 @@ public class Elf extends KaitaiStruct {
             this.alloc = (value() & 2) != 0;
             return this.alloc;
         }
+        private Boolean compressed;
+
+        /**
+         * Section with compressed data
+         */
+        public Boolean compressed() {
+            if (this.compressed != null)
+                return this.compressed;
+            this.compressed = (value() & 2048) != 0;
+            return this.compressed;
+        }
         private Boolean exclude;
 
         /**
-         * section is excluded unless referenced or allocated (Solaris)
+         * Section is excluded unless referenced or allocated (Solaris)
          */
         public Boolean exclude() {
             if (this.exclude != null)
                 return this.exclude;
-            this.exclude = (value() & 134217728) != 0;
+            this.exclude = (value() & 2147483648L) != 0;
             return this.exclude;
         }
         private Boolean execInstr;
 
         /**
-         * executable
+         * Executable machine instructions
          */
         public Boolean execInstr() {
             if (this.execInstr != null)
@@ -3294,10 +5087,22 @@ public class Elf extends KaitaiStruct {
             this.execInstr = (value() & 4) != 0;
             return this.execInstr;
         }
+        private Boolean gnuMbind;
+
+        /**
+         * Mbind section
+         * @see <a href="https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L631">Source</a>
+         */
+        public Boolean gnuMbind() {
+            if (this.gnuMbind != null)
+                return this.gnuMbind;
+            this.gnuMbind = (value() & 16777216) != 0;
+            return this.gnuMbind;
+        }
         private Boolean group;
 
         /**
-         * section is member of a group
+         * Member of a section group
          */
         public Boolean group() {
             if (this.group != null)
@@ -3308,7 +5113,7 @@ public class Elf extends KaitaiStruct {
         private Boolean infoLink;
 
         /**
-         * 'sh_info' contains SHT index
+         * Section header's `sh_info` field holds a section header table index
          */
         public Boolean infoLink() {
             if (this.infoLink != null)
@@ -3319,7 +5124,7 @@ public class Elf extends KaitaiStruct {
         private Boolean linkOrder;
 
         /**
-         * preserve order after combining
+         * Preserve section ordering when linking
          */
         public Boolean linkOrder() {
             if (this.linkOrder != null)
@@ -3330,7 +5135,7 @@ public class Elf extends KaitaiStruct {
         private Boolean maskOs;
 
         /**
-         * OS-specific
+         * OS-specific semantics
          */
         public Boolean maskOs() {
             if (this.maskOs != null)
@@ -3341,7 +5146,7 @@ public class Elf extends KaitaiStruct {
         private Boolean maskProc;
 
         /**
-         * Processor-specific
+         * Processor-specific semantics
          */
         public Boolean maskProc() {
             if (this.maskProc != null)
@@ -3352,7 +5157,7 @@ public class Elf extends KaitaiStruct {
         private Boolean merge;
 
         /**
-         * might be merged
+         * Data in this section can be merged to eliminate duplication
          */
         public Boolean merge() {
             if (this.merge != null)
@@ -3363,29 +5168,50 @@ public class Elf extends KaitaiStruct {
         private Boolean ordered;
 
         /**
-         * special ordering requirement (Solaris)
+         * Special ordering requirement (Solaris)
+         * 
+         * From <https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675>:
+         * 
+         * > `SHF_ORDERED` is an older version of the functionality provided by
+         * > `SHF_LINK_ORDER`, and has been superseded by `SHF_LINK_ORDER`.
+         * > `SHF_ORDERED` is no longer supported.
+         * @see <a href="https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L485">Source</a>
+         * @see <a href="https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/section-headers.html#GUID-2CBE4879-2E76-426E-BB7F-CF0CB1D87C52__CHAPTER6-10675">Source</a>
          */
         public Boolean ordered() {
             if (this.ordered != null)
                 return this.ordered;
-            this.ordered = (value() & 67108864) != 0;
+            this.ordered = (value() & 1073741824) != 0;
             return this.ordered;
         }
-        private Boolean osNonConforming;
+        private Boolean osNonconforming;
 
         /**
-         * non-standard OS specific handling required
+         * Special OS-specific handling required
          */
-        public Boolean osNonConforming() {
-            if (this.osNonConforming != null)
-                return this.osNonConforming;
-            this.osNonConforming = (value() & 256) != 0;
-            return this.osNonConforming;
+        public Boolean osNonconforming() {
+            if (this.osNonconforming != null)
+                return this.osNonconforming;
+            this.osNonconforming = (value() & 256) != 0;
+            return this.osNonconforming;
+        }
+        private Boolean retain;
+
+        /**
+         * Section should not be garbage collected by the linker
+         * @see <a href="https://forge.sourceware.org/binutils-gdb/binutils-gdb-mirror/src/tag/binutils-2_46_1/include/elf/common.h#L630">Source</a>
+         * @see <a href="https://forge.sourceware.org/glibc/glibc-mirror/src/tag/glibc-2.43/elf/elf.h#L484">Source</a>
+         */
+        public Boolean retain() {
+            if (this.retain != null)
+                return this.retain;
+            this.retain = (value() & 2097152) != 0;
+            return this.retain;
         }
         private Boolean strings;
 
         /**
-         * contains nul-terminated strings
+         * Contains null-terminated character strings
          */
         public Boolean strings() {
             if (this.strings != null)
@@ -3396,7 +5222,9 @@ public class Elf extends KaitaiStruct {
         private Boolean tls;
 
         /**
-         * section hold thread-local data
+         * Thread-local storage section (`.tbss` or `.tdata` according to [ELF
+         * Handling For Thread-Local
+         * Storage](https://www.akkadia.org/drepper/tls.pdf))
          */
         public Boolean tls() {
             if (this.tls != null)
@@ -3407,7 +5235,7 @@ public class Elf extends KaitaiStruct {
         private Boolean write;
 
         /**
-         * writable
+         * Writable during execution
          */
         public Boolean write() {
             if (this.write != null)
