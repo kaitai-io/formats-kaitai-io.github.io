@@ -1,0 +1,250 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__zchunk {
+		label="Zchunk";
+		graph[style=dotted];
+
+		zchunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="lead_pos">0</TD><TD PORT="lead_size">...</TD><TD>HeaderLead</TD><TD PORT="lead_type">lead</TD></TR>
+			<TR><TD PORT="header_rest_pos">...</TD><TD PORT="header_rest_size">lead.len_header_rest.value</TD><TD>HeaderWithoutLead</TD><TD PORT="header_rest_type">header_rest</TD></TR>
+			<TR><TD PORT="dict_pos">...</TD><TD PORT="dict_size">header_rest.index.len_dict.value</TD><TD></TD><TD PORT="dict_type">dict</TD></TR>
+			<TR><TD PORT="chunks_pos">...</TD><TD PORT="chunks_size">header_rest.index.chunks_metadata[i].len_chunk.value</TD><TD></TD><TD PORT="chunks_type">chunks</TD></TR>
+			<TR><TD COLSPAN="4" PORT="chunks__repeat">repeat header_rest.index.chunks_metadata.length times</TD></TR>
+			<TR><TD COLSPAN="4" PORT="chunks__if">if !(lead.is_detached_header)</TD></TR>
+		</TABLE>>];
+		subgraph cluster__checksum_type {
+			label="Zchunk::ChecksumType";
+			graph[style=dotted];
+
+			checksum_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="raw_pos">0</TD><TD PORT="raw_size">...</TD><TD>CompressedInteger</TD><TD PORT="raw_type">raw</TD></TR>
+				<TR><TD COLSPAN="4" PORT="raw__valid">must satisfy len_checksum != 0</TD></TR>
+			</TABLE>>];
+			checksum_type__inst__len_checksum [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_checksum</TD><TD>(value == :checksum_types_sha1 ? 20 : (value == :checksum_types_sha256 ? 32 : (value == :checksum_types_sha512 ? 64 : (value == :checksum_types_sha512_128 ? 16 : 0))))</TD></TR>
+			</TABLE>>];
+			checksum_type__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>Kaitai::Struct::Stream::resolve_enum(Zchunk::CHECKSUM_TYPES, raw.value)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__chunk {
+			label="Zchunk::Chunk";
+			graph[style=dotted];
+
+			chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunk_stream_pos">0</TD><TD PORT="chunk_stream_size">...</TD><TD>CompressedInteger</TD><TD PORT="chunk_stream_type">chunk_stream</TD></TR>
+				<TR><TD COLSPAN="4" PORT="chunk_stream__if">if has_data_streams</TD></TR>
+				<TR><TD PORT="chunk_checksum_pos">...</TD><TD PORT="chunk_checksum_size">len_checksum</TD><TD></TD><TD PORT="chunk_checksum_type">chunk_checksum</TD></TR>
+				<TR><TD PORT="uncompressed_chunk_checksum_pos">...</TD><TD PORT="uncompressed_chunk_checksum_size">len_checksum</TD><TD></TD><TD PORT="uncompressed_chunk_checksum_type">uncompressed_chunk_checksum</TD></TR>
+				<TR><TD COLSPAN="4" PORT="uncompressed_chunk_checksum__if">if has_uncompressed_source</TD></TR>
+				<TR><TD PORT="len_chunk_pos">...</TD><TD PORT="len_chunk_size">...</TD><TD>CompressedInteger</TD><TD PORT="len_chunk_type">len_chunk</TD></TR>
+				<TR><TD PORT="len_uncompressed_chunk_pos">...</TD><TD PORT="len_uncompressed_chunk_size">...</TD><TD>CompressedInteger</TD><TD PORT="len_uncompressed_chunk_type">len_uncompressed_chunk</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__compressed_integer {
+			label="Zchunk::CompressedInteger";
+			graph[style=dotted];
+
+			compressed_integer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="groups_pos">0</TD><TD PORT="groups_size">1</TD><TD>Group</TD><TD PORT="groups_type">groups</TD></TR>
+				<TR><TD COLSPAN="4" PORT="groups__repeat">repeat until _.is_last</TD></TR>
+			</TABLE>>];
+			compressed_integer__inst__len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len</TD><TD>groups.length</TD></TR>
+			</TABLE>>];
+			compressed_integer__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>(((((((((groups[0].value | (len &gt;= 2 ? groups[1].value &lt;&lt; 7 : 0)) | (len &gt;= 3 ? groups[2].value &lt;&lt; 14 : 0)) | (len &gt;= 4 ? groups[3].value &lt;&lt; 21 : 0)) | (len &gt;= 5 ? groups[4].value &lt;&lt; 28 : 0)) | (len &gt;= 6 ? groups[5].value &lt;&lt; 35 : 0)) | (len &gt;= 7 ? groups[6].value &lt;&lt; 42 : 0)) | (len &gt;= 8 ? groups[7].value &lt;&lt; 49 : 0)) | (len &gt;= 9 ? groups[8].value &lt;&lt; 56 : 0)) | (len &gt;= 10 ? groups[9].value &lt;&lt; 63 : 0))</TD></TR>
+			</TABLE>>];
+			subgraph cluster__group {
+				label="Zchunk::CompressedInteger::Group";
+				graph[style=dotted];
+
+				group__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="is_last_pos">0</TD><TD PORT="is_last_size">1b</TD><TD>b1be→bool</TD><TD PORT="is_last_type">is_last</TD></TR>
+					<TR><TD COLSPAN="4" PORT="is_last__valid">must be equal to (idx == 9 ? true : is_last)</TD></TR>
+					<TR><TD PORT="value_pos">0:1</TD><TD PORT="value_size">7b</TD><TD>b7be</TD><TD PORT="value_type">value</TD></TR>
+					<TR><TD COLSPAN="4" PORT="value__valid">must be at most (idx == 9 ? 1 : 127)</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__header_lead {
+			label="Zchunk::HeaderLead";
+			graph[style=dotted];
+
+			header_lead__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">5</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD COLSPAN="4" PORT="magic__valid">must be any of [0, 90, 67, 75, 49].pack('C*'), [0, 90, 72, 82, 49].pack('C*')</TD></TR>
+				<TR><TD PORT="overall_checksum_type_pos">5</TD><TD PORT="overall_checksum_type_size">...</TD><TD>ChecksumType</TD><TD PORT="overall_checksum_type_type">overall_checksum_type</TD></TR>
+				<TR><TD PORT="len_header_rest_pos">...</TD><TD PORT="len_header_rest_size">...</TD><TD>CompressedInteger</TD><TD PORT="len_header_rest_type">len_header_rest</TD></TR>
+				<TR><TD PORT="header_checksum_pos">...</TD><TD PORT="header_checksum_size">overall_checksum_type.len_checksum</TD><TD></TD><TD PORT="header_checksum_type">header_checksum</TD></TR>
+			</TABLE>>];
+			header_lead__inst__is_detached_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_detached_header</TD><TD>magic[2].ord == 72</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header_without_lead {
+			label="Zchunk::HeaderWithoutLead";
+			graph[style=dotted];
+
+			header_without_lead__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="preface_pos">0</TD><TD PORT="preface_size">...</TD><TD>Preface</TD><TD PORT="preface_type">preface</TD></TR>
+				<TR><TD PORT="len_index_pos">...</TD><TD PORT="len_index_size">...</TD><TD>CompressedInteger</TD><TD PORT="len_index_type">len_index</TD></TR>
+				<TR><TD PORT="index_pos">...</TD><TD PORT="index_size">len_index.value</TD><TD>Index</TD><TD PORT="index_type">index</TD></TR>
+				<TR><TD PORT="num_signatures_pos">...</TD><TD PORT="num_signatures_size">...</TD><TD>CompressedInteger</TD><TD PORT="num_signatures_type">num_signatures</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_signatures__valid">must satisfy _.value == 0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__index {
+			label="Zchunk::Index";
+			graph[style=dotted];
+
+			index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunk_checksum_type_pos">0</TD><TD PORT="chunk_checksum_type_size">...</TD><TD>ChecksumType</TD><TD PORT="chunk_checksum_type_type">chunk_checksum_type</TD></TR>
+				<TR><TD PORT="num_chunks_pos">...</TD><TD PORT="num_chunks_size">...</TD><TD>CompressedInteger</TD><TD PORT="num_chunks_type">num_chunks</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_chunks__valid">must satisfy _.value &gt;= 1</TD></TR>
+				<TR><TD PORT="dict_stream_pos">...</TD><TD PORT="dict_stream_size">...</TD><TD>CompressedInteger</TD><TD PORT="dict_stream_type">dict_stream</TD></TR>
+				<TR><TD COLSPAN="4" PORT="dict_stream__valid">must satisfy _.value == 0</TD></TR>
+				<TR><TD COLSPAN="4" PORT="dict_stream__if">if _parent.preface.has_data_streams</TD></TR>
+				<TR><TD PORT="dict_checksum_pos">...</TD><TD PORT="dict_checksum_size">chunk_checksum_type.len_checksum</TD><TD></TD><TD PORT="dict_checksum_type">dict_checksum</TD></TR>
+				<TR><TD PORT="uncompressed_dict_checksum_pos">...</TD><TD PORT="uncompressed_dict_checksum_size">chunk_checksum_type.len_checksum</TD><TD></TD><TD PORT="uncompressed_dict_checksum_type">uncompressed_dict_checksum</TD></TR>
+				<TR><TD COLSPAN="4" PORT="uncompressed_dict_checksum__if">if _parent.preface.has_uncompressed_source</TD></TR>
+				<TR><TD PORT="len_dict_pos">...</TD><TD PORT="len_dict_size">...</TD><TD>CompressedInteger</TD><TD PORT="len_dict_type">len_dict</TD></TR>
+				<TR><TD PORT="len_uncompressed_dict_pos">...</TD><TD PORT="len_uncompressed_dict_size">...</TD><TD>CompressedInteger</TD><TD PORT="len_uncompressed_dict_type">len_uncompressed_dict</TD></TR>
+				<TR><TD PORT="chunks_metadata_pos">...</TD><TD PORT="chunks_metadata_size">...</TD><TD>Chunk</TD><TD PORT="chunks_metadata_type">chunks_metadata</TD></TR>
+				<TR><TD COLSPAN="4" PORT="chunks_metadata__repeat">repeat num_data_chunks times</TD></TR>
+			</TABLE>>];
+			index__inst__num_data_chunks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_data_chunks</TD><TD>num_chunks.value - 1</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__optional_element {
+			label="Zchunk::OptionalElement";
+			graph[style=dotted];
+
+			optional_element__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="element_id_pos">0</TD><TD PORT="element_id_size">...</TD><TD>CompressedInteger</TD><TD PORT="element_id_type">element_id</TD></TR>
+				<TR><TD PORT="len_data_pos">...</TD><TD PORT="len_data_size">...</TD><TD>CompressedInteger</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">len_data.value</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__preface {
+			label="Zchunk::Preface";
+			graph[style=dotted];
+
+			preface__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_checksum_pos">0</TD><TD PORT="data_checksum_size">_root.lead.overall_checksum_type.len_checksum</TD><TD></TD><TD PORT="data_checksum_type">data_checksum</TD></TR>
+				<TR><TD PORT="flags_pos">...</TD><TD PORT="flags_size">...</TD><TD>CompressedInteger</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD COLSPAN="4" PORT="flags__valid">must satisfy _.value &lt;= 7</TD></TR>
+				<TR><TD PORT="compression_type_int_pos">...</TD><TD PORT="compression_type_int_size">...</TD><TD>CompressedInteger</TD><TD PORT="compression_type_int_type">compression_type_int</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression_type_int__valid">must satisfy  ((_.value == (Zchunk::I__COMPRESSION_TYPES[:compression_types_none] || :compression_types_none)) || (_.value == (Zchunk::I__COMPRESSION_TYPES[:compression_types_zstd] || :compression_types_zstd))) </TD></TR>
+				<TR><TD PORT="num_optional_elements_pos">...</TD><TD PORT="num_optional_elements_size">...</TD><TD>CompressedInteger</TD><TD PORT="num_optional_elements_type">num_optional_elements</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_optional_elements__valid">must satisfy _.value &gt;= 1</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_optional_elements__if">if has_optional_elements</TD></TR>
+				<TR><TD PORT="optional_elements_pos">...</TD><TD PORT="optional_elements_size">...</TD><TD>OptionalElement</TD><TD PORT="optional_elements_type">optional_elements</TD></TR>
+				<TR><TD COLSPAN="4" PORT="optional_elements__repeat">repeat num_optional_elements.value times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="optional_elements__if">if has_optional_elements</TD></TR>
+			</TABLE>>];
+			preface__inst__compression_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>compression_type</TD><TD>Kaitai::Struct::Stream::resolve_enum(Zchunk::COMPRESSION_TYPES, compression_type_int.value)</TD></TR>
+			</TABLE>>];
+			preface__inst__has_data_streams [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_data_streams</TD><TD>flags.value &amp; 1 != 0</TD></TR>
+			</TABLE>>];
+			preface__inst__has_optional_elements [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_optional_elements</TD><TD>flags.value &amp; 2 != 0</TD></TR>
+			</TABLE>>];
+			preface__inst__has_uncompressed_source [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_uncompressed_source</TD><TD>flags.value &amp; 4 != 0</TD></TR>
+			</TABLE>>];
+		}
+	}
+	zchunk__seq:lead_type -> header_lead__seq [style=bold];
+	compressed_integer__inst__value:value_type -> zchunk__seq:header_rest_size [color="#404040"];
+	zchunk__seq:header_rest_type -> header_without_lead__seq [style=bold];
+	compressed_integer__inst__value:value_type -> zchunk__seq:dict_size [color="#404040"];
+	compressed_integer__inst__value:value_type -> zchunk__seq:chunks_size [color="#404040"];
+	index__seq:chunks_metadata_type -> zchunk__seq:chunks__repeat [color="#404040"];
+	header_lead__inst__is_detached_header:is_detached_header_type -> zchunk__seq:chunks__if [color="#404040"];
+	checksum_type__seq:raw_type -> compressed_integer__seq [style=bold];
+	checksum_type__inst__len_checksum:len_checksum_type -> checksum_type__seq:raw__valid [color="#404040"];
+	checksum_type__inst__value:value_type -> checksum_type__inst__len_checksum [color="#404040"];
+	compressed_integer__inst__value:value_type -> checksum_type__inst__value [color="#404040"];
+	chunk__seq:chunk_stream_type -> compressed_integer__seq [style=bold];
+	chunk__params:has_data_streams_type -> chunk__seq:chunk_stream__if [color="#404040"];
+	chunk__params:len_checksum_type -> chunk__seq:chunk_checksum_size [color="#404040"];
+	chunk__params:len_checksum_type -> chunk__seq:uncompressed_chunk_checksum_size [color="#404040"];
+	chunk__params:has_uncompressed_source_type -> chunk__seq:uncompressed_chunk_checksum__if [color="#404040"];
+	chunk__seq:len_chunk_type -> compressed_integer__seq [style=bold];
+	chunk__seq:len_uncompressed_chunk_type -> compressed_integer__seq [style=bold];
+	compressed_integer__seq:groups_type -> group__seq [style=bold];
+	group__seq:is_last_type -> compressed_integer__seq:groups__repeat [color="#404040"];
+	compressed_integer__seq:groups_type -> compressed_integer__inst__len [color="#404040"];
+	group__seq:value_type -> compressed_integer__inst__value [color="#404040"];
+	compressed_integer__inst__len:len_type -> compressed_integer__inst__value [color="#404040"];
+	group__params:idx_type -> group__seq:is_last__valid [color="#404040"];
+	group__seq:is_last_type -> group__seq:is_last__valid [color="#404040"];
+	group__params:idx_type -> group__seq:value__valid [color="#404040"];
+	header_lead__seq:overall_checksum_type_type -> checksum_type__seq [style=bold];
+	header_lead__seq:len_header_rest_type -> compressed_integer__seq [style=bold];
+	checksum_type__inst__len_checksum:len_checksum_type -> header_lead__seq:header_checksum_size [color="#404040"];
+	header_lead__seq:magic_type -> header_lead__inst__is_detached_header [color="#404040"];
+	header_without_lead__seq:preface_type -> preface__seq [style=bold];
+	header_without_lead__seq:len_index_type -> compressed_integer__seq [style=bold];
+	compressed_integer__inst__value:value_type -> header_without_lead__seq:index_size [color="#404040"];
+	header_without_lead__seq:index_type -> index__seq [style=bold];
+	header_without_lead__seq:num_signatures_type -> compressed_integer__seq [style=bold];
+	compressed_integer__inst__value:value_type -> header_without_lead__seq:num_signatures__valid [color="#404040"];
+	index__seq:chunk_checksum_type_type -> checksum_type__seq [style=bold];
+	index__seq:num_chunks_type -> compressed_integer__seq [style=bold];
+	compressed_integer__inst__value:value_type -> index__seq:num_chunks__valid [color="#404040"];
+	index__seq:dict_stream_type -> compressed_integer__seq [style=bold];
+	compressed_integer__inst__value:value_type -> index__seq:dict_stream__valid [color="#404040"];
+	preface__inst__has_data_streams:has_data_streams_type -> index__seq:dict_stream__if [color="#404040"];
+	checksum_type__inst__len_checksum:len_checksum_type -> index__seq:dict_checksum_size [color="#404040"];
+	checksum_type__inst__len_checksum:len_checksum_type -> index__seq:uncompressed_dict_checksum_size [color="#404040"];
+	preface__inst__has_uncompressed_source:has_uncompressed_source_type -> index__seq:uncompressed_dict_checksum__if [color="#404040"];
+	index__seq:len_dict_type -> compressed_integer__seq [style=bold];
+	index__seq:len_uncompressed_dict_type -> compressed_integer__seq [style=bold];
+	index__seq:chunks_metadata_type -> chunk__seq [style=bold];
+	index__inst__num_data_chunks:num_data_chunks_type -> index__seq:chunks_metadata__repeat [color="#404040"];
+	compressed_integer__inst__value:value_type -> index__inst__num_data_chunks [color="#404040"];
+	optional_element__seq:element_id_type -> compressed_integer__seq [style=bold];
+	optional_element__seq:len_data_type -> compressed_integer__seq [style=bold];
+	compressed_integer__inst__value:value_type -> optional_element__seq:data_size [color="#404040"];
+	checksum_type__inst__len_checksum:len_checksum_type -> preface__seq:data_checksum_size [color="#404040"];
+	preface__seq:flags_type -> compressed_integer__seq [style=bold];
+	compressed_integer__inst__value:value_type -> preface__seq:flags__valid [color="#404040"];
+	preface__seq:compression_type_int_type -> compressed_integer__seq [style=bold];
+	compressed_integer__inst__value:value_type -> preface__seq:compression_type_int__valid [color="#404040"];
+	preface__seq:num_optional_elements_type -> compressed_integer__seq [style=bold];
+	compressed_integer__inst__value:value_type -> preface__seq:num_optional_elements__valid [color="#404040"];
+	preface__inst__has_optional_elements:has_optional_elements_type -> preface__seq:num_optional_elements__if [color="#404040"];
+	preface__seq:optional_elements_type -> optional_element__seq [style=bold];
+	compressed_integer__inst__value:value_type -> preface__seq:optional_elements__repeat [color="#404040"];
+	preface__inst__has_optional_elements:has_optional_elements_type -> preface__seq:optional_elements__if [color="#404040"];
+	compressed_integer__inst__value:value_type -> preface__inst__compression_type [color="#404040"];
+	compressed_integer__inst__value:value_type -> preface__inst__has_data_streams [color="#404040"];
+	compressed_integer__inst__value:value_type -> preface__inst__has_optional_elements [color="#404040"];
+	compressed_integer__inst__value:value_type -> preface__inst__has_uncompressed_source [color="#404040"];
+}
