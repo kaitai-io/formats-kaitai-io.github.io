@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UF2 (USB Flashing Format): Python (read-write) parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Firmware</li>
+        <li class="active">UF2 (USB Flashing Format)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>UF2 (USB Flashing Format):
+            
+            Python (read-write) parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>UF2 is a file format, developed by Microsoft for PXT (also known as
+Microsoft MakeCode), that is particularly suitable for flashing
+microcontrollers over MSC (Mass Storage Class; aka removable flash drive).</p>
+<p>The list of family IDs is stored in a separate JSON file:</p>
+<p><a href="https://github.com/microsoft/uf2/blob/master/utils/uf2families.json">https://github.com/microsoft/uf2/blob/master/utils/uf2families.json</a></p>
+<p>This JSON file is regularly updated. The <code>family_id</code> enum should be kept in
+sync with it. For simplicity and consistency, it's strongly recommended to
+auto-generate this enum from <code>uf2families.json</code> directly. This was last done
+using the following commands:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> curl</span><span style="color:#bf616a;"> -fsSLO</span><span style="color:#c0c5ce;"> https://github.com/microsoft/uf2/raw/90e9741f217f5a40c98ba74d663e408041037578/utils/uf2families.json
+</span><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> jq</span><span style="color:#bf616a;"> -r </span><span style="color:#c0c5ce;">&#39;
+</span><span style="color:#a3be8c;">  .[]
+</span><span style="color:#a3be8c;">  | &quot;    \(.id | ascii_downcase):\n&quot;
+</span><span style="color:#a3be8c;">  + &quot;      id: \(.short_name | ascii_downcase | gsub(&quot;-&quot;; &quot;_&quot;))\n&quot;
+</span><span style="color:#a3be8c;">  + &quot;      doc: \(.description | tojson)&quot;
+</span><span style="color:#c0c5ce;">&#39; uf2families.json
+</span></code></pre>
+<p>Test files, picked to cover as many different shapes as possible:</p>
+<ul>
+<li><a href="https://micropython.org/download/RPI_PICO/">https://micropython.org/download/RPI_PICO/</a> - a typical case: all blocks
+have the same family ID and <code>num_blocks</code>.</li>
+<li><a href="https://micropython.org/download/RPI_PICO2/">https://micropython.org/download/RPI_PICO2/</a> - these .uf2 files are
+actually two UF2 files concatenated. The first UF2 file is the standalone
+<code>family_id::rp2xxx_absolute</code> block that <code>picotool</code> prepends (see the
+<code>is_rp2350_e10_block</code> value instance in the <code>block</code> type).</li>
+<li><a href="https://circuitpython.org/downloads">https://circuitpython.org/downloads</a> - the builds for SAMD boards (for
+example
+<a href="https://circuitpython.org/board/feather_m0_express/">Feather M0 Express</a>)
+set no flags at all, so the field at offset 28 is read as <code>file_size</code> rather
+than <code>family_id</code>.</li>
+<li><a href="https://github.com/raspberrypi/pico-sdk-prebuilts/releases">https://github.com/raspberrypi/pico-sdk-prebuilts/releases</a> -
+<a href="https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/README.md#universal-binary-vs-universal-uf2">Universal UF2</a>
+files, which are again two UF2 files concatenated. What's interesting about
+these is that the last block of the first file (with the family ID
+<code>family_id::rp2040</code>) is moved to the end of the second file, which was
+intended for <code>family_id::rp2xxx_absolute</code> (see
+<a href="https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169">https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169</a>).</li>
+<li><a href="https://github.com/microsoft/pxt-microsoft-boot-sequence/releases">https://github.com/microsoft/pxt-microsoft-boot-sequence/releases</a> - some
+files contain blocks with the <code>flags.is_file_container</code> flag set (for
+example
+<a href="https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2">https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2</a>
+is a pure file container for
+<code>file_name == &quot;Projects/microsoft-boot-sequence.elf&quot;</code>). Generated by
+MakeCode, the only known producer of file container UF2s.</li>
+<li><a href="https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests">https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests</a> -
+synthetic test files for features that real firmware doesn't seem to use
+(e.g. MD5 checksums).</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        uf2
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q105856672">Wikidata Q105856672</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of UF2 (USB Flashing Format)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="UF2 (USB Flashing Format) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="UF2 (USB Flashing Format) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="UF2 (USB Flashing Format) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="UF2 (USB Flashing Format) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="UF2 (USB Flashing Format) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="UF2 (USB Flashing Format) parsing Graphviz library">Graphviz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="UF2 (USB Flashing Format) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="UF2 (USB Flashing Format) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="UF2 (USB Flashing Format) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="UF2 (USB Flashing Format) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="UF2 (USB Flashing Format) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="UF2 (USB Flashing Format) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="UF2 (USB Flashing Format) parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python-write.html" title="UF2 (USB Flashing Format) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="UF2 (USB Flashing Format) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="UF2 (USB Flashing Format) parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python (read-write) source code to parse UF2 (USB Flashing Format)
+            
+        </h2>
+
+        
+
+        <h3>uf2.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python-write/uf2.py" download="uf2.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReadWriteKaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
+
+
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Uf2</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;UF2 is a file format, developed by Microsoft for PXT (also known as</span>
+<span class="sd">    Microsoft MakeCode), that is particularly suitable for flashing</span>
+<span class="sd">    microcontrollers over MSC (Mass Storage Class; aka removable flash drive).</span>
+<span class="sd">    </span>
+<span class="sd">    The list of family IDs is stored in a separate JSON file:</span>
+<span class="sd">    </span>
+<span class="sd">    &lt;https://github.com/microsoft/uf2/blob/master/utils/uf2families.json&gt;</span>
+<span class="sd">    </span>
+<span class="sd">    This JSON file is regularly updated. The `family_id` enum should be kept in</span>
+<span class="sd">    sync with it. For simplicity and consistency, it&#39;s strongly recommended to</span>
+<span class="sd">    auto-generate this enum from `uf2families.json` directly. This was last done</span>
+<span class="sd">    using the following commands:</span>
+<span class="sd">    </span>
+<span class="sd">    ```bash</span>
+<span class="sd">    $ curl -fsSLO https://github.com/microsoft/uf2/raw/90e9741f217f5a40c98ba74d663e408041037578/utils/uf2families.json</span>
+<span class="sd">    $ jq -r &#39;</span>
+<span class="sd">      .[]</span>
+<span class="sd">      | &quot;    \(.id | ascii_downcase):\n&quot;</span>
+<span class="sd">      + &quot;      id: \(.short_name | ascii_downcase | gsub(&quot;-&quot;; &quot;_&quot;))\n&quot;</span>
+<span class="sd">      + &quot;      doc: \(.description | tojson)&quot;</span>
+<span class="sd">    &#39; uf2families.json</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    Test files, picked to cover as many different shapes as possible:</span>
+<span class="sd">    </span>
+<span class="sd">    * &lt;https://micropython.org/download/RPI_PICO/&gt; - a typical case: all blocks</span>
+<span class="sd">      have the same family ID and `num_blocks`.</span>
+<span class="sd">    * &lt;https://micropython.org/download/RPI_PICO2/&gt; - these .uf2 files are</span>
+<span class="sd">      actually two UF2 files concatenated. The first UF2 file is the standalone</span>
+<span class="sd">      `family_id::rp2xxx_absolute` block that `picotool` prepends (see the</span>
+<span class="sd">      `is_rp2350_e10_block` value instance in the `block` type).</span>
+<span class="sd">    * &lt;https://circuitpython.org/downloads&gt; - the builds for SAMD boards (for</span>
+<span class="sd">      example</span>
+<span class="sd">      [Feather M0 Express](https://circuitpython.org/board/feather_m0_express/))</span>
+<span class="sd">      set no flags at all, so the field at offset 28 is read as `file_size` rather</span>
+<span class="sd">      than `family_id`.</span>
+<span class="sd">    * &lt;https://github.com/raspberrypi/pico-sdk-prebuilts/releases&gt; -</span>
+<span class="sd">      [Universal UF2](https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/README.md#universal-binary-vs-universal-uf2)</span>
+<span class="sd">      files, which are again two UF2 files concatenated. What&#39;s interesting about</span>
+<span class="sd">      these is that the last block of the first file (with the family ID</span>
+<span class="sd">      `family_id::rp2040`) is moved to the end of the second file, which was</span>
+<span class="sd">      intended for `family_id::rp2xxx_absolute` (see</span>
+<span class="sd">      &lt;https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169&gt;).</span>
+<span class="sd">    * &lt;https://github.com/microsoft/pxt-microsoft-boot-sequence/releases&gt; - some</span>
+<span class="sd">      files contain blocks with the `flags.is_file_container` flag set (for</span>
+<span class="sd">      example</span>
+<span class="sd">      &lt;https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2&gt;</span>
+<span class="sd">      is a pure file container for</span>
+<span class="sd">      `file_name == &quot;Projects/microsoft-boot-sequence.elf&quot;`). Generated by</span>
+<span class="sd">      MakeCode, the only known producer of file container UF2s.</span>
+<span class="sd">    * &lt;https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests&gt; -</span>
+<span class="sd">      synthetic test files for features that real firmware doesn&#39;t seem to use</span>
+<span class="sd">      (e.g. MD5 checksums).</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ExtensionTagType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">page_size</span> <span class="o">=</span> <span class="mi">780791</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="mi">6622621</span>
+        <span class="n">rp2_ignore_block</span> <span class="o">=</span> <span class="mi">10049507</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="mi">10471356</span>
+        <span class="n">sha2_checksum</span> <span class="o">=</span> <span class="mi">11824560</span>
+        <span class="n">device_type_id</span> <span class="o">=</span> <span class="mi">13149993</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">FamilyId</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">stm32l4</span> <span class="o">=</span> <span class="mi">16738585</span>
+        <span class="n">stm32l5</span> <span class="o">=</span> <span class="mi">69471199</span>
+        <span class="n">stm32f411xc</span> <span class="o">=</span> <span class="mi">114362747</span>
+        <span class="n">m0sense</span> <span class="o">=</span> <span class="mi">299792458</span>
+        <span class="n">atmega32</span> <span class="o">=</span> <span class="mi">374814231</span>
+        <span class="n">saml21</span> <span class="o">=</span> <span class="mi">407992330</span>
+        <span class="n">nrf52</span> <span class="o">=</span> <span class="mi">458716255</span>
+        <span class="n">esp32</span> <span class="o">=</span> <span class="mi">475996592</span>
+        <span class="n">stm32l1</span> <span class="o">=</span> <span class="mi">505365293</span>
+        <span class="n">stm32l0</span> <span class="o">=</span> <span class="mi">539900561</span>
+        <span class="n">stm32wl</span> <span class="o">=</span> <span class="mi">558239728</span>
+        <span class="n">rtl8710b</span> <span class="o">=</span> <span class="mi">585160444</span>
+        <span class="n">lpc55</span> <span class="o">=</span> <span class="mi">716994540</span>
+        <span class="n">esp32c2</span> <span class="o">=</span> <span class="mi">730387100</span>
+        <span class="n">stm32f411xe</span> <span class="o">=</span> <span class="mi">767756741</span>
+        <span class="n">stm32g0</span> <span class="o">=</span> <span class="mi">806311475</span>
+        <span class="n">esp32s31</span> <span class="o">=</span> <span class="mi">822212545</span>
+        <span class="n">gd32f350</span> <span class="o">=</span> <span class="mi">835856582</span>
+        <span class="n">esp32h2</span> <span class="o">=</span> <span class="mi">858203894</span>
+        <span class="n">rtl8720d</span> <span class="o">=</span> <span class="mi">863621090</span>
+        <span class="n">esp32p4</span> <span class="o">=</span> <span class="mi">1026592404</span>
+        <span class="n">maixplay_u4</span> <span class="o">=</span> <span class="mi">1265126769</span>
+        <span class="n">stm32g4</span> <span class="o">=</span> <span class="mi">1282483210</span>
+        <span class="n">stm32h5</span> <span class="o">=</span> <span class="mi">1318001757</span>
+        <span class="n">csk4</span> <span class="o">=</span> <span class="mi">1332399698</span>
+        <span class="n">mimxrt10xx</span> <span class="o">=</span> <span class="mi">1337120189</span>
+        <span class="n">xr809</span> <span class="o">=</span> <span class="mi">1374225320</span>
+        <span class="n">stm32f7</span> <span class="o">=</span> <span class="mi">1404571392</span>
+        <span class="n">esp32c6</span> <span class="o">=</span> <span class="mi">1410195298</span>
+        <span class="n">samd51</span> <span class="o">=</span> <span class="mi">1427194976</span>
+        <span class="n">stm32f4</span> <span class="o">=</span> <span class="mi">1467308631</span>
+        <span class="n">fx2</span> <span class="o">=</span> <span class="mi">1511523995</span>
+        <span class="n">stm32f2</span> <span class="o">=</span> <span class="mi">1561987630</span>
+        <span class="n">stm32f1</span> <span class="o">=</span> <span class="mi">1591873650</span>
+        <span class="n">nrf52833</span> <span class="o">=</span> <span class="mi">1646171002</span>
+        <span class="n">stm32f0</span> <span class="o">=</span> <span class="mi">1685595318</span>
+        <span class="n">bk7231u</span> <span class="o">=</span> <span class="mi">1733968048</span>
+        <span class="n">samd21</span> <span class="o">=</span> <span class="mi">1760373640</span>
+        <span class="n">ch32v</span> <span class="o">=</span> <span class="mi">1771791084</span>
+        <span class="n">bk7251</span> <span class="o">=</span> <span class="mi">1786956866</span>
+        <span class="n">stm32f3</span> <span class="o">=</span> <span class="mi">1803837832</span>
+        <span class="n">stm32f407</span> <span class="o">=</span> <span class="mi">1829315322</span>
+        <span class="n">stm32h7</span> <span class="o">=</span> <span class="mi">1840668802</span>
+        <span class="n">csk6</span> <span class="o">=</span> <span class="mi">1853049000</span>
+        <span class="n">nrf52832xxab</span> <span class="o">=</span> <span class="mi">1869948536</span>
+        <span class="n">stm32wb</span> <span class="o">=</span> <span class="mi">1892771411</span>
+        <span class="n">nrf52832xxaa</span> <span class="o">=</span> <span class="mi">1920081230</span>
+        <span class="n">max32690</span> <span class="o">=</span> <span class="mi">1947226634</span>
+        <span class="n">esp32c61</span> <span class="o">=</span> <span class="mi">2010665156</span>
+        <span class="n">bk7231n</span> <span class="o">=</span> <span class="mi">2067722800</span>
+        <span class="n">ra4m1</span> <span class="o">=</span> <span class="mi">2078840685</span>
+        <span class="n">py32f071_uvk5_v3</span> <span class="o">=</span> <span class="mi">2105173743</span>
+        <span class="n">esp8266</span> <span class="o">=</span> <span class="mi">2125160941</span>
+        <span class="n">kl32l2</span> <span class="o">=</span> <span class="mi">2139350931</span>
+        <span class="n">nrf52820</span> <span class="o">=</span> <span class="mi">2181929567</span>
+        <span class="n">stm32f407vg</span> <span class="o">=</span> <span class="mi">2410701054</span>
+        <span class="n">max78002</span> <span class="o">=</span> <span class="mi">2446589208</span>
+        <span class="n">rza1lu</span> <span class="o">=</span> <span class="mi">2501329455</span>
+        <span class="n">gd32vf103</span> <span class="o">=</span> <span class="mi">2599435827</span>
+        <span class="n">esp32h4</span> <span class="o">=</span> <span class="mi">2651564682</span>
+        <span class="n">rtl8710a</span> <span class="o">=</span> <span class="mi">2684343619</span>
+        <span class="n">at32f415</span> <span class="o">=</span> <span class="mi">2697558926</span>
+        <span class="n">nrf52840</span> <span class="o">=</span> <span class="mi">2913282112</span>
+        <span class="n">esp32h21</span> <span class="o">=</span> <span class="mi">3067936943</span>
+        <span class="n">esp32s2</span> <span class="o">=</span> <span class="mi">3218951918</span>
+        <span class="n">esp32s3</span> <span class="o">=</span> <span class="mi">3296614247</span>
+        <span class="n">esp32c3</span> <span class="o">=</span> <span class="mi">3559628908</span>
+        <span class="n">max32650</span> <span class="o">=</span> <span class="mi">3594487346</span>
+        <span class="n">bl602</span> <span class="o">=</span> <span class="mi">3725750455</span>
+        <span class="n">rtl8720c</span> <span class="o">=</span> <span class="mi">3767498084</span>
+        <span class="n">rp2040</span> <span class="o">=</span> <span class="mi">3834380118</span>
+        <span class="n">rp2xxx_absolute</span> <span class="o">=</span> <span class="mi">3834380119</span>
+        <span class="n">rp2xxx_data</span> <span class="o">=</span> <span class="mi">3834380120</span>
+        <span class="n">rp2350_arm_s</span> <span class="o">=</span> <span class="mi">3834380121</span>
+        <span class="n">rp2350_riscv</span> <span class="o">=</span> <span class="mi">3834380122</span>
+        <span class="n">rp2350_arm_ns</span> <span class="o">=</span> <span class="mi">3834380123</span>
+        <span class="n">max32666</span> <span class="o">=</span> <span class="mi">4039314801</span>
+        <span class="n">esp32c5</span> <span class="o">=</span> <span class="mi">4145808195</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span> <span class="o">=</span> <span class="n">Uf2</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">num_blocks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">_t_blocks</span> <span class="o">=</span> <span class="n">Uf2</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_t_blocks</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_t_blocks</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">_root</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;first_block&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">_parent</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;first_block&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">_parent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">num_blocks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;blocks&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_block</span><span class="o">.</span><span class="n">num_blocks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_root</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;blocks&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_parent</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;blocks&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_parent</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Block</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">Block</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x55\x46\x32\x0A</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x55\x46\x32\x0A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/0&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">second_magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x57\x51\x5D\x9E</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x57\x51\x5D\x9E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_magic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/1&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">Uf2</span><span class="o">.</span><span class="n">Flags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_address</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">_</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/3&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len_payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_payload</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">_</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_payload</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/4&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">block_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_blocks_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_blocks_raw</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationLessThanError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_blocks_raw</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/6&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_family_id</span><span class="p">)):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">file_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_family_id</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">family_id</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">FamilyId</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">476</span><span class="p">)</span>
+            <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Uf2</span><span class="o">.</span><span class="n">BlockData</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">final_magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x30\x6F\xB1\x0A</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x30\x6F\xB1\x0A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_magic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/10&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_family_id</span><span class="p">)):</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_family_id</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">Block</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">second_magic</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_address</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_payload</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_number</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_blocks_raw</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_family_id</span><span class="p">)):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_size</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_family_id</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">family_id</span><span class="p">))</span>
+
+            <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="nb">bytearray</span><span class="p">(</span><span class="mi">476</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">add_child_stream</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">)</span>
+            <span class="n">_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="mi">476</span><span class="p">))</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">_io__raw_data</span><span class="o">=</span><span class="n">_io__raw_data</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span> <span class="o">=</span> <span class="n">_io__raw_data</span><span class="o">.</span><span class="n">to_byte_array</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">476</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;raw(data)&quot;</span><span class="p">,</span> <span class="mi">476</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="p">))</span>
+                <span class="n">parent</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="p">)</span>
+            <span class="n">_io__raw_data</span><span class="o">.</span><span class="n">write_back_handler</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">WriteBackHandler</span><span class="p">(</span><span class="n">_pos2</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_magic</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;magic&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x55\x46\x32\x0A</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x55\x46\x32\x0A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/0&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">second_magic</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;second_magic&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">second_magic</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x57\x51\x5D\x9E</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x57\x51\x5D\x9E</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_magic</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/1&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">_root</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;flags&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">_parent</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;flags&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">_parent</span><span class="p">)</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_address</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">_</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_address</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/3&quot;</span><span class="p">)</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_payload</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">_</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_payload</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/4&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_blocks_raw</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationLessThanError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_blocks_raw</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/6&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_family_id</span><span class="p">)):</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_family_id</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_root</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_parent</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_parent</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_magic</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;final_magic&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_magic</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x30\x6F\xB1\x0A</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x30\x6F\xB1\x0A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_magic</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/block/seq/10&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">is_rp2350_e10_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Determines whether this is a block that `picotool` prepends to RP2350</span>
+<span class="sd">            flash images as a workaround for erratum RP2350-E10 (i.e. a hardware</span>
+<span class="sd">            bug in the A2 version of the RP2350 boot ROM).</span>
+<span class="sd">            </span>
+<span class="sd">            Such a block is always written on its own, but its `num_blocks_raw` is</span>
+<span class="sd">            set to 2. If we trusted this value, we would attempt to read one block</span>
+<span class="sd">            too many (which would most likely fail). Therefore, we must correct it</span>
+<span class="sd">            to 1 before using it.</span>
+<span class="sd">            </span>
+<span class="sd">            The conditions for detecting this block come from the</span>
+<span class="sd">            [`check_abs_block()`](https://github.com/raspberrypi/picotool/blob/6f6458d792b93685a11423b244a585eaa99eafcf/elf2uf2/elf2uf2.cpp#L147)</span>
+<span class="sd">            function in `picotool`. However, there are some differences:</span>
+<span class="sd">            </span>
+<span class="sd">            1. In Kaitai Struct, we cannot easily check whether all 256 payload</span>
+<span class="sd">               bytes are set to `0xef`, so we only check the first and last bytes.</span>
+<span class="sd">            2. There are .uf2 files in the wild where `flags.has_extension_tags`</span>
+<span class="sd">               is true, but there are actually no extension tags (the first and</span>
+<span class="sd">               only tag has a size of 0, which is just a terminator), so our</span>
+<span class="sd">               condition allows for this case. You can download an example of such</span>
+<span class="sd">               a .uf2 file here:</span>
+<span class="sd">               &lt;https://github.com/neednotapply/DC32-cfw/releases/tag/1.69.13.37&gt;</span>
+<span class="sd">            </span>
+<span class="sd">            It&#39;s worth noting that we cannot require the presence of the</span>
+<span class="sd">            `extension_tag_type::rp2_ignore_block`</span>
+<span class="sd">            (`UF2_EXTENSION_RP2_IGNORE_BLOCK`) tag because the UF2 files generated</span>
+<span class="sd">            by `picotool` prior to</span>
+<span class="sd">            &lt;https://github.com/raspberrypi/picotool/commit/78c9bd121b09399823b67ee7ea89003ca0d3315f&gt;</span>
+<span class="sd">            don&#39;t have it. Therefore, we check whether this tag is present only if</span>
+<span class="sd">            `flags.has_extension_tags` is set.</span>
+<span class="sd">            </span>
+<span class="sd">            Test .uf2 files with this special block can be downloaded from</span>
+<span class="sd">            &lt;https://micropython.org/download/RPI_PICO2/&gt;. Note that all the .uf2</span>
+<span class="sd">            files there are actually two UF2 (sub)files concatenated, and this</span>
+<span class="sd">            Kaitai Struct implementation parses only one at a time (so in order to</span>
+<span class="sd">            parse both, you need something like the helper spec `uf2_files.ksy`</span>
+<span class="sd">            from</span>
+<span class="sd">            &lt;https://github.com/kaitai-io/kaitai_struct_formats/pull/542#discussion_r3906386820&gt;).</span>
+<span class="sd">            v1.24.x releases predate the `extension_tag_type::rp2_ignore_block`</span>
+<span class="sd">            tag, while releases v1.25.0 and later include it.</span>
+<span class="sd">            </span>
+<span class="sd">            .. seealso::</span>
+<span class="sd">               Git tag &quot;2.3.0&quot; - https://github.com/raspberrypi/picotool/blob/6f6458d792b93685a11423b244a585eaa99eafcf/elf2uf2/elf2uf2.cpp#L147</span>
+<span class="sd">            </span>
+<span class="sd">            </span>
+<span class="sd">            .. seealso::</span>
+<span class="sd">               Source - https://github.com/raspberrypi/picotool/commit/78c9bd121b09399823b67ee7ea89003ca0d3315f</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_rp2350_e10_block&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_rp2350_e10_block</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_rp2350_e10_block</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">8192</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">40960</span><span class="p">))</span> <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">family_id</span> <span class="o">==</span> <span class="n">Uf2</span><span class="o">.</span><span class="n">FamilyId</span><span class="o">.</span><span class="n">rp2xxx_absolute</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_blocks_raw</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_number</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_payload</span> <span class="o">==</span> <span class="mi">256</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">239</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">239</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">(((</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_extension_tags</span><span class="p">)))</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tag_type</span> <span class="o">==</span> <span class="n">Uf2</span><span class="o">.</span><span class="n">ExtensionTagType</span><span class="o">.</span><span class="n">rp2_ignore_block</span><span class="p">))</span> <span class="p">))</span> <span class="p">))</span> 
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_rp2350_e10_block&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_is_rp2350_e10_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_rp2350_e10_block</span>
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">num_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_blocks&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_blocks</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_blocks</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_rp2350_e10_block</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_blocks_raw</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_num_blocks&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_num_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_num_blocks</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">BlockData</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">BlockData</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_should_write_md5_checksum</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">md5_checksum__enabled</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">len_payload</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">is_file_container</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_extension_tags</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">_t_extension_tags</span> <span class="o">=</span> <span class="n">Uf2</span><span class="o">.</span><span class="n">ExtensionTag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">_t_extension_tags</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+                    <span class="k">finally</span><span class="p">:</span>
+                        <span class="n">_</span> <span class="o">=</span> <span class="n">_t_extension_tags</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">_</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">is_file_container</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_extension_tags</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">md5_checksum</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_md5_checksum&#39;</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">BlockData</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_should_write_md5_checksum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">md5_checksum__enabled</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">is_file_container</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u1</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_extension_tags</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+
+
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">len_payload</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;payload&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">len_payload</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">is_file_container</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="k">if</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index_of</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;file_name&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">byte_array_index_of</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_extension_tags</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;extension_tags&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_root</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;extension_tags&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_parent</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;extension_tags&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_parent</span><span class="p">)</span>
+                    <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;extension_tags&quot;</span><span class="p">,</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extension_tags</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">md5_checksum__enabled</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_md5_checksum</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span><span class="o">.</span><span class="n">_root</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;md5_checksum&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span><span class="o">.</span><span class="n">_parent</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;md5_checksum&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span><span class="o">.</span><span class="n">_parent</span><span class="p">)</span>
+
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">md5_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Describes a region that doesn&#39;t need to be flashed again if the</span>
+<span class="sd">            checksum matches.</span>
+<span class="sd">            </span>
+<span class="sd">            The [official</span>
+<span class="sd">            spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#md5-checksum)</span>
+<span class="sd">            says that &quot;This is currently only used on ESP32&quot;, but no real-world</span>
+<span class="sd">            firmware sample has been found (at least none of the .uf2 files from</span>
+<span class="sd">            &lt;https://github.com/adafruit/tinyuf2/releases&gt;,</span>
+<span class="sd">            [MicroPython](https://micropython.org/download/) or</span>
+<span class="sd">            [CircuitPython](https://circuitpython.org/downloads) contain it). It</span>
+<span class="sd">            was found only in some synthetic test files, e.g.</span>
+<span class="sd">            &lt;https://github.com/umi-eng/uftwo/blob/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests/checksum_256.uf2&gt;.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_should_write_md5_checksum</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_write_md5_checksum</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_md5_checksum&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">md5_checksum__enabled</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_md5_checksum</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">24</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span> <span class="o">=</span> <span class="n">Uf2</span><span class="o">.</span><span class="n">Md5Checksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_md5_checksum&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@md5_checksum</span><span class="o">.</span><span class="n">setter</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">md5_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_write_md5_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_should_write_md5_checksum</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">has_md5_checksum</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">24</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_md5_checksum</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">ExtensionTag</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#extension-tags</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">ExtensionTag</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span>
+            <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="n">_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">_</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_len_tag</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/extension_tag/seq/0&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tag_type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">ExtensionTagType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">24</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_value</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">ExtensionTag</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bits_int_le</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_type</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span>
+            <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="n">_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">_</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_len_tag</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/extension_tag/seq/0&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_value</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_value</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;padding&quot;</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">len_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_value&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_value</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_value</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_len_tag</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_tag</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_len_tag</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_len_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_value</span>
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">min_len_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_min_len_tag&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_min_len_tag</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_min_len_tag</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">3</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_min_len_tag&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_min_len_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_min_len_tag</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Flags</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/uf2.h#L43-L47</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Git tag &quot;2.3.0&quot; - https://github.com/raspberrypi/pico-sdk/blob/98a542c1a62fb549ffb5d66a3e5892b06276b670/src/common/boot_uf2_headers/include/boot/uf2.h#L23-L27</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">Flags</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="n">_</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mi">61441</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="ow">not</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">is_file_container</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">has_extension_tags</span><span class="p">))</span> <span class="p">))))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/flags/seq/0&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">Flags</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="n">_</span> <span class="o">&amp;</span> <span class="o">~</span><span class="mi">61441</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="ow">not</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">is_file_container</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">has_extension_tags</span><span class="p">))</span> <span class="p">))))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/flags/seq/0&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">has_extension_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Indicates whether extension tags are present after the payload.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_extension_tags&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_extension_tags</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_extension_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32768</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_extension_tags&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_has_extension_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_extension_tags</span>
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">has_family_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The field at offset 28 in the block is `family_id` instead of</span>
+<span class="sd">            `file_size`.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_family_id&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_family_id</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_family_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8192</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_family_id&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_has_family_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_family_id</span>
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">has_md5_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Indicates whether `md5_checksum` is present at the end of `data`.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_md5_checksum&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_md5_checksum</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_md5_checksum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16384</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_md5_checksum&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_has_md5_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_md5_checksum</span>
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">is_file_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;When set, the UF2 format is used as a container for regular files</span>
+<span class="sd">            (akin to a TAR file, or ZIP archive without compression).</span>
+<span class="sd">            </span>
+<span class="sd">            `target_address` is the offset in the file where the payload is to be</span>
+<span class="sd">            written, and `file_size` is the size of that file. The name of the</span>
+<span class="sd">            destination file is stored in `data.file_name`.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_file_container&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_file_container</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_file_container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4096</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_file_container&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_is_file_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_file_container</span>
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">not_main_flash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Indicates that this block should be skipped when writing the device</span>
+<span class="sd">            flash. It can be used to store data that does not fit on the device,</span>
+<span class="sd">            typically embedded source code or debug info.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_not_main_flash&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_not_main_flash</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_not_main_flash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_not_main_flash&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_not_main_flash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_not_main_flash</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Md5Checksum</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#md5-checksum</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">Md5Checksum</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">md5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uf2</span><span class="o">.</span><span class="n">Md5Checksum</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_address</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_region</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">md5</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">md5</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">16</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;md5&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">md5</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2026 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UF2 (USB Flashing Format) format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Firmware</li>
+        <li class="active">UF2 (USB Flashing Format)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>UF2 (USB Flashing Format):
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>UF2 is a file format, developed by Microsoft for PXT (also known as
+Microsoft MakeCode), that is particularly suitable for flashing
+microcontrollers over MSC (Mass Storage Class; aka removable flash drive).</p>
+<p>The list of family IDs is stored in a separate JSON file:</p>
+<p><a href="https://github.com/microsoft/uf2/blob/master/utils/uf2families.json">https://github.com/microsoft/uf2/blob/master/utils/uf2families.json</a></p>
+<p>This JSON file is regularly updated. The <code>family_id</code> enum should be kept in
+sync with it. For simplicity and consistency, it's strongly recommended to
+auto-generate this enum from <code>uf2families.json</code> directly. This was last done
+using the following commands:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> curl</span><span style="color:#bf616a;"> -fsSLO</span><span style="color:#c0c5ce;"> https://github.com/microsoft/uf2/raw/90e9741f217f5a40c98ba74d663e408041037578/utils/uf2families.json
+</span><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> jq</span><span style="color:#bf616a;"> -r </span><span style="color:#c0c5ce;">&#39;
+</span><span style="color:#a3be8c;">  .[]
+</span><span style="color:#a3be8c;">  | &quot;    \(.id | ascii_downcase):\n&quot;
+</span><span style="color:#a3be8c;">  + &quot;      id: \(.short_name | ascii_downcase | gsub(&quot;-&quot;; &quot;_&quot;))\n&quot;
+</span><span style="color:#a3be8c;">  + &quot;      doc: \(.description | tojson)&quot;
+</span><span style="color:#c0c5ce;">&#39; uf2families.json
+</span></code></pre>
+<p>Test files, picked to cover as many different shapes as possible:</p>
+<ul>
+<li><a href="https://micropython.org/download/RPI_PICO/">https://micropython.org/download/RPI_PICO/</a> - a typical case: all blocks
+have the same family ID and <code>num_blocks</code>.</li>
+<li><a href="https://micropython.org/download/RPI_PICO2/">https://micropython.org/download/RPI_PICO2/</a> - these .uf2 files are
+actually two UF2 files concatenated. The first UF2 file is the standalone
+<code>family_id::rp2xxx_absolute</code> block that <code>picotool</code> prepends (see the
+<code>is_rp2350_e10_block</code> value instance in the <code>block</code> type).</li>
+<li><a href="https://circuitpython.org/downloads">https://circuitpython.org/downloads</a> - the builds for SAMD boards (for
+example
+<a href="https://circuitpython.org/board/feather_m0_express/">Feather M0 Express</a>)
+set no flags at all, so the field at offset 28 is read as <code>file_size</code> rather
+than <code>family_id</code>.</li>
+<li><a href="https://github.com/raspberrypi/pico-sdk-prebuilts/releases">https://github.com/raspberrypi/pico-sdk-prebuilts/releases</a> -
+<a href="https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/README.md#universal-binary-vs-universal-uf2">Universal UF2</a>
+files, which are again two UF2 files concatenated. What's interesting about
+these is that the last block of the first file (with the family ID
+<code>family_id::rp2040</code>) is moved to the end of the second file, which was
+intended for <code>family_id::rp2xxx_absolute</code> (see
+<a href="https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169">https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169</a>).</li>
+<li><a href="https://github.com/microsoft/pxt-microsoft-boot-sequence/releases">https://github.com/microsoft/pxt-microsoft-boot-sequence/releases</a> - some
+files contain blocks with the <code>flags.is_file_container</code> flag set (for
+example
+<a href="https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2">https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2</a>
+is a pure file container for
+<code>file_name == &quot;Projects/microsoft-boot-sequence.elf&quot;</code>). Generated by
+MakeCode, the only known producer of file container UF2s.</li>
+<li><a href="https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests">https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests</a> -
+synthetic test files for features that real firmware doesn't seem to use
+(e.g. MD5 checksums).</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        uf2
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q105856672">Wikidata Q105856672</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of UF2 (USB Flashing Format)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="UF2 (USB Flashing Format) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="UF2 (USB Flashing Format) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="UF2 (USB Flashing Format) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="UF2 (USB Flashing Format) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="UF2 (USB Flashing Format) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="UF2 (USB Flashing Format) parsing Graphviz library">Graphviz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="UF2 (USB Flashing Format) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="UF2 (USB Flashing Format) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="UF2 (USB Flashing Format) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="UF2 (USB Flashing Format) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="UF2 (USB Flashing Format) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="UF2 (USB Flashing Format) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="UF2 (USB Flashing Format) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title="UF2 (USB Flashing Format) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="UF2 (USB Flashing Format) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="UF2 (USB Flashing Format) parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="uf2.svg">
+            <img class="diagram-img" src="uf2.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uf2</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2 (USB Flashing Format)</span>
+<span class="w">  </span><span class="nt">file-extension</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uf2</span>
+<span class="w">  </span><span class="nt">xref</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q105856672</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">UF2 is a file format, developed by Microsoft for PXT (also known as</span>
+<span class="w">  </span><span class="no">Microsoft MakeCode), that is particularly suitable for flashing</span>
+<span class="w">  </span><span class="no">microcontrollers over MSC (Mass Storage Class; aka removable flash drive).</span>
+
+<span class="w">  </span><span class="no">The list of family IDs is stored in a separate JSON file:</span>
+
+<span class="w">  </span><span class="no">&lt;https://github.com/microsoft/uf2/blob/master/utils/uf2families.json&gt;</span>
+
+<span class="w">  </span><span class="no">This JSON file is regularly updated. The `family_id` enum should be kept in</span>
+<span class="w">  </span><span class="no">sync with it. For simplicity and consistency, it&#39;s strongly recommended to</span>
+<span class="w">  </span><span class="no">auto-generate this enum from `uf2families.json` directly. This was last done</span>
+<span class="w">  </span><span class="no">using the following commands:</span>
+
+<span class="w">  </span><span class="no">```bash</span>
+<span class="w">  </span><span class="no">$ curl -fsSLO https://github.com/microsoft/uf2/raw/90e9741f217f5a40c98ba74d663e408041037578/utils/uf2families.json</span>
+<span class="w">  </span><span class="no">$ jq -r &#39;</span>
+<span class="w">    </span><span class="no">.[]</span>
+<span class="w">    </span><span class="no">| &quot;    \(.id | ascii_downcase):\n&quot;</span>
+<span class="w">    </span><span class="no">+ &quot;      id: \(.short_name | ascii_downcase | gsub(&quot;-&quot;; &quot;_&quot;))\n&quot;</span>
+<span class="w">    </span><span class="no">+ &quot;      doc: \(.description | tojson)&quot;</span>
+<span class="w">  </span><span class="no">&#39; uf2families.json</span>
+<span class="w">  </span><span class="no">```</span>
+
+<span class="w">  </span><span class="no">Test files, picked to cover as many different shapes as possible:</span>
+
+<span class="w">  </span><span class="no">* &lt;https://micropython.org/download/RPI_PICO/&gt; - a typical case: all blocks</span>
+<span class="w">    </span><span class="no">have the same family ID and `num_blocks`.</span>
+<span class="w">  </span><span class="no">* &lt;https://micropython.org/download/RPI_PICO2/&gt; - these .uf2 files are</span>
+<span class="w">    </span><span class="no">actually two UF2 files concatenated. The first UF2 file is the standalone</span>
+<span class="w">    </span><span class="no">`family_id::rp2xxx_absolute` block that `picotool` prepends (see the</span>
+<span class="w">    </span><span class="no">`is_rp2350_e10_block` value instance in the `block` type).</span>
+<span class="w">  </span><span class="no">* &lt;https://circuitpython.org/downloads&gt; - the builds for SAMD boards (for</span>
+<span class="w">    </span><span class="no">example</span>
+<span class="w">    </span><span class="no">[Feather M0 Express](https://circuitpython.org/board/feather_m0_express/))</span>
+<span class="w">    </span><span class="no">set no flags at all, so the field at offset 28 is read as `file_size` rather</span>
+<span class="w">    </span><span class="no">than `family_id`.</span>
+<span class="w">  </span><span class="no">* &lt;https://github.com/raspberrypi/pico-sdk-prebuilts/releases&gt; -</span>
+<span class="w">    </span><span class="no">[Universal UF2](https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/README.md#universal-binary-vs-universal-uf2)</span>
+<span class="w">    </span><span class="no">files, which are again two UF2 files concatenated. What&#39;s interesting about</span>
+<span class="w">    </span><span class="no">these is that the last block of the first file (with the family ID</span>
+<span class="w">    </span><span class="no">`family_id::rp2040`) is moved to the end of the second file, which was</span>
+<span class="w">    </span><span class="no">intended for `family_id::rp2xxx_absolute` (see</span>
+<span class="w">    </span><span class="no">&lt;https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169&gt;).</span>
+<span class="w">  </span><span class="no">* &lt;https://github.com/microsoft/pxt-microsoft-boot-sequence/releases&gt; - some</span>
+<span class="w">    </span><span class="no">files contain blocks with the `flags.is_file_container` flag set (for</span>
+<span class="w">    </span><span class="no">example</span>
+<span class="w">    </span><span class="no">&lt;https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2&gt;</span>
+<span class="w">    </span><span class="no">is a pure file container for</span>
+<span class="w">    </span><span class="no">`file_name == &quot;Projects/microsoft-boot-sequence.elf&quot;`). Generated by</span>
+<span class="w">    </span><span class="no">MakeCode, the only known producer of file container UF2s.</span>
+<span class="w">  </span><span class="no">* &lt;https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests&gt; -</span>
+<span class="w">    </span><span class="no">synthetic test files for features that real firmware doesn&#39;t seem to use</span>
+<span class="w">    </span><span class="no">(e.g. MD5 checksums).</span>
+
+<span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md</span>
+<span class="nt">seq</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">first_block</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">block</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blocks</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">block</span>
+<span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">    </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">first_block.num_blocks - 1</span>
+<span class="nt">types</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">block</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_Block</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Block</span><span class="nv"> </span><span class="s">{block_number:dec}</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">{flags:flags}</span><span class="nv"> </span><span class="s">{family_id}&#39;</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magicStart0</span>
+<span class="w">        </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;UF2\n&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">second_magic</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magicStart1</span>
+<span class="w">        </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0x57</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x51</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x5d</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x9e</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">target_address</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">targetAddr</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_ % 4 == 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Address in flash where `data.payload` should be written, or an offset</span>
+<span class="w">          </span><span class="no">in the file specified by `data.file_name` if `flags.is_file_container`</span>
+<span class="w">          </span><span class="no">is set.</span>
+
+<span class="w">          </span><span class="no">The [official</span>
+<span class="w">          </span><span class="no">spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#payload-sizes)</span>
+<span class="w">          </span><span class="no">says:</span>
+
+<span class="w">          </span><span class="no">&gt; In any event, payload size and target address should always be</span>
+<span class="w">          </span><span class="no">&gt; 4-byte aligned.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_payload</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payloadSize</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_ % 4 == 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">The [official</span>
+<span class="w">          </span><span class="no">spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#payload-sizes)</span>
+<span class="w">          </span><span class="no">says:</span>
+
+<span class="w">          </span><span class="no">&gt; In any event, payload size and target address should always be</span>
+<span class="w">          </span><span class="no">&gt; 4-byte aligned.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">block_number</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blockNo</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_blocks_raw</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">numBlocks</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">block_number + 1</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Number of blocks that make up the UF2 file to which this block</span>
+<span class="w">          </span><span class="no">belongs. Every block of a file has the same value. It is at least 1</span>
+<span class="w">          </span><span class="no">and every `block_number` in the file must be less than this value</span>
+<span class="w">          </span><span class="no">(which is validated by this Kaitai Struct implementation).</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_size</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fileSize</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not flags.has_family_id</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Size of the file this block belongs to, but only if</span>
+<span class="w">          </span><span class="no">`flags.is_file_container` is true. Otherwise, the official spec allows</span>
+<span class="w">          </span><span class="no">this field to be set to anything - though in practice, it&#39;s always</span>
+<span class="w">          </span><span class="no">zero.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">family_id</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">familyID</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">family_id</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags.has_family_id</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">476</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">block_data</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">final_magic</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magicEnd</span>
+<span class="w">        </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0x30</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x6f</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0xb1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x0a</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">num_blocks</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;is_rp2350_e10_block</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">num_blocks_raw&#39;</span>
+<span class="w">      </span><span class="nt">is_rp2350_e10_block</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">(flags.value == 0x2000 or flags.value == 0xa000)</span>
+<span class="w">          </span><span class="no">and family_id == family_id::rp2xxx_absolute</span>
+<span class="w">          </span><span class="no">and num_blocks_raw == 2</span>
+<span class="w">          </span><span class="no">and block_number == 0</span>
+<span class="w">          </span><span class="no">and len_payload == 256</span>
+<span class="w">          </span><span class="no">and data.payload.first == 0xef</span>
+<span class="w">          </span><span class="no">and data.payload.last == 0xef</span>
+<span class="w">          </span><span class="no">and (</span>
+<span class="w">            </span><span class="no">not flags.has_extension_tags</span>
+<span class="w">            </span><span class="no">or data.extension_tags[0].len_tag == 0</span>
+<span class="w">            </span><span class="no">or (</span>
+<span class="w">              </span><span class="no">data.extension_tags[0].len_tag == 4</span>
+<span class="w">              </span><span class="no">and data.extension_tags[0].tag_type == extension_tag_type::rp2_ignore_block</span>
+<span class="w">            </span><span class="no">)</span>
+<span class="w">          </span><span class="no">)</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Determines whether this is a block that `picotool` prepends to RP2350</span>
+<span class="w">          </span><span class="no">flash images as a workaround for erratum RP2350-E10 (i.e. a hardware</span>
+<span class="w">          </span><span class="no">bug in the A2 version of the RP2350 boot ROM).</span>
+
+<span class="w">          </span><span class="no">Such a block is always written on its own, but its `num_blocks_raw` is</span>
+<span class="w">          </span><span class="no">set to 2. If we trusted this value, we would attempt to read one block</span>
+<span class="w">          </span><span class="no">too many (which would most likely fail). Therefore, we must correct it</span>
+<span class="w">          </span><span class="no">to 1 before using it.</span>
+
+<span class="w">          </span><span class="no">The conditions for detecting this block come from the</span>
+<span class="w">          </span><span class="no">[`check_abs_block()`](https://github.com/raspberrypi/picotool/blob/6f6458d792b93685a11423b244a585eaa99eafcf/elf2uf2/elf2uf2.cpp#L147)</span>
+<span class="w">          </span><span class="no">function in `picotool`. However, there are some differences:</span>
+
+<span class="w">          </span><span class="no">1. In Kaitai Struct, we cannot easily check whether all 256 payload</span>
+<span class="w">             </span><span class="no">bytes are set to `0xef`, so we only check the first and last bytes.</span>
+<span class="w">          </span><span class="no">2. There are .uf2 files in the wild where `flags.has_extension_tags`</span>
+<span class="w">             </span><span class="no">is true, but there are actually no extension tags (the first and</span>
+<span class="w">             </span><span class="no">only tag has a size of 0, which is just a terminator), so our</span>
+<span class="w">             </span><span class="no">condition allows for this case. You can download an example of such</span>
+<span class="w">             </span><span class="no">a .uf2 file here:</span>
+<span class="w">             </span><span class="no">&lt;https://github.com/neednotapply/DC32-cfw/releases/tag/1.69.13.37&gt;</span>
+
+<span class="w">          </span><span class="no">It&#39;s worth noting that we cannot require the presence of the</span>
+<span class="w">          </span><span class="no">`extension_tag_type::rp2_ignore_block`</span>
+<span class="w">          </span><span class="no">(`UF2_EXTENSION_RP2_IGNORE_BLOCK`) tag because the UF2 files generated</span>
+<span class="w">          </span><span class="no">by `picotool` prior to</span>
+<span class="w">          </span><span class="no">&lt;https://github.com/raspberrypi/picotool/commit/78c9bd121b09399823b67ee7ea89003ca0d3315f&gt;</span>
+<span class="w">          </span><span class="no">don&#39;t have it. Therefore, we check whether this tag is present only if</span>
+<span class="w">          </span><span class="no">`flags.has_extension_tags` is set.</span>
+
+<span class="w">          </span><span class="no">Test .uf2 files with this special block can be downloaded from</span>
+<span class="w">          </span><span class="no">&lt;https://micropython.org/download/RPI_PICO2/&gt;. Note that all the .uf2</span>
+<span class="w">          </span><span class="no">files there are actually two UF2 (sub)files concatenated, and this</span>
+<span class="w">          </span><span class="no">Kaitai Struct implementation parses only one at a time (so in order to</span>
+<span class="w">          </span><span class="no">parse both, you need something like the helper spec `uf2_files.ksy`</span>
+<span class="w">          </span><span class="no">from</span>
+<span class="w">          </span><span class="no">&lt;https://github.com/kaitai-io/kaitai_struct_formats/pull/542#discussion_r3906386820&gt;).</span>
+<span class="w">          </span><span class="no">v1.24.x releases predate the `extension_tag_type::rp2_ignore_block`</span>
+<span class="w">          </span><span class="no">tag, while releases v1.25.0 and later include it.</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/raspberrypi/picotool/blob/6f6458d792b93685a11423b244a585eaa99eafcf/elf2uf2/elf2uf2.cpp#L147 Git tag &quot;2.3.0&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/raspberrypi/picotool/commit/78c9bd121b09399823b67ee7ea89003ca0d3315f</span>
+<span class="w">  </span><span class="nt">block_data</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_parent.len_payload</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">The bytes to be written to `_parent.target_address`, which is either</span>
+<span class="w">          </span><span class="no">an address in flash, or an offset in the file specified by `file_name`</span>
+<span class="w">          </span><span class="no">if `_parent.flags.is_file_container` is set.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_name</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_parent.flags.is_file_container</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extension_tags</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extension_tag</span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">until</span>
+<span class="w">        </span><span class="nt">repeat-until</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_.len_tag == 0</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_parent.flags.has_extension_tags</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">md5_checksum</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_io.size - 24</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md5_checksum</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_parent.flags.has_md5_checksum</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Describes a region that doesn&#39;t need to be flashed again if the</span>
+<span class="w">          </span><span class="no">checksum matches.</span>
+
+<span class="w">          </span><span class="no">The [official</span>
+<span class="w">          </span><span class="no">spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#md5-checksum)</span>
+<span class="w">          </span><span class="no">says that &quot;This is currently only used on ESP32&quot;, but no real-world</span>
+<span class="w">          </span><span class="no">firmware sample has been found (at least none of the .uf2 files from</span>
+<span class="w">          </span><span class="no">&lt;https://github.com/adafruit/tinyuf2/releases&gt;,</span>
+<span class="w">          </span><span class="no">[MicroPython](https://micropython.org/download/) or</span>
+<span class="w">          </span><span class="no">[CircuitPython](https://circuitpython.org/downloads) contain it). It</span>
+<span class="w">          </span><span class="no">was found only in some synthetic test files, e.g.</span>
+<span class="w">          </span><span class="no">&lt;https://github.com/umi-eng/uftwo/blob/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests/checksum_256.uf2&gt;.</span>
+<span class="w">  </span><span class="nt">extension_tag</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#extension-tags</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{tag_type}:</span><span class="nv"> </span><span class="s">{len_value:dec}</span><span class="nv"> </span><span class="s">bytes</span><span class="nv"> </span><span class="s">({len_tag:dec}</span><span class="nv"> </span><span class="s">total)&#39;</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_tag</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_ == 0 or _ &gt;= min_len_tag</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Total size of the tag in bytes, including this byte and `tag_type`, so</span>
+<span class="w">          </span><span class="no">at least 4. The exception is the last tag which terminates the list -</span>
+<span class="w">          </span><span class="no">it specifies a total size of 0.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tag_type</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b24le</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extension_tag_type</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_value</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_tag != 0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">padding</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-len_tag % 4</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Tags are 4-byte aligned, so a tag whose size is not a multiple</span>
+<span class="w">          </span><span class="no">of 4 is followed by padding.</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">min_len_tag</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_tag._sizeof + tag_type._sizeof</span>
+<span class="w">      </span><span class="nt">len_value</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;len_tag</span><span class="nv"> </span><span class="s">&gt;=</span><span class="nv"> </span><span class="s">min_len_tag</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">len_tag</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">min_len_tag</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0&#39;</span>
+<span class="w">  </span><span class="nt">md5_checksum</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#md5-checksum</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">start_address</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_region</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md5</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">  </span><span class="nt">flags</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/uf2.h#L43-L47</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/raspberrypi/pico-sdk/blob/98a542c1a62fb549ffb5d66a3e5892b06276b670/src/common/boot_uf2_headers/include/boot/uf2.h#L23-L27 Git tag &quot;2.3.0&quot;</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value}&#39;</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">(_ &amp; ~0x0000_f001) == 0 and</span>
+<span class="w">            </span><span class="no">not (is_file_container and has_extension_tags)</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Only the five bits that we cover in value instances below are defined,</span>
+<span class="w">          </span><span class="no">and no other bit may be set. The [official</span>
+<span class="w">          </span><span class="no">spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#flags)</span>
+<span class="w">          </span><span class="no">says &quot;Currently, there are five flags defined&quot;. If any other flags are</span>
+<span class="w">          </span><span class="no">added in the future, this .ksy spec will need to be updated.</span>
+
+<span class="w">          </span><span class="no">The `is_file_container` and `has_extension_tags` flags disagree about</span>
+<span class="w">          </span><span class="no">what follows the payload in `data` (a file name or a list of extension</span>
+<span class="w">          </span><span class="no">tags), so this Kaitai Struct implementation treats them as mutually</span>
+<span class="w">          </span><span class="no">exclusive and will reject a block that sets both. The official spec</span>
+<span class="w">          </span><span class="no">does not specify how this should be handled, but logically there&#39;s a</span>
+<span class="w">          </span><span class="no">conflict, so we&#39;ve decided to strictly treat it as an error.</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">not_main_flash</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_NOFLASH</span><span class="w"> </span><span class="c1"># microsoft/uf2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_NOT_MAIN_FLASH</span><span class="w"> </span><span class="c1"># raspberrypi/pico-sdk</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value &amp; 0x0000_0001 != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Indicates that this block should be skipped when writing the device</span>
+<span class="w">          </span><span class="no">flash. It can be used to store data that does not fit on the device,</span>
+<span class="w">          </span><span class="no">typically embedded source code or debug info.</span>
+<span class="w">      </span><span class="nt">is_file_container</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_FILECONTAINER</span><span class="w"> </span><span class="c1"># microsoft/uf2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_FILE_CONTAINER</span><span class="w"> </span><span class="c1"># raspberrypi/pico-sdk</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value &amp; 0x0000_1000 != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">When set, the UF2 format is used as a container for regular files</span>
+<span class="w">          </span><span class="no">(akin to a TAR file, or ZIP archive without compression).</span>
+
+<span class="w">          </span><span class="no">`target_address` is the offset in the file where the payload is to be</span>
+<span class="w">          </span><span class="no">written, and `file_size` is the size of that file. The name of the</span>
+<span class="w">          </span><span class="no">destination file is stored in `data.file_name`.</span>
+<span class="w">      </span><span class="nt">has_family_id</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_FAMILY_ID</span><span class="w"> </span><span class="c1"># microsoft/uf2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_FAMILY_ID_PRESENT</span><span class="w"> </span><span class="c1"># raspberrypi/pico-sdk</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value &amp; 0x0000_2000 != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">The field at offset 28 in the block is `family_id` instead of</span>
+<span class="w">          </span><span class="no">`file_size`.</span>
+<span class="w">      </span><span class="nt">has_md5_checksum</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_MD5_CHKSUM</span><span class="w"> </span><span class="c1"># microsoft/uf2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_MD5_PRESENT</span><span class="w"> </span><span class="c1"># raspberrypi/pico-sdk</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value &amp; 0x0000_4000 != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Indicates whether `md5_checksum` is present at the end of `data`.</span>
+<span class="w">      </span><span class="nt">has_extension_tags</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_EXTENSION_TAGS</span><span class="w"> </span><span class="c1"># microsoft/uf2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_FLAG_EXTENSION_FLAGS_PRESENT</span><span class="w"> </span><span class="c1"># raspberrypi/pico-sdk</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value &amp; 0x0000_8000 != 0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Indicates whether extension tags are present after the payload.</span>
+<span class="nt">enums</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">extension_tag_type</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0x000000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">end</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">According to the official spec, this type should be used in the last tag</span>
+<span class="w">        </span><span class="no">with `len_tag == 0`, which terminates the list of extension tags.</span>
+<span class="w">    </span><span class="nt">0x9fc7bc</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Version of the firmware file, as a UTF-8 semver string</span>
+<span class="w">    </span><span class="nt">0x650d9d</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">description</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Description of the device for which the firmware file is destined</span>
+<span class="w">        </span><span class="no">(UTF-8)</span>
+<span class="w">    </span><span class="nt">0x0be9f7</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">page_size</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Page size of the target device, as a 32-bit unsigned number</span>
+<span class="w">    </span><span class="nt">0xb46db0</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sha2_checksum</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHA-2 checksum of firmware (can be of various sizes)</span>
+<span class="w">    </span><span class="nt">0xc8a729</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">device_type_id</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Device type identifier, a refinement of `family_id` meant to identify a</span>
+<span class="w">        </span><span class="no">kind of device rather than only an MCU. 32-bit or 64-bit number. Can be</span>
+<span class="w">        </span><span class="no">a hash of the `extension_tag_type::description` tag.</span>
+<span class="w">    </span><span class="nt">0x9957e3</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rp2_ignore_block</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UF2_EXTENSION_RP2_IGNORE_BLOCK</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">The block is to be ignored. This value doesn&#39;t come from the official</span>
+<span class="w">        </span><span class="no">spec, but from the Raspberry Pi Pico SDK. It&#39;s written with no value, so</span>
+<span class="w">        </span><span class="no">the whole tag is the 4 bytes `04 e3 57 99`. See the</span>
+<span class="w">        </span><span class="no">`is_rp2350_e10_block` value instance in the `block` type.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/raspberrypi/pico-sdk/blob/98a542c1a62fb549ffb5d66a3e5892b06276b670/src/common/boot_uf2_headers/include/boot/uf2.h#L46 Git tag &quot;2.3.0&quot;</span>
+<span class="w">  </span><span class="nt">family_id</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0x16573617</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">atmega32</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Microchip</span><span class="nv"> </span><span class="s">(Atmel)</span><span class="nv"> </span><span class="s">ATmega32&quot;</span>
+<span class="w">    </span><span class="nt">0x1851780a</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">saml21</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Microchip</span><span class="nv"> </span><span class="s">(Atmel)</span><span class="nv"> </span><span class="s">SAML21&quot;</span>
+<span class="w">    </span><span class="nt">0x1b57745f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Nordic</span><span class="nv"> </span><span class="s">NRF52&quot;</span>
+<span class="w">    </span><span class="nt">0x1c5f21b0</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32&quot;</span>
+<span class="w">    </span><span class="nt">0x1e1f432d</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32l1</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32L1xx&quot;</span>
+<span class="w">    </span><span class="nt">0x202e3a91</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32l0</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32L0xx&quot;</span>
+<span class="w">    </span><span class="nt">0x21460ff0</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32wl</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32WLxx&quot;</span>
+<span class="w">    </span><span class="nt">0x22e0d6fc</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtl8710b</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Realtek</span><span class="nv"> </span><span class="s">AmebaZ</span><span class="nv"> </span><span class="s">RTL8710B&quot;</span>
+<span class="w">    </span><span class="nt">0x2abc77ec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lpc55</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NXP</span><span class="nv"> </span><span class="s">LPC55xx&quot;</span>
+<span class="w">    </span><span class="nt">0x300f5633</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32g0</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32G0xx&quot;</span>
+<span class="w">    </span><span class="nt">0x31d228c6</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gd32f350</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GD32F350&quot;</span>
+<span class="w">    </span><span class="nt">0x3379cfe2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtl8720d</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Realtek</span><span class="nv"> </span><span class="s">AmebaD</span><span class="nv"> </span><span class="s">RTL8720D&quot;</span>
+<span class="w">    </span><span class="nt">0x04240bdf</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32l5</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32L5xx&quot;</span>
+<span class="w">    </span><span class="nt">0x4c71240a</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32g4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32G4xx&quot;</span>
+<span class="w">    </span><span class="nt">0x4fb2d5bd</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mimxrt10xx</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NXP</span><span class="nv"> </span><span class="s">i.MX</span><span class="nv"> </span><span class="s">RT10XX&quot;</span>
+<span class="w">    </span><span class="nt">0x51e903a8</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xr809</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Xradiotech</span><span class="nv"> </span><span class="s">809&quot;</span>
+<span class="w">    </span><span class="nt">0x53b80f00</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f7</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F7xx&quot;</span>
+<span class="w">    </span><span class="nt">0x55114460</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">samd51</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Microchip</span><span class="nv"> </span><span class="s">(Atmel)</span><span class="nv"> </span><span class="s">SAMD51&quot;</span>
+<span class="w">    </span><span class="nt">0x57755a57</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F4xx&quot;</span>
+<span class="w">    </span><span class="nt">0x5a18069b</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fx2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Cypress</span><span class="nv"> </span><span class="s">FX2&quot;</span>
+<span class="w">    </span><span class="nt">0x5d1a0a2e</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F2xx&quot;</span>
+<span class="w">    </span><span class="nt">0x5ee21072</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f1</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F103&quot;</span>
+<span class="w">    </span><span class="nt">0x621e937a</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52833</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Nordic</span><span class="nv"> </span><span class="s">NRF52833&quot;</span>
+<span class="w">    </span><span class="nt">0x647824b6</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f0</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F0xx&quot;</span>
+<span class="w">    </span><span class="nt">0x675a40b0</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bk7231u</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Beken</span><span class="nv"> </span><span class="s">7231U/7231T&quot;</span>
+<span class="w">    </span><span class="nt">0x68ed2b88</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">samd21</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Microchip</span><span class="nv"> </span><span class="s">(Atmel)</span><span class="nv"> </span><span class="s">SAMD21&quot;</span>
+<span class="w">    </span><span class="nt">0x6a82cc42</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bk7251</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Beken</span><span class="nv"> </span><span class="s">7251/7252&quot;</span>
+<span class="w">    </span><span class="nt">0x6b846188</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f3</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F3xx&quot;</span>
+<span class="w">    </span><span class="nt">0x6d0922fa</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f407</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F407&quot;</span>
+<span class="w">    </span><span class="nt">0x4e8f1c5d</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32h5</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32H5xx&quot;</span>
+<span class="w">    </span><span class="nt">0x6db66082</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32h7</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32H7xx&quot;</span>
+<span class="w">    </span><span class="nt">0x70d16653</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32wb</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32WBxx&quot;</span>
+<span class="w">    </span><span class="nt">0x7b3ef230</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bk7231n</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Beken</span><span class="nv"> </span><span class="s">7231N&quot;</span>
+<span class="w">    </span><span class="nt">0x7eab61ed</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp8266</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP8266&quot;</span>
+<span class="w">    </span><span class="nt">0x7f83e793</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kl32l2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NXP</span><span class="nv"> </span><span class="s">KL32L2x&quot;</span>
+<span class="w">    </span><span class="nt">0x8fb060fe</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f407vg</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F407VG&quot;</span>
+<span class="w">    </span><span class="nt">0x9fffd543</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtl8710a</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Realtek</span><span class="nv"> </span><span class="s">Ameba1</span><span class="nv"> </span><span class="s">RTL8710A&quot;</span>
+<span class="w">    </span><span class="nt">0xada52840</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52840</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Nordic</span><span class="nv"> </span><span class="s">NRF52840&quot;</span>
+<span class="w">    </span><span class="nt">0x820d9a5f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52820</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Nordic</span><span class="nv"> </span><span class="s">NRF52820_xxAA&quot;</span>
+<span class="w">    </span><span class="nt">0xbfdd4eee</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32s2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-S2&quot;</span>
+<span class="w">    </span><span class="nt">0xc47e5767</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32s3</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-S3&quot;</span>
+<span class="w">    </span><span class="nt">0xd42ba06c</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32c3</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-C3&quot;</span>
+<span class="w">    </span><span class="nt">0x2b88d29c</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32c2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-C2&quot;</span>
+<span class="w">    </span><span class="nt">0x332726f6</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32h2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-H2&quot;</span>
+<span class="w">    </span><span class="nt">0x540ddf62</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32c6</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-C6&quot;</span>
+<span class="w">    </span><span class="nt">0x3d308e94</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32p4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-P4&quot;</span>
+<span class="w">    </span><span class="nt">0xf71c0343</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32c5</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-C5&quot;</span>
+<span class="w">    </span><span class="nt">0x77d850c4</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32c61</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-C61&quot;</span>
+<span class="w">    </span><span class="nt">0xb6dd00af</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32h21</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-H21&quot;</span>
+<span class="w">    </span><span class="nt">0x9e0baa8a</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32h4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-H4&quot;</span>
+<span class="w">    </span><span class="nt">0x3101f7c1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esp32s31</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ESP32-S31&quot;</span>
+<span class="w">    </span><span class="nt">0xde1270b7</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bl602</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Boufallo</span><span class="nv"> </span><span class="s">602&quot;</span>
+<span class="w">    </span><span class="nt">0xe08f7564</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtl8720c</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Realtek</span><span class="nv"> </span><span class="s">AmebaZ2</span><span class="nv"> </span><span class="s">RTL8720C&quot;</span>
+<span class="w">    </span><span class="nt">0xe48bff56</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rp2040</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Raspberry</span><span class="nv"> </span><span class="s">Pi</span><span class="nv"> </span><span class="s">RP2040&quot;</span>
+<span class="w">    </span><span class="nt">0xe48bff57</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rp2xxx_absolute</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Raspberry</span><span class="nv"> </span><span class="s">Pi</span><span class="nv"> </span><span class="s">Microcontrollers:</span><span class="nv"> </span><span class="s">Absolute</span><span class="nv"> </span><span class="s">(unpartitioned)</span><span class="nv"> </span><span class="s">download&quot;</span>
+<span class="w">    </span><span class="nt">0xe48bff58</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rp2xxx_data</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Raspberry</span><span class="nv"> </span><span class="s">Pi</span><span class="nv"> </span><span class="s">Microcontrollers:</span><span class="nv"> </span><span class="s">Data</span><span class="nv"> </span><span class="s">partition</span><span class="nv"> </span><span class="s">download&quot;</span>
+<span class="w">    </span><span class="nt">0xe48bff59</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rp2350_arm_s</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Raspberry</span><span class="nv"> </span><span class="s">Pi</span><span class="nv"> </span><span class="s">RP2350,</span><span class="nv"> </span><span class="s">Secure</span><span class="nv"> </span><span class="s">Arm</span><span class="nv"> </span><span class="s">image&quot;</span>
+<span class="w">    </span><span class="nt">0xe48bff5a</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rp2350_riscv</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Raspberry</span><span class="nv"> </span><span class="s">Pi</span><span class="nv"> </span><span class="s">RP2350,</span><span class="nv"> </span><span class="s">RISC-V</span><span class="nv"> </span><span class="s">image&quot;</span>
+<span class="w">    </span><span class="nt">0xe48bff5b</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rp2350_arm_ns</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Raspberry</span><span class="nv"> </span><span class="s">Pi</span><span class="nv"> </span><span class="s">RP2350,</span><span class="nv"> </span><span class="s">Non-secure</span><span class="nv"> </span><span class="s">Arm</span><span class="nv"> </span><span class="s">image&quot;</span>
+<span class="w">    </span><span class="nt">0x00ff6919</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32l4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32L4xx&quot;</span>
+<span class="w">    </span><span class="nt">0x9af03e33</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gd32vf103</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GigaDevice</span><span class="nv"> </span><span class="s">GD32VF103&quot;</span>
+<span class="w">    </span><span class="nt">0x4f6ace52</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csk4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;LISTENAI</span><span class="nv"> </span><span class="s">CSK300x/400x&quot;</span>
+<span class="w">    </span><span class="nt">0x6e7348a8</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csk6</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;LISTENAI</span><span class="nv"> </span><span class="s">CSK60xx&quot;</span>
+<span class="w">    </span><span class="nt">0x11de784a</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">m0sense</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;M0SENSE</span><span class="nv"> </span><span class="s">BL702&quot;</span>
+<span class="w">    </span><span class="nt">0x4b684d71</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">maixplay_u4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Sipeed</span><span class="nv"> </span><span class="s">MaixPlay-U4(BL618)&quot;</span>
+<span class="w">    </span><span class="nt">0x9517422f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rza1lu</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Renesas</span><span class="nv"> </span><span class="s">RZ/A1LU</span><span class="nv"> </span><span class="s">(R7S7210xx)&quot;</span>
+<span class="w">    </span><span class="nt">0x2dc309c5</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f411xe</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F411xE&quot;</span>
+<span class="w">    </span><span class="nt">0x06d1097b</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stm32f411xc</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ST</span><span class="nv"> </span><span class="s">STM32F411xC&quot;</span>
+<span class="w">    </span><span class="nt">0x72721d4e</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52832xxaa</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Nordic</span><span class="nv"> </span><span class="s">NRF52832xxAA&quot;</span>
+<span class="w">    </span><span class="nt">0x6f752678</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52832xxab</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Nordic</span><span class="nv"> </span><span class="s">NRF52832xxAB&quot;</span>
+<span class="w">    </span><span class="nt">0xa0c97b8e</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">at32f415</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ArteryTek</span><span class="nv"> </span><span class="s">AT32F415&quot;</span>
+<span class="w">    </span><span class="nt">0x699b62ec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ch32v</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;WCH</span><span class="nv"> </span><span class="s">CH32V2xx</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">CH32V3xx&quot;</span>
+<span class="w">    </span><span class="nt">0x7be8976d</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ra4m1</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Renesas</span><span class="nv"> </span><span class="s">RA4M1&quot;</span>
+<span class="w">    </span><span class="nt">0x7410520a</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max32690</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Analog</span><span class="nv"> </span><span class="s">Devices</span><span class="nv"> </span><span class="s">MAX32690&quot;</span>
+<span class="w">    </span><span class="nt">0xd63f8632</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max32650</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Analog</span><span class="nv"> </span><span class="s">Devices</span><span class="nv"> </span><span class="s">MAX32650/1/2&quot;</span>
+<span class="w">    </span><span class="nt">0xf0c30d71</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max32666</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Analog</span><span class="nv"> </span><span class="s">Devices</span><span class="nv"> </span><span class="s">MAX32665/6&quot;</span>
+<span class="w">    </span><span class="nt">0x91d3fd18</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max78002</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Analog</span><span class="nv"> </span><span class="s">Devices</span><span class="nv"> </span><span class="s">MAX78002&quot;</span>
+<span class="w">    </span><span class="nt">0x7d7a66ef</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">py32f071_uvk5_v3</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Quansheng</span><span class="nv"> </span><span class="s">UV-K5</span><span class="nv"> </span><span class="s">V3</span><span class="nv"> </span><span class="s">amateur</span><span class="nv"> </span><span class="s">radio</span><span class="nv"> </span><span class="s">based</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">Puya</span><span class="nv"> </span><span class="s">Semiconductor</span><span class="nv"> </span><span class="s">PY32F071&quot;</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2026 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

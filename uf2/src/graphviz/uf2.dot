@@ -1,0 +1,170 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__uf2 {
+		label="Uf2";
+		graph[style=dotted];
+
+		uf2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="first_block_pos">0</TD><TD PORT="first_block_size">516</TD><TD>Block</TD><TD PORT="first_block_type">first_block</TD></TR>
+			<TR><TD PORT="blocks_pos">516</TD><TD PORT="blocks_size">516</TD><TD>Block</TD><TD PORT="blocks_type">blocks</TD></TR>
+			<TR><TD COLSPAN="4" PORT="blocks__repeat">repeat first_block.num_blocks - 1 times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__block {
+			label="Uf2::Block";
+			graph[style=dotted];
+
+			block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>55 46 32 0A</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="second_magic_pos">4</TD><TD PORT="second_magic_size">4</TD><TD>57 51 5D 9E</TD><TD PORT="second_magic_type">second_magic</TD></TR>
+				<TR><TD PORT="flags_pos">8</TD><TD PORT="flags_size">4</TD><TD>Flags</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="target_address_pos">12</TD><TD PORT="target_address_size">4</TD><TD>u4le</TD><TD PORT="target_address_type">target_address</TD></TR>
+				<TR><TD COLSPAN="4" PORT="target_address__valid">must satisfy _ % 4 == 0</TD></TR>
+				<TR><TD PORT="len_payload_pos">16</TD><TD PORT="len_payload_size">4</TD><TD>u4le</TD><TD PORT="len_payload_type">len_payload</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len_payload__valid">must satisfy _ % 4 == 0</TD></TR>
+				<TR><TD PORT="block_number_pos">20</TD><TD PORT="block_number_size">4</TD><TD>u4le</TD><TD PORT="block_number_type">block_number</TD></TR>
+				<TR><TD PORT="num_blocks_raw_pos">24</TD><TD PORT="num_blocks_raw_size">4</TD><TD>u4le</TD><TD PORT="num_blocks_raw_type">num_blocks_raw</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_blocks_raw__valid">must be at least block_number + 1</TD></TR>
+				<TR><TD PORT="file_size_pos">28</TD><TD PORT="file_size_size">4</TD><TD>u4le</TD><TD PORT="file_size_type">file_size</TD></TR>
+				<TR><TD COLSPAN="4" PORT="file_size__if">if !(flags.has_family_id)</TD></TR>
+				<TR><TD PORT="family_id_pos">32</TD><TD PORT="family_id_size">4</TD><TD>u4le→FamilyId</TD><TD PORT="family_id_type">family_id</TD></TR>
+				<TR><TD COLSPAN="4" PORT="family_id__if">if flags.has_family_id</TD></TR>
+				<TR><TD PORT="data_pos">36</TD><TD PORT="data_size">476</TD><TD>BlockData</TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD PORT="final_magic_pos">512</TD><TD PORT="final_magic_size">4</TD><TD>30 6F B1 0A</TD><TD PORT="final_magic_type">final_magic</TD></TR>
+			</TABLE>>];
+			block__inst__is_rp2350_e10_block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_rp2350_e10_block</TD><TD> (( ((flags.value == 8192) || (flags.value == 40960)) ) &amp;&amp; (family_id == :family_id_rp2xxx_absolute) &amp;&amp; (num_blocks_raw == 2) &amp;&amp; (block_number == 0) &amp;&amp; (len_payload == 256) &amp;&amp; (data.payload[0].ord == 239) &amp;&amp; (data.payload[-1].ord == 239) &amp;&amp; ( ((!(flags.has_extension_tags)) || (data.extension_tags[0].len_tag == 0) || ( ((data.extension_tags[0].len_tag == 4) &amp;&amp; (data.extension_tags[0].tag_type == :extension_tag_type_rp2_ignore_block)) )) )) </TD></TR>
+			</TABLE>>];
+			block__inst__num_blocks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_blocks</TD><TD>(is_rp2350_e10_block ? 1 : num_blocks_raw)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__block_data {
+			label="Uf2::BlockData";
+			graph[style=dotted];
+
+			block_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="payload_pos">0</TD><TD PORT="payload_size">_parent.len_payload</TD><TD></TD><TD PORT="payload_type">payload</TD></TR>
+				<TR><TD PORT="file_name_pos">...</TD><TD PORT="file_name_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="file_name_type">file_name</TD></TR>
+				<TR><TD COLSPAN="4" PORT="file_name__if">if _parent.flags.is_file_container</TD></TR>
+				<TR><TD PORT="extension_tags_pos">...</TD><TD PORT="extension_tags_size">...</TD><TD>ExtensionTag</TD><TD PORT="extension_tags_type">extension_tags</TD></TR>
+				<TR><TD COLSPAN="4" PORT="extension_tags__repeat">repeat until _.len_tag == 0</TD></TR>
+				<TR><TD COLSPAN="4" PORT="extension_tags__if">if _parent.flags.has_extension_tags</TD></TR>
+			</TABLE>>];
+			block_data__inst__md5_checksum [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="md5_checksum_pos">_io.size - 24</TD><TD PORT="md5_checksum_size">24</TD><TD>Md5Checksum</TD><TD PORT="md5_checksum_type">md5_checksum</TD></TR>
+				<TR><TD COLSPAN="4" PORT="md5_checksum__if">if _parent.flags.has_md5_checksum</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__extension_tag {
+			label="Uf2::ExtensionTag";
+			graph[style=dotted];
+
+			extension_tag__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_tag_pos">0</TD><TD PORT="len_tag_size">1</TD><TD>u1</TD><TD PORT="len_tag_type">len_tag</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len_tag__valid">must satisfy  ((_ == 0) || (_ &gt;= min_len_tag)) </TD></TR>
+				<TR><TD PORT="tag_type_pos">1</TD><TD PORT="tag_type_size">3</TD><TD>b24le→ExtensionTagType</TD><TD PORT="tag_type_type">tag_type</TD></TR>
+				<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">len_value</TD><TD></TD><TD PORT="value_type">value</TD></TR>
+				<TR><TD COLSPAN="4" PORT="value__if">if len_tag != 0</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">-(len_tag) % 4</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+			extension_tag__inst__len_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_value</TD><TD>(len_tag &gt;= min_len_tag ? len_tag - min_len_tag : 0)</TD></TR>
+			</TABLE>>];
+			extension_tag__inst__min_len_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>min_len_tag</TD><TD>1 + 3</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__flags {
+			label="Uf2::Flags";
+			graph[style=dotted];
+
+			flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>u4le</TD><TD PORT="value_type">value</TD></TR>
+				<TR><TD COLSPAN="4" PORT="value__valid">must satisfy  ((_ &amp; ~61441 == 0) &amp;&amp; (!( ((is_file_container) &amp;&amp; (has_extension_tags)) ))) </TD></TR>
+			</TABLE>>];
+			flags__inst__has_extension_tags [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_extension_tags</TD><TD>value &amp; 32768 != 0</TD></TR>
+			</TABLE>>];
+			flags__inst__has_family_id [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_family_id</TD><TD>value &amp; 8192 != 0</TD></TR>
+			</TABLE>>];
+			flags__inst__has_md5_checksum [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_md5_checksum</TD><TD>value &amp; 16384 != 0</TD></TR>
+			</TABLE>>];
+			flags__inst__is_file_container [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_file_container</TD><TD>value &amp; 4096 != 0</TD></TR>
+			</TABLE>>];
+			flags__inst__not_main_flash [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>not_main_flash</TD><TD>value &amp; 1 != 0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__md5_checksum {
+			label="Uf2::Md5Checksum";
+			graph[style=dotted];
+
+			md5_checksum__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="start_address_pos">0</TD><TD PORT="start_address_size">4</TD><TD>u4le</TD><TD PORT="start_address_type">start_address</TD></TR>
+				<TR><TD PORT="len_region_pos">4</TD><TD PORT="len_region_size">4</TD><TD>u4le</TD><TD PORT="len_region_type">len_region</TD></TR>
+				<TR><TD PORT="md5_pos">8</TD><TD PORT="md5_size">16</TD><TD></TD><TD PORT="md5_type">md5</TD></TR>
+			</TABLE>>];
+		}
+	}
+	uf2__seq:first_block_type -> block__seq [style=bold];
+	uf2__seq:blocks_type -> block__seq [style=bold];
+	block__inst__num_blocks:num_blocks_type -> uf2__seq:blocks__repeat [color="#404040"];
+	block__seq:flags_type -> flags__seq [style=bold];
+	block__seq:block_number_type -> block__seq:num_blocks_raw__valid [color="#404040"];
+	flags__inst__has_family_id:has_family_id_type -> block__seq:file_size__if [color="#404040"];
+	flags__inst__has_family_id:has_family_id_type -> block__seq:family_id__if [color="#404040"];
+	block__seq:data_type -> block_data__seq [style=bold];
+	flags__seq:value_type -> block__inst__is_rp2350_e10_block [color="#404040"];
+	block__seq:family_id_type -> block__inst__is_rp2350_e10_block [color="#404040"];
+	block__seq:num_blocks_raw_type -> block__inst__is_rp2350_e10_block [color="#404040"];
+	block__seq:block_number_type -> block__inst__is_rp2350_e10_block [color="#404040"];
+	block__seq:len_payload_type -> block__inst__is_rp2350_e10_block [color="#404040"];
+	block_data__seq:payload_type -> block__inst__is_rp2350_e10_block [color="#404040"];
+	flags__inst__has_extension_tags:has_extension_tags_type -> block__inst__is_rp2350_e10_block [color="#404040"];
+	extension_tag__seq:len_tag_type -> block__inst__is_rp2350_e10_block [color="#404040"];
+	extension_tag__seq:tag_type_type -> block__inst__is_rp2350_e10_block [color="#404040"];
+	block__inst__is_rp2350_e10_block:is_rp2350_e10_block_type -> block__inst__num_blocks [color="#404040"];
+	block__seq:num_blocks_raw_type -> block__inst__num_blocks [color="#404040"];
+	block__seq:len_payload_type -> block_data__seq:payload_size [color="#404040"];
+	flags__inst__is_file_container:is_file_container_type -> block_data__seq:file_name__if [color="#404040"];
+	block_data__seq:extension_tags_type -> extension_tag__seq [style=bold];
+	extension_tag__seq:len_tag_type -> block_data__seq:extension_tags__repeat [color="#404040"];
+	flags__inst__has_extension_tags:has_extension_tags_type -> block_data__seq:extension_tags__if [color="#404040"];
+	block_data__inst__md5_checksum:md5_checksum_type -> md5_checksum__seq [style=bold];
+	flags__inst__has_md5_checksum:has_md5_checksum_type -> block_data__inst__md5_checksum:md5_checksum__if [color="#404040"];
+	extension_tag__inst__min_len_tag:min_len_tag_type -> extension_tag__seq:len_tag__valid [color="#404040"];
+	extension_tag__inst__len_value:len_value_type -> extension_tag__seq:value_size [color="#404040"];
+	extension_tag__seq:len_tag_type -> extension_tag__seq:value__if [color="#404040"];
+	extension_tag__seq:len_tag_type -> extension_tag__seq:padding_size [color="#404040"];
+	extension_tag__seq:len_tag_type -> extension_tag__inst__len_value [color="#404040"];
+	extension_tag__inst__min_len_tag:min_len_tag_type -> extension_tag__inst__len_value [color="#404040"];
+	extension_tag__seq:len_tag_size -> extension_tag__inst__min_len_tag [color="#404040"];
+	extension_tag__seq:tag_type_size -> extension_tag__inst__min_len_tag [color="#404040"];
+	flags__inst__is_file_container:is_file_container_type -> flags__seq:value__valid [color="#404040"];
+	flags__inst__has_extension_tags:has_extension_tags_type -> flags__seq:value__valid [color="#404040"];
+	flags__seq:value_type -> flags__inst__has_extension_tags [color="#404040"];
+	flags__seq:value_type -> flags__inst__has_family_id [color="#404040"];
+	flags__seq:value_type -> flags__inst__has_md5_checksum [color="#404040"];
+	flags__seq:value_type -> flags__inst__is_file_container [color="#404040"];
+	flags__seq:value_type -> flags__inst__not_main_flash [color="#404040"];
+}

@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UF2 (USB Flashing Format): C++11/STL parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Firmware</li>
+        <li class="active">UF2 (USB Flashing Format)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>UF2 (USB Flashing Format):
+            
+            C++11/STL parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>UF2 is a file format, developed by Microsoft for PXT (also known as
+Microsoft MakeCode), that is particularly suitable for flashing
+microcontrollers over MSC (Mass Storage Class; aka removable flash drive).</p>
+<p>The list of family IDs is stored in a separate JSON file:</p>
+<p><a href="https://github.com/microsoft/uf2/blob/master/utils/uf2families.json">https://github.com/microsoft/uf2/blob/master/utils/uf2families.json</a></p>
+<p>This JSON file is regularly updated. The <code>family_id</code> enum should be kept in
+sync with it. For simplicity and consistency, it's strongly recommended to
+auto-generate this enum from <code>uf2families.json</code> directly. This was last done
+using the following commands:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> curl</span><span style="color:#bf616a;"> -fsSLO</span><span style="color:#c0c5ce;"> https://github.com/microsoft/uf2/raw/90e9741f217f5a40c98ba74d663e408041037578/utils/uf2families.json
+</span><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> jq</span><span style="color:#bf616a;"> -r </span><span style="color:#c0c5ce;">&#39;
+</span><span style="color:#a3be8c;">  .[]
+</span><span style="color:#a3be8c;">  | &quot;    \(.id | ascii_downcase):\n&quot;
+</span><span style="color:#a3be8c;">  + &quot;      id: \(.short_name | ascii_downcase | gsub(&quot;-&quot;; &quot;_&quot;))\n&quot;
+</span><span style="color:#a3be8c;">  + &quot;      doc: \(.description | tojson)&quot;
+</span><span style="color:#c0c5ce;">&#39; uf2families.json
+</span></code></pre>
+<p>Test files, picked to cover as many different shapes as possible:</p>
+<ul>
+<li><a href="https://micropython.org/download/RPI_PICO/">https://micropython.org/download/RPI_PICO/</a> - a typical case: all blocks
+have the same family ID and <code>num_blocks</code>.</li>
+<li><a href="https://micropython.org/download/RPI_PICO2/">https://micropython.org/download/RPI_PICO2/</a> - these .uf2 files are
+actually two UF2 files concatenated. The first UF2 file is the standalone
+<code>family_id::rp2xxx_absolute</code> block that <code>picotool</code> prepends (see the
+<code>is_rp2350_e10_block</code> value instance in the <code>block</code> type).</li>
+<li><a href="https://circuitpython.org/downloads">https://circuitpython.org/downloads</a> - the builds for SAMD boards (for
+example
+<a href="https://circuitpython.org/board/feather_m0_express/">Feather M0 Express</a>)
+set no flags at all, so the field at offset 28 is read as <code>file_size</code> rather
+than <code>family_id</code>.</li>
+<li><a href="https://github.com/raspberrypi/pico-sdk-prebuilts/releases">https://github.com/raspberrypi/pico-sdk-prebuilts/releases</a> -
+<a href="https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/README.md#universal-binary-vs-universal-uf2">Universal UF2</a>
+files, which are again two UF2 files concatenated. What's interesting about
+these is that the last block of the first file (with the family ID
+<code>family_id::rp2040</code>) is moved to the end of the second file, which was
+intended for <code>family_id::rp2xxx_absolute</code> (see
+<a href="https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169">https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169</a>).</li>
+<li><a href="https://github.com/microsoft/pxt-microsoft-boot-sequence/releases">https://github.com/microsoft/pxt-microsoft-boot-sequence/releases</a> - some
+files contain blocks with the <code>flags.is_file_container</code> flag set (for
+example
+<a href="https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2">https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2</a>
+is a pure file container for
+<code>file_name == &quot;Projects/microsoft-boot-sequence.elf&quot;</code>). Generated by
+MakeCode, the only known producer of file container UF2s.</li>
+<li><a href="https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests">https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests</a> -
+synthetic test files for features that real firmware doesn't seem to use
+(e.g. MD5 checksums).</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        uf2
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q105856672">Wikidata Q105856672</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of UF2 (USB Flashing Format)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="UF2 (USB Flashing Format) parsing Overview library">Overview</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="cpp_stl_11.html" title="UF2 (USB Flashing Format) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="UF2 (USB Flashing Format) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="UF2 (USB Flashing Format) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="UF2 (USB Flashing Format) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="UF2 (USB Flashing Format) parsing Graphviz library">Graphviz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="UF2 (USB Flashing Format) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="UF2 (USB Flashing Format) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="UF2 (USB Flashing Format) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="UF2 (USB Flashing Format) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="UF2 (USB Flashing Format) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="UF2 (USB Flashing Format) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="UF2 (USB Flashing Format) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title="UF2 (USB Flashing Format) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="UF2 (USB Flashing Format) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="UF2 (USB Flashing Format) parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <h3>Runtime library</h3>
+
+        <p>All C++11/STL code generated by Kaitai Struct depends on the
+        <a
+            href="https://github.com/kaitai-io/kaitai_struct_cpp_stl_runtime"
+            target="_blank" rel="noopener">
+        Kaitai Struct runtime library for C++/STL</a>.
+        You must add this dependency to your project before you can parse or
+        <a href="https://doc.kaitai.io/serialization.html" target="_blank" rel="noopener">serialize</a>
+        any data.</p>
+
+        
+
+<p>For C++, the easiest way is to <a
+    href="https://github.com/kaitai-io/kaitai_struct_cpp_stl_runtime"
+    target="_blank" rel="noopener">clone the runtime library sources</a>
+and build them along with your project.</p>
+
+<h3>Code</h3>
+
+<p>Using Kaitai Struct in C++/STL usually consists of 3 steps.</p>
+
+<ol>
+    <li>We need to create an STL input stream (<code>std::istream</code>). One can open local file for that, or use existing <code>std::string</code> or <code>char*</code> buffer.
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active"><a href="#example-local-file" role="tab" data-toggle="tab">From local file</a></li>
+            <li role="presentation"><a href="#example-std-string" role="tab" data-toggle="tab">From std::string</a></li>
+            <li role="presentation"><a href="#example-char-ptr" role="tab" data-toggle="tab">From char*</a></li>
+        </ul>
+        <div class="tab-content" style="margin-top: 6px">
+            <div role="tabpanel" class="tab-pane active" id="example-local-file">
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.uf2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-std-string">
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="example-char-ptr">
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
+
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+            </div>
+        </div>
+
+    </li>
+
+    <li>We need to wrap our input stream into Kaitai stream:
+
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span>
+
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
+</pre></div>
+    </li>
+
+    <li>And finally, we can invoke the parsing:
+<div class="highlight"><pre><span></span><span class="n">uf2_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
+</pre></div>
+    </li>
+</ol>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">first_block</span><span class="p">()</span><span class="w"> </span><span class="c1">// =&gt; get first block</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            C++11/STL source code to parse UF2 (USB Flashing Format)
+            
+        </h2>
+
+        
+
+        <h3>uf2.h</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_11/uf2.h" download="uf2.h" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="cp">#pragma once</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">uf2_t</span><span class="p">;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;set&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 11000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * UF2 is a file format, developed by Microsoft for PXT (also known as</span>
+<span class="cm"> * Microsoft MakeCode), that is particularly suitable for flashing</span>
+<span class="cm"> * microcontrollers over MSC (Mass Storage Class; aka removable flash drive).</span>
+<span class="cm"> * </span>
+<span class="cm"> * The list of family IDs is stored in a separate JSON file:</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;https://github.com/microsoft/uf2/blob/master/utils/uf2families.json&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * This JSON file is regularly updated. The `family_id` enum should be kept in</span>
+<span class="cm"> * sync with it. For simplicity and consistency, it&#39;s strongly recommended to</span>
+<span class="cm"> * auto-generate this enum from `uf2families.json` directly. This was last done</span>
+<span class="cm"> * using the following commands:</span>
+<span class="cm"> * </span>
+<span class="cm"> * ```bash</span>
+<span class="cm"> * $ curl -fsSLO https://github.com/microsoft/uf2/raw/90e9741f217f5a40c98ba74d663e408041037578/utils/uf2families.json</span>
+<span class="cm"> * $ jq -r &#39;</span>
+<span class="cm"> *   .[]</span>
+<span class="cm"> *   | &quot;    \(.id | ascii_downcase):\n&quot;</span>
+<span class="cm"> *   + &quot;      id: \(.short_name | ascii_downcase | gsub(&quot;-&quot;; &quot;_&quot;))\n&quot;</span>
+<span class="cm"> *   + &quot;      doc: \(.description | tojson)&quot;</span>
+<span class="cm"> * &#39; uf2families.json</span>
+<span class="cm"> * ```</span>
+<span class="cm"> * </span>
+<span class="cm"> * Test files, picked to cover as many different shapes as possible:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * &lt;https://micropython.org/download/RPI_PICO/&gt; - a typical case: all blocks</span>
+<span class="cm"> *   have the same family ID and `num_blocks`.</span>
+<span class="cm"> * * &lt;https://micropython.org/download/RPI_PICO2/&gt; - these .uf2 files are</span>
+<span class="cm"> *   actually two UF2 files concatenated. The first UF2 file is the standalone</span>
+<span class="cm"> *   `family_id::rp2xxx_absolute` block that `picotool` prepends (see the</span>
+<span class="cm"> *   `is_rp2350_e10_block` value instance in the `block` type).</span>
+<span class="cm"> * * &lt;https://circuitpython.org/downloads&gt; - the builds for SAMD boards (for</span>
+<span class="cm"> *   example</span>
+<span class="cm"> *   [Feather M0 Express](https://circuitpython.org/board/feather_m0_express/))</span>
+<span class="cm"> *   set no flags at all, so the field at offset 28 is read as `file_size` rather</span>
+<span class="cm"> *   than `family_id`.</span>
+<span class="cm"> * * &lt;https://github.com/raspberrypi/pico-sdk-prebuilts/releases&gt; -</span>
+<span class="cm"> *   [Universal UF2](https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/README.md#universal-binary-vs-universal-uf2)</span>
+<span class="cm"> *   files, which are again two UF2 files concatenated. What&#39;s interesting about</span>
+<span class="cm"> *   these is that the last block of the first file (with the family ID</span>
+<span class="cm"> *   `family_id::rp2040`) is moved to the end of the second file, which was</span>
+<span class="cm"> *   intended for `family_id::rp2xxx_absolute` (see</span>
+<span class="cm"> *   &lt;https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169&gt;).</span>
+<span class="cm"> * * &lt;https://github.com/microsoft/pxt-microsoft-boot-sequence/releases&gt; - some</span>
+<span class="cm"> *   files contain blocks with the `flags.is_file_container` flag set (for</span>
+<span class="cm"> *   example</span>
+<span class="cm"> *   &lt;https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2&gt;</span>
+<span class="cm"> *   is a pure file container for</span>
+<span class="cm"> *   `file_name == &quot;Projects/microsoft-boot-sequence.elf&quot;`). Generated by</span>
+<span class="cm"> *   MakeCode, the only known producer of file container UF2s.</span>
+<span class="cm"> * * &lt;https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests&gt; -</span>
+<span class="cm"> *   synthetic test files for features that real firmware doesn&#39;t seem to use</span>
+<span class="cm"> *   (e.g. MD5 checksums).</span>
+<span class="cm"> * \sa https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md Source</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">uf2_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">block_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">block_data_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">extension_tag_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">flags_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">md5_checksum_t</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">extension_tag_type_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">EXTENSION_TAG_TYPE_END</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">EXTENSION_TAG_TYPE_PAGE_SIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">780791</span><span class="p">,</span>
+<span class="w">        </span><span class="n">EXTENSION_TAG_TYPE_DESCRIPTION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6622621</span><span class="p">,</span>
+<span class="w">        </span><span class="n">EXTENSION_TAG_TYPE_RP2_IGNORE_BLOCK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10049507</span><span class="p">,</span>
+<span class="w">        </span><span class="n">EXTENSION_TAG_TYPE_VERSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10471356</span><span class="p">,</span>
+<span class="w">        </span><span class="n">EXTENSION_TAG_TYPE_SHA2_CHECKSUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11824560</span><span class="p">,</span>
+<span class="w">        </span><span class="n">EXTENSION_TAG_TYPE_DEVICE_TYPE_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13149993</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_extension_tag_type_t</span><span class="p">(</span><span class="n">extension_tag_type_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">extension_tag_type_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_extension_tag_type_t</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">family_id_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32L4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16738585</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32L5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">69471199</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F411XC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">114362747</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_M0SENSE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">299792458</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ATMEGA32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">374814231</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_SAML21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">407992330</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_NRF52</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">458716255</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">475996592</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32L1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">505365293</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32L0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">539900561</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32WL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">558239728</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RTL8710B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">585160444</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_LPC55</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">716994540</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32C2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">730387100</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F411XE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">767756741</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32G0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">806311475</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32S31</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">822212545</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_GD32F350</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">835856582</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32H2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">858203894</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RTL8720D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">863621090</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32P4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1026592404</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_MAIXPLAY_U4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1265126769</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32G4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1282483210</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32H5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1318001757</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_CSK4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1332399698</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_MIMXRT10XX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1337120189</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_XR809</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1374225320</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1404571392</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32C6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1410195298</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_SAMD51</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1427194976</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1467308631</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_FX2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1511523995</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1561987630</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1591873650</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_NRF52833</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1646171002</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685595318</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_BK7231U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1733968048</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_SAMD21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1760373640</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_CH32V</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1771791084</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_BK7251</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1786956866</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1803837832</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F407</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1829315322</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32H7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1840668802</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_CSK6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1853049000</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_NRF52832XXAB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1869948536</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32WB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1892771411</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_NRF52832XXAA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1920081230</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_MAX32690</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1947226634</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32C61</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2010665156</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_BK7231N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2067722800</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RA4M1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2078840685</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_PY32F071_UVK5_V3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2105173743</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP8266</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2125160941</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_KL32L2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2139350931</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_NRF52820</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2181929567UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_STM32F407VG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2410701054UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_MAX78002</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2446589208UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RZA1LU</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2501329455UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_GD32VF103</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2599435827UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32H4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2651564682UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RTL8710A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2684343619UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_AT32F415</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2697558926UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_NRF52840</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2913282112UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32H21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3067936943UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32S2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3218951918UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32S3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3296614247UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32C3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3559628908UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_MAX32650</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3594487346UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_BL602</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3725750455UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RTL8720C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3767498084UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RP2040</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3834380118UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RP2XXX_ABSOLUTE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3834380119UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RP2XXX_DATA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3834380120UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RP2350_ARM_S</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3834380121UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RP2350_RISCV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3834380122UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_RP2350_ARM_NS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3834380123UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_MAX32666</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4039314801UL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FAMILY_ID_ESP32C5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4145808195UL</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_family_id_t</span><span class="p">(</span><span class="n">family_id_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">family_id_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_family_id_t</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+<span class="w">    </span><span class="n">uf2_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="o">~</span><span class="n">uf2_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">block_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">block_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_is_rp2350_e10_block</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_is_rp2350_e10_block</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Determines whether this is a block that `picotool` prepends to RP2350</span>
+<span class="cm">         * flash images as a workaround for erratum RP2350-E10 (i.e. a hardware</span>
+<span class="cm">         * bug in the A2 version of the RP2350 boot ROM).</span>
+<span class="cm">         * </span>
+<span class="cm">         * Such a block is always written on its own, but its `num_blocks_raw` is</span>
+<span class="cm">         * set to 2. If we trusted this value, we would attempt to read one block</span>
+<span class="cm">         * too many (which would most likely fail). Therefore, we must correct it</span>
+<span class="cm">         * to 1 before using it.</span>
+<span class="cm">         * </span>
+<span class="cm">         * The conditions for detecting this block come from the</span>
+<span class="cm">         * [`check_abs_block()`](https://github.com/raspberrypi/picotool/blob/6f6458d792b93685a11423b244a585eaa99eafcf/elf2uf2/elf2uf2.cpp#L147)</span>
+<span class="cm">         * function in `picotool`. However, there are some differences:</span>
+<span class="cm">         * </span>
+<span class="cm">         * 1. In Kaitai Struct, we cannot easily check whether all 256 payload</span>
+<span class="cm">         *    bytes are set to `0xef`, so we only check the first and last bytes.</span>
+<span class="cm">         * 2. There are .uf2 files in the wild where `flags.has_extension_tags`</span>
+<span class="cm">         *    is true, but there are actually no extension tags (the first and</span>
+<span class="cm">         *    only tag has a size of 0, which is just a terminator), so our</span>
+<span class="cm">         *    condition allows for this case. You can download an example of such</span>
+<span class="cm">         *    a .uf2 file here:</span>
+<span class="cm">         *    &lt;https://github.com/neednotapply/DC32-cfw/releases/tag/1.69.13.37&gt;</span>
+<span class="cm">         * </span>
+<span class="cm">         * It&#39;s worth noting that we cannot require the presence of the</span>
+<span class="cm">         * `extension_tag_type::rp2_ignore_block`</span>
+<span class="cm">         * (`UF2_EXTENSION_RP2_IGNORE_BLOCK`) tag because the UF2 files generated</span>
+<span class="cm">         * by `picotool` prior to</span>
+<span class="cm">         * &lt;https://github.com/raspberrypi/picotool/commit/78c9bd121b09399823b67ee7ea89003ca0d3315f&gt;</span>
+<span class="cm">         * don&#39;t have it. Therefore, we check whether this tag is present only if</span>
+<span class="cm">         * `flags.has_extension_tags` is set.</span>
+<span class="cm">         * </span>
+<span class="cm">         * Test .uf2 files with this special block can be downloaded from</span>
+<span class="cm">         * &lt;https://micropython.org/download/RPI_PICO2/&gt;. Note that all the .uf2</span>
+<span class="cm">         * files there are actually two UF2 (sub)files concatenated, and this</span>
+<span class="cm">         * Kaitai Struct implementation parses only one at a time (so in order to</span>
+<span class="cm">         * parse both, you need something like the helper spec `uf2_files.ksy`</span>
+<span class="cm">         * from</span>
+<span class="cm">         * &lt;https://github.com/kaitai-io/kaitai_struct_formats/pull/542#discussion_r3906386820&gt;).</span>
+<span class="cm">         * v1.24.x releases predate the `extension_tag_type::rp2_ignore_block`</span>
+<span class="cm">         * tag, while releases v1.25.0 and later include it.</span>
+<span class="cm">         * \sa https://github.com/raspberrypi/picotool/blob/6f6458d792b93685a11423b244a585eaa99eafcf/elf2uf2/elf2uf2.cpp#L147 Git tag &quot;2.3.0&quot;</span>
+<span class="cm">         * \sa https://github.com/raspberrypi/picotool/commit/78c9bd121b09399823b67ee7ea89003ca0d3315f Source</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_rp2350_e10_block</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_num_blocks</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_num_blocks</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">num_blocks</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_second_magic</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">flags_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_flags</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_target_address</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_len_payload</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_block_number</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_num_blocks_raw</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_file_size</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_file_size</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_file_size</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">file_size</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_file_size</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">family_id_t</span><span class="w"> </span><span class="n">m_family_id</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_family_id</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_family_id</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">family_id</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_family_id</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">block_data_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_data</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_final_magic</span><span class="p">;</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_data</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m__io__raw_data</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">second_magic</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_second_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">flags_t</span><span class="o">*</span><span class="w"> </span><span class="n">flags</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_flags</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Address in flash where `data.payload` should be written, or an offset</span>
+<span class="cm">         * in the file specified by `data.file_name` if `flags.is_file_container`</span>
+<span class="cm">         * is set.</span>
+<span class="cm">         * </span>
+<span class="cm">         * The [official</span>
+<span class="cm">         * spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#payload-sizes)</span>
+<span class="cm">         * says:</span>
+<span class="cm">         * </span>
+<span class="cm">         * &gt; In any event, payload size and target address should always be</span>
+<span class="cm">         * &gt; 4-byte aligned.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">target_address</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_target_address</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * The [official</span>
+<span class="cm">         * spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#payload-sizes)</span>
+<span class="cm">         * says:</span>
+<span class="cm">         * </span>
+<span class="cm">         * &gt; In any event, payload size and target address should always be</span>
+<span class="cm">         * &gt; 4-byte aligned.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">len_payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">block_number</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_block_number</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Number of blocks that make up the UF2 file to which this block</span>
+<span class="cm">         * belongs. Every block of a file has the same value. It is at least 1</span>
+<span class="cm">         * and every `block_number` in the file must be less than this value</span>
+<span class="cm">         * (which is validated by this Kaitai Struct implementation).</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">num_blocks_raw</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_blocks_raw</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Size of the file this block belongs to, but only if</span>
+<span class="cm">         * `flags.is_file_container` is true. Otherwise, the official spec allows</span>
+<span class="cm">         * this field to be set to anything - though in practice, it&#39;s always</span>
+<span class="cm">         * zero.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">file_size</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_file_size</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">family_id_t</span><span class="w"> </span><span class="n">family_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_family_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">block_data_t</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_data</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">final_magic</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_final_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_data</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_data</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_data</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_data</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">block_data_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">block_data_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">block_data_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_md5_checksum</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">md5_checksum_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_md5_checksum</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_md5_checksum</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_md5_checksum</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">md5_checksum</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_md5_checksum</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Describes a region that doesn&#39;t need to be flashed again if the</span>
+<span class="cm">         * checksum matches.</span>
+<span class="cm">         * </span>
+<span class="cm">         * The [official</span>
+<span class="cm">         * spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#md5-checksum)</span>
+<span class="cm">         * says that &quot;This is currently only used on ESP32&quot;, but no real-world</span>
+<span class="cm">         * firmware sample has been found (at least none of the .uf2 files from</span>
+<span class="cm">         * &lt;https://github.com/adafruit/tinyuf2/releases&gt;,</span>
+<span class="cm">         * [MicroPython](https://micropython.org/download/) or</span>
+<span class="cm">         * [CircuitPython](https://circuitpython.org/downloads) contain it). It</span>
+<span class="cm">         * was found only in some synthetic test files, e.g.</span>
+<span class="cm">         * &lt;https://github.com/umi-eng/uftwo/blob/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests/checksum_256.uf2&gt;.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">md5_checksum_t</span><span class="o">*</span><span class="w"> </span><span class="n">md5_checksum</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_file_name</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_file_name</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_file_name</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">file_name</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_file_name</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">extension_tag_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_extension_tags</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_extension_tags</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_extension_tags</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">extension_tags</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_extension_tags</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * The bytes to be written to `_parent.target_address`, which is either</span>
+<span class="cm">         * an address in flash, or an offset in the file specified by `file_name`</span>
+<span class="cm">         * if `_parent.flags.is_file_container` is set.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">file_name</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_file_name</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">extension_tag_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">extension_tags</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_extension_tags</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \sa https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#extension-tags Source</span>
+<span class="cm">     */</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">extension_tag_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">extension_tag_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">extension_tag_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_len_value</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">m_len_value</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">len_value</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_min_len_tag</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">m_min_len_tag</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">min_len_tag</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_len_tag</span><span class="p">;</span>
+<span class="w">        </span><span class="n">extension_tag_type_t</span><span class="w"> </span><span class="n">m_tag_type</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_value</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_value</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">value</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_value</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_padding</span><span class="p">;</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Total size of the tag in bytes, including this byte and `tag_type`, so</span>
+<span class="cm">         * at least 4. The exception is the last tag which terminates the list -</span>
+<span class="cm">         * it specifies a total size of 0.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">len_tag</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_tag</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">extension_tag_type_t</span><span class="w"> </span><span class="n">tag_type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_tag_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Tags are 4-byte aligned, so a tag whose size is not a multiple</span>
+<span class="cm">         * of 4 is followed by padding.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">padding</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_padding</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \sa https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/uf2.h#L43-L47 Source</span>
+<span class="cm">     * \sa https://github.com/raspberrypi/pico-sdk/blob/98a542c1a62fb549ffb5d66a3e5892b06276b670/src/common/boot_uf2_headers/include/boot/uf2.h#L23-L27 Git tag &quot;2.3.0&quot;</span>
+<span class="cm">     */</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">flags_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">flags_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_has_extension_tags</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_has_extension_tags</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Indicates whether extension tags are present after the payload.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">has_extension_tags</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_has_family_id</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_has_family_id</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * The field at offset 28 in the block is `family_id` instead of</span>
+<span class="cm">         * `file_size`.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">has_family_id</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_has_md5_checksum</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_has_md5_checksum</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Indicates whether `md5_checksum` is present at the end of `data`.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">has_md5_checksum</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_is_file_container</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_is_file_container</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * When set, the UF2 format is used as a container for regular files</span>
+<span class="cm">         * (akin to a TAR file, or ZIP archive without compression).</span>
+<span class="cm">         * </span>
+<span class="cm">         * `target_address` is the offset in the file where the payload is to be</span>
+<span class="cm">         * written, and `file_size` is the size of that file. The name of the</span>
+<span class="cm">         * destination file is stored in `data.file_name`.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_file_container</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_not_main_flash</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_not_main_flash</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Indicates that this block should be skipped when writing the device</span>
+<span class="cm">         * flash. It can be used to store data that does not fit on the device,</span>
+<span class="cm">         * typically embedded source code or debug info.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">not_main_flash</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Only the five bits that we cover in value instances below are defined,</span>
+<span class="cm">         * and no other bit may be set. The [official</span>
+<span class="cm">         * spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#flags)</span>
+<span class="cm">         * says &quot;Currently, there are five flags defined&quot;. If any other flags are</span>
+<span class="cm">         * added in the future, this .ksy spec will need to be updated.</span>
+<span class="cm">         * </span>
+<span class="cm">         * The `is_file_container` and `has_extension_tags` flags disagree about</span>
+<span class="cm">         * what follows the payload in `data` (a file name or a list of extension</span>
+<span class="cm">         * tags), so this Kaitai Struct implementation treats them as mutually</span>
+<span class="cm">         * exclusive and will reject a block that sets both. The official spec</span>
+<span class="cm">         * does not specify how this should be handled, but logically there&#39;s a</span>
+<span class="cm">         * conflict, so we&#39;ve decided to strictly treat it as an error.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \sa https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#md5-checksum Source</span>
+<span class="cm">     */</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">md5_checksum_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">md5_checksum_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">md5_checksum_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_start_address</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_len_region</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_md5</span><span class="p">;</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">start_address</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_start_address</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">len_region</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_region</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">md5</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_md5</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_first_block</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_blocks</span><span class="p">;</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">first_block</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_first_block</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">blocks</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_blocks</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+        </div>
+        
+
+        <h3>uf2.cpp</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/cpp_stl_11/uf2.cpp" download="uf2.cpp" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;uf2.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/exceptions.h&quot;</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">uf2_t</span><span class="o">::</span><span class="n">extension_tag_type_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">_values_extension_tag_type_t</span><span class="p">{</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">EXTENSION_TAG_TYPE_END</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">EXTENSION_TAG_TYPE_PAGE_SIZE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">EXTENSION_TAG_TYPE_DESCRIPTION</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">EXTENSION_TAG_TYPE_RP2_IGNORE_BLOCK</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">EXTENSION_TAG_TYPE_VERSION</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">EXTENSION_TAG_TYPE_SHA2_CHECKSUM</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">EXTENSION_TAG_TYPE_DEVICE_TYPE_ID</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">uf2_t::_is_defined_extension_tag_type_t</span><span class="p">(</span><span class="n">uf2_t</span><span class="o">::</span><span class="n">extension_tag_type_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">_values_extension_tag_type_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">_values_extension_tag_type_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">uf2_t</span><span class="o">::</span><span class="n">family_id_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">_values_family_id_t</span><span class="p">{</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32L4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32L5</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F411XC</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_M0SENSE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ATMEGA32</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_SAML21</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_NRF52</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32L1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32L0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32WL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RTL8710B</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_LPC55</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32C2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F411XE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32G0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32S31</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_GD32F350</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32H2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RTL8720D</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32P4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_MAIXPLAY_U4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32G4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32H5</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_CSK4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_MIMXRT10XX</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_XR809</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F7</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32C6</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_SAMD51</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_FX2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_NRF52833</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_BK7231U</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_SAMD21</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_CH32V</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_BK7251</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F407</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32H7</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_CSK6</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_NRF52832XXAB</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32WB</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_NRF52832XXAA</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_MAX32690</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32C61</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_BK7231N</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RA4M1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_PY32F071_UVK5_V3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP8266</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_KL32L2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_NRF52820</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_STM32F407VG</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_MAX78002</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RZA1LU</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_GD32VF103</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32H4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RTL8710A</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_AT32F415</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_NRF52840</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32H21</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32S2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32S3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32C3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_MAX32650</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_BL602</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RTL8720C</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RP2040</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RP2XXX_ABSOLUTE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RP2XXX_DATA</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RP2350_ARM_S</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RP2350_RISCV</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RP2350_ARM_NS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_MAX32666</span><span class="p">,</span>
+<span class="w">    </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_ESP32C5</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">uf2_t::_is_defined_family_id_t</span><span class="p">(</span><span class="n">uf2_t</span><span class="o">::</span><span class="n">family_id_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">_values_family_id_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">_values_family_id_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">uf2_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_first_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_first_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">block_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">l_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_blocks</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_blocks</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">m_blocks</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">block_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">))));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::~</span><span class="n">uf2_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_rp2350_e10_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_num_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">m_magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x55\x46\x32\x0A</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x55\x46\x32\x0A</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">m_magic</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/block/seq/0&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_second_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">m_second_magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x57\x51\x5D\x9E</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x57\x51\x5D\x9E</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">m_second_magic</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/block/seq/1&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">flags_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">flags_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_target_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_target_address</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">mod</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_expr_error</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_target_address</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/block/seq/3&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_len_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_len_payload</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">mod</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_expr_error</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_len_payload</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/block/seq/4&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_block_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_num_blocks_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">m_num_blocks_raw</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">block_number</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_less_than_error</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">block_number</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">m_num_blocks_raw</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/block/seq/6&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">n_file_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">has_family_id</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_file_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_file_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">n_family_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">has_family_id</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_family_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_family_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">uf2_t</span><span class="o">::</span><span class="n">family_id_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">476</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m__io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_data</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">block_data_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">block_data_t</span><span class="p">(</span><span class="n">m__io__raw_data</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_final_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">m_final_magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x30\x6F\xB1\x0A</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x30\x6F\xB1\x0A</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">m_final_magic</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/block/seq/10&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::~</span><span class="n">block_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_file_size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_family_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">is_rp2350_e10_block</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_is_rp2350_e10_block</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_rp2350_e10_block</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_rp2350_e10_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_is_rp2350_e10_block</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8192</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">40960</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">family_id</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">FAMILY_ID_RP2XXX_ABSOLUTE</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">num_blocks_raw</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">block_number</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">len_payload</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">256</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">().</span><span class="n">front</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">239</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">().</span><span class="n">back</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">239</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">has_extension_tags</span><span class="p">()))</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">extension_tags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">len_tag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">data</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">extension_tags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">len_tag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">extension_tags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">tag_type</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">EXTENSION_TAG_TYPE_RP2_IGNORE_BLOCK</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_rp2350_e10_block</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">num_blocks</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_num_blocks</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_blocks</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_num_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_num_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">is_rp2350_e10_block</span><span class="p">())</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">num_blocks_raw</span><span class="p">()));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_blocks</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_extension_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_md5_checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_md5_checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_payload</span><span class="p">());</span>
+<span class="w">    </span><span class="n">n_file_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_file_container</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_file_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_file_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">n_extension_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">has_extension_tags</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_extension_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_extension_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">extension_tag_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">extension_tag_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="n">extension_tag_t</span><span class="o">*</span><span class="w"> </span><span class="n">_</span><span class="p">;</span>
+<span class="w">            </span><span class="k">do</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">extension_tag_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m_extension_tags</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">extension_tag_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span><span class="p">)));</span>
+<span class="w">                </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_</span><span class="o">-&gt;</span><span class="n">len_tag</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">::~</span><span class="n">block_data_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_file_name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_extension_tags</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_md5_checksum</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">n_md5_checksum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">md5_checksum_t</span><span class="o">*</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">::</span><span class="n">md5_checksum</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_md5_checksum</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_md5_checksum</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+<span class="w">    </span><span class="n">f_md5_checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">n_md5_checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">has_md5_checksum</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_md5_checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+<span class="w">        </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">24</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m_md5_checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">md5_checksum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">md5_checksum_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">        </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_md5_checksum</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">extension_tag_t</span><span class="o">::</span><span class="n">extension_tag_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_len_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_min_len_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">extension_tag_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_len_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_len_tag</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">min_len_tag</span><span class="p">()))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_expr_error</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_len_tag</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/extension_tag/seq/0&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_tag_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">uf2_t</span><span class="o">::</span><span class="n">extension_tag_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_le</span><span class="p">(</span><span class="mi">24</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">align_to_byte</span><span class="p">();</span>
+<span class="w">    </span><span class="n">n_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">len_tag</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_value</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">mod</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">len_tag</span><span class="p">()),</span><span class="w"> </span><span class="mi">4</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">extension_tag_t</span><span class="o">::~</span><span class="n">extension_tag_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">extension_tag_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">extension_tag_t</span><span class="o">::</span><span class="n">len_value</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_len_value</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_value</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_len_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_len_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">len_tag</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">min_len_tag</span><span class="p">())</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">len_tag</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">min_len_tag</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">extension_tag_t</span><span class="o">::</span><span class="n">min_len_tag</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_min_len_tag</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_min_len_tag</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_min_len_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_min_len_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_min_len_tag</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_has_extension_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_has_family_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_has_md5_checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_file_container</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_not_main_flash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">(((</span><span class="n">_</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="mi">61441</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">is_file_container</span><span class="p">())</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">has_extension_tags</span><span class="p">()))</span><span class="w"> </span><span class="p">)))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_expr_error</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_value</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/flags/seq/0&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::~</span><span class="n">flags_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">has_extension_tags</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_has_extension_tags</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_extension_tags</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_has_extension_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_has_extension_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32768</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_extension_tags</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">has_family_id</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_has_family_id</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_family_id</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_has_family_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_has_family_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">8192</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_family_id</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">has_md5_checksum</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_has_md5_checksum</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_md5_checksum</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_has_md5_checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_has_md5_checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">16384</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_md5_checksum</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">is_file_container</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_is_file_container</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_file_container</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_file_container</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_is_file_container</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">4096</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_file_container</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">not_main_flash</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_not_main_flash</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_not_main_flash</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_not_main_flash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_not_main_flash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_not_main_flash</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">md5_checksum_t</span><span class="o">::</span><span class="n">md5_checksum_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">block_data_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">md5_checksum_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_start_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_len_region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_md5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">uf2_t</span><span class="o">::</span><span class="n">md5_checksum_t</span><span class="o">::~</span><span class="n">md5_checksum_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">uf2_t</span><span class="o">::</span><span class="n">md5_checksum_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2026 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

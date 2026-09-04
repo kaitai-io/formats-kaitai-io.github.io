@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UF2 (USB Flashing Format): Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Firmware</li>
+        <li class="active">UF2 (USB Flashing Format)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>UF2 (USB Flashing Format):
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>UF2 is a file format, developed by Microsoft for PXT (also known as
+Microsoft MakeCode), that is particularly suitable for flashing
+microcontrollers over MSC (Mass Storage Class; aka removable flash drive).</p>
+<p>The list of family IDs is stored in a separate JSON file:</p>
+<p><a href="https://github.com/microsoft/uf2/blob/master/utils/uf2families.json">https://github.com/microsoft/uf2/blob/master/utils/uf2families.json</a></p>
+<p>This JSON file is regularly updated. The <code>family_id</code> enum should be kept in
+sync with it. For simplicity and consistency, it's strongly recommended to
+auto-generate this enum from <code>uf2families.json</code> directly. This was last done
+using the following commands:</p>
+<pre lang="bash" style="background-color:#2b303b;"><code><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> curl</span><span style="color:#bf616a;"> -fsSLO</span><span style="color:#c0c5ce;"> https://github.com/microsoft/uf2/raw/90e9741f217f5a40c98ba74d663e408041037578/utils/uf2families.json
+</span><span style="color:#8fa1b3;">$</span><span style="color:#c0c5ce;"> jq</span><span style="color:#bf616a;"> -r </span><span style="color:#c0c5ce;">&#39;
+</span><span style="color:#a3be8c;">  .[]
+</span><span style="color:#a3be8c;">  | &quot;    \(.id | ascii_downcase):\n&quot;
+</span><span style="color:#a3be8c;">  + &quot;      id: \(.short_name | ascii_downcase | gsub(&quot;-&quot;; &quot;_&quot;))\n&quot;
+</span><span style="color:#a3be8c;">  + &quot;      doc: \(.description | tojson)&quot;
+</span><span style="color:#c0c5ce;">&#39; uf2families.json
+</span></code></pre>
+<p>Test files, picked to cover as many different shapes as possible:</p>
+<ul>
+<li><a href="https://micropython.org/download/RPI_PICO/">https://micropython.org/download/RPI_PICO/</a> - a typical case: all blocks
+have the same family ID and <code>num_blocks</code>.</li>
+<li><a href="https://micropython.org/download/RPI_PICO2/">https://micropython.org/download/RPI_PICO2/</a> - these .uf2 files are
+actually two UF2 files concatenated. The first UF2 file is the standalone
+<code>family_id::rp2xxx_absolute</code> block that <code>picotool</code> prepends (see the
+<code>is_rp2350_e10_block</code> value instance in the <code>block</code> type).</li>
+<li><a href="https://circuitpython.org/downloads">https://circuitpython.org/downloads</a> - the builds for SAMD boards (for
+example
+<a href="https://circuitpython.org/board/feather_m0_express/">Feather M0 Express</a>)
+set no flags at all, so the field at offset 28 is read as <code>file_size</code> rather
+than <code>family_id</code>.</li>
+<li><a href="https://github.com/raspberrypi/pico-sdk-prebuilts/releases">https://github.com/raspberrypi/pico-sdk-prebuilts/releases</a> -
+<a href="https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/README.md#universal-binary-vs-universal-uf2">Universal UF2</a>
+files, which are again two UF2 files concatenated. What's interesting about
+these is that the last block of the first file (with the family ID
+<code>family_id::rp2040</code>) is moved to the end of the second file, which was
+intended for <code>family_id::rp2xxx_absolute</code> (see
+<a href="https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169">https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169</a>).</li>
+<li><a href="https://github.com/microsoft/pxt-microsoft-boot-sequence/releases">https://github.com/microsoft/pxt-microsoft-boot-sequence/releases</a> - some
+files contain blocks with the <code>flags.is_file_container</code> flag set (for
+example
+<a href="https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2">https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2</a>
+is a pure file container for
+<code>file_name == &quot;Projects/microsoft-boot-sequence.elf&quot;</code>). Generated by
+MakeCode, the only known producer of file container UF2s.</li>
+<li><a href="https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests">https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests</a> -
+synthetic test files for features that real firmware doesn't seem to use
+(e.g. MD5 checksums).</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        uf2
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q105856672">Wikidata Q105856672</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of UF2 (USB Flashing Format)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="UF2 (USB Flashing Format) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="UF2 (USB Flashing Format) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="UF2 (USB Flashing Format) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="UF2 (USB Flashing Format) parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title="UF2 (USB Flashing Format) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="UF2 (USB Flashing Format) parsing Graphviz library">Graphviz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="UF2 (USB Flashing Format) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="UF2 (USB Flashing Format) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="UF2 (USB Flashing Format) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="UF2 (USB Flashing Format) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="UF2 (USB Flashing Format) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="UF2 (USB Flashing Format) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="UF2 (USB Flashing Format) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title="UF2 (USB Flashing Format) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="UF2 (USB Flashing Format) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="UF2 (USB Flashing Format) parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse UF2 (USB Flashing Format)
+            
+        </h2>
+
+        
+
+        <h3>uf2.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/uf2.go" download="uf2.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// Code generated by kaitai-struct-compiler from a .ksy source file. DO NOT EDIT.</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w">	</span><span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+<span class="w">	</span><span class="s">&quot;bytes&quot;</span>
+<span class="w">	</span><span class="s">&quot;io&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * UF2 is a file format, developed by Microsoft for PXT (also known as</span>
+<span class="cm"> * Microsoft MakeCode), that is particularly suitable for flashing</span>
+<span class="cm"> * microcontrollers over MSC (Mass Storage Class; aka removable flash drive).</span>
+<span class="cm"> * </span>
+<span class="cm"> * The list of family IDs is stored in a separate JSON file:</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;https://github.com/microsoft/uf2/blob/master/utils/uf2families.json&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * This JSON file is regularly updated. The `family_id` enum should be kept in</span>
+<span class="cm"> * sync with it. For simplicity and consistency, it&#39;s strongly recommended to</span>
+<span class="cm"> * auto-generate this enum from `uf2families.json` directly. This was last done</span>
+<span class="cm"> * using the following commands:</span>
+<span class="cm"> * </span>
+<span class="cm"> * ```bash</span>
+<span class="cm"> * $ curl -fsSLO https://github.com/microsoft/uf2/raw/90e9741f217f5a40c98ba74d663e408041037578/utils/uf2families.json</span>
+<span class="cm"> * $ jq -r &#39;</span>
+<span class="cm"> *   .[]</span>
+<span class="cm"> *   | &quot;    \(.id | ascii_downcase):\n&quot;</span>
+<span class="cm"> *   + &quot;      id: \(.short_name | ascii_downcase | gsub(&quot;-&quot;; &quot;_&quot;))\n&quot;</span>
+<span class="cm"> *   + &quot;      doc: \(.description | tojson)&quot;</span>
+<span class="cm"> * &#39; uf2families.json</span>
+<span class="cm"> * ```</span>
+<span class="cm"> * </span>
+<span class="cm"> * Test files, picked to cover as many different shapes as possible:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * &lt;https://micropython.org/download/RPI_PICO/&gt; - a typical case: all blocks</span>
+<span class="cm"> *   have the same family ID and `num_blocks`.</span>
+<span class="cm"> * * &lt;https://micropython.org/download/RPI_PICO2/&gt; - these .uf2 files are</span>
+<span class="cm"> *   actually two UF2 files concatenated. The first UF2 file is the standalone</span>
+<span class="cm"> *   `family_id::rp2xxx_absolute` block that `picotool` prepends (see the</span>
+<span class="cm"> *   `is_rp2350_e10_block` value instance in the `block` type).</span>
+<span class="cm"> * * &lt;https://circuitpython.org/downloads&gt; - the builds for SAMD boards (for</span>
+<span class="cm"> *   example</span>
+<span class="cm"> *   [Feather M0 Express](https://circuitpython.org/board/feather_m0_express/))</span>
+<span class="cm"> *   set no flags at all, so the field at offset 28 is read as `file_size` rather</span>
+<span class="cm"> *   than `family_id`.</span>
+<span class="cm"> * * &lt;https://github.com/raspberrypi/pico-sdk-prebuilts/releases&gt; -</span>
+<span class="cm"> *   [Universal UF2](https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/README.md#universal-binary-vs-universal-uf2)</span>
+<span class="cm"> *   files, which are again two UF2 files concatenated. What&#39;s interesting about</span>
+<span class="cm"> *   these is that the last block of the first file (with the family ID</span>
+<span class="cm"> *   `family_id::rp2040`) is moved to the end of the second file, which was</span>
+<span class="cm"> *   intended for `family_id::rp2xxx_absolute` (see</span>
+<span class="cm"> *   &lt;https://github.com/raspberrypi/pico-examples/blob/c81c855ffdedc825975a40ba357723a71358ddf0/universal/CMakeLists.txt#L159-L169&gt;).</span>
+<span class="cm"> * * &lt;https://github.com/microsoft/pxt-microsoft-boot-sequence/releases&gt; - some</span>
+<span class="cm"> *   files contain blocks with the `flags.is_file_container` flag set (for</span>
+<span class="cm"> *   example</span>
+<span class="cm"> *   &lt;https://github.com/microsoft/pxt-microsoft-boot-sequence/releases/download/v0.0.4/arcade-p0.uf2&gt;</span>
+<span class="cm"> *   is a pure file container for</span>
+<span class="cm"> *   `file_name == &quot;Projects/microsoft-boot-sequence.elf&quot;`). Generated by</span>
+<span class="cm"> *   MakeCode, the only known producer of file container UF2s.</span>
+<span class="cm"> * * &lt;https://github.com/umi-eng/uftwo/tree/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests&gt; -</span>
+<span class="cm"> *   synthetic test files for features that real firmware doesn&#39;t seem to use</span>
+<span class="cm"> *   (e.g. MD5 checksums).</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="w"> </span><span class="kt">int</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">(</span>
+<span class="w">	</span><span class="nx">Uf2_ExtensionTagType__End</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">	</span><span class="nx">Uf2_ExtensionTagType__PageSize</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">780791</span>
+<span class="w">	</span><span class="nx">Uf2_ExtensionTagType__Description</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">6622621</span>
+<span class="w">	</span><span class="nx">Uf2_ExtensionTagType__Rp2IgnoreBlock</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">10049507</span>
+<span class="w">	</span><span class="nx">Uf2_ExtensionTagType__Version</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">10471356</span>
+<span class="w">	</span><span class="nx">Uf2_ExtensionTagType__Sha2Checksum</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">11824560</span>
+<span class="w">	</span><span class="nx">Uf2_ExtensionTagType__DeviceTypeId</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">13149993</span>
+<span class="p">)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">values_Uf2_ExtensionTagType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="nx">Uf2_ExtensionTagType</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}{</span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">780791</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">6622621</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">10049507</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">10471356</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">11824560</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">13149993</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="p">)</span><span class="w"> </span><span class="nx">isDefined</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">values_Uf2_ExtensionTagType</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">ok</span>
+<span class="p">}</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="kt">int</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">(</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32l4</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">16738585</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32l5</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">69471199</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f411xc</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">114362747</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__M0sense</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">299792458</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Atmega32</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">374814231</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Saml21</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">407992330</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Nrf52</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">458716255</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">475996592</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32l1</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">505365293</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32l0</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">539900561</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32wl</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">558239728</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rtl8710b</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">585160444</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Lpc55</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">716994540</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32c2</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">730387100</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f411xe</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">767756741</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32g0</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">806311475</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32s31</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">822212545</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Gd32f350</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">835856582</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32h2</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">858203894</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rtl8720d</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">863621090</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32p4</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1026592404</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__MaixplayU4</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1265126769</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32g4</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1282483210</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32h5</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1318001757</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Csk4</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1332399698</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Mimxrt10xx</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1337120189</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Xr809</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1374225320</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f7</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1404571392</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32c6</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1410195298</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Samd51</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1427194976</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f4</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1467308631</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Fx2</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1511523995</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f2</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1561987630</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f1</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1591873650</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Nrf52833</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1646171002</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f0</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1685595318</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Bk7231u</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1733968048</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Samd21</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1760373640</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Ch32v</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1771791084</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Bk7251</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1786956866</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f3</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1803837832</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f407</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1829315322</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32h7</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1840668802</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Csk6</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1853049000</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Nrf52832xxab</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1869948536</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32wb</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1892771411</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Nrf52832xxaa</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1920081230</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Max32690</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1947226634</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32c61</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2010665156</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Bk7231n</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2067722800</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Ra4m1</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2078840685</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Py32f071Uvk5V3</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2105173743</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp8266</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2125160941</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Kl32l2</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2139350931</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Nrf52820</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2181929567</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Stm32f407vg</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2410701054</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Max78002</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2446589208</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rza1lu</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2501329455</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Gd32vf103</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2599435827</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32h4</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2651564682</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rtl8710a</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2684343619</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__At32f415</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2697558926</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Nrf52840</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">2913282112</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32h21</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3067936943</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32s2</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3218951918</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32s3</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3296614247</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32c3</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3559628908</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Max32650</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3594487346</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Bl602</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3725750455</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rtl8720c</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3767498084</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rp2040</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3834380118</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rp2xxxAbsolute</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3834380119</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rp2xxxData</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3834380120</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rp2350ArmS</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3834380121</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rp2350Riscv</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3834380122</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Rp2350ArmNs</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3834380123</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Max32666</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">4039314801</span>
+<span class="w">	</span><span class="nx">Uf2_FamilyId__Esp32c5</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">4145808195</span>
+<span class="p">)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">values_Uf2_FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="nx">Uf2_FamilyId</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}{</span><span class="mi">16738585</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">69471199</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">114362747</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">299792458</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">374814231</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">407992330</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">458716255</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">475996592</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">505365293</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">539900561</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">558239728</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">585160444</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">716994540</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">730387100</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">767756741</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">806311475</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">822212545</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">835856582</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">858203894</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">863621090</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1026592404</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1265126769</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1282483210</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1318001757</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1332399698</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1337120189</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1374225320</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1404571392</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1410195298</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1427194976</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1467308631</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1511523995</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1561987630</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1591873650</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1646171002</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1685595318</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1733968048</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1760373640</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1771791084</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1786956866</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1803837832</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1829315322</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1840668802</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1853049000</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1869948536</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1892771411</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1920081230</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">1947226634</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2010665156</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2067722800</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2078840685</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2105173743</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2125160941</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2139350931</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2181929567</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2410701054</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2446589208</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2501329455</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2599435827</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2651564682</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2684343619</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2697558926</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2913282112</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3067936943</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3218951918</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3296614247</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3559628908</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3594487346</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3725750455</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3767498084</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3834380118</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3834380119</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3834380120</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3834380121</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3834380122</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3834380123</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">4039314801</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">4145808195</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="p">)</span><span class="w"> </span><span class="nx">isDefined</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">values_Uf2_FamilyId</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">ok</span>
+<span class="p">}</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Uf2</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">FirstBlock</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Block</span>
+<span class="w">	</span><span class="nx">Blocks</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">Uf2_Block</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewUf2</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Uf2</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Uf2</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp1</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewUf2_Block</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp1</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">FirstBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp1</span>
+<span class="w">	</span><span class="nx">tmp2</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">FirstBlock</span><span class="p">.</span><span class="nx">NumBlocks</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">i</span>
+<span class="w">		</span><span class="nx">tmp3</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewUf2_Block</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp3</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Blocks</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Blocks</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp3</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Uf2_Block</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Magic</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">SecondMagic</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">Flags</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Flags</span>
+<span class="w">	</span><span class="nx">TargetAddress</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">LenPayload</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">BlockNumber</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">NumBlocksRaw</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">FileSize</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">FamilyId</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span>
+<span class="w">	</span><span class="nx">Data</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_BlockData</span>
+<span class="w">	</span><span class="nx">FinalMagic</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span>
+<span class="w">	</span><span class="nx">_raw_Data</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">_f_isRp2350E10Block</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">isRp2350E10Block</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">_f_numBlocks</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">numBlocks</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewUf2_Block</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Block</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Uf2_Block</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Uf2_Block</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Block</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp4</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp4</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/block/seq/0&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp5</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp5</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp5</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">SecondMagic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp5</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">SecondMagic</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="mi">81</span><span class="p">,</span><span class="w"> </span><span class="mi">93</span><span class="p">,</span><span class="w"> </span><span class="mi">158</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="mi">81</span><span class="p">,</span><span class="w"> </span><span class="mi">93</span><span class="p">,</span><span class="w"> </span><span class="mi">158</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">SecondMagic</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/block/seq/1&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp6</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewUf2_Flags</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp6</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp6</span>
+<span class="w">	</span><span class="nx">tmp7</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TargetAddress</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp7</span><span class="p">)</span>
+<span class="w">	</span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_it</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">TargetAddress</span>
+<span class="w">		</span><span class="nx">tmp8</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">_it</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp8</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp8</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">tmp8</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationExprError</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">TargetAddress</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/block/seq/3&quot;</span><span class="p">)</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp9</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenPayload</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span>
+<span class="w">	</span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_it</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">LenPayload</span>
+<span class="w">		</span><span class="nx">tmp10</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">_it</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp10</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp10</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">tmp10</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationExprError</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenPayload</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/block/seq/4&quot;</span><span class="p">)</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">BlockNumber</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp12</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumBlocksRaw</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumBlocksRaw</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">BlockNumber</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationLessThanError</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">BlockNumber</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">NumBlocksRaw</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/block/seq/6&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp13</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">HasFamilyId</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(!(</span><span class="nx">tmp13</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp14</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileSize</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp15</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">HasFamilyId</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp15</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp16</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">Uf2_FamilyId</span><span class="p">(</span><span class="nx">tmp16</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp17</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">476</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp17</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span>
+<span class="w">	</span><span class="nx">_io__raw_Data</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Data</span><span class="p">))</span>
+<span class="w">	</span><span class="nx">tmp18</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewUf2_BlockData</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp18</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Data</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp18</span>
+<span class="w">	</span><span class="nx">tmp19</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp19</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp19</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">FinalMagic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp19</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">FinalMagic</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">48</span><span class="p">,</span><span class="w"> </span><span class="mi">111</span><span class="p">,</span><span class="w"> </span><span class="mi">177</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">48</span><span class="p">,</span><span class="w"> </span><span class="mi">111</span><span class="p">,</span><span class="w"> </span><span class="mi">177</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">FinalMagic</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/block/seq/10&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Determines whether this is a block that `picotool` prepends to RP2350</span>
+<span class="cm"> * flash images as a workaround for erratum RP2350-E10 (i.e. a hardware</span>
+<span class="cm"> * bug in the A2 version of the RP2350 boot ROM).</span>
+<span class="cm"> * </span>
+<span class="cm"> * Such a block is always written on its own, but its `num_blocks_raw` is</span>
+<span class="cm"> * set to 2. If we trusted this value, we would attempt to read one block</span>
+<span class="cm"> * too many (which would most likely fail). Therefore, we must correct it</span>
+<span class="cm"> * to 1 before using it.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The conditions for detecting this block come from the</span>
+<span class="cm"> * [`check_abs_block()`](https://github.com/raspberrypi/picotool/blob/6f6458d792b93685a11423b244a585eaa99eafcf/elf2uf2/elf2uf2.cpp#L147)</span>
+<span class="cm"> * function in `picotool`. However, there are some differences:</span>
+<span class="cm"> * </span>
+<span class="cm"> * 1. In Kaitai Struct, we cannot easily check whether all 256 payload</span>
+<span class="cm"> *    bytes are set to `0xef`, so we only check the first and last bytes.</span>
+<span class="cm"> * 2. There are .uf2 files in the wild where `flags.has_extension_tags`</span>
+<span class="cm"> *    is true, but there are actually no extension tags (the first and</span>
+<span class="cm"> *    only tag has a size of 0, which is just a terminator), so our</span>
+<span class="cm"> *    condition allows for this case. You can download an example of such</span>
+<span class="cm"> *    a .uf2 file here:</span>
+<span class="cm"> *    &lt;https://github.com/neednotapply/DC32-cfw/releases/tag/1.69.13.37&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * It&#39;s worth noting that we cannot require the presence of the</span>
+<span class="cm"> * `extension_tag_type::rp2_ignore_block`</span>
+<span class="cm"> * (`UF2_EXTENSION_RP2_IGNORE_BLOCK`) tag because the UF2 files generated</span>
+<span class="cm"> * by `picotool` prior to</span>
+<span class="cm"> * &lt;https://github.com/raspberrypi/picotool/commit/78c9bd121b09399823b67ee7ea89003ca0d3315f&gt;</span>
+<span class="cm"> * don&#39;t have it. Therefore, we check whether this tag is present only if</span>
+<span class="cm"> * `flags.has_extension_tags` is set.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Test .uf2 files with this special block can be downloaded from</span>
+<span class="cm"> * &lt;https://micropython.org/download/RPI_PICO2/&gt;. Note that all the .uf2</span>
+<span class="cm"> * files there are actually two UF2 (sub)files concatenated, and this</span>
+<span class="cm"> * Kaitai Struct implementation parses only one at a time (so in order to</span>
+<span class="cm"> * parse both, you need something like the helper spec `uf2_files.ksy`</span>
+<span class="cm"> * from</span>
+<span class="cm"> * &lt;https://github.com/kaitai-io/kaitai_struct_formats/pull/542#discussion_r3906386820&gt;).</span>
+<span class="cm"> * v1.24.x releases predate the `extension_tag_type::rp2_ignore_block`</span>
+<span class="cm"> * tag, while releases v1.25.0 and later include it.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/raspberrypi/picotool/blob/6f6458d792b93685a11423b244a585eaa99eafcf/elf2uf2/elf2uf2.cpp#L147&quot;&gt;Git tag &quot;2.3.0&quot;&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/raspberrypi/picotool/commit/78c9bd121b09399823b67ee7ea89003ca0d3315f&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Block</span><span class="p">)</span><span class="w"> </span><span class="nx">IsRp2350E10Block</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_isRp2350E10Block</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">isRp2350E10Block</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_isRp2350E10Block</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">tmp20</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">Payload</span>
+<span class="w">	</span><span class="nx">tmp21</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">HasExtensionTags</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">isRp2350E10Block</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8192</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">40960</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">FamilyId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">Uf2_FamilyId__Rp2xxxAbsolute</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumBlocksRaw</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">BlockNumber</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenPayload</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">256</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">Payload</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">239</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp20</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">tmp20</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">239</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((!(</span><span class="nx">tmp21</span><span class="p">))</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">ExtensionTags</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">LenTag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">ExtensionTags</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">LenTag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Data</span><span class="p">.</span><span class="nx">ExtensionTags</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">TagType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType__Rp2IgnoreBlock</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">isRp2350E10Block</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Block</span><span class="p">)</span><span class="w"> </span><span class="nx">NumBlocks</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">uint32</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_numBlocks</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">numBlocks</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_numBlocks</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp22</span><span class="w"> </span><span class="kt">int8</span><span class="p">;</span>
+<span class="w">	</span><span class="nx">tmp23</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">IsRp2350E10Block</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp23</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp22</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp22</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">NumBlocksRaw</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">numBlocks</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp22</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">numBlocks</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Address in flash where `data.payload` should be written, or an offset</span>
+<span class="cm"> * in the file specified by `data.file_name` if `flags.is_file_container`</span>
+<span class="cm"> * is set.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The [official</span>
+<span class="cm"> * spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#payload-sizes)</span>
+<span class="cm"> * says:</span>
+<span class="cm"> * </span>
+<span class="cm"> * &gt; In any event, payload size and target address should always be</span>
+<span class="cm"> * &gt; 4-byte aligned.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The [official</span>
+<span class="cm"> * spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#payload-sizes)</span>
+<span class="cm"> * says:</span>
+<span class="cm"> * </span>
+<span class="cm"> * &gt; In any event, payload size and target address should always be</span>
+<span class="cm"> * &gt; 4-byte aligned.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Number of blocks that make up the UF2 file to which this block</span>
+<span class="cm"> * belongs. Every block of a file has the same value. It is at least 1</span>
+<span class="cm"> * and every `block_number` in the file must be less than this value</span>
+<span class="cm"> * (which is validated by this Kaitai Struct implementation).</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Size of the file this block belongs to, but only if</span>
+<span class="cm"> * `flags.is_file_container` is true. Otherwise, the official spec allows</span>
+<span class="cm"> * this field to be set to anything - though in practice, it&#39;s always</span>
+<span class="cm"> * zero.</span>
+<span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Uf2_BlockData</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Payload</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">FileName</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">	</span><span class="nx">ExtensionTags</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">Uf2_ExtensionTag</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Block</span>
+<span class="w">	</span><span class="nx">_f_md5Checksum</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">md5Checksum</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Md5Checksum</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewUf2_BlockData</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_BlockData</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Uf2_BlockData</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Uf2_BlockData</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_BlockData</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Block</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp24</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">LenPayload</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp24</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp24</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp24</span>
+<span class="w">	</span><span class="nx">tmp25</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">IsFileContainer</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp26</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileName</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp27</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">HasExtensionTags</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">1</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp28</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewUf2_ExtensionTag</span><span class="p">()</span>
+<span class="w">			</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp28</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">			</span><span class="p">}</span>
+<span class="w">			</span><span class="nx">_it</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tmp28</span>
+<span class="w">			</span><span class="nx">this</span><span class="p">.</span><span class="nx">ExtensionTags</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">ExtensionTags</span><span class="p">,</span><span class="w"> </span><span class="nx">_it</span><span class="p">)</span>
+<span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="nx">_it</span><span class="p">.</span><span class="nx">LenTag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="k">break</span>
+<span class="w">			</span><span class="p">}</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Describes a region that doesn&#39;t need to be flashed again if the</span>
+<span class="cm"> * checksum matches.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The [official</span>
+<span class="cm"> * spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#md5-checksum)</span>
+<span class="cm"> * says that &quot;This is currently only used on ESP32&quot;, but no real-world</span>
+<span class="cm"> * firmware sample has been found (at least none of the .uf2 files from</span>
+<span class="cm"> * &lt;https://github.com/adafruit/tinyuf2/releases&gt;,</span>
+<span class="cm"> * [MicroPython](https://micropython.org/download/) or</span>
+<span class="cm"> * [CircuitPython](https://circuitpython.org/downloads) contain it). It</span>
+<span class="cm"> * was found only in some synthetic test files, e.g.</span>
+<span class="cm"> * &lt;https://github.com/umi-eng/uftwo/blob/35bccf75b4f81c43f088696a8c4a9912f1f4104e/uftwo/tests/checksum_256.uf2&gt;.</span>
+<span class="cm"> */</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_BlockData</span><span class="p">)</span><span class="w"> </span><span class="nx">Md5Checksum</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Md5Checksum</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_md5Checksum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">md5Checksum</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_md5Checksum</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">tmp29</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">Flags</span><span class="p">.</span><span class="nx">HasMd5Checksum</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp30</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Size</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">tmp30</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">24</span><span class="p">),</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp31</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewUf2_Md5Checksum</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp31</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">md5Checksum</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp31</span>
+<span class="w">		</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">md5Checksum</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The bytes to be written to `_parent.target_address`, which is either</span>
+<span class="cm"> * an address in flash, or an offset in the file specified by `file_name`</span>
+<span class="cm"> * if `_parent.flags.is_file_container` is set.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#extension-tags&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Uf2_ExtensionTag</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">LenTag</span><span class="w"> </span><span class="kt">uint8</span>
+<span class="w">	</span><span class="nx">TagType</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span>
+<span class="w">	</span><span class="nx">Value</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">Padding</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_BlockData</span>
+<span class="w">	</span><span class="nx">_f_lenValue</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">lenValue</span><span class="w"> </span><span class="kt">int</span>
+<span class="w">	</span><span class="nx">_f_minLenTag</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">minLenTag</span><span class="w"> </span><span class="kt">int</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewUf2_ExtensionTag</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_ExtensionTag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Uf2_ExtensionTag</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Uf2_ExtensionTag</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_ExtensionTag</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_BlockData</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp32</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenTag</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp32</span>
+<span class="w">	</span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_it</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">LenTag</span>
+<span class="w">		</span><span class="nx">tmp33</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">MinLenTag</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="w"> </span><span class="p">((</span><span class="nx">_it</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">_it</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nx">tmp33</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationExprError</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenTag</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/extension_tag/seq/0&quot;</span><span class="p">)</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp34</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntLe</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TagType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">Uf2_ExtensionTagType</span><span class="p">(</span><span class="nx">tmp34</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">AlignToByte</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenTag</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp35</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">LenValue</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp36</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">))</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp36</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp36</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp36</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp37</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenTag</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp37</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp37</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp38</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp37</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp38</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp38</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Padding</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp38</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_ExtensionTag</span><span class="p">)</span><span class="w"> </span><span class="nx">LenValue</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">lenValue</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_lenValue</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp39</span><span class="w"> </span><span class="kt">int</span><span class="p">;</span>
+<span class="w">	</span><span class="nx">tmp40</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">MinLenTag</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenTag</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nx">tmp40</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp41</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">MinLenTag</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp39</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">LenTag</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">tmp41</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp39</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">lenValue</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp39</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">lenValue</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_ExtensionTag</span><span class="p">)</span><span class="w"> </span><span class="nx">MinLenTag</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_minLenTag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">minLenTag</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_minLenTag</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">minLenTag</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">minLenTag</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Total size of the tag in bytes, including this byte and `tag_type`, so</span>
+<span class="cm"> * at least 4. The exception is the last tag which terminates the list -</span>
+<span class="cm"> * it specifies a total size of 0.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Tags are 4-byte aligned, so a tag whose size is not a multiple</span>
+<span class="cm"> * of 4 is followed by padding.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/uf2.h#L43-L47&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/raspberrypi/pico-sdk/blob/98a542c1a62fb549ffb5d66a3e5892b06276b670/src/common/boot_uf2_headers/include/boot/uf2.h#L23-L27&quot;&gt;Git tag &quot;2.3.0&quot;&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Uf2_Flags</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Value</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Block</span>
+<span class="w">	</span><span class="nx">_f_hasExtensionTags</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">hasExtensionTags</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">_f_hasFamilyId</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">hasFamilyId</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">_f_hasMd5Checksum</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">hasMd5Checksum</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">_f_isFileContainer</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">isFileContainer</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">_f_notMainFlash</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">notMainFlash</span><span class="w"> </span><span class="kt">bool</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewUf2_Flags</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Flags</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Uf2_Flags</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Uf2_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Block</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp42</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp42</span><span class="p">)</span>
+<span class="w">	</span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_it</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span>
+<span class="w">		</span><span class="nx">tmp43</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">IsFileContainer</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp44</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">HasExtensionTags</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="w"> </span><span class="p">((</span><span class="nx">_it</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">^</span><span class="mi">61441</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(!(</span><span class="w"> </span><span class="p">((</span><span class="nx">tmp43</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp44</span><span class="p">))</span><span class="w"> </span><span class="p">)))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationExprError</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/flags/seq/0&quot;</span><span class="p">)</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Indicates whether extension tags are present after the payload.</span>
+<span class="cm"> */</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">HasExtensionTags</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_hasExtensionTags</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">hasExtensionTags</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_hasExtensionTags</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">hasExtensionTags</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32768</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">hasExtensionTags</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The field at offset 28 in the block is `family_id` instead of</span>
+<span class="cm"> * `file_size`.</span>
+<span class="cm"> */</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">HasFamilyId</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_hasFamilyId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">hasFamilyId</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_hasFamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">hasFamilyId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">hasFamilyId</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Indicates whether `md5_checksum` is present at the end of `data`.</span>
+<span class="cm"> */</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">HasMd5Checksum</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_hasMd5Checksum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">hasMd5Checksum</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_hasMd5Checksum</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">hasMd5Checksum</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">16384</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">hasMd5Checksum</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * When set, the UF2 format is used as a container for regular files</span>
+<span class="cm"> * (akin to a TAR file, or ZIP archive without compression).</span>
+<span class="cm"> * </span>
+<span class="cm"> * `target_address` is the offset in the file where the payload is to be</span>
+<span class="cm"> * written, and `file_size` is the size of that file. The name of the</span>
+<span class="cm"> * destination file is stored in `data.file_name`.</span>
+<span class="cm"> */</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">IsFileContainer</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_isFileContainer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">isFileContainer</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_isFileContainer</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">isFileContainer</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">4096</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">isFileContainer</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Indicates that this block should be skipped when writing the device</span>
+<span class="cm"> * flash. It can be used to store data that does not fit on the device,</span>
+<span class="cm"> * typically embedded source code or debug info.</span>
+<span class="cm"> */</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">NotMainFlash</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_notMainFlash</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">notMainFlash</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_notMainFlash</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">notMainFlash</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">notMainFlash</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Only the five bits that we cover in value instances below are defined,</span>
+<span class="cm"> * and no other bit may be set. The [official</span>
+<span class="cm"> * spec](https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#flags)</span>
+<span class="cm"> * says &quot;Currently, there are five flags defined&quot;. If any other flags are</span>
+<span class="cm"> * added in the future, this .ksy spec will need to be updated.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The `is_file_container` and `has_extension_tags` flags disagree about</span>
+<span class="cm"> * what follows the payload in `data` (a file name or a list of extension</span>
+<span class="cm"> * tags), so this Kaitai Struct implementation treats them as mutually</span>
+<span class="cm"> * exclusive and will reject a block that sets both. The official spec</span>
+<span class="cm"> * does not specify how this should be handled, but logically there&#39;s a</span>
+<span class="cm"> * conflict, so we&#39;ve decided to strictly treat it as an error.</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/microsoft/uf2/blob/90e9741f217f5a40c98ba74d663e408041037578/README.md#md5-checksum&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Uf2_Md5Checksum</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">StartAddress</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">LenRegion</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">Md5</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_BlockData</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewUf2_Md5Checksum</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Md5Checksum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Uf2_Md5Checksum</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Uf2_Md5Checksum</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_Md5Checksum</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2_BlockData</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Uf2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp45</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">StartAddress</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp45</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp46</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenRegion</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp46</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp47</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp47</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp47</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Md5</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp47</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2026 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>
