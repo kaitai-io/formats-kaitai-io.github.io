@@ -1,0 +1,231 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__webp {
+		label="Webp";
+		graph[style=dotted];
+
+		webp__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>52 49 46 46</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="len_data_pos">4</TD><TD PORT="len_data_size">4</TD><TD>u4le</TD><TD PORT="len_data_type">len_data</TD></TR>
+			<TR><TD PORT="webp_pos">8</TD><TD PORT="webp_size">4</TD><TD>57 45 42 50</TD><TD PORT="webp_type">webp</TD></TR>
+			<TR><TD PORT="payload_pos">12</TD><TD PORT="payload_size">len_data - 4</TD><TD>Chunks</TD><TD PORT="payload_type">payload</TD></TR>
+		</TABLE>>];
+		subgraph cluster__alph {
+			label="Webp::Alph";
+			graph[style=dotted];
+
+			alph__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">2b</TD><TD>b2be</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD COLSPAN="4" PORT="reserved__valid">must be equal to 0</TD></TR>
+				<TR><TD PORT="preprocessing_pos">0:2</TD><TD PORT="preprocessing_size">2b</TD><TD>b2be→Preprocessing</TD><TD PORT="preprocessing_type">preprocessing</TD></TR>
+				<TR><TD COLSPAN="4" PORT="preprocessing__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="filtering_pos">0:4</TD><TD PORT="filtering_size">2b</TD><TD>b2be→FilteringMethod</TD><TD PORT="filtering_type">filtering</TD></TR>
+				<TR><TD PORT="compression_pos">0:6</TD><TD PORT="compression_size">2b</TD><TD>b2be→CompressionMethod</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="data_pos">1</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__anim {
+			label="Webp::Anim";
+			graph[style=dotted];
+
+			anim__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="background_color_pos">0</TD><TD PORT="background_color_size">4</TD><TD>BgColor</TD><TD PORT="background_color_type">background_color</TD></TR>
+				<TR><TD PORT="loop_count_pos">4</TD><TD PORT="loop_count_size">2</TD><TD>u2le</TD><TD PORT="loop_count_type">loop_count</TD></TR>
+			</TABLE>>];
+			subgraph cluster__bg_color {
+				label="Webp::Anim::BgColor";
+				graph[style=dotted];
+
+				bg_color__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="blue_pos">0</TD><TD PORT="blue_size">1</TD><TD>u1</TD><TD PORT="blue_type">blue</TD></TR>
+					<TR><TD PORT="green_pos">1</TD><TD PORT="green_size">1</TD><TD>u1</TD><TD PORT="green_type">green</TD></TR>
+					<TR><TD PORT="red_pos">2</TD><TD PORT="red_size">1</TD><TD>u1</TD><TD PORT="red_type">red</TD></TR>
+					<TR><TD PORT="alpha_pos">3</TD><TD PORT="alpha_size">1</TD><TD>u1</TD><TD PORT="alpha_type">alpha</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__anmf {
+			label="Webp::Anmf";
+			graph[style=dotted];
+
+			anmf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="frame_x_div_2_pos">0</TD><TD PORT="frame_x_div_2_size">3</TD><TD>b24le</TD><TD PORT="frame_x_div_2_type">frame_x_div_2</TD></TR>
+				<TR><TD PORT="frame_y_div_2_pos">3</TD><TD PORT="frame_y_div_2_size">3</TD><TD>b24le</TD><TD PORT="frame_y_div_2_type">frame_y_div_2</TD></TR>
+				<TR><TD PORT="frame_width_minus_1_pos">6</TD><TD PORT="frame_width_minus_1_size">3</TD><TD>b24le</TD><TD PORT="frame_width_minus_1_type">frame_width_minus_1</TD></TR>
+				<TR><TD PORT="frame_height_minus_1_pos">9</TD><TD PORT="frame_height_minus_1_size">3</TD><TD>b24le</TD><TD PORT="frame_height_minus_1_type">frame_height_minus_1</TD></TR>
+				<TR><TD PORT="duration_pos">12</TD><TD PORT="duration_size">3</TD><TD>b24le</TD><TD PORT="duration_type">duration</TD></TR>
+				<TR><TD PORT="reserved_pos">15</TD><TD PORT="reserved_size">6b</TD><TD>b6be</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD COLSPAN="4" PORT="reserved__valid">must be equal to 0</TD></TR>
+				<TR><TD PORT="blending_method_pos">15:6</TD><TD PORT="blending_method_size">1b</TD><TD>b1be→bool</TD><TD PORT="blending_method_type">blending_method</TD></TR>
+				<TR><TD PORT="disposal_method_pos">15:7</TD><TD PORT="disposal_method_size">1b</TD><TD>b1be→bool</TD><TD PORT="disposal_method_type">disposal_method</TD></TR>
+				<TR><TD PORT="data_pos">16</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+			anmf__inst__frame_height [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>frame_height</TD><TD>frame_height_minus_1 + 1</TD></TR>
+			</TABLE>>];
+			anmf__inst__frame_width [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>frame_width</TD><TD>frame_width_minus_1 + 1</TD></TR>
+			</TABLE>>];
+			anmf__inst__frame_x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>frame_x</TD><TD>frame_x_div_2 * 2</TD></TR>
+			</TABLE>>];
+			anmf__inst__frame_y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>frame_y</TD><TD>frame_y_div_2 * 2</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__chunk {
+			label="Webp::Chunk";
+			graph[style=dotted];
+
+			chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">4</TD><TD>u4le→ChunkNames</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD COLSPAN="4" PORT="name__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="len_data_pos">4</TD><TD PORT="len_data_size">4</TD><TD>u4le</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="data_pos">8</TD><TD PORT="data_size">...</TD><TD>switch (name)</TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">1</TD><TD>00</TD><TD PORT="padding_type">padding</TD></TR>
+				<TR><TD COLSPAN="4" PORT="padding__if">if len_data % 2 != 0</TD></TR>
+			</TABLE>>];
+chunk__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:chunk_names_alph</TD><TD PORT="case0">Alph</TD></TR>
+	<TR><TD>:chunk_names_anim</TD><TD PORT="case1">Anim</TD></TR>
+	<TR><TD>:chunk_names_anmf</TD><TD PORT="case2">Anmf</TD></TR>
+	<TR><TD>:chunk_names_vp8</TD><TD PORT="case3">Vp8</TD></TR>
+	<TR><TD>:chunk_names_vp8l</TD><TD PORT="case4">Vp8l</TD></TR>
+	<TR><TD>:chunk_names_vp8x</TD><TD PORT="case5">Vp8x</TD></TR>
+	<TR><TD>:chunk_names_xmp</TD><TD PORT="case6">Xmp</TD></TR>
+	<TR><TD>:chunk_names_xmp_var</TD><TD PORT="case7">Xmp</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__chunks {
+			label="Webp::Chunks";
+			graph[style=dotted];
+
+			chunks__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunks_pos">0</TD><TD PORT="chunks_size">...</TD><TD>Chunk</TD><TD PORT="chunks_type">chunks</TD></TR>
+				<TR><TD COLSPAN="4" PORT="chunks__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__vp8 {
+			label="Webp::Vp8";
+			graph[style=dotted];
+
+			vp8__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="frame_type_pos">0</TD><TD PORT="frame_type_size">1b</TD><TD>b1le→bool</TD><TD PORT="frame_type_type">frame_type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="frame_type__valid">must be equal to false</TD></TR>
+				<TR><TD PORT="version_pos">0:1</TD><TD PORT="version_size">3b</TD><TD>b3le</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD COLSPAN="4" PORT="version__valid">must be at most 3</TD></TR>
+				<TR><TD PORT="show_frame_pos">0:4</TD><TD PORT="show_frame_size">1b</TD><TD>b1le→bool</TD><TD PORT="show_frame_type">show_frame</TD></TR>
+				<TR><TD PORT="len_first_partition_pos">0:5</TD><TD PORT="len_first_partition_size">19b</TD><TD>b19le</TD><TD PORT="len_first_partition_type">len_first_partition</TD></TR>
+				<TR><TD PORT="start_code_pos">3</TD><TD PORT="start_code_size">3</TD><TD>9D 01 2A</TD><TD PORT="start_code_type">start_code</TD></TR>
+				<TR><TD PORT="width_pos">6</TD><TD PORT="width_size">14b</TD><TD>b14le</TD><TD PORT="width_type">width</TD></TR>
+				<TR><TD PORT="horizontal_scale_pos">7:6</TD><TD PORT="horizontal_scale_size">2b</TD><TD>b2le</TD><TD PORT="horizontal_scale_type">horizontal_scale</TD></TR>
+				<TR><TD PORT="height_pos">8</TD><TD PORT="height_size">14b</TD><TD>b14le</TD><TD PORT="height_type">height</TD></TR>
+				<TR><TD PORT="vertical_scale_pos">9:6</TD><TD PORT="vertical_scale_size">2b</TD><TD>b2le</TD><TD PORT="vertical_scale_type">vertical_scale</TD></TR>
+				<TR><TD PORT="data_pos">10</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__vp8l {
+			label="Webp::Vp8l";
+			graph[style=dotted];
+
+			vp8l__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">1</TD><TD>u1</TD><TD PORT="signature_type">signature</TD></TR>
+				<TR><TD COLSPAN="4" PORT="signature__valid">must be equal to 47</TD></TR>
+				<TR><TD PORT="image_width_minus_1_pos">1</TD><TD PORT="image_width_minus_1_size">14b</TD><TD>b14le</TD><TD PORT="image_width_minus_1_type">image_width_minus_1</TD></TR>
+				<TR><TD PORT="image_height_minus_1_pos">2:6</TD><TD PORT="image_height_minus_1_size">14b</TD><TD>b14le</TD><TD PORT="image_height_minus_1_type">image_height_minus_1</TD></TR>
+				<TR><TD PORT="alpha_is_used_pos">4:4</TD><TD PORT="alpha_is_used_size">1b</TD><TD>b1le→bool</TD><TD PORT="alpha_is_used_type">alpha_is_used</TD></TR>
+				<TR><TD PORT="version_number_pos">4:5</TD><TD PORT="version_number_size">3b</TD><TD>b3le</TD><TD PORT="version_number_type">version_number</TD></TR>
+				<TR><TD COLSPAN="4" PORT="version_number__valid">must be equal to 0</TD></TR>
+				<TR><TD PORT="data_pos">5</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+			vp8l__inst__image_height [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>image_height</TD><TD>image_height_minus_1 + 1</TD></TR>
+			</TABLE>>];
+			vp8l__inst__image_width [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>image_width</TD><TD>image_width_minus_1 + 1</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__vp8x {
+			label="Webp::Vp8x";
+			graph[style=dotted];
+
+			vp8x__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved1_pos">0</TD><TD PORT="reserved1_size">2b</TD><TD>b2be</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD COLSPAN="4" PORT="reserved1__valid">must be equal to 0</TD></TR>
+				<TR><TD PORT="icc_profile_pos">0:2</TD><TD PORT="icc_profile_size">1b</TD><TD>b1be→bool</TD><TD PORT="icc_profile_type">icc_profile</TD></TR>
+				<TR><TD PORT="alpha_pos">0:3</TD><TD PORT="alpha_size">1b</TD><TD>b1be→bool</TD><TD PORT="alpha_type">alpha</TD></TR>
+				<TR><TD PORT="exif_pos">0:4</TD><TD PORT="exif_size">1b</TD><TD>b1be→bool</TD><TD PORT="exif_type">exif</TD></TR>
+				<TR><TD PORT="xmp_pos">0:5</TD><TD PORT="xmp_size">1b</TD><TD>b1be→bool</TD><TD PORT="xmp_type">xmp</TD></TR>
+				<TR><TD PORT="animation_pos">0:6</TD><TD PORT="animation_size">1b</TD><TD>b1be→bool</TD><TD PORT="animation_type">animation</TD></TR>
+				<TR><TD PORT="reserved2_pos">0:7</TD><TD PORT="reserved2_size">1b</TD><TD>b1be→bool</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				<TR><TD COLSPAN="4" PORT="reserved2__valid">must be equal to false</TD></TR>
+				<TR><TD PORT="reserved3_pos">1</TD><TD PORT="reserved3_size">3</TD><TD>b24be</TD><TD PORT="reserved3_type">reserved3</TD></TR>
+				<TR><TD COLSPAN="4" PORT="reserved3__valid">must be equal to 0</TD></TR>
+				<TR><TD PORT="canvas_width_minus_1_pos">4</TD><TD PORT="canvas_width_minus_1_size">3</TD><TD>b24le</TD><TD PORT="canvas_width_minus_1_type">canvas_width_minus_1</TD></TR>
+				<TR><TD PORT="canvas_height_minus_1_pos">7</TD><TD PORT="canvas_height_minus_1_size">3</TD><TD>b24le</TD><TD PORT="canvas_height_minus_1_type">canvas_height_minus_1</TD></TR>
+				<TR><TD COLSPAN="4" PORT="canvas_height_minus_1__valid">must be at most 4294967295 / canvas_width - 1</TD></TR>
+			</TABLE>>];
+			vp8x__inst__canvas_height [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>canvas_height</TD><TD>canvas_height_minus_1 + 1</TD></TR>
+			</TABLE>>];
+			vp8x__inst__canvas_width [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>canvas_width</TD><TD>canvas_width_minus_1 + 1</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__xmp {
+			label="Webp::Xmp";
+			graph[style=dotted];
+
+			xmp__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+	}
+	webp__seq:len_data_type -> webp__seq:payload_size [color="#404040"];
+	webp__seq:webp_size -> webp__seq:payload_size [color="#404040"];
+	webp__seq:payload_type -> chunks__seq [style=bold];
+	anim__seq:background_color_type -> bg_color__seq [style=bold];
+	anmf__seq:frame_height_minus_1_type -> anmf__inst__frame_height [color="#404040"];
+	anmf__seq:frame_width_minus_1_type -> anmf__inst__frame_width [color="#404040"];
+	anmf__seq:frame_x_div_2_type -> anmf__inst__frame_x [color="#404040"];
+	anmf__seq:frame_y_div_2_type -> anmf__inst__frame_y [color="#404040"];
+	chunk__seq:data_type -> chunk__seq_data_switch [style=bold];
+	chunk__seq_data_switch:case0 -> alph__seq [style=bold];
+	chunk__seq_data_switch:case1 -> anim__seq [style=bold];
+	chunk__seq_data_switch:case2 -> anmf__seq [style=bold];
+	chunk__seq_data_switch:case3 -> vp8__seq [style=bold];
+	chunk__seq_data_switch:case4 -> vp8l__seq [style=bold];
+	chunk__seq_data_switch:case5 -> vp8x__seq [style=bold];
+	chunk__seq_data_switch:case6 -> xmp__seq [style=bold];
+	chunk__seq_data_switch:case7 -> xmp__seq [style=bold];
+	chunk__seq:name_type -> chunk__seq:data_type [color="#404040"];
+	chunk__seq:len_data_type -> chunk__seq:padding__if [color="#404040"];
+	chunks__seq:chunks_type -> chunk__seq [style=bold];
+	vp8l__seq:image_height_minus_1_type -> vp8l__inst__image_height [color="#404040"];
+	vp8l__seq:image_width_minus_1_type -> vp8l__inst__image_width [color="#404040"];
+	vp8x__inst__canvas_width:canvas_width_type -> vp8x__seq:canvas_height_minus_1__valid [color="#404040"];
+	vp8x__seq:canvas_height_minus_1_type -> vp8x__inst__canvas_height [color="#404040"];
+	vp8x__seq:canvas_width_minus_1_type -> vp8x__inst__canvas_width [color="#404040"];
+}
