@@ -13,15 +13,37 @@ use std::cell::{Ref, Cell, RefCell};
 use std::rc::{Rc, Weak};
 
 /**
- * This parser is for the RPM version 3 file format which is the current version
- * of the file format used by RPM 2.1 and later (including RPM version 4.x, which
- * is the current version of the RPM tool). There are historical versions of the
- * RPM file format, as well as a currently abandoned fork (rpm5). These formats
- * are not covered by this specification.
- * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md Source
- * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md Source
+ * An RPM package consists of the lead, the signature (contains digests and
+ * signatures), the header (contains the package metadata) and the payload (a
+ * compressed archive of the package files).
+ * 
+ * This structure is shared by all package format versions supported by this
+ * Kaitai Struct implementation:
+ * 
+ * * v3, written by RPM 2.1 to 3.x.
+ * * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+ *   to 4 - see
+ *   <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192>.
+ *   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+ *   default - see
+ *   <https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch>.
+ * * v6, written by upstream RPM 6.0 by default - see
+ *   <https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37>.
+ * 
+ * The versions differ mainly in the tags they use: v6 packages store all sizes
+ * as 64-bit integers, carry only cryptographic data in the signature and always
+ * use the stripped-down cpio archive format (see the `payload` instance).
+ * 
+ * The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+ * this implementation.
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md Source
  * \sa https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html Source
- * \sa http://ftp.rpm.org/max-rpm/ Source
+ * \sa https://ftp.osuosl.org/pub/rpm/max-rpm/ Source
  */
 
 #[derive(Default, Debug, Clone)]
@@ -36,9 +58,18 @@ pub struct Rpm {
     header: RefCell<OptRc<Rpm_Header>>,
     unnamed5: RefCell<Vec<u8>>,
     signature_tags_steps: RefCell<Vec<OptRc<Rpm_SignatureTagsStep>>>,
+    header_tags_steps: RefCell<Vec<OptRc<Rpm_HeaderTagsStep>>>,
     _io: RefCell<BytesReader>,
+    f_has_header_payload_size_tag: Cell<bool>,
+    has_header_payload_size_tag: RefCell<bool>,
+    f_has_payload: Cell<bool>,
+    has_payload: RefCell<bool>,
+    f_has_signature_long_size_tag: Cell<bool>,
+    has_signature_long_size_tag: RefCell<bool>,
     f_has_signature_size_tag: Cell<bool>,
     has_signature_size_tag: RefCell<bool>,
+    f_header_payload_size_tag: Cell<bool>,
+    header_payload_size_tag: RefCell<OptRc<Rpm_HeaderIndexRecord>>,
     f_len_header: Cell<bool>,
     len_header: RefCell<i32>,
     f_len_payload: Cell<bool>,
@@ -49,6 +80,8 @@ pub struct Rpm {
     ofs_payload: RefCell<i32>,
     f_payload: Cell<bool>,
     payload: RefCell<Vec<u8>>,
+    f_signature_long_size_tag: Cell<bool>,
+    signature_long_size_tag: RefCell<OptRc<Rpm_HeaderIndexRecord>>,
     f_signature_size_tag: Cell<bool>,
     signature_size_tag: RefCell<OptRc<Rpm_HeaderIndexRecord>>,
 }
@@ -87,14 +120,63 @@ impl KStruct for Rpm {
         *self_rc.signature_tags_steps.borrow_mut() = Vec::new();
         let l_signature_tags_steps = *self_rc.signature().header_record().num_index_records();
         for _i in 0..l_signature_tags_steps {
-            let f = |t : &mut Rpm_SignatureTagsStep| Ok(t.set_params((_i).try_into().map_err(|_| KError::CastError)?, (if ((_i as i32) < (1 as i32)) { -1 } else { *self_rc.signature_tags_steps()[((_i as i32) - (1 as i32)) as usize].size_tag_idx()? }).try_into().map_err(|_| KError::CastError)?));
+            let f = |t : &mut Rpm_SignatureTagsStep| Ok(t.set_params((_i).try_into().map_err(|_| KError::CastError)?, (if ((_i as i32) != (0 as i32)) { *self_rc.signature_tags_steps()[((_i as i32) - (1 as i32)) as usize].size_tag_idx()? } else { -1 }).try_into().map_err(|_| KError::CastError)?, (if ((_i as i32) != (0 as i32)) { *self_rc.signature_tags_steps()[((_i as i32) - (1 as i32)) as usize].long_size_tag_idx()? } else { -1 }).try_into().map_err(|_| KError::CastError)?));
             let t = Self::read_into_with_init::<_, Rpm_SignatureTagsStep>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
             self_rc.signature_tags_steps.borrow_mut().push(t);
+        }
+        *self_rc.header_tags_steps.borrow_mut() = Vec::new();
+        let l_header_tags_steps = *self_rc.header().header_record().num_index_records();
+        for _i in 0..l_header_tags_steps {
+            let f = |t : &mut Rpm_HeaderTagsStep| Ok(t.set_params((_i).try_into().map_err(|_| KError::CastError)?, (if ((_i as i32) != (0 as i32)) { *self_rc.header_tags_steps()[((_i as i32) - (1 as i32)) as usize].payload_size_tag_idx()? } else { -1 }).try_into().map_err(|_| KError::CastError)?));
+            let t = Self::read_into_with_init::<_, Rpm_HeaderTagsStep>(&*_io, Some(self_rc._root.clone()), Some(self_rc._self.clone()), &f)?.into();
+            self_rc.header_tags_steps.borrow_mut().push(t);
         }
         Ok(())
     }
 }
 impl Rpm {
+    pub fn has_header_payload_size_tag(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_has_header_payload_size_tag.get() {
+            return Ok(self.has_header_payload_size_tag.borrow());
+        }
+        self.f_has_header_payload_size_tag.set(true);
+        *self.has_header_payload_size_tag.borrow_mut() = (*self.header_tags_steps().last().ok_or(KError::EmptyIterator)?.payload_size_tag_idx()? != -1) as bool;
+        Ok(self.has_header_payload_size_tag.borrow())
+    }
+    pub fn has_payload(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_has_payload.get() {
+            return Ok(self.has_payload.borrow());
+        }
+        self.f_has_payload.set(true);
+        *self.has_payload.borrow_mut() = ( ((*self.has_header_payload_size_tag()?) || (*self.has_signature_long_size_tag()?) || (*self.has_signature_size_tag()?)) ) as bool;
+        Ok(self.has_payload.borrow())
+    }
+    pub fn has_signature_long_size_tag(
+        &self
+    ) -> KResult<Ref<'_, bool>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_has_signature_long_size_tag.get() {
+            return Ok(self.has_signature_long_size_tag.borrow());
+        }
+        self.f_has_signature_long_size_tag.set(true);
+        *self.has_signature_long_size_tag.borrow_mut() = (*self.signature_tags_steps().last().ok_or(KError::EmptyIterator)?.long_size_tag_idx()? != -1) as bool;
+        Ok(self.has_signature_long_size_tag.borrow())
+    }
     pub fn has_signature_size_tag(
         &self
     ) -> KResult<Ref<'_, bool>> {
@@ -108,6 +190,21 @@ impl Rpm {
         self.f_has_signature_size_tag.set(true);
         *self.has_signature_size_tag.borrow_mut() = (*self.signature_tags_steps().last().ok_or(KError::EmptyIterator)?.size_tag_idx()? != -1) as bool;
         Ok(self.has_signature_size_tag.borrow())
+    }
+    pub fn header_payload_size_tag(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Rpm_HeaderIndexRecord>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_header_payload_size_tag.get() {
+            return Ok(self.header_payload_size_tag.borrow());
+        }
+        if *self.has_header_payload_size_tag()? {
+            *self.header_payload_size_tag.borrow_mut() = self.header().index_records()[*self.header_tags_steps().last().ok_or(KError::EmptyIterator)?.payload_size_tag_idx()? as usize].clone();
+        }
+        Ok(self.header_payload_size_tag.borrow())
     }
     pub fn len_header(
         &self
@@ -123,6 +220,21 @@ impl Rpm {
         *self.len_header.borrow_mut() = (((*self.ofs_payload()? as i32) - (*self.ofs_header()? as i32))) as i32;
         Ok(self.len_header.borrow())
     }
+
+    /**
+     * Size of the (compressed) payload in bytes. v6 packages store it in
+     * `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+     * (which also includes the size of the header).
+     * 
+     * If the header and payload together or the uncompressed payload reach
+     * 4 GiB, v4 packages use `signature_tags::long_size` instead - see
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212>.
+     * 
+     * RPM never writes both (so this is just a hypothetical scenario), but if
+     * both are present, `signature_tags::long_size` takes precedence over
+     * `signature_tags::size`, just like in RPM's `printSize()` function:
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43>
+     */
     pub fn len_payload(
         &self
     ) -> KResult<Ref<'_, i32>> {
@@ -134,8 +246,8 @@ impl Rpm {
             return Ok(self.len_payload.borrow());
         }
         self.f_len_payload.set(true);
-        if *self.has_signature_size_tag()? {
-            *self.len_payload.borrow_mut() = (((Into::<OptRc<Rpm_RecordTypeUint32>>::into(&*self.signature_size_tag()?.body()?.as_ref().unwrap()).values()[0 as usize] as i32) - (*self.len_header()? as i32))) as i32;
+        if *self.has_payload()? {
+            *self.len_payload.borrow_mut() = (if *self.has_header_payload_size_tag()? { Into::<OptRc<Rpm_RecordTypeUint64>>::into(&*self.header_payload_size_tag()?.body()?.as_ref().unwrap()).values()[0 as usize] } else { if *self.has_signature_long_size_tag()? { ((Into::<OptRc<Rpm_RecordTypeUint64>>::into(&*self.signature_long_size_tag()?.body()?.as_ref().unwrap()).values()[0 as usize] as i32) - (*self.len_header()? as i32)) } else { ((Into::<OptRc<Rpm_RecordTypeUint32>>::into(&*self.signature_size_tag()?.body()?.as_ref().unwrap()).values()[0 as usize] as i32) - (*self.len_header()? as i32)) } }) as i32;
         }
         Ok(self.len_payload.borrow())
     }
@@ -167,6 +279,34 @@ impl Rpm {
         *self.ofs_payload.borrow_mut() = (_io.pos()) as i32;
         Ok(self.ofs_payload.borrow())
     }
+
+    /**
+     * Archive of the package files, compressed using the method specified by
+     * `header_tags::payload_compressor`. If this tag is missing, it's almost
+     * certainly uncompressed (except for some very old v3 packages built by RPM
+     * 3.0.3 or earlier, which didn't use the tag because the payload was always
+     * gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+     * the tag). However, RPM reads the payload as gzip by default - see
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645>.
+     * Since zlib's gzip reader passes data that is not in gzip format through
+     * unchanged (see
+     * <https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389>),
+     * this also works for uncompressed payloads.
+     * 
+     * The archive format is given by `header_tags::payload_format`, which is
+     * `"cpio"` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+     * without a checksum (the `070701` variant) - the [v4 format
+     * documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+     * claims "with a CRC checksum", but that's not true since RPM 2.4.4
+     * (released in 1997).
+     * 
+     * v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+     * variant of cpio with the magic `07070X`. Its file headers only hold the
+     * index of the file in the file lists of the RPM header, which is the only
+     * place where the file names, sizes and other metadata are stored.
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload Source
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload Source
+     */
     pub fn payload(
         &self
     ) -> KResult<Ref<'_, Vec<u8>>> {
@@ -178,13 +318,28 @@ impl Rpm {
             return Ok(self.payload.borrow());
         }
         self.f_payload.set(true);
-        if *self.has_signature_size_tag()? {
+        if *self.has_payload()? {
             let _pos = _io.pos();
             _io.seek(*self.ofs_payload()? as usize)?;
             *self.payload.borrow_mut() = _io.read_bytes(*self.len_payload()? as usize)?.into();
             _io.seek(_pos)?;
         }
         Ok(self.payload.borrow())
+    }
+    pub fn signature_long_size_tag(
+        &self
+    ) -> KResult<Ref<'_, OptRc<Rpm_HeaderIndexRecord>>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_signature_long_size_tag.get() {
+            return Ok(self.signature_long_size_tag.borrow());
+        }
+        if *self.has_signature_long_size_tag()? {
+            *self.signature_long_size_tag.borrow_mut() = self.signature().index_records()[*self.signature_tags_steps().last().ok_or(KError::EmptyIterator)?.long_size_tag_idx()? as usize].clone();
+        }
+        Ok(self.signature_long_size_tag.borrow())
     }
     pub fn signature_size_tag(
         &self
@@ -238,12 +393,26 @@ impl Rpm {
     }
 }
 impl Rpm {
+    pub fn header_tags_steps(&self) -> Ref<'_, Vec<OptRc<Rpm_HeaderTagsStep>>> {
+        self.header_tags_steps.borrow()
+    }
+}
+impl Rpm {
     pub fn _io(&self) -> Ref<'_, BytesReader> {
         self._io.borrow()
     }
 }
 #[derive(Debug, PartialEq, Clone)]
 pub enum Rpm_Architectures {
+
+    /**
+     * Since RPM 6.0, `archnum` and `osnum` are no longer populated when
+     * writing the lead, so they are left zeroed - see
+     * <https://github.com/rpm-software-management/rpm/commit/5a685fb5eb085d5bc37723ec29ce72434db6bd4e>.
+     * This applies to both v4 and v6 packages.
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#lead Source
+     */
+    NotSet,
 
     /**
      * x86 or x86_64
@@ -254,7 +423,7 @@ pub enum Rpm_Architectures {
      * Alpha or Sparc64
      * \sa https://github.com/eclipse/packager/blob/51ccdd3/rpm/src/main/java/org/eclipse/packager/rpm/Architecture.java#L24 Source
      * \sa https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L14 Source
-     * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/rpmrc.in#L188-L197 Source
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/rpmrc.in#L207-L216 Source
      */
     Alpha,
     Sparc,
@@ -265,7 +434,7 @@ pub enum Rpm_Architectures {
     /**
      * SGI Inhouse Processors (IP)
      * \sa https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L19 Source
-     * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/rpmrc.in#L219 Source
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/rpmrc.in#L238 Source
      */
     Sgi,
     Rs6000,
@@ -284,11 +453,12 @@ pub enum Rpm_Architectures {
     Mips64R6,
     Riscv,
     Loongarch64,
+    E2k,
 
     /**
      * can be installed on any architecture
      * \sa https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L31 Source
-     * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmrc.c#L1548 Source
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmrc.cc#L1507 Source
      */
     NoArch,
     Unknown(i64),
@@ -298,6 +468,7 @@ impl TryFrom<i64> for Rpm_Architectures {
     type Error = KError;
     fn try_from(flag: i64) -> KResult<Rpm_Architectures> {
         match flag {
+            0 => Ok(Rpm_Architectures::NotSet),
             1 => Ok(Rpm_Architectures::X86),
             2 => Ok(Rpm_Architectures::Alpha),
             3 => Ok(Rpm_Architectures::Sparc),
@@ -321,6 +492,7 @@ impl TryFrom<i64> for Rpm_Architectures {
             21 => Ok(Rpm_Architectures::Mips64R6),
             22 => Ok(Rpm_Architectures::Riscv),
             23 => Ok(Rpm_Architectures::Loongarch64),
+            24 => Ok(Rpm_Architectures::E2k),
             255 => Ok(Rpm_Architectures::NoArch),
             _ => Ok(Rpm_Architectures::Unknown(flag)),
         }
@@ -330,6 +502,7 @@ impl TryFrom<i64> for Rpm_Architectures {
 impl From<&Rpm_Architectures> for i64 {
     fn from(v: &Rpm_Architectures) -> Self {
         match *v {
+            Rpm_Architectures::NotSet => 0,
             Rpm_Architectures::X86 => 1,
             Rpm_Architectures::Alpha => 2,
             Rpm_Architectures::Sparc => 3,
@@ -353,6 +526,7 @@ impl From<&Rpm_Architectures> for i64 {
             Rpm_Architectures::Mips64R6 => 21,
             Rpm_Architectures::Riscv => 22,
             Rpm_Architectures::Loongarch64 => 23,
+            Rpm_Architectures::E2k => 24,
             Rpm_Architectures::NoArch => 255,
             Rpm_Architectures::Unknown(v) => v
         }
@@ -758,7 +932,22 @@ pub enum Rpm_HeaderTags {
      */
     FileDependsNum,
     DependsDict,
-    SourcePkgid,
+
+    /**
+     * MD5 digest (16 bytes) of the header and payload of the source package
+     * this binary package was built from, i.e. the value of
+     * `signature_tags::md5` in that source package.
+     * 
+     * Only present in binary packages built in the same `rpmbuild` run as
+     * their source package (e.g. `rpmbuild -ba`). Never present in v6
+     * packages, because RPM does not calculate the MD5 digest for them.
+     * 
+     * Before RPM 6.0, this tag was called `RPMTAG_SOURCEPKGID` - see
+     * <https://github.com/rpm-software-management/rpm/commit/79ba4a3c41702e46edd5a4ce7e17a1f3361eb0e7>.
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/build/pack.cc#L901-L902 Source
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/build/pack.cc#L799-L801 Source
+     */
+    SourceSigMd5,
     FileContextsObsolete,
     FsContextsObsolete,
     ReContextsObsolete,
@@ -904,12 +1093,36 @@ pub enum Rpm_HeaderTags {
     TransFileTriggerType,
     FileSignatures,
     FileSignatureLength,
-    PayloadDigest,
-    PayloadDigestAlgo,
+
+    /**
+     * SHA-256 digest of the compressed payload.
+     * 
+     * Before RPM 6.0, this tag was called `RPMTAG_PAYLOADDIGEST` - see
+     * <https://github.com/rpm-software-management/rpm/commit/f14557cd521ddf95994aa6518f006eeb3fc58d87>.
+     */
+    PayloadSha256,
+
+    /**
+     * OpenPGP hash algorithm ID of `header_tags::payload_sha256`. Always 8
+     * (SHA2-256), which makes this tag redundant. Not written to v6 packages.
+     * 
+     * Before RPM 6.0, this tag was called `RPMTAG_PAYLOADDIGESTALGO` - see
+     * <https://github.com/rpm-software-management/rpm/commit/f14557cd521ddf95994aa6518f006eeb3fc58d87>.
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/build/pack.cc#L492-L495 Source
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/include/rpm/rpmcrypto.h#L26 Source
+     */
+    PayloadSha256AlgoObsolete,
     AutoInstalledUnimplemented,
     IdentityUnimplemented,
     ModularityLabel,
-    PayloadDigestAlt,
+
+    /**
+     * SHA-256 digest of the uncompressed payload.
+     * 
+     * Before RPM 6.0, this tag was called `RPMTAG_PAYLOADDIGESTALT` - see
+     * <https://github.com/rpm-software-management/rpm/commit/f14557cd521ddf95994aa6518f006eeb3fc58d87>.
+     */
+    PayloadSha256Alt,
     ArchSuffix,
     Spec,
     TranslationUrl,
@@ -922,6 +1135,69 @@ pub enum Rpm_HeaderTags {
     PreUntransFlags,
     PostUntransFlags,
     SysUsers,
+    BuildSystemInternal,
+    BuildOptionInternal,
+
+    /**
+     * Size of the compressed payload in bytes (only v6).
+     */
+    PayloadSize,
+
+    /**
+     * Size of the uncompressed payload in bytes (only v6).
+     */
+    PayloadSizeAlt,
+
+    /**
+     * RPM package format version (only present in v6 packages).
+     */
+    RpmFormat,
+
+    /**
+     * Index into `header_tags::mime_dict` (only v6).
+     */
+    FileMimeIndex,
+
+    /**
+     * Dictionary of MIME types (only v6).
+     */
+    MimeDict,
+    FileMimes,
+
+    /**
+     * Package digests calculated during verification.
+     */
+    PackageDigests,
+
+    /**
+     * Algorithms used for `header_tags::package_digests`.
+     */
+    PackageDigestAlgos,
+
+    /**
+     * Source RPM NEVR.
+     */
+    SourceNevr,
+
+    /**
+     * SHA-512 digest of the compressed payload.
+     */
+    PayloadSha512,
+
+    /**
+     * SHA-512 digest of the uncompressed payload.
+     */
+    PayloadSha512Alt,
+
+    /**
+     * SHA3-256 digest of the compressed payload.
+     */
+    PayloadSha3256,
+
+    /**
+     * SHA3-256 digest of the uncompressed payload.
+     */
+    PayloadSha3256Alt,
     Unknown(i64),
 }
 
@@ -1069,7 +1345,7 @@ impl TryFrom<i64> for Rpm_HeaderTags {
             1143 => Ok(Rpm_HeaderTags::FileDependsIdx),
             1144 => Ok(Rpm_HeaderTags::FileDependsNum),
             1145 => Ok(Rpm_HeaderTags::DependsDict),
-            1146 => Ok(Rpm_HeaderTags::SourcePkgid),
+            1146 => Ok(Rpm_HeaderTags::SourceSigMd5),
             1147 => Ok(Rpm_HeaderTags::FileContextsObsolete),
             1148 => Ok(Rpm_HeaderTags::FsContextsObsolete),
             1149 => Ok(Rpm_HeaderTags::ReContextsObsolete),
@@ -1211,12 +1487,12 @@ impl TryFrom<i64> for Rpm_HeaderTags {
             5089 => Ok(Rpm_HeaderTags::TransFileTriggerType),
             5090 => Ok(Rpm_HeaderTags::FileSignatures),
             5091 => Ok(Rpm_HeaderTags::FileSignatureLength),
-            5092 => Ok(Rpm_HeaderTags::PayloadDigest),
-            5093 => Ok(Rpm_HeaderTags::PayloadDigestAlgo),
+            5092 => Ok(Rpm_HeaderTags::PayloadSha256),
+            5093 => Ok(Rpm_HeaderTags::PayloadSha256AlgoObsolete),
             5094 => Ok(Rpm_HeaderTags::AutoInstalledUnimplemented),
             5095 => Ok(Rpm_HeaderTags::IdentityUnimplemented),
             5096 => Ok(Rpm_HeaderTags::ModularityLabel),
-            5097 => Ok(Rpm_HeaderTags::PayloadDigestAlt),
+            5097 => Ok(Rpm_HeaderTags::PayloadSha256Alt),
             5098 => Ok(Rpm_HeaderTags::ArchSuffix),
             5099 => Ok(Rpm_HeaderTags::Spec),
             5100 => Ok(Rpm_HeaderTags::TranslationUrl),
@@ -1229,6 +1505,21 @@ impl TryFrom<i64> for Rpm_HeaderTags {
             5107 => Ok(Rpm_HeaderTags::PreUntransFlags),
             5108 => Ok(Rpm_HeaderTags::PostUntransFlags),
             5109 => Ok(Rpm_HeaderTags::SysUsers),
+            5110 => Ok(Rpm_HeaderTags::BuildSystemInternal),
+            5111 => Ok(Rpm_HeaderTags::BuildOptionInternal),
+            5112 => Ok(Rpm_HeaderTags::PayloadSize),
+            5113 => Ok(Rpm_HeaderTags::PayloadSizeAlt),
+            5114 => Ok(Rpm_HeaderTags::RpmFormat),
+            5115 => Ok(Rpm_HeaderTags::FileMimeIndex),
+            5116 => Ok(Rpm_HeaderTags::MimeDict),
+            5117 => Ok(Rpm_HeaderTags::FileMimes),
+            5118 => Ok(Rpm_HeaderTags::PackageDigests),
+            5119 => Ok(Rpm_HeaderTags::PackageDigestAlgos),
+            5120 => Ok(Rpm_HeaderTags::SourceNevr),
+            5121 => Ok(Rpm_HeaderTags::PayloadSha512),
+            5122 => Ok(Rpm_HeaderTags::PayloadSha512Alt),
+            5123 => Ok(Rpm_HeaderTags::PayloadSha3256),
+            5124 => Ok(Rpm_HeaderTags::PayloadSha3256Alt),
             _ => Ok(Rpm_HeaderTags::Unknown(flag)),
         }
     }
@@ -1377,7 +1668,7 @@ impl From<&Rpm_HeaderTags> for i64 {
             Rpm_HeaderTags::FileDependsIdx => 1143,
             Rpm_HeaderTags::FileDependsNum => 1144,
             Rpm_HeaderTags::DependsDict => 1145,
-            Rpm_HeaderTags::SourcePkgid => 1146,
+            Rpm_HeaderTags::SourceSigMd5 => 1146,
             Rpm_HeaderTags::FileContextsObsolete => 1147,
             Rpm_HeaderTags::FsContextsObsolete => 1148,
             Rpm_HeaderTags::ReContextsObsolete => 1149,
@@ -1519,12 +1810,12 @@ impl From<&Rpm_HeaderTags> for i64 {
             Rpm_HeaderTags::TransFileTriggerType => 5089,
             Rpm_HeaderTags::FileSignatures => 5090,
             Rpm_HeaderTags::FileSignatureLength => 5091,
-            Rpm_HeaderTags::PayloadDigest => 5092,
-            Rpm_HeaderTags::PayloadDigestAlgo => 5093,
+            Rpm_HeaderTags::PayloadSha256 => 5092,
+            Rpm_HeaderTags::PayloadSha256AlgoObsolete => 5093,
             Rpm_HeaderTags::AutoInstalledUnimplemented => 5094,
             Rpm_HeaderTags::IdentityUnimplemented => 5095,
             Rpm_HeaderTags::ModularityLabel => 5096,
-            Rpm_HeaderTags::PayloadDigestAlt => 5097,
+            Rpm_HeaderTags::PayloadSha256Alt => 5097,
             Rpm_HeaderTags::ArchSuffix => 5098,
             Rpm_HeaderTags::Spec => 5099,
             Rpm_HeaderTags::TranslationUrl => 5100,
@@ -1537,6 +1828,21 @@ impl From<&Rpm_HeaderTags> for i64 {
             Rpm_HeaderTags::PreUntransFlags => 5107,
             Rpm_HeaderTags::PostUntransFlags => 5108,
             Rpm_HeaderTags::SysUsers => 5109,
+            Rpm_HeaderTags::BuildSystemInternal => 5110,
+            Rpm_HeaderTags::BuildOptionInternal => 5111,
+            Rpm_HeaderTags::PayloadSize => 5112,
+            Rpm_HeaderTags::PayloadSizeAlt => 5113,
+            Rpm_HeaderTags::RpmFormat => 5114,
+            Rpm_HeaderTags::FileMimeIndex => 5115,
+            Rpm_HeaderTags::MimeDict => 5116,
+            Rpm_HeaderTags::FileMimes => 5117,
+            Rpm_HeaderTags::PackageDigests => 5118,
+            Rpm_HeaderTags::PackageDigestAlgos => 5119,
+            Rpm_HeaderTags::SourceNevr => 5120,
+            Rpm_HeaderTags::PayloadSha512 => 5121,
+            Rpm_HeaderTags::PayloadSha512Alt => 5122,
+            Rpm_HeaderTags::PayloadSha3256 => 5123,
+            Rpm_HeaderTags::PayloadSha3256Alt => 5124,
             Rpm_HeaderTags::Unknown(v) => v
         }
     }
@@ -1548,6 +1854,15 @@ impl Default for Rpm_HeaderTags {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Rpm_OperatingSystems {
+
+    /**
+     * Since RPM 6.0, `archnum` and `osnum` are no longer populated when
+     * writing the lead, so they are left zeroed - see
+     * <https://github.com/rpm-software-management/rpm/commit/5a685fb5eb085d5bc37723ec29ce72434db6bd4e>.
+     * This applies to both v4 and v6 packages.
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#lead Source
+     */
+    NotSet,
     Linux,
     Irix,
 
@@ -1562,7 +1877,7 @@ pub enum Rpm_OperatingSystems {
      * 
      * Moreover, this value is actually used in practice, see this sample file:
      * <https://github.com/craigwblake/redline/blob/15afff5/src/test/resources/rpm-3-1.0-1.somearch.rpm>
-     * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmrc.c#L1548 Source
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmrc.cc#L1507 Source
      */
     NoOs,
     Unknown(i64),
@@ -1572,6 +1887,7 @@ impl TryFrom<i64> for Rpm_OperatingSystems {
     type Error = KError;
     fn try_from(flag: i64) -> KResult<Rpm_OperatingSystems> {
         match flag {
+            0 => Ok(Rpm_OperatingSystems::NotSet),
             1 => Ok(Rpm_OperatingSystems::Linux),
             2 => Ok(Rpm_OperatingSystems::Irix),
             255 => Ok(Rpm_OperatingSystems::NoOs),
@@ -1583,6 +1899,7 @@ impl TryFrom<i64> for Rpm_OperatingSystems {
 impl From<&Rpm_OperatingSystems> for i64 {
     fn from(v: &Rpm_OperatingSystems) -> Self {
         match *v {
+            Rpm_OperatingSystems::NotSet => 0,
             Rpm_OperatingSystems::Linux => 1,
             Rpm_OperatingSystems::Irix => 2,
             Rpm_OperatingSystems::NoOs => 255,
@@ -1597,7 +1914,6 @@ impl Default for Rpm_OperatingSystems {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Rpm_RecordTypes {
-    NotImplemented,
     Char,
     Uint8,
     Uint16,
@@ -1614,7 +1930,6 @@ impl TryFrom<i64> for Rpm_RecordTypes {
     type Error = KError;
     fn try_from(flag: i64) -> KResult<Rpm_RecordTypes> {
         match flag {
-            0 => Ok(Rpm_RecordTypes::NotImplemented),
             1 => Ok(Rpm_RecordTypes::Char),
             2 => Ok(Rpm_RecordTypes::Uint8),
             3 => Ok(Rpm_RecordTypes::Uint16),
@@ -1632,7 +1947,6 @@ impl TryFrom<i64> for Rpm_RecordTypes {
 impl From<&Rpm_RecordTypes> for i64 {
     fn from(v: &Rpm_RecordTypes) -> Self {
         match *v {
-            Rpm_RecordTypes::NotImplemented => 0,
             Rpm_RecordTypes::Char => 1,
             Rpm_RecordTypes::Uint8 => 2,
             Rpm_RecordTypes::Uint16 => 3,
@@ -1702,6 +2016,33 @@ pub enum Rpm_SignatureTags {
     VeritySignatureAlgo,
 
     /**
+     * RPM v6 OpenPGP signature(s) of the header, base64 encoded. The default
+     * signature type when signing v6 packages, but it can also be added to v4
+     * packages using `rpmsign --rpmv6` - see
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmsign.1.scd?plain=1#L86-L87>.
+     */
+    Openpgp,
+
+    /**
+     * SHA3-256 digest of the header (only v6).
+     */
+    Sha3256,
+
+    /**
+     * Space reserved for signatures, consisting solely of zeros. Always the
+     * last tag in the signature.
+     * 
+     * v6 packages use this tag instead of `signature_tags::reserved_space`
+     * = 1008, which is used for the same purpose in v4 packages. In v6
+     * packages, signature tag numbers above 999 are considered illegal, so
+     * that signature tags don't clash with header tags - see
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md?plain=1#L76-L77>.
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md?plain=1#L83-L84 Source
+     * \sa https://github.com/rpm-software-management/rpm/commit/a40b6e9a74b517370fda9aa5c9fc3db2276be563 Source
+     */
+    Reserved,
+
+    /**
      * Header + payload size (32bit) in bytes.
      */
     Size,
@@ -1763,6 +2104,9 @@ impl TryFrom<i64> for Rpm_SignatureTags {
             275 => Ok(Rpm_SignatureTags::FileSignatureLength),
             276 => Ok(Rpm_SignatureTags::VeritySignatures),
             277 => Ok(Rpm_SignatureTags::VeritySignatureAlgo),
+            278 => Ok(Rpm_SignatureTags::Openpgp),
+            279 => Ok(Rpm_SignatureTags::Sha3256),
+            999 => Ok(Rpm_SignatureTags::Reserved),
             1000 => Ok(Rpm_SignatureTags::Size),
             1001 => Ok(Rpm_SignatureTags::LeMd51Obsolete),
             1002 => Ok(Rpm_SignatureTags::Pgp),
@@ -1795,6 +2139,9 @@ impl From<&Rpm_SignatureTags> for i64 {
             Rpm_SignatureTags::FileSignatureLength => 275,
             Rpm_SignatureTags::VeritySignatures => 276,
             Rpm_SignatureTags::VeritySignatureAlgo => 277,
+            Rpm_SignatureTags::Openpgp => 278,
+            Rpm_SignatureTags::Sha3256 => 279,
+            Rpm_SignatureTags::Reserved => 999,
             Rpm_SignatureTags::Size => 1000,
             Rpm_SignatureTags::LeMd51Obsolete => 1001,
             Rpm_SignatureTags::Pgp => 1002,
@@ -2304,7 +2651,13 @@ impl KStruct for Rpm_HeaderRecord {
         if !(((*self_rc.num_index_records() as u32) >= (1 as u32))) {
             return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::LessThan, src_path: "/types/header_record/seq/2".to_string() }));
         }
+        if !(((*self_rc.num_index_records() as i32) <= (if *_prc.as_ref().unwrap().is_signature() { 32 } else { 65535 } as i32))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::GreaterThan, src_path: "/types/header_record/seq/2".to_string() }));
+        }
         *self_rc.len_storage_section.borrow_mut() = _io.read_u4be()?.into();
+        if !(((*self_rc.len_storage_section() as i32) <= (if *_prc.as_ref().unwrap().is_signature() { ((((64 as i32) * (1024 as i32)) as i32) * (1024 as i32)) } else { 268435455 } as i32))) {
+            return Err(KError::ValidationFailed(ValidationFailedError { kind: ValidationKind::GreaterThan, src_path: "/types/header_record/seq/3".to_string() }));
+        }
         Ok(())
     }
 }
@@ -2342,7 +2695,81 @@ impl Rpm_HeaderRecord {
 }
 
 /**
- * In 2021, Panu Matilainen (a RPM developer) [described this
+ * Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+ * which is where v6 packages store the payload size.
+ */
+
+#[derive(Default, Debug, Clone)]
+pub struct Rpm_HeaderTagsStep {
+    pub _root: SharedType<Rpm>,
+    pub _parent: SharedType<Rpm>,
+    pub _self: SharedType<Self>,
+    idx: RefCell<i32>,
+    prev_payload_size_tag_idx: RefCell<i32>,
+    _io: RefCell<BytesReader>,
+    f_payload_size_tag_idx: Cell<bool>,
+    payload_size_tag_idx: RefCell<i32>,
+}
+impl KStruct for Rpm_HeaderTagsStep {
+    type Root = Rpm;
+    type Parent = Rpm;
+
+    fn read<S: KStream>(
+        self_rc: &OptRc<Self>,
+        _io: &S,
+        _root: SharedType<Self::Root>,
+        _parent: SharedType<Self::Parent>,
+    ) -> KResult<()> {
+        *self_rc._io.borrow_mut() = _io.clone();
+        self_rc._root.set(_root.get());
+        self_rc._parent.set(_parent.get());
+        self_rc._self.set(Ok(self_rc.clone()));
+        let _rrc = self_rc._root.get_value().borrow().upgrade();
+        let _prc = self_rc._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        Ok(())
+    }
+}
+impl Rpm_HeaderTagsStep {
+    pub fn idx(&self) -> Ref<'_, i32> {
+        self.idx.borrow()
+    }
+}
+impl Rpm_HeaderTagsStep {
+    pub fn prev_payload_size_tag_idx(&self) -> Ref<'_, i32> {
+        self.prev_payload_size_tag_idx.borrow()
+    }
+}
+impl Rpm_HeaderTagsStep {
+    pub fn set_params(&mut self, idx: i32, prev_payload_size_tag_idx: i32) {
+        *self.idx.borrow_mut() = idx;
+        *self.prev_payload_size_tag_idx.borrow_mut() = prev_payload_size_tag_idx;
+    }
+}
+impl Rpm_HeaderTagsStep {
+    pub fn payload_size_tag_idx(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_payload_size_tag_idx.get() {
+            return Ok(self.payload_size_tag_idx.borrow());
+        }
+        self.f_payload_size_tag_idx.set(true);
+        *self.payload_size_tag_idx.borrow_mut() = (if ((*self.prev_payload_size_tag_idx() as i32) != (-1 as i32)) { *self.prev_payload_size_tag_idx() } else { if  ((*_prc.as_ref().unwrap().header().index_records()[*self.idx() as usize].header_tag()? == Rpm_HeaderTags::PayloadSize) && (*_prc.as_ref().unwrap().header().index_records()[*self.idx() as usize].record_type() == Rpm_RecordTypes::Uint64) && (((*_prc.as_ref().unwrap().header().index_records()[*self.idx() as usize].num_values()? as u32) >= (1 as u32))))  { *self.idx() } else { -1 } }) as i32;
+        Ok(self.payload_size_tag_idx.borrow())
+    }
+}
+impl Rpm_HeaderTagsStep {
+    pub fn _io(&self) -> Ref<'_, BytesReader> {
+        self._io.borrow()
+    }
+}
+
+/**
+ * In 2021, Panu Matilainen (an RPM developer) [described this
  * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
  * as follows:
  * 
@@ -2351,10 +2778,13 @@ impl Rpm_HeaderRecord {
  * > it's an rpm file in the first place, just ignore everything in it.
  * > Literally everything.
  * 
- * The fields with `valid` constraints are important, because these are the
- * same validations that RPM does (which means that any valid `.rpm` file
- * must pass them), but otherwise you should not make decisions based on the
- * values given here.
+ * RPM 4.19 and older rejected packages that didn't meet the `valid`
+ * constraints specified here, while RPM 4.20 and later only check the
+ * `magic` - see
+ * <https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66>.
+ * Nevertheless, RPM still writes values that pass these checks for backwards
+ * compatibility, so any `.rpm` file should pass.
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md Source
  */
 
 #[derive(Default, Debug, Clone)]
@@ -2439,6 +2869,10 @@ impl Rpm_Lead {
         self.os.borrow()
     }
 }
+
+/**
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21 Source
+ */
 impl Rpm_Lead {
     pub fn signature_type(&self) -> Ref<'_, u16> {
         self.signature_type.borrow()
@@ -2884,7 +3318,8 @@ impl Rpm_RpmVersion {
 }
 
 /**
- * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102 Source
+ * 3 in v3 and v4 packages, 4 in v6 packages.
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52 Source
  */
 impl Rpm_RpmVersion {
     pub fn major(&self) -> Ref<'_, u8> {
@@ -2902,6 +3337,13 @@ impl Rpm_RpmVersion {
     }
 }
 
+/**
+ * Finds the first `signature_tags::size` and `signature_tags::long_size`
+ * index record. Since Kaitai Struct doesn't have a built-in way to search an
+ * array directly, each step receives the indexes found so far via
+ * parameters.
+ */
+
 #[derive(Default, Debug, Clone)]
 pub struct Rpm_SignatureTagsStep {
     pub _root: SharedType<Rpm>,
@@ -2909,7 +3351,10 @@ pub struct Rpm_SignatureTagsStep {
     pub _self: SharedType<Self>,
     idx: RefCell<i32>,
     prev_size_tag_idx: RefCell<i32>,
+    prev_long_size_tag_idx: RefCell<i32>,
     _io: RefCell<BytesReader>,
+    f_long_size_tag_idx: Cell<bool>,
+    long_size_tag_idx: RefCell<i32>,
     f_size_tag_idx: Cell<bool>,
     size_tag_idx: RefCell<i32>,
 }
@@ -2944,12 +3389,32 @@ impl Rpm_SignatureTagsStep {
     }
 }
 impl Rpm_SignatureTagsStep {
-    pub fn set_params(&mut self, idx: i32, prev_size_tag_idx: i32) {
-        *self.idx.borrow_mut() = idx;
-        *self.prev_size_tag_idx.borrow_mut() = prev_size_tag_idx;
+    pub fn prev_long_size_tag_idx(&self) -> Ref<'_, i32> {
+        self.prev_long_size_tag_idx.borrow()
     }
 }
 impl Rpm_SignatureTagsStep {
+    pub fn set_params(&mut self, idx: i32, prev_size_tag_idx: i32, prev_long_size_tag_idx: i32) {
+        *self.idx.borrow_mut() = idx;
+        *self.prev_size_tag_idx.borrow_mut() = prev_size_tag_idx;
+        *self.prev_long_size_tag_idx.borrow_mut() = prev_long_size_tag_idx;
+    }
+}
+impl Rpm_SignatureTagsStep {
+    pub fn long_size_tag_idx(
+        &self
+    ) -> KResult<Ref<'_, i32>> {
+        let _io = self._io.borrow();
+        let _rrc = self._root.get_value().borrow().upgrade();
+        let _prc = self._parent.get_value().borrow().upgrade();
+        let _r = _rrc.as_ref().unwrap();
+        if self.f_long_size_tag_idx.get() {
+            return Ok(self.long_size_tag_idx.borrow());
+        }
+        self.f_long_size_tag_idx.set(true);
+        *self.long_size_tag_idx.borrow_mut() = (if ((*self.prev_long_size_tag_idx() as i32) != (-1 as i32)) { *self.prev_long_size_tag_idx() } else { if  ((*_prc.as_ref().unwrap().signature().index_records()[*self.idx() as usize].signature_tag()? == Rpm_SignatureTags::LongSize) && (*_prc.as_ref().unwrap().signature().index_records()[*self.idx() as usize].record_type() == Rpm_RecordTypes::Uint64) && (((*_prc.as_ref().unwrap().signature().index_records()[*self.idx() as usize].num_values()? as u32) >= (1 as u32))))  { *self.idx() } else { -1 } }) as i32;
+        Ok(self.long_size_tag_idx.borrow())
+    }
     pub fn size_tag_idx(
         &self
     ) -> KResult<Ref<'_, i32>> {

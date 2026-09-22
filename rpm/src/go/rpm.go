@@ -8,19 +8,42 @@ import (
 
 
 /**
- * This parser is for the RPM version 3 file format which is the current version
- * of the file format used by RPM 2.1 and later (including RPM version 4.x, which
- * is the current version of the RPM tool). There are historical versions of the
- * RPM file format, as well as a currently abandoned fork (rpm5). These formats
- * are not covered by this specification.
- * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md">Source</a>
- * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md">Source</a>
+ * An RPM package consists of the lead, the signature (contains digests and
+ * signatures), the header (contains the package metadata) and the payload (a
+ * compressed archive of the package files).
+ * 
+ * This structure is shared by all package format versions supported by this
+ * Kaitai Struct implementation:
+ * 
+ * * v3, written by RPM 2.1 to 3.x.
+ * * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+ *   to 4 - see
+ *   <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192>.
+ *   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+ *   default - see
+ *   <https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch>.
+ * * v6, written by upstream RPM 6.0 by default - see
+ *   <https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37>.
+ * 
+ * The versions differ mainly in the tags they use: v6 packages store all sizes
+ * as 64-bit integers, carry only cryptographic data in the signature and always
+ * use the stripped-down cpio archive format (see the `payload` instance).
+ * 
+ * The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+ * this implementation.
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md">Source</a>
  * @see <a href="https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html">Source</a>
- * @see <a href="http://ftp.rpm.org/max-rpm/">Source</a>
+ * @see <a href="https://ftp.osuosl.org/pub/rpm/max-rpm/">Source</a>
  */
 
 type Rpm_Architectures int
 const (
+	Rpm_Architectures__NotSet Rpm_Architectures = 0
 	Rpm_Architectures__X86 Rpm_Architectures = 1
 	Rpm_Architectures__Alpha Rpm_Architectures = 2
 	Rpm_Architectures__Sparc Rpm_Architectures = 3
@@ -44,9 +67,10 @@ const (
 	Rpm_Architectures__Mips64R6 Rpm_Architectures = 21
 	Rpm_Architectures__Riscv Rpm_Architectures = 22
 	Rpm_Architectures__Loongarch64 Rpm_Architectures = 23
+	Rpm_Architectures__E2k Rpm_Architectures = 24
 	Rpm_Architectures__NoArch Rpm_Architectures = 255
 )
-var values_Rpm_Architectures = map[Rpm_Architectures]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 255: {}}
+var values_Rpm_Architectures = map[Rpm_Architectures]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 255: {}}
 func (v Rpm_Architectures) isDefined() bool {
 	_, ok := values_Rpm_Architectures[v]
 	return ok
@@ -194,7 +218,7 @@ const (
 	Rpm_HeaderTags__FileDependsIdx Rpm_HeaderTags = 1143
 	Rpm_HeaderTags__FileDependsNum Rpm_HeaderTags = 1144
 	Rpm_HeaderTags__DependsDict Rpm_HeaderTags = 1145
-	Rpm_HeaderTags__SourcePkgid Rpm_HeaderTags = 1146
+	Rpm_HeaderTags__SourceSigMd5 Rpm_HeaderTags = 1146
 	Rpm_HeaderTags__FileContextsObsolete Rpm_HeaderTags = 1147
 	Rpm_HeaderTags__FsContextsObsolete Rpm_HeaderTags = 1148
 	Rpm_HeaderTags__ReContextsObsolete Rpm_HeaderTags = 1149
@@ -336,12 +360,12 @@ const (
 	Rpm_HeaderTags__TransFileTriggerType Rpm_HeaderTags = 5089
 	Rpm_HeaderTags__FileSignatures Rpm_HeaderTags = 5090
 	Rpm_HeaderTags__FileSignatureLength Rpm_HeaderTags = 5091
-	Rpm_HeaderTags__PayloadDigest Rpm_HeaderTags = 5092
-	Rpm_HeaderTags__PayloadDigestAlgo Rpm_HeaderTags = 5093
+	Rpm_HeaderTags__PayloadSha256 Rpm_HeaderTags = 5092
+	Rpm_HeaderTags__PayloadSha256AlgoObsolete Rpm_HeaderTags = 5093
 	Rpm_HeaderTags__AutoInstalledUnimplemented Rpm_HeaderTags = 5094
 	Rpm_HeaderTags__IdentityUnimplemented Rpm_HeaderTags = 5095
 	Rpm_HeaderTags__ModularityLabel Rpm_HeaderTags = 5096
-	Rpm_HeaderTags__PayloadDigestAlt Rpm_HeaderTags = 5097
+	Rpm_HeaderTags__PayloadSha256Alt Rpm_HeaderTags = 5097
 	Rpm_HeaderTags__ArchSuffix Rpm_HeaderTags = 5098
 	Rpm_HeaderTags__Spec Rpm_HeaderTags = 5099
 	Rpm_HeaderTags__TranslationUrl Rpm_HeaderTags = 5100
@@ -354,8 +378,23 @@ const (
 	Rpm_HeaderTags__PreUntransFlags Rpm_HeaderTags = 5107
 	Rpm_HeaderTags__PostUntransFlags Rpm_HeaderTags = 5108
 	Rpm_HeaderTags__SysUsers Rpm_HeaderTags = 5109
+	Rpm_HeaderTags__BuildSystemInternal Rpm_HeaderTags = 5110
+	Rpm_HeaderTags__BuildOptionInternal Rpm_HeaderTags = 5111
+	Rpm_HeaderTags__PayloadSize Rpm_HeaderTags = 5112
+	Rpm_HeaderTags__PayloadSizeAlt Rpm_HeaderTags = 5113
+	Rpm_HeaderTags__RpmFormat Rpm_HeaderTags = 5114
+	Rpm_HeaderTags__FileMimeIndex Rpm_HeaderTags = 5115
+	Rpm_HeaderTags__MimeDict Rpm_HeaderTags = 5116
+	Rpm_HeaderTags__FileMimes Rpm_HeaderTags = 5117
+	Rpm_HeaderTags__PackageDigests Rpm_HeaderTags = 5118
+	Rpm_HeaderTags__PackageDigestAlgos Rpm_HeaderTags = 5119
+	Rpm_HeaderTags__SourceNevr Rpm_HeaderTags = 5120
+	Rpm_HeaderTags__PayloadSha512 Rpm_HeaderTags = 5121
+	Rpm_HeaderTags__PayloadSha512Alt Rpm_HeaderTags = 5122
+	Rpm_HeaderTags__PayloadSha3256 Rpm_HeaderTags = 5123
+	Rpm_HeaderTags__PayloadSha3256Alt Rpm_HeaderTags = 5124
 )
-var values_Rpm_HeaderTags = map[Rpm_HeaderTags]struct{}{62: {}, 63: {}, 100: {}, 1000: {}, 1001: {}, 1002: {}, 1003: {}, 1004: {}, 1005: {}, 1006: {}, 1007: {}, 1008: {}, 1009: {}, 1010: {}, 1011: {}, 1012: {}, 1013: {}, 1014: {}, 1015: {}, 1016: {}, 1017: {}, 1018: {}, 1019: {}, 1020: {}, 1021: {}, 1022: {}, 1023: {}, 1024: {}, 1025: {}, 1026: {}, 1027: {}, 1028: {}, 1029: {}, 1030: {}, 1031: {}, 1032: {}, 1033: {}, 1034: {}, 1035: {}, 1036: {}, 1037: {}, 1038: {}, 1039: {}, 1040: {}, 1041: {}, 1042: {}, 1043: {}, 1044: {}, 1045: {}, 1046: {}, 1047: {}, 1048: {}, 1049: {}, 1050: {}, 1051: {}, 1052: {}, 1053: {}, 1054: {}, 1055: {}, 1056: {}, 1057: {}, 1058: {}, 1059: {}, 1060: {}, 1061: {}, 1062: {}, 1063: {}, 1064: {}, 1065: {}, 1066: {}, 1067: {}, 1068: {}, 1069: {}, 1079: {}, 1080: {}, 1081: {}, 1082: {}, 1083: {}, 1084: {}, 1085: {}, 1086: {}, 1087: {}, 1088: {}, 1089: {}, 1090: {}, 1091: {}, 1092: {}, 1093: {}, 1094: {}, 1095: {}, 1096: {}, 1097: {}, 1098: {}, 1099: {}, 1100: {}, 1101: {}, 1102: {}, 1103: {}, 1104: {}, 1105: {}, 1106: {}, 1107: {}, 1108: {}, 1109: {}, 1110: {}, 1111: {}, 1112: {}, 1113: {}, 1114: {}, 1115: {}, 1116: {}, 1117: {}, 1118: {}, 1119: {}, 1120: {}, 1121: {}, 1122: {}, 1123: {}, 1124: {}, 1125: {}, 1126: {}, 1127: {}, 1128: {}, 1129: {}, 1130: {}, 1131: {}, 1132: {}, 1133: {}, 1134: {}, 1135: {}, 1136: {}, 1137: {}, 1138: {}, 1139: {}, 1140: {}, 1141: {}, 1142: {}, 1143: {}, 1144: {}, 1145: {}, 1146: {}, 1147: {}, 1148: {}, 1149: {}, 1150: {}, 1151: {}, 1152: {}, 1153: {}, 1154: {}, 1155: {}, 1156: {}, 1157: {}, 1158: {}, 1159: {}, 1160: {}, 1161: {}, 1162: {}, 1163: {}, 1164: {}, 1165: {}, 1166: {}, 1167: {}, 1168: {}, 1169: {}, 1170: {}, 1171: {}, 1172: {}, 1173: {}, 1174: {}, 1175: {}, 1176: {}, 1177: {}, 1178: {}, 1179: {}, 1180: {}, 1181: {}, 1182: {}, 1183: {}, 1184: {}, 1185: {}, 1186: {}, 1187: {}, 1188: {}, 1189: {}, 1190: {}, 1191: {}, 1192: {}, 1193: {}, 1194: {}, 1195: {}, 1196: {}, 5000: {}, 5001: {}, 5002: {}, 5003: {}, 5004: {}, 5005: {}, 5006: {}, 5007: {}, 5008: {}, 5009: {}, 5010: {}, 5011: {}, 5012: {}, 5013: {}, 5014: {}, 5015: {}, 5016: {}, 5017: {}, 5018: {}, 5019: {}, 5020: {}, 5021: {}, 5022: {}, 5023: {}, 5024: {}, 5025: {}, 5026: {}, 5027: {}, 5029: {}, 5030: {}, 5031: {}, 5032: {}, 5033: {}, 5034: {}, 5035: {}, 5036: {}, 5037: {}, 5038: {}, 5039: {}, 5040: {}, 5041: {}, 5042: {}, 5043: {}, 5044: {}, 5045: {}, 5046: {}, 5047: {}, 5048: {}, 5049: {}, 5050: {}, 5051: {}, 5052: {}, 5053: {}, 5054: {}, 5055: {}, 5056: {}, 5057: {}, 5058: {}, 5059: {}, 5060: {}, 5061: {}, 5062: {}, 5063: {}, 5064: {}, 5065: {}, 5066: {}, 5067: {}, 5068: {}, 5069: {}, 5070: {}, 5071: {}, 5072: {}, 5073: {}, 5074: {}, 5075: {}, 5076: {}, 5077: {}, 5078: {}, 5079: {}, 5080: {}, 5081: {}, 5082: {}, 5083: {}, 5084: {}, 5085: {}, 5086: {}, 5087: {}, 5088: {}, 5089: {}, 5090: {}, 5091: {}, 5092: {}, 5093: {}, 5094: {}, 5095: {}, 5096: {}, 5097: {}, 5098: {}, 5099: {}, 5100: {}, 5101: {}, 5102: {}, 5103: {}, 5104: {}, 5105: {}, 5106: {}, 5107: {}, 5108: {}, 5109: {}}
+var values_Rpm_HeaderTags = map[Rpm_HeaderTags]struct{}{62: {}, 63: {}, 100: {}, 1000: {}, 1001: {}, 1002: {}, 1003: {}, 1004: {}, 1005: {}, 1006: {}, 1007: {}, 1008: {}, 1009: {}, 1010: {}, 1011: {}, 1012: {}, 1013: {}, 1014: {}, 1015: {}, 1016: {}, 1017: {}, 1018: {}, 1019: {}, 1020: {}, 1021: {}, 1022: {}, 1023: {}, 1024: {}, 1025: {}, 1026: {}, 1027: {}, 1028: {}, 1029: {}, 1030: {}, 1031: {}, 1032: {}, 1033: {}, 1034: {}, 1035: {}, 1036: {}, 1037: {}, 1038: {}, 1039: {}, 1040: {}, 1041: {}, 1042: {}, 1043: {}, 1044: {}, 1045: {}, 1046: {}, 1047: {}, 1048: {}, 1049: {}, 1050: {}, 1051: {}, 1052: {}, 1053: {}, 1054: {}, 1055: {}, 1056: {}, 1057: {}, 1058: {}, 1059: {}, 1060: {}, 1061: {}, 1062: {}, 1063: {}, 1064: {}, 1065: {}, 1066: {}, 1067: {}, 1068: {}, 1069: {}, 1079: {}, 1080: {}, 1081: {}, 1082: {}, 1083: {}, 1084: {}, 1085: {}, 1086: {}, 1087: {}, 1088: {}, 1089: {}, 1090: {}, 1091: {}, 1092: {}, 1093: {}, 1094: {}, 1095: {}, 1096: {}, 1097: {}, 1098: {}, 1099: {}, 1100: {}, 1101: {}, 1102: {}, 1103: {}, 1104: {}, 1105: {}, 1106: {}, 1107: {}, 1108: {}, 1109: {}, 1110: {}, 1111: {}, 1112: {}, 1113: {}, 1114: {}, 1115: {}, 1116: {}, 1117: {}, 1118: {}, 1119: {}, 1120: {}, 1121: {}, 1122: {}, 1123: {}, 1124: {}, 1125: {}, 1126: {}, 1127: {}, 1128: {}, 1129: {}, 1130: {}, 1131: {}, 1132: {}, 1133: {}, 1134: {}, 1135: {}, 1136: {}, 1137: {}, 1138: {}, 1139: {}, 1140: {}, 1141: {}, 1142: {}, 1143: {}, 1144: {}, 1145: {}, 1146: {}, 1147: {}, 1148: {}, 1149: {}, 1150: {}, 1151: {}, 1152: {}, 1153: {}, 1154: {}, 1155: {}, 1156: {}, 1157: {}, 1158: {}, 1159: {}, 1160: {}, 1161: {}, 1162: {}, 1163: {}, 1164: {}, 1165: {}, 1166: {}, 1167: {}, 1168: {}, 1169: {}, 1170: {}, 1171: {}, 1172: {}, 1173: {}, 1174: {}, 1175: {}, 1176: {}, 1177: {}, 1178: {}, 1179: {}, 1180: {}, 1181: {}, 1182: {}, 1183: {}, 1184: {}, 1185: {}, 1186: {}, 1187: {}, 1188: {}, 1189: {}, 1190: {}, 1191: {}, 1192: {}, 1193: {}, 1194: {}, 1195: {}, 1196: {}, 5000: {}, 5001: {}, 5002: {}, 5003: {}, 5004: {}, 5005: {}, 5006: {}, 5007: {}, 5008: {}, 5009: {}, 5010: {}, 5011: {}, 5012: {}, 5013: {}, 5014: {}, 5015: {}, 5016: {}, 5017: {}, 5018: {}, 5019: {}, 5020: {}, 5021: {}, 5022: {}, 5023: {}, 5024: {}, 5025: {}, 5026: {}, 5027: {}, 5029: {}, 5030: {}, 5031: {}, 5032: {}, 5033: {}, 5034: {}, 5035: {}, 5036: {}, 5037: {}, 5038: {}, 5039: {}, 5040: {}, 5041: {}, 5042: {}, 5043: {}, 5044: {}, 5045: {}, 5046: {}, 5047: {}, 5048: {}, 5049: {}, 5050: {}, 5051: {}, 5052: {}, 5053: {}, 5054: {}, 5055: {}, 5056: {}, 5057: {}, 5058: {}, 5059: {}, 5060: {}, 5061: {}, 5062: {}, 5063: {}, 5064: {}, 5065: {}, 5066: {}, 5067: {}, 5068: {}, 5069: {}, 5070: {}, 5071: {}, 5072: {}, 5073: {}, 5074: {}, 5075: {}, 5076: {}, 5077: {}, 5078: {}, 5079: {}, 5080: {}, 5081: {}, 5082: {}, 5083: {}, 5084: {}, 5085: {}, 5086: {}, 5087: {}, 5088: {}, 5089: {}, 5090: {}, 5091: {}, 5092: {}, 5093: {}, 5094: {}, 5095: {}, 5096: {}, 5097: {}, 5098: {}, 5099: {}, 5100: {}, 5101: {}, 5102: {}, 5103: {}, 5104: {}, 5105: {}, 5106: {}, 5107: {}, 5108: {}, 5109: {}, 5110: {}, 5111: {}, 5112: {}, 5113: {}, 5114: {}, 5115: {}, 5116: {}, 5117: {}, 5118: {}, 5119: {}, 5120: {}, 5121: {}, 5122: {}, 5123: {}, 5124: {}}
 func (v Rpm_HeaderTags) isDefined() bool {
 	_, ok := values_Rpm_HeaderTags[v]
 	return ok
@@ -363,11 +402,12 @@ func (v Rpm_HeaderTags) isDefined() bool {
 
 type Rpm_OperatingSystems int
 const (
+	Rpm_OperatingSystems__NotSet Rpm_OperatingSystems = 0
 	Rpm_OperatingSystems__Linux Rpm_OperatingSystems = 1
 	Rpm_OperatingSystems__Irix Rpm_OperatingSystems = 2
 	Rpm_OperatingSystems__NoOs Rpm_OperatingSystems = 255
 )
-var values_Rpm_OperatingSystems = map[Rpm_OperatingSystems]struct{}{1: {}, 2: {}, 255: {}}
+var values_Rpm_OperatingSystems = map[Rpm_OperatingSystems]struct{}{0: {}, 1: {}, 2: {}, 255: {}}
 func (v Rpm_OperatingSystems) isDefined() bool {
 	_, ok := values_Rpm_OperatingSystems[v]
 	return ok
@@ -375,7 +415,6 @@ func (v Rpm_OperatingSystems) isDefined() bool {
 
 type Rpm_RecordTypes int
 const (
-	Rpm_RecordTypes__NotImplemented Rpm_RecordTypes = 0
 	Rpm_RecordTypes__Char Rpm_RecordTypes = 1
 	Rpm_RecordTypes__Uint8 Rpm_RecordTypes = 2
 	Rpm_RecordTypes__Uint16 Rpm_RecordTypes = 3
@@ -386,7 +425,7 @@ const (
 	Rpm_RecordTypes__StringArray Rpm_RecordTypes = 8
 	Rpm_RecordTypes__I18nString Rpm_RecordTypes = 9
 )
-var values_Rpm_RecordTypes = map[Rpm_RecordTypes]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}}
+var values_Rpm_RecordTypes = map[Rpm_RecordTypes]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}}
 func (v Rpm_RecordTypes) isDefined() bool {
 	_, ok := values_Rpm_RecordTypes[v]
 	return ok
@@ -420,6 +459,9 @@ const (
 	Rpm_SignatureTags__FileSignatureLength Rpm_SignatureTags = 275
 	Rpm_SignatureTags__VeritySignatures Rpm_SignatureTags = 276
 	Rpm_SignatureTags__VeritySignatureAlgo Rpm_SignatureTags = 277
+	Rpm_SignatureTags__Openpgp Rpm_SignatureTags = 278
+	Rpm_SignatureTags__Sha3256 Rpm_SignatureTags = 279
+	Rpm_SignatureTags__Reserved Rpm_SignatureTags = 999
 	Rpm_SignatureTags__Size Rpm_SignatureTags = 1000
 	Rpm_SignatureTags__LeMd51Obsolete Rpm_SignatureTags = 1001
 	Rpm_SignatureTags__Pgp Rpm_SignatureTags = 1002
@@ -430,7 +472,7 @@ const (
 	Rpm_SignatureTags__PayloadSize Rpm_SignatureTags = 1007
 	Rpm_SignatureTags__ReservedSpace Rpm_SignatureTags = 1008
 )
-var values_Rpm_SignatureTags = map[Rpm_SignatureTags]struct{}{62: {}, 63: {}, 100: {}, 264: {}, 265: {}, 267: {}, 268: {}, 269: {}, 270: {}, 271: {}, 273: {}, 274: {}, 275: {}, 276: {}, 277: {}, 1000: {}, 1001: {}, 1002: {}, 1003: {}, 1004: {}, 1005: {}, 1006: {}, 1007: {}, 1008: {}}
+var values_Rpm_SignatureTags = map[Rpm_SignatureTags]struct{}{62: {}, 63: {}, 100: {}, 264: {}, 265: {}, 267: {}, 268: {}, 269: {}, 270: {}, 271: {}, 273: {}, 274: {}, 275: {}, 276: {}, 277: {}, 278: {}, 279: {}, 999: {}, 1000: {}, 1001: {}, 1002: {}, 1003: {}, 1004: {}, 1005: {}, 1006: {}, 1007: {}, 1008: {}}
 func (v Rpm_SignatureTags) isDefined() bool {
 	_, ok := values_Rpm_SignatureTags[v]
 	return ok
@@ -443,11 +485,20 @@ type Rpm struct {
 	Header *Rpm_Header
 	_unnamed5 []byte
 	SignatureTagsSteps []*Rpm_SignatureTagsStep
+	HeaderTagsSteps []*Rpm_HeaderTagsStep
 	_io *kaitai.Stream
 	_root *Rpm
 	_parent kaitai.Struct
+	_f_hasHeaderPayloadSizeTag bool
+	hasHeaderPayloadSizeTag bool
+	_f_hasPayload bool
+	hasPayload bool
+	_f_hasSignatureLongSizeTag bool
+	hasSignatureLongSizeTag bool
 	_f_hasSignatureSizeTag bool
 	hasSignatureSizeTag bool
+	_f_headerPayloadSizeTag bool
+	headerPayloadSizeTag *Rpm_HeaderIndexRecord
 	_f_lenHeader bool
 	lenHeader int
 	_f_lenPayload bool
@@ -458,6 +509,8 @@ type Rpm struct {
 	ofsPayload int
 	_f_payload bool
 	payload []byte
+	_f_signatureLongSizeTag bool
+	signatureLongSizeTag *Rpm_HeaderIndexRecord
 	_f_signatureSizeTag bool
 	signatureSizeTag *Rpm_HeaderIndexRecord
 }
@@ -534,76 +587,225 @@ func (this *Rpm) Read(io *kaitai.Stream, parent kaitai.Struct, root *Rpm) (err e
 	for i := 0; i < int(this.Signature.HeaderRecord.NumIndexRecords); i++ {
 		_ = i
 		var tmp11 int;
-		if (i < 1) {
-			tmp11 = -1
-		} else {
+		if (i != 0) {
 			tmp12, err := this.SignatureTagsSteps[i - 1].SizeTagIdx()
 			if err != nil {
 				return err
 			}
 			tmp11 = tmp12
+		} else {
+			tmp11 = -1
 		}
-		tmp13 := NewRpm_SignatureTagsStep(i, tmp11)
-		err = tmp13.Read(this._io, this, this._root)
+		var tmp13 int;
+		if (i != 0) {
+			tmp14, err := this.SignatureTagsSteps[i - 1].LongSizeTagIdx()
+			if err != nil {
+				return err
+			}
+			tmp13 = tmp14
+		} else {
+			tmp13 = -1
+		}
+		tmp15 := NewRpm_SignatureTagsStep(i, tmp11, tmp13)
+		err = tmp15.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.SignatureTagsSteps = append(this.SignatureTagsSteps, tmp13)
+		this.SignatureTagsSteps = append(this.SignatureTagsSteps, tmp15)
+	}
+	for i := 0; i < int(this.Header.HeaderRecord.NumIndexRecords); i++ {
+		_ = i
+		var tmp16 int;
+		if (i != 0) {
+			tmp17, err := this.HeaderTagsSteps[i - 1].PayloadSizeTagIdx()
+			if err != nil {
+				return err
+			}
+			tmp16 = tmp17
+		} else {
+			tmp16 = -1
+		}
+		tmp18 := NewRpm_HeaderTagsStep(i, tmp16)
+		err = tmp18.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.HeaderTagsSteps = append(this.HeaderTagsSteps, tmp18)
 	}
 	return err
+}
+func (this *Rpm) HasHeaderPayloadSizeTag() (v bool, err error) {
+	if (this._f_hasHeaderPayloadSizeTag) {
+		return this.hasHeaderPayloadSizeTag, nil
+	}
+	this._f_hasHeaderPayloadSizeTag = true
+	tmp19 := this.HeaderTagsSteps
+	tmp20, err := tmp19[len(tmp19) - 1].PayloadSizeTagIdx()
+	if err != nil {
+		return false, err
+	}
+	this.hasHeaderPayloadSizeTag = bool(tmp20 != -1)
+	return this.hasHeaderPayloadSizeTag, nil
+}
+func (this *Rpm) HasPayload() (v bool, err error) {
+	if (this._f_hasPayload) {
+		return this.hasPayload, nil
+	}
+	this._f_hasPayload = true
+	tmp21, err := this.HasHeaderPayloadSizeTag()
+	if err != nil {
+		return false, err
+	}
+	tmp22, err := this.HasSignatureLongSizeTag()
+	if err != nil {
+		return false, err
+	}
+	tmp23, err := this.HasSignatureSizeTag()
+	if err != nil {
+		return false, err
+	}
+	this.hasPayload = bool( ((tmp21) || (tmp22) || (tmp23)) )
+	return this.hasPayload, nil
+}
+func (this *Rpm) HasSignatureLongSizeTag() (v bool, err error) {
+	if (this._f_hasSignatureLongSizeTag) {
+		return this.hasSignatureLongSizeTag, nil
+	}
+	this._f_hasSignatureLongSizeTag = true
+	tmp24 := this.SignatureTagsSteps
+	tmp25, err := tmp24[len(tmp24) - 1].LongSizeTagIdx()
+	if err != nil {
+		return false, err
+	}
+	this.hasSignatureLongSizeTag = bool(tmp25 != -1)
+	return this.hasSignatureLongSizeTag, nil
 }
 func (this *Rpm) HasSignatureSizeTag() (v bool, err error) {
 	if (this._f_hasSignatureSizeTag) {
 		return this.hasSignatureSizeTag, nil
 	}
 	this._f_hasSignatureSizeTag = true
-	tmp14 := this.SignatureTagsSteps
-	tmp15, err := tmp14[len(tmp14) - 1].SizeTagIdx()
+	tmp26 := this.SignatureTagsSteps
+	tmp27, err := tmp26[len(tmp26) - 1].SizeTagIdx()
 	if err != nil {
 		return false, err
 	}
-	this.hasSignatureSizeTag = bool(tmp15 != -1)
+	this.hasSignatureSizeTag = bool(tmp27 != -1)
 	return this.hasSignatureSizeTag, nil
+}
+func (this *Rpm) HeaderPayloadSizeTag() (v *Rpm_HeaderIndexRecord, err error) {
+	if (this._f_headerPayloadSizeTag) {
+		return this.headerPayloadSizeTag, nil
+	}
+	this._f_headerPayloadSizeTag = true
+	tmp28, err := this.HasHeaderPayloadSizeTag()
+	if err != nil {
+		return nil, err
+	}
+	if (tmp28) {
+		tmp29 := this.HeaderTagsSteps
+		tmp30, err := tmp29[len(tmp29) - 1].PayloadSizeTagIdx()
+		if err != nil {
+			return nil, err
+		}
+		this.headerPayloadSizeTag = this.Header.IndexRecords[tmp30]
+	}
+	return this.headerPayloadSizeTag, nil
 }
 func (this *Rpm) LenHeader() (v int, err error) {
 	if (this._f_lenHeader) {
 		return this.lenHeader, nil
 	}
 	this._f_lenHeader = true
-	tmp16, err := this.OfsPayload()
+	tmp31, err := this.OfsPayload()
 	if err != nil {
 		return 0, err
 	}
-	tmp17, err := this.OfsHeader()
+	tmp32, err := this.OfsHeader()
 	if err != nil {
 		return 0, err
 	}
-	this.lenHeader = int(tmp16 - tmp17)
+	this.lenHeader = int(tmp31 - tmp32)
 	return this.lenHeader, nil
 }
+
+/**
+ * Size of the (compressed) payload in bytes. v6 packages store it in
+ * `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+ * (which also includes the size of the header).
+ * 
+ * If the header and payload together or the uncompressed payload reach
+ * 4 GiB, v4 packages use `signature_tags::long_size` instead - see
+ * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212>.
+ * 
+ * RPM never writes both (so this is just a hypothetical scenario), but if
+ * both are present, `signature_tags::long_size` takes precedence over
+ * `signature_tags::size`, just like in RPM's `printSize()` function:
+ * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43>
+ */
 func (this *Rpm) LenPayload() (v int, err error) {
 	if (this._f_lenPayload) {
 		return this.lenPayload, nil
 	}
 	this._f_lenPayload = true
-	tmp18, err := this.HasSignatureSizeTag()
+	tmp33, err := this.HasPayload()
 	if err != nil {
 		return 0, err
 	}
-	if (tmp18) {
-		tmp19, err := this.SignatureSizeTag()
+	if (tmp33) {
+		var tmp34 uint64;
+		tmp35, err := this.HasHeaderPayloadSizeTag()
 		if err != nil {
 			return 0, err
 		}
-		tmp20, err := tmp19.Body()
-		if err != nil {
-			return 0, err
+		if (tmp35) {
+			tmp36, err := this.HeaderPayloadSizeTag()
+			if err != nil {
+				return 0, err
+			}
+			tmp37, err := tmp36.Body()
+			if err != nil {
+				return 0, err
+			}
+			tmp34 = tmp37.(*Rpm_RecordTypeUint64).Values[0]
+		} else {
+			var tmp38 int;
+			tmp39, err := this.HasSignatureLongSizeTag()
+			if err != nil {
+				return 0, err
+			}
+			if (tmp39) {
+				tmp40, err := this.SignatureLongSizeTag()
+				if err != nil {
+					return 0, err
+				}
+				tmp41, err := tmp40.Body()
+				if err != nil {
+					return 0, err
+				}
+				tmp42, err := this.LenHeader()
+				if err != nil {
+					return 0, err
+				}
+				tmp38 = tmp41.(*Rpm_RecordTypeUint64).Values[0] - tmp42
+			} else {
+				tmp43, err := this.SignatureSizeTag()
+				if err != nil {
+					return 0, err
+				}
+				tmp44, err := tmp43.Body()
+				if err != nil {
+					return 0, err
+				}
+				tmp45, err := this.LenHeader()
+				if err != nil {
+					return 0, err
+				}
+				tmp38 = tmp44.(*Rpm_RecordTypeUint32).Values[0] - tmp45
+			}
+			tmp34 = tmp38
 		}
-		tmp21, err := this.LenHeader()
-		if err != nil {
-			return 0, err
-		}
-		this.lenPayload = int(tmp20.(*Rpm_RecordTypeUint32).Values[0] - tmp21)
+		this.lenPayload = int(tmp34)
 	}
 	return this.lenPayload, nil
 }
@@ -612,11 +814,11 @@ func (this *Rpm) OfsHeader() (v int, err error) {
 		return this.ofsHeader, nil
 	}
 	this._f_ofsHeader = true
-	tmp22, err := this._io.Pos()
+	tmp46, err := this._io.Pos()
 	if err != nil {
 		return 0, err
 	}
-	this.ofsHeader = int(tmp22)
+	this.ofsHeader = int(tmp46)
 	return this.ofsHeader, nil
 }
 func (this *Rpm) OfsPayload() (v int, err error) {
@@ -624,45 +826,73 @@ func (this *Rpm) OfsPayload() (v int, err error) {
 		return this.ofsPayload, nil
 	}
 	this._f_ofsPayload = true
-	tmp23, err := this._io.Pos()
+	tmp47, err := this._io.Pos()
 	if err != nil {
 		return 0, err
 	}
-	this.ofsPayload = int(tmp23)
+	this.ofsPayload = int(tmp47)
 	return this.ofsPayload, nil
 }
+
+/**
+ * Archive of the package files, compressed using the method specified by
+ * `header_tags::payload_compressor`. If this tag is missing, it's almost
+ * certainly uncompressed (except for some very old v3 packages built by RPM
+ * 3.0.3 or earlier, which didn't use the tag because the payload was always
+ * gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+ * the tag). However, RPM reads the payload as gzip by default - see
+ * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645>.
+ * Since zlib's gzip reader passes data that is not in gzip format through
+ * unchanged (see
+ * <https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389>),
+ * this also works for uncompressed payloads.
+ * 
+ * The archive format is given by `header_tags::payload_format`, which is
+ * `"cpio"` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+ * without a checksum (the `070701` variant) - the [v4 format
+ * documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+ * claims "with a CRC checksum", but that's not true since RPM 2.4.4
+ * (released in 1997).
+ * 
+ * v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+ * variant of cpio with the magic `07070X`. Its file headers only hold the
+ * index of the file in the file lists of the RPM header, which is the only
+ * place where the file names, sizes and other metadata are stored.
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload">Source</a>
+ */
 func (this *Rpm) Payload() (v []byte, err error) {
 	if (this._f_payload) {
 		return this.payload, nil
 	}
 	this._f_payload = true
-	tmp24, err := this.HasSignatureSizeTag()
+	tmp48, err := this.HasPayload()
 	if err != nil {
 		return nil, err
 	}
-	if (tmp24) {
+	if (tmp48) {
 		_pos, err := this._io.Pos()
 		if err != nil {
 			return nil, err
 		}
-		tmp25, err := this.OfsPayload()
+		tmp49, err := this.OfsPayload()
 		if err != nil {
 			return nil, err
 		}
-		_, err = this._io.Seek(int64(tmp25), io.SeekStart)
+		_, err = this._io.Seek(int64(tmp49), io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
-		tmp26, err := this.LenPayload()
+		tmp50, err := this.LenPayload()
 		if err != nil {
 			return nil, err
 		}
-		tmp27, err := this._io.ReadBytes(int(tmp26))
+		tmp51, err := this._io.ReadBytes(int(tmp50))
 		if err != nil {
 			return nil, err
 		}
-		tmp27 = tmp27
-		this.payload = tmp27
+		tmp51 = tmp51
+		this.payload = tmp51
 		_, err = this._io.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return nil, err
@@ -670,22 +900,41 @@ func (this *Rpm) Payload() (v []byte, err error) {
 	}
 	return this.payload, nil
 }
+func (this *Rpm) SignatureLongSizeTag() (v *Rpm_HeaderIndexRecord, err error) {
+	if (this._f_signatureLongSizeTag) {
+		return this.signatureLongSizeTag, nil
+	}
+	this._f_signatureLongSizeTag = true
+	tmp52, err := this.HasSignatureLongSizeTag()
+	if err != nil {
+		return nil, err
+	}
+	if (tmp52) {
+		tmp53 := this.SignatureTagsSteps
+		tmp54, err := tmp53[len(tmp53) - 1].LongSizeTagIdx()
+		if err != nil {
+			return nil, err
+		}
+		this.signatureLongSizeTag = this.Signature.IndexRecords[tmp54]
+	}
+	return this.signatureLongSizeTag, nil
+}
 func (this *Rpm) SignatureSizeTag() (v *Rpm_HeaderIndexRecord, err error) {
 	if (this._f_signatureSizeTag) {
 		return this.signatureSizeTag, nil
 	}
 	this._f_signatureSizeTag = true
-	tmp28, err := this.HasSignatureSizeTag()
+	tmp55, err := this.HasSignatureSizeTag()
 	if err != nil {
 		return nil, err
 	}
-	if (tmp28) {
-		tmp29 := this.SignatureTagsSteps
-		tmp30, err := tmp29[len(tmp29) - 1].SizeTagIdx()
+	if (tmp55) {
+		tmp56 := this.SignatureTagsSteps
+		tmp57, err := tmp56[len(tmp56) - 1].SizeTagIdx()
 		if err != nil {
 			return nil, err
 		}
-		this.signatureSizeTag = this.Signature.IndexRecords[tmp30]
+		this.signatureSizeTag = this.Signature.IndexRecords[tmp57]
 	}
 	return this.signatureSizeTag, nil
 }
@@ -743,34 +992,34 @@ func (this *Rpm_Header) Read(io *kaitai.Stream, parent *Rpm, root *Rpm) (err err
 	this._parent = parent
 	this._root = root
 
-	tmp31 := NewRpm_HeaderRecord()
-	err = tmp31.Read(this._io, this, this._root)
+	tmp58 := NewRpm_HeaderRecord()
+	err = tmp58.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.HeaderRecord = tmp31
+	this.HeaderRecord = tmp58
 	for i := 0; i < int(this.HeaderRecord.NumIndexRecords); i++ {
 		_ = i
-		tmp32 := NewRpm_HeaderIndexRecord()
-		err = tmp32.Read(this._io, this, this._root)
+		tmp59 := NewRpm_HeaderIndexRecord()
+		err = tmp59.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.IndexRecords = append(this.IndexRecords, tmp32)
+		this.IndexRecords = append(this.IndexRecords, tmp59)
 	}
-	tmp33, err := this._io.ReadBytes(int(this.HeaderRecord.LenStorageSection))
+	tmp60, err := this._io.ReadBytes(int(this.HeaderRecord.LenStorageSection))
 	if err != nil {
 		return err
 	}
-	tmp33 = tmp33
-	this._raw_StorageSection = tmp33
+	tmp60 = tmp60
+	this._raw_StorageSection = tmp60
 	_io__raw_StorageSection := kaitai.NewStream(bytes.NewReader(this._raw_StorageSection))
-	tmp34 := NewRpm_Dummy()
-	err = tmp34.Read(_io__raw_StorageSection, this, this._root)
+	tmp61 := NewRpm_Dummy()
+	err = tmp61.Read(_io__raw_StorageSection, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.StorageSection = tmp34
+	this.StorageSection = tmp61
 	return err
 }
 func (this *Rpm_Header) IsHeader() (v bool, err error) {
@@ -814,26 +1063,29 @@ func (this *Rpm_HeaderIndexRecord) Read(io *kaitai.Stream, parent *Rpm_Header, r
 	this._parent = parent
 	this._root = root
 
-	tmp35, err := this._io.ReadU4be()
+	tmp62, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.TagRaw = uint32(tmp35)
-	tmp36, err := this._io.ReadU4be()
+	this.TagRaw = uint32(tmp62)
+	tmp63, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.RecordType = Rpm_RecordTypes(tmp36)
-	tmp37, err := this._io.ReadU4be()
+	this.RecordType = Rpm_RecordTypes(tmp63)
+	if !this.RecordType.isDefined() {
+		return kaitai.NewValidationNotInEnumError(this.RecordType, this._io, "/types/header_index_record/seq/1")
+	}
+	tmp64, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.OfsBody = uint32(tmp37)
-	tmp38, err := this._io.ReadU4be()
+	this.OfsBody = uint32(tmp64)
+	tmp65, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Count = uint32(tmp38)
+	this.Count = uint32(tmp65)
 	return err
 }
 func (this *Rpm_HeaderIndexRecord) Body() (v kaitai.Struct, err error) {
@@ -852,100 +1104,100 @@ func (this *Rpm_HeaderIndexRecord) Body() (v kaitai.Struct, err error) {
 	}
 	switch (this.RecordType) {
 	case Rpm_RecordTypes__Bin:
-		tmp39, err := this.LenValue()
+		tmp66, err := this.LenValue()
 		if err != nil {
 			return nil, err
 		}
-		tmp40 := NewRpm_RecordTypeBin(tmp39)
-		err = tmp40.Read(thisIo, this, this._root)
+		tmp67 := NewRpm_RecordTypeBin(tmp66)
+		err = tmp67.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp40
+		this.body = tmp67
 	case Rpm_RecordTypes__Char:
-		tmp41, err := this.NumValues()
+		tmp68, err := this.NumValues()
 		if err != nil {
 			return nil, err
 		}
-		tmp42 := NewRpm_RecordTypeUint8(tmp41)
-		err = tmp42.Read(thisIo, this, this._root)
+		tmp69 := NewRpm_RecordTypeUint8(tmp68)
+		err = tmp69.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp42
+		this.body = tmp69
 	case Rpm_RecordTypes__I18nString:
-		tmp43, err := this.NumValues()
+		tmp70, err := this.NumValues()
 		if err != nil {
 			return nil, err
 		}
-		tmp44 := NewRpm_RecordTypeStringArray(tmp43)
-		err = tmp44.Read(thisIo, this, this._root)
+		tmp71 := NewRpm_RecordTypeStringArray(tmp70)
+		err = tmp71.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp44
+		this.body = tmp71
 	case Rpm_RecordTypes__String:
-		tmp45 := NewRpm_RecordTypeString()
-		err = tmp45.Read(thisIo, this, this._root)
+		tmp72 := NewRpm_RecordTypeString()
+		err = tmp72.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp45
+		this.body = tmp72
 	case Rpm_RecordTypes__StringArray:
-		tmp46, err := this.NumValues()
+		tmp73, err := this.NumValues()
 		if err != nil {
 			return nil, err
 		}
-		tmp47 := NewRpm_RecordTypeStringArray(tmp46)
-		err = tmp47.Read(thisIo, this, this._root)
+		tmp74 := NewRpm_RecordTypeStringArray(tmp73)
+		err = tmp74.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp47
+		this.body = tmp74
 	case Rpm_RecordTypes__Uint16:
-		tmp48, err := this.NumValues()
+		tmp75, err := this.NumValues()
 		if err != nil {
 			return nil, err
 		}
-		tmp49 := NewRpm_RecordTypeUint16(tmp48)
-		err = tmp49.Read(thisIo, this, this._root)
+		tmp76 := NewRpm_RecordTypeUint16(tmp75)
+		err = tmp76.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp49
+		this.body = tmp76
 	case Rpm_RecordTypes__Uint32:
-		tmp50, err := this.NumValues()
+		tmp77, err := this.NumValues()
 		if err != nil {
 			return nil, err
 		}
-		tmp51 := NewRpm_RecordTypeUint32(tmp50)
-		err = tmp51.Read(thisIo, this, this._root)
+		tmp78 := NewRpm_RecordTypeUint32(tmp77)
+		err = tmp78.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp51
+		this.body = tmp78
 	case Rpm_RecordTypes__Uint64:
-		tmp52, err := this.NumValues()
+		tmp79, err := this.NumValues()
 		if err != nil {
 			return nil, err
 		}
-		tmp53 := NewRpm_RecordTypeUint64(tmp52)
-		err = tmp53.Read(thisIo, this, this._root)
+		tmp80 := NewRpm_RecordTypeUint64(tmp79)
+		err = tmp80.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp53
+		this.body = tmp80
 	case Rpm_RecordTypes__Uint8:
-		tmp54, err := this.NumValues()
+		tmp81, err := this.NumValues()
 		if err != nil {
 			return nil, err
 		}
-		tmp55 := NewRpm_RecordTypeUint8(tmp54)
-		err = tmp55.Read(thisIo, this, this._root)
+		tmp82 := NewRpm_RecordTypeUint8(tmp81)
+		err = tmp82.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp55
+		this.body = tmp82
 	}
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
@@ -958,11 +1210,11 @@ func (this *Rpm_HeaderIndexRecord) HeaderTag() (v Rpm_HeaderTags, err error) {
 		return this.headerTag, nil
 	}
 	this._f_headerTag = true
-	tmp56, err := this._parent.IsHeader()
+	tmp83, err := this._parent.IsHeader()
 	if err != nil {
 		return nil, err
 	}
-	if (tmp56) {
+	if (tmp83) {
 		this.headerTag = Rpm_HeaderTags(Rpm_HeaderTags(this.TagRaw))
 	}
 	return this.headerTag, nil
@@ -1028,37 +1280,67 @@ func (this *Rpm_HeaderRecord) Read(io *kaitai.Stream, parent *Rpm_Header, root *
 	this._parent = parent
 	this._root = root
 
-	tmp57, err := this._io.ReadBytes(int(4))
+	tmp84, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp57 = tmp57
-	this.Magic = tmp57
+	tmp84 = tmp84
+	this.Magic = tmp84
 	if !(bytes.Equal(this.Magic, []uint8{142, 173, 232, 1})) {
 		return kaitai.NewValidationNotEqualError([]uint8{142, 173, 232, 1}, this.Magic, this._io, "/types/header_record/seq/0")
 	}
-	tmp58, err := this._io.ReadBytes(int(4))
+	tmp85, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp58 = tmp58
-	this.Reserved = tmp58
+	tmp85 = tmp85
+	this.Reserved = tmp85
 	if !(bytes.Equal(this.Reserved, []uint8{0, 0, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.Reserved, this._io, "/types/header_record/seq/1")
 	}
-	tmp59, err := this._io.ReadU4be()
+	tmp86, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.NumIndexRecords = uint32(tmp59)
+	this.NumIndexRecords = uint32(tmp86)
 	if !(this.NumIndexRecords >= 1) {
 		return kaitai.NewValidationLessThanError(1, this.NumIndexRecords, this._io, "/types/header_record/seq/2")
 	}
-	tmp60, err := this._io.ReadU4be()
+	var tmp87 int8;
+	if (this._parent.IsSignature) {
+		tmp87 = 32
+	} else {
+		tmp87 = 65535
+	}
+	var tmp88 int8;
+	if (this._parent.IsSignature) {
+		tmp88 = 32
+	} else {
+		tmp88 = 65535
+	}
+	if !(this.NumIndexRecords <= tmp87) {
+		return kaitai.NewValidationGreaterThanError(tmp88, this.NumIndexRecords, this._io, "/types/header_record/seq/2")
+	}
+	tmp89, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LenStorageSection = uint32(tmp60)
+	this.LenStorageSection = uint32(tmp89)
+	var tmp90 int;
+	if (this._parent.IsSignature) {
+		tmp90 = (64 * 1024) * 1024
+	} else {
+		tmp90 = 268435455
+	}
+	var tmp91 int;
+	if (this._parent.IsSignature) {
+		tmp91 = (64 * 1024) * 1024
+	} else {
+		tmp91 = 268435455
+	}
+	if !(this.LenStorageSection <= tmp90) {
+		return kaitai.NewValidationGreaterThanError(tmp91, this.LenStorageSection, this._io, "/types/header_record/seq/3")
+	}
 	return err
 }
 
@@ -1068,7 +1350,67 @@ func (this *Rpm_HeaderRecord) Read(io *kaitai.Stream, parent *Rpm_Header, root *
  */
 
 /**
- * In 2021, Panu Matilainen (a RPM developer) [described this
+ * Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+ * which is where v6 packages store the payload size.
+ */
+type Rpm_HeaderTagsStep struct {
+	Idx int32
+	PrevPayloadSizeTagIdx int32
+	_io *kaitai.Stream
+	_root *Rpm
+	_parent *Rpm
+	_f_payloadSizeTagIdx bool
+	payloadSizeTagIdx int
+}
+func NewRpm_HeaderTagsStep(idx int32, prevPayloadSizeTagIdx int32) *Rpm_HeaderTagsStep {
+	return &Rpm_HeaderTagsStep{
+		Idx: idx,
+		PrevPayloadSizeTagIdx: prevPayloadSizeTagIdx,
+	}
+}
+
+func (this Rpm_HeaderTagsStep) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Rpm_HeaderTagsStep) Read(io *kaitai.Stream, parent *Rpm, root *Rpm) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	return err
+}
+func (this *Rpm_HeaderTagsStep) PayloadSizeTagIdx() (v int, err error) {
+	if (this._f_payloadSizeTagIdx) {
+		return this.payloadSizeTagIdx, nil
+	}
+	this._f_payloadSizeTagIdx = true
+	var tmp92 int32;
+	if (this.PrevPayloadSizeTagIdx != -1) {
+		tmp92 = this.PrevPayloadSizeTagIdx
+	} else {
+		var tmp93 int32;
+		tmp94, err := this._parent.Header.IndexRecords[this.Idx].HeaderTag()
+		if err != nil {
+			return 0, err
+		}
+		tmp95, err := this._parent.Header.IndexRecords[this.Idx].NumValues()
+		if err != nil {
+			return 0, err
+		}
+		if ( ((tmp94 == Rpm_HeaderTags__PayloadSize) && (this._parent.Header.IndexRecords[this.Idx].RecordType == Rpm_RecordTypes__Uint64) && (tmp95 >= 1)) ) {
+			tmp93 = this.Idx
+		} else {
+			tmp93 = -1
+		}
+		tmp92 = tmp93
+	}
+	this.payloadSizeTagIdx = int(tmp92)
+	return this.payloadSizeTagIdx, nil
+}
+
+/**
+ * In 2021, Panu Matilainen (an RPM developer) [described this
  * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
  * as follows:
  * 
@@ -1077,10 +1419,13 @@ func (this *Rpm_HeaderRecord) Read(io *kaitai.Stream, parent *Rpm_Header, root *
  * > it's an rpm file in the first place, just ignore everything in it.
  * > Literally everything.
  * 
- * The fields with `valid` constraints are important, because these are the
- * same validations that RPM does (which means that any valid `.rpm` file
- * must pass them), but otherwise you should not make decisions based on the
- * values given here.
+ * RPM 4.19 and older rejected packages that didn't meet the `valid`
+ * constraints specified here, while RPM 4.20 and later only check the
+ * `magic` - see
+ * <https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66>.
+ * Nevertheless, RPM still writes values that pass these checks for backwards
+ * compatibility, so any `.rpm` file should pass.
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md">Source</a>
  */
 type Rpm_Lead struct {
 	Magic []byte
@@ -1109,58 +1454,62 @@ func (this *Rpm_Lead) Read(io *kaitai.Stream, parent *Rpm, root *Rpm) (err error
 	this._parent = parent
 	this._root = root
 
-	tmp61, err := this._io.ReadBytes(int(4))
+	tmp96, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp61 = tmp61
-	this.Magic = tmp61
+	tmp96 = tmp96
+	this.Magic = tmp96
 	if !(bytes.Equal(this.Magic, []uint8{237, 171, 238, 219})) {
 		return kaitai.NewValidationNotEqualError([]uint8{237, 171, 238, 219}, this.Magic, this._io, "/types/lead/seq/0")
 	}
-	tmp62 := NewRpm_RpmVersion()
-	err = tmp62.Read(this._io, this, this._root)
+	tmp97 := NewRpm_RpmVersion()
+	err = tmp97.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Version = tmp62
-	tmp63, err := this._io.ReadU2be()
+	this.Version = tmp97
+	tmp98, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Type = Rpm_RpmTypes(tmp63)
-	tmp64, err := this._io.ReadU2be()
+	this.Type = Rpm_RpmTypes(tmp98)
+	tmp99, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Architecture = Rpm_Architectures(tmp64)
-	tmp65, err := this._io.ReadBytes(int(66))
+	this.Architecture = Rpm_Architectures(tmp99)
+	tmp100, err := this._io.ReadBytes(int(66))
 	if err != nil {
 		return err
 	}
-	tmp65 = kaitai.BytesTerminate(tmp65, 0, false)
-	this.PackageName = string(tmp65)
-	tmp66, err := this._io.ReadU2be()
+	tmp100 = kaitai.BytesTerminate(tmp100, 0, false)
+	this.PackageName = string(tmp100)
+	tmp101, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Os = Rpm_OperatingSystems(tmp66)
-	tmp67, err := this._io.ReadU2be()
+	this.Os = Rpm_OperatingSystems(tmp101)
+	tmp102, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.SignatureType = uint16(tmp67)
+	this.SignatureType = uint16(tmp102)
 	if !(this.SignatureType == 5) {
 		return kaitai.NewValidationNotEqualError(5, this.SignatureType, this._io, "/types/lead/seq/6")
 	}
-	tmp68, err := this._io.ReadBytes(int(16))
+	tmp103, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp68 = tmp68
-	this.Reserved = tmp68
+	tmp103 = tmp103
+	this.Reserved = tmp103
 	return err
 }
+
+/**
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21">Source</a>
+ */
 type Rpm_RecordTypeBin struct {
 	Values [][]byte
 	LenValue uint32
@@ -1185,12 +1534,12 @@ func (this *Rpm_RecordTypeBin) Read(io *kaitai.Stream, parent *Rpm_HeaderIndexRe
 
 	for i := 0; i < int(1); i++ {
 		_ = i
-		tmp69, err := this._io.ReadBytes(int(this.LenValue))
+		tmp104, err := this._io.ReadBytes(int(this.LenValue))
 		if err != nil {
 			return err
 		}
-		tmp69 = tmp69
-		this.Values = append(this.Values, tmp69)
+		tmp104 = tmp104
+		this.Values = append(this.Values, tmp104)
 	}
 	return err
 }
@@ -1216,11 +1565,11 @@ func (this *Rpm_RecordTypeString) Read(io *kaitai.Stream, parent *Rpm_HeaderInde
 
 	for i := 0; i < int(1); i++ {
 		_ = i
-		tmp70, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp105, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return err
 		}
-		this.Values = append(this.Values, string(tmp70))
+		this.Values = append(this.Values, string(tmp105))
 	}
 	return err
 }
@@ -1248,11 +1597,11 @@ func (this *Rpm_RecordTypeStringArray) Read(io *kaitai.Stream, parent *Rpm_Heade
 
 	for i := 0; i < int(this.NumValues); i++ {
 		_ = i
-		tmp71, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp106, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return err
 		}
-		this.Values = append(this.Values, string(tmp71))
+		this.Values = append(this.Values, string(tmp106))
 	}
 	return err
 }
@@ -1280,11 +1629,11 @@ func (this *Rpm_RecordTypeUint16) Read(io *kaitai.Stream, parent *Rpm_HeaderInde
 
 	for i := 0; i < int(this.NumValues); i++ {
 		_ = i
-		tmp72, err := this._io.ReadU2be()
+		tmp107, err := this._io.ReadU2be()
 		if err != nil {
 			return err
 		}
-		this.Values = append(this.Values, tmp72)
+		this.Values = append(this.Values, tmp107)
 	}
 	return err
 }
@@ -1312,11 +1661,11 @@ func (this *Rpm_RecordTypeUint32) Read(io *kaitai.Stream, parent *Rpm_HeaderInde
 
 	for i := 0; i < int(this.NumValues); i++ {
 		_ = i
-		tmp73, err := this._io.ReadU4be()
+		tmp108, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.Values = append(this.Values, tmp73)
+		this.Values = append(this.Values, tmp108)
 	}
 	return err
 }
@@ -1344,11 +1693,11 @@ func (this *Rpm_RecordTypeUint64) Read(io *kaitai.Stream, parent *Rpm_HeaderInde
 
 	for i := 0; i < int(this.NumValues); i++ {
 		_ = i
-		tmp74, err := this._io.ReadU8be()
+		tmp109, err := this._io.ReadU8be()
 		if err != nil {
 			return err
 		}
-		this.Values = append(this.Values, tmp74)
+		this.Values = append(this.Values, tmp109)
 	}
 	return err
 }
@@ -1376,11 +1725,11 @@ func (this *Rpm_RecordTypeUint8) Read(io *kaitai.Stream, parent *Rpm_HeaderIndex
 
 	for i := 0; i < int(this.NumValues); i++ {
 		_ = i
-		tmp75, err := this._io.ReadU1()
+		tmp110, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
-		this.Values = append(this.Values, tmp75)
+		this.Values = append(this.Values, tmp110)
 	}
 	return err
 }
@@ -1405,41 +1754,53 @@ func (this *Rpm_RpmVersion) Read(io *kaitai.Stream, parent *Rpm_Lead, root *Rpm)
 	this._parent = parent
 	this._root = root
 
-	tmp76, err := this._io.ReadU1()
+	tmp111, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Major = tmp76
+	this.Major = tmp111
 	if !(this.Major >= 3) {
 		return kaitai.NewValidationLessThanError(3, this.Major, this._io, "/types/rpm_version/seq/0")
 	}
 	if !(this.Major <= 4) {
 		return kaitai.NewValidationGreaterThanError(4, this.Major, this._io, "/types/rpm_version/seq/0")
 	}
-	tmp77, err := this._io.ReadU1()
+	tmp112, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Minor = tmp77
+	this.Minor = tmp112
 	return err
 }
 
 /**
- * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
+ * 3 in v3 and v4 packages, 4 in v6 packages.
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52">Source</a>
+ */
+
+/**
+ * Finds the first `signature_tags::size` and `signature_tags::long_size`
+ * index record. Since Kaitai Struct doesn't have a built-in way to search an
+ * array directly, each step receives the indexes found so far via
+ * parameters.
  */
 type Rpm_SignatureTagsStep struct {
 	Idx int32
 	PrevSizeTagIdx int32
+	PrevLongSizeTagIdx int32
 	_io *kaitai.Stream
 	_root *Rpm
 	_parent *Rpm
+	_f_longSizeTagIdx bool
+	longSizeTagIdx int
 	_f_sizeTagIdx bool
 	sizeTagIdx int
 }
-func NewRpm_SignatureTagsStep(idx int32, prevSizeTagIdx int32) *Rpm_SignatureTagsStep {
+func NewRpm_SignatureTagsStep(idx int32, prevSizeTagIdx int32, prevLongSizeTagIdx int32) *Rpm_SignatureTagsStep {
 	return &Rpm_SignatureTagsStep{
 		Idx: idx,
 		PrevSizeTagIdx: prevSizeTagIdx,
+		PrevLongSizeTagIdx: prevLongSizeTagIdx,
 	}
 }
 
@@ -1454,31 +1815,59 @@ func (this *Rpm_SignatureTagsStep) Read(io *kaitai.Stream, parent *Rpm, root *Rp
 
 	return err
 }
+func (this *Rpm_SignatureTagsStep) LongSizeTagIdx() (v int, err error) {
+	if (this._f_longSizeTagIdx) {
+		return this.longSizeTagIdx, nil
+	}
+	this._f_longSizeTagIdx = true
+	var tmp113 int32;
+	if (this.PrevLongSizeTagIdx != -1) {
+		tmp113 = this.PrevLongSizeTagIdx
+	} else {
+		var tmp114 int32;
+		tmp115, err := this._parent.Signature.IndexRecords[this.Idx].SignatureTag()
+		if err != nil {
+			return 0, err
+		}
+		tmp116, err := this._parent.Signature.IndexRecords[this.Idx].NumValues()
+		if err != nil {
+			return 0, err
+		}
+		if ( ((tmp115 == Rpm_SignatureTags__LongSize) && (this._parent.Signature.IndexRecords[this.Idx].RecordType == Rpm_RecordTypes__Uint64) && (tmp116 >= 1)) ) {
+			tmp114 = this.Idx
+		} else {
+			tmp114 = -1
+		}
+		tmp113 = tmp114
+	}
+	this.longSizeTagIdx = int(tmp113)
+	return this.longSizeTagIdx, nil
+}
 func (this *Rpm_SignatureTagsStep) SizeTagIdx() (v int, err error) {
 	if (this._f_sizeTagIdx) {
 		return this.sizeTagIdx, nil
 	}
 	this._f_sizeTagIdx = true
-	var tmp78 int32;
+	var tmp117 int32;
 	if (this.PrevSizeTagIdx != -1) {
-		tmp78 = this.PrevSizeTagIdx
+		tmp117 = this.PrevSizeTagIdx
 	} else {
-		var tmp79 int32;
-		tmp80, err := this._parent.Signature.IndexRecords[this.Idx].SignatureTag()
+		var tmp118 int32;
+		tmp119, err := this._parent.Signature.IndexRecords[this.Idx].SignatureTag()
 		if err != nil {
 			return 0, err
 		}
-		tmp81, err := this._parent.Signature.IndexRecords[this.Idx].NumValues()
+		tmp120, err := this._parent.Signature.IndexRecords[this.Idx].NumValues()
 		if err != nil {
 			return 0, err
 		}
-		if ( ((tmp80 == Rpm_SignatureTags__Size) && (this._parent.Signature.IndexRecords[this.Idx].RecordType == Rpm_RecordTypes__Uint32) && (tmp81 >= 1)) ) {
-			tmp79 = this.Idx
+		if ( ((tmp119 == Rpm_SignatureTags__Size) && (this._parent.Signature.IndexRecords[this.Idx].RecordType == Rpm_RecordTypes__Uint32) && (tmp120 >= 1)) ) {
+			tmp118 = this.Idx
 		} else {
-			tmp79 = -1
+			tmp118 = -1
 		}
-		tmp78 = tmp79
+		tmp117 = tmp118
 	}
-	this.sizeTagIdx = int(tmp78)
+	this.sizeTagIdx = int(tmp117)
 	return this.sizeTagIdx, nil
 }

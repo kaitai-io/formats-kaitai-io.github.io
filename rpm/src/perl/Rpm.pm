@@ -19,6 +19,7 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
+our $ARCHITECTURES_NOT_SET = 0;
 our $ARCHITECTURES_X86 = 1;
 our $ARCHITECTURES_ALPHA = 2;
 our $ARCHITECTURES_SPARC = 3;
@@ -42,6 +43,7 @@ our $ARCHITECTURES_MIPS_R6 = 20;
 our $ARCHITECTURES_MIPS64_R6 = 21;
 our $ARCHITECTURES_RISCV = 22;
 our $ARCHITECTURES_LOONGARCH64 = 23;
+our $ARCHITECTURES_E2K = 24;
 our $ARCHITECTURES_NO_ARCH = 255;
 
 our $HEADER_TAGS_SIGNATURES = 62;
@@ -184,7 +186,7 @@ our $HEADER_TAGS_CLASS_DICT = 1142;
 our $HEADER_TAGS_FILE_DEPENDS_IDX = 1143;
 our $HEADER_TAGS_FILE_DEPENDS_NUM = 1144;
 our $HEADER_TAGS_DEPENDS_DICT = 1145;
-our $HEADER_TAGS_SOURCE_PKGID = 1146;
+our $HEADER_TAGS_SOURCE_SIG_MD5 = 1146;
 our $HEADER_TAGS_FILE_CONTEXTS_OBSOLETE = 1147;
 our $HEADER_TAGS_FS_CONTEXTS_OBSOLETE = 1148;
 our $HEADER_TAGS_RE_CONTEXTS_OBSOLETE = 1149;
@@ -326,12 +328,12 @@ our $HEADER_TAGS_TRANS_FILE_TRIGGER_CONDS = 5088;
 our $HEADER_TAGS_TRANS_FILE_TRIGGER_TYPE = 5089;
 our $HEADER_TAGS_FILE_SIGNATURES = 5090;
 our $HEADER_TAGS_FILE_SIGNATURE_LENGTH = 5091;
-our $HEADER_TAGS_PAYLOAD_DIGEST = 5092;
-our $HEADER_TAGS_PAYLOAD_DIGEST_ALGO = 5093;
+our $HEADER_TAGS_PAYLOAD_SHA256 = 5092;
+our $HEADER_TAGS_PAYLOAD_SHA256_ALGO_OBSOLETE = 5093;
 our $HEADER_TAGS_AUTO_INSTALLED_UNIMPLEMENTED = 5094;
 our $HEADER_TAGS_IDENTITY_UNIMPLEMENTED = 5095;
 our $HEADER_TAGS_MODULARITY_LABEL = 5096;
-our $HEADER_TAGS_PAYLOAD_DIGEST_ALT = 5097;
+our $HEADER_TAGS_PAYLOAD_SHA256_ALT = 5097;
 our $HEADER_TAGS_ARCH_SUFFIX = 5098;
 our $HEADER_TAGS_SPEC = 5099;
 our $HEADER_TAGS_TRANSLATION_URL = 5100;
@@ -344,12 +346,27 @@ our $HEADER_TAGS_POST_UNTRANS_PROG = 5106;
 our $HEADER_TAGS_PRE_UNTRANS_FLAGS = 5107;
 our $HEADER_TAGS_POST_UNTRANS_FLAGS = 5108;
 our $HEADER_TAGS_SYS_USERS = 5109;
+our $HEADER_TAGS_BUILD_SYSTEM_INTERNAL = 5110;
+our $HEADER_TAGS_BUILD_OPTION_INTERNAL = 5111;
+our $HEADER_TAGS_PAYLOAD_SIZE = 5112;
+our $HEADER_TAGS_PAYLOAD_SIZE_ALT = 5113;
+our $HEADER_TAGS_RPM_FORMAT = 5114;
+our $HEADER_TAGS_FILE_MIME_INDEX = 5115;
+our $HEADER_TAGS_MIME_DICT = 5116;
+our $HEADER_TAGS_FILE_MIMES = 5117;
+our $HEADER_TAGS_PACKAGE_DIGESTS = 5118;
+our $HEADER_TAGS_PACKAGE_DIGEST_ALGOS = 5119;
+our $HEADER_TAGS_SOURCE_NEVR = 5120;
+our $HEADER_TAGS_PAYLOAD_SHA512 = 5121;
+our $HEADER_TAGS_PAYLOAD_SHA512_ALT = 5122;
+our $HEADER_TAGS_PAYLOAD_SHA3_256 = 5123;
+our $HEADER_TAGS_PAYLOAD_SHA3_256_ALT = 5124;
 
+our $OPERATING_SYSTEMS_NOT_SET = 0;
 our $OPERATING_SYSTEMS_LINUX = 1;
 our $OPERATING_SYSTEMS_IRIX = 2;
 our $OPERATING_SYSTEMS_NO_OS = 255;
 
-our $RECORD_TYPES_NOT_IMPLEMENTED = 0;
 our $RECORD_TYPES_CHAR = 1;
 our $RECORD_TYPES_UINT8 = 2;
 our $RECORD_TYPES_UINT16 = 3;
@@ -378,6 +395,9 @@ our $SIGNATURE_TAGS_FILE_SIGNATURES = 274;
 our $SIGNATURE_TAGS_FILE_SIGNATURE_LENGTH = 275;
 our $SIGNATURE_TAGS_VERITY_SIGNATURES = 276;
 our $SIGNATURE_TAGS_VERITY_SIGNATURE_ALGO = 277;
+our $SIGNATURE_TAGS_OPENPGP = 278;
+our $SIGNATURE_TAGS_SHA3_256 = 279;
+our $SIGNATURE_TAGS_RESERVED = 999;
 our $SIGNATURE_TAGS_SIZE = 1000;
 our $SIGNATURE_TAGS_LE_MD5_1_OBSOLETE = 1001;
 our $SIGNATURE_TAGS_PGP = 1002;
@@ -419,6 +439,32 @@ sub _read {
     for (my $i = 0; $i < $n_signature_tags_steps; $i++) {
         push @{$self->{signature_tags_steps}}, Rpm::SignatureTagsStep->new($self->{_io}, $self, $self->{_root});
     }
+    $self->{header_tags_steps} = [];
+    my $n_header_tags_steps = $self->header()->header_record()->num_index_records();
+    for (my $i = 0; $i < $n_header_tags_steps; $i++) {
+        push @{$self->{header_tags_steps}}, Rpm::HeaderTagsStep->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub has_header_payload_size_tag {
+    my ($self) = @_;
+    return $self->{has_header_payload_size_tag} if ($self->{has_header_payload_size_tag});
+    $self->{has_header_payload_size_tag} = @{$self->header_tags_steps()}[-1]->payload_size_tag_idx() != -1;
+    return $self->{has_header_payload_size_tag};
+}
+
+sub has_payload {
+    my ($self) = @_;
+    return $self->{has_payload} if ($self->{has_payload});
+    $self->{has_payload} =  (($self->has_header_payload_size_tag()) || ($self->has_signature_long_size_tag()) || ($self->has_signature_size_tag())) ;
+    return $self->{has_payload};
+}
+
+sub has_signature_long_size_tag {
+    my ($self) = @_;
+    return $self->{has_signature_long_size_tag} if ($self->{has_signature_long_size_tag});
+    $self->{has_signature_long_size_tag} = @{$self->signature_tags_steps()}[-1]->long_size_tag_idx() != -1;
+    return $self->{has_signature_long_size_tag};
 }
 
 sub has_signature_size_tag {
@@ -426,6 +472,15 @@ sub has_signature_size_tag {
     return $self->{has_signature_size_tag} if ($self->{has_signature_size_tag});
     $self->{has_signature_size_tag} = @{$self->signature_tags_steps()}[-1]->size_tag_idx() != -1;
     return $self->{has_signature_size_tag};
+}
+
+sub header_payload_size_tag {
+    my ($self) = @_;
+    return $self->{header_payload_size_tag} if ($self->{header_payload_size_tag});
+    if ($self->has_header_payload_size_tag()) {
+        $self->{header_payload_size_tag} = @{$self->header()->index_records()}[@{$self->header_tags_steps()}[-1]->payload_size_tag_idx()];
+    }
+    return $self->{header_payload_size_tag};
 }
 
 sub len_header {
@@ -438,8 +493,8 @@ sub len_header {
 sub len_payload {
     my ($self) = @_;
     return $self->{len_payload} if ($self->{len_payload});
-    if ($self->has_signature_size_tag()) {
-        $self->{len_payload} = @{$self->signature_size_tag()->body()->values()}[0] - $self->len_header();
+    if ($self->has_payload()) {
+        $self->{len_payload} = ($self->has_header_payload_size_tag() ? @{$self->header_payload_size_tag()->body()->values()}[0] : ($self->has_signature_long_size_tag() ? @{$self->signature_long_size_tag()->body()->values()}[0] - $self->len_header() : @{$self->signature_size_tag()->body()->values()}[0] - $self->len_header()));
     }
     return $self->{len_payload};
 }
@@ -461,13 +516,22 @@ sub ofs_payload {
 sub payload {
     my ($self) = @_;
     return $self->{payload} if ($self->{payload});
-    if ($self->has_signature_size_tag()) {
+    if ($self->has_payload()) {
         my $_pos = $self->{_io}->pos();
         $self->{_io}->seek($self->ofs_payload());
         $self->{payload} = $self->{_io}->read_bytes($self->len_payload());
         $self->{_io}->seek($_pos);
     }
     return $self->{payload};
+}
+
+sub signature_long_size_tag {
+    my ($self) = @_;
+    return $self->{signature_long_size_tag} if ($self->{signature_long_size_tag});
+    if ($self->has_signature_long_size_tag()) {
+        $self->{signature_long_size_tag} = @{$self->signature()->index_records()}[@{$self->signature_tags_steps()}[-1]->long_size_tag_idx()];
+    }
+    return $self->{signature_long_size_tag};
 }
 
 sub signature_size_tag {
@@ -512,6 +576,11 @@ sub _unnamed5 {
 sub signature_tags_steps {
     my ($self) = @_;
     return $self->{signature_tags_steps};
+}
+
+sub header_tags_steps {
+    my ($self) = @_;
+    return $self->{header_tags_steps};
 }
 
 ########################################################################
@@ -803,6 +872,55 @@ sub num_index_records {
 sub len_storage_section {
     my ($self) = @_;
     return $self->{len_storage_section};
+}
+
+########################################################################
+package Rpm::HeaderTagsStep;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+sub payload_size_tag_idx {
+    my ($self) = @_;
+    return $self->{payload_size_tag_idx} if ($self->{payload_size_tag_idx});
+    $self->{payload_size_tag_idx} = ($self->prev_payload_size_tag_idx() != -1 ? $self->prev_payload_size_tag_idx() : ( ((@{$self->_parent()->header()->index_records()}[$self->idx()]->header_tag() == $Rpm::HEADER_TAGS_PAYLOAD_SIZE) && (@{$self->_parent()->header()->index_records()}[$self->idx()]->record_type() == $Rpm::RECORD_TYPES_UINT64) && (@{$self->_parent()->header()->index_records()}[$self->idx()]->num_values() >= 1))  ? $self->idx() : -1));
+    return $self->{payload_size_tag_idx};
+}
+
+sub idx {
+    my ($self) = @_;
+    return $self->{idx};
+}
+
+sub prev_payload_size_tag_idx {
+    my ($self) = @_;
+    return $self->{prev_payload_size_tag_idx};
 }
 
 ########################################################################
@@ -1285,6 +1403,13 @@ sub _read {
 
 }
 
+sub long_size_tag_idx {
+    my ($self) = @_;
+    return $self->{long_size_tag_idx} if ($self->{long_size_tag_idx});
+    $self->{long_size_tag_idx} = ($self->prev_long_size_tag_idx() != -1 ? $self->prev_long_size_tag_idx() : ( ((@{$self->_parent()->signature()->index_records()}[$self->idx()]->signature_tag() == $Rpm::SIGNATURE_TAGS_LONG_SIZE) && (@{$self->_parent()->signature()->index_records()}[$self->idx()]->record_type() == $Rpm::RECORD_TYPES_UINT64) && (@{$self->_parent()->signature()->index_records()}[$self->idx()]->num_values() >= 1))  ? $self->idx() : -1));
+    return $self->{long_size_tag_idx};
+}
+
 sub size_tag_idx {
     my ($self) = @_;
     return $self->{size_tag_idx} if ($self->{size_tag_idx});
@@ -1300,6 +1425,11 @@ sub idx {
 sub prev_size_tag_idx {
     my ($self) = @_;
     return $self->{prev_size_tag_idx};
+}
+
+sub prev_long_size_tag_idx {
+    my ($self) = @_;
+    return $self->{prev_long_size_tag_idx};
 }
 
 1;

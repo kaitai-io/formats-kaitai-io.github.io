@@ -3,6 +3,7 @@
 #include "rpm.h"
 #include "kaitai/exceptions.h"
 const std::set<rpm_t::architectures_t> rpm_t::_values_architectures_t{
+    rpm_t::ARCHITECTURES_NOT_SET,
     rpm_t::ARCHITECTURES_X86,
     rpm_t::ARCHITECTURES_ALPHA,
     rpm_t::ARCHITECTURES_SPARC,
@@ -26,6 +27,7 @@ const std::set<rpm_t::architectures_t> rpm_t::_values_architectures_t{
     rpm_t::ARCHITECTURES_MIPS64_R6,
     rpm_t::ARCHITECTURES_RISCV,
     rpm_t::ARCHITECTURES_LOONGARCH64,
+    rpm_t::ARCHITECTURES_E2K,
     rpm_t::ARCHITECTURES_NO_ARCH,
 };
 bool rpm_t::_is_defined_architectures_t(rpm_t::architectures_t v) {
@@ -172,7 +174,7 @@ const std::set<rpm_t::header_tags_t> rpm_t::_values_header_tags_t{
     rpm_t::HEADER_TAGS_FILE_DEPENDS_IDX,
     rpm_t::HEADER_TAGS_FILE_DEPENDS_NUM,
     rpm_t::HEADER_TAGS_DEPENDS_DICT,
-    rpm_t::HEADER_TAGS_SOURCE_PKGID,
+    rpm_t::HEADER_TAGS_SOURCE_SIG_MD5,
     rpm_t::HEADER_TAGS_FILE_CONTEXTS_OBSOLETE,
     rpm_t::HEADER_TAGS_FS_CONTEXTS_OBSOLETE,
     rpm_t::HEADER_TAGS_RE_CONTEXTS_OBSOLETE,
@@ -314,12 +316,12 @@ const std::set<rpm_t::header_tags_t> rpm_t::_values_header_tags_t{
     rpm_t::HEADER_TAGS_TRANS_FILE_TRIGGER_TYPE,
     rpm_t::HEADER_TAGS_FILE_SIGNATURES,
     rpm_t::HEADER_TAGS_FILE_SIGNATURE_LENGTH,
-    rpm_t::HEADER_TAGS_PAYLOAD_DIGEST,
-    rpm_t::HEADER_TAGS_PAYLOAD_DIGEST_ALGO,
+    rpm_t::HEADER_TAGS_PAYLOAD_SHA256,
+    rpm_t::HEADER_TAGS_PAYLOAD_SHA256_ALGO_OBSOLETE,
     rpm_t::HEADER_TAGS_AUTO_INSTALLED_UNIMPLEMENTED,
     rpm_t::HEADER_TAGS_IDENTITY_UNIMPLEMENTED,
     rpm_t::HEADER_TAGS_MODULARITY_LABEL,
-    rpm_t::HEADER_TAGS_PAYLOAD_DIGEST_ALT,
+    rpm_t::HEADER_TAGS_PAYLOAD_SHA256_ALT,
     rpm_t::HEADER_TAGS_ARCH_SUFFIX,
     rpm_t::HEADER_TAGS_SPEC,
     rpm_t::HEADER_TAGS_TRANSLATION_URL,
@@ -332,11 +334,27 @@ const std::set<rpm_t::header_tags_t> rpm_t::_values_header_tags_t{
     rpm_t::HEADER_TAGS_PRE_UNTRANS_FLAGS,
     rpm_t::HEADER_TAGS_POST_UNTRANS_FLAGS,
     rpm_t::HEADER_TAGS_SYS_USERS,
+    rpm_t::HEADER_TAGS_BUILD_SYSTEM_INTERNAL,
+    rpm_t::HEADER_TAGS_BUILD_OPTION_INTERNAL,
+    rpm_t::HEADER_TAGS_PAYLOAD_SIZE,
+    rpm_t::HEADER_TAGS_PAYLOAD_SIZE_ALT,
+    rpm_t::HEADER_TAGS_RPM_FORMAT,
+    rpm_t::HEADER_TAGS_FILE_MIME_INDEX,
+    rpm_t::HEADER_TAGS_MIME_DICT,
+    rpm_t::HEADER_TAGS_FILE_MIMES,
+    rpm_t::HEADER_TAGS_PACKAGE_DIGESTS,
+    rpm_t::HEADER_TAGS_PACKAGE_DIGEST_ALGOS,
+    rpm_t::HEADER_TAGS_SOURCE_NEVR,
+    rpm_t::HEADER_TAGS_PAYLOAD_SHA512,
+    rpm_t::HEADER_TAGS_PAYLOAD_SHA512_ALT,
+    rpm_t::HEADER_TAGS_PAYLOAD_SHA3_256,
+    rpm_t::HEADER_TAGS_PAYLOAD_SHA3_256_ALT,
 };
 bool rpm_t::_is_defined_header_tags_t(rpm_t::header_tags_t v) {
     return rpm_t::_values_header_tags_t.find(v) != rpm_t::_values_header_tags_t.end();
 }
 const std::set<rpm_t::operating_systems_t> rpm_t::_values_operating_systems_t{
+    rpm_t::OPERATING_SYSTEMS_NOT_SET,
     rpm_t::OPERATING_SYSTEMS_LINUX,
     rpm_t::OPERATING_SYSTEMS_IRIX,
     rpm_t::OPERATING_SYSTEMS_NO_OS,
@@ -345,7 +363,6 @@ bool rpm_t::_is_defined_operating_systems_t(rpm_t::operating_systems_t v) {
     return rpm_t::_values_operating_systems_t.find(v) != rpm_t::_values_operating_systems_t.end();
 }
 const std::set<rpm_t::record_types_t> rpm_t::_values_record_types_t{
-    rpm_t::RECORD_TYPES_NOT_IMPLEMENTED,
     rpm_t::RECORD_TYPES_CHAR,
     rpm_t::RECORD_TYPES_UINT8,
     rpm_t::RECORD_TYPES_UINT16,
@@ -382,6 +399,9 @@ const std::set<rpm_t::signature_tags_t> rpm_t::_values_signature_tags_t{
     rpm_t::SIGNATURE_TAGS_FILE_SIGNATURE_LENGTH,
     rpm_t::SIGNATURE_TAGS_VERITY_SIGNATURES,
     rpm_t::SIGNATURE_TAGS_VERITY_SIGNATURE_ALGO,
+    rpm_t::SIGNATURE_TAGS_OPENPGP,
+    rpm_t::SIGNATURE_TAGS_SHA3_256,
+    rpm_t::SIGNATURE_TAGS_RESERVED,
     rpm_t::SIGNATURE_TAGS_SIZE,
     rpm_t::SIGNATURE_TAGS_LE_MD5_1_OBSOLETE,
     rpm_t::SIGNATURE_TAGS_PGP,
@@ -403,12 +423,18 @@ rpm_t::rpm_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, rpm_t* p__root)
     m_signature = nullptr;
     m_header = nullptr;
     m_signature_tags_steps = nullptr;
+    m_header_tags_steps = nullptr;
+    f_has_header_payload_size_tag = false;
+    f_has_payload = false;
+    f_has_signature_long_size_tag = false;
     f_has_signature_size_tag = false;
+    f_header_payload_size_tag = false;
     f_len_header = false;
     f_len_payload = false;
     f_ofs_header = false;
     f_ofs_payload = false;
     f_payload = false;
+    f_signature_long_size_tag = false;
     f_signature_size_tag = false;
     _read();
 }
@@ -431,7 +457,12 @@ void rpm_t::_read() {
     m_signature_tags_steps = std::unique_ptr<std::vector<std::unique_ptr<signature_tags_step_t>>>(new std::vector<std::unique_ptr<signature_tags_step_t>>());
     const int l_signature_tags_steps = signature()->header_record()->num_index_records();
     for (int i = 0; i < l_signature_tags_steps; i++) {
-        m_signature_tags_steps->push_back(std::move(std::unique_ptr<signature_tags_step_t>(new signature_tags_step_t(i, ((i < 1) ? (-1) : (signature_tags_steps()->at(i - 1)->size_tag_idx())), m__io, this, m__root))));
+        m_signature_tags_steps->push_back(std::move(std::unique_ptr<signature_tags_step_t>(new signature_tags_step_t(i, ((i != 0) ? (signature_tags_steps()->at(i - 1)->size_tag_idx()) : (-1)), ((i != 0) ? (signature_tags_steps()->at(i - 1)->long_size_tag_idx()) : (-1)), m__io, this, m__root))));
+    }
+    m_header_tags_steps = std::unique_ptr<std::vector<std::unique_ptr<header_tags_step_t>>>(new std::vector<std::unique_ptr<header_tags_step_t>>());
+    const int l_header_tags_steps = header()->header_record()->num_index_records();
+    for (int i = 0; i < l_header_tags_steps; i++) {
+        m_header_tags_steps->push_back(std::move(std::unique_ptr<header_tags_step_t>(new header_tags_step_t(i, ((i != 0) ? (header_tags_steps()->at(i - 1)->payload_size_tag_idx()) : (-1)), m__io, this, m__root))));
     }
 }
 
@@ -517,6 +548,9 @@ rpm_t::header_index_record_t::header_index_record_t(kaitai::kstream* p__io, rpm_
 void rpm_t::header_index_record_t::_read() {
     m_tag_raw = m__io->read_u4be();
     m_record_type = static_cast<rpm_t::record_types_t>(m__io->read_u4be());
+    if (!rpm_t::_is_defined_record_types_t(m_record_type)) {
+        throw kaitai::validation_not_in_enum_error<rpm_t::record_types_t>(m_record_type, m__io, std::string("/types/header_index_record/seq/1"));
+    }
     m_ofs_body = m__io->read_u4be();
     m_count = m__io->read_u4be();
 }
@@ -656,7 +690,13 @@ void rpm_t::header_record_t::_read() {
     if (!(m_num_index_records >= 1)) {
         throw kaitai::validation_less_than_error<uint32_t>(1, m_num_index_records, m__io, std::string("/types/header_record/seq/2"));
     }
+    if (!(m_num_index_records <= ((_parent()->is_signature()) ? (32) : (65535)))) {
+        throw kaitai::validation_greater_than_error<uint32_t>(((_parent()->is_signature()) ? (32) : (65535)), m_num_index_records, m__io, std::string("/types/header_record/seq/2"));
+    }
     m_len_storage_section = m__io->read_u4be();
+    if (!(m_len_storage_section <= ((_parent()->is_signature()) ? ((64 * 1024) * 1024) : (268435455)))) {
+        throw kaitai::validation_greater_than_error<uint32_t>(((_parent()->is_signature()) ? ((64 * 1024) * 1024) : (268435455)), m_len_storage_section, m__io, std::string("/types/header_record/seq/3"));
+    }
 }
 
 rpm_t::header_record_t::~header_record_t() {
@@ -664,6 +704,33 @@ rpm_t::header_record_t::~header_record_t() {
 }
 
 void rpm_t::header_record_t::_clean_up() {
+}
+
+rpm_t::header_tags_step_t::header_tags_step_t(int32_t p_idx, int32_t p_prev_payload_size_tag_idx, kaitai::kstream* p__io, rpm_t* p__parent, rpm_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_idx = p_idx;
+    m_prev_payload_size_tag_idx = p_prev_payload_size_tag_idx;
+    f_payload_size_tag_idx = false;
+    _read();
+}
+
+void rpm_t::header_tags_step_t::_read() {
+}
+
+rpm_t::header_tags_step_t::~header_tags_step_t() {
+    _clean_up();
+}
+
+void rpm_t::header_tags_step_t::_clean_up() {
+}
+
+int32_t rpm_t::header_tags_step_t::payload_size_tag_idx() {
+    if (f_payload_size_tag_idx)
+        return m_payload_size_tag_idx;
+    f_payload_size_tag_idx = true;
+    m_payload_size_tag_idx = ((prev_payload_size_tag_idx() != -1) ? (prev_payload_size_tag_idx()) : ((( ((_parent()->header()->index_records()->at(idx())->header_tag() == rpm_t::HEADER_TAGS_PAYLOAD_SIZE) && (_parent()->header()->index_records()->at(idx())->record_type() == rpm_t::RECORD_TYPES_UINT64) && (_parent()->header()->index_records()->at(idx())->num_values() >= 1)) ) ? (idx()) : (-1))));
+    return m_payload_size_tag_idx;
 }
 
 rpm_t::lead_t::lead_t(kaitai::kstream* p__io, rpm_t* p__parent, rpm_t* p__root) : kaitai::kstruct(p__io) {
@@ -881,11 +948,13 @@ rpm_t::rpm_version_t::~rpm_version_t() {
 void rpm_t::rpm_version_t::_clean_up() {
 }
 
-rpm_t::signature_tags_step_t::signature_tags_step_t(int32_t p_idx, int32_t p_prev_size_tag_idx, kaitai::kstream* p__io, rpm_t* p__parent, rpm_t* p__root) : kaitai::kstruct(p__io) {
+rpm_t::signature_tags_step_t::signature_tags_step_t(int32_t p_idx, int32_t p_prev_size_tag_idx, int32_t p_prev_long_size_tag_idx, kaitai::kstream* p__io, rpm_t* p__parent, rpm_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     m_idx = p_idx;
     m_prev_size_tag_idx = p_prev_size_tag_idx;
+    m_prev_long_size_tag_idx = p_prev_long_size_tag_idx;
+    f_long_size_tag_idx = false;
     f_size_tag_idx = false;
     _read();
 }
@@ -900,6 +969,14 @@ rpm_t::signature_tags_step_t::~signature_tags_step_t() {
 void rpm_t::signature_tags_step_t::_clean_up() {
 }
 
+int32_t rpm_t::signature_tags_step_t::long_size_tag_idx() {
+    if (f_long_size_tag_idx)
+        return m_long_size_tag_idx;
+    f_long_size_tag_idx = true;
+    m_long_size_tag_idx = ((prev_long_size_tag_idx() != -1) ? (prev_long_size_tag_idx()) : ((( ((_parent()->signature()->index_records()->at(idx())->signature_tag() == rpm_t::SIGNATURE_TAGS_LONG_SIZE) && (_parent()->signature()->index_records()->at(idx())->record_type() == rpm_t::RECORD_TYPES_UINT64) && (_parent()->signature()->index_records()->at(idx())->num_values() >= 1)) ) ? (idx()) : (-1))));
+    return m_long_size_tag_idx;
+}
+
 int32_t rpm_t::signature_tags_step_t::size_tag_idx() {
     if (f_size_tag_idx)
         return m_size_tag_idx;
@@ -908,12 +985,48 @@ int32_t rpm_t::signature_tags_step_t::size_tag_idx() {
     return m_size_tag_idx;
 }
 
+bool rpm_t::has_header_payload_size_tag() {
+    if (f_has_header_payload_size_tag)
+        return m_has_header_payload_size_tag;
+    f_has_header_payload_size_tag = true;
+    m_has_header_payload_size_tag = header_tags_steps()->back()->payload_size_tag_idx() != -1;
+    return m_has_header_payload_size_tag;
+}
+
+bool rpm_t::has_payload() {
+    if (f_has_payload)
+        return m_has_payload;
+    f_has_payload = true;
+    m_has_payload =  ((has_header_payload_size_tag()) || (has_signature_long_size_tag()) || (has_signature_size_tag())) ;
+    return m_has_payload;
+}
+
+bool rpm_t::has_signature_long_size_tag() {
+    if (f_has_signature_long_size_tag)
+        return m_has_signature_long_size_tag;
+    f_has_signature_long_size_tag = true;
+    m_has_signature_long_size_tag = signature_tags_steps()->back()->long_size_tag_idx() != -1;
+    return m_has_signature_long_size_tag;
+}
+
 bool rpm_t::has_signature_size_tag() {
     if (f_has_signature_size_tag)
         return m_has_signature_size_tag;
     f_has_signature_size_tag = true;
     m_has_signature_size_tag = signature_tags_steps()->back()->size_tag_idx() != -1;
     return m_has_signature_size_tag;
+}
+
+rpm_t::header_index_record_t* rpm_t::header_payload_size_tag() {
+    if (f_header_payload_size_tag)
+        return m_header_payload_size_tag;
+    f_header_payload_size_tag = true;
+    n_header_payload_size_tag = true;
+    if (has_header_payload_size_tag()) {
+        n_header_payload_size_tag = false;
+        m_header_payload_size_tag = header()->index_records()->at(header_tags_steps()->back()->payload_size_tag_idx()).get();
+    }
+    return m_header_payload_size_tag;
 }
 
 int32_t rpm_t::len_header() {
@@ -929,9 +1042,9 @@ int32_t rpm_t::len_payload() {
         return m_len_payload;
     f_len_payload = true;
     n_len_payload = true;
-    if (has_signature_size_tag()) {
+    if (has_payload()) {
         n_len_payload = false;
-        m_len_payload = static_cast<rpm_t::record_type_uint32_t*>(signature_size_tag()->body())->values()->at(0) - len_header();
+        m_len_payload = ((has_header_payload_size_tag()) ? (static_cast<rpm_t::record_type_uint64_t*>(header_payload_size_tag()->body())->values()->at(0)) : (((has_signature_long_size_tag()) ? (static_cast<rpm_t::record_type_uint64_t*>(signature_long_size_tag()->body())->values()->at(0) - len_header()) : (static_cast<rpm_t::record_type_uint32_t*>(signature_size_tag()->body())->values()->at(0) - len_header()))));
     }
     return m_len_payload;
 }
@@ -957,7 +1070,7 @@ std::string rpm_t::payload() {
         return m_payload;
     f_payload = true;
     n_payload = true;
-    if (has_signature_size_tag()) {
+    if (has_payload()) {
         n_payload = false;
         std::streampos _pos = m__io->pos();
         m__io->seek(ofs_payload());
@@ -965,6 +1078,18 @@ std::string rpm_t::payload() {
         m__io->seek(_pos);
     }
     return m_payload;
+}
+
+rpm_t::header_index_record_t* rpm_t::signature_long_size_tag() {
+    if (f_signature_long_size_tag)
+        return m_signature_long_size_tag;
+    f_signature_long_size_tag = true;
+    n_signature_long_size_tag = true;
+    if (has_signature_long_size_tag()) {
+        n_signature_long_size_tag = false;
+        m_signature_long_size_tag = signature()->index_records()->at(signature_tags_steps()->back()->long_size_tag_idx()).get();
+    }
+    return m_signature_long_size_tag;
 }
 
 rpm_t::header_index_record_t* rpm_t::signature_size_tag() {

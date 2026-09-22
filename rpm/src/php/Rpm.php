@@ -2,11 +2,29 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
- * This parser is for the RPM version 3 file format which is the current version
- * of the file format used by RPM 2.1 and later (including RPM version 4.x, which
- * is the current version of the RPM tool). There are historical versions of the
- * RPM file format, as well as a currently abandoned fork (rpm5). These formats
- * are not covered by this specification.
+ * An RPM package consists of the lead, the signature (contains digests and
+ * signatures), the header (contains the package metadata) and the payload (a
+ * compressed archive of the package files).
+ * 
+ * This structure is shared by all package format versions supported by this
+ * Kaitai Struct implementation:
+ * 
+ * * v3, written by RPM 2.1 to 3.x.
+ * * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+ *   to 4 - see
+ *   <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192>.
+ *   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+ *   default - see
+ *   <https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch>.
+ * * v6, written by upstream RPM 6.0 by default - see
+ *   <https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37>.
+ * 
+ * The versions differ mainly in the tags they use: v6 packages store all sizes
+ * as 64-bit integers, carry only cryptographic data in the signature and always
+ * use the stripped-down cpio archive format (see the `payload` instance).
+ * 
+ * The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+ * this implementation.
  */
 
 namespace {
@@ -30,8 +48,34 @@ namespace {
             $this->_m_signatureTagsSteps = [];
             $n = $this->signature()->headerRecord()->numIndexRecords();
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_signatureTagsSteps[] = new \Rpm\SignatureTagsStep($i, ($i < 1 ? -1 : $this->signatureTagsSteps()[$i - 1]->sizeTagIdx()), $this->_io, $this, $this->_root);
+                $this->_m_signatureTagsSteps[] = new \Rpm\SignatureTagsStep($i, ($i != 0 ? $this->signatureTagsSteps()[$i - 1]->sizeTagIdx() : -1), ($i != 0 ? $this->signatureTagsSteps()[$i - 1]->longSizeTagIdx() : -1), $this->_io, $this, $this->_root);
             }
+            $this->_m_headerTagsSteps = [];
+            $n = $this->header()->headerRecord()->numIndexRecords();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_headerTagsSteps[] = new \Rpm\HeaderTagsStep($i, ($i != 0 ? $this->headerTagsSteps()[$i - 1]->payloadSizeTagIdx() : -1), $this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_hasHeaderPayloadSizeTag;
+        public function hasHeaderPayloadSizeTag() {
+            if ($this->_m_hasHeaderPayloadSizeTag !== null)
+                return $this->_m_hasHeaderPayloadSizeTag;
+            $this->_m_hasHeaderPayloadSizeTag = $this->headerTagsSteps()[count($this->headerTagsSteps()) - 1]->payloadSizeTagIdx() != -1;
+            return $this->_m_hasHeaderPayloadSizeTag;
+        }
+        protected $_m_hasPayload;
+        public function hasPayload() {
+            if ($this->_m_hasPayload !== null)
+                return $this->_m_hasPayload;
+            $this->_m_hasPayload =  (($this->hasHeaderPayloadSizeTag()) || ($this->hasSignatureLongSizeTag()) || ($this->hasSignatureSizeTag())) ;
+            return $this->_m_hasPayload;
+        }
+        protected $_m_hasSignatureLongSizeTag;
+        public function hasSignatureLongSizeTag() {
+            if ($this->_m_hasSignatureLongSizeTag !== null)
+                return $this->_m_hasSignatureLongSizeTag;
+            $this->_m_hasSignatureLongSizeTag = $this->signatureTagsSteps()[count($this->signatureTagsSteps()) - 1]->longSizeTagIdx() != -1;
+            return $this->_m_hasSignatureLongSizeTag;
         }
         protected $_m_hasSignatureSizeTag;
         public function hasSignatureSizeTag() {
@@ -39,6 +83,15 @@ namespace {
                 return $this->_m_hasSignatureSizeTag;
             $this->_m_hasSignatureSizeTag = $this->signatureTagsSteps()[count($this->signatureTagsSteps()) - 1]->sizeTagIdx() != -1;
             return $this->_m_hasSignatureSizeTag;
+        }
+        protected $_m_headerPayloadSizeTag;
+        public function headerPayloadSizeTag() {
+            if ($this->_m_headerPayloadSizeTag !== null)
+                return $this->_m_headerPayloadSizeTag;
+            if ($this->hasHeaderPayloadSizeTag()) {
+                $this->_m_headerPayloadSizeTag = $this->header()->indexRecords()[$this->headerTagsSteps()[count($this->headerTagsSteps()) - 1]->payloadSizeTagIdx()];
+            }
+            return $this->_m_headerPayloadSizeTag;
         }
         protected $_m_lenHeader;
         public function lenHeader() {
@@ -48,11 +101,26 @@ namespace {
             return $this->_m_lenHeader;
         }
         protected $_m_lenPayload;
+
+        /**
+         * Size of the (compressed) payload in bytes. v6 packages store it in
+         * `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+         * (which also includes the size of the header).
+         * 
+         * If the header and payload together or the uncompressed payload reach
+         * 4 GiB, v4 packages use `signature_tags::long_size` instead - see
+         * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212>.
+         * 
+         * RPM never writes both (so this is just a hypothetical scenario), but if
+         * both are present, `signature_tags::long_size` takes precedence over
+         * `signature_tags::size`, just like in RPM's `printSize()` function:
+         * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43>
+         */
         public function lenPayload() {
             if ($this->_m_lenPayload !== null)
                 return $this->_m_lenPayload;
-            if ($this->hasSignatureSizeTag()) {
-                $this->_m_lenPayload = $this->signatureSizeTag()->body()->values()[0] - $this->lenHeader();
+            if ($this->hasPayload()) {
+                $this->_m_lenPayload = ($this->hasHeaderPayloadSizeTag() ? $this->headerPayloadSizeTag()->body()->values()[0] : ($this->hasSignatureLongSizeTag() ? $this->signatureLongSizeTag()->body()->values()[0] - $this->lenHeader() : $this->signatureSizeTag()->body()->values()[0] - $this->lenHeader()));
             }
             return $this->_m_lenPayload;
         }
@@ -71,16 +139,51 @@ namespace {
             return $this->_m_ofsPayload;
         }
         protected $_m_payload;
+
+        /**
+         * Archive of the package files, compressed using the method specified by
+         * `header_tags::payload_compressor`. If this tag is missing, it's almost
+         * certainly uncompressed (except for some very old v3 packages built by RPM
+         * 3.0.3 or earlier, which didn't use the tag because the payload was always
+         * gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+         * the tag). However, RPM reads the payload as gzip by default - see
+         * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645>.
+         * Since zlib's gzip reader passes data that is not in gzip format through
+         * unchanged (see
+         * <https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389>),
+         * this also works for uncompressed payloads.
+         * 
+         * The archive format is given by `header_tags::payload_format`, which is
+         * `"cpio"` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+         * without a checksum (the `070701` variant) - the [v4 format
+         * documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+         * claims "with a CRC checksum", but that's not true since RPM 2.4.4
+         * (released in 1997).
+         * 
+         * v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+         * variant of cpio with the magic `07070X`. Its file headers only hold the
+         * index of the file in the file lists of the RPM header, which is the only
+         * place where the file names, sizes and other metadata are stored.
+         */
         public function payload() {
             if ($this->_m_payload !== null)
                 return $this->_m_payload;
-            if ($this->hasSignatureSizeTag()) {
+            if ($this->hasPayload()) {
                 $_pos = $this->_io->pos();
                 $this->_io->seek($this->ofsPayload());
                 $this->_m_payload = $this->_io->readBytes($this->lenPayload());
                 $this->_io->seek($_pos);
             }
             return $this->_m_payload;
+        }
+        protected $_m_signatureLongSizeTag;
+        public function signatureLongSizeTag() {
+            if ($this->_m_signatureLongSizeTag !== null)
+                return $this->_m_signatureLongSizeTag;
+            if ($this->hasSignatureLongSizeTag()) {
+                $this->_m_signatureLongSizeTag = $this->signature()->indexRecords()[$this->signatureTagsSteps()[count($this->signatureTagsSteps()) - 1]->longSizeTagIdx()];
+            }
+            return $this->_m_signatureLongSizeTag;
         }
         protected $_m_signatureSizeTag;
         public function signatureSizeTag() {
@@ -98,6 +201,7 @@ namespace {
         protected $_m_header;
         protected $_m__unnamed5;
         protected $_m_signatureTagsSteps;
+        protected $_m_headerTagsSteps;
         public function lead() { return $this->_m_lead; }
         public function signature() { return $this->_m_signature; }
         public function signaturePadding() { return $this->_m_signaturePadding; }
@@ -105,6 +209,7 @@ namespace {
         public function header() { return $this->_m_header; }
         public function _unnamed5() { return $this->_m__unnamed5; }
         public function signatureTagsSteps() { return $this->_m_signatureTagsSteps; }
+        public function headerTagsSteps() { return $this->_m_headerTagsSteps; }
     }
 }
 
@@ -175,6 +280,9 @@ namespace Rpm {
         private function _read() {
             $this->_m_tagRaw = $this->_io->readU4be();
             $this->_m_recordType = $this->_io->readU4be();
+            if (!\Rpm\RecordTypes::isDefined($this->_m_recordType)) {
+                throw new \Kaitai\Struct\Error\ValidationNotInEnumError($this->_m_recordType, $this->_io, "/types/header_index_record/seq/1");
+            }
             $this->_m_ofsBody = $this->_io->readU4be();
             $this->_m_count = $this->_io->readU4be();
         }
@@ -292,7 +400,13 @@ namespace Rpm {
             if (!($this->_m_numIndexRecords >= 1)) {
                 throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_numIndexRecords, $this->_io, "/types/header_record/seq/2");
             }
+            if (!($this->_m_numIndexRecords <= ($this->_parent()->isSignature() ? 32 : 65535))) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(($this->_parent()->isSignature() ? 32 : 65535), $this->_m_numIndexRecords, $this->_io, "/types/header_record/seq/2");
+            }
             $this->_m_lenStorageSection = $this->_io->readU4be();
+            if (!($this->_m_lenStorageSection <= ($this->_parent()->isSignature() ? (64 * 1024) * 1024 : 268435455))) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(($this->_parent()->isSignature() ? (64 * 1024) * 1024 : 268435455), $this->_m_lenStorageSection, $this->_io, "/types/header_record/seq/3");
+            }
         }
         protected $_m_magic;
         protected $_m_reserved;
@@ -311,7 +425,37 @@ namespace Rpm {
 }
 
 /**
- * In 2021, Panu Matilainen (a RPM developer) [described this
+ * Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+ * which is where v6 packages store the payload size.
+ */
+
+namespace Rpm {
+    class HeaderTagsStep extends \Kaitai\Struct\Struct {
+        public function __construct(int $idx, int $prevPayloadSizeTagIdx, \Kaitai\Struct\Stream $_io, ?\Rpm $_parent = null, ?\Rpm $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_idx = $idx;
+            $this->_m_prevPayloadSizeTagIdx = $prevPayloadSizeTagIdx;
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+        protected $_m_payloadSizeTagIdx;
+        public function payloadSizeTagIdx() {
+            if ($this->_m_payloadSizeTagIdx !== null)
+                return $this->_m_payloadSizeTagIdx;
+            $this->_m_payloadSizeTagIdx = ($this->prevPayloadSizeTagIdx() != -1 ? $this->prevPayloadSizeTagIdx() : ( (($this->_parent()->header()->indexRecords()[$this->idx()]->headerTag() == \Rpm\HeaderTags::PAYLOAD_SIZE) && ($this->_parent()->header()->indexRecords()[$this->idx()]->recordType() == \Rpm\RecordTypes::UINT64) && ($this->_parent()->header()->indexRecords()[$this->idx()]->numValues() >= 1))  ? $this->idx() : -1));
+            return $this->_m_payloadSizeTagIdx;
+        }
+        protected $_m_idx;
+        protected $_m_prevPayloadSizeTagIdx;
+        public function idx() { return $this->_m_idx; }
+        public function prevPayloadSizeTagIdx() { return $this->_m_prevPayloadSizeTagIdx; }
+    }
+}
+
+/**
+ * In 2021, Panu Matilainen (an RPM developer) [described this
  * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
  * as follows:
  * 
@@ -320,10 +464,12 @@ namespace Rpm {
  * > it's an rpm file in the first place, just ignore everything in it.
  * > Literally everything.
  * 
- * The fields with `valid` constraints are important, because these are the
- * same validations that RPM does (which means that any valid `.rpm` file
- * must pass them), but otherwise you should not make decisions based on the
- * values given here.
+ * RPM 4.19 and older rejected packages that didn't meet the `valid`
+ * constraints specified here, while RPM 4.20 and later only check the
+ * `magic` - see
+ * <https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66>.
+ * Nevertheless, RPM still writes values that pass these checks for backwards
+ * compatibility, so any `.rpm` file should pass.
  */
 
 namespace Rpm {
@@ -538,21 +684,40 @@ namespace Rpm {
         }
         protected $_m_major;
         protected $_m_minor;
+
+        /**
+         * 3 in v3 and v4 packages, 4 in v6 packages.
+         */
         public function major() { return $this->_m_major; }
         public function minor() { return $this->_m_minor; }
     }
 }
 
+/**
+ * Finds the first `signature_tags::size` and `signature_tags::long_size`
+ * index record. Since Kaitai Struct doesn't have a built-in way to search an
+ * array directly, each step receives the indexes found so far via
+ * parameters.
+ */
+
 namespace Rpm {
     class SignatureTagsStep extends \Kaitai\Struct\Struct {
-        public function __construct(int $idx, int $prevSizeTagIdx, \Kaitai\Struct\Stream $_io, ?\Rpm $_parent = null, ?\Rpm $_root = null) {
+        public function __construct(int $idx, int $prevSizeTagIdx, int $prevLongSizeTagIdx, \Kaitai\Struct\Stream $_io, ?\Rpm $_parent = null, ?\Rpm $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_idx = $idx;
             $this->_m_prevSizeTagIdx = $prevSizeTagIdx;
+            $this->_m_prevLongSizeTagIdx = $prevLongSizeTagIdx;
             $this->_read();
         }
 
         private function _read() {
+        }
+        protected $_m_longSizeTagIdx;
+        public function longSizeTagIdx() {
+            if ($this->_m_longSizeTagIdx !== null)
+                return $this->_m_longSizeTagIdx;
+            $this->_m_longSizeTagIdx = ($this->prevLongSizeTagIdx() != -1 ? $this->prevLongSizeTagIdx() : ( (($this->_parent()->signature()->indexRecords()[$this->idx()]->signatureTag() == \Rpm\SignatureTags::LONG_SIZE) && ($this->_parent()->signature()->indexRecords()[$this->idx()]->recordType() == \Rpm\RecordTypes::UINT64) && ($this->_parent()->signature()->indexRecords()[$this->idx()]->numValues() >= 1))  ? $this->idx() : -1));
+            return $this->_m_longSizeTagIdx;
         }
         protected $_m_sizeTagIdx;
         public function sizeTagIdx() {
@@ -563,13 +728,23 @@ namespace Rpm {
         }
         protected $_m_idx;
         protected $_m_prevSizeTagIdx;
+        protected $_m_prevLongSizeTagIdx;
         public function idx() { return $this->_m_idx; }
         public function prevSizeTagIdx() { return $this->_m_prevSizeTagIdx; }
+        public function prevLongSizeTagIdx() { return $this->_m_prevLongSizeTagIdx; }
     }
 }
 
 namespace Rpm {
     class Architectures {
+
+        /**
+         * Since RPM 6.0, `archnum` and `osnum` are no longer populated when
+         * writing the lead, so they are left zeroed - see
+         * <https://github.com/rpm-software-management/rpm/commit/5a685fb5eb085d5bc37723ec29ce72434db6bd4e>.
+         * This applies to both v4 and v6 packages.
+         */
+        const NOT_SET = 0;
 
         /**
          * x86 or x86_64
@@ -605,13 +780,14 @@ namespace Rpm {
         const MIPS64_R6 = 21;
         const RISCV = 22;
         const LOONGARCH64 = 23;
+        const E2K = 24;
 
         /**
          * can be installed on any architecture
          */
         const NO_ARCH = 255;
 
-        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 255 => true];
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 255 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);
@@ -1014,7 +1190,20 @@ namespace Rpm {
          */
         const FILE_DEPENDS_NUM = 1144;
         const DEPENDS_DICT = 1145;
-        const SOURCE_PKGID = 1146;
+
+        /**
+         * MD5 digest (16 bytes) of the header and payload of the source package
+         * this binary package was built from, i.e. the value of
+         * `signature_tags::md5` in that source package.
+         * 
+         * Only present in binary packages built in the same `rpmbuild` run as
+         * their source package (e.g. `rpmbuild -ba`). Never present in v6
+         * packages, because RPM does not calculate the MD5 digest for them.
+         * 
+         * Before RPM 6.0, this tag was called `RPMTAG_SOURCEPKGID` - see
+         * <https://github.com/rpm-software-management/rpm/commit/79ba4a3c41702e46edd5a4ce7e17a1f3361eb0e7>.
+         */
+        const SOURCE_SIG_MD5 = 1146;
         const FILE_CONTEXTS_OBSOLETE = 1147;
         const FS_CONTEXTS_OBSOLETE = 1148;
         const RE_CONTEXTS_OBSOLETE = 1149;
@@ -1160,12 +1349,34 @@ namespace Rpm {
         const TRANS_FILE_TRIGGER_TYPE = 5089;
         const FILE_SIGNATURES = 5090;
         const FILE_SIGNATURE_LENGTH = 5091;
-        const PAYLOAD_DIGEST = 5092;
-        const PAYLOAD_DIGEST_ALGO = 5093;
+
+        /**
+         * SHA-256 digest of the compressed payload.
+         * 
+         * Before RPM 6.0, this tag was called `RPMTAG_PAYLOADDIGEST` - see
+         * <https://github.com/rpm-software-management/rpm/commit/f14557cd521ddf95994aa6518f006eeb3fc58d87>.
+         */
+        const PAYLOAD_SHA256 = 5092;
+
+        /**
+         * OpenPGP hash algorithm ID of `header_tags::payload_sha256`. Always 8
+         * (SHA2-256), which makes this tag redundant. Not written to v6 packages.
+         * 
+         * Before RPM 6.0, this tag was called `RPMTAG_PAYLOADDIGESTALGO` - see
+         * <https://github.com/rpm-software-management/rpm/commit/f14557cd521ddf95994aa6518f006eeb3fc58d87>.
+         */
+        const PAYLOAD_SHA256_ALGO_OBSOLETE = 5093;
         const AUTO_INSTALLED_UNIMPLEMENTED = 5094;
         const IDENTITY_UNIMPLEMENTED = 5095;
         const MODULARITY_LABEL = 5096;
-        const PAYLOAD_DIGEST_ALT = 5097;
+
+        /**
+         * SHA-256 digest of the uncompressed payload.
+         * 
+         * Before RPM 6.0, this tag was called `RPMTAG_PAYLOADDIGESTALT` - see
+         * <https://github.com/rpm-software-management/rpm/commit/f14557cd521ddf95994aa6518f006eeb3fc58d87>.
+         */
+        const PAYLOAD_SHA256_ALT = 5097;
         const ARCH_SUFFIX = 5098;
         const SPEC = 5099;
         const TRANSLATION_URL = 5100;
@@ -1178,8 +1389,71 @@ namespace Rpm {
         const PRE_UNTRANS_FLAGS = 5107;
         const POST_UNTRANS_FLAGS = 5108;
         const SYS_USERS = 5109;
+        const BUILD_SYSTEM_INTERNAL = 5110;
+        const BUILD_OPTION_INTERNAL = 5111;
 
-        private const _VALUES = [62 => true, 63 => true, 100 => true, 1000 => true, 1001 => true, 1002 => true, 1003 => true, 1004 => true, 1005 => true, 1006 => true, 1007 => true, 1008 => true, 1009 => true, 1010 => true, 1011 => true, 1012 => true, 1013 => true, 1014 => true, 1015 => true, 1016 => true, 1017 => true, 1018 => true, 1019 => true, 1020 => true, 1021 => true, 1022 => true, 1023 => true, 1024 => true, 1025 => true, 1026 => true, 1027 => true, 1028 => true, 1029 => true, 1030 => true, 1031 => true, 1032 => true, 1033 => true, 1034 => true, 1035 => true, 1036 => true, 1037 => true, 1038 => true, 1039 => true, 1040 => true, 1041 => true, 1042 => true, 1043 => true, 1044 => true, 1045 => true, 1046 => true, 1047 => true, 1048 => true, 1049 => true, 1050 => true, 1051 => true, 1052 => true, 1053 => true, 1054 => true, 1055 => true, 1056 => true, 1057 => true, 1058 => true, 1059 => true, 1060 => true, 1061 => true, 1062 => true, 1063 => true, 1064 => true, 1065 => true, 1066 => true, 1067 => true, 1068 => true, 1069 => true, 1079 => true, 1080 => true, 1081 => true, 1082 => true, 1083 => true, 1084 => true, 1085 => true, 1086 => true, 1087 => true, 1088 => true, 1089 => true, 1090 => true, 1091 => true, 1092 => true, 1093 => true, 1094 => true, 1095 => true, 1096 => true, 1097 => true, 1098 => true, 1099 => true, 1100 => true, 1101 => true, 1102 => true, 1103 => true, 1104 => true, 1105 => true, 1106 => true, 1107 => true, 1108 => true, 1109 => true, 1110 => true, 1111 => true, 1112 => true, 1113 => true, 1114 => true, 1115 => true, 1116 => true, 1117 => true, 1118 => true, 1119 => true, 1120 => true, 1121 => true, 1122 => true, 1123 => true, 1124 => true, 1125 => true, 1126 => true, 1127 => true, 1128 => true, 1129 => true, 1130 => true, 1131 => true, 1132 => true, 1133 => true, 1134 => true, 1135 => true, 1136 => true, 1137 => true, 1138 => true, 1139 => true, 1140 => true, 1141 => true, 1142 => true, 1143 => true, 1144 => true, 1145 => true, 1146 => true, 1147 => true, 1148 => true, 1149 => true, 1150 => true, 1151 => true, 1152 => true, 1153 => true, 1154 => true, 1155 => true, 1156 => true, 1157 => true, 1158 => true, 1159 => true, 1160 => true, 1161 => true, 1162 => true, 1163 => true, 1164 => true, 1165 => true, 1166 => true, 1167 => true, 1168 => true, 1169 => true, 1170 => true, 1171 => true, 1172 => true, 1173 => true, 1174 => true, 1175 => true, 1176 => true, 1177 => true, 1178 => true, 1179 => true, 1180 => true, 1181 => true, 1182 => true, 1183 => true, 1184 => true, 1185 => true, 1186 => true, 1187 => true, 1188 => true, 1189 => true, 1190 => true, 1191 => true, 1192 => true, 1193 => true, 1194 => true, 1195 => true, 1196 => true, 5000 => true, 5001 => true, 5002 => true, 5003 => true, 5004 => true, 5005 => true, 5006 => true, 5007 => true, 5008 => true, 5009 => true, 5010 => true, 5011 => true, 5012 => true, 5013 => true, 5014 => true, 5015 => true, 5016 => true, 5017 => true, 5018 => true, 5019 => true, 5020 => true, 5021 => true, 5022 => true, 5023 => true, 5024 => true, 5025 => true, 5026 => true, 5027 => true, 5029 => true, 5030 => true, 5031 => true, 5032 => true, 5033 => true, 5034 => true, 5035 => true, 5036 => true, 5037 => true, 5038 => true, 5039 => true, 5040 => true, 5041 => true, 5042 => true, 5043 => true, 5044 => true, 5045 => true, 5046 => true, 5047 => true, 5048 => true, 5049 => true, 5050 => true, 5051 => true, 5052 => true, 5053 => true, 5054 => true, 5055 => true, 5056 => true, 5057 => true, 5058 => true, 5059 => true, 5060 => true, 5061 => true, 5062 => true, 5063 => true, 5064 => true, 5065 => true, 5066 => true, 5067 => true, 5068 => true, 5069 => true, 5070 => true, 5071 => true, 5072 => true, 5073 => true, 5074 => true, 5075 => true, 5076 => true, 5077 => true, 5078 => true, 5079 => true, 5080 => true, 5081 => true, 5082 => true, 5083 => true, 5084 => true, 5085 => true, 5086 => true, 5087 => true, 5088 => true, 5089 => true, 5090 => true, 5091 => true, 5092 => true, 5093 => true, 5094 => true, 5095 => true, 5096 => true, 5097 => true, 5098 => true, 5099 => true, 5100 => true, 5101 => true, 5102 => true, 5103 => true, 5104 => true, 5105 => true, 5106 => true, 5107 => true, 5108 => true, 5109 => true];
+        /**
+         * Size of the compressed payload in bytes (only v6).
+         */
+        const PAYLOAD_SIZE = 5112;
+
+        /**
+         * Size of the uncompressed payload in bytes (only v6).
+         */
+        const PAYLOAD_SIZE_ALT = 5113;
+
+        /**
+         * RPM package format version (only present in v6 packages).
+         */
+        const RPM_FORMAT = 5114;
+
+        /**
+         * Index into `header_tags::mime_dict` (only v6).
+         */
+        const FILE_MIME_INDEX = 5115;
+
+        /**
+         * Dictionary of MIME types (only v6).
+         */
+        const MIME_DICT = 5116;
+        const FILE_MIMES = 5117;
+
+        /**
+         * Package digests calculated during verification.
+         */
+        const PACKAGE_DIGESTS = 5118;
+
+        /**
+         * Algorithms used for `header_tags::package_digests`.
+         */
+        const PACKAGE_DIGEST_ALGOS = 5119;
+
+        /**
+         * Source RPM NEVR.
+         */
+        const SOURCE_NEVR = 5120;
+
+        /**
+         * SHA-512 digest of the compressed payload.
+         */
+        const PAYLOAD_SHA512 = 5121;
+
+        /**
+         * SHA-512 digest of the uncompressed payload.
+         */
+        const PAYLOAD_SHA512_ALT = 5122;
+
+        /**
+         * SHA3-256 digest of the compressed payload.
+         */
+        const PAYLOAD_SHA3_256 = 5123;
+
+        /**
+         * SHA3-256 digest of the uncompressed payload.
+         */
+        const PAYLOAD_SHA3_256_ALT = 5124;
+
+        private const _VALUES = [62 => true, 63 => true, 100 => true, 1000 => true, 1001 => true, 1002 => true, 1003 => true, 1004 => true, 1005 => true, 1006 => true, 1007 => true, 1008 => true, 1009 => true, 1010 => true, 1011 => true, 1012 => true, 1013 => true, 1014 => true, 1015 => true, 1016 => true, 1017 => true, 1018 => true, 1019 => true, 1020 => true, 1021 => true, 1022 => true, 1023 => true, 1024 => true, 1025 => true, 1026 => true, 1027 => true, 1028 => true, 1029 => true, 1030 => true, 1031 => true, 1032 => true, 1033 => true, 1034 => true, 1035 => true, 1036 => true, 1037 => true, 1038 => true, 1039 => true, 1040 => true, 1041 => true, 1042 => true, 1043 => true, 1044 => true, 1045 => true, 1046 => true, 1047 => true, 1048 => true, 1049 => true, 1050 => true, 1051 => true, 1052 => true, 1053 => true, 1054 => true, 1055 => true, 1056 => true, 1057 => true, 1058 => true, 1059 => true, 1060 => true, 1061 => true, 1062 => true, 1063 => true, 1064 => true, 1065 => true, 1066 => true, 1067 => true, 1068 => true, 1069 => true, 1079 => true, 1080 => true, 1081 => true, 1082 => true, 1083 => true, 1084 => true, 1085 => true, 1086 => true, 1087 => true, 1088 => true, 1089 => true, 1090 => true, 1091 => true, 1092 => true, 1093 => true, 1094 => true, 1095 => true, 1096 => true, 1097 => true, 1098 => true, 1099 => true, 1100 => true, 1101 => true, 1102 => true, 1103 => true, 1104 => true, 1105 => true, 1106 => true, 1107 => true, 1108 => true, 1109 => true, 1110 => true, 1111 => true, 1112 => true, 1113 => true, 1114 => true, 1115 => true, 1116 => true, 1117 => true, 1118 => true, 1119 => true, 1120 => true, 1121 => true, 1122 => true, 1123 => true, 1124 => true, 1125 => true, 1126 => true, 1127 => true, 1128 => true, 1129 => true, 1130 => true, 1131 => true, 1132 => true, 1133 => true, 1134 => true, 1135 => true, 1136 => true, 1137 => true, 1138 => true, 1139 => true, 1140 => true, 1141 => true, 1142 => true, 1143 => true, 1144 => true, 1145 => true, 1146 => true, 1147 => true, 1148 => true, 1149 => true, 1150 => true, 1151 => true, 1152 => true, 1153 => true, 1154 => true, 1155 => true, 1156 => true, 1157 => true, 1158 => true, 1159 => true, 1160 => true, 1161 => true, 1162 => true, 1163 => true, 1164 => true, 1165 => true, 1166 => true, 1167 => true, 1168 => true, 1169 => true, 1170 => true, 1171 => true, 1172 => true, 1173 => true, 1174 => true, 1175 => true, 1176 => true, 1177 => true, 1178 => true, 1179 => true, 1180 => true, 1181 => true, 1182 => true, 1183 => true, 1184 => true, 1185 => true, 1186 => true, 1187 => true, 1188 => true, 1189 => true, 1190 => true, 1191 => true, 1192 => true, 1193 => true, 1194 => true, 1195 => true, 1196 => true, 5000 => true, 5001 => true, 5002 => true, 5003 => true, 5004 => true, 5005 => true, 5006 => true, 5007 => true, 5008 => true, 5009 => true, 5010 => true, 5011 => true, 5012 => true, 5013 => true, 5014 => true, 5015 => true, 5016 => true, 5017 => true, 5018 => true, 5019 => true, 5020 => true, 5021 => true, 5022 => true, 5023 => true, 5024 => true, 5025 => true, 5026 => true, 5027 => true, 5029 => true, 5030 => true, 5031 => true, 5032 => true, 5033 => true, 5034 => true, 5035 => true, 5036 => true, 5037 => true, 5038 => true, 5039 => true, 5040 => true, 5041 => true, 5042 => true, 5043 => true, 5044 => true, 5045 => true, 5046 => true, 5047 => true, 5048 => true, 5049 => true, 5050 => true, 5051 => true, 5052 => true, 5053 => true, 5054 => true, 5055 => true, 5056 => true, 5057 => true, 5058 => true, 5059 => true, 5060 => true, 5061 => true, 5062 => true, 5063 => true, 5064 => true, 5065 => true, 5066 => true, 5067 => true, 5068 => true, 5069 => true, 5070 => true, 5071 => true, 5072 => true, 5073 => true, 5074 => true, 5075 => true, 5076 => true, 5077 => true, 5078 => true, 5079 => true, 5080 => true, 5081 => true, 5082 => true, 5083 => true, 5084 => true, 5085 => true, 5086 => true, 5087 => true, 5088 => true, 5089 => true, 5090 => true, 5091 => true, 5092 => true, 5093 => true, 5094 => true, 5095 => true, 5096 => true, 5097 => true, 5098 => true, 5099 => true, 5100 => true, 5101 => true, 5102 => true, 5103 => true, 5104 => true, 5105 => true, 5106 => true, 5107 => true, 5108 => true, 5109 => true, 5110 => true, 5111 => true, 5112 => true, 5113 => true, 5114 => true, 5115 => true, 5116 => true, 5117 => true, 5118 => true, 5119 => true, 5120 => true, 5121 => true, 5122 => true, 5123 => true, 5124 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);
@@ -1189,6 +1463,14 @@ namespace Rpm {
 
 namespace Rpm {
     class OperatingSystems {
+
+        /**
+         * Since RPM 6.0, `archnum` and `osnum` are no longer populated when
+         * writing the lead, so they are left zeroed - see
+         * <https://github.com/rpm-software-management/rpm/commit/5a685fb5eb085d5bc37723ec29ce72434db6bd4e>.
+         * This applies to both v4 and v6 packages.
+         */
+        const NOT_SET = 0;
         const LINUX = 1;
         const IRIX = 2;
 
@@ -1206,7 +1488,7 @@ namespace Rpm {
          */
         const NO_OS = 255;
 
-        private const _VALUES = [1 => true, 2 => true, 255 => true];
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 255 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);
@@ -1216,7 +1498,6 @@ namespace Rpm {
 
 namespace Rpm {
     class RecordTypes {
-        const NOT_IMPLEMENTED = 0;
         const CHAR = 1;
         const UINT8 = 2;
         const UINT16 = 3;
@@ -1227,7 +1508,7 @@ namespace Rpm {
         const STRING_ARRAY = 8;
         const I18N_STRING = 9;
 
-        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true];
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);
@@ -1265,6 +1546,31 @@ namespace Rpm {
         const FILE_SIGNATURE_LENGTH = 275;
         const VERITY_SIGNATURES = 276;
         const VERITY_SIGNATURE_ALGO = 277;
+
+        /**
+         * RPM v6 OpenPGP signature(s) of the header, base64 encoded. The default
+         * signature type when signing v6 packages, but it can also be added to v4
+         * packages using `rpmsign --rpmv6` - see
+         * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmsign.1.scd?plain=1#L86-L87>.
+         */
+        const OPENPGP = 278;
+
+        /**
+         * SHA3-256 digest of the header (only v6).
+         */
+        const SHA3_256 = 279;
+
+        /**
+         * Space reserved for signatures, consisting solely of zeros. Always the
+         * last tag in the signature.
+         * 
+         * v6 packages use this tag instead of `signature_tags::reserved_space`
+         * = 1008, which is used for the same purpose in v4 packages. In v6
+         * packages, signature tag numbers above 999 are considered illegal, so
+         * that signature tags don't clash with header tags - see
+         * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md?plain=1#L76-L77>.
+         */
+        const RESERVED = 999;
 
         /**
          * Header + payload size (32bit) in bytes.
@@ -1307,7 +1613,7 @@ namespace Rpm {
          */
         const RESERVED_SPACE = 1008;
 
-        private const _VALUES = [62 => true, 63 => true, 100 => true, 264 => true, 265 => true, 267 => true, 268 => true, 269 => true, 270 => true, 271 => true, 273 => true, 274 => true, 275 => true, 276 => true, 277 => true, 1000 => true, 1001 => true, 1002 => true, 1003 => true, 1004 => true, 1005 => true, 1006 => true, 1007 => true, 1008 => true];
+        private const _VALUES = [62 => true, 63 => true, 100 => true, 264 => true, 265 => true, 267 => true, 268 => true, 269 => true, 270 => true, 271 => true, 273 => true, 274 => true, 275 => true, 276 => true, 277 => true, 278 => true, 279 => true, 999 => true, 1000 => true, 1001 => true, 1002 => true, 1003 => true, 1004 => true, 1005 => true, 1006 => true, 1007 => true, 1008 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);

@@ -95,11 +95,27 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>This parser is for the RPM version 3 file format which is the current version
-of the file format used by RPM 2.1 and later (including RPM version 4.x, which
-is the current version of the RPM tool). There are historical versions of the
-RPM file format, as well as a currently abandoned fork (rpm5). These formats
-are not covered by this specification.</p>
+                <p><p>An RPM package consists of the lead, the signature (contains digests and
+signatures), the header (contains the package metadata) and the payload (a
+compressed archive of the package files).</p>
+<p>This structure is shared by all package format versions supported by this
+Kaitai Struct implementation:</p>
+<ul>
+<li>v3, written by RPM 2.1 to 3.x.</li>
+<li>v4, written by RPM 4.x, and by RPM 6.x when the <code>%_rpmformat</code> macro is set
+to 4 - see
+<a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192</a>.
+For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+default - see
+<a href="https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch">https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch</a>.</li>
+<li>v6, written by upstream RPM 6.0 by default - see
+<a href="https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37">https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37</a>.</li>
+</ul>
+<p>The versions differ mainly in the tags they use: v6 packages store all sizes
+as 64-bit integers, carry only cryptographic data in the signature and always
+use the stripped-down cpio archive format (see the <code>payload</code> instance).</p>
+<p>The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+this implementation.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -131,7 +147,7 @@ are not covered by this specification.</p>
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.9
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -151,7 +167,7 @@ are not covered by this specification.</p>
                             
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/795">PRONOM fmt/795</a></li>
                             
-                            <li><a href="https://www.wikidata.org/wiki/Q492650">Wikidata Q492650</a></li>
+                            <li><a href="https://www.wikidata.org/wiki/Q11241282">Wikidata Q11241282</a></li>
                             
                             
                             
@@ -304,7 +320,29 @@ can also be found there.</p>
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Lead</span><span class="w"> </span><span class="c1">// =&gt; get lead</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Payload</span><span class="w"> </span><span class="c1">// =&gt; Archive of the package files, compressed using the method specified by</span>
+<span class="err">`</span><span class="n">header_tags</span><span class="p">::</span><span class="n">payload_compressor</span><span class="err">`</span><span class="p">.</span><span class="w"> </span><span class="n">If</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">missing</span><span class="p">,</span><span class="w"> </span><span class="n">it</span><span class="err">&#39;</span><span class="n">s</span><span class="w"> </span><span class="n">almost</span>
+<span class="n">certainly</span><span class="w"> </span><span class="nf">uncompressed</span><span class="w"> </span><span class="p">(</span><span class="n">except</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">some</span><span class="w"> </span><span class="n">very</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="n">v3</span><span class="w"> </span><span class="n">packages</span><span class="w"> </span><span class="n">built</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">RPM</span>
+<span class="mf">3.0.3</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">earlier</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">didn</span><span class="err">&#39;</span><span class="n">t</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">because</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">always</span>
+<span class="n">gzipped</span><span class="p">;</span><span class="w"> </span><span class="n">RPM</span><span class="w"> </span><span class="mf">3.0.5</span><span class="w"> </span><span class="n">added</span><span class="w"> </span><span class="n">support</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">bzip2</span><span class="w"> </span><span class="n">payloads</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">started</span><span class="w"> </span><span class="n">writing</span>
+<span class="n">the</span><span class="w"> </span><span class="n">tag</span><span class="p">).</span><span class="w"> </span><span class="n">However</span><span class="p">,</span><span class="w"> </span><span class="n">RPM</span><span class="w"> </span><span class="n">reads</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">gzip</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">see</span>
+<span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="c1">//github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645&gt;.</span>
+<span class="n">Since</span><span class="w"> </span><span class="n">zlib</span><span class="err">&#39;</span><span class="n">s</span><span class="w"> </span><span class="n">gzip</span><span class="w"> </span><span class="n">reader</span><span class="w"> </span><span class="n">passes</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">gzip</span><span class="w"> </span><span class="n">format</span><span class="w"> </span><span class="n">through</span>
+<span class="n">unchanged</span><span class="w"> </span><span class="p">(</span><span class="n">see</span>
+<span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="c1">//github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389&gt;),</span>
+<span class="k">this</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="n">works</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">uncompressed</span><span class="w"> </span><span class="n">payloads</span><span class="p">.</span>
+
+<span class="n">The</span><span class="w"> </span><span class="n">archive</span><span class="w"> </span><span class="n">format</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">given</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="err">`</span><span class="n">header_tags</span><span class="p">::</span><span class="n">payload_format</span><span class="err">`</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="k">is</span>
+<span class="err">`</span><span class="s">&quot;cpio&quot;</span><span class="err">`</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">regular</span><span class="w"> </span><span class="n">packages</span><span class="p">.</span><span class="w"> </span><span class="n">In</span><span class="w"> </span><span class="n">v4</span><span class="o">/</span><span class="n">v3</span><span class="w"> </span><span class="n">packages</span><span class="p">,</span><span class="w"> </span><span class="n">it</span><span class="err">&#39;</span><span class="n">s</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">SVR4</span><span class="w"> </span><span class="n">cpio</span><span class="w"> </span><span class="n">archive</span>
+<span class="n">without</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="nf">checksum</span><span class="w"> </span><span class="p">(</span><span class="n">the</span><span class="w"> </span><span class="err">`</span><span class="mi">070701</span><span class="err">`</span><span class="w"> </span><span class="n">variant</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="p">[</span><span class="n">v4</span><span class="w"> </span><span class="n">format</span>
+<span class="n">documentation</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="c1">//github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)</span>
+<span class="n">claims</span><span class="w"> </span><span class="s">&quot;with a CRC checksum&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="n">that</span><span class="err">&#39;</span><span class="n">s</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">true</span><span class="w"> </span><span class="n">since</span><span class="w"> </span><span class="n">RPM</span><span class="w"> </span><span class="mf">2.4.4</span>
+<span class="p">(</span><span class="n">released</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">1997</span><span class="p">).</span>
+
+<span class="n">v6</span><span class="w"> </span><span class="n">packages</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">v4</span><span class="w"> </span><span class="n">packages</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">over</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">GiB</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">stripped</span><span class="o">-</span><span class="n">down</span>
+<span class="n">variant</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">cpio</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">magic</span><span class="w"> </span><span class="err">`</span><span class="mi">07070</span><span class="n">X</span><span class="err">`</span><span class="p">.</span><span class="w"> </span><span class="n">Its</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">headers</span><span class="w"> </span><span class="n">only</span><span class="w"> </span><span class="n">hold</span><span class="w"> </span><span class="n">the</span>
+<span class="n">index</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">lists</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">RPM</span><span class="w"> </span><span class="n">header</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">only</span>
+<span class="n">place</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">names</span><span class="p">,</span><span class="w"> </span><span class="n">sizes</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">other</span><span class="w"> </span><span class="n">metadata</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">stored</span><span class="p">.</span>
 </pre></div>
 
     </div>
@@ -335,28 +373,59 @@ can also be found there.</p>
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System</span><span class="p">;</span>
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
 <span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">    </span><span class="c1">/// This parser is for the RPM version 3 file format which is the current version</span>
-<span class="w">    </span><span class="c1">/// of the file format used by RPM 2.1 and later (including RPM version 4.x, which</span>
-<span class="w">    </span><span class="c1">/// is the current version of the RPM tool). There are historical versions of the</span>
-<span class="w">    </span><span class="c1">/// RPM file format, as well as a currently abandoned fork (rpm5). These formats</span>
-<span class="w">    </span><span class="c1">/// are not covered by this specification.</span>
+<span class="w">    </span><span class="c1">/// An RPM package consists of the lead, the signature (contains digests and</span>
+<span class="w">    </span><span class="c1">/// signatures), the header (contains the package metadata) and the payload (a</span>
+<span class="w">    </span><span class="c1">/// compressed archive of the package files).</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// This structure is shared by all package format versions supported by this</span>
+<span class="w">    </span><span class="c1">/// Kaitai Struct implementation:</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// * v3, written by RPM 2.1 to 3.x.</span>
+<span class="w">    </span><span class="c1">/// * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set</span>
+<span class="w">    </span><span class="c1">///   to 4 - see</span>
+<span class="w">    </span><span class="c1">///   &amp;lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192&amp;gt;.</span>
+<span class="w">    </span><span class="c1">///   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by</span>
+<span class="w">    </span><span class="c1">///   default - see</span>
+<span class="w">    </span><span class="c1">///   &amp;lt;https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch&amp;gt;.</span>
+<span class="w">    </span><span class="c1">/// * v6, written by upstream RPM 6.0 by default - see</span>
+<span class="w">    </span><span class="c1">///   &amp;lt;https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37&amp;gt;.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// The versions differ mainly in the tags they use: v6 packages store all sizes</span>
+<span class="w">    </span><span class="c1">/// as 64-bit integers, carry only cryptographic data in the signature and always</span>
+<span class="w">    </span><span class="c1">/// use the stripped-down cpio archive format (see the `payload` instance).</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// The formats before v3, as well as the abandoned rpm5 fork, are not covered by</span>
+<span class="w">    </span><span class="c1">/// this implementation.</span>
 <span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
 <span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
-<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md&quot;&gt;Source&lt;/a&gt;</span>
 <span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
 <span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
-<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md&quot;&gt;Source&lt;/a&gt;</span>
 <span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
 <span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
 <span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html&quot;&gt;Source&lt;/a&gt;</span>
 <span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
 <span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
-<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;http://ftp.rpm.org/max-rpm/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://ftp.osuosl.org/pub/rpm/max-rpm/&quot;&gt;Source&lt;/a&gt;</span>
 <span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
 <span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Rpm</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">{</span>
@@ -368,6 +437,7 @@ can also be found there.</p>
 
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">Architectures</span>
 <span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">NotSet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">            </span><span class="n">X86</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Sparc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
@@ -391,6 +461,7 @@ can also be found there.</p>
 <span class="w">            </span><span class="n">Mips64R6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Riscv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Loongarch64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
+<span class="w">            </span><span class="n">E2k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span>
 <span class="w">            </span><span class="n">NoArch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span>
 <span class="w">        </span><span class="p">}</span>
 
@@ -536,7 +607,7 @@ can also be found there.</p>
 <span class="w">            </span><span class="n">FileDependsIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1143</span><span class="p">,</span>
 <span class="w">            </span><span class="n">FileDependsNum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1144</span><span class="p">,</span>
 <span class="w">            </span><span class="n">DependsDict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1145</span><span class="p">,</span>
-<span class="w">            </span><span class="n">SourcePkgid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1146</span><span class="p">,</span>
+<span class="w">            </span><span class="n">SourceSigMd5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1146</span><span class="p">,</span>
 <span class="w">            </span><span class="n">FileContextsObsolete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1147</span><span class="p">,</span>
 <span class="w">            </span><span class="n">FsContextsObsolete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1148</span><span class="p">,</span>
 <span class="w">            </span><span class="n">ReContextsObsolete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1149</span><span class="p">,</span>
@@ -678,12 +749,12 @@ can also be found there.</p>
 <span class="w">            </span><span class="n">TransFileTriggerType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5089</span><span class="p">,</span>
 <span class="w">            </span><span class="n">FileSignatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5090</span><span class="p">,</span>
 <span class="w">            </span><span class="n">FileSignatureLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5091</span><span class="p">,</span>
-<span class="w">            </span><span class="n">PayloadDigest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5092</span><span class="p">,</span>
-<span class="w">            </span><span class="n">PayloadDigestAlgo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5093</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PayloadSha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5092</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PayloadSha256AlgoObsolete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5093</span><span class="p">,</span>
 <span class="w">            </span><span class="n">AutoInstalledUnimplemented</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5094</span><span class="p">,</span>
 <span class="w">            </span><span class="n">IdentityUnimplemented</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5095</span><span class="p">,</span>
 <span class="w">            </span><span class="n">ModularityLabel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5096</span><span class="p">,</span>
-<span class="w">            </span><span class="n">PayloadDigestAlt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5097</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PayloadSha256Alt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5097</span><span class="p">,</span>
 <span class="w">            </span><span class="n">ArchSuffix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5098</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5099</span><span class="p">,</span>
 <span class="w">            </span><span class="n">TranslationUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5100</span><span class="p">,</span>
@@ -696,10 +767,26 @@ can also be found there.</p>
 <span class="w">            </span><span class="n">PreUntransFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5107</span><span class="p">,</span>
 <span class="w">            </span><span class="n">PostUntransFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5108</span><span class="p">,</span>
 <span class="w">            </span><span class="n">SysUsers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5109</span><span class="p">,</span>
+<span class="w">            </span><span class="n">BuildSystemInternal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5110</span><span class="p">,</span>
+<span class="w">            </span><span class="n">BuildOptionInternal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5111</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PayloadSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5112</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PayloadSizeAlt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5113</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RpmFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5114</span><span class="p">,</span>
+<span class="w">            </span><span class="n">FileMimeIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5115</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MimeDict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5116</span><span class="p">,</span>
+<span class="w">            </span><span class="n">FileMimes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5117</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PackageDigests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5118</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PackageDigestAlgos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5119</span><span class="p">,</span>
+<span class="w">            </span><span class="n">SourceNevr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5120</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PayloadSha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5121</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PayloadSha512Alt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5122</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PayloadSha3256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5123</span><span class="p">,</span>
+<span class="w">            </span><span class="n">PayloadSha3256Alt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5124</span><span class="p">,</span>
 <span class="w">        </span><span class="p">}</span>
 
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">OperatingSystems</span>
 <span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">NotSet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Linux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Irix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
 <span class="w">            </span><span class="n">NoOs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span>
@@ -707,7 +794,6 @@ can also be found there.</p>
 
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">RecordTypes</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="n">NotImplemented</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Char</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Uint8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Uint16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
@@ -742,6 +828,9 @@ can also be found there.</p>
 <span class="w">            </span><span class="n">FileSignatureLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">275</span><span class="p">,</span>
 <span class="w">            </span><span class="n">VeritySignatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">276</span><span class="p">,</span>
 <span class="w">            </span><span class="n">VeritySignatureAlgo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">277</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Openpgp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">278</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Sha3256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">279</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">999</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
 <span class="w">            </span><span class="n">LeMd51Obsolete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1001</span><span class="p">,</span>
 <span class="w">            </span><span class="n">Pgp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1002</span><span class="p">,</span>
@@ -756,12 +845,17 @@ can also be found there.</p>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_hasHeaderPayloadSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_hasPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_hasSignatureLongSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_hasSignatureSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_headerPayloadSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_lenPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_ofsHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_ofsPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_signatureLongSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_signatureSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">        </span><span class="p">}</span>
@@ -780,7 +874,12 @@ can also be found there.</p>
 <span class="w">            </span><span class="n">_signatureTagsSteps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SignatureTagsStep</span><span class="o">&gt;</span><span class="p">();</span>
 <span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Signature</span><span class="p">.</span><span class="n">HeaderRecord</span><span class="p">.</span><span class="n">NumIndexRecords</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
 <span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="n">_signatureTagsSteps</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SignatureTagsStep</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">SignatureTagsSteps</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">SizeTagIdx</span><span class="p">),</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                </span><span class="n">_signatureTagsSteps</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SignatureTagsStep</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">SignatureTagsSteps</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">SizeTagIdx</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">SignatureTagsSteps</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">LongSizeTagIdx</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">_headerTagsSteps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">HeaderTagsStep</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Header</span><span class="p">.</span><span class="n">HeaderRecord</span><span class="p">.</span><span class="n">NumIndexRecords</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_headerTagsSteps</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">HeaderTagsStep</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">HeaderTagsSteps</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">PayloadSizeTagIdx</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Dummy</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
@@ -882,6 +981,10 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="n">_tagRaw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
 <span class="w">                </span><span class="n">_recordType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">Rpm</span><span class="p">.</span><span class="n">RecordTypes</span><span class="p">)</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">Enum</span><span class="p">.</span><span class="n">IsDefined</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">RecordTypes</span><span class="p">),</span><span class="w"> </span><span class="n">_recordType</span><span class="p">))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotInEnumError</span><span class="p">(</span><span class="n">_recordType</span><span class="p">,</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header_index_record/seq/1&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="n">_ofsBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
 <span class="w">                </span><span class="n">_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
 <span class="w">            </span><span class="p">}</span>
@@ -1050,7 +1153,15 @@ can also be found there.</p>
 <span class="w">                </span><span class="p">{</span>
 <span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationLessThanError</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">_numIndexRecords</span><span class="p">,</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header_record/seq/2&quot;</span><span class="p">);</span>
 <span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_numIndexRecords</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsSignature</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">65535</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationGreaterThanError</span><span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsSignature</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">65535</span><span class="p">),</span><span class="w"> </span><span class="n">_numIndexRecords</span><span class="p">,</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header_record/seq/2&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="n">_lenStorageSection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_lenStorageSection</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsSignature</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="mi">64</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">268435455</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationGreaterThanError</span><span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsSignature</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="mi">64</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">268435455</span><span class="p">),</span><span class="w"> </span><span class="n">_lenStorageSection</span><span class="p">,</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header_record/seq/3&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span>
@@ -1072,7 +1183,48 @@ can also be found there.</p>
 <span class="w">        </span><span class="p">}</span>
 
 <span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">        </span><span class="c1">/// In 2021, Panu Matilainen (a RPM developer) [described this</span>
+<span class="w">        </span><span class="c1">/// Like `signature_tags_step`, but looks for `header_tags::payload_size`,</span>
+<span class="w">        </span><span class="c1">/// which is where v6 packages store the payload size.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">HeaderTagsStep</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">HeaderTagsStep</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">p_idx</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">p_prevPayloadSizeTagIdx</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_idx</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_prevPayloadSizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_prevPayloadSizeTagIdx</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_payloadSizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_payloadSizeTagIdx</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_payloadSizeTagIdx</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PayloadSizeTagIdx</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_payloadSizeTagIdx</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_payloadSizeTagIdx</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_payloadSizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_payloadSizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">PrevPayloadSizeTagIdx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">PrevPayloadSizeTagIdx</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">IndexRecords</span><span class="p">[</span><span class="n">Idx</span><span class="p">].</span><span class="n">HeaderTag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Rpm</span><span class="p">.</span><span class="n">HeaderTags</span><span class="p">.</span><span class="n">PayloadSize</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">IndexRecords</span><span class="p">[</span><span class="n">Idx</span><span class="p">].</span><span class="n">RecordType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Rpm</span><span class="p">.</span><span class="n">RecordTypes</span><span class="p">.</span><span class="n">Uint64</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">IndexRecords</span><span class="p">[</span><span class="n">Idx</span><span class="p">].</span><span class="n">NumValues</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="n">Idx</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)));</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_payloadSizeTagIdx</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_idx</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_prevPayloadSizeTagIdx</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Idx</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_idx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PrevPayloadSizeTagIdx</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_prevPayloadSizeTagIdx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// In 2021, Panu Matilainen (an RPM developer) [described this</span>
 <span class="w">        </span><span class="c1">/// structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)</span>
 <span class="w">        </span><span class="c1">/// as follows:</span>
 <span class="w">        </span><span class="c1">/// </span>
@@ -1081,11 +1233,16 @@ can also be found there.</p>
 <span class="w">        </span><span class="c1">/// &amp;gt; it&#39;s an rpm file in the first place, just ignore everything in it.</span>
 <span class="w">        </span><span class="c1">/// &amp;gt; Literally everything.</span>
 <span class="w">        </span><span class="c1">/// </span>
-<span class="w">        </span><span class="c1">/// The fields with `valid` constraints are important, because these are the</span>
-<span class="w">        </span><span class="c1">/// same validations that RPM does (which means that any valid `.rpm` file</span>
-<span class="w">        </span><span class="c1">/// must pass them), but otherwise you should not make decisions based on the</span>
-<span class="w">        </span><span class="c1">/// values given here.</span>
+<span class="w">        </span><span class="c1">/// RPM 4.19 and older rejected packages that didn&#39;t meet the `valid`</span>
+<span class="w">        </span><span class="c1">/// constraints specified here, while RPM 4.20 and later only check the</span>
+<span class="w">        </span><span class="c1">/// `magic` - see</span>
+<span class="w">        </span><span class="c1">/// &amp;lt;https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66&amp;gt;.</span>
+<span class="w">        </span><span class="c1">/// Nevertheless, RPM still writes values that pass these checks for backwards</span>
+<span class="w">        </span><span class="c1">/// compatibility, so any `.rpm` file should pass.</span>
 <span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Lead</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Lead</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
@@ -1134,6 +1291,10 @@ can also be found there.</p>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Architectures</span><span class="w"> </span><span class="n">Architecture</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_architecture</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">PackageName</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_packageName</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">OperatingSystems</span><span class="w"> </span><span class="n">Os</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_os</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">SignatureType</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_signatureType</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Reserved</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
@@ -1354,27 +1515,52 @@ can also be found there.</p>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Rpm</span><span class="p">.</span><span class="n">Lead</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// 3 in v3 and v4 packages, 4 in v6 packages.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
 <span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
-<span class="w">            </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52&quot;&gt;Source&lt;/a&gt;</span>
 <span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Major</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_major</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Minor</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_minor</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Rpm</span><span class="p">.</span><span class="n">Lead</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Finds the first `signature_tags::size` and `signature_tags::long_size`</span>
+<span class="w">        </span><span class="c1">/// index record. Since Kaitai Struct doesn&#39;t have a built-in way to search an</span>
+<span class="w">        </span><span class="c1">/// array directly, each step receives the indexes found so far via</span>
+<span class="w">        </span><span class="c1">/// parameters.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">SignatureTagsStep</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">SignatureTagsStep</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">p_idx</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">p_prevSizeTagIdx</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">SignatureTagsStep</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">p_idx</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">p_prevSizeTagIdx</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">p_prevLongSizeTagIdx</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
 <span class="w">                </span><span class="n">_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_idx</span><span class="p">;</span>
 <span class="w">                </span><span class="n">_prevSizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_prevSizeTagIdx</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_prevLongSizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_prevLongSizeTagIdx</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_longSizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">                </span><span class="n">f_sizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">                </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">            </span><span class="p">{</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_longSizeTagIdx</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_longSizeTagIdx</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LongSizeTagIdx</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_longSizeTagIdx</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_longSizeTagIdx</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_longSizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_longSizeTagIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">PrevLongSizeTagIdx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">PrevLongSizeTagIdx</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Signature</span><span class="p">.</span><span class="n">IndexRecords</span><span class="p">[</span><span class="n">Idx</span><span class="p">].</span><span class="n">SignatureTag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Rpm</span><span class="p">.</span><span class="n">SignatureTags</span><span class="p">.</span><span class="n">LongSize</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Signature</span><span class="p">.</span><span class="n">IndexRecords</span><span class="p">[</span><span class="n">Idx</span><span class="p">].</span><span class="n">RecordType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Rpm</span><span class="p">.</span><span class="n">RecordTypes</span><span class="p">.</span><span class="n">Uint64</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Signature</span><span class="p">.</span><span class="n">IndexRecords</span><span class="p">[</span><span class="n">Idx</span><span class="p">].</span><span class="n">NumValues</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="n">Idx</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)));</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_longSizeTagIdx</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_sizeTagIdx</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_sizeTagIdx</span><span class="p">;</span>
@@ -1391,12 +1577,53 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_idx</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_prevSizeTagIdx</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_prevLongSizeTagIdx</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Idx</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_idx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PrevSizeTagIdx</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_prevSizeTagIdx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PrevLongSizeTagIdx</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_prevLongSizeTagIdx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_hasHeaderPayloadSizeTag</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_hasHeaderPayloadSizeTag</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">HasHeaderPayloadSizeTag</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_hasHeaderPayloadSizeTag</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_hasHeaderPayloadSizeTag</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_hasHeaderPayloadSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_hasHeaderPayloadSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">HeaderTagsSteps</span><span class="p">[</span><span class="n">HeaderTagsSteps</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">PayloadSizeTagIdx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_hasHeaderPayloadSizeTag</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_hasPayload</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_hasPayload</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">HasPayload</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_hasPayload</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_hasPayload</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_hasPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_hasPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">HasHeaderPayloadSizeTag</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">HasSignatureLongSizeTag</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">HasSignatureSizeTag</span><span class="p">))</span><span class="w"> </span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_hasPayload</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_hasSignatureLongSizeTag</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_hasSignatureLongSizeTag</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">HasSignatureLongSizeTag</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_hasSignatureLongSizeTag</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_hasSignatureLongSizeTag</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_hasSignatureLongSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_hasSignatureLongSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">SignatureTagsSteps</span><span class="p">[</span><span class="n">SignatureTagsSteps</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">LongSizeTagIdx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_hasSignatureLongSizeTag</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_hasSignatureSizeTag</span><span class="p">;</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_hasSignatureSizeTag</span><span class="p">;</span>
@@ -1409,6 +1636,21 @@ can also be found there.</p>
 <span class="w">                </span><span class="n">f_hasSignatureSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                </span><span class="n">_hasSignatureSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">SignatureTagsSteps</span><span class="p">[</span><span class="n">SignatureTagsSteps</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">SizeTagIdx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_hasSignatureSizeTag</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_headerPayloadSizeTag</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">HeaderIndexRecord</span><span class="w"> </span><span class="n">_headerPayloadSizeTag</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">HeaderIndexRecord</span><span class="w"> </span><span class="n">HeaderPayloadSizeTag</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_headerPayloadSizeTag</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_headerPayloadSizeTag</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_headerPayloadSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">HasHeaderPayloadSizeTag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_headerPayloadSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">HeaderIndexRecord</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">IndexRecords</span><span class="p">[</span><span class="n">HeaderTagsSteps</span><span class="p">[</span><span class="n">HeaderTagsSteps</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">PayloadSizeTagIdx</span><span class="p">]);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_headerPayloadSizeTag</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lenHeader</span><span class="p">;</span>
@@ -1426,6 +1668,21 @@ can also be found there.</p>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lenPayload</span><span class="p">;</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">_lenPayload</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Size of the (compressed) payload in bytes. v6 packages store it in</span>
+<span class="w">        </span><span class="c1">/// `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`</span>
+<span class="w">        </span><span class="c1">/// (which also includes the size of the header).</span>
+<span class="w">        </span><span class="c1">/// </span>
+<span class="w">        </span><span class="c1">/// If the header and payload together or the uncompressed payload reach</span>
+<span class="w">        </span><span class="c1">/// 4 GiB, v4 packages use `signature_tags::long_size` instead - see</span>
+<span class="w">        </span><span class="c1">/// &amp;lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212&amp;gt;.</span>
+<span class="w">        </span><span class="c1">/// </span>
+<span class="w">        </span><span class="c1">/// RPM never writes both (so this is just a hypothetical scenario), but if</span>
+<span class="w">        </span><span class="c1">/// both are present, `signature_tags::long_size` takes precedence over</span>
+<span class="w">        </span><span class="c1">/// `signature_tags::size`, just like in RPM&#39;s `printSize()` function:</span>
+<span class="w">        </span><span class="c1">/// &amp;lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43&amp;gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">LenPayload</span>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">            </span><span class="k">get</span>
@@ -1433,8 +1690,8 @@ can also be found there.</p>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lenPayload</span><span class="p">)</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_lenPayload</span><span class="p">;</span>
 <span class="w">                </span><span class="n">f_lenPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">HasSignatureSizeTag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">_lenPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(((</span><span class="n">Rpm</span><span class="p">.</span><span class="n">RecordTypeUint32</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">SignatureSizeTag</span><span class="p">.</span><span class="n">Body</span><span class="p">)).</span><span class="n">Values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">LenHeader</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">HasPayload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_lenPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">HasHeaderPayloadSizeTag</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">((</span><span class="n">Rpm</span><span class="p">.</span><span class="n">RecordTypeUint64</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">HeaderPayloadSizeTag</span><span class="p">.</span><span class="n">Body</span><span class="p">)).</span><span class="n">Values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">HasSignatureLongSizeTag</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">((</span><span class="n">Rpm</span><span class="p">.</span><span class="n">RecordTypeUint64</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">SignatureLongSizeTag</span><span class="p">.</span><span class="n">Body</span><span class="p">)).</span><span class="n">Values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">LenHeader</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Rpm</span><span class="p">.</span><span class="n">RecordTypeUint32</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">SignatureSizeTag</span><span class="p">.</span><span class="n">Body</span><span class="p">)).</span><span class="n">Values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">LenHeader</span><span class="p">)));</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_lenPayload</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
@@ -1467,6 +1724,38 @@ can also be found there.</p>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_payload</span><span class="p">;</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_payload</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Archive of the package files, compressed using the method specified by</span>
+<span class="w">        </span><span class="c1">/// `header_tags::payload_compressor`. If this tag is missing, it&#39;s almost</span>
+<span class="w">        </span><span class="c1">/// certainly uncompressed (except for some very old v3 packages built by RPM</span>
+<span class="w">        </span><span class="c1">/// 3.0.3 or earlier, which didn&#39;t use the tag because the payload was always</span>
+<span class="w">        </span><span class="c1">/// gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing</span>
+<span class="w">        </span><span class="c1">/// the tag). However, RPM reads the payload as gzip by default - see</span>
+<span class="w">        </span><span class="c1">/// &amp;lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645&amp;gt;.</span>
+<span class="w">        </span><span class="c1">/// Since zlib&#39;s gzip reader passes data that is not in gzip format through</span>
+<span class="w">        </span><span class="c1">/// unchanged (see</span>
+<span class="w">        </span><span class="c1">/// &amp;lt;https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389&amp;gt;),</span>
+<span class="w">        </span><span class="c1">/// this also works for uncompressed payloads.</span>
+<span class="w">        </span><span class="c1">/// </span>
+<span class="w">        </span><span class="c1">/// The archive format is given by `header_tags::payload_format`, which is</span>
+<span class="w">        </span><span class="c1">/// `&amp;quot;cpio&amp;quot;` for regular packages. In v4/v3 packages, it&#39;s a SVR4 cpio archive</span>
+<span class="w">        </span><span class="c1">/// without a checksum (the `070701` variant) - the [v4 format</span>
+<span class="w">        </span><span class="c1">/// documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)</span>
+<span class="w">        </span><span class="c1">/// claims &amp;quot;with a CRC checksum&amp;quot;, but that&#39;s not true since RPM 2.4.4</span>
+<span class="w">        </span><span class="c1">/// (released in 1997).</span>
+<span class="w">        </span><span class="c1">/// </span>
+<span class="w">        </span><span class="c1">/// v6 packages and v4 packages with a file over 4 GiB use a stripped-down</span>
+<span class="w">        </span><span class="c1">/// variant of cpio with the magic `07070X`. Its file headers only hold the</span>
+<span class="w">        </span><span class="c1">/// index of the file in the file lists of the RPM header, which is the only</span>
+<span class="w">        </span><span class="c1">/// place where the file names, sizes and other metadata are stored.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Payload</span>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">            </span><span class="k">get</span>
@@ -1474,13 +1763,28 @@ can also be found there.</p>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_payload</span><span class="p">)</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_payload</span><span class="p">;</span>
 <span class="w">                </span><span class="n">f_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">HasSignatureSizeTag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">HasPayload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
 <span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsPayload</span><span class="p">);</span>
 <span class="w">                    </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenPayload</span><span class="p">);</span>
 <span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_payload</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_signatureLongSizeTag</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">HeaderIndexRecord</span><span class="w"> </span><span class="n">_signatureLongSizeTag</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">HeaderIndexRecord</span><span class="w"> </span><span class="n">SignatureLongSizeTag</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_signatureLongSizeTag</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_signatureLongSizeTag</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_signatureLongSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">HasSignatureLongSizeTag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_signatureLongSizeTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">HeaderIndexRecord</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Signature</span><span class="p">.</span><span class="n">IndexRecords</span><span class="p">[</span><span class="n">SignatureTagsSteps</span><span class="p">[</span><span class="n">SignatureTagsSteps</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">LongSizeTagIdx</span><span class="p">]);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_signatureLongSizeTag</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_signatureSizeTag</span><span class="p">;</span>
@@ -1505,6 +1809,7 @@ can also be found there.</p>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__unnamed5</span><span class="p">;</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SignatureTagsStep</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_signatureTagsSteps</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">HeaderTagsStep</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_headerTagsSteps</span><span class="p">;</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Lead</span><span class="w"> </span><span class="n">Lead</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lead</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
@@ -1514,6 +1819,7 @@ can also be found there.</p>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Unnamed_5</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__unnamed5</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SignatureTagsStep</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SignatureTagsSteps</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_signatureTagsSteps</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">HeaderTagsStep</span><span class="o">&gt;</span><span class="w"> </span><span class="n">HeaderTagsSteps</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_headerTagsSteps</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Rpm</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>

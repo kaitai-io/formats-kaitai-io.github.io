@@ -13,15 +13,37 @@ import java.nio.charset.StandardCharsets;
 
 
 /**
- * This parser is for the RPM version 3 file format which is the current version
- * of the file format used by RPM 2.1 and later (including RPM version 4.x, which
- * is the current version of the RPM tool). There are historical versions of the
- * RPM file format, as well as a currently abandoned fork (rpm5). These formats
- * are not covered by this specification.
- * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md">Source</a>
- * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md">Source</a>
+ * An RPM package consists of the lead, the signature (contains digests and
+ * signatures), the header (contains the package metadata) and the payload (a
+ * compressed archive of the package files).
+ * 
+ * This structure is shared by all package format versions supported by this
+ * Kaitai Struct implementation:
+ * 
+ * * v3, written by RPM 2.1 to 3.x.
+ * * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+ *   to 4 - see
+ *   <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192>.
+ *   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+ *   default - see
+ *   <https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch>.
+ * * v6, written by upstream RPM 6.0 by default - see
+ *   <https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37>.
+ * 
+ * The versions differ mainly in the tags they use: v6 packages store all sizes
+ * as 64-bit integers, carry only cryptographic data in the signature and always
+ * use the stripped-down cpio archive format (see the `payload` instance).
+ * 
+ * The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+ * this implementation.
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md">Source</a>
+ * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md">Source</a>
  * @see <a href="https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html">Source</a>
- * @see <a href="http://ftp.rpm.org/max-rpm/">Source</a>
+ * @see <a href="https://ftp.osuosl.org/pub/rpm/max-rpm/">Source</a>
  */
 public class Rpm extends KaitaiStruct {
     public static Rpm fromFile(String fileName) throws IOException {
@@ -29,6 +51,7 @@ public class Rpm extends KaitaiStruct {
     }
 
     public enum Architectures {
+        NOT_SET(0),
         X86(1),
         ALPHA(2),
         SPARC(3),
@@ -52,12 +75,13 @@ public class Rpm extends KaitaiStruct {
         MIPS64_R6(21),
         RISCV(22),
         LOONGARCH64(23),
+        E2K(24),
         NO_ARCH(255);
 
         private final long id;
         Architectures(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Architectures> byId = new HashMap<Long, Architectures>(24);
+        private static final Map<Long, Architectures> byId = new HashMap<Long, Architectures>(26);
         static {
             for (Architectures e : Architectures.values())
                 byId.put(e.id(), e);
@@ -206,7 +230,7 @@ public class Rpm extends KaitaiStruct {
         FILE_DEPENDS_IDX(1143),
         FILE_DEPENDS_NUM(1144),
         DEPENDS_DICT(1145),
-        SOURCE_PKGID(1146),
+        SOURCE_SIG_MD5(1146),
         FILE_CONTEXTS_OBSOLETE(1147),
         FS_CONTEXTS_OBSOLETE(1148),
         RE_CONTEXTS_OBSOLETE(1149),
@@ -348,12 +372,12 @@ public class Rpm extends KaitaiStruct {
         TRANS_FILE_TRIGGER_TYPE(5089),
         FILE_SIGNATURES(5090),
         FILE_SIGNATURE_LENGTH(5091),
-        PAYLOAD_DIGEST(5092),
-        PAYLOAD_DIGEST_ALGO(5093),
+        PAYLOAD_SHA256(5092),
+        PAYLOAD_SHA256_ALGO_OBSOLETE(5093),
         AUTO_INSTALLED_UNIMPLEMENTED(5094),
         IDENTITY_UNIMPLEMENTED(5095),
         MODULARITY_LABEL(5096),
-        PAYLOAD_DIGEST_ALT(5097),
+        PAYLOAD_SHA256_ALT(5097),
         ARCH_SUFFIX(5098),
         SPEC(5099),
         TRANSLATION_URL(5100),
@@ -365,12 +389,27 @@ public class Rpm extends KaitaiStruct {
         POST_UNTRANS_PROG(5106),
         PRE_UNTRANS_FLAGS(5107),
         POST_UNTRANS_FLAGS(5108),
-        SYS_USERS(5109);
+        SYS_USERS(5109),
+        BUILD_SYSTEM_INTERNAL(5110),
+        BUILD_OPTION_INTERNAL(5111),
+        PAYLOAD_SIZE(5112),
+        PAYLOAD_SIZE_ALT(5113),
+        RPM_FORMAT(5114),
+        FILE_MIME_INDEX(5115),
+        MIME_DICT(5116),
+        FILE_MIMES(5117),
+        PACKAGE_DIGESTS(5118),
+        PACKAGE_DIGEST_ALGOS(5119),
+        SOURCE_NEVR(5120),
+        PAYLOAD_SHA512(5121),
+        PAYLOAD_SHA512_ALT(5122),
+        PAYLOAD_SHA3_256(5123),
+        PAYLOAD_SHA3_256_ALT(5124);
 
         private final long id;
         HeaderTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, HeaderTags> byId = new HashMap<Long, HeaderTags>(300);
+        private static final Map<Long, HeaderTags> byId = new HashMap<Long, HeaderTags>(315);
         static {
             for (HeaderTags e : HeaderTags.values())
                 byId.put(e.id(), e);
@@ -379,6 +418,7 @@ public class Rpm extends KaitaiStruct {
     }
 
     public enum OperatingSystems {
+        NOT_SET(0),
         LINUX(1),
         IRIX(2),
         NO_OS(255);
@@ -386,7 +426,7 @@ public class Rpm extends KaitaiStruct {
         private final long id;
         OperatingSystems(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, OperatingSystems> byId = new HashMap<Long, OperatingSystems>(3);
+        private static final Map<Long, OperatingSystems> byId = new HashMap<Long, OperatingSystems>(4);
         static {
             for (OperatingSystems e : OperatingSystems.values())
                 byId.put(e.id(), e);
@@ -395,7 +435,6 @@ public class Rpm extends KaitaiStruct {
     }
 
     public enum RecordTypes {
-        NOT_IMPLEMENTED(0),
         CHAR(1),
         UINT8(2),
         UINT16(3),
@@ -409,7 +448,7 @@ public class Rpm extends KaitaiStruct {
         private final long id;
         RecordTypes(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, RecordTypes> byId = new HashMap<Long, RecordTypes>(10);
+        private static final Map<Long, RecordTypes> byId = new HashMap<Long, RecordTypes>(9);
         static {
             for (RecordTypes e : RecordTypes.values())
                 byId.put(e.id(), e);
@@ -448,6 +487,9 @@ public class Rpm extends KaitaiStruct {
         FILE_SIGNATURE_LENGTH(275),
         VERITY_SIGNATURES(276),
         VERITY_SIGNATURE_ALGO(277),
+        OPENPGP(278),
+        SHA3_256(279),
+        RESERVED(999),
         SIZE(1000),
         LE_MD5_1_OBSOLETE(1001),
         PGP(1002),
@@ -461,7 +503,7 @@ public class Rpm extends KaitaiStruct {
         private final long id;
         SignatureTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, SignatureTags> byId = new HashMap<Long, SignatureTags>(24);
+        private static final Map<Long, SignatureTags> byId = new HashMap<Long, SignatureTags>(27);
         static {
             for (SignatureTags e : SignatureTags.values())
                 byId.put(e.id(), e);
@@ -496,7 +538,11 @@ public class Rpm extends KaitaiStruct {
         }
         this.signatureTagsSteps = new ArrayList<SignatureTagsStep>();
         for (int i = 0; i < signature().headerRecord().numIndexRecords(); i++) {
-            this.signatureTagsSteps.add(new SignatureTagsStep(this._io, this, _root, i, (i < 1 ? -1 : signatureTagsSteps().get(((Number) (i - 1)).intValue()).sizeTagIdx())));
+            this.signatureTagsSteps.add(new SignatureTagsStep(this._io, this, _root, i, (i != 0 ? signatureTagsSteps().get(((Number) (i - 1)).intValue()).sizeTagIdx() : -1), (i != 0 ? signatureTagsSteps().get(((Number) (i - 1)).intValue()).longSizeTagIdx() : -1)));
+        }
+        this.headerTagsSteps = new ArrayList<HeaderTagsStep>();
+        for (int i = 0; i < header().headerRecord().numIndexRecords(); i++) {
+            this.headerTagsSteps.add(new HeaderTagsStep(this._io, this, _root, i, (i != 0 ? headerTagsSteps().get(((Number) (i - 1)).intValue()).payloadSizeTagIdx() : -1)));
         }
     }
 
@@ -510,6 +556,9 @@ public class Rpm extends KaitaiStruct {
         }
         for (int i = 0; i < this.signatureTagsSteps.size(); i++) {
             this.signatureTagsSteps.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        for (int i = 0; i < this.headerTagsSteps.size(); i++) {
+            this.headerTagsSteps.get(((Number) (i)).intValue())._fetchInstances();
         }
         payload();
         if (this.payload != null) {
@@ -626,6 +675,9 @@ public class Rpm extends KaitaiStruct {
         private void _read() {
             this.tagRaw = this._io.readU4be();
             this.recordType = Rpm.RecordTypes.byId(this._io.readU4be());
+            if (this.recordType == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.recordType, this._io, "/types/header_index_record/seq/1");
+            }
             this.ofsBody = this._io.readU4be();
             this.count = this._io.readU4be();
         }
@@ -820,7 +872,13 @@ public class Rpm extends KaitaiStruct {
             if (!(this.numIndexRecords >= 1)) {
                 throw new KaitaiStream.ValidationLessThanError(1, this.numIndexRecords, this._io, "/types/header_record/seq/2");
             }
+            if (!(this.numIndexRecords <= (_parent().isSignature() ? 32 : 65535))) {
+                throw new KaitaiStream.ValidationGreaterThanError((_parent().isSignature() ? 32 : 65535), this.numIndexRecords, this._io, "/types/header_record/seq/2");
+            }
             this.lenStorageSection = this._io.readU4be();
+            if (!(this.lenStorageSection <= (_parent().isSignature() ? (64 * 1024) * 1024 : 268435455))) {
+                throw new KaitaiStream.ValidationGreaterThanError((_parent().isSignature() ? (64 * 1024) * 1024 : 268435455), this.lenStorageSection, this._io, "/types/header_record/seq/3");
+            }
         }
 
         public void _fetchInstances() {
@@ -845,7 +903,51 @@ public class Rpm extends KaitaiStruct {
     }
 
     /**
-     * In 2021, Panu Matilainen (a RPM developer) [described this
+     * Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+     * which is where v6 packages store the payload size.
+     */
+    public static class HeaderTagsStep extends KaitaiStruct {
+
+        public HeaderTagsStep(KaitaiStream _io, int idx, int prevPayloadSizeTagIdx) {
+            this(_io, null, null, idx, prevPayloadSizeTagIdx);
+        }
+
+        public HeaderTagsStep(KaitaiStream _io, Rpm _parent, int idx, int prevPayloadSizeTagIdx) {
+            this(_io, _parent, null, idx, prevPayloadSizeTagIdx);
+        }
+
+        public HeaderTagsStep(KaitaiStream _io, Rpm _parent, Rpm _root, int idx, int prevPayloadSizeTagIdx) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.idx = idx;
+            this.prevPayloadSizeTagIdx = prevPayloadSizeTagIdx;
+            _read();
+        }
+        private void _read() {
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer payloadSizeTagIdx;
+        public Integer payloadSizeTagIdx() {
+            if (this.payloadSizeTagIdx != null)
+                return this.payloadSizeTagIdx;
+            this.payloadSizeTagIdx = ((Number) ((prevPayloadSizeTagIdx() != -1 ? prevPayloadSizeTagIdx() : ( ((_parent().header().indexRecords().get(((Number) (idx())).intValue()).headerTag() == Rpm.HeaderTags.PAYLOAD_SIZE) && (_parent().header().indexRecords().get(((Number) (idx())).intValue()).recordType() == Rpm.RecordTypes.UINT64) && (_parent().header().indexRecords().get(((Number) (idx())).intValue()).numValues() >= 1))  ? idx() : -1)))).intValue();
+            return this.payloadSizeTagIdx;
+        }
+        private int idx;
+        private int prevPayloadSizeTagIdx;
+        private Rpm _root;
+        private Rpm _parent;
+        public int idx() { return idx; }
+        public int prevPayloadSizeTagIdx() { return prevPayloadSizeTagIdx; }
+        public Rpm _root() { return _root; }
+        public Rpm _parent() { return _parent; }
+    }
+
+    /**
+     * In 2021, Panu Matilainen (an RPM developer) [described this
      * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
      * as follows:
      * 
@@ -854,10 +956,13 @@ public class Rpm extends KaitaiStruct {
      * > it's an rpm file in the first place, just ignore everything in it.
      * > Literally everything.
      * 
-     * The fields with `valid` constraints are important, because these are the
-     * same validations that RPM does (which means that any valid `.rpm` file
-     * must pass them), but otherwise you should not make decisions based on the
-     * values given here.
+     * RPM 4.19 and older rejected packages that didn't meet the `valid`
+     * constraints specified here, while RPM 4.20 and later only check the
+     * `magic` - see
+     * <https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66>.
+     * Nevertheless, RPM still writes values that pass these checks for backwards
+     * compatibility, so any `.rpm` file should pass.
+     * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md">Source</a>
      */
     public static class Lead extends KaitaiStruct {
         public static Lead fromFile(String fileName) throws IOException {
@@ -914,6 +1019,10 @@ public class Rpm extends KaitaiStruct {
         public Architectures architecture() { return architecture; }
         public String packageName() { return packageName; }
         public OperatingSystems os() { return os; }
+
+        /**
+         * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21">Source</a>
+         */
         public int signatureType() { return signatureType; }
         public byte[] reserved() { return reserved; }
         public Rpm _root() { return _root; }
@@ -1216,35 +1325,51 @@ public class Rpm extends KaitaiStruct {
         private Rpm.Lead _parent;
 
         /**
-         * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
+         * 3 in v3 and v4 packages, 4 in v6 packages.
+         * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52">Source</a>
          */
         public int major() { return major; }
         public int minor() { return minor; }
         public Rpm _root() { return _root; }
         public Rpm.Lead _parent() { return _parent; }
     }
+
+    /**
+     * Finds the first `signature_tags::size` and `signature_tags::long_size`
+     * index record. Since Kaitai Struct doesn't have a built-in way to search an
+     * array directly, each step receives the indexes found so far via
+     * parameters.
+     */
     public static class SignatureTagsStep extends KaitaiStruct {
 
-        public SignatureTagsStep(KaitaiStream _io, int idx, int prevSizeTagIdx) {
-            this(_io, null, null, idx, prevSizeTagIdx);
+        public SignatureTagsStep(KaitaiStream _io, int idx, int prevSizeTagIdx, int prevLongSizeTagIdx) {
+            this(_io, null, null, idx, prevSizeTagIdx, prevLongSizeTagIdx);
         }
 
-        public SignatureTagsStep(KaitaiStream _io, Rpm _parent, int idx, int prevSizeTagIdx) {
-            this(_io, _parent, null, idx, prevSizeTagIdx);
+        public SignatureTagsStep(KaitaiStream _io, Rpm _parent, int idx, int prevSizeTagIdx, int prevLongSizeTagIdx) {
+            this(_io, _parent, null, idx, prevSizeTagIdx, prevLongSizeTagIdx);
         }
 
-        public SignatureTagsStep(KaitaiStream _io, Rpm _parent, Rpm _root, int idx, int prevSizeTagIdx) {
+        public SignatureTagsStep(KaitaiStream _io, Rpm _parent, Rpm _root, int idx, int prevSizeTagIdx, int prevLongSizeTagIdx) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             this.idx = idx;
             this.prevSizeTagIdx = prevSizeTagIdx;
+            this.prevLongSizeTagIdx = prevLongSizeTagIdx;
             _read();
         }
         private void _read() {
         }
 
         public void _fetchInstances() {
+        }
+        private Integer longSizeTagIdx;
+        public Integer longSizeTagIdx() {
+            if (this.longSizeTagIdx != null)
+                return this.longSizeTagIdx;
+            this.longSizeTagIdx = ((Number) ((prevLongSizeTagIdx() != -1 ? prevLongSizeTagIdx() : ( ((_parent().signature().indexRecords().get(((Number) (idx())).intValue()).signatureTag() == Rpm.SignatureTags.LONG_SIZE) && (_parent().signature().indexRecords().get(((Number) (idx())).intValue()).recordType() == Rpm.RecordTypes.UINT64) && (_parent().signature().indexRecords().get(((Number) (idx())).intValue()).numValues() >= 1))  ? idx() : -1)))).intValue();
+            return this.longSizeTagIdx;
         }
         private Integer sizeTagIdx;
         public Integer sizeTagIdx() {
@@ -1255,12 +1380,35 @@ public class Rpm extends KaitaiStruct {
         }
         private int idx;
         private int prevSizeTagIdx;
+        private int prevLongSizeTagIdx;
         private Rpm _root;
         private Rpm _parent;
         public int idx() { return idx; }
         public int prevSizeTagIdx() { return prevSizeTagIdx; }
+        public int prevLongSizeTagIdx() { return prevLongSizeTagIdx; }
         public Rpm _root() { return _root; }
         public Rpm _parent() { return _parent; }
+    }
+    private Boolean hasHeaderPayloadSizeTag;
+    public Boolean hasHeaderPayloadSizeTag() {
+        if (this.hasHeaderPayloadSizeTag != null)
+            return this.hasHeaderPayloadSizeTag;
+        this.hasHeaderPayloadSizeTag = headerTagsSteps().get(headerTagsSteps().size() - 1).payloadSizeTagIdx() != -1;
+        return this.hasHeaderPayloadSizeTag;
+    }
+    private Boolean hasPayload;
+    public Boolean hasPayload() {
+        if (this.hasPayload != null)
+            return this.hasPayload;
+        this.hasPayload =  ((hasHeaderPayloadSizeTag()) || (hasSignatureLongSizeTag()) || (hasSignatureSizeTag())) ;
+        return this.hasPayload;
+    }
+    private Boolean hasSignatureLongSizeTag;
+    public Boolean hasSignatureLongSizeTag() {
+        if (this.hasSignatureLongSizeTag != null)
+            return this.hasSignatureLongSizeTag;
+        this.hasSignatureLongSizeTag = signatureTagsSteps().get(signatureTagsSteps().size() - 1).longSizeTagIdx() != -1;
+        return this.hasSignatureLongSizeTag;
     }
     private Boolean hasSignatureSizeTag;
     public Boolean hasSignatureSizeTag() {
@@ -1268,6 +1416,15 @@ public class Rpm extends KaitaiStruct {
             return this.hasSignatureSizeTag;
         this.hasSignatureSizeTag = signatureTagsSteps().get(signatureTagsSteps().size() - 1).sizeTagIdx() != -1;
         return this.hasSignatureSizeTag;
+    }
+    private HeaderIndexRecord headerPayloadSizeTag;
+    public HeaderIndexRecord headerPayloadSizeTag() {
+        if (this.headerPayloadSizeTag != null)
+            return this.headerPayloadSizeTag;
+        if (hasHeaderPayloadSizeTag()) {
+            this.headerPayloadSizeTag = header().indexRecords().get(((Number) (headerTagsSteps().get(headerTagsSteps().size() - 1).payloadSizeTagIdx())).intValue());
+        }
+        return this.headerPayloadSizeTag;
     }
     private Integer lenHeader;
     public Integer lenHeader() {
@@ -1277,11 +1434,26 @@ public class Rpm extends KaitaiStruct {
         return this.lenHeader;
     }
     private Integer lenPayload;
+
+    /**
+     * Size of the (compressed) payload in bytes. v6 packages store it in
+     * `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+     * (which also includes the size of the header).
+     * 
+     * If the header and payload together or the uncompressed payload reach
+     * 4 GiB, v4 packages use `signature_tags::long_size` instead - see
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212>.
+     * 
+     * RPM never writes both (so this is just a hypothetical scenario), but if
+     * both are present, `signature_tags::long_size` takes precedence over
+     * `signature_tags::size`, just like in RPM's `printSize()` function:
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43>
+     */
     public Integer lenPayload() {
         if (this.lenPayload != null)
             return this.lenPayload;
-        if (hasSignatureSizeTag()) {
-            this.lenPayload = ((Number) (((Rpm.RecordTypeUint32) (signatureSizeTag().body())).values().get(((int) 0)) - lenHeader())).intValue();
+        if (hasPayload()) {
+            this.lenPayload = ((Number) ((hasHeaderPayloadSizeTag() ? ((Rpm.RecordTypeUint64) (headerPayloadSizeTag().body())).values().get(((int) 0)) : (hasSignatureLongSizeTag() ? ((Rpm.RecordTypeUint64) (signatureLongSizeTag().body())).values().get(((int) 0)) - lenHeader() : ((Rpm.RecordTypeUint32) (signatureSizeTag().body())).values().get(((int) 0)) - lenHeader())))).intValue();
         }
         return this.lenPayload;
     }
@@ -1300,16 +1472,53 @@ public class Rpm extends KaitaiStruct {
         return this.ofsPayload;
     }
     private byte[] payload;
+
+    /**
+     * Archive of the package files, compressed using the method specified by
+     * `header_tags::payload_compressor`. If this tag is missing, it's almost
+     * certainly uncompressed (except for some very old v3 packages built by RPM
+     * 3.0.3 or earlier, which didn't use the tag because the payload was always
+     * gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+     * the tag). However, RPM reads the payload as gzip by default - see
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645>.
+     * Since zlib's gzip reader passes data that is not in gzip format through
+     * unchanged (see
+     * <https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389>),
+     * this also works for uncompressed payloads.
+     * 
+     * The archive format is given by `header_tags::payload_format`, which is
+     * `"cpio"` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+     * without a checksum (the `070701` variant) - the [v4 format
+     * documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+     * claims "with a CRC checksum", but that's not true since RPM 2.4.4
+     * (released in 1997).
+     * 
+     * v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+     * variant of cpio with the magic `07070X`. Its file headers only hold the
+     * index of the file in the file lists of the RPM header, which is the only
+     * place where the file names, sizes and other metadata are stored.
+     * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload">Source</a>
+     * @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload">Source</a>
+     */
     public byte[] payload() {
         if (this.payload != null)
             return this.payload;
-        if (hasSignatureSizeTag()) {
+        if (hasPayload()) {
             long _pos = this._io.pos();
             this._io.seek(ofsPayload());
             this.payload = this._io.readBytes(lenPayload());
             this._io.seek(_pos);
         }
         return this.payload;
+    }
+    private HeaderIndexRecord signatureLongSizeTag;
+    public HeaderIndexRecord signatureLongSizeTag() {
+        if (this.signatureLongSizeTag != null)
+            return this.signatureLongSizeTag;
+        if (hasSignatureLongSizeTag()) {
+            this.signatureLongSizeTag = signature().indexRecords().get(((Number) (signatureTagsSteps().get(signatureTagsSteps().size() - 1).longSizeTagIdx())).intValue());
+        }
+        return this.signatureLongSizeTag;
     }
     private HeaderIndexRecord signatureSizeTag;
     public HeaderIndexRecord signatureSizeTag() {
@@ -1327,6 +1536,7 @@ public class Rpm extends KaitaiStruct {
     private Header header;
     private byte[] _unnamed5;
     private List<SignatureTagsStep> signatureTagsSteps;
+    private List<HeaderTagsStep> headerTagsSteps;
     private Rpm _root;
     private KaitaiStruct _parent;
     public Lead lead() { return lead; }
@@ -1336,6 +1546,7 @@ public class Rpm extends KaitaiStruct {
     public Header header() { return header; }
     public byte[] _unnamed5() { return _unnamed5; }
     public List<SignatureTagsStep> signatureTagsSteps() { return signatureTagsSteps; }
+    public List<HeaderTagsStep> headerTagsSteps() { return headerTagsSteps; }
     public Rpm _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

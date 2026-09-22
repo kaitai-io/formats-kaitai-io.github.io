@@ -95,11 +95,27 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>This parser is for the RPM version 3 file format which is the current version
-of the file format used by RPM 2.1 and later (including RPM version 4.x, which
-is the current version of the RPM tool). There are historical versions of the
-RPM file format, as well as a currently abandoned fork (rpm5). These formats
-are not covered by this specification.</p>
+                <p><p>An RPM package consists of the lead, the signature (contains digests and
+signatures), the header (contains the package metadata) and the payload (a
+compressed archive of the package files).</p>
+<p>This structure is shared by all package format versions supported by this
+Kaitai Struct implementation:</p>
+<ul>
+<li>v3, written by RPM 2.1 to 3.x.</li>
+<li>v4, written by RPM 4.x, and by RPM 6.x when the <code>%_rpmformat</code> macro is set
+to 4 - see
+<a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192</a>.
+For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+default - see
+<a href="https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch">https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch</a>.</li>
+<li>v6, written by upstream RPM 6.0 by default - see
+<a href="https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37">https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37</a>.</li>
+</ul>
+<p>The versions differ mainly in the tags they use: v6 packages store all sizes
+as 64-bit integers, carry only cryptographic data in the signature and always
+use the stripped-down cpio archive format (see the <code>payload</code> instance).</p>
+<p>The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+this implementation.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -131,7 +147,7 @@ are not covered by this specification.</p>
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.9
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -151,7 +167,7 @@ are not covered by this specification.</p>
                             
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/795">PRONOM fmt/795</a></li>
                             
-                            <li><a href="https://www.wikidata.org/wiki/Q492650">Wikidata Q492650</a></li>
+                            <li><a href="https://www.wikidata.org/wiki/Q11241282">Wikidata Q11241282</a></li>
                             
                             
                             
@@ -306,7 +322,29 @@ are not covered by this specification.</p>
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">lead</span> <span class="c1"># =&gt; get lead</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">payload</span> <span class="c1"># =&gt; Archive of the package files, compressed using the method specified by</span>
+<span class="err">`</span><span class="n">header_tags</span><span class="p">::</span><span class="n">payload_compressor</span><span class="err">`</span><span class="o">.</span> <span class="n">If</span> <span class="n">this</span> <span class="n">tag</span> <span class="ow">is</span> <span class="n">missing</span><span class="p">,</span> <span class="n">it</span><span class="s1">&#39;s almost</span>
+<span class="n">certainly</span> <span class="n">uncompressed</span> <span class="p">(</span><span class="k">except</span> <span class="k">for</span> <span class="n">some</span> <span class="n">very</span> <span class="n">old</span> <span class="n">v3</span> <span class="n">packages</span> <span class="n">built</span> <span class="n">by</span> <span class="n">RPM</span>
+<span class="mf">3.0.3</span> <span class="ow">or</span> <span class="n">earlier</span><span class="p">,</span> <span class="n">which</span> <span class="n">didn</span><span class="s1">&#39;t use the tag because the payload was always</span>
+<span class="n">gzipped</span><span class="p">;</span> <span class="n">RPM</span> <span class="mf">3.0.5</span> <span class="n">added</span> <span class="n">support</span> <span class="k">for</span> <span class="n">bzip2</span> <span class="n">payloads</span> <span class="ow">and</span> <span class="n">started</span> <span class="n">writing</span>
+<span class="n">the</span> <span class="n">tag</span><span class="p">)</span><span class="o">.</span> <span class="n">However</span><span class="p">,</span> <span class="n">RPM</span> <span class="n">reads</span> <span class="n">the</span> <span class="n">payload</span> <span class="k">as</span> <span class="n">gzip</span> <span class="n">by</span> <span class="n">default</span> <span class="o">-</span> <span class="n">see</span>
+<span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">rpm</span><span class="o">-</span><span class="n">software</span><span class="o">-</span><span class="n">management</span><span class="o">/</span><span class="n">rpm</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">ec9ea8c43808c346da4b6cb454cdc58aef8e506a</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">rpmte</span><span class="o">.</span><span class="n">cc</span><span class="c1">#L643-L645&gt;.</span>
+<span class="n">Since</span> <span class="n">zlib</span><span class="s1">&#39;s gzip reader passes data that is not in gzip format through</span>
+<span class="n">unchanged</span> <span class="p">(</span><span class="n">see</span>
+<span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">madler</span><span class="o">/</span><span class="n">zlib</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">da607da739fa6047df13e66a2af6b8bec7c2a498</span><span class="o">/</span><span class="n">zlib</span><span class="o">.</span><span class="n">h</span><span class="c1">#L1386-L1389&gt;),</span>
+<span class="n">this</span> <span class="n">also</span> <span class="n">works</span> <span class="k">for</span> <span class="n">uncompressed</span> <span class="n">payloads</span><span class="o">.</span>
+
+<span class="n">The</span> <span class="n">archive</span> <span class="nb">format</span> <span class="ow">is</span> <span class="n">given</span> <span class="n">by</span> <span class="err">`</span><span class="n">header_tags</span><span class="p">::</span><span class="n">payload_format</span><span class="err">`</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span>
+<span class="err">`</span><span class="s2">&quot;cpio&quot;</span><span class="err">`</span> <span class="k">for</span> <span class="n">regular</span> <span class="n">packages</span><span class="o">.</span> <span class="n">In</span> <span class="n">v4</span><span class="o">/</span><span class="n">v3</span> <span class="n">packages</span><span class="p">,</span> <span class="n">it</span><span class="s1">&#39;s a SVR4 cpio archive</span>
+<span class="n">without</span> <span class="n">a</span> <span class="n">checksum</span> <span class="p">(</span><span class="n">the</span> <span class="err">`</span><span class="mi">070701</span><span class="err">`</span> <span class="n">variant</span><span class="p">)</span> <span class="o">-</span> <span class="n">the</span> <span class="p">[</span><span class="n">v4</span> <span class="nb">format</span>
+<span class="n">documentation</span><span class="p">](</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">rpm</span><span class="o">-</span><span class="n">software</span><span class="o">-</span><span class="n">management</span><span class="o">/</span><span class="n">rpm</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">ec9ea8c43808c346da4b6cb454cdc58aef8e506a</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">manual</span><span class="o">/</span><span class="n">format_v4</span><span class="o">.</span><span class="n">md</span><span class="err">?</span><span class="n">plain</span><span class="o">=</span><span class="mi">1</span><span class="c1">#L106-L107)</span>
+<span class="n">claims</span> <span class="s2">&quot;with a CRC checksum&quot;</span><span class="p">,</span> <span class="n">but</span> <span class="n">that</span><span class="s1">&#39;s not true since RPM 2.4.4</span>
+<span class="p">(</span><span class="n">released</span> <span class="ow">in</span> <span class="mi">1997</span><span class="p">)</span><span class="o">.</span>
+
+<span class="n">v6</span> <span class="n">packages</span> <span class="ow">and</span> <span class="n">v4</span> <span class="n">packages</span> <span class="k">with</span> <span class="n">a</span> <span class="n">file</span> <span class="n">over</span> <span class="mi">4</span> <span class="n">GiB</span> <span class="n">use</span> <span class="n">a</span> <span class="n">stripped</span><span class="o">-</span><span class="n">down</span>
+<span class="n">variant</span> <span class="n">of</span> <span class="n">cpio</span> <span class="k">with</span> <span class="n">the</span> <span class="n">magic</span> <span class="err">`</span><span class="mi">07070</span><span class="n">X</span><span class="err">`</span><span class="o">.</span> <span class="n">Its</span> <span class="n">file</span> <span class="n">headers</span> <span class="n">only</span> <span class="n">hold</span> <span class="n">the</span>
+<span class="n">index</span> <span class="n">of</span> <span class="n">the</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">file</span> <span class="n">lists</span> <span class="n">of</span> <span class="n">the</span> <span class="n">RPM</span> <span class="n">header</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">only</span>
+<span class="n">place</span> <span class="n">where</span> <span class="n">the</span> <span class="n">file</span> <span class="n">names</span><span class="p">,</span> <span class="n">sizes</span> <span class="ow">and</span> <span class="n">other</span> <span class="n">metadata</span> <span class="n">are</span> <span class="n">stored</span><span class="o">.</span>
 </pre></div>
 
     </div>
@@ -346,18 +384,52 @@ are not covered by this specification.</p>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Rpm</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This parser is for the RPM version 3 file format which is the current version</span>
-<span class="sd">    of the file format used by RPM 2.1 and later (including RPM version 4.x, which</span>
-<span class="sd">    is the current version of the RPM tool). There are historical versions of the</span>
-<span class="sd">    RPM file format, as well as a currently abandoned fork (rpm5). These formats</span>
-<span class="sd">    are not covered by this specification.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An RPM package consists of the lead, the signature (contains digests and</span>
+<span class="sd">    signatures), the header (contains the package metadata) and the payload (a</span>
+<span class="sd">    compressed archive of the package files).</span>
+<span class="sd">    </span>
+<span class="sd">    This structure is shared by all package format versions supported by this</span>
+<span class="sd">    Kaitai Struct implementation:</span>
+<span class="sd">    </span>
+<span class="sd">    * v3, written by RPM 2.1 to 3.x.</span>
+<span class="sd">    * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set</span>
+<span class="sd">      to 4 - see</span>
+<span class="sd">      &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192&gt;.</span>
+<span class="sd">      For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by</span>
+<span class="sd">      default - see</span>
+<span class="sd">      &lt;https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch&gt;.</span>
+<span class="sd">    * v6, written by upstream RPM 6.0 by default - see</span>
+<span class="sd">      &lt;https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37&gt;.</span>
+<span class="sd">    </span>
+<span class="sd">    The versions differ mainly in the tags they use: v6 packages store all sizes</span>
+<span class="sd">    as 64-bit integers, carry only cryptographic data in the signature and always</span>
+<span class="sd">    use the stripped-down cpio archive format (see the `payload` instance).</span>
+<span class="sd">    </span>
+<span class="sd">    The formats before v3, as well as the abandoned rpm5 fork, are not covered by</span>
+<span class="sd">    this implementation.</span>
 <span class="sd">    </span>
 <span class="sd">    .. seealso::</span>
-<span class="sd">       Source - https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md</span>
+<span class="sd">       Source - https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md</span>
 <span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    .. seealso::</span>
-<span class="sd">       Source - https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md</span>
+<span class="sd">       Source - https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md</span>
 <span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    .. seealso::</span>
@@ -365,10 +437,11 @@ are not covered by this specification.</p>
 <span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    .. seealso::</span>
-<span class="sd">       Source - http://ftp.rpm.org/max-rpm/</span>
+<span class="sd">       Source - https://ftp.osuosl.org/pub/rpm/max-rpm/</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Architectures</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">not_set</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">x86</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">alpha</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">sparc</span> <span class="o">=</span> <span class="mi">3</span>
@@ -392,6 +465,7 @@ are not covered by this specification.</p>
         <span class="n">mips64_r6</span> <span class="o">=</span> <span class="mi">21</span>
         <span class="n">riscv</span> <span class="o">=</span> <span class="mi">22</span>
         <span class="n">loongarch64</span> <span class="o">=</span> <span class="mi">23</span>
+        <span class="n">e2k</span> <span class="o">=</span> <span class="mi">24</span>
         <span class="n">no_arch</span> <span class="o">=</span> <span class="mi">255</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">HeaderTags</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
@@ -535,7 +609,7 @@ are not covered by this specification.</p>
         <span class="n">file_depends_idx</span> <span class="o">=</span> <span class="mi">1143</span>
         <span class="n">file_depends_num</span> <span class="o">=</span> <span class="mi">1144</span>
         <span class="n">depends_dict</span> <span class="o">=</span> <span class="mi">1145</span>
-        <span class="n">source_pkgid</span> <span class="o">=</span> <span class="mi">1146</span>
+        <span class="n">source_sig_md5</span> <span class="o">=</span> <span class="mi">1146</span>
         <span class="n">file_contexts_obsolete</span> <span class="o">=</span> <span class="mi">1147</span>
         <span class="n">fs_contexts_obsolete</span> <span class="o">=</span> <span class="mi">1148</span>
         <span class="n">re_contexts_obsolete</span> <span class="o">=</span> <span class="mi">1149</span>
@@ -677,12 +751,12 @@ are not covered by this specification.</p>
         <span class="n">trans_file_trigger_type</span> <span class="o">=</span> <span class="mi">5089</span>
         <span class="n">file_signatures</span> <span class="o">=</span> <span class="mi">5090</span>
         <span class="n">file_signature_length</span> <span class="o">=</span> <span class="mi">5091</span>
-        <span class="n">payload_digest</span> <span class="o">=</span> <span class="mi">5092</span>
-        <span class="n">payload_digest_algo</span> <span class="o">=</span> <span class="mi">5093</span>
+        <span class="n">payload_sha256</span> <span class="o">=</span> <span class="mi">5092</span>
+        <span class="n">payload_sha256_algo_obsolete</span> <span class="o">=</span> <span class="mi">5093</span>
         <span class="n">auto_installed_unimplemented</span> <span class="o">=</span> <span class="mi">5094</span>
         <span class="n">identity_unimplemented</span> <span class="o">=</span> <span class="mi">5095</span>
         <span class="n">modularity_label</span> <span class="o">=</span> <span class="mi">5096</span>
-        <span class="n">payload_digest_alt</span> <span class="o">=</span> <span class="mi">5097</span>
+        <span class="n">payload_sha256_alt</span> <span class="o">=</span> <span class="mi">5097</span>
         <span class="n">arch_suffix</span> <span class="o">=</span> <span class="mi">5098</span>
         <span class="n">spec</span> <span class="o">=</span> <span class="mi">5099</span>
         <span class="n">translation_url</span> <span class="o">=</span> <span class="mi">5100</span>
@@ -695,14 +769,29 @@ are not covered by this specification.</p>
         <span class="n">pre_untrans_flags</span> <span class="o">=</span> <span class="mi">5107</span>
         <span class="n">post_untrans_flags</span> <span class="o">=</span> <span class="mi">5108</span>
         <span class="n">sys_users</span> <span class="o">=</span> <span class="mi">5109</span>
+        <span class="n">build_system_internal</span> <span class="o">=</span> <span class="mi">5110</span>
+        <span class="n">build_option_internal</span> <span class="o">=</span> <span class="mi">5111</span>
+        <span class="n">payload_size</span> <span class="o">=</span> <span class="mi">5112</span>
+        <span class="n">payload_size_alt</span> <span class="o">=</span> <span class="mi">5113</span>
+        <span class="n">rpm_format</span> <span class="o">=</span> <span class="mi">5114</span>
+        <span class="n">file_mime_index</span> <span class="o">=</span> <span class="mi">5115</span>
+        <span class="n">mime_dict</span> <span class="o">=</span> <span class="mi">5116</span>
+        <span class="n">file_mimes</span> <span class="o">=</span> <span class="mi">5117</span>
+        <span class="n">package_digests</span> <span class="o">=</span> <span class="mi">5118</span>
+        <span class="n">package_digest_algos</span> <span class="o">=</span> <span class="mi">5119</span>
+        <span class="n">source_nevr</span> <span class="o">=</span> <span class="mi">5120</span>
+        <span class="n">payload_sha512</span> <span class="o">=</span> <span class="mi">5121</span>
+        <span class="n">payload_sha512_alt</span> <span class="o">=</span> <span class="mi">5122</span>
+        <span class="n">payload_sha3_256</span> <span class="o">=</span> <span class="mi">5123</span>
+        <span class="n">payload_sha3_256_alt</span> <span class="o">=</span> <span class="mi">5124</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">OperatingSystems</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">not_set</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">linux</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">irix</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">no_os</span> <span class="o">=</span> <span class="mi">255</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">RecordTypes</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
-        <span class="n">not_implemented</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">char</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">uint8</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">uint16</span> <span class="o">=</span> <span class="mi">3</span>
@@ -733,6 +822,9 @@ are not covered by this specification.</p>
         <span class="n">file_signature_length</span> <span class="o">=</span> <span class="mi">275</span>
         <span class="n">verity_signatures</span> <span class="o">=</span> <span class="mi">276</span>
         <span class="n">verity_signature_algo</span> <span class="o">=</span> <span class="mi">277</span>
+        <span class="n">openpgp</span> <span class="o">=</span> <span class="mi">278</span>
+        <span class="n">sha3_256</span> <span class="o">=</span> <span class="mi">279</span>
+        <span class="n">reserved</span> <span class="o">=</span> <span class="mi">999</span>
         <span class="n">size</span> <span class="o">=</span> <span class="mi">1000</span>
         <span class="n">le_md5_1_obsolete</span> <span class="o">=</span> <span class="mi">1001</span>
         <span class="n">pgp</span> <span class="o">=</span> <span class="mi">1002</span>
@@ -763,7 +855,11 @@ are not covered by this specification.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">header_record</span><span class="o">.</span><span class="n">num_index_records</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Rpm</span><span class="o">.</span><span class="n">SignatureTagsStep</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size_tag_idx</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Rpm</span><span class="o">.</span><span class="n">SignatureTagsStep</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size_tag_idx</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">long_size_tag_idx</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">header_tags_steps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">header_record</span><span class="o">.</span><span class="n">num_index_records</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header_tags_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Rpm</span><span class="o">.</span><span class="n">HeaderTagsStep</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_tags_steps</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">payload_size_tag_idx</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
 
@@ -781,6 +877,10 @@ are not covered by this specification.</p>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="p">)):</span>
             <span class="k">pass</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_tags_steps</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header_tags_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
 
         <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_payload&#39;</span><span class="p">):</span>
@@ -853,6 +953,8 @@ are not covered by this specification.</p>
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tag_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">record_type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Rpm</span><span class="o">.</span><span class="n">RecordTypes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">())</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">record_type</span><span class="p">,</span> <span class="n">Rpm</span><span class="o">.</span><span class="n">RecordTypes</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotInEnumError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">record_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/header_index_record/seq/1&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ofs_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
 
@@ -993,15 +1095,47 @@ are not covered by this specification.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">num_index_records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_index_records</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationLessThanError</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_index_records</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/header_record/seq/2&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_index_records</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mi">32</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_signature</span> <span class="k">else</span> <span class="mi">65535</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationGreaterThanError</span><span class="p">((</span><span class="mi">32</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_signature</span> <span class="k">else</span> <span class="mi">65535</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_index_records</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/header_record/seq/2&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">len_storage_section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_storage_section</span> <span class="o">&lt;=</span> <span class="p">((</span><span class="mi">64</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1024</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_signature</span> <span class="k">else</span> <span class="mi">268435455</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationGreaterThanError</span><span class="p">(((</span><span class="mi">64</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1024</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_signature</span> <span class="k">else</span> <span class="mi">268435455</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_storage_section</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/header_record/seq/3&quot;</span><span class="p">)</span>
 
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">pass</span>
 
 
+    <span class="k">class</span><span class="w"> </span><span class="nc">HeaderTagsStep</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Like `signature_tags_step`, but looks for `header_tags::payload_size`,</span>
+<span class="sd">        which is where v6 packages store the payload size.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">prev_payload_size_tag_idx</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Rpm</span><span class="o">.</span><span class="n">HeaderTagsStep</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_payload_size_tag_idx</span> <span class="o">=</span> <span class="n">prev_payload_size_tag_idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">payload_size_tag_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_payload_size_tag_idx&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_payload_size_tag_idx</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_payload_size_tag_idx</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_payload_size_tag_idx</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_payload_size_tag_idx</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">index_records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">header_tag</span> <span class="o">==</span> <span class="n">Rpm</span><span class="o">.</span><span class="n">HeaderTags</span><span class="o">.</span><span class="n">payload_size</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">index_records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">record_type</span> <span class="o">==</span> <span class="n">Rpm</span><span class="o">.</span><span class="n">RecordTypes</span><span class="o">.</span><span class="n">uint64</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">index_records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">num_values</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span>  <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_payload_size_tag_idx&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">Lead</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;In 2021, Panu Matilainen (a RPM developer) [described this</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;In 2021, Panu Matilainen (an RPM developer) [described this</span>
 <span class="sd">        structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)</span>
 <span class="sd">        as follows:</span>
 <span class="sd">        </span>
@@ -1010,10 +1144,15 @@ are not covered by this specification.</p>
 <span class="sd">        &gt; it&#39;s an rpm file in the first place, just ignore everything in it.</span>
 <span class="sd">        &gt; Literally everything.</span>
 <span class="sd">        </span>
-<span class="sd">        The fields with `valid` constraints are important, because these are the</span>
-<span class="sd">        same validations that RPM does (which means that any valid `.rpm` file</span>
-<span class="sd">        must pass them), but otherwise you should not make decisions based on the</span>
-<span class="sd">        values given here.</span>
+<span class="sd">        RPM 4.19 and older rejected packages that didn&#39;t meet the `valid`</span>
+<span class="sd">        constraints specified here, while RPM 4.20 and later only check the</span>
+<span class="sd">        `magic` - see</span>
+<span class="sd">        &lt;https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66&gt;.</span>
+<span class="sd">        Nevertheless, RPM still writes values that pass these checks for backwards</span>
+<span class="sd">        compatibility, so any `.rpm` file should pass.</span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">Rpm</span><span class="o">.</span><span class="n">Lead</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
@@ -1215,12 +1354,18 @@ are not covered by this specification.</p>
 
 
     <span class="k">class</span><span class="w"> </span><span class="nc">SignatureTagsStep</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">prev_size_tag_idx</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finds the first `signature_tags::size` and `signature_tags::long_size`</span>
+<span class="sd">        index record. Since Kaitai Struct doesn&#39;t have a built-in way to search an</span>
+<span class="sd">        array directly, each step receives the indexes found so far via</span>
+<span class="sd">        parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">prev_size_tag_idx</span><span class="p">,</span> <span class="n">prev_long_size_tag_idx</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">Rpm</span><span class="o">.</span><span class="n">SignatureTagsStep</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prev_size_tag_idx</span> <span class="o">=</span> <span class="n">prev_size_tag_idx</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_long_size_tag_idx</span> <span class="o">=</span> <span class="n">prev_long_size_tag_idx</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1229,6 +1374,14 @@ are not covered by this specification.</p>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">pass</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">long_size_tag_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_long_size_tag_idx&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_long_size_tag_idx</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_long_size_tag_idx</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_long_size_tag_idx</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_long_size_tag_idx</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">index_records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">signature_tag</span> <span class="o">==</span> <span class="n">Rpm</span><span class="o">.</span><span class="n">SignatureTags</span><span class="o">.</span><span class="n">long_size</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">index_records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">record_type</span> <span class="o">==</span> <span class="n">Rpm</span><span class="o">.</span><span class="n">RecordTypes</span><span class="o">.</span><span class="n">uint64</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">index_records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">num_values</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">))</span>  <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_long_size_tag_idx&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">size_tag_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1240,12 +1393,47 @@ are not covered by this specification.</p>
 
 
     <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_header_payload_size_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_header_payload_size_tag&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_header_payload_size_tag</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_header_payload_size_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_tags_steps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">payload_size_tag_idx</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_header_payload_size_tag&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_payload&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_payload</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_payload</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">has_header_payload_size_tag</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">has_signature_long_size_tag</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">has_signature_size_tag</span><span class="p">))</span> 
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_payload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_signature_long_size_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_signature_long_size_tag&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_signature_long_size_tag</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_signature_long_size_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">long_size_tag_idx</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_signature_long_size_tag&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">has_signature_size_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_signature_size_tag&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_signature_size_tag</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_signature_size_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size_tag_idx</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_signature_size_tag&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">header_payload_size_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_header_payload_size_tag&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_header_payload_size_tag</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_header_payload_size_tag</span><span class="p">:</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_header_payload_size_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">index_records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">header_tags_steps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">payload_size_tag_idx</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_header_payload_size_tag&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">len_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1257,12 +1445,25 @@ are not covered by this specification.</p>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">len_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Size of the (compressed) payload in bytes. v6 packages store it in</span>
+<span class="sd">        `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`</span>
+<span class="sd">        (which also includes the size of the header).</span>
+<span class="sd">        </span>
+<span class="sd">        If the header and payload together or the uncompressed payload reach</span>
+<span class="sd">        4 GiB, v4 packages use `signature_tags::long_size` instead - see</span>
+<span class="sd">        &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212&gt;.</span>
+<span class="sd">        </span>
+<span class="sd">        RPM never writes both (so this is just a hypothetical scenario), but if</span>
+<span class="sd">        both are present, `signature_tags::long_size` takes precedence over</span>
+<span class="sd">        `signature_tags::size`, just like in RPM&#39;s `printSize()` function:</span>
+<span class="sd">        &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_payload&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_payload</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_signature_size_tag</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_payload</span><span class="p">:</span>
             <span class="k">pass</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signature_size_tag</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_len_payload</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_payload_size_tag</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_header_payload_size_tag</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">signature_long_size_tag</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_signature_long_size_tag</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">signature_size_tag</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_payload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -1284,10 +1485,41 @@ are not covered by this specification.</p>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">payload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Archive of the package files, compressed using the method specified by</span>
+<span class="sd">        `header_tags::payload_compressor`. If this tag is missing, it&#39;s almost</span>
+<span class="sd">        certainly uncompressed (except for some very old v3 packages built by RPM</span>
+<span class="sd">        3.0.3 or earlier, which didn&#39;t use the tag because the payload was always</span>
+<span class="sd">        gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing</span>
+<span class="sd">        the tag). However, RPM reads the payload as gzip by default - see</span>
+<span class="sd">        &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645&gt;.</span>
+<span class="sd">        Since zlib&#39;s gzip reader passes data that is not in gzip format through</span>
+<span class="sd">        unchanged (see</span>
+<span class="sd">        &lt;https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389&gt;),</span>
+<span class="sd">        this also works for uncompressed payloads.</span>
+<span class="sd">        </span>
+<span class="sd">        The archive format is given by `header_tags::payload_format`, which is</span>
+<span class="sd">        `&quot;cpio&quot;` for regular packages. In v4/v3 packages, it&#39;s a SVR4 cpio archive</span>
+<span class="sd">        without a checksum (the `070701` variant) - the [v4 format</span>
+<span class="sd">        documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)</span>
+<span class="sd">        claims &quot;with a CRC checksum&quot;, but that&#39;s not true since RPM 2.4.4</span>
+<span class="sd">        (released in 1997).</span>
+<span class="sd">        </span>
+<span class="sd">        v6 packages and v4 packages with a file over 4 GiB use a stripped-down</span>
+<span class="sd">        variant of cpio with the magic `07070X`. Its file headers only hold the</span>
+<span class="sd">        index of the file in the file lists of the RPM header, which is the only</span>
+<span class="sd">        place where the file names, sizes and other metadata are stored.</span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_payload&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_payload</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_signature_size_tag</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_payload</span><span class="p">:</span>
             <span class="k">pass</span>
             <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_payload</span><span class="p">)</span>
@@ -1295,6 +1527,17 @@ are not covered by this specification.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_payload&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">signature_long_size_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_signature_long_size_tag&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_signature_long_size_tag</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_signature_long_size_tag</span><span class="p">:</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_signature_long_size_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">index_records</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">signature_tags_steps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">long_size_tag_idx</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_signature_long_size_tag&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">signature_size_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

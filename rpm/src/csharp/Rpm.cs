@@ -1,28 +1,59 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 using System.Collections.Generic;
+using System;
 
 namespace Kaitai
 {
 
     /// <summary>
-    /// This parser is for the RPM version 3 file format which is the current version
-    /// of the file format used by RPM 2.1 and later (including RPM version 4.x, which
-    /// is the current version of the RPM tool). There are historical versions of the
-    /// RPM file format, as well as a currently abandoned fork (rpm5). These formats
-    /// are not covered by this specification.
+    /// An RPM package consists of the lead, the signature (contains digests and
+    /// signatures), the header (contains the package metadata) and the payload (a
+    /// compressed archive of the package files).
+    /// 
+    /// This structure is shared by all package format versions supported by this
+    /// Kaitai Struct implementation:
+    /// 
+    /// * v3, written by RPM 2.1 to 3.x.
+    /// * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+    ///   to 4 - see
+    ///   &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192&gt;.
+    ///   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+    ///   default - see
+    ///   &lt;https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch&gt;.
+    /// * v6, written by upstream RPM 6.0 by default - see
+    ///   &lt;https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37&gt;.
+    /// 
+    /// The versions differ mainly in the tags they use: v6 packages store all sizes
+    /// as 64-bit integers, carry only cryptographic data in the signature and always
+    /// use the stripped-down cpio archive format (see the `payload` instance).
+    /// 
+    /// The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+    /// this implementation.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md">Source</a>
+    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md">Source</a>
+    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="http://ftp.rpm.org/max-rpm/">Source</a>
+    /// Reference: <a href="https://ftp.osuosl.org/pub/rpm/max-rpm/">Source</a>
     /// </remarks>
     public partial class Rpm : KaitaiStruct
     {
@@ -34,6 +65,7 @@ namespace Kaitai
 
         public enum Architectures
         {
+            NotSet = 0,
             X86 = 1,
             Alpha = 2,
             Sparc = 3,
@@ -57,6 +89,7 @@ namespace Kaitai
             Mips64R6 = 21,
             Riscv = 22,
             Loongarch64 = 23,
+            E2k = 24,
             NoArch = 255,
         }
 
@@ -202,7 +235,7 @@ namespace Kaitai
             FileDependsIdx = 1143,
             FileDependsNum = 1144,
             DependsDict = 1145,
-            SourcePkgid = 1146,
+            SourceSigMd5 = 1146,
             FileContextsObsolete = 1147,
             FsContextsObsolete = 1148,
             ReContextsObsolete = 1149,
@@ -344,12 +377,12 @@ namespace Kaitai
             TransFileTriggerType = 5089,
             FileSignatures = 5090,
             FileSignatureLength = 5091,
-            PayloadDigest = 5092,
-            PayloadDigestAlgo = 5093,
+            PayloadSha256 = 5092,
+            PayloadSha256AlgoObsolete = 5093,
             AutoInstalledUnimplemented = 5094,
             IdentityUnimplemented = 5095,
             ModularityLabel = 5096,
-            PayloadDigestAlt = 5097,
+            PayloadSha256Alt = 5097,
             ArchSuffix = 5098,
             Spec = 5099,
             TranslationUrl = 5100,
@@ -362,10 +395,26 @@ namespace Kaitai
             PreUntransFlags = 5107,
             PostUntransFlags = 5108,
             SysUsers = 5109,
+            BuildSystemInternal = 5110,
+            BuildOptionInternal = 5111,
+            PayloadSize = 5112,
+            PayloadSizeAlt = 5113,
+            RpmFormat = 5114,
+            FileMimeIndex = 5115,
+            MimeDict = 5116,
+            FileMimes = 5117,
+            PackageDigests = 5118,
+            PackageDigestAlgos = 5119,
+            SourceNevr = 5120,
+            PayloadSha512 = 5121,
+            PayloadSha512Alt = 5122,
+            PayloadSha3256 = 5123,
+            PayloadSha3256Alt = 5124,
         }
 
         public enum OperatingSystems
         {
+            NotSet = 0,
             Linux = 1,
             Irix = 2,
             NoOs = 255,
@@ -373,7 +422,6 @@ namespace Kaitai
 
         public enum RecordTypes
         {
-            NotImplemented = 0,
             Char = 1,
             Uint8 = 2,
             Uint16 = 3,
@@ -408,6 +456,9 @@ namespace Kaitai
             FileSignatureLength = 275,
             VeritySignatures = 276,
             VeritySignatureAlgo = 277,
+            Openpgp = 278,
+            Sha3256 = 279,
+            Reserved = 999,
             Size = 1000,
             LeMd51Obsolete = 1001,
             Pgp = 1002,
@@ -422,12 +473,17 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
+            f_hasHeaderPayloadSizeTag = false;
+            f_hasPayload = false;
+            f_hasSignatureLongSizeTag = false;
             f_hasSignatureSizeTag = false;
+            f_headerPayloadSizeTag = false;
             f_lenHeader = false;
             f_lenPayload = false;
             f_ofsHeader = false;
             f_ofsPayload = false;
             f_payload = false;
+            f_signatureLongSizeTag = false;
             f_signatureSizeTag = false;
             _read();
         }
@@ -446,7 +502,12 @@ namespace Kaitai
             _signatureTagsSteps = new List<SignatureTagsStep>();
             for (var i = 0; i < Signature.HeaderRecord.NumIndexRecords; i++)
             {
-                _signatureTagsSteps.Add(new SignatureTagsStep(i, (i < 1 ? -1 : SignatureTagsSteps[i - 1].SizeTagIdx), m_io, this, m_root));
+                _signatureTagsSteps.Add(new SignatureTagsStep(i, (i != 0 ? SignatureTagsSteps[i - 1].SizeTagIdx : -1), (i != 0 ? SignatureTagsSteps[i - 1].LongSizeTagIdx : -1), m_io, this, m_root));
+            }
+            _headerTagsSteps = new List<HeaderTagsStep>();
+            for (var i = 0; i < Header.HeaderRecord.NumIndexRecords; i++)
+            {
+                _headerTagsSteps.Add(new HeaderTagsStep(i, (i != 0 ? HeaderTagsSteps[i - 1].PayloadSizeTagIdx : -1), m_io, this, m_root));
             }
         }
         public partial class Dummy : KaitaiStruct
@@ -548,6 +609,10 @@ namespace Kaitai
             {
                 _tagRaw = m_io.ReadU4be();
                 _recordType = ((Rpm.RecordTypes) m_io.ReadU4be());
+                if (!Enum.IsDefined(typeof(RecordTypes), _recordType))
+                {
+                    throw new ValidationNotInEnumError(_recordType, m_io, "/types/header_index_record/seq/1");
+                }
                 _ofsBody = m_io.ReadU4be();
                 _count = m_io.ReadU4be();
             }
@@ -716,7 +781,15 @@ namespace Kaitai
                 {
                     throw new ValidationLessThanError(1, _numIndexRecords, m_io, "/types/header_record/seq/2");
                 }
+                if (!(_numIndexRecords <= (M_Parent.IsSignature ? 32 : 65535)))
+                {
+                    throw new ValidationGreaterThanError((M_Parent.IsSignature ? 32 : 65535), _numIndexRecords, m_io, "/types/header_record/seq/2");
+                }
                 _lenStorageSection = m_io.ReadU4be();
+                if (!(_lenStorageSection <= (M_Parent.IsSignature ? (64 * 1024) * 1024 : 268435455)))
+                {
+                    throw new ValidationGreaterThanError((M_Parent.IsSignature ? (64 * 1024) * 1024 : 268435455), _lenStorageSection, m_io, "/types/header_record/seq/3");
+                }
             }
             private byte[] _magic;
             private byte[] _reserved;
@@ -738,7 +811,48 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// In 2021, Panu Matilainen (a RPM developer) [described this
+        /// Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+        /// which is where v6 packages store the payload size.
+        /// </summary>
+        public partial class HeaderTagsStep : KaitaiStruct
+        {
+            public HeaderTagsStep(int p_idx, int p_prevPayloadSizeTagIdx, KaitaiStream p__io, Rpm p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _idx = p_idx;
+                _prevPayloadSizeTagIdx = p_prevPayloadSizeTagIdx;
+                f_payloadSizeTagIdx = false;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private bool f_payloadSizeTagIdx;
+            private int _payloadSizeTagIdx;
+            public int PayloadSizeTagIdx
+            {
+                get
+                {
+                    if (f_payloadSizeTagIdx)
+                        return _payloadSizeTagIdx;
+                    f_payloadSizeTagIdx = true;
+                    _payloadSizeTagIdx = (int) ((PrevPayloadSizeTagIdx != -1 ? PrevPayloadSizeTagIdx : ( ((M_Parent.Header.IndexRecords[Idx].HeaderTag == Rpm.HeaderTags.PayloadSize) && (M_Parent.Header.IndexRecords[Idx].RecordType == Rpm.RecordTypes.Uint64) && (M_Parent.Header.IndexRecords[Idx].NumValues >= 1))  ? Idx : -1)));
+                    return _payloadSizeTagIdx;
+                }
+            }
+            private int _idx;
+            private int _prevPayloadSizeTagIdx;
+            private Rpm m_root;
+            private Rpm m_parent;
+            public int Idx { get { return _idx; } }
+            public int PrevPayloadSizeTagIdx { get { return _prevPayloadSizeTagIdx; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// In 2021, Panu Matilainen (an RPM developer) [described this
         /// structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
         /// as follows:
         /// 
@@ -747,11 +861,16 @@ namespace Kaitai
         /// &gt; it's an rpm file in the first place, just ignore everything in it.
         /// &gt; Literally everything.
         /// 
-        /// The fields with `valid` constraints are important, because these are the
-        /// same validations that RPM does (which means that any valid `.rpm` file
-        /// must pass them), but otherwise you should not make decisions based on the
-        /// values given here.
+        /// RPM 4.19 and older rejected packages that didn't meet the `valid`
+        /// constraints specified here, while RPM 4.20 and later only check the
+        /// `magic` - see
+        /// &lt;https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66&gt;.
+        /// Nevertheless, RPM still writes values that pass these checks for backwards
+        /// compatibility, so any `.rpm` file should pass.
         /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md">Source</a>
+        /// </remarks>
         public partial class Lead : KaitaiStruct
         {
             public static Lead FromFile(string fileName)
@@ -800,6 +919,10 @@ namespace Kaitai
             public Architectures Architecture { get { return _architecture; } }
             public string PackageName { get { return _packageName; } }
             public OperatingSystems Os { get { return _os; } }
+
+            /// <remarks>
+            /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21">Source</a>
+            /// </remarks>
             public ushort SignatureType { get { return _signatureType; } }
             public byte[] Reserved { get { return _reserved; } }
             public Rpm M_Root { get { return m_root; } }
@@ -1020,27 +1143,52 @@ namespace Kaitai
             private Rpm m_root;
             private Rpm.Lead m_parent;
 
+            /// <summary>
+            /// 3 in v3 and v4 packages, 4 in v6 packages.
+            /// </summary>
             /// <remarks>
-            /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
+            /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52">Source</a>
             /// </remarks>
             public byte Major { get { return _major; } }
             public byte Minor { get { return _minor; } }
             public Rpm M_Root { get { return m_root; } }
             public Rpm.Lead M_Parent { get { return m_parent; } }
         }
+
+        /// <summary>
+        /// Finds the first `signature_tags::size` and `signature_tags::long_size`
+        /// index record. Since Kaitai Struct doesn't have a built-in way to search an
+        /// array directly, each step receives the indexes found so far via
+        /// parameters.
+        /// </summary>
         public partial class SignatureTagsStep : KaitaiStruct
         {
-            public SignatureTagsStep(int p_idx, int p_prevSizeTagIdx, KaitaiStream p__io, Rpm p__parent = null, Rpm p__root = null) : base(p__io)
+            public SignatureTagsStep(int p_idx, int p_prevSizeTagIdx, int p_prevLongSizeTagIdx, KaitaiStream p__io, Rpm p__parent = null, Rpm p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
                 _idx = p_idx;
                 _prevSizeTagIdx = p_prevSizeTagIdx;
+                _prevLongSizeTagIdx = p_prevLongSizeTagIdx;
+                f_longSizeTagIdx = false;
                 f_sizeTagIdx = false;
                 _read();
             }
             private void _read()
             {
+            }
+            private bool f_longSizeTagIdx;
+            private int _longSizeTagIdx;
+            public int LongSizeTagIdx
+            {
+                get
+                {
+                    if (f_longSizeTagIdx)
+                        return _longSizeTagIdx;
+                    f_longSizeTagIdx = true;
+                    _longSizeTagIdx = (int) ((PrevLongSizeTagIdx != -1 ? PrevLongSizeTagIdx : ( ((M_Parent.Signature.IndexRecords[Idx].SignatureTag == Rpm.SignatureTags.LongSize) && (M_Parent.Signature.IndexRecords[Idx].RecordType == Rpm.RecordTypes.Uint64) && (M_Parent.Signature.IndexRecords[Idx].NumValues >= 1))  ? Idx : -1)));
+                    return _longSizeTagIdx;
+                }
             }
             private bool f_sizeTagIdx;
             private int _sizeTagIdx;
@@ -1057,12 +1205,53 @@ namespace Kaitai
             }
             private int _idx;
             private int _prevSizeTagIdx;
+            private int _prevLongSizeTagIdx;
             private Rpm m_root;
             private Rpm m_parent;
             public int Idx { get { return _idx; } }
             public int PrevSizeTagIdx { get { return _prevSizeTagIdx; } }
+            public int PrevLongSizeTagIdx { get { return _prevLongSizeTagIdx; } }
             public Rpm M_Root { get { return m_root; } }
             public Rpm M_Parent { get { return m_parent; } }
+        }
+        private bool f_hasHeaderPayloadSizeTag;
+        private bool _hasHeaderPayloadSizeTag;
+        public bool HasHeaderPayloadSizeTag
+        {
+            get
+            {
+                if (f_hasHeaderPayloadSizeTag)
+                    return _hasHeaderPayloadSizeTag;
+                f_hasHeaderPayloadSizeTag = true;
+                _hasHeaderPayloadSizeTag = (bool) (HeaderTagsSteps[HeaderTagsSteps.Count - 1].PayloadSizeTagIdx != -1);
+                return _hasHeaderPayloadSizeTag;
+            }
+        }
+        private bool f_hasPayload;
+        private bool _hasPayload;
+        public bool HasPayload
+        {
+            get
+            {
+                if (f_hasPayload)
+                    return _hasPayload;
+                f_hasPayload = true;
+                _hasPayload = (bool) ( ((HasHeaderPayloadSizeTag) || (HasSignatureLongSizeTag) || (HasSignatureSizeTag)) );
+                return _hasPayload;
+            }
+        }
+        private bool f_hasSignatureLongSizeTag;
+        private bool _hasSignatureLongSizeTag;
+        public bool HasSignatureLongSizeTag
+        {
+            get
+            {
+                if (f_hasSignatureLongSizeTag)
+                    return _hasSignatureLongSizeTag;
+                f_hasSignatureLongSizeTag = true;
+                _hasSignatureLongSizeTag = (bool) (SignatureTagsSteps[SignatureTagsSteps.Count - 1].LongSizeTagIdx != -1);
+                return _hasSignatureLongSizeTag;
+            }
         }
         private bool f_hasSignatureSizeTag;
         private bool _hasSignatureSizeTag;
@@ -1075,6 +1264,21 @@ namespace Kaitai
                 f_hasSignatureSizeTag = true;
                 _hasSignatureSizeTag = (bool) (SignatureTagsSteps[SignatureTagsSteps.Count - 1].SizeTagIdx != -1);
                 return _hasSignatureSizeTag;
+            }
+        }
+        private bool f_headerPayloadSizeTag;
+        private HeaderIndexRecord _headerPayloadSizeTag;
+        public HeaderIndexRecord HeaderPayloadSizeTag
+        {
+            get
+            {
+                if (f_headerPayloadSizeTag)
+                    return _headerPayloadSizeTag;
+                f_headerPayloadSizeTag = true;
+                if (HasHeaderPayloadSizeTag) {
+                    _headerPayloadSizeTag = (HeaderIndexRecord) (Header.IndexRecords[HeaderTagsSteps[HeaderTagsSteps.Count - 1].PayloadSizeTagIdx]);
+                }
+                return _headerPayloadSizeTag;
             }
         }
         private bool f_lenHeader;
@@ -1092,6 +1296,21 @@ namespace Kaitai
         }
         private bool f_lenPayload;
         private int? _lenPayload;
+
+        /// <summary>
+        /// Size of the (compressed) payload in bytes. v6 packages store it in
+        /// `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+        /// (which also includes the size of the header).
+        /// 
+        /// If the header and payload together or the uncompressed payload reach
+        /// 4 GiB, v4 packages use `signature_tags::long_size` instead - see
+        /// &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212&gt;.
+        /// 
+        /// RPM never writes both (so this is just a hypothetical scenario), but if
+        /// both are present, `signature_tags::long_size` takes precedence over
+        /// `signature_tags::size`, just like in RPM's `printSize()` function:
+        /// &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43&gt;
+        /// </summary>
         public int? LenPayload
         {
             get
@@ -1099,8 +1318,8 @@ namespace Kaitai
                 if (f_lenPayload)
                     return _lenPayload;
                 f_lenPayload = true;
-                if (HasSignatureSizeTag) {
-                    _lenPayload = (int) (((Rpm.RecordTypeUint32) (SignatureSizeTag.Body)).Values[0] - LenHeader);
+                if (HasPayload) {
+                    _lenPayload = (int) ((HasHeaderPayloadSizeTag ? ((Rpm.RecordTypeUint64) (HeaderPayloadSizeTag.Body)).Values[0] : (HasSignatureLongSizeTag ? ((Rpm.RecordTypeUint64) (SignatureLongSizeTag.Body)).Values[0] - LenHeader : ((Rpm.RecordTypeUint32) (SignatureSizeTag.Body)).Values[0] - LenHeader)));
                 }
                 return _lenPayload;
             }
@@ -1133,6 +1352,38 @@ namespace Kaitai
         }
         private bool f_payload;
         private byte[] _payload;
+
+        /// <summary>
+        /// Archive of the package files, compressed using the method specified by
+        /// `header_tags::payload_compressor`. If this tag is missing, it's almost
+        /// certainly uncompressed (except for some very old v3 packages built by RPM
+        /// 3.0.3 or earlier, which didn't use the tag because the payload was always
+        /// gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+        /// the tag). However, RPM reads the payload as gzip by default - see
+        /// &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645&gt;.
+        /// Since zlib's gzip reader passes data that is not in gzip format through
+        /// unchanged (see
+        /// &lt;https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389&gt;),
+        /// this also works for uncompressed payloads.
+        /// 
+        /// The archive format is given by `header_tags::payload_format`, which is
+        /// `&quot;cpio&quot;` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+        /// without a checksum (the `070701` variant) - the [v4 format
+        /// documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+        /// claims &quot;with a CRC checksum&quot;, but that's not true since RPM 2.4.4
+        /// (released in 1997).
+        /// 
+        /// v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+        /// variant of cpio with the magic `07070X`. Its file headers only hold the
+        /// index of the file in the file lists of the RPM header, which is the only
+        /// place where the file names, sizes and other metadata are stored.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload">Source</a>
+        /// </remarks>
         public byte[] Payload
         {
             get
@@ -1140,13 +1391,28 @@ namespace Kaitai
                 if (f_payload)
                     return _payload;
                 f_payload = true;
-                if (HasSignatureSizeTag) {
+                if (HasPayload) {
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsPayload);
                     _payload = m_io.ReadBytes(LenPayload);
                     m_io.Seek(_pos);
                 }
                 return _payload;
+            }
+        }
+        private bool f_signatureLongSizeTag;
+        private HeaderIndexRecord _signatureLongSizeTag;
+        public HeaderIndexRecord SignatureLongSizeTag
+        {
+            get
+            {
+                if (f_signatureLongSizeTag)
+                    return _signatureLongSizeTag;
+                f_signatureLongSizeTag = true;
+                if (HasSignatureLongSizeTag) {
+                    _signatureLongSizeTag = (HeaderIndexRecord) (Signature.IndexRecords[SignatureTagsSteps[SignatureTagsSteps.Count - 1].LongSizeTagIdx]);
+                }
+                return _signatureLongSizeTag;
             }
         }
         private bool f_signatureSizeTag;
@@ -1171,6 +1437,7 @@ namespace Kaitai
         private Header _header;
         private byte[] __unnamed5;
         private List<SignatureTagsStep> _signatureTagsSteps;
+        private List<HeaderTagsStep> _headerTagsSteps;
         private Rpm m_root;
         private KaitaiStruct m_parent;
         public Lead Lead { get { return _lead; } }
@@ -1180,6 +1447,7 @@ namespace Kaitai
         public Header Header { get { return _header; } }
         public byte[] Unnamed_5 { get { return __unnamed5; } }
         public List<SignatureTagsStep> SignatureTagsSteps { get { return _signatureTagsSteps; } }
+        public List<HeaderTagsStep> HeaderTagsSteps { get { return _headerTagsSteps; } }
         public Rpm M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
     }

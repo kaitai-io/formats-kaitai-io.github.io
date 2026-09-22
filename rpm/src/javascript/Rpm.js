@@ -10,19 +10,42 @@
   }
 })(typeof self !== 'undefined' ? self : this, function (Rpm_, KaitaiStream) {
 /**
- * This parser is for the RPM version 3 file format which is the current version
- * of the file format used by RPM 2.1 and later (including RPM version 4.x, which
- * is the current version of the RPM tool). There are historical versions of the
- * RPM file format, as well as a currently abandoned fork (rpm5). These formats
- * are not covered by this specification.
- * @see {@link https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md|Source}
- * @see {@link https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md|Source}
+ * An RPM package consists of the lead, the signature (contains digests and
+ * signatures), the header (contains the package metadata) and the payload (a
+ * compressed archive of the package files).
+ * 
+ * This structure is shared by all package format versions supported by this
+ * Kaitai Struct implementation:
+ * 
+ * * v3, written by RPM 2.1 to 3.x.
+ * * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+ *   to 4 - see
+ *   <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192>.
+ *   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+ *   default - see
+ *   <https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch>.
+ * * v6, written by upstream RPM 6.0 by default - see
+ *   <https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37>.
+ * 
+ * The versions differ mainly in the tags they use: v6 packages store all sizes
+ * as 64-bit integers, carry only cryptographic data in the signature and always
+ * use the stripped-down cpio archive format (see the `payload` instance).
+ * 
+ * The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+ * this implementation.
+ * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md|Source}
+ * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md|Source}
+ * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md|Source}
+ * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md|Source}
+ * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md|Source}
+ * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md|Source}
  * @see {@link https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html|Source}
- * @see {@link http://ftp.rpm.org/max-rpm/|Source}
+ * @see {@link https://ftp.osuosl.org/pub/rpm/max-rpm/|Source}
  */
 
 var Rpm = (function() {
   Rpm.Architectures = Object.freeze({
+    NOT_SET: 0,
     X86: 1,
     ALPHA: 2,
     SPARC: 3,
@@ -46,8 +69,10 @@ var Rpm = (function() {
     MIPS64_R6: 21,
     RISCV: 22,
     LOONGARCH64: 23,
+    E2K: 24,
     NO_ARCH: 255,
 
+    0: "NOT_SET",
     1: "X86",
     2: "ALPHA",
     3: "SPARC",
@@ -71,6 +96,7 @@ var Rpm = (function() {
     21: "MIPS64_R6",
     22: "RISCV",
     23: "LOONGARCH64",
+    24: "E2K",
     255: "NO_ARCH",
   });
 
@@ -215,7 +241,7 @@ var Rpm = (function() {
     FILE_DEPENDS_IDX: 1143,
     FILE_DEPENDS_NUM: 1144,
     DEPENDS_DICT: 1145,
-    SOURCE_PKGID: 1146,
+    SOURCE_SIG_MD5: 1146,
     FILE_CONTEXTS_OBSOLETE: 1147,
     FS_CONTEXTS_OBSOLETE: 1148,
     RE_CONTEXTS_OBSOLETE: 1149,
@@ -357,12 +383,12 @@ var Rpm = (function() {
     TRANS_FILE_TRIGGER_TYPE: 5089,
     FILE_SIGNATURES: 5090,
     FILE_SIGNATURE_LENGTH: 5091,
-    PAYLOAD_DIGEST: 5092,
-    PAYLOAD_DIGEST_ALGO: 5093,
+    PAYLOAD_SHA256: 5092,
+    PAYLOAD_SHA256_ALGO_OBSOLETE: 5093,
     AUTO_INSTALLED_UNIMPLEMENTED: 5094,
     IDENTITY_UNIMPLEMENTED: 5095,
     MODULARITY_LABEL: 5096,
-    PAYLOAD_DIGEST_ALT: 5097,
+    PAYLOAD_SHA256_ALT: 5097,
     ARCH_SUFFIX: 5098,
     SPEC: 5099,
     TRANSLATION_URL: 5100,
@@ -375,6 +401,21 @@ var Rpm = (function() {
     PRE_UNTRANS_FLAGS: 5107,
     POST_UNTRANS_FLAGS: 5108,
     SYS_USERS: 5109,
+    BUILD_SYSTEM_INTERNAL: 5110,
+    BUILD_OPTION_INTERNAL: 5111,
+    PAYLOAD_SIZE: 5112,
+    PAYLOAD_SIZE_ALT: 5113,
+    RPM_FORMAT: 5114,
+    FILE_MIME_INDEX: 5115,
+    MIME_DICT: 5116,
+    FILE_MIMES: 5117,
+    PACKAGE_DIGESTS: 5118,
+    PACKAGE_DIGEST_ALGOS: 5119,
+    SOURCE_NEVR: 5120,
+    PAYLOAD_SHA512: 5121,
+    PAYLOAD_SHA512_ALT: 5122,
+    PAYLOAD_SHA3_256: 5123,
+    PAYLOAD_SHA3_256_ALT: 5124,
 
     62: "SIGNATURES",
     63: "HEADER_IMMUTABLE",
@@ -516,7 +557,7 @@ var Rpm = (function() {
     1143: "FILE_DEPENDS_IDX",
     1144: "FILE_DEPENDS_NUM",
     1145: "DEPENDS_DICT",
-    1146: "SOURCE_PKGID",
+    1146: "SOURCE_SIG_MD5",
     1147: "FILE_CONTEXTS_OBSOLETE",
     1148: "FS_CONTEXTS_OBSOLETE",
     1149: "RE_CONTEXTS_OBSOLETE",
@@ -658,12 +699,12 @@ var Rpm = (function() {
     5089: "TRANS_FILE_TRIGGER_TYPE",
     5090: "FILE_SIGNATURES",
     5091: "FILE_SIGNATURE_LENGTH",
-    5092: "PAYLOAD_DIGEST",
-    5093: "PAYLOAD_DIGEST_ALGO",
+    5092: "PAYLOAD_SHA256",
+    5093: "PAYLOAD_SHA256_ALGO_OBSOLETE",
     5094: "AUTO_INSTALLED_UNIMPLEMENTED",
     5095: "IDENTITY_UNIMPLEMENTED",
     5096: "MODULARITY_LABEL",
-    5097: "PAYLOAD_DIGEST_ALT",
+    5097: "PAYLOAD_SHA256_ALT",
     5098: "ARCH_SUFFIX",
     5099: "SPEC",
     5100: "TRANSLATION_URL",
@@ -676,20 +717,36 @@ var Rpm = (function() {
     5107: "PRE_UNTRANS_FLAGS",
     5108: "POST_UNTRANS_FLAGS",
     5109: "SYS_USERS",
+    5110: "BUILD_SYSTEM_INTERNAL",
+    5111: "BUILD_OPTION_INTERNAL",
+    5112: "PAYLOAD_SIZE",
+    5113: "PAYLOAD_SIZE_ALT",
+    5114: "RPM_FORMAT",
+    5115: "FILE_MIME_INDEX",
+    5116: "MIME_DICT",
+    5117: "FILE_MIMES",
+    5118: "PACKAGE_DIGESTS",
+    5119: "PACKAGE_DIGEST_ALGOS",
+    5120: "SOURCE_NEVR",
+    5121: "PAYLOAD_SHA512",
+    5122: "PAYLOAD_SHA512_ALT",
+    5123: "PAYLOAD_SHA3_256",
+    5124: "PAYLOAD_SHA3_256_ALT",
   });
 
   Rpm.OperatingSystems = Object.freeze({
+    NOT_SET: 0,
     LINUX: 1,
     IRIX: 2,
     NO_OS: 255,
 
+    0: "NOT_SET",
     1: "LINUX",
     2: "IRIX",
     255: "NO_OS",
   });
 
   Rpm.RecordTypes = Object.freeze({
-    NOT_IMPLEMENTED: 0,
     CHAR: 1,
     UINT8: 2,
     UINT16: 3,
@@ -700,7 +757,6 @@ var Rpm = (function() {
     STRING_ARRAY: 8,
     I18N_STRING: 9,
 
-    0: "NOT_IMPLEMENTED",
     1: "CHAR",
     2: "UINT8",
     3: "UINT16",
@@ -736,6 +792,9 @@ var Rpm = (function() {
     FILE_SIGNATURE_LENGTH: 275,
     VERITY_SIGNATURES: 276,
     VERITY_SIGNATURE_ALGO: 277,
+    OPENPGP: 278,
+    SHA3_256: 279,
+    RESERVED: 999,
     SIZE: 1000,
     LE_MD5_1_OBSOLETE: 1001,
     PGP: 1002,
@@ -761,6 +820,9 @@ var Rpm = (function() {
     275: "FILE_SIGNATURE_LENGTH",
     276: "VERITY_SIGNATURES",
     277: "VERITY_SIGNATURE_ALGO",
+    278: "OPENPGP",
+    279: "SHA3_256",
+    999: "RESERVED",
     1000: "SIZE",
     1001: "LE_MD5_1_OBSOLETE",
     1002: "PGP",
@@ -792,7 +854,11 @@ var Rpm = (function() {
     }
     this.signatureTagsSteps = [];
     for (var i = 0; i < this.signature.headerRecord.numIndexRecords; i++) {
-      this.signatureTagsSteps.push(new SignatureTagsStep(this._io, this, this._root, i, (i < 1 ? -1 : this.signatureTagsSteps[i - 1].sizeTagIdx)));
+      this.signatureTagsSteps.push(new SignatureTagsStep(this._io, this, this._root, i, (i != 0 ? this.signatureTagsSteps[i - 1].sizeTagIdx : -1), (i != 0 ? this.signatureTagsSteps[i - 1].longSizeTagIdx : -1)));
+    }
+    this.headerTagsSteps = [];
+    for (var i = 0; i < this.header.headerRecord.numIndexRecords; i++) {
+      this.headerTagsSteps.push(new HeaderTagsStep(this._io, this, this._root, i, (i != 0 ? this.headerTagsSteps[i - 1].payloadSizeTagIdx : -1)));
     }
   }
 
@@ -858,6 +924,9 @@ var Rpm = (function() {
     HeaderIndexRecord.prototype._read = function() {
       this.tagRaw = this._io.readU4be();
       this.recordType = this._io.readU4be();
+      if (!Object.prototype.hasOwnProperty.call(Rpm.RecordTypes, this.recordType)) {
+        throw new KaitaiStream.ValidationNotInEnumError(this.recordType, this._io, "/types/header_index_record/seq/1");
+      }
       this.ofsBody = this._io.readU4be();
       this.count = this._io.readU4be();
     }
@@ -974,7 +1043,13 @@ var Rpm = (function() {
       if (!(this.numIndexRecords >= 1)) {
         throw new KaitaiStream.ValidationLessThanError(1, this.numIndexRecords, this._io, "/types/header_record/seq/2");
       }
+      if (!(this.numIndexRecords <= (this._parent.isSignature ? 32 : 65535))) {
+        throw new KaitaiStream.ValidationGreaterThanError((this._parent.isSignature ? 32 : 65535), this.numIndexRecords, this._io, "/types/header_record/seq/2");
+      }
       this.lenStorageSection = this._io.readU4be();
+      if (!(this.lenStorageSection <= (this._parent.isSignature ? (64 * 1024) * 1024 : 268435455))) {
+        throw new KaitaiStream.ValidationGreaterThanError((this._parent.isSignature ? (64 * 1024) * 1024 : 268435455), this.lenStorageSection, this._io, "/types/header_record/seq/3");
+      }
     }
 
     /**
@@ -986,7 +1061,36 @@ var Rpm = (function() {
   })();
 
   /**
-   * In 2021, Panu Matilainen (a RPM developer) [described this
+   * Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+   * which is where v6 packages store the payload size.
+   */
+
+  var HeaderTagsStep = Rpm.HeaderTagsStep = (function() {
+    function HeaderTagsStep(_io, _parent, _root, idx, prevPayloadSizeTagIdx) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.idx = idx;
+      this.prevPayloadSizeTagIdx = prevPayloadSizeTagIdx;
+
+      this._read();
+    }
+    HeaderTagsStep.prototype._read = function() {
+    }
+    Object.defineProperty(HeaderTagsStep.prototype, 'payloadSizeTagIdx', {
+      get: function() {
+        if (this._m_payloadSizeTagIdx !== undefined)
+          return this._m_payloadSizeTagIdx;
+        this._m_payloadSizeTagIdx = (this.prevPayloadSizeTagIdx != -1 ? this.prevPayloadSizeTagIdx : ( ((this._parent.header.indexRecords[this.idx].headerTag == Rpm.HeaderTags.PAYLOAD_SIZE) && (this._parent.header.indexRecords[this.idx].recordType == Rpm.RecordTypes.UINT64) && (this._parent.header.indexRecords[this.idx].numValues >= 1))  ? this.idx : -1));
+        return this._m_payloadSizeTagIdx;
+      }
+    });
+
+    return HeaderTagsStep;
+  })();
+
+  /**
+   * In 2021, Panu Matilainen (an RPM developer) [described this
    * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
    * as follows:
    * 
@@ -995,10 +1099,13 @@ var Rpm = (function() {
    * > it's an rpm file in the first place, just ignore everything in it.
    * > Literally everything.
    * 
-   * The fields with `valid` constraints are important, because these are the
-   * same validations that RPM does (which means that any valid `.rpm` file
-   * must pass them), but otherwise you should not make decisions based on the
-   * values given here.
+   * RPM 4.19 and older rejected packages that didn't meet the `valid`
+   * constraints specified here, while RPM 4.20 and later only check the
+   * `magic` - see
+   * <https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66>.
+   * Nevertheless, RPM still writes values that pass these checks for backwards
+   * compatibility, so any `.rpm` file should pass.
+   * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md|Source}
    */
 
   var Lead = Rpm.Lead = (function() {
@@ -1025,6 +1132,10 @@ var Rpm = (function() {
       }
       this.reserved = this._io.readBytes(16);
     }
+
+    /**
+     * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21|Source}
+     */
 
     return Lead;
   })();
@@ -1181,24 +1292,41 @@ var Rpm = (function() {
     }
 
     /**
-     * @see {@link https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102|Source}
+     * 3 in v3 and v4 packages, 4 in v6 packages.
+     * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52|Source}
      */
 
     return RpmVersion;
   })();
 
+  /**
+   * Finds the first `signature_tags::size` and `signature_tags::long_size`
+   * index record. Since Kaitai Struct doesn't have a built-in way to search an
+   * array directly, each step receives the indexes found so far via
+   * parameters.
+   */
+
   var SignatureTagsStep = Rpm.SignatureTagsStep = (function() {
-    function SignatureTagsStep(_io, _parent, _root, idx, prevSizeTagIdx) {
+    function SignatureTagsStep(_io, _parent, _root, idx, prevSizeTagIdx, prevLongSizeTagIdx) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root;
       this.idx = idx;
       this.prevSizeTagIdx = prevSizeTagIdx;
+      this.prevLongSizeTagIdx = prevLongSizeTagIdx;
 
       this._read();
     }
     SignatureTagsStep.prototype._read = function() {
     }
+    Object.defineProperty(SignatureTagsStep.prototype, 'longSizeTagIdx', {
+      get: function() {
+        if (this._m_longSizeTagIdx !== undefined)
+          return this._m_longSizeTagIdx;
+        this._m_longSizeTagIdx = (this.prevLongSizeTagIdx != -1 ? this.prevLongSizeTagIdx : ( ((this._parent.signature.indexRecords[this.idx].signatureTag == Rpm.SignatureTags.LONG_SIZE) && (this._parent.signature.indexRecords[this.idx].recordType == Rpm.RecordTypes.UINT64) && (this._parent.signature.indexRecords[this.idx].numValues >= 1))  ? this.idx : -1));
+        return this._m_longSizeTagIdx;
+      }
+    });
     Object.defineProperty(SignatureTagsStep.prototype, 'sizeTagIdx', {
       get: function() {
         if (this._m_sizeTagIdx !== undefined)
@@ -1210,12 +1338,46 @@ var Rpm = (function() {
 
     return SignatureTagsStep;
   })();
+  Object.defineProperty(Rpm.prototype, 'hasHeaderPayloadSizeTag', {
+    get: function() {
+      if (this._m_hasHeaderPayloadSizeTag !== undefined)
+        return this._m_hasHeaderPayloadSizeTag;
+      this._m_hasHeaderPayloadSizeTag = this.headerTagsSteps[this.headerTagsSteps.length - 1].payloadSizeTagIdx != -1;
+      return this._m_hasHeaderPayloadSizeTag;
+    }
+  });
+  Object.defineProperty(Rpm.prototype, 'hasPayload', {
+    get: function() {
+      if (this._m_hasPayload !== undefined)
+        return this._m_hasPayload;
+      this._m_hasPayload =  ((this.hasHeaderPayloadSizeTag) || (this.hasSignatureLongSizeTag) || (this.hasSignatureSizeTag)) ;
+      return this._m_hasPayload;
+    }
+  });
+  Object.defineProperty(Rpm.prototype, 'hasSignatureLongSizeTag', {
+    get: function() {
+      if (this._m_hasSignatureLongSizeTag !== undefined)
+        return this._m_hasSignatureLongSizeTag;
+      this._m_hasSignatureLongSizeTag = this.signatureTagsSteps[this.signatureTagsSteps.length - 1].longSizeTagIdx != -1;
+      return this._m_hasSignatureLongSizeTag;
+    }
+  });
   Object.defineProperty(Rpm.prototype, 'hasSignatureSizeTag', {
     get: function() {
       if (this._m_hasSignatureSizeTag !== undefined)
         return this._m_hasSignatureSizeTag;
       this._m_hasSignatureSizeTag = this.signatureTagsSteps[this.signatureTagsSteps.length - 1].sizeTagIdx != -1;
       return this._m_hasSignatureSizeTag;
+    }
+  });
+  Object.defineProperty(Rpm.prototype, 'headerPayloadSizeTag', {
+    get: function() {
+      if (this._m_headerPayloadSizeTag !== undefined)
+        return this._m_headerPayloadSizeTag;
+      if (this.hasHeaderPayloadSizeTag) {
+        this._m_headerPayloadSizeTag = this.header.indexRecords[this.headerTagsSteps[this.headerTagsSteps.length - 1].payloadSizeTagIdx];
+      }
+      return this._m_headerPayloadSizeTag;
     }
   });
   Object.defineProperty(Rpm.prototype, 'lenHeader', {
@@ -1226,12 +1388,27 @@ var Rpm = (function() {
       return this._m_lenHeader;
     }
   });
+
+  /**
+   * Size of the (compressed) payload in bytes. v6 packages store it in
+   * `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+   * (which also includes the size of the header).
+   * 
+   * If the header and payload together or the uncompressed payload reach
+   * 4 GiB, v4 packages use `signature_tags::long_size` instead - see
+   * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212>.
+   * 
+   * RPM never writes both (so this is just a hypothetical scenario), but if
+   * both are present, `signature_tags::long_size` takes precedence over
+   * `signature_tags::size`, just like in RPM's `printSize()` function:
+   * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43>
+   */
   Object.defineProperty(Rpm.prototype, 'lenPayload', {
     get: function() {
       if (this._m_lenPayload !== undefined)
         return this._m_lenPayload;
-      if (this.hasSignatureSizeTag) {
-        this._m_lenPayload = this.signatureSizeTag.body.values[0] - this.lenHeader;
+      if (this.hasPayload) {
+        this._m_lenPayload = (this.hasHeaderPayloadSizeTag ? this.headerPayloadSizeTag.body.values[0] : (this.hasSignatureLongSizeTag ? this.signatureLongSizeTag.body.values[0] - this.lenHeader : this.signatureSizeTag.body.values[0] - this.lenHeader));
       }
       return this._m_lenPayload;
     }
@@ -1252,17 +1429,55 @@ var Rpm = (function() {
       return this._m_ofsPayload;
     }
   });
+
+  /**
+   * Archive of the package files, compressed using the method specified by
+   * `header_tags::payload_compressor`. If this tag is missing, it's almost
+   * certainly uncompressed (except for some very old v3 packages built by RPM
+   * 3.0.3 or earlier, which didn't use the tag because the payload was always
+   * gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+   * the tag). However, RPM reads the payload as gzip by default - see
+   * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645>.
+   * Since zlib's gzip reader passes data that is not in gzip format through
+   * unchanged (see
+   * <https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389>),
+   * this also works for uncompressed payloads.
+   * 
+   * The archive format is given by `header_tags::payload_format`, which is
+   * `"cpio"` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+   * without a checksum (the `070701` variant) - the [v4 format
+   * documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+   * claims "with a CRC checksum", but that's not true since RPM 2.4.4
+   * (released in 1997).
+   * 
+   * v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+   * variant of cpio with the magic `07070X`. Its file headers only hold the
+   * index of the file in the file lists of the RPM header, which is the only
+   * place where the file names, sizes and other metadata are stored.
+   * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload|Source}
+   * @see {@link https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload|Source}
+   */
   Object.defineProperty(Rpm.prototype, 'payload', {
     get: function() {
       if (this._m_payload !== undefined)
         return this._m_payload;
-      if (this.hasSignatureSizeTag) {
+      if (this.hasPayload) {
         var _pos = this._io.pos;
         this._io.seek(this.ofsPayload);
         this._m_payload = this._io.readBytes(this.lenPayload);
         this._io.seek(_pos);
       }
       return this._m_payload;
+    }
+  });
+  Object.defineProperty(Rpm.prototype, 'signatureLongSizeTag', {
+    get: function() {
+      if (this._m_signatureLongSizeTag !== undefined)
+        return this._m_signatureLongSizeTag;
+      if (this.hasSignatureLongSizeTag) {
+        this._m_signatureLongSizeTag = this.signature.indexRecords[this.signatureTagsSteps[this.signatureTagsSteps.length - 1].longSizeTagIdx];
+      }
+      return this._m_signatureLongSizeTag;
     }
   });
   Object.defineProperty(Rpm.prototype, 'signatureSizeTag', {

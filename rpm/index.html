@@ -95,11 +95,27 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>This parser is for the RPM version 3 file format which is the current version
-of the file format used by RPM 2.1 and later (including RPM version 4.x, which
-is the current version of the RPM tool). There are historical versions of the
-RPM file format, as well as a currently abandoned fork (rpm5). These formats
-are not covered by this specification.</p>
+                <p><p>An RPM package consists of the lead, the signature (contains digests and
+signatures), the header (contains the package metadata) and the payload (a
+compressed archive of the package files).</p>
+<p>This structure is shared by all package format versions supported by this
+Kaitai Struct implementation:</p>
+<ul>
+<li>v3, written by RPM 2.1 to 3.x.</li>
+<li>v4, written by RPM 4.x, and by RPM 6.x when the <code>%_rpmformat</code> macro is set
+to 4 - see
+<a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192</a>.
+For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+default - see
+<a href="https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch">https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch</a>.</li>
+<li>v6, written by upstream RPM 6.0 by default - see
+<a href="https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37">https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37</a>.</li>
+</ul>
+<p>The versions differ mainly in the tags they use: v6 packages store all sizes
+as 64-bit integers, carry only cryptographic data in the signature and always
+use the stripped-down cpio archive format (see the <code>payload</code> instance).</p>
+<p>The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+this implementation.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -131,7 +147,7 @@ are not covered by this specification.</p>
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.9
+                        Minimal Kaitai Struct required: 0.11
                     </div>
                     
                     
@@ -151,7 +167,7 @@ are not covered by this specification.</p>
                             
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/795">PRONOM fmt/795</a></li>
                             
-                            <li><a href="https://www.wikidata.org/wiki/Q492650">Wikidata Q492650</a></li>
+                            <li><a href="https://www.wikidata.org/wiki/Q11241282">Wikidata Q11241282</a></li>
                             
                             
                             
@@ -291,22 +307,44 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="nt">justsolve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPM</span>
 <span class="w">    </span><span class="nt">mime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/x-rpm</span>
 <span class="w">    </span><span class="nt">pronom</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fmt/795</span><span class="w"> </span><span class="c1"># v3</span>
-<span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q492650</span>
+<span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q11241282</span>
 <span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0.11&#39;</span>
 <span class="w">  </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
 <span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
 <span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">  </span><span class="no">This parser is for the RPM version 3 file format which is the current version</span>
-<span class="w">  </span><span class="no">of the file format used by RPM 2.1 and later (including RPM version 4.x, which</span>
-<span class="w">  </span><span class="no">is the current version of the RPM tool). There are historical versions of the</span>
-<span class="w">  </span><span class="no">RPM file format, as well as a currently abandoned fork (rpm5). These formats</span>
-<span class="w">  </span><span class="no">are not covered by this specification.</span>
+<span class="w">  </span><span class="no">An RPM package consists of the lead, the signature (contains digests and</span>
+<span class="w">  </span><span class="no">signatures), the header (contains the package metadata) and the payload (a</span>
+<span class="w">  </span><span class="no">compressed archive of the package files).</span>
+
+<span class="w">  </span><span class="no">This structure is shared by all package format versions supported by this</span>
+<span class="w">  </span><span class="no">Kaitai Struct implementation:</span>
+
+<span class="w">  </span><span class="no">* v3, written by RPM 2.1 to 3.x.</span>
+<span class="w">  </span><span class="no">* v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set</span>
+<span class="w">    </span><span class="no">to 4 - see</span>
+<span class="w">    </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192&gt;.</span>
+<span class="w">    </span><span class="no">For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by</span>
+<span class="w">    </span><span class="no">default - see</span>
+<span class="w">    </span><span class="no">&lt;https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch&gt;.</span>
+<span class="w">  </span><span class="no">* v6, written by upstream RPM 6.0 by default - see</span>
+<span class="w">    </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37&gt;.</span>
+
+<span class="w">  </span><span class="no">The versions differ mainly in the tags they use: v6 packages store all sizes</span>
+<span class="w">  </span><span class="no">as 64-bit integers, carry only cryptographic data in the signature and always</span>
+<span class="w">  </span><span class="no">use the stripped-down cpio archive format (see the `payload` instance).</span>
+
+<span class="w">  </span><span class="no">The formats before v3, as well as the abandoned rpm5 fork, are not covered by</span>
+<span class="w">  </span><span class="no">this implementation.</span>
 <span class="nt">doc-ref</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://ftp.rpm.org/max-rpm/</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://ftp.osuosl.org/pub/rpm/max-rpm/</span>
 <span class="nt">seq</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lead</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lead</span>
@@ -321,34 +359,117 @@ are not covered by this specification.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 <span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_payload &lt; 0</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signature_tags_steps</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;signature_tags_step(_index,</span><span class="nv"> </span><span class="s">_index</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">-1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">signature_tags_steps[_index</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1].size_tag_idx)&#39;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">signature_tags_step(</span>
+<span class="w">        </span><span class="no">_index,</span>
+<span class="w">        </span><span class="no">_index != 0 ? signature_tags_steps[_index - 1].size_tag_idx : -1,</span>
+<span class="w">        </span><span class="no">_index != 0 ? signature_tags_steps[_index - 1].long_size_tag_idx : -1</span>
+<span class="w">      </span><span class="no">)</span>
 <span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
 <span class="w">    </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signature.header_record.num_index_records</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header_tags_steps</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">header_tags_step(</span>
+<span class="w">        </span><span class="no">_index,</span>
+<span class="w">        </span><span class="no">_index != 0 ? header_tags_steps[_index - 1].payload_size_tag_idx : -1</span>
+<span class="w">      </span><span class="no">)</span>
+<span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">    </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header.header_record.num_index_records</span>
 <span class="nt">instances</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">payload</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_payload</span>
 <span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_payload</span>
-<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_signature_size_tag</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_payload</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Archive of the package files, compressed using the method specified by</span>
+<span class="w">      </span><span class="no">`header_tags::payload_compressor`. If this tag is missing, it&#39;s almost</span>
+<span class="w">      </span><span class="no">certainly uncompressed (except for some very old v3 packages built by RPM</span>
+<span class="w">      </span><span class="no">3.0.3 or earlier, which didn&#39;t use the tag because the payload was always</span>
+<span class="w">      </span><span class="no">gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing</span>
+<span class="w">      </span><span class="no">the tag). However, RPM reads the payload as gzip by default - see</span>
+<span class="w">      </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645&gt;.</span>
+<span class="w">      </span><span class="no">Since zlib&#39;s gzip reader passes data that is not in gzip format through</span>
+<span class="w">      </span><span class="no">unchanged (see</span>
+<span class="w">      </span><span class="no">&lt;https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389&gt;),</span>
+<span class="w">      </span><span class="no">this also works for uncompressed payloads.</span>
+
+<span class="w">      </span><span class="no">The archive format is given by `header_tags::payload_format`, which is</span>
+<span class="w">      </span><span class="no">`&quot;cpio&quot;` for regular packages. In v4/v3 packages, it&#39;s a SVR4 cpio archive</span>
+<span class="w">      </span><span class="no">without a checksum (the `070701` variant) - the [v4 format</span>
+<span class="w">      </span><span class="no">documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)</span>
+<span class="w">      </span><span class="no">claims &quot;with a CRC checksum&quot;, but that&#39;s not true since RPM 2.4.4</span>
+<span class="w">      </span><span class="no">(released in 1997).</span>
+
+<span class="w">      </span><span class="no">v6 packages and v4 packages with a file over 4 GiB use a stripped-down</span>
+<span class="w">      </span><span class="no">variant of cpio with the magic `07070X`. Its file headers only hold the</span>
+<span class="w">      </span><span class="no">index of the file in the file lists of the RPM header, which is the only</span>
+<span class="w">      </span><span class="no">place where the file names, sizes and other metadata are stored.</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload</span>
 <span class="w">  </span><span class="nt">len_payload</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;signature_size_tag.body.as&lt;record_type_uint32&gt;.values[0]</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">len_header&#39;</span>
-<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_signature_size_tag</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">has_header_payload_size_tag</span>
+<span class="w">        </span><span class="no">? header_payload_size_tag.body.as&lt;record_type_uint64&gt;.values[0]</span>
+<span class="w">        </span><span class="no">: has_signature_long_size_tag</span>
+<span class="w">          </span><span class="no">? signature_long_size_tag.body.as&lt;record_type_uint64&gt;.values[0] - len_header</span>
+<span class="w">          </span><span class="no">: signature_size_tag.body.as&lt;record_type_uint32&gt;.values[0] - len_header</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_payload</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Size of the (compressed) payload in bytes. v6 packages store it in</span>
+<span class="w">      </span><span class="no">`header_tags::payload_size`, v4/v3 packages in `signature_tags::size`</span>
+<span class="w">      </span><span class="no">(which also includes the size of the header).</span>
+
+<span class="w">      </span><span class="no">If the header and payload together or the uncompressed payload reach</span>
+<span class="w">      </span><span class="no">4 GiB, v4 packages use `signature_tags::long_size` instead - see</span>
+<span class="w">      </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212&gt;.</span>
+
+<span class="w">      </span><span class="no">RPM never writes both (so this is just a hypothetical scenario), but if</span>
+<span class="w">      </span><span class="no">both are present, `signature_tags::long_size` takes precedence over</span>
+<span class="w">      </span><span class="no">`signature_tags::size`, just like in RPM&#39;s `printSize()` function:</span>
+<span class="w">      </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43&gt;</span>
+<span class="w">  </span><span class="nt">has_payload</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">has_header_payload_size_tag or</span>
+<span class="w">      </span><span class="no">has_signature_long_size_tag or</span>
+<span class="w">      </span><span class="no">has_signature_size_tag</span>
 <span class="w">  </span><span class="nt">len_header</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_payload - ofs_header</span>
 <span class="w">  </span><span class="nt">ofs_header</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_io.pos</span>
 <span class="w">  </span><span class="nt">ofs_payload</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_io.pos</span>
+
 <span class="w">  </span><span class="nt">has_signature_size_tag</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signature_tags_steps.last.size_tag_idx != -1</span>
 <span class="w">  </span><span class="nt">signature_size_tag</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signature.index_records[signature_tags_steps.last.size_tag_idx]</span>
 <span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_signature_size_tag</span>
+
+<span class="w">  </span><span class="nt">has_signature_long_size_tag</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signature_tags_steps.last.long_size_tag_idx != -1</span>
+<span class="w">  </span><span class="nt">signature_long_size_tag</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signature.index_records[signature_tags_steps.last.long_size_tag_idx]</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_signature_long_size_tag</span>
+
+<span class="w">  </span><span class="nt">has_header_payload_size_tag</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header_tags_steps.last.payload_size_tag_idx != -1</span>
+<span class="w">  </span><span class="nt">header_payload_size_tag</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header.index_records[header_tags_steps.last.payload_size_tag_idx]</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_header_payload_size_tag</span>
 <span class="nt">types</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">signature_tags_step</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Finds the first `signature_tags::size` and `signature_tags::long_size`</span>
+<span class="w">      </span><span class="no">index record. Since Kaitai Struct doesn&#39;t have a built-in way to search an</span>
+<span class="w">      </span><span class="no">array directly, each step receives the indexes found so far via</span>
+<span class="w">      </span><span class="no">parameters.</span>
 <span class="w">    </span><span class="nt">params</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idx</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prev_size_tag_idx</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prev_long_size_tag_idx</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
 <span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">size_tag_idx</span><span class="p">:</span>
@@ -357,10 +478,32 @@ are not covered by this specification.</p>
 <span class="w">            </span><span class="no">(_parent.signature.index_records[idx].signature_tag == signature_tags::size</span>
 <span class="w">            </span><span class="no">and _parent.signature.index_records[idx].record_type == record_types::uint32</span>
 <span class="w">            </span><span class="no">and _parent.signature.index_records[idx].num_values &gt;= 1 ? idx : -1)</span>
+<span class="w">      </span><span class="nt">long_size_tag_idx</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">prev_long_size_tag_idx != -1 ? prev_long_size_tag_idx :</span>
+<span class="w">            </span><span class="no">(_parent.signature.index_records[idx].signature_tag == signature_tags::long_size</span>
+<span class="w">            </span><span class="no">and _parent.signature.index_records[idx].record_type == record_types::uint64</span>
+<span class="w">            </span><span class="no">and _parent.signature.index_records[idx].num_values &gt;= 1 ? idx : -1)</span>
+<span class="w">  </span><span class="nt">header_tags_step</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Like `signature_tags_step`, but looks for `header_tags::payload_size`,</span>
+<span class="w">      </span><span class="no">which is where v6 packages store the payload size.</span>
+<span class="w">    </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idx</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prev_payload_size_tag_idx</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">payload_size_tag_idx</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">prev_payload_size_tag_idx != -1 ? prev_payload_size_tag_idx :</span>
+<span class="w">            </span><span class="no">(_parent.header.index_records[idx].header_tag == header_tags::payload_size</span>
+<span class="w">            </span><span class="no">and _parent.header.index_records[idx].record_type == record_types::uint64</span>
+<span class="w">            </span><span class="no">and _parent.header.index_records[idx].num_values &gt;= 1 ? idx : -1)</span>
 <span class="w">  </span><span class="nt">dummy</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 <span class="w">  </span><span class="nt">lead</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">In 2021, Panu Matilainen (a RPM developer) [described this</span>
+<span class="w">      </span><span class="no">In 2021, Panu Matilainen (an RPM developer) [described this</span>
 <span class="w">      </span><span class="no">structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)</span>
 <span class="w">      </span><span class="no">as follows:</span>
 
@@ -369,10 +512,13 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="no">&gt; it&#39;s an rpm file in the first place, just ignore everything in it.</span>
 <span class="w">      </span><span class="no">&gt; Literally everything.</span>
 
-<span class="w">      </span><span class="no">The fields with `valid` constraints are important, because these are the</span>
-<span class="w">      </span><span class="no">same validations that RPM does (which means that any valid `.rpm` file</span>
-<span class="w">      </span><span class="no">must pass them), but otherwise you should not make decisions based on the</span>
-<span class="w">      </span><span class="no">values given here.</span>
+<span class="w">      </span><span class="no">RPM 4.19 and older rejected packages that didn&#39;t meet the `valid`</span>
+<span class="w">      </span><span class="no">constraints specified here, while RPM 4.20 and later only check the</span>
+<span class="w">      </span><span class="no">`magic` - see</span>
+<span class="w">      </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66&gt;.</span>
+<span class="w">      </span><span class="no">Nevertheless, RPM still writes values that pass these checks for backwards</span>
+<span class="w">      </span><span class="no">compatibility, so any `.rpm` file should pass.</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic</span>
 <span class="w">        </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0xed</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0xab</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0xee</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0xdb</span><span class="p p-Indicator">]</span>
@@ -395,6 +541,7 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signature_type</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
 <span class="w">        </span><span class="nt">valid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved</span>
 <span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
 <span class="w">  </span><span class="nt">rpm_version</span><span class="p">:</span>
@@ -404,7 +551,8 @@ are not covered by this specification.</p>
 <span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="w">          </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3 in v3 and v4 packages, 4 in v6 packages.</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minor</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">  </span><span class="nt">header</span><span class="p">:</span>
@@ -437,6 +585,9 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record_type</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record_types</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="c1"># See https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/header.cc#L316-L317</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_body</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count</span>
@@ -543,9 +694,14 @@ are not covered by this specification.</p>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
 <span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="c1"># See https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/header.cc#L1953-L1970</span>
+<span class="w">          </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;_parent.is_signature</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">32</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0xffff&#39;</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_storage_section</span>
 <span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hsize</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="c1"># See https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/header.cc#L1953-L1970</span>
+<span class="w">          </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;_parent.is_signature</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">64</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1024</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1024</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0x0fff_ffff&#39;</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">Size of the storage area for the data</span>
 <span class="w">          </span><span class="no">pointed to by the Index Records.</span>
@@ -554,7 +710,7 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">binary</span>
 <span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source</span>
 
-<span class="w">  </span><span class="c1"># these come (mostly) from &lt;https://github.com/rpm-software-management/rpm/blob/afad3167/rpmrc.in#L170&gt;</span>
+<span class="w">  </span><span class="c1"># these come (mostly) from &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/rpmrc.in#L189&gt;</span>
 <span class="w">  </span><span class="c1"># (see &lt;https://ftp.osuosl.org/pub/rpm/max-rpm/s1-rpm-multi-build-install-detection.html#S3-RPM-MULTI-XXX-CANON&gt;</span>
 <span class="w">  </span><span class="c1"># for `arch_canon` entry explanation)</span>
 <span class="w">  </span><span class="c1">#</span>
@@ -563,6 +719,14 @@ are not covered by this specification.</p>
 <span class="w">  </span><span class="c1">#   - &lt;https://github.com/craigwblake/redline/blob/15afff5/src/main/java/org/redline_rpm/header/Architecture.java&gt;</span>
 <span class="w">  </span><span class="c1">#   - &lt;https://web.archive.org/web/20210605105702/https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch01s03.html&gt;</span>
 <span class="w">  </span><span class="nt">architectures</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not_set</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Since RPM 6.0, `archnum` and `osnum` are no longer populated when</span>
+<span class="w">        </span><span class="no">writing the lead, so they are left zeroed - see</span>
+<span class="w">        </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/commit/5a685fb5eb085d5bc37723ec29ce72434db6bd4e&gt;.</span>
+<span class="w">        </span><span class="no">This applies to both v4 and v6 packages.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#lead</span>
 <span class="w">    </span><span class="nt">1</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x86</span>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x86 or x86_64</span>
@@ -572,7 +736,7 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/eclipse/packager/blob/51ccdd3/rpm/src/main/java/org/eclipse/packager/rpm/Architecture.java#L24</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L14</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/rpmrc.in#L188-L197</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/rpmrc.in#L207-L216</span>
 <span class="w">    </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sparc</span>
 <span class="w">    </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mips</span>
 <span class="w">    </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ppc</span>
@@ -583,7 +747,7 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SGI Inhouse Processors (IP)</span>
 <span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L19</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/rpmrc.in#L219</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/rpmrc.in#L238</span>
 <span class="w">    </span><span class="nt">8</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rs6000</span>
 <span class="w">    </span><span class="nt">9</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ia64</span>
 <span class="w">    </span><span class="nt">10</span><span class="p">:</span>
@@ -598,7 +762,7 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">m68kmint</span>
 <span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/craigwblake/redline/blob/15afff5/src/main/java/org/redline_rpm/header/Architecture.java#L18</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/rpmrc.in#L240-L247</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/rpmrc.in#L259-L266</span>
 <span class="w">    </span><span class="nt">14</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s390</span>
 <span class="w">    </span><span class="nt">15</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s390x</span>
 <span class="w">    </span><span class="nt">16</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ppc64</span>
@@ -608,23 +772,32 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="nt">20</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mips_r6</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mipsr6</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/rpmrc.in#L266-L267</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/rpmrc.in#L285-L286</span>
 <span class="w">    </span><span class="nt">21</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mips64_r6</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mips64r6</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/rpmrc.in#L268-L269</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/rpmrc.in#L287-L288</span>
 <span class="w">    </span><span class="nt">22</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">riscv</span>
 <span class="w">    </span><span class="nt">23</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loongarch64</span>
+<span class="w">    </span><span class="nt">24</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">e2k</span>
 <span class="w">    </span><span class="nt">255</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arch</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">noarch</span>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">can be installed on any architecture</span>
 <span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L31</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmrc.c#L1548</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmrc.cc#L1507</span>
 <span class="w">  </span><span class="nt">operating_systems</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># these come from &lt;https://github.com/rpm-software-management/rpm/blob/afad3167/rpmrc.in#L277&gt;</span>
-<span class="w">    </span><span class="c1"># in practice it will almost always be 1</span>
+<span class="w">    </span><span class="c1"># these come from &lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/rpmrc.in#L306&gt;</span>
+<span class="w">    </span><span class="c1"># in practice it will almost always be 1 (or 0 if written by RPM 6.0+)</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not_set</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Since RPM 6.0, `archnum` and `osnum` are no longer populated when</span>
+<span class="w">        </span><span class="no">writing the lead, so they are left zeroed - see</span>
+<span class="w">        </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/commit/5a685fb5eb085d5bc37723ec29ce72434db6bd4e&gt;.</span>
+<span class="w">        </span><span class="no">This applies to both v4 and v6 packages.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#lead</span>
 <span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">linux</span>
 <span class="w">    </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">irix</span>
 <span class="w">    </span><span class="nt">255</span><span class="p">:</span>
@@ -641,11 +814,11 @@ are not covered by this specification.</p>
 
 <span class="w">        </span><span class="no">Moreover, this value is actually used in practice, see this sample file:</span>
 <span class="w">        </span><span class="no">&lt;https://github.com/craigwblake/redline/blob/15afff5/src/test/resources/rpm-3-1.0-1.somearch.rpm&gt;</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmrc.c#L1548</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmrc.cc#L1507</span>
 
 <span class="w">  </span><span class="nt">signature_tags</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># Tags from [lib/rpmtag.h](https://github.com/rpm-software-management/rpm/blob/afad3167/include/rpm/rpmtag.h#L423).</span>
-<span class="w">    </span><span class="c1"># the first three are shared with header_tags</span>
+<span class="w">    </span><span class="c1"># Tags from [`include/rpm/rpmtag.h`](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/include/rpm/rpmtag.h#L440).</span>
+<span class="w">    </span><span class="c1"># The first three are shared with `header_tags`.</span>
 <span class="w">    </span><span class="nt">62</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signatures</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HEADER_SIGNATURES</span>
@@ -666,7 +839,7 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="c1"># 266:</span>
 <span class="w">    </span><span class="c1">#   id: pubkeys_internal</span>
 <span class="w">    </span><span class="c1">#   -orig-id: RPMTAG_PUBKEYS</span>
-<span class="w">    </span><span class="c1">#   doc-ref: https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md#internal--special</span>
+<span class="w">    </span><span class="c1">#   doc-ref: https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md#internal--special</span>
 <span class="w">    </span><span class="nt">267</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dsa</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_DSA</span>
@@ -698,6 +871,33 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="nt">277</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verity_signature_algo</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_VERITYSIGNATUREALGO</span>
+<span class="w">    </span><span class="nt">278</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openpgp</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_OPENPGP</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">RPM v6 OpenPGP signature(s) of the header, base64 encoded. The default</span>
+<span class="w">        </span><span class="no">signature type when signing v6 packages, but it can also be added to v4</span>
+<span class="w">        </span><span class="no">packages using `rpmsign --rpmv6` - see</span>
+<span class="w">        </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmsign.1.scd?plain=1#L86-L87&gt;.</span>
+<span class="w">    </span><span class="nt">279</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sha3_256</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_SHA3_256</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHA3-256 digest of the header (only v6).</span>
+<span class="w">    </span><span class="nt">999</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_RESERVED</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Space reserved for signatures, consisting solely of zeros. Always the</span>
+<span class="w">        </span><span class="no">last tag in the signature.</span>
+
+<span class="w">        </span><span class="no">v6 packages use this tag instead of `signature_tags::reserved_space`</span>
+<span class="w">        </span><span class="no">= 1008, which is used for the same purpose in v4 packages. In v6</span>
+<span class="w">        </span><span class="no">packages, signature tag numbers above 999 are considered illegal, so</span>
+<span class="w">        </span><span class="no">that signature tags don&#39;t clash with header tags - see</span>
+<span class="w">        </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md?plain=1#L76-L77&gt;.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md?plain=1#L83-L84</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/commit/a40b6e9a74b517370fda9aa5c9fc3db2276be563</span>
 <span class="w">    </span><span class="nt">1000</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">size</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_SIZE</span>
@@ -734,7 +934,7 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_RESERVEDSPACE</span>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Space reserved for signatures</span>
 <span class="w">  </span><span class="nt">header_tags</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># Tags from [include/rpm/rpmtag.h](https://github.com/rpm-software-management/rpm/blob/afad3167/include/rpm/rpmtag.h).</span>
+<span class="w">    </span><span class="c1"># Tags from [`include/rpm/rpmtag.h`](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/include/rpm/rpmtag.h).</span>
 <span class="w">    </span><span class="c1"># This includes (almost) all tags. Some have `_unimplemented`, `_internal`</span>
 <span class="w">    </span><span class="c1"># or `_obsolete` suffix (if more than one applies, the first applicable in</span>
 <span class="w">    </span><span class="c1"># this order is used).</span>
@@ -805,11 +1005,11 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="nt">1012</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gif_obsolete</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_GIF</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md#deprecated--obsolete</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md#deprecated--obsolete</span>
 <span class="w">    </span><span class="nt">1013</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xpm_obsolete</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_XPM</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md#deprecated--obsolete</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md#deprecated--obsolete</span>
 <span class="w">    </span><span class="nt">1014</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">license</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_LICENSE</span>
@@ -870,7 +1070,7 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="nt">1027</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">old_file_names_obsolete</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_OLDFILENAMES</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md#deprecated--obsolete</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md#deprecated--obsolete</span>
 <span class="w">    </span><span class="nt">1028</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_sizes</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILESIZES</span>
@@ -935,7 +1135,7 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="nt">1043</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">icon_obsolete</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_ICON</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md#deprecated--obsolete</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md#deprecated--obsolete</span>
 <span class="w">    </span><span class="nt">1044</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_rpm</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_SOURCERPM</span>
@@ -1221,7 +1421,7 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="nt">1129</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remove_tid_obsolete</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_REMOVETID</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md#deprecated--obsolete</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md#deprecated--obsolete</span>
 <span class="w">    </span><span class="nt">1130</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sha1_rhn_internal</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_SHA1RHN</span>
@@ -1274,20 +1474,36 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">depends_dict</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_DEPENDSDICT</span>
 <span class="w">    </span><span class="nt">1146</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_pkgid</span>
-<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_SOURCEPKGID</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_sig_md5</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_SOURCESIGMD5</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_SOURCEPKGID</span><span class="w"> </span><span class="c1"># before RPM 6.0</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">MD5 digest (16 bytes) of the header and payload of the source package</span>
+<span class="w">        </span><span class="no">this binary package was built from, i.e. the value of</span>
+<span class="w">        </span><span class="no">`signature_tags::md5` in that source package.</span>
+
+<span class="w">        </span><span class="no">Only present in binary packages built in the same `rpmbuild` run as</span>
+<span class="w">        </span><span class="no">their source package (e.g. `rpmbuild -ba`). Never present in v6</span>
+<span class="w">        </span><span class="no">packages, because RPM does not calculate the MD5 digest for them.</span>
+
+<span class="w">        </span><span class="no">Before RPM 6.0, this tag was called `RPMTAG_SOURCEPKGID` - see</span>
+<span class="w">        </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/commit/79ba4a3c41702e46edd5a4ce7e17a1f3361eb0e7&gt;.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/build/pack.cc#L901-L902</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/build/pack.cc#L799-L801</span>
 <span class="w">    </span><span class="nt">1147</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_contexts_obsolete</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILECONTEXTS</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md#deprecated--obsolete</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md#deprecated--obsolete</span>
 <span class="w">    </span><span class="nt">1148</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fs_contexts_obsolete</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_FSCONTEXTS</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md#deprecated--obsolete</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md#deprecated--obsolete</span>
 <span class="w">    </span><span class="nt">1149</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">re_contexts_obsolete</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_RECONTEXTS</span>
-<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md#deprecated--obsolete</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md#deprecated--obsolete</span>
 <span class="w">    </span><span class="nt">1150</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">policies</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_POLICIES</span>
@@ -1708,11 +1924,29 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_signature_length</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILESIGNATURELENGTH</span>
 <span class="w">    </span><span class="nt">5092</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_digest</span>
-<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADDIGEST</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_sha256</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADSHA256</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADDIGEST</span><span class="w"> </span><span class="c1"># before RPM 6.0</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">SHA-256 digest of the compressed payload.</span>
+
+<span class="w">        </span><span class="no">Before RPM 6.0, this tag was called `RPMTAG_PAYLOADDIGEST` - see</span>
+<span class="w">        </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/commit/f14557cd521ddf95994aa6518f006eeb3fc58d87&gt;.</span>
 <span class="w">    </span><span class="nt">5093</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_digest_algo</span>
-<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADDIGESTALGO</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_sha256_algo_obsolete</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADSHA256ALGO</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADDIGESTALGO</span><span class="w"> </span><span class="c1"># before RPM 6.0</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">OpenPGP hash algorithm ID of `header_tags::payload_sha256`. Always 8</span>
+<span class="w">        </span><span class="no">(SHA2-256), which makes this tag redundant. Not written to v6 packages.</span>
+
+<span class="w">        </span><span class="no">Before RPM 6.0, this tag was called `RPMTAG_PAYLOADDIGESTALGO` - see</span>
+<span class="w">        </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/commit/f14557cd521ddf95994aa6518f006eeb3fc58d87&gt;.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/build/pack.cc#L492-L495</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/include/rpm/rpmcrypto.h#L26</span>
 <span class="w">    </span><span class="nt">5094</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto_installed_unimplemented</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_AUTOINSTALLED</span>
@@ -1723,8 +1957,15 @@ are not covered by this specification.</p>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modularity_label</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_MODULARITYLABEL</span>
 <span class="w">    </span><span class="nt">5097</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_digest_alt</span>
-<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADDIGESTALT</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_sha256_alt</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADSHA256ALT</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADDIGESTALT</span><span class="w"> </span><span class="c1"># before RPM 6.0</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">SHA-256 digest of the uncompressed payload.</span>
+
+<span class="w">        </span><span class="no">Before RPM 6.0, this tag was called `RPMTAG_PAYLOADDIGESTALT` - see</span>
+<span class="w">        </span><span class="no">&lt;https://github.com/rpm-software-management/rpm/commit/f14557cd521ddf95994aa6518f006eeb3fc58d87&gt;.</span>
 <span class="w">    </span><span class="nt">5098</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arch_suffix</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_ARCHSUFFIX</span>
@@ -1761,9 +2002,65 @@ are not covered by this specification.</p>
 <span class="w">    </span><span class="nt">5109</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sys_users</span>
 <span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_SYSUSERS</span>
+<span class="w">    </span><span class="nt">5110</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build_system_internal</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDSYSTEM</span>
+<span class="w">    </span><span class="nt">5111</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build_option_internal</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDOPTION</span>
+<span class="w">    </span><span class="nt">5112</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_size</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADSIZE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Size of the compressed payload in bytes (only v6).</span>
+<span class="w">    </span><span class="nt">5113</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_size_alt</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADSIZEALT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Size of the uncompressed payload in bytes (only v6).</span>
+<span class="w">    </span><span class="nt">5114</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rpm_format</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_RPMFORMAT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPM package format version (only present in v6 packages).</span>
+<span class="w">    </span><span class="nt">5115</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_mime_index</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEMIMEINDEX</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Index into `header_tags::mime_dict` (only v6).</span>
+<span class="w">    </span><span class="nt">5116</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mime_dict</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_MIMEDICT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dictionary of MIME types (only v6).</span>
+<span class="w">    </span><span class="nt">5117</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_mimes</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEMIMES</span>
+<span class="w">    </span><span class="nt">5118</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">package_digests</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PACKAGEDIGESTS</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Package digests calculated during verification.</span>
+<span class="w">    </span><span class="nt">5119</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">package_digest_algos</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PACKAGEDIGESTALGOS</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Algorithms used for `header_tags::package_digests`.</span>
+<span class="w">    </span><span class="nt">5120</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_nevr</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_SOURCENEVR</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Source RPM NEVR.</span>
+<span class="w">    </span><span class="nt">5121</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_sha512</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADSHA512</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHA-512 digest of the compressed payload.</span>
+<span class="w">    </span><span class="nt">5122</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_sha512_alt</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADSHA512ALT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHA-512 digest of the uncompressed payload.</span>
+<span class="w">    </span><span class="nt">5123</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_sha3_256</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADSHA3_256</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHA3-256 digest of the compressed payload.</span>
+<span class="w">    </span><span class="nt">5124</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_sha3_256_alt</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADSHA3_256ALT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHA3-256 digest of the uncompressed payload.</span>
+<span class="w">  </span><span class="c1"># https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_header.md#index</span>
 <span class="w">  </span><span class="nt">record_types</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># from LSB</span>
-<span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not_implemented</span>
 <span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">char</span>
 <span class="w">    </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span>
 <span class="w">    </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint16</span>

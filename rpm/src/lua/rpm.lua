@@ -10,18 +10,41 @@ local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 
 -- 
--- This parser is for the RPM version 3 file format which is the current version
--- of the file format used by RPM 2.1 and later (including RPM version 4.x, which
--- is the current version of the RPM tool). There are historical versions of the
--- RPM file format, as well as a currently abandoned fork (rpm5). These formats
--- are not covered by this specification.
--- See also: Source (https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md)
--- See also: Source (https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md)
+-- An RPM package consists of the lead, the signature (contains digests and
+-- signatures), the header (contains the package metadata) and the payload (a
+-- compressed archive of the package files).
+-- 
+-- This structure is shared by all package format versions supported by this
+-- Kaitai Struct implementation:
+-- 
+-- * v3, written by RPM 2.1 to 3.x.
+-- * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+--   to 4 - see
+--   <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192>.
+--   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+--   default - see
+--   <https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch>.
+-- * v6, written by upstream RPM 6.0 by default - see
+--   <https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37>.
+-- 
+-- The versions differ mainly in the tags they use: v6 packages store all sizes
+-- as 64-bit integers, carry only cryptographic data in the signature and always
+-- use the stripped-down cpio archive format (see the `payload` instance).
+-- 
+-- The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+-- this implementation.
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md)
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md)
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md)
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md)
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md)
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md)
 -- See also: Source (https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html)
--- See also: Source (http://ftp.rpm.org/max-rpm/)
+-- See also: Source (https://ftp.osuosl.org/pub/rpm/max-rpm/)
 Rpm = class.class(KaitaiStruct)
 
 Rpm.Architectures = enum.Enum {
+  not_set = 0,
   x86 = 1,
   alpha = 2,
   sparc = 3,
@@ -45,6 +68,7 @@ Rpm.Architectures = enum.Enum {
   mips64_r6 = 21,
   riscv = 22,
   loongarch64 = 23,
+  e2k = 24,
   no_arch = 255,
 }
 
@@ -189,7 +213,7 @@ Rpm.HeaderTags = enum.Enum {
   file_depends_idx = 1143,
   file_depends_num = 1144,
   depends_dict = 1145,
-  source_pkgid = 1146,
+  source_sig_md5 = 1146,
   file_contexts_obsolete = 1147,
   fs_contexts_obsolete = 1148,
   re_contexts_obsolete = 1149,
@@ -331,12 +355,12 @@ Rpm.HeaderTags = enum.Enum {
   trans_file_trigger_type = 5089,
   file_signatures = 5090,
   file_signature_length = 5091,
-  payload_digest = 5092,
-  payload_digest_algo = 5093,
+  payload_sha256 = 5092,
+  payload_sha256_algo_obsolete = 5093,
   auto_installed_unimplemented = 5094,
   identity_unimplemented = 5095,
   modularity_label = 5096,
-  payload_digest_alt = 5097,
+  payload_sha256_alt = 5097,
   arch_suffix = 5098,
   spec = 5099,
   translation_url = 5100,
@@ -349,16 +373,31 @@ Rpm.HeaderTags = enum.Enum {
   pre_untrans_flags = 5107,
   post_untrans_flags = 5108,
   sys_users = 5109,
+  build_system_internal = 5110,
+  build_option_internal = 5111,
+  payload_size = 5112,
+  payload_size_alt = 5113,
+  rpm_format = 5114,
+  file_mime_index = 5115,
+  mime_dict = 5116,
+  file_mimes = 5117,
+  package_digests = 5118,
+  package_digest_algos = 5119,
+  source_nevr = 5120,
+  payload_sha512 = 5121,
+  payload_sha512_alt = 5122,
+  payload_sha3_256 = 5123,
+  payload_sha3_256_alt = 5124,
 }
 
 Rpm.OperatingSystems = enum.Enum {
+  not_set = 0,
   linux = 1,
   irix = 2,
   no_os = 255,
 }
 
 Rpm.RecordTypes = enum.Enum {
-  not_implemented = 0,
   char = 1,
   uint8 = 2,
   uint16 = 3,
@@ -391,6 +430,9 @@ Rpm.SignatureTags = enum.Enum {
   file_signature_length = 275,
   verity_signatures = 276,
   verity_signature_algo = 277,
+  openpgp = 278,
+  sha3_256 = 279,
+  reserved = 999,
   size = 1000,
   le_md5_1_obsolete = 1001,
   pgp = 1002,
@@ -422,8 +464,42 @@ function Rpm:_read()
   end
   self.signature_tags_steps = {}
   for i = 0, self.signature.header_record.num_index_records - 1 do
-    self.signature_tags_steps[i + 1] = Rpm.SignatureTagsStep(i, utils.box_unwrap((i < 1) and utils.box_wrap(-1) or (self.signature_tags_steps[(i - 1) + 1].size_tag_idx)), self._io, self, self._root)
+    self.signature_tags_steps[i + 1] = Rpm.SignatureTagsStep(i, utils.box_unwrap((i ~= 0) and utils.box_wrap(self.signature_tags_steps[(i - 1) + 1].size_tag_idx) or (-1)), utils.box_unwrap((i ~= 0) and utils.box_wrap(self.signature_tags_steps[(i - 1) + 1].long_size_tag_idx) or (-1)), self._io, self, self._root)
   end
+  self.header_tags_steps = {}
+  for i = 0, self.header.header_record.num_index_records - 1 do
+    self.header_tags_steps[i + 1] = Rpm.HeaderTagsStep(i, utils.box_unwrap((i ~= 0) and utils.box_wrap(self.header_tags_steps[(i - 1) + 1].payload_size_tag_idx) or (-1)), self._io, self, self._root)
+  end
+end
+
+Rpm.property.has_header_payload_size_tag = {}
+function Rpm.property.has_header_payload_size_tag:get()
+  if self._m_has_header_payload_size_tag ~= nil then
+    return self._m_has_header_payload_size_tag
+  end
+
+  self._m_has_header_payload_size_tag = self.header_tags_steps[#self.header_tags_steps].payload_size_tag_idx ~= -1
+  return self._m_has_header_payload_size_tag
+end
+
+Rpm.property.has_payload = {}
+function Rpm.property.has_payload:get()
+  if self._m_has_payload ~= nil then
+    return self._m_has_payload
+  end
+
+  self._m_has_payload =  ((self.has_header_payload_size_tag) or (self.has_signature_long_size_tag) or (self.has_signature_size_tag)) 
+  return self._m_has_payload
+end
+
+Rpm.property.has_signature_long_size_tag = {}
+function Rpm.property.has_signature_long_size_tag:get()
+  if self._m_has_signature_long_size_tag ~= nil then
+    return self._m_has_signature_long_size_tag
+  end
+
+  self._m_has_signature_long_size_tag = self.signature_tags_steps[#self.signature_tags_steps].long_size_tag_idx ~= -1
+  return self._m_has_signature_long_size_tag
 end
 
 Rpm.property.has_signature_size_tag = {}
@@ -436,6 +512,18 @@ function Rpm.property.has_signature_size_tag:get()
   return self._m_has_signature_size_tag
 end
 
+Rpm.property.header_payload_size_tag = {}
+function Rpm.property.header_payload_size_tag:get()
+  if self._m_header_payload_size_tag ~= nil then
+    return self._m_header_payload_size_tag
+  end
+
+  if self.has_header_payload_size_tag then
+    self._m_header_payload_size_tag = self.header.index_records[self.header_tags_steps[#self.header_tags_steps].payload_size_tag_idx + 1]
+  end
+  return self._m_header_payload_size_tag
+end
+
 Rpm.property.len_header = {}
 function Rpm.property.len_header:get()
   if self._m_len_header ~= nil then
@@ -446,14 +534,27 @@ function Rpm.property.len_header:get()
   return self._m_len_header
 end
 
+-- 
+-- Size of the (compressed) payload in bytes. v6 packages store it in
+-- `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+-- (which also includes the size of the header).
+-- 
+-- If the header and payload together or the uncompressed payload reach
+-- 4 GiB, v4 packages use `signature_tags::long_size` instead - see
+-- <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212>.
+-- 
+-- RPM never writes both (so this is just a hypothetical scenario), but if
+-- both are present, `signature_tags::long_size` takes precedence over
+-- `signature_tags::size`, just like in RPM's `printSize()` function:
+-- <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43>
 Rpm.property.len_payload = {}
 function Rpm.property.len_payload:get()
   if self._m_len_payload ~= nil then
     return self._m_len_payload
   end
 
-  if self.has_signature_size_tag then
-    self._m_len_payload = self.signature_size_tag.body.values[0 + 1] - self.len_header
+  if self.has_payload then
+    self._m_len_payload = utils.box_unwrap((self.has_header_payload_size_tag) and utils.box_wrap(self.header_payload_size_tag.body.values[0 + 1]) or (utils.box_unwrap((self.has_signature_long_size_tag) and utils.box_wrap(self.signature_long_size_tag.body.values[0 + 1] - self.len_header) or (self.signature_size_tag.body.values[0 + 1] - self.len_header))))
   end
   return self._m_len_payload
 end
@@ -478,19 +579,57 @@ function Rpm.property.ofs_payload:get()
   return self._m_ofs_payload
 end
 
+-- 
+-- Archive of the package files, compressed using the method specified by
+-- `header_tags::payload_compressor`. If this tag is missing, it's almost
+-- certainly uncompressed (except for some very old v3 packages built by RPM
+-- 3.0.3 or earlier, which didn't use the tag because the payload was always
+-- gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+-- the tag). However, RPM reads the payload as gzip by default - see
+-- <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645>.
+-- Since zlib's gzip reader passes data that is not in gzip format through
+-- unchanged (see
+-- <https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389>),
+-- this also works for uncompressed payloads.
+-- 
+-- The archive format is given by `header_tags::payload_format`, which is
+-- `"cpio"` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+-- without a checksum (the `070701` variant) - the [v4 format
+-- documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+-- claims "with a CRC checksum", but that's not true since RPM 2.4.4
+-- (released in 1997).
+-- 
+-- v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+-- variant of cpio with the magic `07070X`. Its file headers only hold the
+-- index of the file in the file lists of the RPM header, which is the only
+-- place where the file names, sizes and other metadata are stored.
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload)
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload)
 Rpm.property.payload = {}
 function Rpm.property.payload:get()
   if self._m_payload ~= nil then
     return self._m_payload
   end
 
-  if self.has_signature_size_tag then
+  if self.has_payload then
     local _pos = self._io:pos()
     self._io:seek(self.ofs_payload)
     self._m_payload = self._io:read_bytes(self.len_payload)
     self._io:seek(_pos)
   end
   return self._m_payload
+end
+
+Rpm.property.signature_long_size_tag = {}
+function Rpm.property.signature_long_size_tag:get()
+  if self._m_signature_long_size_tag ~= nil then
+    return self._m_signature_long_size_tag
+  end
+
+  if self.has_signature_long_size_tag then
+    self._m_signature_long_size_tag = self.signature.index_records[self.signature_tags_steps[#self.signature_tags_steps].long_size_tag_idx + 1]
+  end
+  return self._m_signature_long_size_tag
 end
 
 Rpm.property.signature_size_tag = {}
@@ -567,6 +706,9 @@ end
 function Rpm.HeaderIndexRecord:_read()
   self.tag_raw = self._io:read_u4be()
   self.record_type = Rpm.RecordTypes(self._io:read_u4be())
+  if self.record_type == nil then
+    error("ValidationNotInEnumError")
+  end
   self.ofs_body = self._io:read_u4be()
   self.count = self._io:read_u4be()
 end
@@ -679,7 +821,13 @@ function Rpm.HeaderRecord:_read()
   if not(self.num_index_records >= 1) then
     error("ValidationLessThanError")
   end
+  if not(self.num_index_records <= utils.box_unwrap((self._parent.is_signature) and utils.box_wrap(32) or (65535))) then
+    error("ValidationGreaterThanError")
+  end
   self.len_storage_section = self._io:read_u4be()
+  if not(self.len_storage_section <= utils.box_unwrap((self._parent.is_signature) and utils.box_wrap((64 * 1024) * 1024) or (268435455))) then
+    error("ValidationGreaterThanError")
+  end
 end
 
 -- 
@@ -687,7 +835,35 @@ end
 -- pointed to by the Index Records.
 
 -- 
--- In 2021, Panu Matilainen (a RPM developer) [described this
+-- Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+-- which is where v6 packages store the payload size.
+Rpm.HeaderTagsStep = class.class(KaitaiStruct)
+
+function Rpm.HeaderTagsStep:_init(idx, prev_payload_size_tag_idx, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.idx = idx
+  self.prev_payload_size_tag_idx = prev_payload_size_tag_idx
+  self:_read()
+end
+
+function Rpm.HeaderTagsStep:_read()
+end
+
+Rpm.HeaderTagsStep.property.payload_size_tag_idx = {}
+function Rpm.HeaderTagsStep.property.payload_size_tag_idx:get()
+  if self._m_payload_size_tag_idx ~= nil then
+    return self._m_payload_size_tag_idx
+  end
+
+  self._m_payload_size_tag_idx = utils.box_unwrap((self.prev_payload_size_tag_idx ~= -1) and utils.box_wrap(self.prev_payload_size_tag_idx) or (utils.box_unwrap(( ((self._parent.header.index_records[self.idx + 1].header_tag == Rpm.HeaderTags.payload_size) and (self._parent.header.index_records[self.idx + 1].record_type == Rpm.RecordTypes.uint64) and (self._parent.header.index_records[self.idx + 1].num_values >= 1)) ) and utils.box_wrap(self.idx) or (-1))))
+  return self._m_payload_size_tag_idx
+end
+
+
+-- 
+-- In 2021, Panu Matilainen (an RPM developer) [described this
 -- structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
 -- as follows:
 -- 
@@ -696,10 +872,13 @@ end
 -- > it's an rpm file in the first place, just ignore everything in it.
 -- > Literally everything.
 -- 
--- The fields with `valid` constraints are important, because these are the
--- same validations that RPM does (which means that any valid `.rpm` file
--- must pass them), but otherwise you should not make decisions based on the
--- values given here.
+-- RPM 4.19 and older rejected packages that didn't meet the `valid`
+-- constraints specified here, while RPM 4.20 and later only check the
+-- `magic` - see
+-- <https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66>.
+-- Nevertheless, RPM still writes values that pass these checks for backwards
+-- compatibility, so any `.rpm` file should pass.
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md)
 Rpm.Lead = class.class(KaitaiStruct)
 
 function Rpm.Lead:_init(io, parent, root)
@@ -726,6 +905,8 @@ function Rpm.Lead:_read()
   self.reserved = self._io:read_bytes(16)
 end
 
+-- 
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21)
 
 Rpm.RecordTypeBin = class.class(KaitaiStruct)
 
@@ -873,20 +1054,37 @@ function Rpm.RpmVersion:_read()
 end
 
 -- 
--- See also: Source (https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102)
+-- 3 in v3 and v4 packages, 4 in v6 packages.
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52)
 
+-- 
+-- Finds the first `signature_tags::size` and `signature_tags::long_size`
+-- index record. Since Kaitai Struct doesn't have a built-in way to search an
+-- array directly, each step receives the indexes found so far via
+-- parameters.
 Rpm.SignatureTagsStep = class.class(KaitaiStruct)
 
-function Rpm.SignatureTagsStep:_init(idx, prev_size_tag_idx, io, parent, root)
+function Rpm.SignatureTagsStep:_init(idx, prev_size_tag_idx, prev_long_size_tag_idx, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
   self._root = root
   self.idx = idx
   self.prev_size_tag_idx = prev_size_tag_idx
+  self.prev_long_size_tag_idx = prev_long_size_tag_idx
   self:_read()
 end
 
 function Rpm.SignatureTagsStep:_read()
+end
+
+Rpm.SignatureTagsStep.property.long_size_tag_idx = {}
+function Rpm.SignatureTagsStep.property.long_size_tag_idx:get()
+  if self._m_long_size_tag_idx ~= nil then
+    return self._m_long_size_tag_idx
+  end
+
+  self._m_long_size_tag_idx = utils.box_unwrap((self.prev_long_size_tag_idx ~= -1) and utils.box_wrap(self.prev_long_size_tag_idx) or (utils.box_unwrap(( ((self._parent.signature.index_records[self.idx + 1].signature_tag == Rpm.SignatureTags.long_size) and (self._parent.signature.index_records[self.idx + 1].record_type == Rpm.RecordTypes.uint64) and (self._parent.signature.index_records[self.idx + 1].num_values >= 1)) ) and utils.box_wrap(self.idx) or (-1))))
+  return self._m_long_size_tag_idx
 end
 
 Rpm.SignatureTagsStep.property.size_tag_idx = {}

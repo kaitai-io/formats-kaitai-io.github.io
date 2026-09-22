@@ -15,15 +15,37 @@ class rpm_t;
 #endif
 
 /**
- * This parser is for the RPM version 3 file format which is the current version
- * of the file format used by RPM 2.1 and later (including RPM version 4.x, which
- * is the current version of the RPM tool). There are historical versions of the
- * RPM file format, as well as a currently abandoned fork (rpm5). These formats
- * are not covered by this specification.
- * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md Source
- * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md Source
+ * An RPM package consists of the lead, the signature (contains digests and
+ * signatures), the header (contains the package metadata) and the payload (a
+ * compressed archive of the package files).
+ * 
+ * This structure is shared by all package format versions supported by this
+ * Kaitai Struct implementation:
+ * 
+ * * v3, written by RPM 2.1 to 3.x.
+ * * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+ *   to 4 - see
+ *   <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192>.
+ *   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+ *   default - see
+ *   <https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch>.
+ * * v6, written by upstream RPM 6.0 by default - see
+ *   <https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37>.
+ * 
+ * The versions differ mainly in the tags they use: v6 packages store all sizes
+ * as 64-bit integers, carry only cryptographic data in the signature and always
+ * use the stripped-down cpio archive format (see the `payload` instance).
+ * 
+ * The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+ * this implementation.
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md Source
+ * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md Source
  * \sa https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html Source
- * \sa http://ftp.rpm.org/max-rpm/ Source
+ * \sa https://ftp.osuosl.org/pub/rpm/max-rpm/ Source
  */
 
 class rpm_t : public kaitai::kstruct {
@@ -33,6 +55,7 @@ public:
     class header_t;
     class header_index_record_t;
     class header_record_t;
+    class header_tags_step_t;
     class lead_t;
     class record_type_bin_t;
     class record_type_string_t;
@@ -45,6 +68,7 @@ public:
     class signature_tags_step_t;
 
     enum architectures_t {
+        ARCHITECTURES_NOT_SET = 0,
         ARCHITECTURES_X86 = 1,
         ARCHITECTURES_ALPHA = 2,
         ARCHITECTURES_SPARC = 3,
@@ -68,6 +92,7 @@ public:
         ARCHITECTURES_MIPS64_R6 = 21,
         ARCHITECTURES_RISCV = 22,
         ARCHITECTURES_LOONGARCH64 = 23,
+        ARCHITECTURES_E2K = 24,
         ARCHITECTURES_NO_ARCH = 255
     };
     static bool _is_defined_architectures_t(architectures_t v);
@@ -218,7 +243,7 @@ public:
         HEADER_TAGS_FILE_DEPENDS_IDX = 1143,
         HEADER_TAGS_FILE_DEPENDS_NUM = 1144,
         HEADER_TAGS_DEPENDS_DICT = 1145,
-        HEADER_TAGS_SOURCE_PKGID = 1146,
+        HEADER_TAGS_SOURCE_SIG_MD5 = 1146,
         HEADER_TAGS_FILE_CONTEXTS_OBSOLETE = 1147,
         HEADER_TAGS_FS_CONTEXTS_OBSOLETE = 1148,
         HEADER_TAGS_RE_CONTEXTS_OBSOLETE = 1149,
@@ -360,12 +385,12 @@ public:
         HEADER_TAGS_TRANS_FILE_TRIGGER_TYPE = 5089,
         HEADER_TAGS_FILE_SIGNATURES = 5090,
         HEADER_TAGS_FILE_SIGNATURE_LENGTH = 5091,
-        HEADER_TAGS_PAYLOAD_DIGEST = 5092,
-        HEADER_TAGS_PAYLOAD_DIGEST_ALGO = 5093,
+        HEADER_TAGS_PAYLOAD_SHA256 = 5092,
+        HEADER_TAGS_PAYLOAD_SHA256_ALGO_OBSOLETE = 5093,
         HEADER_TAGS_AUTO_INSTALLED_UNIMPLEMENTED = 5094,
         HEADER_TAGS_IDENTITY_UNIMPLEMENTED = 5095,
         HEADER_TAGS_MODULARITY_LABEL = 5096,
-        HEADER_TAGS_PAYLOAD_DIGEST_ALT = 5097,
+        HEADER_TAGS_PAYLOAD_SHA256_ALT = 5097,
         HEADER_TAGS_ARCH_SUFFIX = 5098,
         HEADER_TAGS_SPEC = 5099,
         HEADER_TAGS_TRANSLATION_URL = 5100,
@@ -377,7 +402,22 @@ public:
         HEADER_TAGS_POST_UNTRANS_PROG = 5106,
         HEADER_TAGS_PRE_UNTRANS_FLAGS = 5107,
         HEADER_TAGS_POST_UNTRANS_FLAGS = 5108,
-        HEADER_TAGS_SYS_USERS = 5109
+        HEADER_TAGS_SYS_USERS = 5109,
+        HEADER_TAGS_BUILD_SYSTEM_INTERNAL = 5110,
+        HEADER_TAGS_BUILD_OPTION_INTERNAL = 5111,
+        HEADER_TAGS_PAYLOAD_SIZE = 5112,
+        HEADER_TAGS_PAYLOAD_SIZE_ALT = 5113,
+        HEADER_TAGS_RPM_FORMAT = 5114,
+        HEADER_TAGS_FILE_MIME_INDEX = 5115,
+        HEADER_TAGS_MIME_DICT = 5116,
+        HEADER_TAGS_FILE_MIMES = 5117,
+        HEADER_TAGS_PACKAGE_DIGESTS = 5118,
+        HEADER_TAGS_PACKAGE_DIGEST_ALGOS = 5119,
+        HEADER_TAGS_SOURCE_NEVR = 5120,
+        HEADER_TAGS_PAYLOAD_SHA512 = 5121,
+        HEADER_TAGS_PAYLOAD_SHA512_ALT = 5122,
+        HEADER_TAGS_PAYLOAD_SHA3_256 = 5123,
+        HEADER_TAGS_PAYLOAD_SHA3_256_ALT = 5124
     };
     static bool _is_defined_header_tags_t(header_tags_t v);
 
@@ -387,6 +427,7 @@ private:
 public:
 
     enum operating_systems_t {
+        OPERATING_SYSTEMS_NOT_SET = 0,
         OPERATING_SYSTEMS_LINUX = 1,
         OPERATING_SYSTEMS_IRIX = 2,
         OPERATING_SYSTEMS_NO_OS = 255
@@ -399,7 +440,6 @@ private:
 public:
 
     enum record_types_t {
-        RECORD_TYPES_NOT_IMPLEMENTED = 0,
         RECORD_TYPES_CHAR = 1,
         RECORD_TYPES_UINT8 = 2,
         RECORD_TYPES_UINT16 = 3,
@@ -444,6 +484,9 @@ public:
         SIGNATURE_TAGS_FILE_SIGNATURE_LENGTH = 275,
         SIGNATURE_TAGS_VERITY_SIGNATURES = 276,
         SIGNATURE_TAGS_VERITY_SIGNATURE_ALGO = 277,
+        SIGNATURE_TAGS_OPENPGP = 278,
+        SIGNATURE_TAGS_SHA3_256 = 279,
+        SIGNATURE_TAGS_RESERVED = 999,
         SIGNATURE_TAGS_SIZE = 1000,
         SIGNATURE_TAGS_LE_MD5_1_OBSOLETE = 1001,
         SIGNATURE_TAGS_PGP = 1002,
@@ -678,7 +721,45 @@ public:
     };
 
     /**
-     * In 2021, Panu Matilainen (a RPM developer) [described this
+     * Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+     * which is where v6 packages store the payload size.
+     */
+
+    class header_tags_step_t : public kaitai::kstruct {
+
+    public:
+
+        header_tags_step_t(int32_t p_idx, int32_t p_prev_payload_size_tag_idx, kaitai::kstream* p__io, rpm_t* p__parent = nullptr, rpm_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header_tags_step_t();
+
+    private:
+        bool f_payload_size_tag_idx;
+        int32_t m_payload_size_tag_idx;
+
+    public:
+        int32_t payload_size_tag_idx();
+
+    private:
+        int32_t m_idx;
+        int32_t m_prev_payload_size_tag_idx;
+        rpm_t* m__root;
+        rpm_t* m__parent;
+
+    public:
+        int32_t idx() const { return m_idx; }
+        int32_t prev_payload_size_tag_idx() const { return m_prev_payload_size_tag_idx; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * In 2021, Panu Matilainen (an RPM developer) [described this
      * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
      * as follows:
      * 
@@ -687,10 +768,13 @@ public:
      * > it's an rpm file in the first place, just ignore everything in it.
      * > Literally everything.
      * 
-     * The fields with `valid` constraints are important, because these are the
-     * same validations that RPM does (which means that any valid `.rpm` file
-     * must pass them), but otherwise you should not make decisions based on the
-     * values given here.
+     * RPM 4.19 and older rejected packages that didn't meet the `valid`
+     * constraints specified here, while RPM 4.20 and later only check the
+     * `magic` - see
+     * <https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66>.
+     * Nevertheless, RPM still writes values that pass these checks for backwards
+     * compatibility, so any `.rpm` file should pass.
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md Source
      */
 
     class lead_t : public kaitai::kstruct {
@@ -725,6 +809,10 @@ public:
         architectures_t architecture() const { return m_architecture; }
         std::string package_name() const { return m_package_name; }
         operating_systems_t os() const { return m_os; }
+
+        /**
+         * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21 Source
+         */
         uint16_t signature_type() const { return m_signature_type; }
         std::string reserved() const { return m_reserved; }
         rpm_t* _root() const { return m__root; }
@@ -933,7 +1021,8 @@ public:
     public:
 
         /**
-         * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102 Source
+         * 3 in v3 and v4 packages, 4 in v6 packages.
+         * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52 Source
          */
         uint8_t major() const { return m_major; }
         uint8_t minor() const { return m_minor; }
@@ -941,11 +1030,18 @@ public:
         rpm_t::lead_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * Finds the first `signature_tags::size` and `signature_tags::long_size`
+     * index record. Since Kaitai Struct doesn't have a built-in way to search an
+     * array directly, each step receives the indexes found so far via
+     * parameters.
+     */
+
     class signature_tags_step_t : public kaitai::kstruct {
 
     public:
 
-        signature_tags_step_t(int32_t p_idx, int32_t p_prev_size_tag_idx, kaitai::kstream* p__io, rpm_t* p__parent = nullptr, rpm_t* p__root = nullptr);
+        signature_tags_step_t(int32_t p_idx, int32_t p_prev_size_tag_idx, int32_t p_prev_long_size_tag_idx, kaitai::kstream* p__io, rpm_t* p__parent = nullptr, rpm_t* p__root = nullptr);
 
     private:
         void _read();
@@ -953,6 +1049,13 @@ public:
 
     public:
         ~signature_tags_step_t();
+
+    private:
+        bool f_long_size_tag_idx;
+        int32_t m_long_size_tag_idx;
+
+    public:
+        int32_t long_size_tag_idx();
 
     private:
         bool f_size_tag_idx;
@@ -964,15 +1067,38 @@ public:
     private:
         int32_t m_idx;
         int32_t m_prev_size_tag_idx;
+        int32_t m_prev_long_size_tag_idx;
         rpm_t* m__root;
         rpm_t* m__parent;
 
     public:
         int32_t idx() const { return m_idx; }
         int32_t prev_size_tag_idx() const { return m_prev_size_tag_idx; }
+        int32_t prev_long_size_tag_idx() const { return m_prev_long_size_tag_idx; }
         rpm_t* _root() const { return m__root; }
         rpm_t* _parent() const { return m__parent; }
     };
+
+private:
+    bool f_has_header_payload_size_tag;
+    bool m_has_header_payload_size_tag;
+
+public:
+    bool has_header_payload_size_tag();
+
+private:
+    bool f_has_payload;
+    bool m_has_payload;
+
+public:
+    bool has_payload();
+
+private:
+    bool f_has_signature_long_size_tag;
+    bool m_has_signature_long_size_tag;
+
+public:
+    bool has_signature_long_size_tag();
 
 private:
     bool f_has_signature_size_tag;
@@ -980,6 +1106,19 @@ private:
 
 public:
     bool has_signature_size_tag();
+
+private:
+    bool f_header_payload_size_tag;
+    header_index_record_t* m_header_payload_size_tag;
+    bool n_header_payload_size_tag;
+
+public:
+    bool _is_null_header_payload_size_tag() { header_payload_size_tag(); return n_header_payload_size_tag; };
+
+private:
+
+public:
+    header_index_record_t* header_payload_size_tag();
 
 private:
     bool f_len_header;
@@ -999,6 +1138,21 @@ public:
 private:
 
 public:
+
+    /**
+     * Size of the (compressed) payload in bytes. v6 packages store it in
+     * `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+     * (which also includes the size of the header).
+     * 
+     * If the header and payload together or the uncompressed payload reach
+     * 4 GiB, v4 packages use `signature_tags::long_size` instead - see
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212>.
+     * 
+     * RPM never writes both (so this is just a hypothetical scenario), but if
+     * both are present, `signature_tags::long_size` takes precedence over
+     * `signature_tags::size`, just like in RPM's `printSize()` function:
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43>
+     */
     int32_t len_payload();
 
 private:
@@ -1026,7 +1180,48 @@ public:
 private:
 
 public:
+
+    /**
+     * Archive of the package files, compressed using the method specified by
+     * `header_tags::payload_compressor`. If this tag is missing, it's almost
+     * certainly uncompressed (except for some very old v3 packages built by RPM
+     * 3.0.3 or earlier, which didn't use the tag because the payload was always
+     * gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+     * the tag). However, RPM reads the payload as gzip by default - see
+     * <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645>.
+     * Since zlib's gzip reader passes data that is not in gzip format through
+     * unchanged (see
+     * <https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389>),
+     * this also works for uncompressed payloads.
+     * 
+     * The archive format is given by `header_tags::payload_format`, which is
+     * `"cpio"` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+     * without a checksum (the `070701` variant) - the [v4 format
+     * documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+     * claims "with a CRC checksum", but that's not true since RPM 2.4.4
+     * (released in 1997).
+     * 
+     * v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+     * variant of cpio with the magic `07070X`. Its file headers only hold the
+     * index of the file in the file lists of the RPM header, which is the only
+     * place where the file names, sizes and other metadata are stored.
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload Source
+     * \sa https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload Source
+     */
     std::string payload();
+
+private:
+    bool f_signature_long_size_tag;
+    header_index_record_t* m_signature_long_size_tag;
+    bool n_signature_long_size_tag;
+
+public:
+    bool _is_null_signature_long_size_tag() { signature_long_size_tag(); return n_signature_long_size_tag; };
+
+private:
+
+public:
+    header_index_record_t* signature_long_size_tag();
 
 private:
     bool f_signature_size_tag;
@@ -1061,6 +1256,7 @@ public:
 
 private:
     std::unique_ptr<std::vector<std::unique_ptr<signature_tags_step_t>>> m_signature_tags_steps;
+    std::unique_ptr<std::vector<std::unique_ptr<header_tags_step_t>>> m_header_tags_steps;
     rpm_t* m__root;
     kaitai::kstruct* m__parent;
 
@@ -1072,6 +1268,7 @@ public:
     header_t* header() const { return m_header.get(); }
     std::string _unnamed5() const { return m__unnamed5; }
     std::vector<std::unique_ptr<signature_tags_step_t>>* signature_tags_steps() const { return m_signature_tags_steps.get(); }
+    std::vector<std::unique_ptr<header_tags_step_t>>* header_tags_steps() const { return m_header_tags_steps.get(); }
     rpm_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
 };

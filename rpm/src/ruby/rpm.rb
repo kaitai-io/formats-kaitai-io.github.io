@@ -8,18 +8,41 @@ end
 
 
 ##
-# This parser is for the RPM version 3 file format which is the current version
-# of the file format used by RPM 2.1 and later (including RPM version 4.x, which
-# is the current version of the RPM tool). There are historical versions of the
-# RPM file format, as well as a currently abandoned fork (rpm5). These formats
-# are not covered by this specification.
-# @see https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md Source
-# @see https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md Source
+# An RPM package consists of the lead, the signature (contains digests and
+# signatures), the header (contains the package metadata) and the payload (a
+# compressed archive of the package files).
+# 
+# This structure is shared by all package format versions supported by this
+# Kaitai Struct implementation:
+# 
+# * v3, written by RPM 2.1 to 3.x.
+# * v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+#   to 4 - see
+#   <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192>.
+#   For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+#   default - see
+#   <https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch>.
+# * v6, written by upstream RPM 6.0 by default - see
+#   <https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37>.
+# 
+# The versions differ mainly in the tags they use: v6 packages store all sizes
+# as 64-bit integers, carry only cryptographic data in the signature and always
+# use the stripped-down cpio archive format (see the `payload` instance).
+# 
+# The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+# this implementation.
+# @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md Source
+# @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md Source
+# @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md Source
+# @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md Source
+# @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md Source
+# @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md Source
 # @see https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html Source
-# @see http://ftp.rpm.org/max-rpm/ Source
+# @see https://ftp.osuosl.org/pub/rpm/max-rpm/ Source
 class Rpm < Kaitai::Struct::Struct
 
   ARCHITECTURES = {
+    0 => :architectures_not_set,
     1 => :architectures_x86,
     2 => :architectures_alpha,
     3 => :architectures_sparc,
@@ -43,6 +66,7 @@ class Rpm < Kaitai::Struct::Struct
     21 => :architectures_mips64_r6,
     22 => :architectures_riscv,
     23 => :architectures_loongarch64,
+    24 => :architectures_e2k,
     255 => :architectures_no_arch,
   }
   I__ARCHITECTURES = ARCHITECTURES.invert
@@ -188,7 +212,7 @@ class Rpm < Kaitai::Struct::Struct
     1143 => :header_tags_file_depends_idx,
     1144 => :header_tags_file_depends_num,
     1145 => :header_tags_depends_dict,
-    1146 => :header_tags_source_pkgid,
+    1146 => :header_tags_source_sig_md5,
     1147 => :header_tags_file_contexts_obsolete,
     1148 => :header_tags_fs_contexts_obsolete,
     1149 => :header_tags_re_contexts_obsolete,
@@ -330,12 +354,12 @@ class Rpm < Kaitai::Struct::Struct
     5089 => :header_tags_trans_file_trigger_type,
     5090 => :header_tags_file_signatures,
     5091 => :header_tags_file_signature_length,
-    5092 => :header_tags_payload_digest,
-    5093 => :header_tags_payload_digest_algo,
+    5092 => :header_tags_payload_sha256,
+    5093 => :header_tags_payload_sha256_algo_obsolete,
     5094 => :header_tags_auto_installed_unimplemented,
     5095 => :header_tags_identity_unimplemented,
     5096 => :header_tags_modularity_label,
-    5097 => :header_tags_payload_digest_alt,
+    5097 => :header_tags_payload_sha256_alt,
     5098 => :header_tags_arch_suffix,
     5099 => :header_tags_spec,
     5100 => :header_tags_translation_url,
@@ -348,10 +372,26 @@ class Rpm < Kaitai::Struct::Struct
     5107 => :header_tags_pre_untrans_flags,
     5108 => :header_tags_post_untrans_flags,
     5109 => :header_tags_sys_users,
+    5110 => :header_tags_build_system_internal,
+    5111 => :header_tags_build_option_internal,
+    5112 => :header_tags_payload_size,
+    5113 => :header_tags_payload_size_alt,
+    5114 => :header_tags_rpm_format,
+    5115 => :header_tags_file_mime_index,
+    5116 => :header_tags_mime_dict,
+    5117 => :header_tags_file_mimes,
+    5118 => :header_tags_package_digests,
+    5119 => :header_tags_package_digest_algos,
+    5120 => :header_tags_source_nevr,
+    5121 => :header_tags_payload_sha512,
+    5122 => :header_tags_payload_sha512_alt,
+    5123 => :header_tags_payload_sha3_256,
+    5124 => :header_tags_payload_sha3_256_alt,
   }
   I__HEADER_TAGS = HEADER_TAGS.invert
 
   OPERATING_SYSTEMS = {
+    0 => :operating_systems_not_set,
     1 => :operating_systems_linux,
     2 => :operating_systems_irix,
     255 => :operating_systems_no_os,
@@ -359,7 +399,6 @@ class Rpm < Kaitai::Struct::Struct
   I__OPERATING_SYSTEMS = OPERATING_SYSTEMS.invert
 
   RECORD_TYPES = {
-    0 => :record_types_not_implemented,
     1 => :record_types_char,
     2 => :record_types_uint8,
     3 => :record_types_uint16,
@@ -394,6 +433,9 @@ class Rpm < Kaitai::Struct::Struct
     275 => :signature_tags_file_signature_length,
     276 => :signature_tags_verity_signatures,
     277 => :signature_tags_verity_signature_algo,
+    278 => :signature_tags_openpgp,
+    279 => :signature_tags_sha3_256,
+    999 => :signature_tags_reserved,
     1000 => :signature_tags_size,
     1001 => :signature_tags_le_md5_1_obsolete,
     1002 => :signature_tags_pgp,
@@ -423,7 +465,11 @@ class Rpm < Kaitai::Struct::Struct
     end
     @signature_tags_steps = []
     (signature.header_record.num_index_records).times { |i|
-      @signature_tags_steps << SignatureTagsStep.new(@_io, self, @_root, i, (i < 1 ? -1 : signature_tags_steps[i - 1].size_tag_idx))
+      @signature_tags_steps << SignatureTagsStep.new(@_io, self, @_root, i, (i != 0 ? signature_tags_steps[i - 1].size_tag_idx : -1), (i != 0 ? signature_tags_steps[i - 1].long_size_tag_idx : -1))
+    }
+    @header_tags_steps = []
+    (header.header_record.num_index_records).times { |i|
+      @header_tags_steps << HeaderTagsStep.new(@_io, self, @_root, i, (i != 0 ? header_tags_steps[i - 1].payload_size_tag_idx : -1))
     }
     self
   end
@@ -479,6 +525,7 @@ class Rpm < Kaitai::Struct::Struct
     def _read
       @tag_raw = @_io.read_u4be
       @record_type = Kaitai::Struct::Stream::resolve_enum(Rpm::RECORD_TYPES, @_io.read_u4be)
+      raise Kaitai::Struct::ValidationNotInEnumError.new(@record_type, @_io, "/types/header_index_record/seq/1") if not Rpm::I__RECORD_TYPES.key?(@record_type)
       @ofs_body = @_io.read_u4be
       @count = @_io.read_u4be
       self
@@ -563,7 +610,9 @@ class Rpm < Kaitai::Struct::Struct
       raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), @reserved, @_io, "/types/header_record/seq/1") if not @reserved == [0, 0, 0, 0].pack('C*')
       @num_index_records = @_io.read_u4be
       raise Kaitai::Struct::ValidationLessThanError.new(1, @num_index_records, @_io, "/types/header_record/seq/2") if not @num_index_records >= 1
+      raise Kaitai::Struct::ValidationGreaterThanError.new((_parent.is_signature ? 32 : 65535), @num_index_records, @_io, "/types/header_record/seq/2") if not @num_index_records <= (_parent.is_signature ? 32 : 65535)
       @len_storage_section = @_io.read_u4be
+      raise Kaitai::Struct::ValidationGreaterThanError.new((_parent.is_signature ? (64 * 1024) * 1024 : 268435455), @len_storage_section, @_io, "/types/header_record/seq/3") if not @len_storage_section <= (_parent.is_signature ? (64 * 1024) * 1024 : 268435455)
       self
     end
     attr_reader :magic
@@ -577,7 +626,30 @@ class Rpm < Kaitai::Struct::Struct
   end
 
   ##
-  # In 2021, Panu Matilainen (a RPM developer) [described this
+  # Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+  # which is where v6 packages store the payload size.
+  class HeaderTagsStep < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, idx, prev_payload_size_tag_idx)
+      super(_io, _parent, _root)
+      @idx = idx
+      @prev_payload_size_tag_idx = prev_payload_size_tag_idx
+      _read
+    end
+
+    def _read
+      self
+    end
+    def payload_size_tag_idx
+      return @payload_size_tag_idx unless @payload_size_tag_idx.nil?
+      @payload_size_tag_idx = (prev_payload_size_tag_idx != -1 ? prev_payload_size_tag_idx : ( ((_parent.header.index_records[idx].header_tag == :header_tags_payload_size) && (_parent.header.index_records[idx].record_type == :record_types_uint64) && (_parent.header.index_records[idx].num_values >= 1))  ? idx : -1))
+      @payload_size_tag_idx
+    end
+    attr_reader :idx
+    attr_reader :prev_payload_size_tag_idx
+  end
+
+  ##
+  # In 2021, Panu Matilainen (an RPM developer) [described this
   # structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
   # as follows:
   # 
@@ -586,10 +658,13 @@ class Rpm < Kaitai::Struct::Struct
   # > it's an rpm file in the first place, just ignore everything in it.
   # > Literally everything.
   # 
-  # The fields with `valid` constraints are important, because these are the
-  # same validations that RPM does (which means that any valid `.rpm` file
-  # must pass them), but otherwise you should not make decisions based on the
-  # values given here.
+  # RPM 4.19 and older rejected packages that didn't meet the `valid`
+  # constraints specified here, while RPM 4.20 and later only check the
+  # `magic` - see
+  # <https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66>.
+  # Nevertheless, RPM still writes values that pass these checks for backwards
+  # compatibility, so any `.rpm` file should pass.
+  # @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md Source
   class Lead < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
@@ -615,6 +690,9 @@ class Rpm < Kaitai::Struct::Struct
     attr_reader :architecture
     attr_reader :package_name
     attr_reader :os
+
+    ##
+    # @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21 Source
     attr_reader :signature_type
     attr_reader :reserved
   end
@@ -750,20 +828,33 @@ class Rpm < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102 Source
+    # 3 in v3 and v4 packages, 4 in v6 packages.
+    # @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52 Source
     attr_reader :major
     attr_reader :minor
   end
+
+  ##
+  # Finds the first `signature_tags::size` and `signature_tags::long_size`
+  # index record. Since Kaitai Struct doesn't have a built-in way to search an
+  # array directly, each step receives the indexes found so far via
+  # parameters.
   class SignatureTagsStep < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = nil, idx, prev_size_tag_idx)
+    def initialize(_io, _parent = nil, _root = nil, idx, prev_size_tag_idx, prev_long_size_tag_idx)
       super(_io, _parent, _root)
       @idx = idx
       @prev_size_tag_idx = prev_size_tag_idx
+      @prev_long_size_tag_idx = prev_long_size_tag_idx
       _read
     end
 
     def _read
       self
+    end
+    def long_size_tag_idx
+      return @long_size_tag_idx unless @long_size_tag_idx.nil?
+      @long_size_tag_idx = (prev_long_size_tag_idx != -1 ? prev_long_size_tag_idx : ( ((_parent.signature.index_records[idx].signature_tag == :signature_tags_long_size) && (_parent.signature.index_records[idx].record_type == :record_types_uint64) && (_parent.signature.index_records[idx].num_values >= 1))  ? idx : -1))
+      @long_size_tag_idx
     end
     def size_tag_idx
       return @size_tag_idx unless @size_tag_idx.nil?
@@ -772,21 +863,58 @@ class Rpm < Kaitai::Struct::Struct
     end
     attr_reader :idx
     attr_reader :prev_size_tag_idx
+    attr_reader :prev_long_size_tag_idx
+  end
+  def has_header_payload_size_tag
+    return @has_header_payload_size_tag unless @has_header_payload_size_tag.nil?
+    @has_header_payload_size_tag = header_tags_steps.last.payload_size_tag_idx != -1
+    @has_header_payload_size_tag
+  end
+  def has_payload
+    return @has_payload unless @has_payload.nil?
+    @has_payload =  ((has_header_payload_size_tag) || (has_signature_long_size_tag) || (has_signature_size_tag)) 
+    @has_payload
+  end
+  def has_signature_long_size_tag
+    return @has_signature_long_size_tag unless @has_signature_long_size_tag.nil?
+    @has_signature_long_size_tag = signature_tags_steps.last.long_size_tag_idx != -1
+    @has_signature_long_size_tag
   end
   def has_signature_size_tag
     return @has_signature_size_tag unless @has_signature_size_tag.nil?
     @has_signature_size_tag = signature_tags_steps.last.size_tag_idx != -1
     @has_signature_size_tag
   end
+  def header_payload_size_tag
+    return @header_payload_size_tag unless @header_payload_size_tag.nil?
+    if has_header_payload_size_tag
+      @header_payload_size_tag = header.index_records[header_tags_steps.last.payload_size_tag_idx]
+    end
+    @header_payload_size_tag
+  end
   def len_header
     return @len_header unless @len_header.nil?
     @len_header = ofs_payload - ofs_header
     @len_header
   end
+
+  ##
+  # Size of the (compressed) payload in bytes. v6 packages store it in
+  # `header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+  # (which also includes the size of the header).
+  # 
+  # If the header and payload together or the uncompressed payload reach
+  # 4 GiB, v4 packages use `signature_tags::long_size` instead - see
+  # <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212>.
+  # 
+  # RPM never writes both (so this is just a hypothetical scenario), but if
+  # both are present, `signature_tags::long_size` takes precedence over
+  # `signature_tags::size`, just like in RPM's `printSize()` function:
+  # <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43>
   def len_payload
     return @len_payload unless @len_payload.nil?
-    if has_signature_size_tag
-      @len_payload = signature_size_tag.body.values[0] - len_header
+    if has_payload
+      @len_payload = (has_header_payload_size_tag ? header_payload_size_tag.body.values[0] : (has_signature_long_size_tag ? signature_long_size_tag.body.values[0] - len_header : signature_size_tag.body.values[0] - len_header))
     end
     @len_payload
   end
@@ -800,15 +928,49 @@ class Rpm < Kaitai::Struct::Struct
     @ofs_payload = _io.pos
     @ofs_payload
   end
+
+  ##
+  # Archive of the package files, compressed using the method specified by
+  # `header_tags::payload_compressor`. If this tag is missing, it's almost
+  # certainly uncompressed (except for some very old v3 packages built by RPM
+  # 3.0.3 or earlier, which didn't use the tag because the payload was always
+  # gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+  # the tag). However, RPM reads the payload as gzip by default - see
+  # <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645>.
+  # Since zlib's gzip reader passes data that is not in gzip format through
+  # unchanged (see
+  # <https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389>),
+  # this also works for uncompressed payloads.
+  # 
+  # The archive format is given by `header_tags::payload_format`, which is
+  # `"cpio"` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+  # without a checksum (the `070701` variant) - the [v4 format
+  # documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+  # claims "with a CRC checksum", but that's not true since RPM 2.4.4
+  # (released in 1997).
+  # 
+  # v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+  # variant of cpio with the magic `07070X`. Its file headers only hold the
+  # index of the file in the file lists of the RPM header, which is the only
+  # place where the file names, sizes and other metadata are stored.
+  # @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload Source
+  # @see https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload Source
   def payload
     return @payload unless @payload.nil?
-    if has_signature_size_tag
+    if has_payload
       _pos = @_io.pos
       @_io.seek(ofs_payload)
       @payload = @_io.read_bytes(len_payload)
       @_io.seek(_pos)
     end
     @payload
+  end
+  def signature_long_size_tag
+    return @signature_long_size_tag unless @signature_long_size_tag.nil?
+    if has_signature_long_size_tag
+      @signature_long_size_tag = signature.index_records[signature_tags_steps.last.long_size_tag_idx]
+    end
+    @signature_long_size_tag
   end
   def signature_size_tag
     return @signature_size_tag unless @signature_size_tag.nil?
@@ -824,4 +986,5 @@ class Rpm < Kaitai::Struct::Struct
   attr_reader :header
   attr_reader :_unnamed5
   attr_reader :signature_tags_steps
+  attr_reader :header_tags_steps
 end

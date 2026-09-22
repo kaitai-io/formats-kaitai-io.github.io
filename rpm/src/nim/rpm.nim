@@ -10,9 +10,18 @@ type
     `header`*: Rpm_Header
     `unnamed5`*: seq[byte]
     `signatureTagsSteps`*: seq[Rpm_SignatureTagsStep]
+    `headerTagsSteps`*: seq[Rpm_HeaderTagsStep]
     `parent`*: KaitaiStruct
+    `hasHeaderPayloadSizeTagInst`: bool
+    `hasHeaderPayloadSizeTagInstFlag`: bool
+    `hasPayloadInst`: bool
+    `hasPayloadInstFlag`: bool
+    `hasSignatureLongSizeTagInst`: bool
+    `hasSignatureLongSizeTagInstFlag`: bool
     `hasSignatureSizeTagInst`: bool
     `hasSignatureSizeTagInstFlag`: bool
+    `headerPayloadSizeTagInst`: Rpm_HeaderIndexRecord
+    `headerPayloadSizeTagInstFlag`: bool
     `lenHeaderInst`: int
     `lenHeaderInstFlag`: bool
     `lenPayloadInst`: int
@@ -23,9 +32,12 @@ type
     `ofsPayloadInstFlag`: bool
     `payloadInst`: seq[byte]
     `payloadInstFlag`: bool
+    `signatureLongSizeTagInst`: Rpm_HeaderIndexRecord
+    `signatureLongSizeTagInstFlag`: bool
     `signatureSizeTagInst`: Rpm_HeaderIndexRecord
     `signatureSizeTagInstFlag`: bool
   Rpm_Architectures* = enum
+    not_set = 0
     x86 = 1
     alpha = 2
     sparc = 3
@@ -49,6 +61,7 @@ type
     mips64_r6 = 21
     riscv = 22
     loongarch64 = 23
+    e2k = 24
     no_arch = 255
   Rpm_HeaderTags* = enum
     signatures = 62
@@ -191,7 +204,7 @@ type
     file_depends_idx = 1143
     file_depends_num = 1144
     depends_dict = 1145
-    source_pkgid = 1146
+    source_sig_md5 = 1146
     file_contexts_obsolete = 1147
     fs_contexts_obsolete = 1148
     re_contexts_obsolete = 1149
@@ -333,12 +346,12 @@ type
     trans_file_trigger_type = 5089
     file_signatures = 5090
     file_signature_length = 5091
-    payload_digest = 5092
-    payload_digest_algo = 5093
+    payload_sha256 = 5092
+    payload_sha256_algo_obsolete = 5093
     auto_installed_unimplemented = 5094
     identity_unimplemented = 5095
     modularity_label = 5096
-    payload_digest_alt = 5097
+    payload_sha256_alt = 5097
     arch_suffix = 5098
     spec = 5099
     translation_url = 5100
@@ -351,12 +364,27 @@ type
     pre_untrans_flags = 5107
     post_untrans_flags = 5108
     sys_users = 5109
+    build_system_internal = 5110
+    build_option_internal = 5111
+    payload_size = 5112
+    payload_size_alt = 5113
+    rpm_format = 5114
+    file_mime_index = 5115
+    mime_dict = 5116
+    file_mimes = 5117
+    package_digests = 5118
+    package_digest_algos = 5119
+    source_nevr = 5120
+    payload_sha512 = 5121
+    payload_sha512_alt = 5122
+    payload_sha3_256 = 5123
+    payload_sha3_256_alt = 5124
   Rpm_OperatingSystems* = enum
+    not_set = 0
     linux = 1
     irix = 2
     no_os = 255
   Rpm_RecordTypes* = enum
-    not_implemented = 0
     char = 1
     uint8 = 2
     uint16 = 3
@@ -385,6 +413,9 @@ type
     file_signature_length = 275
     verity_signatures = 276
     verity_signature_algo = 277
+    openpgp = 278
+    sha3_256 = 279
+    reserved = 999
     size = 1000
     le_md5_1_obsolete = 1001
     pgp = 1002
@@ -427,6 +458,12 @@ type
     `numIndexRecords`*: uint32
     `lenStorageSection`*: uint32
     `parent`*: Rpm_Header
+  Rpm_HeaderTagsStep* = ref object of KaitaiStruct
+    `idx`*: int32
+    `prevPayloadSizeTagIdx`*: int32
+    `parent`*: Rpm
+    `payloadSizeTagIdxInst`: int
+    `payloadSizeTagIdxInstFlag`: bool
   Rpm_Lead* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `version`*: Rpm_RpmVersion
@@ -471,7 +508,10 @@ type
   Rpm_SignatureTagsStep* = ref object of KaitaiStruct
     `idx`*: int32
     `prevSizeTagIdx`*: int32
+    `prevLongSizeTagIdx`*: int32
     `parent`*: Rpm
+    `longSizeTagIdxInst`: int
+    `longSizeTagIdxInstFlag`: bool
     `sizeTagIdxInst`: int
     `sizeTagIdxInstFlag`: bool
 
@@ -480,6 +520,7 @@ proc read*(_: typedesc[Rpm_Dummy], io: KaitaiStream, root: KaitaiStruct, parent:
 proc read*(_: typedesc[Rpm_Header], io: KaitaiStream, root: KaitaiStruct, parent: Rpm, isSignature: any): Rpm_Header
 proc read*(_: typedesc[Rpm_HeaderIndexRecord], io: KaitaiStream, root: KaitaiStruct, parent: Rpm_Header): Rpm_HeaderIndexRecord
 proc read*(_: typedesc[Rpm_HeaderRecord], io: KaitaiStream, root: KaitaiStruct, parent: Rpm_Header): Rpm_HeaderRecord
+proc read*(_: typedesc[Rpm_HeaderTagsStep], io: KaitaiStream, root: KaitaiStruct, parent: Rpm, idx: any, prevPayloadSizeTagIdx: any): Rpm_HeaderTagsStep
 proc read*(_: typedesc[Rpm_Lead], io: KaitaiStream, root: KaitaiStruct, parent: Rpm): Rpm_Lead
 proc read*(_: typedesc[Rpm_RecordTypeBin], io: KaitaiStream, root: KaitaiStruct, parent: Rpm_HeaderIndexRecord, lenValue: any): Rpm_RecordTypeBin
 proc read*(_: typedesc[Rpm_RecordTypeString], io: KaitaiStream, root: KaitaiStruct, parent: Rpm_HeaderIndexRecord): Rpm_RecordTypeString
@@ -489,14 +530,19 @@ proc read*(_: typedesc[Rpm_RecordTypeUint32], io: KaitaiStream, root: KaitaiStru
 proc read*(_: typedesc[Rpm_RecordTypeUint64], io: KaitaiStream, root: KaitaiStruct, parent: Rpm_HeaderIndexRecord, numValues: any): Rpm_RecordTypeUint64
 proc read*(_: typedesc[Rpm_RecordTypeUint8], io: KaitaiStream, root: KaitaiStruct, parent: Rpm_HeaderIndexRecord, numValues: any): Rpm_RecordTypeUint8
 proc read*(_: typedesc[Rpm_RpmVersion], io: KaitaiStream, root: KaitaiStruct, parent: Rpm_Lead): Rpm_RpmVersion
-proc read*(_: typedesc[Rpm_SignatureTagsStep], io: KaitaiStream, root: KaitaiStruct, parent: Rpm, idx: any, prevSizeTagIdx: any): Rpm_SignatureTagsStep
+proc read*(_: typedesc[Rpm_SignatureTagsStep], io: KaitaiStream, root: KaitaiStruct, parent: Rpm, idx: any, prevSizeTagIdx: any, prevLongSizeTagIdx: any): Rpm_SignatureTagsStep
 
+proc hasHeaderPayloadSizeTag*(this: Rpm): bool
+proc hasPayload*(this: Rpm): bool
+proc hasSignatureLongSizeTag*(this: Rpm): bool
 proc hasSignatureSizeTag*(this: Rpm): bool
+proc headerPayloadSizeTag*(this: Rpm): Rpm_HeaderIndexRecord
 proc lenHeader*(this: Rpm): int
 proc lenPayload*(this: Rpm): int
 proc ofsHeader*(this: Rpm): int
 proc ofsPayload*(this: Rpm): int
 proc payload*(this: Rpm): seq[byte]
+proc signatureLongSizeTag*(this: Rpm): Rpm_HeaderIndexRecord
 proc signatureSizeTag*(this: Rpm): Rpm_HeaderIndexRecord
 proc isHeader*(this: Rpm_Header): bool
 proc body*(this: Rpm_HeaderIndexRecord): KaitaiStruct
@@ -504,20 +550,44 @@ proc headerTag*(this: Rpm_HeaderIndexRecord): Rpm_HeaderTags
 proc lenValue*(this: Rpm_HeaderIndexRecord): uint32
 proc numValues*(this: Rpm_HeaderIndexRecord): uint32
 proc signatureTag*(this: Rpm_HeaderIndexRecord): Rpm_SignatureTags
+proc payloadSizeTagIdx*(this: Rpm_HeaderTagsStep): int
+proc longSizeTagIdx*(this: Rpm_SignatureTagsStep): int
 proc sizeTagIdx*(this: Rpm_SignatureTagsStep): int
 
 
 ##[
-This parser is for the RPM version 3 file format which is the current version
-of the file format used by RPM 2.1 and later (including RPM version 4.x, which
-is the current version of the RPM tool). There are historical versions of the
-RPM file format, as well as a currently abandoned fork (rpm5). These formats
-are not covered by this specification.
+An RPM package consists of the lead, the signature (contains digests and
+signatures), the header (contains the package metadata) and the payload (a
+compressed archive of the package files).
 
-@see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/format.md">Source</a>
-@see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/docs/manual/tags.md">Source</a>
+This structure is shared by all package format versions supported by this
+Kaitai Struct implementation:
+
+* v3, written by RPM 2.1 to 3.x.
+* v4, written by RPM 4.x, and by RPM 6.x when the `%_rpmformat` macro is set
+  to 4 - see
+  <https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/man/rpmbuild-config.5.scd?plain=1#L189-L192>.
+  For example, Fedora 43 and 44 patch RPM 6.0 to keep producing v4 packages by
+  default - see
+  <https://src.fedoraproject.org/rpms/rpm/blob/7099d81c3b5ecf1777a43095be429cb198bcc566/f/rpm-6.0-rpmformat.patch>.
+* v6, written by upstream RPM 6.0 by default - see
+  <https://github.com/rpm-software-management/rpm/commit/99d80a22d3d299bdc4418f7e61cd491731626d37>.
+
+The versions differ mainly in the tags they use: v6 packages store all sizes
+as 64-bit integers, carry only cryptographic data in the signature and always
+use the stripped-down cpio archive format (see the `payload` instance).
+
+The formats before v3, as well as the abandoned rpm5 fork, are not covered by
+this implementation.
+
+@see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md">Source</a>
+@see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md">Source</a>
+@see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v3.md">Source</a>
+@see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/signatures_digests.md">Source</a>
+@see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/large_files.md">Source</a>
+@see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/tags.md">Source</a>
 @see <a href="https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html">Source</a>
-@see <a href="http://ftp.rpm.org/max-rpm/">Source</a>
+@see <a href="https://ftp.osuosl.org/pub/rpm/max-rpm/">Source</a>
 ]##
 proc read*(_: typedesc[Rpm], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Rpm =
   template this: untyped = result
@@ -542,8 +612,35 @@ proc read*(_: typedesc[Rpm], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
     let unnamed5Expr = this.io.readBytes(int(0))
     this.unnamed5 = unnamed5Expr
   for i in 0 ..< int(this.signature.headerRecord.numIndexRecords):
-    let it = Rpm_SignatureTagsStep.read(this.io, this.root, this, i, (if i < 1: -1 else: this.signatureTagsSteps[i - 1].sizeTagIdx))
+    let it = Rpm_SignatureTagsStep.read(this.io, this.root, this, i, (if i != 0: this.signatureTagsSteps[i - 1].sizeTagIdx else: -1), (if i != 0: this.signatureTagsSteps[i - 1].longSizeTagIdx else: -1))
     this.signatureTagsSteps.add(it)
+  for i in 0 ..< int(this.header.headerRecord.numIndexRecords):
+    let it = Rpm_HeaderTagsStep.read(this.io, this.root, this, i, (if i != 0: this.headerTagsSteps[i - 1].payloadSizeTagIdx else: -1))
+    this.headerTagsSteps.add(it)
+
+proc hasHeaderPayloadSizeTag(this: Rpm): bool = 
+  if this.hasHeaderPayloadSizeTagInstFlag:
+    return this.hasHeaderPayloadSizeTagInst
+  let hasHeaderPayloadSizeTagInstExpr = bool(this.headerTagsSteps[^1].payloadSizeTagIdx != -1)
+  this.hasHeaderPayloadSizeTagInst = hasHeaderPayloadSizeTagInstExpr
+  this.hasHeaderPayloadSizeTagInstFlag = true
+  return this.hasHeaderPayloadSizeTagInst
+
+proc hasPayload(this: Rpm): bool = 
+  if this.hasPayloadInstFlag:
+    return this.hasPayloadInst
+  let hasPayloadInstExpr = bool( ((this.hasHeaderPayloadSizeTag) or (this.hasSignatureLongSizeTag) or (this.hasSignatureSizeTag)) )
+  this.hasPayloadInst = hasPayloadInstExpr
+  this.hasPayloadInstFlag = true
+  return this.hasPayloadInst
+
+proc hasSignatureLongSizeTag(this: Rpm): bool = 
+  if this.hasSignatureLongSizeTagInstFlag:
+    return this.hasSignatureLongSizeTagInst
+  let hasSignatureLongSizeTagInstExpr = bool(this.signatureTagsSteps[^1].longSizeTagIdx != -1)
+  this.hasSignatureLongSizeTagInst = hasSignatureLongSizeTagInstExpr
+  this.hasSignatureLongSizeTagInstFlag = true
+  return this.hasSignatureLongSizeTagInst
 
 proc hasSignatureSizeTag(this: Rpm): bool = 
   if this.hasSignatureSizeTagInstFlag:
@@ -552,6 +649,15 @@ proc hasSignatureSizeTag(this: Rpm): bool =
   this.hasSignatureSizeTagInst = hasSignatureSizeTagInstExpr
   this.hasSignatureSizeTagInstFlag = true
   return this.hasSignatureSizeTagInst
+
+proc headerPayloadSizeTag(this: Rpm): Rpm_HeaderIndexRecord = 
+  if this.headerPayloadSizeTagInstFlag:
+    return this.headerPayloadSizeTagInst
+  if this.hasHeaderPayloadSizeTag:
+    let headerPayloadSizeTagInstExpr = Rpm_HeaderIndexRecord(this.header.indexRecords[this.headerTagsSteps[^1].payloadSizeTagIdx])
+    this.headerPayloadSizeTagInst = headerPayloadSizeTagInstExpr
+  this.headerPayloadSizeTagInstFlag = true
+  return this.headerPayloadSizeTagInst
 
 proc lenHeader(this: Rpm): int = 
   if this.lenHeaderInstFlag:
@@ -562,10 +668,26 @@ proc lenHeader(this: Rpm): int =
   return this.lenHeaderInst
 
 proc lenPayload(this: Rpm): int = 
+
+  ##[
+  Size of the (compressed) payload in bytes. v6 packages store it in
+`header_tags::payload_size`, v4/v3 packages in `signature_tags::size`
+(which also includes the size of the header).
+
+If the header and payload together or the uncompressed payload reach
+4 GiB, v4 packages use `signature_tags::long_size` instead - see
+<https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L182-L212>.
+
+RPM never writes both (so this is just a hypothetical scenario), but if
+both are present, `signature_tags::long_size` takes precedence over
+`signature_tags::size`, just like in RPM's `printSize()` function:
+<https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/signature.cc#L36-L43>
+
+  ]##
   if this.lenPayloadInstFlag:
     return this.lenPayloadInst
-  if this.hasSignatureSizeTag:
-    let lenPayloadInstExpr = int((Rpm_RecordTypeUint32(this.signatureSizeTag.body)).values[0] - this.lenHeader)
+  if this.hasPayload:
+    let lenPayloadInstExpr = int((if this.hasHeaderPayloadSizeTag: (Rpm_RecordTypeUint64(this.headerPayloadSizeTag.body)).values[0] else: (if this.hasSignatureLongSizeTag: (Rpm_RecordTypeUint64(this.signatureLongSizeTag.body)).values[0] - this.lenHeader else: (Rpm_RecordTypeUint32(this.signatureSizeTag.body)).values[0] - this.lenHeader)))
     this.lenPayloadInst = lenPayloadInstExpr
   this.lenPayloadInstFlag = true
   return this.lenPayloadInst
@@ -587,9 +709,38 @@ proc ofsPayload(this: Rpm): int =
   return this.ofsPayloadInst
 
 proc payload(this: Rpm): seq[byte] = 
+
+  ##[
+  Archive of the package files, compressed using the method specified by
+`header_tags::payload_compressor`. If this tag is missing, it's almost
+certainly uncompressed (except for some very old v3 packages built by RPM
+3.0.3 or earlier, which didn't use the tag because the payload was always
+gzipped; RPM 3.0.5 added support for bzip2 payloads and started writing
+the tag). However, RPM reads the payload as gzip by default - see
+<https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmte.cc#L643-L645>.
+Since zlib's gzip reader passes data that is not in gzip format through
+unchanged (see
+<https://github.com/madler/zlib/blob/da607da739fa6047df13e66a2af6b8bec7c2a498/zlib.h#L1386-L1389>),
+this also works for uncompressed payloads.
+
+The archive format is given by `header_tags::payload_format`, which is
+`"cpio"` for regular packages. In v4/v3 packages, it's a SVR4 cpio archive
+without a checksum (the `070701` variant) - the [v4 format
+documentation](https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md?plain=1#L106-L107)
+claims "with a CRC checksum", but that's not true since RPM 2.4.4
+(released in 1997).
+
+v6 packages and v4 packages with a file over 4 GiB use a stripped-down
+variant of cpio with the magic `07070X`. Its file headers only hold the
+index of the file in the file lists of the RPM header, which is the only
+place where the file names, sizes and other metadata are stored.
+
+  @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v6.md#payload">Source</a>
+  @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_v4.md#payload">Source</a>
+  ]##
   if this.payloadInstFlag:
     return this.payloadInst
-  if this.hasSignatureSizeTag:
+  if this.hasPayload:
     let pos = this.io.pos()
     this.io.seek(int(this.ofsPayload))
     let payloadInstExpr = this.io.readBytes(int(this.lenPayload))
@@ -597,6 +748,15 @@ proc payload(this: Rpm): seq[byte] =
     this.io.seek(pos)
   this.payloadInstFlag = true
   return this.payloadInst
+
+proc signatureLongSizeTag(this: Rpm): Rpm_HeaderIndexRecord = 
+  if this.signatureLongSizeTagInstFlag:
+    return this.signatureLongSizeTagInst
+  if this.hasSignatureLongSizeTag:
+    let signatureLongSizeTagInstExpr = Rpm_HeaderIndexRecord(this.signature.indexRecords[this.signatureTagsSteps[^1].longSizeTagIdx])
+    this.signatureLongSizeTagInst = signatureLongSizeTagInstExpr
+  this.signatureLongSizeTagInstFlag = true
+  return this.signatureLongSizeTagInst
 
 proc signatureSizeTag(this: Rpm): Rpm_HeaderIndexRecord = 
   if this.signatureSizeTagInstFlag:
@@ -792,7 +952,37 @@ proc fromFile*(_: typedesc[Rpm_HeaderRecord], filename: string): Rpm_HeaderRecor
 
 
 ##[
-In 2021, Panu Matilainen (a RPM developer) [described this
+Like `signature_tags_step`, but looks for `header_tags::payload_size`,
+which is where v6 packages store the payload size.
+
+]##
+proc read*(_: typedesc[Rpm_HeaderTagsStep], io: KaitaiStream, root: KaitaiStruct, parent: Rpm, idx: any, prevPayloadSizeTagIdx: any): Rpm_HeaderTagsStep =
+  template this: untyped = result
+  this = new(Rpm_HeaderTagsStep)
+  let root = if root == nil: cast[Rpm](this) else: cast[Rpm](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let idxExpr = int32(idx)
+  this.idx = idxExpr
+  let prevPayloadSizeTagIdxExpr = int32(prevPayloadSizeTagIdx)
+  this.prevPayloadSizeTagIdx = prevPayloadSizeTagIdxExpr
+
+
+proc payloadSizeTagIdx(this: Rpm_HeaderTagsStep): int = 
+  if this.payloadSizeTagIdxInstFlag:
+    return this.payloadSizeTagIdxInst
+  let payloadSizeTagIdxInstExpr = int((if this.prevPayloadSizeTagIdx != -1: this.prevPayloadSizeTagIdx else: (if  ((this.parent.header.indexRecords[this.idx].headerTag == rpm.payload_size) and (this.parent.header.indexRecords[this.idx].recordType == rpm.uint64) and (this.parent.header.indexRecords[this.idx].numValues >= 1)) : this.idx else: -1)))
+  this.payloadSizeTagIdxInst = payloadSizeTagIdxInstExpr
+  this.payloadSizeTagIdxInstFlag = true
+  return this.payloadSizeTagIdxInst
+
+proc fromFile*(_: typedesc[Rpm_HeaderTagsStep], filename: string): Rpm_HeaderTagsStep =
+  Rpm_HeaderTagsStep.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+In 2021, Panu Matilainen (an RPM developer) [described this
 structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
 as follows:
 
@@ -801,11 +991,14 @@ as follows:
 > it's an rpm file in the first place, just ignore everything in it.
 > Literally everything.
 
-The fields with `valid` constraints are important, because these are the
-same validations that RPM does (which means that any valid `.rpm` file
-must pass them), but otherwise you should not make decisions based on the
-values given here.
+RPM 4.19 and older rejected packages that didn't meet the `valid`
+constraints specified here, while RPM 4.20 and later only check the
+`magic` - see
+<https://github.com/rpm-software-management/rpm/commit/b3449a0774487a091bbe59e821b4004b06d4fa66>.
+Nevertheless, RPM still writes values that pass these checks for backwards
+compatibility, so any `.rpm` file should pass.
 
+@see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/docs/manual/format_lead.md">Source</a>
 ]##
 proc read*(_: typedesc[Rpm_Lead], io: KaitaiStream, root: KaitaiStruct, parent: Rpm): Rpm_Lead =
   template this: untyped = result
@@ -827,6 +1020,10 @@ proc read*(_: typedesc[Rpm_Lead], io: KaitaiStream, root: KaitaiStruct, parent: 
   this.packageName = packageNameExpr
   let osExpr = Rpm_OperatingSystems(this.io.readU2be())
   this.os = osExpr
+
+  ##[
+  @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L20-L21">Source</a>
+  ]##
   let signatureTypeExpr = this.io.readU2be()
   this.signatureType = signatureTypeExpr
   let reservedExpr = this.io.readBytes(int(16))
@@ -962,7 +1159,8 @@ proc read*(_: typedesc[Rpm_RpmVersion], io: KaitaiStream, root: KaitaiStruct, pa
 
 
   ##[
-  @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
+  3 in v3 and v4 packages, 4 in v6 packages.
+  @see <a href="https://github.com/rpm-software-management/rpm/blob/ec9ea8c43808c346da4b6cb454cdc58aef8e506a/lib/rpmlead.cc#L51-L52">Source</a>
   ]##
   let majorExpr = this.io.readU1()
   this.major = majorExpr
@@ -972,7 +1170,15 @@ proc read*(_: typedesc[Rpm_RpmVersion], io: KaitaiStream, root: KaitaiStruct, pa
 proc fromFile*(_: typedesc[Rpm_RpmVersion], filename: string): Rpm_RpmVersion =
   Rpm_RpmVersion.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Rpm_SignatureTagsStep], io: KaitaiStream, root: KaitaiStruct, parent: Rpm, idx: any, prevSizeTagIdx: any): Rpm_SignatureTagsStep =
+
+##[
+Finds the first `signature_tags::size` and `signature_tags::long_size`
+index record. Since Kaitai Struct doesn't have a built-in way to search an
+array directly, each step receives the indexes found so far via
+parameters.
+
+]##
+proc read*(_: typedesc[Rpm_SignatureTagsStep], io: KaitaiStream, root: KaitaiStruct, parent: Rpm, idx: any, prevSizeTagIdx: any, prevLongSizeTagIdx: any): Rpm_SignatureTagsStep =
   template this: untyped = result
   this = new(Rpm_SignatureTagsStep)
   let root = if root == nil: cast[Rpm](this) else: cast[Rpm](root)
@@ -983,7 +1189,17 @@ proc read*(_: typedesc[Rpm_SignatureTagsStep], io: KaitaiStream, root: KaitaiStr
   this.idx = idxExpr
   let prevSizeTagIdxExpr = int32(prevSizeTagIdx)
   this.prevSizeTagIdx = prevSizeTagIdxExpr
+  let prevLongSizeTagIdxExpr = int32(prevLongSizeTagIdx)
+  this.prevLongSizeTagIdx = prevLongSizeTagIdxExpr
 
+
+proc longSizeTagIdx(this: Rpm_SignatureTagsStep): int = 
+  if this.longSizeTagIdxInstFlag:
+    return this.longSizeTagIdxInst
+  let longSizeTagIdxInstExpr = int((if this.prevLongSizeTagIdx != -1: this.prevLongSizeTagIdx else: (if  ((this.parent.signature.indexRecords[this.idx].signatureTag == rpm.long_size) and (this.parent.signature.indexRecords[this.idx].recordType == rpm.uint64) and (this.parent.signature.indexRecords[this.idx].numValues >= 1)) : this.idx else: -1)))
+  this.longSizeTagIdxInst = longSizeTagIdxInstExpr
+  this.longSizeTagIdxInstFlag = true
+  return this.longSizeTagIdxInst
 
 proc sizeTagIdx(this: Rpm_SignatureTagsStep): int = 
   if this.sizeTagIdxInstFlag:
