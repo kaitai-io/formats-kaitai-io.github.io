@@ -76,6 +76,7 @@ const std::set<uimage_t::uimage_os_t> uimage_t::_values_uimage_os_t{
     uimage_t::UIMAGE_OS_TEE,
     uimage_t::UIMAGE_OS_OPENSBI,
     uimage_t::UIMAGE_OS_EFI,
+    uimage_t::UIMAGE_OS_ELF,
 };
 bool uimage_t::_is_defined_uimage_os_t(uimage_t::uimage_os_t v) {
     return uimage_t::_values_uimage_os_t.find(v) != uimage_t::_values_uimage_os_t.end();
@@ -122,6 +123,13 @@ const std::set<uimage_t::uimage_type_t> uimage_t::_values_uimage_type_t{
     uimage_t::UIMAGE_TYPE_IMX8IMAGE,
     uimage_t::UIMAGE_TYPE_COPRO,
     uimage_t::UIMAGE_TYPE_SUNXI_EGON,
+    uimage_t::UIMAGE_TYPE_SUNXI_TOC0,
+    uimage_t::UIMAGE_TYPE_FDT_LEGACY,
+    uimage_t::UIMAGE_TYPE_RENESAS_SPKG,
+    uimage_t::UIMAGE_TYPE_STARFIVE_SPL,
+    uimage_t::UIMAGE_TYPE_TFA_BL31,
+    uimage_t::UIMAGE_TYPE_STM32IMAGE_V2,
+    uimage_t::UIMAGE_TYPE_AMLIMAGE,
 };
 bool uimage_t::_is_defined_uimage_type_t(uimage_t::uimage_type_t v) {
     return uimage_t::_values_uimage_type_t.find(v) != uimage_t::_values_uimage_type_t.end();

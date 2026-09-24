@@ -13,7 +13,7 @@
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * @see {@link https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h|Source}
+ * @see {@link https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h|Git tag "v2026.07"}
  */
 
 var Uimage = (function() {
@@ -123,6 +123,7 @@ var Uimage = (function() {
     TEE: 26,
     OPENSBI: 27,
     EFI: 28,
+    ELF: 29,
 
     0: "INVALID",
     1: "OPENBSD",
@@ -153,6 +154,7 @@ var Uimage = (function() {
     26: "TEE",
     27: "OPENSBI",
     28: "EFI",
+    29: "ELF",
   });
 
   Uimage.UimageType = Object.freeze({
@@ -197,6 +199,13 @@ var Uimage = (function() {
     IMX8IMAGE: 38,
     COPRO: 39,
     SUNXI_EGON: 40,
+    SUNXI_TOC0: 41,
+    FDT_LEGACY: 42,
+    RENESAS_SPKG: 43,
+    STARFIVE_SPL: 44,
+    TFA_BL31: 45,
+    STM32IMAGE_V2: 46,
+    AMLIMAGE: 47,
 
     0: "INVALID",
     1: "STANDALONE",
@@ -239,6 +248,13 @@ var Uimage = (function() {
     38: "IMX8IMAGE",
     39: "COPRO",
     40: "SUNXI_EGON",
+    41: "SUNXI_TOC0",
+    42: "FDT_LEGACY",
+    43: "RENESAS_SPKG",
+    44: "STARFIVE_SPL",
+    45: "TFA_BL31",
+    46: "STM32IMAGE_V2",
+    47: "AMLIMAGE",
   });
 
   function Uimage(_io, _parent, _root) {

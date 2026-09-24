@@ -344,7 +344,7 @@ and build them along with your project.</p>
 <span class="cm"> * The new uImage format allows more flexibility in handling images of various</span>
 <span class="cm"> * types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
 <span class="cm"> * with sha1 and md5 checksums.</span>
-<span class="cm"> * \sa https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h Source</span>
+<span class="cm"> * \sa https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h Git tag &quot;v2026.07&quot;</span>
 <span class="cm"> */</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">uimage_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
@@ -435,7 +435,8 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">UIMAGE_OS_ARM_TRUSTED_FIRMWARE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
 <span class="w">        </span><span class="n">UIMAGE_OS_TEE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span>
 <span class="w">        </span><span class="n">UIMAGE_OS_OPENSBI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span>
-<span class="w">        </span><span class="n">UIMAGE_OS_EFI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span>
+<span class="w">        </span><span class="n">UIMAGE_OS_EFI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span>
+<span class="w">        </span><span class="n">UIMAGE_OS_ELF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">29</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_uimage_os_t</span><span class="p">(</span><span class="n">uimage_os_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
 
@@ -486,7 +487,14 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">UIMAGE_TYPE_IMX8MIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">37</span><span class="p">,</span>
 <span class="w">        </span><span class="n">UIMAGE_TYPE_IMX8IMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">38</span><span class="p">,</span>
 <span class="w">        </span><span class="n">UIMAGE_TYPE_COPRO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span>
-<span class="w">        </span><span class="n">UIMAGE_TYPE_SUNXI_EGON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">40</span>
+<span class="w">        </span><span class="n">UIMAGE_TYPE_SUNXI_EGON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">        </span><span class="n">UIMAGE_TYPE_SUNXI_TOC0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">41</span><span class="p">,</span>
+<span class="w">        </span><span class="n">UIMAGE_TYPE_FDT_LEGACY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">        </span><span class="n">UIMAGE_TYPE_RENESAS_SPKG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span>
+<span class="w">        </span><span class="n">UIMAGE_TYPE_STARFIVE_SPL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span>
+<span class="w">        </span><span class="n">UIMAGE_TYPE_TFA_BL31</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">        </span><span class="n">UIMAGE_TYPE_STM32IMAGE_V2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">46</span><span class="p">,</span>
+<span class="w">        </span><span class="n">UIMAGE_TYPE_AMLIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">47</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_uimage_type_t</span><span class="p">(</span><span class="n">uimage_type_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
 
@@ -666,6 +674,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_OS_TEE</span><span class="p">);</span>
 <span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_OS_OPENSBI</span><span class="p">);</span>
 <span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_OS_EFI</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_OS_ELF</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">uimage_os_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uimage_t</span><span class="o">::</span><span class="n">_values_uimage_os_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uimage_t</span><span class="o">::</span><span class="n">_build_values_uimage_os_t</span><span class="p">();</span>
@@ -715,6 +724,13 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_IMX8IMAGE</span><span class="p">);</span>
 <span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_COPRO</span><span class="p">);</span>
 <span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_SUNXI_EGON</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_SUNXI_TOC0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_FDT_LEGACY</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_RENESAS_SPKG</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_STARFIVE_SPL</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_TFA_BL31</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_STM32IMAGE_V2</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">UIMAGE_TYPE_AMLIMAGE</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">uimage_t</span><span class="o">::</span><span class="n">uimage_type_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uimage_t</span><span class="o">::</span><span class="n">_values_uimage_type_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uimage_t</span><span class="o">::</span><span class="n">_build_values_uimage_type_t</span><span class="p">();</span>

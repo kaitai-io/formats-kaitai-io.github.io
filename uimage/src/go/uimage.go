@@ -10,7 +10,7 @@ import (
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * @see <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h">Source</a>
+ * @see <a href="https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h">Git tag "v2026.07"</a>
  */
 
 type Uimage_UimageArch int
@@ -96,8 +96,9 @@ const (
 	Uimage_UimageOs__Tee Uimage_UimageOs = 26
 	Uimage_UimageOs__Opensbi Uimage_UimageOs = 27
 	Uimage_UimageOs__Efi Uimage_UimageOs = 28
+	Uimage_UimageOs__Elf Uimage_UimageOs = 29
 )
-var values_Uimage_UimageOs = map[Uimage_UimageOs]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}}
+var values_Uimage_UimageOs = map[Uimage_UimageOs]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}}
 func (v Uimage_UimageOs) isDefined() bool {
 	_, ok := values_Uimage_UimageOs[v]
 	return ok
@@ -146,8 +147,15 @@ const (
 	Uimage_UimageType__Imx8image Uimage_UimageType = 38
 	Uimage_UimageType__Copro Uimage_UimageType = 39
 	Uimage_UimageType__SunxiEgon Uimage_UimageType = 40
+	Uimage_UimageType__SunxiToc0 Uimage_UimageType = 41
+	Uimage_UimageType__FdtLegacy Uimage_UimageType = 42
+	Uimage_UimageType__RenesasSpkg Uimage_UimageType = 43
+	Uimage_UimageType__StarfiveSpl Uimage_UimageType = 44
+	Uimage_UimageType__TfaBl31 Uimage_UimageType = 45
+	Uimage_UimageType__Stm32imageV2 Uimage_UimageType = 46
+	Uimage_UimageType__Amlimage Uimage_UimageType = 47
 )
-var values_Uimage_UimageType = map[Uimage_UimageType]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}, 32: {}, 33: {}, 34: {}, 35: {}, 36: {}, 37: {}, 38: {}, 39: {}, 40: {}}
+var values_Uimage_UimageType = map[Uimage_UimageType]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}, 32: {}, 33: {}, 34: {}, 35: {}, 36: {}, 37: {}, 38: {}, 39: {}, 40: {}, 41: {}, 42: {}, 43: {}, 44: {}, 45: {}, 46: {}, 47: {}}
 func (v Uimage_UimageType) isDefined() bool {
 	_, ok := values_Uimage_UimageType[v]
 	return ok

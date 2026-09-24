@@ -17,7 +17,7 @@ class uimage_t;
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * \sa https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h Source
+ * \sa https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h Git tag "v2026.07"
  */
 
 class uimage_t : public kaitai::kstruct {
@@ -106,7 +106,8 @@ public:
         UIMAGE_OS_ARM_TRUSTED_FIRMWARE = 25,
         UIMAGE_OS_TEE = 26,
         UIMAGE_OS_OPENSBI = 27,
-        UIMAGE_OS_EFI = 28
+        UIMAGE_OS_EFI = 28,
+        UIMAGE_OS_ELF = 29
     };
     static bool _is_defined_uimage_os_t(uimage_os_t v);
 
@@ -156,7 +157,14 @@ public:
         UIMAGE_TYPE_IMX8MIMAGE = 37,
         UIMAGE_TYPE_IMX8IMAGE = 38,
         UIMAGE_TYPE_COPRO = 39,
-        UIMAGE_TYPE_SUNXI_EGON = 40
+        UIMAGE_TYPE_SUNXI_EGON = 40,
+        UIMAGE_TYPE_SUNXI_TOC0 = 41,
+        UIMAGE_TYPE_FDT_LEGACY = 42,
+        UIMAGE_TYPE_RENESAS_SPKG = 43,
+        UIMAGE_TYPE_STARFIVE_SPL = 44,
+        UIMAGE_TYPE_TFA_BL31 = 45,
+        UIMAGE_TYPE_STM32IMAGE_V2 = 46,
+        UIMAGE_TYPE_AMLIMAGE = 47
     };
     static bool _is_defined_uimage_type_t(uimage_type_t v);
 

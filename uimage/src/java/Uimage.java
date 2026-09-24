@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * @see <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h">Source</a>
+ * @see <a href="https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h">Git tag "v2026.07"</a>
  */
 public class Uimage extends KaitaiStruct {
     public static Uimage fromFile(String fileName) throws IOException {
@@ -110,12 +110,13 @@ public class Uimage extends KaitaiStruct {
         ARM_TRUSTED_FIRMWARE(25),
         TEE(26),
         OPENSBI(27),
-        EFI(28);
+        EFI(28),
+        ELF(29);
 
         private final long id;
         UimageOs(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, UimageOs> byId = new HashMap<Long, UimageOs>(29);
+        private static final Map<Long, UimageOs> byId = new HashMap<Long, UimageOs>(30);
         static {
             for (UimageOs e : UimageOs.values())
                 byId.put(e.id(), e);
@@ -164,12 +165,19 @@ public class Uimage extends KaitaiStruct {
         IMX8MIMAGE(37),
         IMX8IMAGE(38),
         COPRO(39),
-        SUNXI_EGON(40);
+        SUNXI_EGON(40),
+        SUNXI_TOC0(41),
+        FDT_LEGACY(42),
+        RENESAS_SPKG(43),
+        STARFIVE_SPL(44),
+        TFA_BL31(45),
+        STM32IMAGE_V2(46),
+        AMLIMAGE(47);
 
         private final long id;
         UimageType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, UimageType> byId = new HashMap<Long, UimageType>(41);
+        private static final Map<Long, UimageType> byId = new HashMap<Long, UimageType>(48);
         static {
             for (UimageType e : UimageType.values())
                 byId.put(e.id(), e);

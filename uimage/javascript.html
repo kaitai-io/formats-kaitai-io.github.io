@@ -300,7 +300,7 @@ with sha1 and md5 checksums.</p>
 <span class="cm"> * The new uImage format allows more flexibility in handling images of various</span>
 <span class="cm"> * types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
 <span class="cm"> * with sha1 and md5 checksums.</span>
-<span class="cm"> * @see {@link https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h|Source}</span>
+<span class="cm"> * @see {@link https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h|Git tag &quot;v2026.07&quot;}</span>
 <span class="cm"> */</span>
 
 <span class="kd">var</span><span class="w"> </span><span class="nx">Uimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -410,6 +410,7 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="nx">TEE</span><span class="o">:</span><span class="w"> </span><span class="mf">26</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">OPENSBI</span><span class="o">:</span><span class="w"> </span><span class="mf">27</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">EFI</span><span class="o">:</span><span class="w"> </span><span class="mf">28</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">ELF</span><span class="o">:</span><span class="w"> </span><span class="mf">29</span><span class="p">,</span>
 
 <span class="w">    </span><span class="mf">0</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="mf">1</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;OPENBSD&quot;</span><span class="p">,</span>
@@ -440,6 +441,7 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="mf">26</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;TEE&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="mf">27</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;OPENSBI&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="mf">28</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;EFI&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">29</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ELF&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 
 <span class="w">  </span><span class="nx">Uimage</span><span class="p">.</span><span class="nx">UimageType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
@@ -484,6 +486,13 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="nx">IMX8IMAGE</span><span class="o">:</span><span class="w"> </span><span class="mf">38</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">COPRO</span><span class="o">:</span><span class="w"> </span><span class="mf">39</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">SUNXI_EGON</span><span class="o">:</span><span class="w"> </span><span class="mf">40</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">SUNXI_TOC0</span><span class="o">:</span><span class="w"> </span><span class="mf">41</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">FDT_LEGACY</span><span class="o">:</span><span class="w"> </span><span class="mf">42</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">RENESAS_SPKG</span><span class="o">:</span><span class="w"> </span><span class="mf">43</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">STARFIVE_SPL</span><span class="o">:</span><span class="w"> </span><span class="mf">44</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">TFA_BL31</span><span class="o">:</span><span class="w"> </span><span class="mf">45</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">STM32IMAGE_V2</span><span class="o">:</span><span class="w"> </span><span class="mf">46</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">AMLIMAGE</span><span class="o">:</span><span class="w"> </span><span class="mf">47</span><span class="p">,</span>
 
 <span class="w">    </span><span class="mf">0</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="mf">1</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;STANDALONE&quot;</span><span class="p">,</span>
@@ -526,6 +535,13 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="mf">38</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;IMX8IMAGE&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="mf">39</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;COPRO&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="mf">40</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SUNXI_EGON&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">41</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SUNXI_TOC0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">42</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;FDT_LEGACY&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">43</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RENESAS_SPKG&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">44</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;STARFIVE_SPL&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">45</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;TFA_BL31&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">46</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;STM32IMAGE_V2&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">47</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;AMLIMAGE&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 
 <span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">Uimage</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>

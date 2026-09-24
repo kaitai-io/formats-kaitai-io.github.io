@@ -11,7 +11,7 @@ local str_decode = require("string_decode")
 -- The new uImage format allows more flexibility in handling images of various
 -- types (kernel, ramdisk, etc.), it also enhances integrity protection of images
 -- with sha1 and md5 checksums.
--- See also: Source (https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h)
+-- See also: Git tag "v2026.07" (https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h)
 Uimage = class.class(KaitaiStruct)
 
 Uimage.UimageArch = enum.Enum {
@@ -84,6 +84,7 @@ Uimage.UimageOs = enum.Enum {
   tee = 26,
   opensbi = 27,
   efi = 28,
+  elf = 29,
 }
 
 Uimage.UimageType = enum.Enum {
@@ -128,6 +129,13 @@ Uimage.UimageType = enum.Enum {
   imx8image = 38,
   copro = 39,
   sunxi_egon = 40,
+  sunxi_toc0 = 41,
+  fdt_legacy = 42,
+  renesas_spkg = 43,
+  starfive_spl = 44,
+  tfa_bl31 = 45,
+  stm32image_v2 = 46,
+  amlimage = 47,
 }
 
 function Uimage:_init(io, parent, root)

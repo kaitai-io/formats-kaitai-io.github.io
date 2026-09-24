@@ -72,6 +72,7 @@ type
     tee = 26
     opensbi = 27
     efi = 28
+    elf = 29
   Uimage_UimageType* = enum
     invalid = 0
     standalone = 1
@@ -114,6 +115,13 @@ type
     imx8image = 38
     copro = 39
     sunxi_egon = 40
+    sunxi_toc0 = 41
+    fdt_legacy = 42
+    renesas_spkg = 43
+    starfive_spl = 44
+    tfa_bl31 = 45
+    stm32image_v2 = 46
+    amlimage = 47
   Uimage_Uheader* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `headerCrc`*: uint32
@@ -139,7 +147,7 @@ The new uImage format allows more flexibility in handling images of various
 types (kernel, ramdisk, etc.), it also enhances integrity protection of images
 with sha1 and md5 checksums.
 
-@see <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h">Source</a>
+@see <a href="https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h">Git tag "v2026.07"</a>
 ]##
 proc read*(_: typedesc[Uimage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Uimage =
   template this: untyped = result

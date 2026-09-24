@@ -83,6 +83,7 @@ std::set<uimage_t::uimage_os_t> uimage_t::_build_values_uimage_os_t() {
     _t.insert(uimage_t::UIMAGE_OS_TEE);
     _t.insert(uimage_t::UIMAGE_OS_OPENSBI);
     _t.insert(uimage_t::UIMAGE_OS_EFI);
+    _t.insert(uimage_t::UIMAGE_OS_ELF);
     return _t;
 }
 const std::set<uimage_t::uimage_os_t> uimage_t::_values_uimage_os_t = uimage_t::_build_values_uimage_os_t();
@@ -132,6 +133,13 @@ std::set<uimage_t::uimage_type_t> uimage_t::_build_values_uimage_type_t() {
     _t.insert(uimage_t::UIMAGE_TYPE_IMX8IMAGE);
     _t.insert(uimage_t::UIMAGE_TYPE_COPRO);
     _t.insert(uimage_t::UIMAGE_TYPE_SUNXI_EGON);
+    _t.insert(uimage_t::UIMAGE_TYPE_SUNXI_TOC0);
+    _t.insert(uimage_t::UIMAGE_TYPE_FDT_LEGACY);
+    _t.insert(uimage_t::UIMAGE_TYPE_RENESAS_SPKG);
+    _t.insert(uimage_t::UIMAGE_TYPE_STARFIVE_SPL);
+    _t.insert(uimage_t::UIMAGE_TYPE_TFA_BL31);
+    _t.insert(uimage_t::UIMAGE_TYPE_STM32IMAGE_V2);
+    _t.insert(uimage_t::UIMAGE_TYPE_AMLIMAGE);
     return _t;
 }
 const std::set<uimage_t::uimage_type_t> uimage_t::_values_uimage_type_t = uimage_t::_build_values_uimage_type_t();

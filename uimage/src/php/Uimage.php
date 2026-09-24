@@ -392,7 +392,12 @@ namespace Uimage {
          */
         const EFI = 28;
 
-        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true];
+        /**
+         * ELF Image (e.g. seL4)
+         */
+        const ELF = 29;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);
@@ -608,7 +613,42 @@ namespace Uimage {
          */
         const SUNXI_EGON = 40;
 
-        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 34 => true, 35 => true, 36 => true, 37 => true, 38 => true, 39 => true, 40 => true];
+        /**
+         * Allwinner TOC0 Boot Image
+         */
+        const SUNXI_TOC0 = 41;
+
+        /**
+         * Binary Flat Device Tree Blob in a Legacy Image
+         */
+        const FDT_LEGACY = 42;
+
+        /**
+         * Renesas SPKG image
+         */
+        const RENESAS_SPKG = 43;
+
+        /**
+         * StarFive SPL image
+         */
+        const STARFIVE_SPL = 44;
+
+        /**
+         * TFA BL31 image
+         */
+        const TFA_BL31 = 45;
+
+        /**
+         * STMicroelectronics STM32 Image V2.0
+         */
+        const STM32IMAGE_V2 = 46;
+
+        /**
+         * Amlogic Boot Image
+         */
+        const AMLIMAGE = 47;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 34 => true, 35 => true, 36 => true, 37 => true, 38 => true, 39 => true, 40 => true, 41 => true, 42 => true, 43 => true, 44 => true, 45 => true, 46 => true, 47 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);

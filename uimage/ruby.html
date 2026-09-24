@@ -301,7 +301,7 @@ with sha1 and md5 checksums.</p>
 <span class="c1"># The new uImage format allows more flexibility in handling images of various</span>
 <span class="c1"># types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
 <span class="c1"># with sha1 and md5 checksums.</span>
-<span class="c1"># @see https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h Source</span>
+<span class="c1"># @see https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h Git tag &quot;v2026.07&quot;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Uimage</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
 <span class="w">  </span><span class="no">UIMAGE_ARCH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -376,6 +376,7 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="mi">26</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_tee</span><span class="p">,</span>
 <span class="w">    </span><span class="mi">27</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_opensbi</span><span class="p">,</span>
 <span class="w">    </span><span class="mi">28</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_efi</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">29</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_elf</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__UIMAGE_OS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UIMAGE_OS</span><span class="o">.</span><span class="n">invert</span>
 
@@ -421,6 +422,13 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="mi">38</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_imx8image</span><span class="p">,</span>
 <span class="w">    </span><span class="mi">39</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_copro</span><span class="p">,</span>
 <span class="w">    </span><span class="mi">40</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_sunxi_egon</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">41</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_sunxi_toc0</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">42</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_fdt_legacy</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">43</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_renesas_spkg</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">44</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_starfive_spl</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">45</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_tfa_bl31</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">46</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_stm32image_v2</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">47</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_amlimage</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__UIMAGE_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UIMAGE_TYPE</span><span class="o">.</span><span class="n">invert</span>
 <span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>

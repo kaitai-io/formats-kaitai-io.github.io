@@ -16,7 +16,7 @@ use std::rc::{Rc, Weak};
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * \sa https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h Source
+ * \sa https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h Git tag "v2026.07"
  */
 
 #[derive(Default, Debug, Clone)]
@@ -481,6 +481,11 @@ pub enum Uimage_UimageOs {
      * EFI Firmware (e.g. GRUB2)
      */
     Efi,
+
+    /**
+     * ELF Image (e.g. seL4)
+     */
+    Elf,
     Unknown(i64),
 }
 
@@ -517,6 +522,7 @@ impl TryFrom<i64> for Uimage_UimageOs {
             26 => Ok(Uimage_UimageOs::Tee),
             27 => Ok(Uimage_UimageOs::Opensbi),
             28 => Ok(Uimage_UimageOs::Efi),
+            29 => Ok(Uimage_UimageOs::Elf),
             _ => Ok(Uimage_UimageOs::Unknown(flag)),
         }
     }
@@ -554,6 +560,7 @@ impl From<&Uimage_UimageOs> for i64 {
             Uimage_UimageOs::Tee => 26,
             Uimage_UimageOs::Opensbi => 27,
             Uimage_UimageOs::Efi => 28,
+            Uimage_UimageOs::Elf => 29,
             Uimage_UimageOs::Unknown(v) => v
         }
     }
@@ -770,6 +777,41 @@ pub enum Uimage_UimageType {
      * Allwinner eGON Boot Image
      */
     SunxiEgon,
+
+    /**
+     * Allwinner TOC0 Boot Image
+     */
+    SunxiToc0,
+
+    /**
+     * Binary Flat Device Tree Blob in a Legacy Image
+     */
+    FdtLegacy,
+
+    /**
+     * Renesas SPKG image
+     */
+    RenesasSpkg,
+
+    /**
+     * StarFive SPL image
+     */
+    StarfiveSpl,
+
+    /**
+     * TFA BL31 image
+     */
+    TfaBl31,
+
+    /**
+     * STMicroelectronics STM32 Image V2.0
+     */
+    Stm32imageV2,
+
+    /**
+     * Amlogic Boot Image
+     */
+    Amlimage,
     Unknown(i64),
 }
 
@@ -818,6 +860,13 @@ impl TryFrom<i64> for Uimage_UimageType {
             38 => Ok(Uimage_UimageType::Imx8image),
             39 => Ok(Uimage_UimageType::Copro),
             40 => Ok(Uimage_UimageType::SunxiEgon),
+            41 => Ok(Uimage_UimageType::SunxiToc0),
+            42 => Ok(Uimage_UimageType::FdtLegacy),
+            43 => Ok(Uimage_UimageType::RenesasSpkg),
+            44 => Ok(Uimage_UimageType::StarfiveSpl),
+            45 => Ok(Uimage_UimageType::TfaBl31),
+            46 => Ok(Uimage_UimageType::Stm32imageV2),
+            47 => Ok(Uimage_UimageType::Amlimage),
             _ => Ok(Uimage_UimageType::Unknown(flag)),
         }
     }
@@ -867,6 +916,13 @@ impl From<&Uimage_UimageType> for i64 {
             Uimage_UimageType::Imx8image => 38,
             Uimage_UimageType::Copro => 39,
             Uimage_UimageType::SunxiEgon => 40,
+            Uimage_UimageType::SunxiToc0 => 41,
+            Uimage_UimageType::FdtLegacy => 42,
+            Uimage_UimageType::RenesasSpkg => 43,
+            Uimage_UimageType::StarfiveSpl => 44,
+            Uimage_UimageType::TfaBl31 => 45,
+            Uimage_UimageType::Stm32imageV2 => 46,
+            Uimage_UimageType::Amlimage => 47,
             Uimage_UimageType::Unknown(v) => v
         }
     }

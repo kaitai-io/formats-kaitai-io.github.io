@@ -11,7 +11,7 @@ namespace Kaitai
     /// with sha1 and md5 checksums.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h">Source</a>
+    /// Reference: <a href="https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h">Git tag "v2026.07"</a>
     /// </remarks>
     public partial class Uimage : KaitaiStruct
     {
@@ -94,6 +94,7 @@ namespace Kaitai
             Tee = 26,
             Opensbi = 27,
             Efi = 28,
+            Elf = 29,
         }
 
         public enum UimageType
@@ -139,6 +140,13 @@ namespace Kaitai
             Imx8image = 38,
             Copro = 39,
             SunxiEgon = 40,
+            SunxiToc0 = 41,
+            FdtLegacy = 42,
+            RenesasSpkg = 43,
+            StarfiveSpl = 44,
+            TfaBl31 = 45,
+            Stm32imageV2 = 46,
+            Amlimage = 47,
         }
         public Uimage(KaitaiStream p__io, KaitaiStruct p__parent = null, Uimage p__root = null) : base(p__io)
         {

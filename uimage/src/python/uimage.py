@@ -15,7 +15,7 @@ class Uimage(KaitaiStruct):
     with sha1 and md5 checksums.
     
     .. seealso::
-       Source - https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h
+       Git tag "v2026.07" - https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h
     """
 
     class UimageArch(IntEnum):
@@ -86,6 +86,7 @@ class Uimage(KaitaiStruct):
         tee = 26
         opensbi = 27
         efi = 28
+        elf = 29
 
     class UimageType(IntEnum):
         invalid = 0
@@ -129,6 +130,13 @@ class Uimage(KaitaiStruct):
         imx8image = 38
         copro = 39
         sunxi_egon = 40
+        sunxi_toc0 = 41
+        fdt_legacy = 42
+        renesas_spkg = 43
+        starfive_spl = 44
+        tfa_bl31 = 45
+        stm32image_v2 = 46
+        amlimage = 47
     def __init__(self, _io, _parent=None, _root=None):
         super(Uimage, self).__init__(_io)
         self._parent = _parent

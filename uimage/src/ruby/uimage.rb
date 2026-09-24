@@ -11,7 +11,7 @@ end
 # The new uImage format allows more flexibility in handling images of various
 # types (kernel, ramdisk, etc.), it also enhances integrity protection of images
 # with sha1 and md5 checksums.
-# @see https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h Source
+# @see https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h Git tag "v2026.07"
 class Uimage < Kaitai::Struct::Struct
 
   UIMAGE_ARCH = {
@@ -86,6 +86,7 @@ class Uimage < Kaitai::Struct::Struct
     26 => :uimage_os_tee,
     27 => :uimage_os_opensbi,
     28 => :uimage_os_efi,
+    29 => :uimage_os_elf,
   }
   I__UIMAGE_OS = UIMAGE_OS.invert
 
@@ -131,6 +132,13 @@ class Uimage < Kaitai::Struct::Struct
     38 => :uimage_type_imx8image,
     39 => :uimage_type_copro,
     40 => :uimage_type_sunxi_egon,
+    41 => :uimage_type_sunxi_toc0,
+    42 => :uimage_type_fdt_legacy,
+    43 => :uimage_type_renesas_spkg,
+    44 => :uimage_type_starfive_spl,
+    45 => :uimage_type_tfa_bl31,
+    46 => :uimage_type_stm32image_v2,
+    47 => :uimage_type_amlimage,
   }
   I__UIMAGE_TYPE = UIMAGE_TYPE.invert
   def initialize(_io, _parent = nil, _root = nil)
