@@ -2,16 +2,123 @@
 
 import (
 	"github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
+	"io"
 	"bytes"
 )
 
 
 /**
- * The new uImage format allows more flexibility in handling images of various
- * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
- * with sha1 and md5 checksums.
+ * The legacy U-Boot image format (uImage), as created by `mkimage`: a 64-byte
+ * header followed by the image data (e.g. a Linux kernel, a ramdisk or a
+ * script). The header describes the data (OS, CPU architecture, image type,
+ * compression, load and entry point addresses, name) and protects both the
+ * header and the data with CRC-32 checksums.
+ * 
+ * U-Boot's newer FIT (Flattened Image Tree) format is not covered by this spec.
  * @see <a href="https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h">Git tag "v2026.07"</a>
  */
+
+type Uimage_MagicTypes int
+const (
+	Uimage_MagicTypes__AllnetAllSg8316m Uimage_MagicTypes = 5
+	Uimage_MagicTypes__AllnetAllSg8208m Uimage_MagicTypes = 6
+	Uimage_MagicTypes__AllnetAllSg8324m Uimage_MagicTypes = 22
+	Uimage_MagicTypes__DattoL8 Uimage_MagicTypes = 7353344
+	Uimage_MagicTypes__AllnetAllWapc0450c Uimage_MagicTypes = 9453568
+	Uimage_MagicTypes__EngeniusEws2910pV3 Uimage_MagicTypes = 50398464
+	Uimage_MagicTypes__EngeniusEws120028tfp Uimage_MagicTypes = 50402048
+	Uimage_MagicTypes__EngeniusEws7926efp Uimage_MagicTypes = 50402050
+	Uimage_MagicTypes__EngeniusEws7952p Uimage_MagicTypes = 50406401
+	Uimage_MagicTypes__EngeniusEws2908p Uimage_MagicTypes = 50409728
+	Uimage_MagicTypes__EngeniusEws7928pV2 Uimage_MagicTypes = 51450112
+	Uimage_MagicTypes__EngeniusEws120028tfpV2 Uimage_MagicTypes = 51450624
+	Uimage_MagicTypes__EngeniusEws2910p Uimage_MagicTypes = 58730768
+	Uimage_MagicTypes__EngeniusEws5912fp Uimage_MagicTypes = 58743058
+	Uimage_MagicTypes__EngeniusEws7928p Uimage_MagicTypes = 58751272
+	Uimage_MagicTypes__EngeniusEws1200d10t Uimage_MagicTypes = 59187216
+	Uimage_MagicTypes__EngeniusEws120028t Uimage_MagicTypes = 59187240
+	Uimage_MagicTypes__EngeniusEws7928fp Uimage_MagicTypes = 59216527
+	Uimage_MagicTypes__EngeniusEws120052t Uimage_MagicTypes = 60235858
+	Uimage_MagicTypes__EngeniusEws7952fp Uimage_MagicTypes = 60265775
+	Uimage_MagicTypes__YoukuYkL1 Uimage_MagicTypes = 304680960
+	Uimage_MagicTypes__RealtekSdk Uimage_MagicTypes = 305418240
+	Uimage_MagicTypes__NetgearGs750e Uimage_MagicTypes = 391006017
+	Uimage_MagicTypes__NetgearGs728tpV2 Uimage_MagicTypes = 391006018
+	Uimage_MagicTypes__BoltBl100 Uimage_MagicTypes = 638656533
+	Uimage_MagicTypes__Uimage Uimage_MagicTypes = 654645590
+	Uimage_MagicTypes__NetgearWnce4004 Uimage_MagicTypes = 654645607
+	Uimage_MagicTypes__NetgearWnr612V2Early Uimage_MagicTypes = 808857906
+	Uimage_MagicTypes__NetgearWnr1000V2Vc Uimage_MagicTypes = 825241648
+	Uimage_MagicTypes__NetgearWnr1000V2 Uimage_MagicTypes = 825241649
+	Uimage_MagicTypes__NetgearWnr1000V2Vm Uimage_MagicTypes = 825241650
+	Uimage_MagicTypes__NetgearWnr1000V4 Uimage_MagicTypes = 825241652
+	Uimage_MagicTypes__NetgearWpn824n Uimage_MagicTypes = 825307184
+	Uimage_MagicTypes__ZyxelUag50 Uimage_MagicTypes = 827343191
+	Uimage_MagicTypes__NetgearWnr2000 Uimage_MagicTypes = 842018865
+	Uimage_MagicTypes__NetgearWnr2000V3 Uimage_MagicTypes = 842018867
+	Uimage_MagicTypes__NetgearWnr2000V4 Uimage_MagicTypes = 842018868
+	Uimage_MagicTypes__NetgearWnr612V2 Uimage_MagicTypes = 842020401
+	Uimage_MagicTypes__NetgearWnr2200 Uimage_MagicTypes = 842149936
+	Uimage_MagicTypes__NetgearWndr3700 Uimage_MagicTypes = 859254832
+	Uimage_MagicTypes__NetgearWndr3700V2 Uimage_MagicTypes = 859254833
+	Uimage_MagicTypes__NetgearWndr3700V4 Uimage_MagicTypes = 859254835
+	Uimage_MagicTypes__NetgearR6100 Uimage_MagicTypes = 909127728
+	Uimage_MagicTypes__NetgearWnr612 Uimage_MagicTypes = 909193778
+	Uimage_MagicTypes__MitrastarComb Uimage_MagicTypes = 1129270594
+	Uimage_MagicTypes__MitrastarComc Uimage_MagicTypes = 1129270595
+	Uimage_MagicTypes__NetgearGs308t Uimage_MagicTypes = 1313293109
+	Uimage_MagicTypes__NetgearNge Uimage_MagicTypes = 1313293600
+	Uimage_MagicTypes__NetgearNgf Uimage_MagicTypes = 1313293856
+	Uimage_MagicTypes__NetgearNgg Uimage_MagicTypes = 1313294112
+	Uimage_MagicTypes__NetgearNgh Uimage_MagicTypes = 1313294368
+	Uimage_MagicTypes__NetgearNgi Uimage_MagicTypes = 1313294624
+	Uimage_MagicTypes__NetgearNgp Uimage_MagicTypes = 1313296416
+	Uimage_MagicTypes__OpenwrtOkli Uimage_MagicTypes = 1330334793
+	Uimage_MagicTypes__OpenwrtDlinkCovr Uimage_MagicTypes = 1752396147
+	Uimage_MagicTypes__OpenwrtSenaoOkli Uimage_MagicTypes = 1936805707
+	Uimage_MagicTypes__EngeniusEcs1112fp Uimage_MagicTypes = 2155872258
+	Uimage_MagicTypes__EngeniusEws120028tfpOldFw Uimage_MagicTypes = 2197885696
+	Uimage_MagicTypes__EngeniusEws7926efpOldFw Uimage_MagicTypes = 2197885698
+	Uimage_MagicTypes__EngeniusEws7952pOldFw Uimage_MagicTypes = 2197890049
+	Uimage_MagicTypes__RealtekRtl838x Uimage_MagicTypes = 2206203904
+	Uimage_MagicTypes__IodataBshG08m Uimage_MagicTypes = 2206203905
+	Uimage_MagicTypes__IodataBshGp08 Uimage_MagicTypes = 2206203906
+	Uimage_MagicTypes__IodataBshG16m Uimage_MagicTypes = 2206203907
+	Uimage_MagicTypes__IodataBshG24m Uimage_MagicTypes = 2206203908
+	Uimage_MagicTypes__IodataBshG08mb Uimage_MagicTypes = 2206203920
+	Uimage_MagicTypes__IodataBshGp08mb Uimage_MagicTypes = 2206203921
+	Uimage_MagicTypes__IodataBshG16mb Uimage_MagicTypes = 2206203922
+	Uimage_MagicTypes__IodataBshG24mb Uimage_MagicTypes = 2206203923
+	Uimage_MagicTypes__TrendnetTpe3012ls Uimage_MagicTypes = 2206210573
+	Uimage_MagicTypes__TrendnetTpe3018ls Uimage_MagicTypes = 2206210574
+	Uimage_MagicTypes__EngeniusEgs2108pOldFw Uimage_MagicTypes = 2206212360
+	Uimage_MagicTypes__EngeniusEgs2110pOldFw Uimage_MagicTypes = 2206212368
+	Uimage_MagicTypes__EngeniusEws2910pOldFw Uimage_MagicTypes = 2206214416
+	Uimage_MagicTypes__EngeniusEgs5110pOldFw Uimage_MagicTypes = 2206224656
+	Uimage_MagicTypes__EngeniusEgs5212fpOldFw Uimage_MagicTypes = 2206224914
+	Uimage_MagicTypes__EngeniusEws5912fpOldFw Uimage_MagicTypes = 2206226706
+	Uimage_MagicTypes__EngeniusEws7928pOldFw Uimage_MagicTypes = 2206234920
+	Uimage_MagicTypes__EngeniusEws1200d10tOldFw Uimage_MagicTypes = 2206670864
+	Uimage_MagicTypes__EngeniusEws120028tOldFw Uimage_MagicTypes = 2206670888
+	Uimage_MagicTypes__EngeniusEgs7228fpOldFw Uimage_MagicTypes = 2206671503
+	Uimage_MagicTypes__EngeniusEws7928fpOldFw Uimage_MagicTypes = 2206700175
+	Uimage_MagicTypes__RealtekRtl839x Uimage_MagicTypes = 2207252480
+	Uimage_MagicTypes__RealtekRtl8396 Uimage_MagicTypes = 2207645696
+	Uimage_MagicTypes__EngeniusEws120052tOldFw Uimage_MagicTypes = 2207719506
+	Uimage_MagicTypes__EngeniusEgs7252fpOldFw Uimage_MagicTypes = 2207720751
+	Uimage_MagicTypes__EngeniusEws7952fpOldFw Uimage_MagicTypes = 2207749423
+	Uimage_MagicTypes__RealtekRtl930x Uimage_MagicTypes = 2466250752
+	Uimage_MagicTypes__ZyxelXgs101012 Uimage_MagicTypes = 2466254864
+	Uimage_MagicTypes__ZyxelXgs121012 Uimage_MagicTypes = 2466255376
+	Uimage_MagicTypes__ZyxelXgs125012 Uimage_MagicTypes = 2466255440
+	Uimage_MagicTypes__NicgigaS1000800sM Uimage_MagicTypes = 2466447360
+	Uimage_MagicTypes__PlasmacloudPsx28 Uimage_MagicTypes = 2467299328
+)
+var values_Uimage_MagicTypes = map[Uimage_MagicTypes]struct{}{5: {}, 6: {}, 22: {}, 7353344: {}, 9453568: {}, 50398464: {}, 50402048: {}, 50402050: {}, 50406401: {}, 50409728: {}, 51450112: {}, 51450624: {}, 58730768: {}, 58743058: {}, 58751272: {}, 59187216: {}, 59187240: {}, 59216527: {}, 60235858: {}, 60265775: {}, 304680960: {}, 305418240: {}, 391006017: {}, 391006018: {}, 638656533: {}, 654645590: {}, 654645607: {}, 808857906: {}, 825241648: {}, 825241649: {}, 825241650: {}, 825241652: {}, 825307184: {}, 827343191: {}, 842018865: {}, 842018867: {}, 842018868: {}, 842020401: {}, 842149936: {}, 859254832: {}, 859254833: {}, 859254835: {}, 909127728: {}, 909193778: {}, 1129270594: {}, 1129270595: {}, 1313293109: {}, 1313293600: {}, 1313293856: {}, 1313294112: {}, 1313294368: {}, 1313294624: {}, 1313296416: {}, 1330334793: {}, 1752396147: {}, 1936805707: {}, 2155872258: {}, 2197885696: {}, 2197885698: {}, 2197890049: {}, 2206203904: {}, 2206203905: {}, 2206203906: {}, 2206203907: {}, 2206203908: {}, 2206203920: {}, 2206203921: {}, 2206203922: {}, 2206203923: {}, 2206210573: {}, 2206210574: {}, 2206212360: {}, 2206212368: {}, 2206214416: {}, 2206224656: {}, 2206224914: {}, 2206226706: {}, 2206234920: {}, 2206670864: {}, 2206670888: {}, 2206671503: {}, 2206700175: {}, 2207252480: {}, 2207645696: {}, 2207719506: {}, 2207720751: {}, 2207749423: {}, 2466250752: {}, 2466254864: {}, 2466255376: {}, 2466255440: {}, 2466447360: {}, 2467299328: {}}
+func (v Uimage_MagicTypes) isDefined() bool {
+	_, ok := values_Uimage_MagicTypes[v]
+	return ok
+}
 
 type Uimage_UimageArch int
 const (
@@ -58,8 +165,10 @@ const (
 	Uimage_UimageComp__Lzo Uimage_UimageComp = 4
 	Uimage_UimageComp__Lz4 Uimage_UimageComp = 5
 	Uimage_UimageComp__Zstd Uimage_UimageComp = 6
+	Uimage_UimageComp__Mz Uimage_UimageComp = 9
+	Uimage_UimageComp__Xip Uimage_UimageComp = 10
 )
-var values_Uimage_UimageComp = map[Uimage_UimageComp]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}}
+var values_Uimage_UimageComp = map[Uimage_UimageComp]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 9: {}, 10: {}}
 func (v Uimage_UimageComp) isDefined() bool {
 	_, ok := values_Uimage_UimageComp[v]
 	return ok
@@ -195,8 +304,299 @@ func (this *Uimage) Read(io *kaitai.Stream, parent kaitai.Struct, root *Uimage) 
 	this.Data = tmp2
 	return err
 }
+
+/**
+ * ASUS firmware images [overlay the 32-byte image
+ * name](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L185-L188)
+ * with a [`TAIL`
+ * structure](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L151-L171)
+ * that contains version information and the product ID (model name).
+ * 
+ * The first 16 bytes have the same structure in all three known variants of
+ * the `TAIL` structure. The meaning of the last 16 bytes differs across the
+ * variants - therefore, for simplicity, this Kaitai Struct implementation
+ * treats them as an opaque byte array named `extra_info`. For an overview of
+ * the variants, see the documentation for `extra_info`.
+ */
+type Uimage_AsusFirmwareInformation struct {
+	KernelVersion *Uimage_Version
+	FsVersion *Uimage_Version
+	ProductId string
+	ExtraInfo []byte
+	_io *kaitai.Stream
+	_root *Uimage
+	_parent *Uimage_NameOrAsusInfo
+}
+func NewUimage_AsusFirmwareInformation() *Uimage_AsusFirmwareInformation {
+	return &Uimage_AsusFirmwareInformation{
+	}
+}
+
+func (this Uimage_AsusFirmwareInformation) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Uimage_AsusFirmwareInformation) Read(io *kaitai.Stream, parent *Uimage_NameOrAsusInfo, root *Uimage) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp3 := NewUimage_Version()
+	err = tmp3.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.KernelVersion = tmp3
+	tmp4 := NewUimage_Version()
+	err = tmp4.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.FsVersion = tmp4
+	tmp5, err := this._io.ReadBytes(int(12))
+	if err != nil {
+		return err
+	}
+	tmp5 = kaitai.BytesTerminate(tmp5, 0, false)
+	this.ProductId = string(tmp5)
+	tmp6, err := this._io.ReadBytes(int(16))
+	if err != nil {
+		return err
+	}
+	tmp6 = tmp6
+	this.ExtraInfo = tmp6
+	return err
+}
+
+/**
+ * In the Ralink SDK variant (see `extra_info`), the product ID field is
+ * actually 23 bytes long, but no known product ID is longer than 12
+ * bytes.
+ */
+
+/**
+ * The structure of these bytes varies among the three known variants of
+ * the `TAIL` structure, and the header doesn't say which one is used:
+ * 
+ * * Plain: 8 hardware versions (using the `version` type) - see
+ *   <https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L170>
+ * 
+ *   Sample file: `RT-AC51U_3.0.0.4_380_8591-ga8dd632.trx` from
+ *   <https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC51U/FW_RT_AC51U_30043808591.zip>,
+ *   released on 2020-09-22 and listed on
+ *   <https://www.asus.com/supportonly/rt-ac51u/helpdesk_bios/>.
+ * 
+ *   Source code links:
+ * 
+ *   - [ASUS GPL source, RT-AC55UHP
+ *     3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)
+ *     (`asuswrt/release/src/asustools/mkimage.src/` in
+ *     `GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)
+ *   - [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial
+ *     mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src)
+ * 
+ * * `TRX_NEW` (a macro defined when building `mkimage`): the
+ *   build number and extended build number (`u2le` each), two key bytes
+ *   and 5 hardware versions - see
+ *   <https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/include/image.h#L174-L180>
+ * 
+ *   `mkimage` [overwrites the first 3 hardware
+ *   versions](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/mkimage.c#L546-L569)
+ *   with values derived from the key bytes.
+ * 
+ *   Sample file: `RT-AC55UHP_3.0.0.4_382_52236-ga0f880d.trx` (build 382,
+ *   extended build 52236) from
+ *   <https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/FW_RT_AC55UHP_300438252236.zip>,
+ *   released on 2020-06-04 and listed on
+ *   <https://www.asus.com/supportonly/rt-ac55uhp/helpdesk_bios/>.
+ * 
+ *   Source code links:
+ * 
+ *   - [ASUS GPL source, RT-AC55UHP
+ *     3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)
+ *     (`asuswrt/release/src-qca/asustools/mkimage.src/` in
+ *     `GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)
+ *   - [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial
+ *     mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src)
+ * 
+ * * Ralink SDK: the rest of a 23-byte product ID (see `product_id`),
+ *   a version suffix letter and the kernel part size (called `ih_ksz`) -
+ *   see <https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h#L164-L165>
+ * 
+ *   Sample file: `RP-N12_1.0.1.1f.trx` from
+ *   <https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/FW_RP-N12_1.0.1.1f.zip>,
+ *   released on 2019-11-12 and listed on
+ *   <https://www.asus.com/supportonly/rp-n12/helpdesk_bios/>.
+ * 
+ *   Source code links:
+ * 
+ *   - [ASUS GPL source, RP-N12
+ *     1.0.1.1f](https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/GPL_RP_N12_1011f.zip)
+ *     (`GPL_RP-N12_source.1011f/user/mkimage/include/image.h` in
+ *     `GPL_RP-N12_source.1011f.tar.bz2`)
+ *   - [rt-n56u custom firmware by Andy
+ *     Padavan](https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h)
+ * 
+ * In the plain and `TRX_NEW` variants, the last 4 bytes may instead
+ * contain the offset of the root file system, which is [written by
+ * `mkimage -r`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/mkimage.c#L527-L542)
+ * as the magic byte 0xA9
+ * ([`ROOTFS_OFFSET_MAGIC`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L154-L159))
+ * followed by the offset as a 24-bit big-endian integer.
+ */
+type Uimage_NameOrAsusInfo struct {
+	Name string
+	AsusInfo *Uimage_AsusFirmwareInformation
+	_io *kaitai.Stream
+	_root *Uimage
+	_parent *Uimage_Uheader
+	_f_byte0 bool
+	byte0 uint8
+	_f_byte4 bool
+	byte4 uint8
+	_f_hasAsusInfo bool
+	hasAsusInfo bool
+}
+func NewUimage_NameOrAsusInfo() *Uimage_NameOrAsusInfo {
+	return &Uimage_NameOrAsusInfo{
+	}
+}
+
+func (this Uimage_NameOrAsusInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Uimage_NameOrAsusInfo) Read(io *kaitai.Stream, parent *Uimage_Uheader, root *Uimage) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp7, err := this.HasAsusInfo()
+	if err != nil {
+		return err
+	}
+	if (!(tmp7)) {
+		tmp8, err := this._io.ReadBytesTerm(0, false, true, false)
+		if err != nil {
+			return err
+		}
+		this.Name = string(tmp8)
+	}
+	tmp9, err := this.HasAsusInfo()
+	if err != nil {
+		return err
+	}
+	if (tmp9) {
+		tmp10 := NewUimage_AsusFirmwareInformation()
+		err = tmp10.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.AsusInfo = tmp10
+	}
+	return err
+}
+func (this *Uimage_NameOrAsusInfo) Byte0() (v uint8, err error) {
+	if (this._f_byte0) {
+		return this.byte0, nil
+	}
+	this._f_byte0 = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return 0, err
+	}
+	_, err = this._io.Seek(int64(0), io.SeekStart)
+	if err != nil {
+		return 0, err
+	}
+	tmp11, err := this._io.ReadU1()
+	if err != nil {
+		return 0, err
+	}
+	this.byte0 = tmp11
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return 0, err
+	}
+	return this.byte0, nil
+}
+func (this *Uimage_NameOrAsusInfo) Byte4() (v uint8, err error) {
+	if (this._f_byte4) {
+		return this.byte4, nil
+	}
+	this._f_byte4 = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return 0, err
+	}
+	_, err = this._io.Seek(int64(4), io.SeekStart)
+	if err != nil {
+		return 0, err
+	}
+	tmp12, err := this._io.ReadU1()
+	if err != nil {
+		return 0, err
+	}
+	this.byte4 = tmp12
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return 0, err
+	}
+	return this.byte4, nil
+}
+
+/**
+ * Whether this type stores ASUS firmware information (`asus_info`)
+ * rather than an image name (`name`).
+ * 
+ * The header doesn't say which one it is, so we infer it using a
+ * heuristic based on the layout of the `asus_firmware_information` type.
+ * If ASUS firmware info is present, the first byte (the major kernel
+ * version number) is a small integer (i.e. not a printable character),
+ * and byte 4 (first byte of the product ID/model name) is a printable
+ * character. An empty name is not mistaken for ASUS information, because
+ * its byte 4 is a null byte.
+ * 
+ * The highest known major kernel version number is 9 (e.g. in
+ * `DSL-N55U_9.0.0.4_380_3925-gad8f412_Annex_A.trx` from
+ * <https://dlcdnets.asus.com/pub/ASUS/wireless/DSL-N55U/FW_DSL_N55U_90043803925.zip>,
+ * released on 2016-08-04 and listed on
+ * <https://www.asus.com/supportonly/dsl-n55u/helpdesk_bios/>). ASUS
+ * seems to use such high major versions (9, sometimes 7) for beta
+ * releases, whereas regular releases use 3 (or 1 in older firmware).
+ * 
+ * It can also be 0, in particular due to a bug in the MediaTek MT798X
+ * build of ASUS's `mkimage` (it reads the `-V` values from fixed `argv`
+ * positions, even though it parses the options using `getopt()` - see
+ * <https://github.com/blocktrron/tuf-ax4200-gpl/blob/a4fe37f4d78473f97c6d47cf93d97c3811af90cc/release/src-mtk-MT798X/Uboot-upstream/tools/mkimage.c#L317-L333>).
+ * For example, this is the case in
+ * `RT-AX52_3.0.0.4_388_34015-g9488655.trx` from
+ * <https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AX52/FW_RT-AX52_300438834015.zip>,
+ * released on 2026-03-20 and listed on
+ * <https://www.asus.com/supportonly/rt-ax52/helpdesk_bios?model2Name=RT-AX52>.
+ */
+func (this *Uimage_NameOrAsusInfo) HasAsusInfo() (v bool, err error) {
+	if (this._f_hasAsusInfo) {
+		return this.hasAsusInfo, nil
+	}
+	this._f_hasAsusInfo = true
+	tmp13, err := this.Byte0()
+	if err != nil {
+		return false, err
+	}
+	tmp14, err := this.Byte4()
+	if err != nil {
+		return false, err
+	}
+	tmp15, err := this.Byte4()
+	if err != nil {
+		return false, err
+	}
+	this.hasAsusInfo = bool( ((tmp13 < 32) && (tmp14 >= 32) && (tmp15 < 127)) )
+	return this.hasAsusInfo, nil
+}
 type Uimage_Uheader struct {
-	Magic []byte
+	Magic Uimage_MagicTypes
 	HeaderCrc uint32
 	Timestamp uint32
 	LenImage uint32
@@ -207,10 +607,11 @@ type Uimage_Uheader struct {
 	Architecture Uimage_UimageArch
 	ImageType Uimage_UimageType
 	CompressionType Uimage_UimageComp
-	Name string
+	NameOrAsusInfo *Uimage_NameOrAsusInfo
 	_io *kaitai.Stream
 	_root *Uimage
 	_parent *Uimage
+	_raw_NameOrAsusInfo []byte
 }
 func NewUimage_Uheader() *Uimage_Uheader {
 	return &Uimage_Uheader{
@@ -226,70 +627,128 @@ func (this *Uimage_Uheader) Read(io *kaitai.Stream, parent *Uimage, root *Uimage
 	this._parent = parent
 	this._root = root
 
-	tmp3, err := this._io.ReadBytes(int(4))
+	tmp16, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	tmp3 = tmp3
-	this.Magic = tmp3
-	if !(bytes.Equal(this.Magic, []uint8{39, 5, 25, 86})) {
-		return kaitai.NewValidationNotEqualError([]uint8{39, 5, 25, 86}, this.Magic, this._io, "/types/uheader/seq/0")
+	this.Magic = Uimage_MagicTypes(tmp16)
+	if !this.Magic.isDefined() {
+		return kaitai.NewValidationNotInEnumError(this.Magic, this._io, "/types/uheader/seq/0")
 	}
-	tmp4, err := this._io.ReadU4be()
+	tmp17, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.HeaderCrc = uint32(tmp4)
-	tmp5, err := this._io.ReadU4be()
+	this.HeaderCrc = uint32(tmp17)
+	tmp18, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Timestamp = uint32(tmp5)
-	tmp6, err := this._io.ReadU4be()
+	this.Timestamp = uint32(tmp18)
+	tmp19, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LenImage = uint32(tmp6)
-	tmp7, err := this._io.ReadU4be()
+	this.LenImage = uint32(tmp19)
+	tmp20, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LoadAddress = uint32(tmp7)
-	tmp8, err := this._io.ReadU4be()
+	this.LoadAddress = uint32(tmp20)
+	tmp21, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.EntryAddress = uint32(tmp8)
-	tmp9, err := this._io.ReadU4be()
+	this.EntryAddress = uint32(tmp21)
+	tmp22, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.DataCrc = uint32(tmp9)
-	tmp10, err := this._io.ReadU1()
+	this.DataCrc = uint32(tmp22)
+	tmp23, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.OsType = Uimage_UimageOs(tmp10)
-	tmp11, err := this._io.ReadU1()
+	this.OsType = Uimage_UimageOs(tmp23)
+	if !this.OsType.isDefined() {
+		return kaitai.NewValidationNotInEnumError(this.OsType, this._io, "/types/uheader/seq/7")
+	}
+	tmp24, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Architecture = Uimage_UimageArch(tmp11)
-	tmp12, err := this._io.ReadU1()
+	this.Architecture = Uimage_UimageArch(tmp24)
+	if !this.Architecture.isDefined() {
+		return kaitai.NewValidationNotInEnumError(this.Architecture, this._io, "/types/uheader/seq/8")
+	}
+	tmp25, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ImageType = Uimage_UimageType(tmp12)
-	tmp13, err := this._io.ReadU1()
+	this.ImageType = Uimage_UimageType(tmp25)
+	if !this.ImageType.isDefined() {
+		return kaitai.NewValidationNotInEnumError(this.ImageType, this._io, "/types/uheader/seq/9")
+	}
+	tmp26, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.CompressionType = Uimage_UimageComp(tmp13)
-	tmp14, err := this._io.ReadBytes(int(32))
+	this.CompressionType = Uimage_UimageComp(tmp26)
+	if !this.CompressionType.isDefined() {
+		return kaitai.NewValidationNotInEnumError(this.CompressionType, this._io, "/types/uheader/seq/10")
+	}
+	tmp27, err := this._io.ReadBytes(int(32))
 	if err != nil {
 		return err
 	}
-	tmp14 = kaitai.BytesTerminate(tmp14, 0, false)
-	this.Name = string(tmp14)
+	tmp27 = tmp27
+	this._raw_NameOrAsusInfo = tmp27
+	_io__raw_NameOrAsusInfo := kaitai.NewStream(bytes.NewReader(this._raw_NameOrAsusInfo))
+	tmp28 := NewUimage_NameOrAsusInfo()
+	err = tmp28.Read(_io__raw_NameOrAsusInfo, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.NameOrAsusInfo = tmp28
+	return err
+}
+
+/**
+ * Besides the standard U-Boot magic, some vendors' bootloaders expect
+ * their own value (often a different one for each device model), with
+ * the rest of the header unchanged. `magic_types` lists the values
+ * known so far; images with any other magic are rejected.
+ */
+type Uimage_Version struct {
+	Major uint8
+	Minor uint8
+	_io *kaitai.Stream
+	_root *Uimage
+	_parent *Uimage_AsusFirmwareInformation
+}
+func NewUimage_Version() *Uimage_Version {
+	return &Uimage_Version{
+	}
+}
+
+func (this Uimage_Version) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Uimage_Version) Read(io *kaitai.Stream, parent *Uimage_AsusFirmwareInformation, root *Uimage) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp29, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Major = tmp29
+	tmp30, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Minor = tmp30
 	return err
 }

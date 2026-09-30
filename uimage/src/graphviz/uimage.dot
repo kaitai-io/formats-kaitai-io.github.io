@@ -10,13 +10,50 @@ digraph {
 			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">64</TD><TD>Uheader</TD><TD PORT="header_type">header</TD></TR>
 			<TR><TD PORT="data_pos">64</TD><TD PORT="data_size">header.len_image</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 		</TABLE>>];
+		subgraph cluster__asus_firmware_information {
+			label="Uimage::AsusFirmwareInformation";
+			graph[style=dotted];
+
+			asus_firmware_information__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="kernel_version_pos">0</TD><TD PORT="kernel_version_size">2</TD><TD>Version</TD><TD PORT="kernel_version_type">kernel_version</TD></TR>
+				<TR><TD PORT="fs_version_pos">2</TD><TD PORT="fs_version_size">2</TD><TD>Version</TD><TD PORT="fs_version_type">fs_version</TD></TR>
+				<TR><TD PORT="product_id_pos">4</TD><TD PORT="product_id_size">12</TD><TD>str(UTF-8)</TD><TD PORT="product_id_type">product_id</TD></TR>
+				<TR><TD PORT="extra_info_pos">16</TD><TD PORT="extra_info_size">16</TD><TD></TD><TD PORT="extra_info_type">extra_info</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__name_or_asus_info {
+			label="Uimage::NameOrAsusInfo";
+			graph[style=dotted];
+
+			name_or_asus_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>str(term=0, ignore EOS, UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD COLSPAN="4" PORT="name__if">if !(has_asus_info)</TD></TR>
+				<TR><TD PORT="asus_info_pos">...</TD><TD PORT="asus_info_size">32</TD><TD>AsusFirmwareInformation</TD><TD PORT="asus_info_type">asus_info</TD></TR>
+				<TR><TD COLSPAN="4" PORT="asus_info__if">if has_asus_info</TD></TR>
+			</TABLE>>];
+			name_or_asus_info__inst__byte0 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="byte0_pos">0</TD><TD PORT="byte0_size">1</TD><TD>u1</TD><TD PORT="byte0_type">byte0</TD></TR>
+			</TABLE>>];
+			name_or_asus_info__inst__byte4 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="byte4_pos">4</TD><TD PORT="byte4_size">1</TD><TD>u1</TD><TD PORT="byte4_type">byte4</TD></TR>
+			</TABLE>>];
+			name_or_asus_info__inst__has_asus_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_asus_info</TD><TD> ((byte0 &lt; 32) &amp;&amp; (byte4 &gt;= 32) &amp;&amp; (byte4 &lt; 127)) </TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__uheader {
 			label="Uimage::Uheader";
 			graph[style=dotted];
 
 			uheader__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>27 05 19 56</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4be→MagicTypes</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD COLSPAN="4" PORT="magic__valid">must be defined in the enum</TD></TR>
 				<TR><TD PORT="header_crc_pos">4</TD><TD PORT="header_crc_size">4</TD><TD>u4be</TD><TD PORT="header_crc_type">header_crc</TD></TR>
 				<TR><TD PORT="timestamp_pos">8</TD><TD PORT="timestamp_size">4</TD><TD>u4be</TD><TD PORT="timestamp_type">timestamp</TD></TR>
 				<TR><TD PORT="len_image_pos">12</TD><TD PORT="len_image_size">4</TD><TD>u4be</TD><TD PORT="len_image_type">len_image</TD></TR>
@@ -24,13 +61,35 @@ digraph {
 				<TR><TD PORT="entry_address_pos">20</TD><TD PORT="entry_address_size">4</TD><TD>u4be</TD><TD PORT="entry_address_type">entry_address</TD></TR>
 				<TR><TD PORT="data_crc_pos">24</TD><TD PORT="data_crc_size">4</TD><TD>u4be</TD><TD PORT="data_crc_type">data_crc</TD></TR>
 				<TR><TD PORT="os_type_pos">28</TD><TD PORT="os_type_size">1</TD><TD>u1→UimageOs</TD><TD PORT="os_type_type">os_type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="os_type__valid">must be defined in the enum</TD></TR>
 				<TR><TD PORT="architecture_pos">29</TD><TD PORT="architecture_size">1</TD><TD>u1→UimageArch</TD><TD PORT="architecture_type">architecture</TD></TR>
+				<TR><TD COLSPAN="4" PORT="architecture__valid">must be defined in the enum</TD></TR>
 				<TR><TD PORT="image_type_pos">30</TD><TD PORT="image_type_size">1</TD><TD>u1→UimageType</TD><TD PORT="image_type_type">image_type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="image_type__valid">must be defined in the enum</TD></TR>
 				<TR><TD PORT="compression_type_pos">31</TD><TD PORT="compression_type_size">1</TD><TD>u1→UimageComp</TD><TD PORT="compression_type_type">compression_type</TD></TR>
-				<TR><TD PORT="name_pos">32</TD><TD PORT="name_size">32</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression_type__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="name_or_asus_info_pos">32</TD><TD PORT="name_or_asus_info_size">32</TD><TD>NameOrAsusInfo</TD><TD PORT="name_or_asus_info_type">name_or_asus_info</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__version {
+			label="Uimage::Version";
+			graph[style=dotted];
+
+			version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="major_pos">0</TD><TD PORT="major_size">1</TD><TD>u1</TD><TD PORT="major_type">major</TD></TR>
+				<TR><TD PORT="minor_pos">1</TD><TD PORT="minor_size">1</TD><TD>u1</TD><TD PORT="minor_type">minor</TD></TR>
 			</TABLE>>];
 		}
 	}
 	uimage__seq:header_type -> uheader__seq [style=bold];
 	uheader__seq:len_image_type -> uimage__seq:data_size [color="#404040"];
+	asus_firmware_information__seq:kernel_version_type -> version__seq [style=bold];
+	asus_firmware_information__seq:fs_version_type -> version__seq [style=bold];
+	name_or_asus_info__inst__has_asus_info:has_asus_info_type -> name_or_asus_info__seq:name__if [color="#404040"];
+	name_or_asus_info__seq:asus_info_type -> asus_firmware_information__seq [style=bold];
+	name_or_asus_info__inst__has_asus_info:has_asus_info_type -> name_or_asus_info__seq:asus_info__if [color="#404040"];
+	name_or_asus_info__inst__byte0:byte0_type -> name_or_asus_info__inst__has_asus_info [color="#404040"];
+	name_or_asus_info__inst__byte4:byte4_type -> name_or_asus_info__inst__has_asus_info [color="#404040"];
+	uheader__seq:name_or_asus_info_type -> name_or_asus_info__seq [style=bold];
 }

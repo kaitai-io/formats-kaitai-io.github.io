@@ -8,20 +8,129 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Objects;
 import io.kaitai.struct.ConsistencyError;
-import java.util.Arrays;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.Charset;
 
 
 /**
- * The new uImage format allows more flexibility in handling images of various
- * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
- * with sha1 and md5 checksums.
+ * The legacy U-Boot image format (uImage), as created by `mkimage`: a 64-byte
+ * header followed by the image data (e.g. a Linux kernel, a ramdisk or a
+ * script). The header describes the data (OS, CPU architecture, image type,
+ * compression, load and entry point addresses, name) and protects both the
+ * header and the data with CRC-32 checksums.
+ * 
+ * U-Boot's newer FIT (Flattened Image Tree) format is not covered by this spec.
  * @see <a href="https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h">Git tag "v2026.07"</a>
  */
 public class Uimage extends KaitaiStruct.ReadWrite {
     public static Uimage fromFile(String fileName) throws IOException {
         return new Uimage(new ByteBufferKaitaiStream(fileName));
+    }
+
+    public enum MagicTypes {
+        ALLNET_ALL_SG8316M(5),
+        ALLNET_ALL_SG8208M(6),
+        ALLNET_ALL_SG8324M(22),
+        DATTO_L8(7353344),
+        ALLNET_ALL_WAPC0450C(9453568),
+        ENGENIUS_EWS2910P_V3(50398464),
+        ENGENIUS_EWS1200_28TFP(50402048),
+        ENGENIUS_EWS7926EFP(50402050),
+        ENGENIUS_EWS7952P(50406401),
+        ENGENIUS_EWS2908P(50409728),
+        ENGENIUS_EWS7928P_V2(51450112),
+        ENGENIUS_EWS1200_28TFP_V2(51450624),
+        ENGENIUS_EWS2910P(58730768),
+        ENGENIUS_EWS5912FP(58743058),
+        ENGENIUS_EWS7928P(58751272),
+        ENGENIUS_EWS1200D_10T(59187216),
+        ENGENIUS_EWS1200_28T(59187240),
+        ENGENIUS_EWS7928FP(59216527),
+        ENGENIUS_EWS1200_52T(60235858),
+        ENGENIUS_EWS7952FP(60265775),
+        YOUKU_YK_L1(304680960),
+        REALTEK_SDK(305418240),
+        NETGEAR_GS750E(391006017),
+        NETGEAR_GS728TP_V2(391006018),
+        BOLT_BL100(638656533),
+        UIMAGE(654645590),
+        NETGEAR_WNCE4004(654645607),
+        NETGEAR_WNR612_V2_EARLY(808857906),
+        NETGEAR_WNR1000_V2_VC(825241648),
+        NETGEAR_WNR1000_V2(825241649),
+        NETGEAR_WNR1000_V2_VM(825241650),
+        NETGEAR_WNR1000_V4(825241652),
+        NETGEAR_WPN824N(825307184),
+        ZYXEL_UAG50(827343191),
+        NETGEAR_WNR2000(842018865),
+        NETGEAR_WNR2000_V3(842018867),
+        NETGEAR_WNR2000_V4(842018868),
+        NETGEAR_WNR612_V2(842020401),
+        NETGEAR_WNR2200(842149936),
+        NETGEAR_WNDR3700(859254832),
+        NETGEAR_WNDR3700_V2(859254833),
+        NETGEAR_WNDR3700_V4(859254835),
+        NETGEAR_R6100(909127728),
+        NETGEAR_WNR612(909193778),
+        MITRASTAR_COMB(1129270594),
+        MITRASTAR_COMC(1129270595),
+        NETGEAR_GS308T(1313293109),
+        NETGEAR_NGE(1313293600),
+        NETGEAR_NGF(1313293856),
+        NETGEAR_NGG(1313294112),
+        NETGEAR_NGH(1313294368),
+        NETGEAR_NGI(1313294624),
+        NETGEAR_NGP(1313296416),
+        OPENWRT_OKLI(1330334793),
+        OPENWRT_DLINK_COVR(1752396147),
+        OPENWRT_SENAO_OKLI(1936805707),
+        ENGENIUS_ECS1112FP(2155872258L),
+        ENGENIUS_EWS1200_28TFP_OLD_FW(2197885696L),
+        ENGENIUS_EWS7926EFP_OLD_FW(2197885698L),
+        ENGENIUS_EWS7952P_OLD_FW(2197890049L),
+        REALTEK_RTL838X(2206203904L),
+        IODATA_BSH_G08M(2206203905L),
+        IODATA_BSH_GP08(2206203906L),
+        IODATA_BSH_G16M(2206203907L),
+        IODATA_BSH_G24M(2206203908L),
+        IODATA_BSH_G08MB(2206203920L),
+        IODATA_BSH_GP08MB(2206203921L),
+        IODATA_BSH_G16MB(2206203922L),
+        IODATA_BSH_G24MB(2206203923L),
+        TRENDNET_TPE_3012LS(2206210573L),
+        TRENDNET_TPE_3018LS(2206210574L),
+        ENGENIUS_EGS2108P_OLD_FW(2206212360L),
+        ENGENIUS_EGS2110P_OLD_FW(2206212368L),
+        ENGENIUS_EWS2910P_OLD_FW(2206214416L),
+        ENGENIUS_EGS5110P_OLD_FW(2206224656L),
+        ENGENIUS_EGS5212FP_OLD_FW(2206224914L),
+        ENGENIUS_EWS5912FP_OLD_FW(2206226706L),
+        ENGENIUS_EWS7928P_OLD_FW(2206234920L),
+        ENGENIUS_EWS1200D_10T_OLD_FW(2206670864L),
+        ENGENIUS_EWS1200_28T_OLD_FW(2206670888L),
+        ENGENIUS_EGS7228FP_OLD_FW(2206671503L),
+        ENGENIUS_EWS7928FP_OLD_FW(2206700175L),
+        REALTEK_RTL839X(2207252480L),
+        REALTEK_RTL8396(2207645696L),
+        ENGENIUS_EWS1200_52T_OLD_FW(2207719506L),
+        ENGENIUS_EGS7252FP_OLD_FW(2207720751L),
+        ENGENIUS_EWS7952FP_OLD_FW(2207749423L),
+        REALTEK_RTL930X(2466250752L),
+        ZYXEL_XGS1010_12(2466254864L),
+        ZYXEL_XGS1210_12(2466255376L),
+        ZYXEL_XGS1250_12(2466255440L),
+        NICGIGA_S100_0800S_M(2466447360L),
+        PLASMACLOUD_PSX28(2467299328L);
+
+        private final long id;
+        MagicTypes(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, MagicTypes> byId = new HashMap<Long, MagicTypes>(93);
+        static {
+            for (MagicTypes e : MagicTypes.values())
+                byId.put(e.id(), e);
+        }
+        public static MagicTypes byId(long id) { return byId.get(id); }
     }
 
     public enum UimageArch {
@@ -71,12 +180,14 @@ public class Uimage extends KaitaiStruct.ReadWrite {
         LZMA(3),
         LZO(4),
         LZ4(5),
-        ZSTD(6);
+        ZSTD(6),
+        MZ(9),
+        XIP(10);
 
         private final long id;
         UimageComp(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, UimageComp> byId = new HashMap<Long, UimageComp>(7);
+        private static final Map<Long, UimageComp> byId = new HashMap<Long, UimageComp>(9);
         static {
             for (UimageComp e : UimageComp.values())
                 byId.put(e.id(), e);
@@ -230,6 +341,355 @@ public class Uimage extends KaitaiStruct.ReadWrite {
             throw new ConsistencyError("data", header().lenImage(), this.data.length);
         _dirty = false;
     }
+
+    /**
+     * ASUS firmware images [overlay the 32-byte image
+     * name](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L185-L188)
+     * with a [`TAIL`
+     * structure](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L151-L171)
+     * that contains version information and the product ID (model name).
+     * 
+     * The first 16 bytes have the same structure in all three known variants of
+     * the `TAIL` structure. The meaning of the last 16 bytes differs across the
+     * variants - therefore, for simplicity, this Kaitai Struct implementation
+     * treats them as an opaque byte array named `extra_info`. For an overview of
+     * the variants, see the documentation for `extra_info`.
+     */
+    public static class AsusFirmwareInformation extends KaitaiStruct.ReadWrite {
+        public static AsusFirmwareInformation fromFile(String fileName) throws IOException {
+            return new AsusFirmwareInformation(new ByteBufferKaitaiStream(fileName));
+        }
+        public AsusFirmwareInformation() {
+            this(null, null, null);
+        }
+
+        public AsusFirmwareInformation(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public AsusFirmwareInformation(KaitaiStream _io, Uimage.NameOrAsusInfo _parent) {
+            this(_io, _parent, null);
+        }
+
+        public AsusFirmwareInformation(KaitaiStream _io, Uimage.NameOrAsusInfo _parent, Uimage _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.kernelVersion = new Version(this._io, this, _root);
+            this.kernelVersion._read();
+            this.fsVersion = new Version(this._io, this, _root);
+            this.fsVersion._read();
+            this.productId = new String(KaitaiStream.bytesTerminate(this._io.readBytes(12), (byte) 0, false), StandardCharsets.UTF_8);
+            this.extraInfo = this._io.readBytes(16);
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            this.kernelVersion._fetchInstances();
+            this.fsVersion._fetchInstances();
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this.kernelVersion._write_Seq(this._io);
+            this.fsVersion._write_Seq(this._io);
+            this._io.writeBytesLimit((this.productId).getBytes(Charset.forName("UTF-8")), 12, (byte) 0, (byte) 0);
+            this._io.writeBytes(this.extraInfo);
+        }
+
+        public void _check() {
+            if (!Objects.equals(this.kernelVersion._root(), _root()))
+                throw new ConsistencyError("kernel_version", _root(), this.kernelVersion._root());
+            if (!Objects.equals(this.kernelVersion._parent(), this))
+                throw new ConsistencyError("kernel_version", this, this.kernelVersion._parent());
+            if (!Objects.equals(this.fsVersion._root(), _root()))
+                throw new ConsistencyError("fs_version", _root(), this.fsVersion._root());
+            if (!Objects.equals(this.fsVersion._parent(), this))
+                throw new ConsistencyError("fs_version", this, this.fsVersion._parent());
+            if ((this.productId).getBytes(Charset.forName("UTF-8")).length > 12)
+                throw new ConsistencyError("product_id", 12, (this.productId).getBytes(Charset.forName("UTF-8")).length);
+            if (KaitaiStream.byteArrayIndexOf((this.productId).getBytes(Charset.forName("UTF-8")), ((byte) 0)) != -1)
+                throw new ConsistencyError("product_id", -1, KaitaiStream.byteArrayIndexOf((this.productId).getBytes(Charset.forName("UTF-8")), ((byte) 0)));
+            if (this.extraInfo.length != 16)
+                throw new ConsistencyError("extra_info", 16, this.extraInfo.length);
+            _dirty = false;
+        }
+        private Version kernelVersion;
+        private Version fsVersion;
+        private String productId;
+        private byte[] extraInfo;
+        private Uimage _root;
+        private Uimage.NameOrAsusInfo _parent;
+        public Version kernelVersion() { return kernelVersion; }
+        public void setKernelVersion(Version _v) { _dirty = true; kernelVersion = _v; }
+        public Version fsVersion() { return fsVersion; }
+        public void setFsVersion(Version _v) { _dirty = true; fsVersion = _v; }
+
+        /**
+         * In the Ralink SDK variant (see `extra_info`), the product ID field is
+         * actually 23 bytes long, but no known product ID is longer than 12
+         * bytes.
+         */
+        public String productId() { return productId; }
+        public void setProductId(String _v) { _dirty = true; productId = _v; }
+
+        /**
+         * The structure of these bytes varies among the three known variants of
+         * the `TAIL` structure, and the header doesn't say which one is used:
+         * 
+         * * Plain: 8 hardware versions (using the `version` type) - see
+         *   <https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L170>
+         * 
+         *   Sample file: `RT-AC51U_3.0.0.4_380_8591-ga8dd632.trx` from
+         *   <https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC51U/FW_RT_AC51U_30043808591.zip>,
+         *   released on 2020-09-22 and listed on
+         *   <https://www.asus.com/supportonly/rt-ac51u/helpdesk_bios/>.
+         * 
+         *   Source code links:
+         * 
+         *   - [ASUS GPL source, RT-AC55UHP
+         *     3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)
+         *     (`asuswrt/release/src/asustools/mkimage.src/` in
+         *     `GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)
+         *   - [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial
+         *     mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src)
+         * 
+         * * `TRX_NEW` (a macro defined when building `mkimage`): the
+         *   build number and extended build number (`u2le` each), two key bytes
+         *   and 5 hardware versions - see
+         *   <https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/include/image.h#L174-L180>
+         * 
+         *   `mkimage` [overwrites the first 3 hardware
+         *   versions](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/mkimage.c#L546-L569)
+         *   with values derived from the key bytes.
+         * 
+         *   Sample file: `RT-AC55UHP_3.0.0.4_382_52236-ga0f880d.trx` (build 382,
+         *   extended build 52236) from
+         *   <https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/FW_RT_AC55UHP_300438252236.zip>,
+         *   released on 2020-06-04 and listed on
+         *   <https://www.asus.com/supportonly/rt-ac55uhp/helpdesk_bios/>.
+         * 
+         *   Source code links:
+         * 
+         *   - [ASUS GPL source, RT-AC55UHP
+         *     3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)
+         *     (`asuswrt/release/src-qca/asustools/mkimage.src/` in
+         *     `GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)
+         *   - [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial
+         *     mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src)
+         * 
+         * * Ralink SDK: the rest of a 23-byte product ID (see `product_id`),
+         *   a version suffix letter and the kernel part size (called `ih_ksz`) -
+         *   see <https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h#L164-L165>
+         * 
+         *   Sample file: `RP-N12_1.0.1.1f.trx` from
+         *   <https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/FW_RP-N12_1.0.1.1f.zip>,
+         *   released on 2019-11-12 and listed on
+         *   <https://www.asus.com/supportonly/rp-n12/helpdesk_bios/>.
+         * 
+         *   Source code links:
+         * 
+         *   - [ASUS GPL source, RP-N12
+         *     1.0.1.1f](https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/GPL_RP_N12_1011f.zip)
+         *     (`GPL_RP-N12_source.1011f/user/mkimage/include/image.h` in
+         *     `GPL_RP-N12_source.1011f.tar.bz2`)
+         *   - [rt-n56u custom firmware by Andy
+         *     Padavan](https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h)
+         * 
+         * In the plain and `TRX_NEW` variants, the last 4 bytes may instead
+         * contain the offset of the root file system, which is [written by
+         * `mkimage -r`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/mkimage.c#L527-L542)
+         * as the magic byte 0xA9
+         * ([`ROOTFS_OFFSET_MAGIC`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L154-L159))
+         * followed by the offset as a 24-bit big-endian integer.
+         */
+        public byte[] extraInfo() { return extraInfo; }
+        public void setExtraInfo(byte[] _v) { _dirty = true; extraInfo = _v; }
+        public Uimage _root() { return _root; }
+        public void set_root(Uimage _v) { _dirty = true; _root = _v; }
+        public Uimage.NameOrAsusInfo _parent() { return _parent; }
+        public void set_parent(Uimage.NameOrAsusInfo _v) { _dirty = true; _parent = _v; }
+    }
+    public static class NameOrAsusInfo extends KaitaiStruct.ReadWrite {
+        public static NameOrAsusInfo fromFile(String fileName) throws IOException {
+            return new NameOrAsusInfo(new ByteBufferKaitaiStream(fileName));
+        }
+        public NameOrAsusInfo() {
+            this(null, null, null);
+        }
+
+        public NameOrAsusInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public NameOrAsusInfo(KaitaiStream _io, Uimage.Uheader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public NameOrAsusInfo(KaitaiStream _io, Uimage.Uheader _parent, Uimage _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            if (!(hasAsusInfo())) {
+                this.name = new String(this._io.readBytesTerm((byte) 0, false, true, false), StandardCharsets.UTF_8);
+            }
+            if (hasAsusInfo()) {
+                this.asusInfo = new AsusFirmwareInformation(this._io, this, _root);
+                this.asusInfo._read();
+            }
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+            if (!(hasAsusInfo())) {
+            }
+            if (hasAsusInfo()) {
+                this.asusInfo._fetchInstances();
+            }
+            byte0();
+            if (this.byte0 != null) {
+            }
+            byte4();
+            if (this.byte4 != null) {
+            }
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            _shouldWriteByte0 = _enabledByte0;
+            _shouldWriteByte4 = _enabledByte4;
+            if (!(hasAsusInfo())) {
+                if (KaitaiStream.byteArrayIndexOf((this.name).getBytes(Charset.forName("UTF-8")), ((byte) 0)) != -1)
+                    throw new ConsistencyError("name", -1, KaitaiStream.byteArrayIndexOf((this.name).getBytes(Charset.forName("UTF-8")), ((byte) 0)));
+                this._io.writeBytes((this.name).getBytes(Charset.forName("UTF-8")));
+                if (!(this._io.isEof())) {
+                    this._io.writeU1(0);
+                }
+            }
+            if (hasAsusInfo()) {
+                if (!Objects.equals(this.asusInfo._root(), _root()))
+                    throw new ConsistencyError("asus_info", _root(), this.asusInfo._root());
+                if (!Objects.equals(this.asusInfo._parent(), this))
+                    throw new ConsistencyError("asus_info", this, this.asusInfo._parent());
+                this.asusInfo._write_Seq(this._io);
+            }
+        }
+
+        public void _check() {
+            if (_enabledByte0) {
+            }
+            if (_enabledByte4) {
+            }
+            _dirty = false;
+        }
+        private Integer byte0;
+        private boolean _shouldWriteByte0 = false;
+        private boolean _enabledByte0 = true;
+        public Integer byte0() {
+            if (_shouldWriteByte0)
+                _writeByte0();
+            if (this.byte0 != null)
+                return this.byte0;
+            if (!_enabledByte0)
+                return null;
+            long _pos = this._io.pos();
+            this._io.seek(0);
+            this.byte0 = this._io.readU1();
+            this._io.seek(_pos);
+            return this.byte0;
+        }
+        public void setByte0(int _v) { _dirty = true; byte0 = _v; }
+        public void setByte0_Enabled(boolean _v) { _dirty = true; _enabledByte0 = _v; }
+
+        private void _writeByte0() {
+            _shouldWriteByte0 = false;
+            long _pos = this._io.pos();
+            this._io.seek(0);
+            this._io.writeU1(this.byte0);
+            this._io.seek(_pos);
+        }
+        private Integer byte4;
+        private boolean _shouldWriteByte4 = false;
+        private boolean _enabledByte4 = true;
+        public Integer byte4() {
+            if (_shouldWriteByte4)
+                _writeByte4();
+            if (this.byte4 != null)
+                return this.byte4;
+            if (!_enabledByte4)
+                return null;
+            long _pos = this._io.pos();
+            this._io.seek(4);
+            this.byte4 = this._io.readU1();
+            this._io.seek(_pos);
+            return this.byte4;
+        }
+        public void setByte4(int _v) { _dirty = true; byte4 = _v; }
+        public void setByte4_Enabled(boolean _v) { _dirty = true; _enabledByte4 = _v; }
+
+        private void _writeByte4() {
+            _shouldWriteByte4 = false;
+            long _pos = this._io.pos();
+            this._io.seek(4);
+            this._io.writeU1(this.byte4);
+            this._io.seek(_pos);
+        }
+        private Boolean hasAsusInfo;
+
+        /**
+         * Whether this type stores ASUS firmware information (`asus_info`)
+         * rather than an image name (`name`).
+         * 
+         * The header doesn't say which one it is, so we infer it using a
+         * heuristic based on the layout of the `asus_firmware_information` type.
+         * If ASUS firmware info is present, the first byte (the major kernel
+         * version number) is a small integer (i.e. not a printable character),
+         * and byte 4 (first byte of the product ID/model name) is a printable
+         * character. An empty name is not mistaken for ASUS information, because
+         * its byte 4 is a null byte.
+         * 
+         * The highest known major kernel version number is 9 (e.g. in
+         * `DSL-N55U_9.0.0.4_380_3925-gad8f412_Annex_A.trx` from
+         * <https://dlcdnets.asus.com/pub/ASUS/wireless/DSL-N55U/FW_DSL_N55U_90043803925.zip>,
+         * released on 2016-08-04 and listed on
+         * <https://www.asus.com/supportonly/dsl-n55u/helpdesk_bios/>). ASUS
+         * seems to use such high major versions (9, sometimes 7) for beta
+         * releases, whereas regular releases use 3 (or 1 in older firmware).
+         * 
+         * It can also be 0, in particular due to a bug in the MediaTek MT798X
+         * build of ASUS's `mkimage` (it reads the `-V` values from fixed `argv`
+         * positions, even though it parses the options using `getopt()` - see
+         * <https://github.com/blocktrron/tuf-ax4200-gpl/blob/a4fe37f4d78473f97c6d47cf93d97c3811af90cc/release/src-mtk-MT798X/Uboot-upstream/tools/mkimage.c#L317-L333>).
+         * For example, this is the case in
+         * `RT-AX52_3.0.0.4_388_34015-g9488655.trx` from
+         * <https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AX52/FW_RT-AX52_300438834015.zip>,
+         * released on 2026-03-20 and listed on
+         * <https://www.asus.com/supportonly/rt-ax52/helpdesk_bios?model2Name=RT-AX52>.
+         */
+        public Boolean hasAsusInfo() {
+            if (this.hasAsusInfo != null)
+                return this.hasAsusInfo;
+            this.hasAsusInfo =  ((byte0() < 32) && (byte4() >= 32) && (byte4() < 127)) ;
+            return this.hasAsusInfo;
+        }
+        public void _invalidateHasAsusInfo() { this.hasAsusInfo = null; }
+        private String name;
+        private AsusFirmwareInformation asusInfo;
+        private Uimage _root;
+        private Uimage.Uheader _parent;
+        public String name() { return name; }
+        public void setName(String _v) { _dirty = true; name = _v; }
+        public AsusFirmwareInformation asusInfo() { return asusInfo; }
+        public void setAsusInfo(AsusFirmwareInformation _v) { _dirty = true; asusInfo = _v; }
+        public Uimage _root() { return _root; }
+        public void set_root(Uimage _v) { _dirty = true; _root = _v; }
+        public Uimage.Uheader _parent() { return _parent; }
+        public void set_parent(Uimage.Uheader _v) { _dirty = true; _parent = _v; }
+    }
     public static class Uheader extends KaitaiStruct.ReadWrite {
         public static Uheader fromFile(String fileName) throws IOException {
             return new Uheader(new ByteBufferKaitaiStream(fileName));
@@ -252,9 +712,9 @@ public class Uimage extends KaitaiStruct.ReadWrite {
             this._root = _root;
         }
         public void _read() {
-            this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(this.magic, new byte[] { 39, 5, 25, 86 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 39, 5, 25, 86 }, this.magic, this._io, "/types/uheader/seq/0");
+            this.magic = Uimage.MagicTypes.byId(this._io.readU4be());
+            if (this.magic == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.magic, this._io, "/types/uheader/seq/0");
             }
             this.headerCrc = this._io.readU4be();
             this.timestamp = this._io.readU4be();
@@ -263,19 +723,35 @@ public class Uimage extends KaitaiStruct.ReadWrite {
             this.entryAddress = this._io.readU4be();
             this.dataCrc = this._io.readU4be();
             this.osType = Uimage.UimageOs.byId(this._io.readU1());
+            if (this.osType == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.osType, this._io, "/types/uheader/seq/7");
+            }
             this.architecture = Uimage.UimageArch.byId(this._io.readU1());
+            if (this.architecture == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.architecture, this._io, "/types/uheader/seq/8");
+            }
             this.imageType = Uimage.UimageType.byId(this._io.readU1());
+            if (this.imageType == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.imageType, this._io, "/types/uheader/seq/9");
+            }
             this.compressionType = Uimage.UimageComp.byId(this._io.readU1());
-            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(32), (byte) 0, false), StandardCharsets.UTF_8);
+            if (this.compressionType == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.compressionType, this._io, "/types/uheader/seq/10");
+            }
+            this._raw_nameOrAsusInfo = this._io.readBytes(32);
+            KaitaiStream _io__raw_nameOrAsusInfo = new ByteBufferKaitaiStream(this._raw_nameOrAsusInfo);
+            this.nameOrAsusInfo = new NameOrAsusInfo(_io__raw_nameOrAsusInfo, this, _root);
+            this.nameOrAsusInfo._read();
             _dirty = false;
         }
 
         public void _fetchInstances() {
+            this.nameOrAsusInfo._fetchInstances();
         }
 
         public void _write_Seq() {
             _assertNotDirty();
-            this._io.writeBytes(this.magic);
+            this._io.writeU4be(((Number) (this.magic.id())).longValue());
             this._io.writeU4be(this.headerCrc);
             this._io.writeU4be(this.timestamp);
             this._io.writeU4be(this.lenImage);
@@ -286,22 +762,48 @@ public class Uimage extends KaitaiStruct.ReadWrite {
             this._io.writeU1(((Number) (this.architecture.id())).intValue());
             this._io.writeU1(((Number) (this.imageType.id())).intValue());
             this._io.writeU1(((Number) (this.compressionType.id())).intValue());
-            this._io.writeBytesLimit((this.name).getBytes(Charset.forName("UTF-8")), 32, (byte) 0, (byte) 0);
+            final KaitaiStream _io__raw_nameOrAsusInfo = new ByteBufferKaitaiStream(32);
+            this._io.addChildStream(_io__raw_nameOrAsusInfo);
+            {
+                long _pos2 = this._io.pos();
+                this._io.seek(this._io.pos() + (32));
+                final Uheader _this = this;
+                _io__raw_nameOrAsusInfo.setWriteBackHandler(new KaitaiStream.WriteBackHandler(_pos2) {
+                    @Override
+                    protected void write(KaitaiStream parent) {
+                        _this._raw_nameOrAsusInfo = _io__raw_nameOrAsusInfo.toByteArray();
+                        if (_this._raw_nameOrAsusInfo.length != 32)
+                            throw new ConsistencyError("raw(name_or_asus_info)", 32, _this._raw_nameOrAsusInfo.length);
+                        parent.writeBytes(_this._raw_nameOrAsusInfo);
+                    }
+                });
+            }
+            this.nameOrAsusInfo._write_Seq(_io__raw_nameOrAsusInfo);
         }
 
         public void _check() {
-            if (this.magic.length != 4)
-                throw new ConsistencyError("magic", 4, this.magic.length);
-            if (!(Arrays.equals(this.magic, new byte[] { 39, 5, 25, 86 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 39, 5, 25, 86 }, this.magic, null, "/types/uheader/seq/0");
+            if (this.magic == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.magic, null, "/types/uheader/seq/0");
             }
-            if ((this.name).getBytes(Charset.forName("UTF-8")).length > 32)
-                throw new ConsistencyError("name", 32, (this.name).getBytes(Charset.forName("UTF-8")).length);
-            if (KaitaiStream.byteArrayIndexOf((this.name).getBytes(Charset.forName("UTF-8")), ((byte) 0)) != -1)
-                throw new ConsistencyError("name", -1, KaitaiStream.byteArrayIndexOf((this.name).getBytes(Charset.forName("UTF-8")), ((byte) 0)));
+            if (this.osType == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.osType, null, "/types/uheader/seq/7");
+            }
+            if (this.architecture == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.architecture, null, "/types/uheader/seq/8");
+            }
+            if (this.imageType == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.imageType, null, "/types/uheader/seq/9");
+            }
+            if (this.compressionType == null) {
+                throw new KaitaiStream.ValidationNotInEnumError(this.compressionType, null, "/types/uheader/seq/10");
+            }
+            if (!Objects.equals(this.nameOrAsusInfo._root(), _root()))
+                throw new ConsistencyError("name_or_asus_info", _root(), this.nameOrAsusInfo._root());
+            if (!Objects.equals(this.nameOrAsusInfo._parent(), this))
+                throw new ConsistencyError("name_or_asus_info", this, this.nameOrAsusInfo._parent());
             _dirty = false;
         }
-        private byte[] magic;
+        private MagicTypes magic;
         private long headerCrc;
         private long timestamp;
         private long lenImage;
@@ -312,11 +814,19 @@ public class Uimage extends KaitaiStruct.ReadWrite {
         private UimageArch architecture;
         private UimageType imageType;
         private UimageComp compressionType;
-        private String name;
+        private NameOrAsusInfo nameOrAsusInfo;
         private Uimage _root;
         private Uimage _parent;
-        public byte[] magic() { return magic; }
-        public void setMagic(byte[] _v) { _dirty = true; magic = _v; }
+        private byte[] _raw_nameOrAsusInfo;
+
+        /**
+         * Besides the standard U-Boot magic, some vendors' bootloaders expect
+         * their own value (often a different one for each device model), with
+         * the rest of the header unchanged. `magic_types` lists the values
+         * known so far; images with any other magic are rejected.
+         */
+        public MagicTypes magic() { return magic; }
+        public void setMagic(MagicTypes _v) { _dirty = true; magic = _v; }
         public long headerCrc() { return headerCrc; }
         public void setHeaderCrc(long _v) { _dirty = true; headerCrc = _v; }
         public long timestamp() { return timestamp; }
@@ -337,12 +847,66 @@ public class Uimage extends KaitaiStruct.ReadWrite {
         public void setImageType(UimageType _v) { _dirty = true; imageType = _v; }
         public UimageComp compressionType() { return compressionType; }
         public void setCompressionType(UimageComp _v) { _dirty = true; compressionType = _v; }
-        public String name() { return name; }
-        public void setName(String _v) { _dirty = true; name = _v; }
+        public NameOrAsusInfo nameOrAsusInfo() { return nameOrAsusInfo; }
+        public void setNameOrAsusInfo(NameOrAsusInfo _v) { _dirty = true; nameOrAsusInfo = _v; }
         public Uimage _root() { return _root; }
         public void set_root(Uimage _v) { _dirty = true; _root = _v; }
         public Uimage _parent() { return _parent; }
         public void set_parent(Uimage _v) { _dirty = true; _parent = _v; }
+        public byte[] _raw_nameOrAsusInfo() { return _raw_nameOrAsusInfo; }
+        public void set_raw_NameOrAsusInfo(byte[] _v) { _dirty = true; _raw_nameOrAsusInfo = _v; }
+    }
+    public static class Version extends KaitaiStruct.ReadWrite {
+        public static Version fromFile(String fileName) throws IOException {
+            return new Version(new ByteBufferKaitaiStream(fileName));
+        }
+        public Version() {
+            this(null, null, null);
+        }
+
+        public Version(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Version(KaitaiStream _io, Uimage.AsusFirmwareInformation _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Version(KaitaiStream _io, Uimage.AsusFirmwareInformation _parent, Uimage _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+        }
+        public void _read() {
+            this.major = this._io.readU1();
+            this.minor = this._io.readU1();
+            _dirty = false;
+        }
+
+        public void _fetchInstances() {
+        }
+
+        public void _write_Seq() {
+            _assertNotDirty();
+            this._io.writeU1(this.major);
+            this._io.writeU1(this.minor);
+        }
+
+        public void _check() {
+            _dirty = false;
+        }
+        private int major;
+        private int minor;
+        private Uimage _root;
+        private Uimage.AsusFirmwareInformation _parent;
+        public int major() { return major; }
+        public void setMajor(int _v) { _dirty = true; major = _v; }
+        public int minor() { return minor; }
+        public void setMinor(int _v) { _dirty = true; minor = _v; }
+        public Uimage _root() { return _root; }
+        public void set_root(Uimage _v) { _dirty = true; _root = _v; }
+        public Uimage.AsusFirmwareInformation _parent() { return _parent; }
+        public void set_parent(Uimage.AsusFirmwareInformation _v) { _dirty = true; _parent = _v; }
     }
     private Uheader header;
     private byte[] data;

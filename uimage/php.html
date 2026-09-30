@@ -95,14 +95,31 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>The new uImage format allows more flexibility in handling images of various
-types (kernel, ramdisk, etc.), it also enhances integrity protection of images
-with sha1 and md5 checksums.</p>
+                <p><p>The legacy U-Boot image format (uImage), as created by <code>mkimage</code>: a 64-byte
+header followed by the image data (e.g. a Linux kernel, a ramdisk or a
+script). The header describes the data (OS, CPU architecture, image type,
+compression, load and entry point addresses, name) and protects both the
+header and the data with CRC-32 checksums.</p>
+<p>U-Boot's newer FIT (Flattened Image Tree) format is not covered by this spec.</p>
 </p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        U-Boot
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["bin", "img", "scr", "trx", "bix", "uimg"]
+                    </div>
                     
                     
                     <div class="panel-heading">
@@ -114,7 +131,35 @@ with sha1 and md5 checksums.</p>
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.11
+                    </div>
                     
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q105856758">Wikidata Q105856758</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
                     
                 </div>
             </div>
@@ -248,9 +293,13 @@ with sha1 and md5 checksums.</p>
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="sd">/**</span>
-<span class="sd"> * The new uImage format allows more flexibility in handling images of various</span>
-<span class="sd"> * types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
-<span class="sd"> * with sha1 and md5 checksums.</span>
+<span class="sd"> * The legacy U-Boot image format (uImage), as created by `mkimage`: a 64-byte</span>
+<span class="sd"> * header followed by the image data (e.g. a Linux kernel, a ramdisk or a</span>
+<span class="sd"> * script). The header describes the data (OS, CPU architecture, image type,</span>
+<span class="sd"> * compression, load and entry point addresses, name) and protects both the</span>
+<span class="sd"> * header and the data with CRC-32 checksums.</span>
+<span class="sd"> * </span>
+<span class="sd"> * U-Boot&#39;s newer FIT (Flattened Image Tree) format is not covered by this spec.</span>
 <span class="sd"> */</span>
 
 <span class="k">namespace</span> <span class="p">{</span>
@@ -271,6 +320,201 @@ with sha1 and md5 checksums.</p>
     <span class="p">}</span>
 <span class="p">}</span>
 
+<span class="sd">/**</span>
+<span class="sd"> * ASUS firmware images [overlay the 32-byte image</span>
+<span class="sd"> * name](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L185-L188)</span>
+<span class="sd"> * with a [`TAIL`</span>
+<span class="sd"> * structure](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L151-L171)</span>
+<span class="sd"> * that contains version information and the product ID (model name).</span>
+<span class="sd"> * </span>
+<span class="sd"> * The first 16 bytes have the same structure in all three known variants of</span>
+<span class="sd"> * the `TAIL` structure. The meaning of the last 16 bytes differs across the</span>
+<span class="sd"> * variants - therefore, for simplicity, this Kaitai Struct implementation</span>
+<span class="sd"> * treats them as an opaque byte array named `extra_info`. For an overview of</span>
+<span class="sd"> * the variants, see the documentation for `extra_info`.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">Uimage</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">AsusFirmwareInformation</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Uimage\NameOrAsusInfo</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Uimage</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_kernelVersion</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Uimage\Version</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fsVersion</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Uimage\Version</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_productId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extraInfo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_kernelVersion</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_fsVersion</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_productId</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_extraInfo</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">kernelVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_kernelVersion</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">fsVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fsVersion</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * In the Ralink SDK variant (see `extra_info`), the product ID field is</span>
+<span class="sd">         * actually 23 bytes long, but no known product ID is longer than 12</span>
+<span class="sd">         * bytes.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">productId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_productId</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The structure of these bytes varies among the three known variants of</span>
+<span class="sd">         * the `TAIL` structure, and the header doesn&#39;t say which one is used:</span>
+<span class="sd">         * </span>
+<span class="sd">         * * Plain: 8 hardware versions (using the `version` type) - see</span>
+<span class="sd">         *   &lt;https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L170&gt;</span>
+<span class="sd">         * </span>
+<span class="sd">         *   Sample file: `RT-AC51U_3.0.0.4_380_8591-ga8dd632.trx` from</span>
+<span class="sd">         *   &lt;https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC51U/FW_RT_AC51U_30043808591.zip&gt;,</span>
+<span class="sd">         *   released on 2020-09-22 and listed on</span>
+<span class="sd">         *   &lt;https://www.asus.com/supportonly/rt-ac51u/helpdesk_bios/&gt;.</span>
+<span class="sd">         * </span>
+<span class="sd">         *   Source code links:</span>
+<span class="sd">         * </span>
+<span class="sd">         *   - [ASUS GPL source, RT-AC55UHP</span>
+<span class="sd">         *     3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)</span>
+<span class="sd">         *     (`asuswrt/release/src/asustools/mkimage.src/` in</span>
+<span class="sd">         *     `GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)</span>
+<span class="sd">         *   - [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial</span>
+<span class="sd">         *     mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src)</span>
+<span class="sd">         * </span>
+<span class="sd">         * * `TRX_NEW` (a macro defined when building `mkimage`): the</span>
+<span class="sd">         *   build number and extended build number (`u2le` each), two key bytes</span>
+<span class="sd">         *   and 5 hardware versions - see</span>
+<span class="sd">         *   &lt;https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/include/image.h#L174-L180&gt;</span>
+<span class="sd">         * </span>
+<span class="sd">         *   `mkimage` [overwrites the first 3 hardware</span>
+<span class="sd">         *   versions](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/mkimage.c#L546-L569)</span>
+<span class="sd">         *   with values derived from the key bytes.</span>
+<span class="sd">         * </span>
+<span class="sd">         *   Sample file: `RT-AC55UHP_3.0.0.4_382_52236-ga0f880d.trx` (build 382,</span>
+<span class="sd">         *   extended build 52236) from</span>
+<span class="sd">         *   &lt;https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/FW_RT_AC55UHP_300438252236.zip&gt;,</span>
+<span class="sd">         *   released on 2020-06-04 and listed on</span>
+<span class="sd">         *   &lt;https://www.asus.com/supportonly/rt-ac55uhp/helpdesk_bios/&gt;.</span>
+<span class="sd">         * </span>
+<span class="sd">         *   Source code links:</span>
+<span class="sd">         * </span>
+<span class="sd">         *   - [ASUS GPL source, RT-AC55UHP</span>
+<span class="sd">         *     3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)</span>
+<span class="sd">         *     (`asuswrt/release/src-qca/asustools/mkimage.src/` in</span>
+<span class="sd">         *     `GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)</span>
+<span class="sd">         *   - [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial</span>
+<span class="sd">         *     mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src)</span>
+<span class="sd">         * </span>
+<span class="sd">         * * Ralink SDK: the rest of a 23-byte product ID (see `product_id`),</span>
+<span class="sd">         *   a version suffix letter and the kernel part size (called `ih_ksz`) -</span>
+<span class="sd">         *   see &lt;https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h#L164-L165&gt;</span>
+<span class="sd">         * </span>
+<span class="sd">         *   Sample file: `RP-N12_1.0.1.1f.trx` from</span>
+<span class="sd">         *   &lt;https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/FW_RP-N12_1.0.1.1f.zip&gt;,</span>
+<span class="sd">         *   released on 2019-11-12 and listed on</span>
+<span class="sd">         *   &lt;https://www.asus.com/supportonly/rp-n12/helpdesk_bios/&gt;.</span>
+<span class="sd">         * </span>
+<span class="sd">         *   Source code links:</span>
+<span class="sd">         * </span>
+<span class="sd">         *   - [ASUS GPL source, RP-N12</span>
+<span class="sd">         *     1.0.1.1f](https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/GPL_RP_N12_1011f.zip)</span>
+<span class="sd">         *     (`GPL_RP-N12_source.1011f/user/mkimage/include/image.h` in</span>
+<span class="sd">         *     `GPL_RP-N12_source.1011f.tar.bz2`)</span>
+<span class="sd">         *   - [rt-n56u custom firmware by Andy</span>
+<span class="sd">         *     Padavan](https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h)</span>
+<span class="sd">         * </span>
+<span class="sd">         * In the plain and `TRX_NEW` variants, the last 4 bytes may instead</span>
+<span class="sd">         * contain the offset of the root file system, which is [written by</span>
+<span class="sd">         * `mkimage -r`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/mkimage.c#L527-L542)</span>
+<span class="sd">         * as the magic byte 0xA9</span>
+<span class="sd">         * ([`ROOTFS_OFFSET_MAGIC`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L154-L159))</span>
+<span class="sd">         * followed by the offset as a 24-bit big-endian integer.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">extraInfo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extraInfo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Uimage</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">NameOrAsusInfo</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Uimage\Uheader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Uimage</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasAsusInfo</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">false</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasAsusInfo</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asusInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Uimage\AsusFirmwareInformation</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_byte0</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">byte0</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte0</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte0</span><span class="p">;</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte0</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte0</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_byte4</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">byte4</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte4</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte4</span><span class="p">;</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte4</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte4</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_hasAsusInfo</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Whether this type stores ASUS firmware information (`asus_info`)</span>
+<span class="sd">         * rather than an image name (`name`).</span>
+<span class="sd">         * </span>
+<span class="sd">         * The header doesn&#39;t say which one it is, so we infer it using a</span>
+<span class="sd">         * heuristic based on the layout of the `asus_firmware_information` type.</span>
+<span class="sd">         * If ASUS firmware info is present, the first byte (the major kernel</span>
+<span class="sd">         * version number) is a small integer (i.e. not a printable character),</span>
+<span class="sd">         * and byte 4 (first byte of the product ID/model name) is a printable</span>
+<span class="sd">         * character. An empty name is not mistaken for ASUS information, because</span>
+<span class="sd">         * its byte 4 is a null byte.</span>
+<span class="sd">         * </span>
+<span class="sd">         * The highest known major kernel version number is 9 (e.g. in</span>
+<span class="sd">         * `DSL-N55U_9.0.0.4_380_3925-gad8f412_Annex_A.trx` from</span>
+<span class="sd">         * &lt;https://dlcdnets.asus.com/pub/ASUS/wireless/DSL-N55U/FW_DSL_N55U_90043803925.zip&gt;,</span>
+<span class="sd">         * released on 2016-08-04 and listed on</span>
+<span class="sd">         * &lt;https://www.asus.com/supportonly/dsl-n55u/helpdesk_bios/&gt;). ASUS</span>
+<span class="sd">         * seems to use such high major versions (9, sometimes 7) for beta</span>
+<span class="sd">         * releases, whereas regular releases use 3 (or 1 in older firmware).</span>
+<span class="sd">         * </span>
+<span class="sd">         * It can also be 0, in particular due to a bug in the MediaTek MT798X</span>
+<span class="sd">         * build of ASUS&#39;s `mkimage` (it reads the `-V` values from fixed `argv`</span>
+<span class="sd">         * positions, even though it parses the options using `getopt()` - see</span>
+<span class="sd">         * &lt;https://github.com/blocktrron/tuf-ax4200-gpl/blob/a4fe37f4d78473f97c6d47cf93d97c3811af90cc/release/src-mtk-MT798X/Uboot-upstream/tools/mkimage.c#L317-L333&gt;).</span>
+<span class="sd">         * For example, this is the case in</span>
+<span class="sd">         * `RT-AX52_3.0.0.4_388_34015-g9488655.trx` from</span>
+<span class="sd">         * &lt;https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AX52/FW_RT-AX52_300438834015.zip&gt;,</span>
+<span class="sd">         * released on 2026-03-20 and listed on</span>
+<span class="sd">         * &lt;https://www.asus.com/supportonly/rt-ax52/helpdesk_bios?model2Name=RT-AX52&gt;.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">hasAsusInfo</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasAsusInfo</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasAsusInfo</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasAsusInfo</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte0</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte4</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte4</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">127</span><span class="p">))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasAsusInfo</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_asusInfo</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">asusInfo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asusInfo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
 <span class="k">namespace</span> <span class="nx">Uimage</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Uheader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
         <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Uimage</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Uimage</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
@@ -279,9 +523,9 @@ with sha1 and md5 checksums.</p>
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\x27\x05\x19\x56</span><span class="s2">&quot;</span><span class="p">))</span> <span class="p">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x27\x05\x19\x56</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/uheader/seq/0&quot;</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">\Uimage\MagicTypes</span><span class="o">::</span><span class="na">isDefined</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotInEnumError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/uheader/seq/0&quot;</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headerCrc</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timestamp</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
@@ -290,10 +534,24 @@ with sha1 and md5 checksums.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryAddress</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataCrc</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">\Uimage\UimageOs</span><span class="o">::</span><span class="na">isDefined</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osType</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotInEnumError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osType</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/uheader/seq/7&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_architecture</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">\Uimage\UimageArch</span><span class="o">::</span><span class="na">isDefined</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_architecture</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotInEnumError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_architecture</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/uheader/seq/8&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">\Uimage\UimageType</span><span class="o">::</span><span class="na">isDefined</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageType</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotInEnumError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageType</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/uheader/seq/9&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">\Uimage\UimageComp</span><span class="o">::</span><span class="na">isDefined</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionType</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotInEnumError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionType</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/uheader/seq/10&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_nameOrAsusInfo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+            <span class="nv">$_io__raw_nameOrAsusInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_nameOrAsusInfo</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nameOrAsusInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Uimage\NameOrAsusInfo</span><span class="p">(</span><span class="nv">$_io__raw_nameOrAsusInfo</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_headerCrc</span><span class="p">;</span>
@@ -306,7 +564,15 @@ with sha1 and md5 checksums.</p>
         <span class="k">protected</span> <span class="nv">$_m_architecture</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_imageType</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_compressionType</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_nameOrAsusInfo</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_nameOrAsusInfo</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Besides the standard U-Boot magic, some vendors&#39; bootloaders expect</span>
+<span class="sd">         * their own value (often a different one for each device model), with</span>
+<span class="sd">         * the rest of the header unchanged. `magic_types` lists the values</span>
+<span class="sd">         * known so far; images with any other magic are rejected.</span>
+<span class="sd">         */</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">headerCrc</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headerCrc</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">timestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timestamp</span><span class="p">;</span> <span class="p">}</span>
@@ -318,7 +584,559 @@ with sha1 and md5 checksums.</p>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">architecture</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_architecture</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">imageType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageType</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">compressionType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionType</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">nameOrAsusInfo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nameOrAsusInfo</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_nameOrAsusInfo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_nameOrAsusInfo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Uimage</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Version</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Uimage\AsusFirmwareInformation</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Uimage</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_major</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_major</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_minor</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">major</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_major</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">minor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minor</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Uimage</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">MagicTypes</span> <span class="p">{</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * ALLNET ALL-SG8316M.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ALLNET_ALL_SG8316M</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * ALLNET ALL-SG8208M. OpenWrt device `allnet_all-sg8208m`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ALLNET_ALL_SG8208M</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * ALLNET ALL-SG8324M.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ALLNET_ALL_SG8324M</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt device `datto_l8`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">DATTO_L8</span> <span class="o">=</span> <span class="mi">7353344</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * ALLNET ALL-WAPC0450C.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ALLNET_ALL_WAPC0450C</span> <span class="o">=</span> <span class="mi">9453568</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt device `engenius_ews2910p-v3`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS2910P_V3</span> <span class="o">=</span> <span class="mi">50398464</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS1200-28TFP firmware 1.07.16 to 1.07.40.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS1200_28TFP</span> <span class="o">=</span> <span class="mi">50402048</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7926EFP firmware 1.07.22 to 1.07.27.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7926EFP</span> <span class="o">=</span> <span class="mi">50402050</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7952P firmware 1.07.16 to 1.07.40.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7952P</span> <span class="o">=</span> <span class="mi">50406401</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS2908P firmware 1.07.34 to 1.07.43.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS2908P</span> <span class="o">=</span> <span class="mi">50409728</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7928P v2 firmware 1.07.40 to 1.07.43.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7928P_V2</span> <span class="o">=</span> <span class="mi">51450112</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS1200-28TFP v2 firmware 1.07.43.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS1200_28TFP_V2</span> <span class="o">=</span> <span class="mi">51450624</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS2910P firmware 1.07.16 to 1.07.43. OpenWrt device</span>
+<span class="sd">         * `engenius_ews2910p-v1`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS2910P</span> <span class="o">=</span> <span class="mi">58730768</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS5912FP firmware 1.07.16 to 1.07.43.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS5912FP</span> <span class="o">=</span> <span class="mi">58743058</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7928P firmware 1.07.16 to 1.07.40.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7928P</span> <span class="o">=</span> <span class="mi">58751272</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS1200D-10T firmware 1.07.16 to 1.07.22.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS1200D_10T</span> <span class="o">=</span> <span class="mi">59187216</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS1200-28T firmware 1.07.16 to 1.07.22.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS1200_28T</span> <span class="o">=</span> <span class="mi">59187240</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7928FP firmware 1.07.16 to 1.07.40.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7928FP</span> <span class="o">=</span> <span class="mi">59216527</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS1200-52T firmware 1.07.16 to 1.07.22.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS1200_52T</span> <span class="o">=</span> <span class="mi">60235858</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7952FP firmware 1.07.16 to 1.07.40.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7952FP</span> <span class="o">=</span> <span class="mi">60265775</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt devices `youku_x2`, `youku_yk-l1`, `youku_yk-l1c`,</span>
+<span class="sd">         * `youku_yk-l2`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">YOUKU_YK_L1</span> <span class="o">=</span> <span class="mi">304680960</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Generic default of the Realtek switch SDK&#39;s U-Boot</span>
+<span class="sd">         * (`CONFIG_IH_MAGIC_NUMBER`), used e.g. by many TRENDnet switches. OpenWrt</span>
+<span class="sd">         * device `apresia_aplgs120gtss`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">REALTEK_SDK</span> <span class="o">=</span> <span class="mi">305418240</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt device `netgear_gs750e`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_GS750E</span> <span class="o">=</span> <span class="mi">391006017</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * NETGEAR GS728TPv2, GS728TPPv2, GS752TPv2 and GS752TPP.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_GS728TP_V2</span> <span class="o">=</span> <span class="mi">391006018</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt device `bolt_bl100`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">BOLT_BL100</span> <span class="o">=</span> <span class="mi">638656533</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The standard U-Boot header magic (`IH_MAGIC`).</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">UIMAGE</span> <span class="o">=</span> <span class="mi">654645590</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * NETGEAR WNCE4004.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNCE4004</span> <span class="o">=</span> <span class="mi">654645607</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;0612&quot; in ASCII. NETGEAR WNR612v2 firmware 1.0.0.2 (later firmware uses</span>
+<span class="sd">         * &quot;2061&quot;).</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR612_V2_EARLY</span> <span class="o">=</span> <span class="mi">808857906</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;1000&quot; in ASCII. NETGEAR WNR1000v2-VC. OpenWrt used this magic only in</span>
+<span class="sd">         * its `ar71xx` target, which was</span>
+<span class="sd">         * [removed](https://github.com/openwrt/openwrt/commit/4e4ee4649553ab536225060a27fc320bf54e458c)</span>
+<span class="sd">         * after OpenWrt 19.07, so it is missing from the current OpenWrt code.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR1000_V2_VC</span> <span class="o">=</span> <span class="mi">825241648</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;1001&quot; in ASCII. OpenWrt device `netgear_wnr1000-v2`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR1000_V2</span> <span class="o">=</span> <span class="mi">825241649</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;1002&quot; in ASCII. NETGEAR WNR1000v2-VM. No firmware image with this magic</span>
+<span class="sd">         * was found among the ones surveyed (September 2026), so it may not be</span>
+<span class="sd">         * used in practice.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR1000_V2_VM</span> <span class="o">=</span> <span class="mi">825241650</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;1004&quot; in ASCII. NETGEAR WNR1000v4. No firmware image with this magic</span>
+<span class="sd">         * was found among the ones surveyed (September 2026), so it may not be</span>
+<span class="sd">         * used in practice.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR1000_V4</span> <span class="o">=</span> <span class="mi">825241652</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;1100&quot; in ASCII. NETGEAR WPN824N. OpenWrt used this magic only in its</span>
+<span class="sd">         * `ar71xx` target, which was</span>
+<span class="sd">         * [removed](https://github.com/openwrt/openwrt/commit/4e4ee4649553ab536225060a27fc320bf54e458c)</span>
+<span class="sd">         * after OpenWrt 19.07, so it is missing from the current OpenWrt code.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WPN824N</span> <span class="o">=</span> <span class="mi">825307184</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;1PAW&quot; in ASCII. ZyXEL UAG50.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ZYXEL_UAG50</span> <span class="o">=</span> <span class="mi">827343191</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;2001&quot; in ASCII. OpenWrt 19.07 images for the NETGEAR WNR2000 (the stock</span>
+<span class="sd">         * firmware uses the standard magic). OpenWrt used this magic only in its</span>
+<span class="sd">         * `ar71xx` target, which was</span>
+<span class="sd">         * [removed](https://github.com/openwrt/openwrt/commit/4e4ee4649553ab536225060a27fc320bf54e458c)</span>
+<span class="sd">         * after OpenWrt 19.07, so it is missing from the current OpenWrt code.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR2000</span> <span class="o">=</span> <span class="mi">842018865</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;2003&quot; in ASCII. OpenWrt device `netgear_wnr2000-v3`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR2000_V3</span> <span class="o">=</span> <span class="mi">842018867</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;2004&quot; in ASCII. NETGEAR WNR2000v4. OpenWrt used this magic only in its</span>
+<span class="sd">         * `ar71xx` target, which was</span>
+<span class="sd">         * [removed](https://github.com/openwrt/openwrt/commit/4e4ee4649553ab536225060a27fc320bf54e458c)</span>
+<span class="sd">         * after OpenWrt 19.07, so it is missing from the current OpenWrt code.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR2000_V4</span> <span class="o">=</span> <span class="mi">842018868</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;2061&quot; in ASCII. OpenWrt devices `netgear_wnr612-v2`, `on_n150r`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR612_V2</span> <span class="o">=</span> <span class="mi">842020401</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;2200&quot; in ASCII. OpenWrt device `netgear_wnr2200_common`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR2200</span> <span class="o">=</span> <span class="mi">842149936</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;3700&quot; in ASCII. OpenWrt device `netgear_wndr3700`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNDR3700</span> <span class="o">=</span> <span class="mi">859254832</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;3701&quot; in ASCII. OpenWrt devices `netgear_wndr3700-v2`,</span>
+<span class="sd">         * `netgear_wndr3800`, `netgear_wndr3800ch`, `netgear_wndrmac-v1`,</span>
+<span class="sd">         * `netgear_wndrmac-v2`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNDR3700_V2</span> <span class="o">=</span> <span class="mi">859254833</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;3703&quot; in ASCII. OpenWrt devices `netgear_wndr3700-v4`,</span>
+<span class="sd">         * `netgear_wndr4300`, `netgear_wndr4300sw`, `netgear_wndr4300tn`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNDR3700_V4</span> <span class="o">=</span> <span class="mi">859254835</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;6000&quot; in ASCII. OpenWrt device `netgear_r6100`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_R6100</span> <span class="o">=</span> <span class="mi">909127728</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;6122&quot; in ASCII. NETGEAR WNR612. No firmware image with this magic was</span>
+<span class="sd">         * found among the ones surveyed (September 2026), so it may not be used in</span>
+<span class="sd">         * practice.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_WNR612</span> <span class="o">=</span> <span class="mi">909193778</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;COMB&quot; in ASCII. Devices made by MitraStar (MSTC), e.g. ZyXEL NBG6604</span>
+<span class="sd">         * and I-O DATA WN-AX1167GR2, WN-AX2033GR, WN-AX2033GR2, WN-DX1167GR and</span>
+<span class="sd">         * WN-DX2033GR.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MITRASTAR_COMB</span> <span class="o">=</span> <span class="mi">1129270594</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;COMC&quot; in ASCII. Devices made by MitraStar (MSTC), e.g. I-O DATA</span>
+<span class="sd">         * WN-CS300FR, WN-DX1167R, WN-DX1200GR, WN-DX1300EXP, WN-DX1300GRN,</span>
+<span class="sd">         * WN-PL1167EX01/02/03, WN-SX300FR and WN-SX300GR.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MITRASTAR_COMC</span> <span class="o">=</span> <span class="mi">1129270595</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;NGC5&quot; in ASCII. OpenWrt devices `netgear_gs308t-v1`,</span>
+<span class="sd">         * `netgear_gs310tp-v1`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_GS308T</span> <span class="o">=</span> <span class="mi">1313293109</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;NGE &quot; in ASCII. OpenWrt device `netgear_nge`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_NGE</span> <span class="o">=</span> <span class="mi">1313293600</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;NGF &quot; in ASCII. NETGEAR GC108P and GC108PP.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_NGF</span> <span class="o">=</span> <span class="mi">1313293856</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;NGG &quot; in ASCII. OpenWrt device `netgear_ngg`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_NGG</span> <span class="o">=</span> <span class="mi">1313294112</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;NGH &quot; in ASCII. NETGEAR GS724TPv2 and GS724TPP.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_NGH</span> <span class="o">=</span> <span class="mi">1313294368</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;NGI &quot; in ASCII. NETGEAR GS716TP and GS716TPP.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_NGI</span> <span class="o">=</span> <span class="mi">1313294624</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;NGP &quot; in ASCII. NETGEAR MS510TXM and MS510TXUP.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NETGEAR_NGP</span> <span class="o">=</span> <span class="mi">1313296416</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;OKLI&quot; in ASCII. The kernel of OpenWrt images for devices whose</span>
+<span class="sd">         * bootloader loads a small OpenWrt loader (`lzma-loader`, `loader-okli`)</span>
+<span class="sd">         * instead, which then boots this kernel.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">OPENWRT_OKLI</span> <span class="o">=</span> <span class="mi">1330334793</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;hsqs&quot; in ASCII. The kernel of OpenWrt images for the D-Link COVR-C1200</span>
+<span class="sd">         * and COVR-P2500, loaded by OpenWrt&#39;s `lzma-loader`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">OPENWRT_DLINK_COVR</span> <span class="o">=</span> <span class="mi">1752396147</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &quot;sqOK&quot; in ASCII. The kernel of OpenWrt images for Senao-based access</span>
+<span class="sd">         * points (e.g. EnGenius EAP and ENS series, ALLNET ALL-WAP02860AC,</span>
+<span class="sd">         * WatchGuard AP100/200/300), loaded by OpenWrt&#39;s `lzma-loader`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">OPENWRT_SENAO_OKLI</span> <span class="o">=</span> <span class="mi">1936805707</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius ECS1112FP (`image/series_vmlinux.bix` in the tar archive that</span>
+<span class="sd">         * follows a 64-byte header in the `.imag` firmware file, i.e. at offset</span>
+<span class="sd">         * 0x240).</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_ECS1112FP</span> <span class="o">=</span> <span class="mi">2155872258</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS1200-28TFP firmware 1.05.45 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS1200_28TFP_OLD_FW</span> <span class="o">=</span> <span class="mi">2197885696</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7926EFP firmware 1.06.23.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7926EFP_OLD_FW</span> <span class="o">=</span> <span class="mi">2197885698</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7952P firmware 1.05.52 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7952P_OLD_FW</span> <span class="o">=</span> <span class="mi">2197890049</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Default of the Realtek switch SDK for RTL838x</span>
+<span class="sd">         * (`CONFIG_IH_MAGIC_NUMBER`), used e.g. by ZyXEL GS1900 series, Cisco</span>
+<span class="sd">         * Sx220 series and Ubiquiti UISP-S switches. EnGenius EGS7228P firmware</span>
+<span class="sd">         * 1.05.05. OpenWrt devices `zyxel_gs1900`, `inaba_aml2-17gp`,</span>
+<span class="sd">         * `horaco_zx-swtgw2c8f`, `mokerlink_2g080gm`, `mokerlink_10gt080m`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">REALTEK_RTL838X</span> <span class="o">=</span> <span class="mi">2206203904</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * I-O DATA BSH-G08M.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IODATA_BSH_G08M</span> <span class="o">=</span> <span class="mi">2206203905</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * I-O DATA BSH-GP08 and Ubiquiti UISP-S (RTL838x).</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IODATA_BSH_GP08</span> <span class="o">=</span> <span class="mi">2206203906</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * I-O DATA BSH-G16M.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IODATA_BSH_G16M</span> <span class="o">=</span> <span class="mi">2206203907</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * I-O DATA BSH-G24M.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IODATA_BSH_G24M</span> <span class="o">=</span> <span class="mi">2206203908</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * I-O DATA BSH-G08MB.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IODATA_BSH_G08MB</span> <span class="o">=</span> <span class="mi">2206203920</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * I-O DATA BSH-GP08MB.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IODATA_BSH_GP08MB</span> <span class="o">=</span> <span class="mi">2206203921</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * I-O DATA BSH-G16MB.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IODATA_BSH_G16MB</span> <span class="o">=</span> <span class="mi">2206203922</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * I-O DATA BSH-G24MB. OpenWrt device `iodata_bsh-g24mb`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IODATA_BSH_G24MB</span> <span class="o">=</span> <span class="mi">2206203923</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * TRENDnet TPE-3012LS.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TRENDNET_TPE_3012LS</span> <span class="o">=</span> <span class="mi">2206210573</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * TRENDnet TPE-3018LS.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TRENDNET_TPE_3018LS</span> <span class="o">=</span> <span class="mi">2206210574</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EGS2108P firmware 1.05.20.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EGS2108P_OLD_FW</span> <span class="o">=</span> <span class="mi">2206212360</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EGS2110P firmware 1.05.20.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EGS2110P_OLD_FW</span> <span class="o">=</span> <span class="mi">2206212368</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS2910P firmware 1.05.38 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS2910P_OLD_FW</span> <span class="o">=</span> <span class="mi">2206214416</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EGS5110P firmware 1.05.20.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EGS5110P_OLD_FW</span> <span class="o">=</span> <span class="mi">2206224656</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EGS5212FP firmware 1.05.05.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EGS5212FP_OLD_FW</span> <span class="o">=</span> <span class="mi">2206224914</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS5912FP firmware 1.05.38 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS5912FP_OLD_FW</span> <span class="o">=</span> <span class="mi">2206226706</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7928P firmware 1.05.38 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7928P_OLD_FW</span> <span class="o">=</span> <span class="mi">2206234920</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS1200D-10T firmware 1.05.39 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS1200D_10T_OLD_FW</span> <span class="o">=</span> <span class="mi">2206670864</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS1200-28T firmware 1.05.38 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS1200_28T_OLD_FW</span> <span class="o">=</span> <span class="mi">2206670888</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EGS7228FP firmware 1.05.05.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EGS7228FP_OLD_FW</span> <span class="o">=</span> <span class="mi">2206671503</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7928FP firmware 1.05.42 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7928FP_OLD_FW</span> <span class="o">=</span> <span class="mi">2206700175</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Default of the Realtek switch SDK for RTL839x</span>
+<span class="sd">         * (`CONFIG_IH_MAGIC_NUMBER`). No firmware image with this magic was found</span>
+<span class="sd">         * among the ones surveyed (September 2026), so it may not be used in</span>
+<span class="sd">         * practice.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">REALTEK_RTL839X</span> <span class="o">=</span> <span class="mi">2207252480</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Default of the Realtek switch SDK for RTL8396</span>
+<span class="sd">         * (`CONFIG_IH_MAGIC_NUMBER`). No firmware image with this magic was found</span>
+<span class="sd">         * among the ones surveyed (September 2026), so it may not be used in</span>
+<span class="sd">         * practice.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">REALTEK_RTL8396</span> <span class="o">=</span> <span class="mi">2207645696</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS1200-52T firmware 1.05.38 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS1200_52T_OLD_FW</span> <span class="o">=</span> <span class="mi">2207719506</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EGS7252FP firmware 1.05.05.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EGS7252FP_OLD_FW</span> <span class="o">=</span> <span class="mi">2207720751</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * EnGenius EWS7952FP firmware 1.05.38 to 1.06.21.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ENGENIUS_EWS7952FP_OLD_FW</span> <span class="o">=</span> <span class="mi">2207749423</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Default of the Realtek switch SDK for RTL930x</span>
+<span class="sd">         * (`CONFIG_IH_MAGIC_NUMBER`), used e.g. by TRENDnet and Ubiquiti UISP-S</span>
+<span class="sd">         * switches. EnGenius ECS1528FP (`image/series_vmlinux.bix` in the tar</span>
+<span class="sd">         * archive that follows a 64-byte header in the `.imag` firmware file, i.e.</span>
+<span class="sd">         * at offset 0x240). OpenWrt devices `sirivision_sr-st3408f`,</span>
+<span class="sd">         * `sirivision_sr-st3808f`, `keeplink_kp-9000-8xm`, `plasmacloud-common`,</span>
+<span class="sd">         * `vimin_vm-s100-0800ms`, `xikestor_sks8300-8t`,</span>
+<span class="sd">         * `xikestor_sks8300-12e2t2x`, `xikestor_sks8310-8x`,</span>
+<span class="sd">         * `sirivision_sr-st31212f`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">REALTEK_RTL930X</span> <span class="o">=</span> <span class="mi">2466250752</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt device `zyxel_xgs1010-12`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ZYXEL_XGS1010_12</span> <span class="o">=</span> <span class="mi">2466254864</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt device `zyxel_xgs1210-12`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ZYXEL_XGS1210_12</span> <span class="o">=</span> <span class="mi">2466255376</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt device `zyxel_xgs1250-12-common`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ZYXEL_XGS1250_12</span> <span class="o">=</span> <span class="mi">2466255440</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt devices `nicgiga_s100-0800s-m`, `tplink_tl-st1008f-v2`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NICGIGA_S100_0800S_M</span> <span class="o">=</span> <span class="mi">2466447360</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenWrt device `plasmacloud-common`.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PLASMACLOUD_PSX28</span> <span class="o">=</span> <span class="mi">2467299328</span><span class="p">;</span>
+
+        <span class="k">private</span> <span class="k">const</span> <span class="no">_VALUES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">6</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">22</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">7353344</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">9453568</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">50398464</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">50402048</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">50402050</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">50406401</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">50409728</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">51450112</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">51450624</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">58730768</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">58743058</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">58751272</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">59187216</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">59187240</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">59216527</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">60235858</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">60265775</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">304680960</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">305418240</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">391006017</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">391006018</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">638656533</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">654645590</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">654645607</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">808857906</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">825241648</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">825241649</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">825241650</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">825241652</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">825307184</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">827343191</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">842018865</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">842018867</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">842018868</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">842020401</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">842149936</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">859254832</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">859254833</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">859254835</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">909127728</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">909193778</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1129270594</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1129270595</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1313293109</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1313293600</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1313293856</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1313294112</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1313294368</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1313294624</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1313296416</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1330334793</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1752396147</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1936805707</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2155872258</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2197885696</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2197885698</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2197890049</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206203904</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206203905</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206203906</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206203907</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206203908</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206203920</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206203921</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206203922</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206203923</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206210573</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206210574</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206212360</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206212368</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206214416</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206224656</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206224914</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206226706</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206234920</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206670864</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206670888</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206671503</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2206700175</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2207252480</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2207645696</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2207719506</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2207720751</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2207749423</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2466250752</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2466254864</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2466255376</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2466255440</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2466447360</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2467299328</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">];</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">isDefined</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$v</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">isset</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">_VALUES</span><span class="p">[</span><span class="nv">$v</span><span class="p">]);</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -482,7 +1300,22 @@ with sha1 and md5 checksums.</p>
         <span class="k">const</span> <span class="no">LZ4</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">ZSTD</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
 
-        <span class="k">private</span> <span class="k">const</span> <span class="no">_VALUES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">3</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">4</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">5</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">6</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">];</span>
+        <span class="sd">/**</span>
+<span class="sd">         * `IH_COMP_MZ` of the U-Boot fork for SigmaStar (formerly MStar) SoCs,</span>
+<span class="sd">         * not defined in upstream U-Boot. Used e.g. in I-O DATA TS-NS240W and</span>
+<span class="sd">         * TS-NS320W network camera firmware.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MZ</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * `IH_COMP_XIP` of the U-Boot fork for SigmaStar (formerly MStar) SoCs,</span>
+<span class="sd">         * not defined in upstream U-Boot. No firmware image with this value was</span>
+<span class="sd">         * found among the ones surveyed (September 2026), so it may not be used</span>
+<span class="sd">         * in practice.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">XIP</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+        <span class="k">private</span> <span class="k">const</span> <span class="no">_VALUES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">3</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">4</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">5</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">6</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">9</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">10</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">];</span>
 
         <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">isDefined</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$v</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span> <span class="p">{</span>
             <span class="k">return</span> <span class="nb">isset</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">_VALUES</span><span class="p">[</span><span class="nv">$v</span><span class="p">]);</span>

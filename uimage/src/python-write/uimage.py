@@ -10,13 +10,112 @@ if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
     raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Uimage(ReadWriteKaitaiStruct):
-    """The new uImage format allows more flexibility in handling images of various
-    types (kernel, ramdisk, etc.), it also enhances integrity protection of images
-    with sha1 and md5 checksums.
+    """The legacy U-Boot image format (uImage), as created by `mkimage`: a 64-byte
+    header followed by the image data (e.g. a Linux kernel, a ramdisk or a
+    script). The header describes the data (OS, CPU architecture, image type,
+    compression, load and entry point addresses, name) and protects both the
+    header and the data with CRC-32 checksums.
+    
+    U-Boot's newer FIT (Flattened Image Tree) format is not covered by this spec.
     
     .. seealso::
        Git tag "v2026.07" - https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h
     """
+
+    class MagicTypes(IntEnum):
+        allnet_all_sg8316m = 5
+        allnet_all_sg8208m = 6
+        allnet_all_sg8324m = 22
+        datto_l8 = 7353344
+        allnet_all_wapc0450c = 9453568
+        engenius_ews2910p_v3 = 50398464
+        engenius_ews1200_28tfp = 50402048
+        engenius_ews7926efp = 50402050
+        engenius_ews7952p = 50406401
+        engenius_ews2908p = 50409728
+        engenius_ews7928p_v2 = 51450112
+        engenius_ews1200_28tfp_v2 = 51450624
+        engenius_ews2910p = 58730768
+        engenius_ews5912fp = 58743058
+        engenius_ews7928p = 58751272
+        engenius_ews1200d_10t = 59187216
+        engenius_ews1200_28t = 59187240
+        engenius_ews7928fp = 59216527
+        engenius_ews1200_52t = 60235858
+        engenius_ews7952fp = 60265775
+        youku_yk_l1 = 304680960
+        realtek_sdk = 305418240
+        netgear_gs750e = 391006017
+        netgear_gs728tp_v2 = 391006018
+        bolt_bl100 = 638656533
+        uimage = 654645590
+        netgear_wnce4004 = 654645607
+        netgear_wnr612_v2_early = 808857906
+        netgear_wnr1000_v2_vc = 825241648
+        netgear_wnr1000_v2 = 825241649
+        netgear_wnr1000_v2_vm = 825241650
+        netgear_wnr1000_v4 = 825241652
+        netgear_wpn824n = 825307184
+        zyxel_uag50 = 827343191
+        netgear_wnr2000 = 842018865
+        netgear_wnr2000_v3 = 842018867
+        netgear_wnr2000_v4 = 842018868
+        netgear_wnr612_v2 = 842020401
+        netgear_wnr2200 = 842149936
+        netgear_wndr3700 = 859254832
+        netgear_wndr3700_v2 = 859254833
+        netgear_wndr3700_v4 = 859254835
+        netgear_r6100 = 909127728
+        netgear_wnr612 = 909193778
+        mitrastar_comb = 1129270594
+        mitrastar_comc = 1129270595
+        netgear_gs308t = 1313293109
+        netgear_nge = 1313293600
+        netgear_ngf = 1313293856
+        netgear_ngg = 1313294112
+        netgear_ngh = 1313294368
+        netgear_ngi = 1313294624
+        netgear_ngp = 1313296416
+        openwrt_okli = 1330334793
+        openwrt_dlink_covr = 1752396147
+        openwrt_senao_okli = 1936805707
+        engenius_ecs1112fp = 2155872258
+        engenius_ews1200_28tfp_old_fw = 2197885696
+        engenius_ews7926efp_old_fw = 2197885698
+        engenius_ews7952p_old_fw = 2197890049
+        realtek_rtl838x = 2206203904
+        iodata_bsh_g08m = 2206203905
+        iodata_bsh_gp08 = 2206203906
+        iodata_bsh_g16m = 2206203907
+        iodata_bsh_g24m = 2206203908
+        iodata_bsh_g08mb = 2206203920
+        iodata_bsh_gp08mb = 2206203921
+        iodata_bsh_g16mb = 2206203922
+        iodata_bsh_g24mb = 2206203923
+        trendnet_tpe_3012ls = 2206210573
+        trendnet_tpe_3018ls = 2206210574
+        engenius_egs2108p_old_fw = 2206212360
+        engenius_egs2110p_old_fw = 2206212368
+        engenius_ews2910p_old_fw = 2206214416
+        engenius_egs5110p_old_fw = 2206224656
+        engenius_egs5212fp_old_fw = 2206224914
+        engenius_ews5912fp_old_fw = 2206226706
+        engenius_ews7928p_old_fw = 2206234920
+        engenius_ews1200d_10t_old_fw = 2206670864
+        engenius_ews1200_28t_old_fw = 2206670888
+        engenius_egs7228fp_old_fw = 2206671503
+        engenius_ews7928fp_old_fw = 2206700175
+        realtek_rtl839x = 2207252480
+        realtek_rtl8396 = 2207645696
+        engenius_ews1200_52t_old_fw = 2207719506
+        engenius_egs7252fp_old_fw = 2207720751
+        engenius_ews7952fp_old_fw = 2207749423
+        realtek_rtl930x = 2466250752
+        zyxel_xgs1010_12 = 2466254864
+        zyxel_xgs1210_12 = 2466255376
+        zyxel_xgs1250_12 = 2466255440
+        nicgiga_s100_0800s_m = 2466447360
+        plasmacloud_psx28 = 2467299328
 
     class UimageArch(IntEnum):
         invalid = 0
@@ -55,6 +154,8 @@ class Uimage(ReadWriteKaitaiStruct):
         lzo = 4
         lz4 = 5
         zstd = 6
+        mz = 9
+        xip = 10
 
     class UimageOs(IntEnum):
         invalid = 0
@@ -169,6 +270,236 @@ class Uimage(ReadWriteKaitaiStruct):
             raise kaitaistruct.ConsistencyError(u"data", self.header.len_image, len(self.data))
         self._dirty = False
 
+    class AsusFirmwareInformation(ReadWriteKaitaiStruct):
+        """ASUS firmware images [overlay the 32-byte image
+        name](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L185-L188)
+        with a [`TAIL`
+        structure](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L151-L171)
+        that contains version information and the product ID (model name).
+        
+        The first 16 bytes have the same structure in all three known variants of
+        the `TAIL` structure. The meaning of the last 16 bytes differs across the
+        variants - therefore, for simplicity, this Kaitai Struct implementation
+        treats them as an opaque byte array named `extra_info`. For an overview of
+        the variants, see the documentation for `extra_info`.
+        """
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Uimage.AsusFirmwareInformation, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.kernel_version = Uimage.Version(self._io, self, self._root)
+            self.kernel_version._read()
+            self.fs_version = Uimage.Version(self._io, self, self._root)
+            self.fs_version._read()
+            self.product_id = (KaitaiStream.bytes_terminate(self._io.read_bytes(12), 0, False)).decode(u"UTF-8")
+            self.extra_info = self._io.read_bytes(16)
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+            self.kernel_version._fetch_instances()
+            self.fs_version._fetch_instances()
+
+
+        def _write__seq(self, io=None):
+            super(Uimage.AsusFirmwareInformation, self)._write__seq(io)
+            self.kernel_version._write__seq(self._io)
+            self.fs_version._write__seq(self._io)
+            self._io.write_bytes_limit((self.product_id).encode(u"UTF-8"), 12, 0, 0)
+            self._io.write_bytes(self.extra_info)
+
+
+        def _check(self):
+            if self.kernel_version._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"kernel_version", self._root, self.kernel_version._root)
+            if self.kernel_version._parent != self:
+                raise kaitaistruct.ConsistencyError(u"kernel_version", self, self.kernel_version._parent)
+            if self.fs_version._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"fs_version", self._root, self.fs_version._root)
+            if self.fs_version._parent != self:
+                raise kaitaistruct.ConsistencyError(u"fs_version", self, self.fs_version._parent)
+            if len((self.product_id).encode(u"UTF-8")) > 12:
+                raise kaitaistruct.ConsistencyError(u"product_id", 12, len((self.product_id).encode(u"UTF-8")))
+            if KaitaiStream.byte_array_index_of((self.product_id).encode(u"UTF-8"), 0) != -1:
+                raise kaitaistruct.ConsistencyError(u"product_id", -1, KaitaiStream.byte_array_index_of((self.product_id).encode(u"UTF-8"), 0))
+            if len(self.extra_info) != 16:
+                raise kaitaistruct.ConsistencyError(u"extra_info", 16, len(self.extra_info))
+            self._dirty = False
+
+
+    class NameOrAsusInfo(ReadWriteKaitaiStruct):
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Uimage.NameOrAsusInfo, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._should_write_byte0 = False
+            self.byte0__enabled = True
+            self._should_write_byte4 = False
+            self.byte4__enabled = True
+
+        def _read(self):
+            if (not (self.has_asus_info)):
+                pass
+                self.name = (self._io.read_bytes_term(0, False, True, False)).decode(u"UTF-8")
+
+            if self.has_asus_info:
+                pass
+                self.asus_info = Uimage.AsusFirmwareInformation(self._io, self, self._root)
+                self.asus_info._read()
+
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+            if (not (self.has_asus_info)):
+                pass
+
+            if self.has_asus_info:
+                pass
+                self.asus_info._fetch_instances()
+
+            _ = self.byte0
+            if hasattr(self, '_m_byte0'):
+                pass
+
+            _ = self.byte4
+            if hasattr(self, '_m_byte4'):
+                pass
+
+
+
+        def _write__seq(self, io=None):
+            super(Uimage.NameOrAsusInfo, self)._write__seq(io)
+            self._should_write_byte0 = self.byte0__enabled
+            self._should_write_byte4 = self.byte4__enabled
+            if (not (self.has_asus_info)):
+                pass
+                if KaitaiStream.byte_array_index_of((self.name).encode(u"UTF-8"), 0) != -1:
+                    raise kaitaistruct.ConsistencyError(u"name", -1, KaitaiStream.byte_array_index_of((self.name).encode(u"UTF-8"), 0))
+                self._io.write_bytes((self.name).encode(u"UTF-8"))
+                if not self._io.is_eof():
+                    self._io.write_u1(0)
+
+
+            if self.has_asus_info:
+                pass
+                if self.asus_info._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"asus_info", self._root, self.asus_info._root)
+                if self.asus_info._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"asus_info", self, self.asus_info._parent)
+                self.asus_info._write__seq(self._io)
+
+
+
+        def _check(self):
+            if self.byte0__enabled:
+                pass
+
+            if self.byte4__enabled:
+                pass
+
+            self._dirty = False
+
+        @property
+        def byte0(self):
+            if self._should_write_byte0:
+                self._write_byte0()
+            if hasattr(self, '_m_byte0'):
+                return self._m_byte0
+
+            if not self.byte0__enabled:
+                return None
+
+            _pos = self._io.pos()
+            self._io.seek(0)
+            self._m_byte0 = self._io.read_u1()
+            self._io.seek(_pos)
+            return getattr(self, '_m_byte0', None)
+
+        @byte0.setter
+        def byte0(self, v):
+            self._dirty = True
+            self._m_byte0 = v
+
+        def _write_byte0(self):
+            self._should_write_byte0 = False
+            _pos = self._io.pos()
+            self._io.seek(0)
+            self._io.write_u1(self._m_byte0)
+            self._io.seek(_pos)
+
+        @property
+        def byte4(self):
+            if self._should_write_byte4:
+                self._write_byte4()
+            if hasattr(self, '_m_byte4'):
+                return self._m_byte4
+
+            if not self.byte4__enabled:
+                return None
+
+            _pos = self._io.pos()
+            self._io.seek(4)
+            self._m_byte4 = self._io.read_u1()
+            self._io.seek(_pos)
+            return getattr(self, '_m_byte4', None)
+
+        @byte4.setter
+        def byte4(self, v):
+            self._dirty = True
+            self._m_byte4 = v
+
+        def _write_byte4(self):
+            self._should_write_byte4 = False
+            _pos = self._io.pos()
+            self._io.seek(4)
+            self._io.write_u1(self._m_byte4)
+            self._io.seek(_pos)
+
+        @property
+        def has_asus_info(self):
+            """Whether this type stores ASUS firmware information (`asus_info`)
+            rather than an image name (`name`).
+            
+            The header doesn't say which one it is, so we infer it using a
+            heuristic based on the layout of the `asus_firmware_information` type.
+            If ASUS firmware info is present, the first byte (the major kernel
+            version number) is a small integer (i.e. not a printable character),
+            and byte 4 (first byte of the product ID/model name) is a printable
+            character. An empty name is not mistaken for ASUS information, because
+            its byte 4 is a null byte.
+            
+            The highest known major kernel version number is 9 (e.g. in
+            `DSL-N55U_9.0.0.4_380_3925-gad8f412_Annex_A.trx` from
+            <https://dlcdnets.asus.com/pub/ASUS/wireless/DSL-N55U/FW_DSL_N55U_90043803925.zip>,
+            released on 2016-08-04 and listed on
+            <https://www.asus.com/supportonly/dsl-n55u/helpdesk_bios/>). ASUS
+            seems to use such high major versions (9, sometimes 7) for beta
+            releases, whereas regular releases use 3 (or 1 in older firmware).
+            
+            It can also be 0, in particular due to a bug in the MediaTek MT798X
+            build of ASUS's `mkimage` (it reads the `-V` values from fixed `argv`
+            positions, even though it parses the options using `getopt()` - see
+            <https://github.com/blocktrron/tuf-ax4200-gpl/blob/a4fe37f4d78473f97c6d47cf93d97c3811af90cc/release/src-mtk-MT798X/Uboot-upstream/tools/mkimage.c#L317-L333>).
+            For example, this is the case in
+            `RT-AX52_3.0.0.4_388_34015-g9488655.trx` from
+            <https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AX52/FW_RT-AX52_300438834015.zip>,
+            released on 2026-03-20 and listed on
+            <https://www.asus.com/supportonly/rt-ax52/helpdesk_bios?model2Name=RT-AX52>.
+            """
+            if hasattr(self, '_m_has_asus_info'):
+                return self._m_has_asus_info
+
+            self._m_has_asus_info =  ((self.byte0 < 32) and (self.byte4 >= 32) and (self.byte4 < 127)) 
+            return getattr(self, '_m_has_asus_info', None)
+
+        def _invalidate_has_asus_info(self):
+            del self._m_has_asus_info
+
     class Uheader(ReadWriteKaitaiStruct):
         def __init__(self, _io=None, _parent=None, _root=None):
             super(Uimage.Uheader, self).__init__(_io)
@@ -176,9 +507,9 @@ class Uimage(ReadWriteKaitaiStruct):
             self._root = _root
 
         def _read(self):
-            self.magic = self._io.read_bytes(4)
-            if not self.magic == b"\x27\x05\x19\x56":
-                raise kaitaistruct.ValidationNotEqualError(b"\x27\x05\x19\x56", self.magic, self._io, u"/types/uheader/seq/0")
+            self.magic = KaitaiStream.resolve_enum(Uimage.MagicTypes, self._io.read_u4be())
+            if not isinstance(self.magic, Uimage.MagicTypes):
+                raise kaitaistruct.ValidationNotInEnumError(self.magic, self._io, u"/types/uheader/seq/0")
             self.header_crc = self._io.read_u4be()
             self.timestamp = self._io.read_u4be()
             self.len_image = self._io.read_u4be()
@@ -186,20 +517,32 @@ class Uimage(ReadWriteKaitaiStruct):
             self.entry_address = self._io.read_u4be()
             self.data_crc = self._io.read_u4be()
             self.os_type = KaitaiStream.resolve_enum(Uimage.UimageOs, self._io.read_u1())
+            if not isinstance(self.os_type, Uimage.UimageOs):
+                raise kaitaistruct.ValidationNotInEnumError(self.os_type, self._io, u"/types/uheader/seq/7")
             self.architecture = KaitaiStream.resolve_enum(Uimage.UimageArch, self._io.read_u1())
+            if not isinstance(self.architecture, Uimage.UimageArch):
+                raise kaitaistruct.ValidationNotInEnumError(self.architecture, self._io, u"/types/uheader/seq/8")
             self.image_type = KaitaiStream.resolve_enum(Uimage.UimageType, self._io.read_u1())
+            if not isinstance(self.image_type, Uimage.UimageType):
+                raise kaitaistruct.ValidationNotInEnumError(self.image_type, self._io, u"/types/uheader/seq/9")
             self.compression_type = KaitaiStream.resolve_enum(Uimage.UimageComp, self._io.read_u1())
-            self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"UTF-8")
+            if not isinstance(self.compression_type, Uimage.UimageComp):
+                raise kaitaistruct.ValidationNotInEnumError(self.compression_type, self._io, u"/types/uheader/seq/10")
+            self._raw_name_or_asus_info = self._io.read_bytes(32)
+            _io__raw_name_or_asus_info = KaitaiStream(BytesIO(self._raw_name_or_asus_info))
+            self.name_or_asus_info = Uimage.NameOrAsusInfo(_io__raw_name_or_asus_info, self, self._root)
+            self.name_or_asus_info._read()
             self._dirty = False
 
 
         def _fetch_instances(self):
             pass
+            self.name_or_asus_info._fetch_instances()
 
 
         def _write__seq(self, io=None):
             super(Uimage.Uheader, self)._write__seq(io)
-            self._io.write_bytes(self.magic)
+            self._io.write_u4be(int(self.magic))
             self._io.write_u4be(self.header_crc)
             self._io.write_u4be(self.timestamp)
             self._io.write_u4be(self.len_image)
@@ -210,18 +553,60 @@ class Uimage(ReadWriteKaitaiStruct):
             self._io.write_u1(int(self.architecture))
             self._io.write_u1(int(self.image_type))
             self._io.write_u1(int(self.compression_type))
-            self._io.write_bytes_limit((self.name).encode(u"UTF-8"), 32, 0, 0)
+            _io__raw_name_or_asus_info = KaitaiStream(BytesIO(bytearray(32)))
+            self._io.add_child_stream(_io__raw_name_or_asus_info)
+            _pos2 = self._io.pos()
+            self._io.seek(self._io.pos() + (32))
+            def handler(parent, _io__raw_name_or_asus_info=_io__raw_name_or_asus_info):
+                self._raw_name_or_asus_info = _io__raw_name_or_asus_info.to_byte_array()
+                if len(self._raw_name_or_asus_info) != 32:
+                    raise kaitaistruct.ConsistencyError(u"raw(name_or_asus_info)", 32, len(self._raw_name_or_asus_info))
+                parent.write_bytes(self._raw_name_or_asus_info)
+            _io__raw_name_or_asus_info.write_back_handler = KaitaiStream.WriteBackHandler(_pos2, handler)
+            self.name_or_asus_info._write__seq(_io__raw_name_or_asus_info)
 
 
         def _check(self):
-            if len(self.magic) != 4:
-                raise kaitaistruct.ConsistencyError(u"magic", 4, len(self.magic))
-            if not self.magic == b"\x27\x05\x19\x56":
-                raise kaitaistruct.ValidationNotEqualError(b"\x27\x05\x19\x56", self.magic, None, u"/types/uheader/seq/0")
-            if len((self.name).encode(u"UTF-8")) > 32:
-                raise kaitaistruct.ConsistencyError(u"name", 32, len((self.name).encode(u"UTF-8")))
-            if KaitaiStream.byte_array_index_of((self.name).encode(u"UTF-8"), 0) != -1:
-                raise kaitaistruct.ConsistencyError(u"name", -1, KaitaiStream.byte_array_index_of((self.name).encode(u"UTF-8"), 0))
+            if not isinstance(self.magic, Uimage.MagicTypes):
+                raise kaitaistruct.ValidationNotInEnumError(self.magic, None, u"/types/uheader/seq/0")
+            if not isinstance(self.os_type, Uimage.UimageOs):
+                raise kaitaistruct.ValidationNotInEnumError(self.os_type, None, u"/types/uheader/seq/7")
+            if not isinstance(self.architecture, Uimage.UimageArch):
+                raise kaitaistruct.ValidationNotInEnumError(self.architecture, None, u"/types/uheader/seq/8")
+            if not isinstance(self.image_type, Uimage.UimageType):
+                raise kaitaistruct.ValidationNotInEnumError(self.image_type, None, u"/types/uheader/seq/9")
+            if not isinstance(self.compression_type, Uimage.UimageComp):
+                raise kaitaistruct.ValidationNotInEnumError(self.compression_type, None, u"/types/uheader/seq/10")
+            if self.name_or_asus_info._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"name_or_asus_info", self._root, self.name_or_asus_info._root)
+            if self.name_or_asus_info._parent != self:
+                raise kaitaistruct.ConsistencyError(u"name_or_asus_info", self, self.name_or_asus_info._parent)
+            self._dirty = False
+
+
+    class Version(ReadWriteKaitaiStruct):
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Uimage.Version, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.major = self._io.read_u1()
+            self.minor = self._io.read_u1()
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+
+
+        def _write__seq(self, io=None):
+            super(Uimage.Version, self)._write__seq(io)
+            self._io.write_u1(self.major)
+            self._io.write_u1(self.minor)
+
+
+        def _check(self):
             self._dirty = False
 
 

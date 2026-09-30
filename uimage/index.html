@@ -95,14 +95,31 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p><p>The new uImage format allows more flexibility in handling images of various
-types (kernel, ramdisk, etc.), it also enhances integrity protection of images
-with sha1 and md5 checksums.</p>
+                <p><p>The legacy U-Boot image format (uImage), as created by <code>mkimage</code>: a 64-byte
+header followed by the image data (e.g. a Linux kernel, a ramdisk or a
+script). The header describes the data (OS, CPU architecture, image type,
+compression, load and entry point addresses, name) and protects both the
+header and the data with CRC-32 checksums.</p>
+<p>U-Boot's newer FIT (Flattened Image Tree) format is not covered by this spec.</p>
 </p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
                     
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        U-Boot
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["bin", "img", "scr", "trx", "bix", "uimg"]
+                    </div>
                     
                     
                     <div class="panel-heading">
@@ -114,7 +131,35 @@ with sha1 and md5 checksums.</p>
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.11
+                    </div>
                     
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q105856758">Wikidata Q105856758</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
                     
                 </div>
             </div>
@@ -237,12 +282,27 @@ with sha1 and md5 checksums.</p>
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uimage</span>
 <span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">U-Boot Image wrapper</span>
+<span class="w">  </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">U-Boot</span>
+<span class="w">  </span><span class="nt">file-extension</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">img</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scr</span><span class="w"> </span><span class="c1"># U-Boot scripts (`mkimage -T script`), e.g. `boot.scr`</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trx</span><span class="w"> </span><span class="c1"># ASUS firmware</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bix</span><span class="w"> </span><span class="c1"># firmware of switches based on the Realtek switch SDK</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uimg</span>
+<span class="w">  </span><span class="nt">xref</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q105856758</span>
 <span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0.11&#39;</span>
 <span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
 <span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">  </span><span class="no">The new uImage format allows more flexibility in handling images of various</span>
-<span class="w">  </span><span class="no">types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
-<span class="w">  </span><span class="no">with sha1 and md5 checksums.</span>
+<span class="w">  </span><span class="no">The legacy U-Boot image format (uImage), as created by `mkimage`: a 64-byte</span>
+<span class="w">  </span><span class="no">header followed by the image data (e.g. a Linux kernel, a ramdisk or a</span>
+<span class="w">  </span><span class="no">script). The header describes the data (OS, CPU architecture, image type,</span>
+<span class="w">  </span><span class="no">compression, load and entry point addresses, name) and protects both the</span>
+<span class="w">  </span><span class="no">header and the data with CRC-32 checksums.</span>
+
+<span class="w">  </span><span class="no">U-Boot&#39;s newer FIT (Flattened Image Tree) format is not covered by this spec.</span>
 <span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h Git tag &quot;v2026.07&quot;</span>
 <span class="nt">seq</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header</span>
@@ -253,7 +313,15 @@ with sha1 and md5 checksums.</p>
 <span class="w">  </span><span class="nt">uheader</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic</span>
-<span class="w">        </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0x27</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x05</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x19</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x56</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic_types</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Besides the standard U-Boot magic, some vendors&#39; bootloaders expect</span>
+<span class="w">          </span><span class="no">their own value (often a different one for each device model), with</span>
+<span class="w">          </span><span class="no">the rest of the header unchanged. `magic_types` lists the values</span>
+<span class="w">          </span><span class="no">known so far; images with any other magic are rejected.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header_crc</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timestamp</span>
@@ -269,19 +337,179 @@ with sha1 and md5 checksums.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">os_type</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uimage_os</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">architecture</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uimage_arch</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image_type</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uimage_type</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compression_type</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uimage_comp</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name_or_asus_info</span>
 <span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
-<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name_or_asus_info</span>
+<span class="w">  </span><span class="nt">name_or_asus_info</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+<span class="w">        </span><span class="nt">eos-error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not has_asus_info</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asus_info</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asus_firmware_information</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_asus_info</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">has_asus_info</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">byte0 &lt; 0x20 and byte4 &gt;= 0x20 and byte4 &lt; 0x7f</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Whether this type stores ASUS firmware information (`asus_info`)</span>
+<span class="w">          </span><span class="no">rather than an image name (`name`).</span>
+
+<span class="w">          </span><span class="no">The header doesn&#39;t say which one it is, so we infer it using a</span>
+<span class="w">          </span><span class="no">heuristic based on the layout of the `asus_firmware_information` type.</span>
+<span class="w">          </span><span class="no">If ASUS firmware info is present, the first byte (the major kernel</span>
+<span class="w">          </span><span class="no">version number) is a small integer (i.e. not a printable character),</span>
+<span class="w">          </span><span class="no">and byte 4 (first byte of the product ID/model name) is a printable</span>
+<span class="w">          </span><span class="no">character. An empty name is not mistaken for ASUS information, because</span>
+<span class="w">          </span><span class="no">its byte 4 is a null byte.</span>
+
+<span class="w">          </span><span class="no">The highest known major kernel version number is 9 (e.g. in</span>
+<span class="w">          </span><span class="no">`DSL-N55U_9.0.0.4_380_3925-gad8f412_Annex_A.trx` from</span>
+<span class="w">          </span><span class="no">&lt;https://dlcdnets.asus.com/pub/ASUS/wireless/DSL-N55U/FW_DSL_N55U_90043803925.zip&gt;,</span>
+<span class="w">          </span><span class="no">released on 2016-08-04 and listed on</span>
+<span class="w">          </span><span class="no">&lt;https://www.asus.com/supportonly/dsl-n55u/helpdesk_bios/&gt;). ASUS</span>
+<span class="w">          </span><span class="no">seems to use such high major versions (9, sometimes 7) for beta</span>
+<span class="w">          </span><span class="no">releases, whereas regular releases use 3 (or 1 in older firmware).</span>
+
+<span class="w">          </span><span class="no">It can also be 0, in particular due to a bug in the MediaTek MT798X</span>
+<span class="w">          </span><span class="no">build of ASUS&#39;s `mkimage` (it reads the `-V` values from fixed `argv`</span>
+<span class="w">          </span><span class="no">positions, even though it parses the options using `getopt()` - see</span>
+<span class="w">          </span><span class="no">&lt;https://github.com/blocktrron/tuf-ax4200-gpl/blob/a4fe37f4d78473f97c6d47cf93d97c3811af90cc/release/src-mtk-MT798X/Uboot-upstream/tools/mkimage.c#L317-L333&gt;).</span>
+<span class="w">          </span><span class="no">For example, this is the case in</span>
+<span class="w">          </span><span class="no">`RT-AX52_3.0.0.4_388_34015-g9488655.trx` from</span>
+<span class="w">          </span><span class="no">&lt;https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AX52/FW_RT-AX52_300438834015.zip&gt;,</span>
+<span class="w">          </span><span class="no">released on 2026-03-20 and listed on</span>
+<span class="w">          </span><span class="no">&lt;https://www.asus.com/supportonly/rt-ax52/helpdesk_bios?model2Name=RT-AX52&gt;.</span>
+<span class="w">      </span><span class="nt">byte0</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">      </span><span class="nt">byte4</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">  </span><span class="nt">asus_firmware_information</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">ASUS firmware images [overlay the 32-byte image</span>
+<span class="w">      </span><span class="no">name](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L185-L188)</span>
+<span class="w">      </span><span class="no">with a [`TAIL`</span>
+<span class="w">      </span><span class="no">structure](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L151-L171)</span>
+<span class="w">      </span><span class="no">that contains version information and the product ID (model name).</span>
+
+<span class="w">      </span><span class="no">The first 16 bytes have the same structure in all three known variants of</span>
+<span class="w">      </span><span class="no">the `TAIL` structure. The meaning of the last 16 bytes differs across the</span>
+<span class="w">      </span><span class="no">variants - therefore, for simplicity, this Kaitai Struct implementation</span>
+<span class="w">      </span><span class="no">treats them as an opaque byte array named `extra_info`. For an overview of</span>
+<span class="w">      </span><span class="no">the variants, see the documentation for `extra_info`.</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{product_id}</span><span class="nv"> </span><span class="s">{kernel_version}.{fs_version}&#39;</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kernel_version</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fs_version</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">product_id</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">In the Ralink SDK variant (see `extra_info`), the product ID field is</span>
+<span class="w">          </span><span class="no">actually 23 bytes long, but no known product ID is longer than 12</span>
+<span class="w">          </span><span class="no">bytes.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extra_info</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">The structure of these bytes varies among the three known variants of</span>
+<span class="w">          </span><span class="no">the `TAIL` structure, and the header doesn&#39;t say which one is used:</span>
+
+<span class="w">          </span><span class="no">* Plain: 8 hardware versions (using the `version` type) - see</span>
+<span class="w">            </span><span class="no">&lt;https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L170&gt;</span>
+
+<span class="w">            </span><span class="no">Sample file: `RT-AC51U_3.0.0.4_380_8591-ga8dd632.trx` from</span>
+<span class="w">            </span><span class="no">&lt;https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC51U/FW_RT_AC51U_30043808591.zip&gt;,</span>
+<span class="w">            </span><span class="no">released on 2020-09-22 and listed on</span>
+<span class="w">            </span><span class="no">&lt;https://www.asus.com/supportonly/rt-ac51u/helpdesk_bios/&gt;.</span>
+
+<span class="w">            </span><span class="no">Source code links:</span>
+
+<span class="w">            </span><span class="no">- [ASUS GPL source, RT-AC55UHP</span>
+<span class="w">              </span><span class="no">3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)</span>
+<span class="w">              </span><span class="no">(`asuswrt/release/src/asustools/mkimage.src/` in</span>
+<span class="w">              </span><span class="no">`GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)</span>
+<span class="w">            </span><span class="no">- [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial</span>
+<span class="w">              </span><span class="no">mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src)</span>
+
+<span class="w">          </span><span class="no">* `TRX_NEW` (a macro defined when building `mkimage`): the</span>
+<span class="w">            </span><span class="no">build number and extended build number (`u2le` each), two key bytes</span>
+<span class="w">            </span><span class="no">and 5 hardware versions - see</span>
+<span class="w">            </span><span class="no">&lt;https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/include/image.h#L174-L180&gt;</span>
+
+<span class="w">            </span><span class="no">`mkimage` [overwrites the first 3 hardware</span>
+<span class="w">            </span><span class="no">versions](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/mkimage.c#L546-L569)</span>
+<span class="w">            </span><span class="no">with values derived from the key bytes.</span>
+
+<span class="w">            </span><span class="no">Sample file: `RT-AC55UHP_3.0.0.4_382_52236-ga0f880d.trx` (build 382,</span>
+<span class="w">            </span><span class="no">extended build 52236) from</span>
+<span class="w">            </span><span class="no">&lt;https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/FW_RT_AC55UHP_300438252236.zip&gt;,</span>
+<span class="w">            </span><span class="no">released on 2020-06-04 and listed on</span>
+<span class="w">            </span><span class="no">&lt;https://www.asus.com/supportonly/rt-ac55uhp/helpdesk_bios/&gt;.</span>
+
+<span class="w">            </span><span class="no">Source code links:</span>
+
+<span class="w">            </span><span class="no">- [ASUS GPL source, RT-AC55UHP</span>
+<span class="w">              </span><span class="no">3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)</span>
+<span class="w">              </span><span class="no">(`asuswrt/release/src-qca/asustools/mkimage.src/` in</span>
+<span class="w">              </span><span class="no">`GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)</span>
+<span class="w">            </span><span class="no">- [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial</span>
+<span class="w">              </span><span class="no">mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src)</span>
+
+<span class="w">          </span><span class="no">* Ralink SDK: the rest of a 23-byte product ID (see `product_id`),</span>
+<span class="w">            </span><span class="no">a version suffix letter and the kernel part size (called `ih_ksz`) -</span>
+<span class="w">            </span><span class="no">see &lt;https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h#L164-L165&gt;</span>
+
+<span class="w">            </span><span class="no">Sample file: `RP-N12_1.0.1.1f.trx` from</span>
+<span class="w">            </span><span class="no">&lt;https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/FW_RP-N12_1.0.1.1f.zip&gt;,</span>
+<span class="w">            </span><span class="no">released on 2019-11-12 and listed on</span>
+<span class="w">            </span><span class="no">&lt;https://www.asus.com/supportonly/rp-n12/helpdesk_bios/&gt;.</span>
+
+<span class="w">            </span><span class="no">Source code links:</span>
+
+<span class="w">            </span><span class="no">- [ASUS GPL source, RP-N12</span>
+<span class="w">              </span><span class="no">1.0.1.1f](https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/GPL_RP_N12_1011f.zip)</span>
+<span class="w">              </span><span class="no">(`GPL_RP-N12_source.1011f/user/mkimage/include/image.h` in</span>
+<span class="w">              </span><span class="no">`GPL_RP-N12_source.1011f.tar.bz2`)</span>
+<span class="w">            </span><span class="no">- [rt-n56u custom firmware by Andy</span>
+<span class="w">              </span><span class="no">Padavan](https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h)</span>
+
+<span class="w">          </span><span class="no">In the plain and `TRX_NEW` variants, the last 4 bytes may instead</span>
+<span class="w">          </span><span class="no">contain the offset of the root file system, which is [written by</span>
+<span class="w">          </span><span class="no">`mkimage -r`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/mkimage.c#L527-L542)</span>
+<span class="w">          </span><span class="no">as the magic byte 0xA9</span>
+<span class="w">          </span><span class="no">([`ROOTFS_OFFSET_MAGIC`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L154-L159))</span>
+<span class="w">          </span><span class="no">followed by the offset as a 24-bit big-endian integer.</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{major:dec}.{minor:dec}&#39;</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minor</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
 <span class="nt">enums</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">uimage_os</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">0</span><span class="p">:</span>
@@ -466,6 +694,23 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lzo</span>
 <span class="w">    </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lz4</span>
 <span class="w">    </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zstd</span>
+<span class="w">    </span><span class="nt">9</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mz</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">`IH_COMP_MZ` of the U-Boot fork for SigmaStar (formerly MStar) SoCs,</span>
+<span class="w">        </span><span class="no">not defined in upstream U-Boot. Used e.g. in I-O DATA TS-NS240W and</span>
+<span class="w">        </span><span class="no">TS-NS320W network camera firmware.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/OpenIPC/u-boot-sigmastar/blob/bf77aff5d44f34d14b89b3f4014aa8dda9834794/include/image.h#L253 SigmaStar U-Boot (OpenIPC&#39;s copy)</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/t/tsns240w_f10302.exe I-O DATA TS-NS240W firmware 1.03.02</span>
+<span class="w">    </span><span class="nt">10</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xip</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">`IH_COMP_XIP` of the U-Boot fork for SigmaStar (formerly MStar) SoCs,</span>
+<span class="w">        </span><span class="no">not defined in upstream U-Boot. No firmware image with this value was</span>
+<span class="w">        </span><span class="no">found among the ones surveyed (September 2026), so it may not be used</span>
+<span class="w">        </span><span class="no">in practice.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/OpenIPC/u-boot-sigmastar/blob/bf77aff5d44f34d14b89b3f4014aa8dda9834794/include/image.h#L254 SigmaStar U-Boot (OpenIPC&#39;s copy)</span>
 <span class="w">  </span><span class="nt">uimage_type</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">0</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">invalid</span>
@@ -611,6 +856,610 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="nt">47</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amlimage</span>
 <span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Amlogic Boot Image</span>
+<span class="w">  </span><span class="c1"># Finding magics of new devices (many vendors use a different one for</span>
+<span class="w">  </span><span class="c1"># each model): a header is a uImage if its header CRC is valid, so scan</span>
+<span class="w">  </span><span class="c1"># firmware files at every offset for that, ignoring the magic. Beware of</span>
+<span class="w">  </span><span class="c1"># a common false positive: `FF FF FF FF FF FF FF FF` followed by 56 zero</span>
+<span class="w">  </span><span class="c1"># bytes also has a valid header CRC. In vendor firmware files, the uImage</span>
+<span class="w">  </span><span class="c1"># often follows a vendor-specific header (e.g. at offset 0x80 in NETGEAR&#39;s</span>
+<span class="w">  </span><span class="c1"># `*.img` files).</span>
+<span class="w">  </span><span class="c1">#</span>
+<span class="w">  </span><span class="c1"># Source code:</span>
+<span class="w">  </span><span class="c1"># https://github.com/search?q=repo%3Aopenwrt%2Fopenwrt+UIMAGE_MAGIC&amp;type=code</span>
+<span class="w">  </span><span class="c1"># https://github.com/search?q=repo%3Aopenwrt%2Fopenwrt+%2FuImage+%5Cw%2B+-M+0x%2F&amp;type=code</span>
+<span class="w">  </span><span class="c1"># https://github.com/search?q=IH_MAGIC_DEFAULT&amp;type=code (NETGEAR&#39;s U-Boot)</span>
+<span class="w">  </span><span class="c1"># https://github.com/search?q=CONFIG_IH_MAGIC_NUMBER&amp;type=code (Realtek switch SDK)</span>
+<span class="w">  </span><span class="c1">#</span>
+<span class="w">  </span><span class="c1"># Firmware images:</span>
+<span class="w">  </span><span class="c1"># https://downloads.openwrt.org/releases/</span>
+<span class="w">  </span><span class="c1"># https://downloads.openwrt.org/snapshots/targets/ (devices added since the last release)</span>
+<span class="w">  </span><span class="c1"># https://openwrt.org/docs/techref/targets/realtek (switches based on the Realtek switch SDK)</span>
+<span class="w">  </span><span class="c1"># https://www.engeniustech.com/wp_firmware/ (`*.bix`)</span>
+<span class="w">  </span><span class="c1"># https://downloads.trendnet.com/</span>
+<span class="w">  </span><span class="c1"># https://www.allnet.de/en/allnet-brand/support/downloads-search/ (ALLNET; each product&#39;s page links its files)</span>
+<span class="w">  </span><span class="c1"># https://fw-update.ubnt.com/api/firmware-latest (Ubiquiti; the latest firmware of every product)</span>
+<span class="w">  </span><span class="c1"># https://www.iodata.jp/lib/ (I-O DATA; the JSONP APIs behind it list everything:)</span>
+<span class="w">  </span><span class="c1">#   `https://www.iodata.jp/lib/script/product-index.php?callback=cb&amp;code=&lt;first letter, or 0&gt;` (products)</span>
+<span class="w">  </span><span class="c1">#   `https://www.iodata.jp/lib/script/product.php?callback=cb&amp;code=&lt;product key&gt;` (its software)</span>
+<span class="w">  </span><span class="c1">#   `https://www.iodata.jp/lib/script/soft.php?callback=cb&amp;code=&lt;software key&gt;` (its files)</span>
+<span class="w">  </span><span class="c1">#   `https://lib.iodata.jp/lib/soft/&lt;first letter&gt;/&lt;file name&gt;`</span>
+<span class="w">  </span><span class="c1"># https://www.zyxel.com/global/en/support/download (ZyXEL, current models:)</span>
+<span class="w">  </span><span class="c1">#   `https://www.zyxel.com/global/en/search_api_autocomplete/product_list_by_model?display=block_1&amp;field=model_machine_name&amp;filter=model&amp;q=&lt;substring&gt;` (models, at most 25 per query)</span>
+<span class="w">  </span><span class="c1">#   `https://www.zyxel.com/global/en/support/download?model=&lt;model&gt;` (its files)</span>
+<span class="w">  </span><span class="c1"># https://www.zyxel.com/global/en/support/end-of-life (ZyXEL, end-of-life models:)</span>
+<span class="w">  </span><span class="c1">#   https://www.zyxel.com/library/eol/global/www-hardware-data.json (recent ones, often with links to their files)</span>
+<span class="w">  </span><span class="c1">#   https://www.zyxel.com/zyxel-file/eol/ArchivedEOLModel.pdf (older ones, names only)</span>
+<span class="w">  </span><span class="c1">#</span>
+<span class="w">  </span><span class="c1"># Only the Wayback Machine lists these (possibly incompletely):</span>
+<span class="w">  </span><span class="c1"># https://web.archive.org/cdx/search/cdx?matchType=prefix&amp;collapse=urlkey&amp;fl=original&amp;filter=statuscode:200&amp;url=www.downloads.netgear.com/files/ (NETGEAR)</span>
+<span class="w">  </span><span class="c1"># https://web.archive.org/cdx/search/cdx?matchType=prefix&amp;collapse=urlkey&amp;fl=original&amp;filter=statuscode:200&amp;url=download.zyxel.com/ (ZyXEL files not linked from the pages above)</span>
+<span class="w">  </span><span class="nt">magic_types</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0x00000005</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allnet_all_sg8316m</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALLNET ALL-SG8316M.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.allnet.de/ftp-downloads/allnet/switches/all-sg8316m/all-sg8316m-version_2.2.1.zip ALLNET ALL-SG8316M firmware 2.2.1</span>
+<span class="w">    </span><span class="nt">0x00000006</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allnet_all_sg8208m</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALLNET ALL-SG8208M. OpenWrt device `allnet_all-sg8208m`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L10 OpenWrt, `allnet_all-sg8208m`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.allnet.de/ftp-downloads/allnet/switches/all-sg8208m/all-sg8208m-version_2.2.1_vmlinux.bix.zip ALLNET ALL-SG8208M firmware 2.2.1</span>
+<span class="w">    </span><span class="nt">0x00000016</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allnet_all_sg8324m</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALLNET ALL-SG8324M.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.allnet.de/ftp-downloads/allnet/switches/all-sg8324m/ALL_SG8324M_FW.2.2.1.zip ALLNET ALL-SG8324M firmware 2.2.1</span>
+<span class="w">    </span><span class="nt">0x00703400</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datto_l8</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenWrt device `datto_l8`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L102 OpenWrt, `datto_l8`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/snapshots/targets/realtek/rtl838x/openwrt-realtek-rtl838x-datto_l8-squashfs-sysupgrade.bin OpenWrt snapshot, `datto_l8`</span>
+<span class="w">    </span><span class="nt">0x00904000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allnet_all_wapc0450c</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALLNET ALL-WAPC0450C.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.allnet.de/ftp-downloads/allnet/wireless/ALL-WAPC0450C/Firmware-Update_1.01.00_ALL-WAPC0450C.zip ALLNET ALL-WAPC0450C firmware 1.00.04 (in the 1.01.00 update package)</span>
+<span class="w">    </span><span class="nt">0x03010500</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews2910p_v3</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenWrt device `engenius_ews2910p-v3`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L124 OpenWrt, `engenius_ews2910p-v3`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/realtek/rtl838x/openwrt-25.12.5-realtek-rtl838x-engenius_ews2910p-v3-squashfs-sysupgrade.bin OpenWrt 25.12.5, `engenius_ews2910p-v3`</span>
+<span class="w">    </span><span class="nt">0x03011300</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews1200_28tfp</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS1200-28TFP firmware 1.07.16 to 1.07.40.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews1200-28tfp_fw_1.07.40_c1.9.33_200225-1841.bix EnGenius EWS1200-28TFP firmware 1.07.40</span>
+<span class="w">    </span><span class="nt">0x03011302</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7926efp</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7926EFP firmware 1.07.22 to 1.07.27.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7926efp_fw_1.07.27_c1.9.37_210312-1805.bix EnGenius EWS7926EFP firmware 1.07.27</span>
+<span class="w">    </span><span class="nt">0x03012401</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7952p</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7952P firmware 1.07.16 to 1.07.40.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7952p_fw_1.07.40_c1.9.33_200225-1806.bix EnGenius EWS7952P firmware 1.07.40</span>
+<span class="w">    </span><span class="nt">0x03013100</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews2908p</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS2908P firmware 1.07.34 to 1.07.43.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews2908p_fw_1.07.43_c1.9.37_210311-1751.bix EnGenius EWS2908P firmware 1.07.43</span>
+<span class="w">    </span><span class="nt">0x03111100</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7928p_v2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7928P v2 firmware 1.07.40 to 1.07.43.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7928pv2_fw_1.07.43_c1.9.37_210312-1011.bix EnGenius EWS7928P v2 firmware 1.07.43</span>
+<span class="w">    </span><span class="nt">0x03111300</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews1200_28tfp_v2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS1200-28TFP v2 firmware 1.07.43.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews1200-28tfpv2_fw_1.07.43_c1.9.37_210312-1021.bix EnGenius EWS1200-28TFP v2 firmware 1.07.43</span>
+<span class="w">    </span><span class="nt">0x03802910</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews2910p</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">EnGenius EWS2910P firmware 1.07.16 to 1.07.43. OpenWrt device</span>
+<span class="w">        </span><span class="no">`engenius_ews2910p-v1`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews2910p_fw_1.07.43_c1.9.37_210311-1807.bix EnGenius EWS2910P firmware 1.07.43</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L113 OpenWrt, `engenius_ews2910p-v1`</span>
+<span class="w">    </span><span class="nt">0x03805912</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews5912fp</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS5912FP firmware 1.07.16 to 1.07.43.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews5912fp_fw_1.07.43_c1.9.37_210312-0947.bix EnGenius EWS5912FP firmware 1.07.43</span>
+<span class="w">    </span><span class="nt">0x03807928</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7928p</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7928P firmware 1.07.16 to 1.07.40.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7928p_fw_1.07.40_c1.9.33_200225-1707.bix EnGenius EWS7928P firmware 1.07.40</span>
+<span class="w">    </span><span class="nt">0x03872010</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews1200d_10t</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS1200D-10T firmware 1.07.16 to 1.07.22.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews1200d-10t_fw_1.07.22_c1.9.21_181018-0217.bix EnGenius EWS1200D-10T firmware 1.07.22</span>
+<span class="w">    </span><span class="nt">0x03872028</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews1200_28t</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS1200-28T firmware 1.07.16 to 1.07.22.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews1200-28t_fw_1.07.22_c1.9.21_181018-0206.bix EnGenius EWS1200-28T firmware 1.07.22</span>
+<span class="w">    </span><span class="nt">0x0387928f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7928fp</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7928FP firmware 1.07.16 to 1.07.40.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7928fp_fw_1.07.40_c1.9.33_200415-1156.bix EnGenius EWS7928FP firmware 1.07.40</span>
+<span class="w">    </span><span class="nt">0x03972052</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews1200_52t</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS1200-52T firmware 1.07.16 to 1.07.22.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews1200-52t_fw_1.07.22_c1.9.21_181018-0154.bix EnGenius EWS1200-52T firmware 1.07.22</span>
+<span class="w">    </span><span class="nt">0x0397952f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7952fp</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7952FP firmware 1.07.16 to 1.07.40.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7952fp_fw_1.07.40_c1.9.33_200225-1743.bix EnGenius EWS7952FP firmware 1.07.40</span>
+<span class="w">    </span><span class="nt">0x12291000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">youku_yk_l1</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">OpenWrt devices `youku_x2`, `youku_yk-l1`, `youku_yk-l1c`,</span>
+<span class="w">        </span><span class="no">`youku_yk-l2`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ramips/image/mt7620.mk#L1456 OpenWrt, `youku_x2`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ramips/image/mt7620.mk#L1469 OpenWrt, `youku_yk-l1`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ramips/image/mt7620.mk#L1481 OpenWrt, `youku_yk-l1c`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ramips/image/mt7621.mk#L3702 OpenWrt, `youku_yk-l2`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/ramips/mt7620/openwrt-25.12.5-ramips-mt7620-youku_yk-l1-squashfs-sysupgrade.bin OpenWrt 25.12.5, `youku_yk-l1`</span>
+<span class="w">    </span><span class="nt">0x12345000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">realtek_sdk</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Generic default of the Realtek switch SDK&#39;s U-Boot</span>
+<span class="w">        </span><span class="no">(`CONFIG_IH_MAGIC_NUMBER`), used e.g. by many TRENDnet switches. OpenWrt</span>
+<span class="w">        </span><span class="no">device `apresia_aplgs120gtss`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L21 OpenWrt, `apresia_aplgs120gtss`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/halmartin/zyxel-gs1900-gpl/blob/9567911410eb74739dc41cd36934c94b88d53a70/gs1900/u-boot-2011.12/config.in#L217 Realtek SDK U-Boot (ZyXEL GS1900 GPL code)</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.trendnet.com/tpe-1620ws_v2/firmware/fw_ws-2-10-024-all.zip TRENDnet TPE-1620WS v2 firmware 2.10.024</span>
+<span class="w">    </span><span class="nt">0x174e4741</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_gs750e</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenWrt device `netgear_gs750e`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl839x.mk#L71 OpenWrt, `netgear_gs750e`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/realtek/rtl839x/openwrt-25.12.5-realtek-rtl839x-netgear_gs750e-squashfs-sysupgrade.bin OpenWrt 25.12.5, `netgear_gs750e`</span>
+<span class="w">    </span><span class="nt">0x174e4742</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_gs728tp_v2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NETGEAR GS728TPv2, GS728TPPv2, GS752TPv2 and GS752TPP.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/GS728TPv2/GS728_752_TP_TPP_V6.0.0.37.zip NETGEAR GS728TPv2 firmware 6.0.0.37</span>
+<span class="w">    </span><span class="nt">0x26112015</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bolt_bl100</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenWrt device `bolt_bl100`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ramips/image/mt7620.mk#L158 OpenWrt, `bolt_bl100`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/ramips/mt7620/openwrt-25.12.5-ramips-mt7620-bolt_bl100-squashfs-sysupgrade.bin OpenWrt 25.12.5, `bolt_bl100`</span>
+<span class="w">    </span><span class="nt">0x27051956</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uimage</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The standard U-Boot header magic (`IH_MAGIC`).</span>
+<span class="w">    </span><span class="nt">0x27051967</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnce4004</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NETGEAR WNCE4004.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/WNCE4004/wnce4004-V1.0.0.32.zip NETGEAR WNCE4004 firmware 1.0.0.32</span>
+<span class="w">    </span><span class="nt">0x30363132</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr612_v2_early</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;0612&quot; in ASCII. NETGEAR WNR612v2 firmware 1.0.0.2 (later firmware uses</span>
+<span class="w">        </span><span class="no">&quot;2061&quot;).</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/wnr612v2-V1.0.0.2_1.0.3.img NETGEAR WNR612v2 firmware 1.0.0.2</span>
+<span class="w">    </span><span class="nt">0x31303030</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr1000_v2_vc</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;1000&quot; in ASCII. NETGEAR WNR1000v2-VC. OpenWrt used this magic only in</span>
+<span class="w">        </span><span class="no">its `ar71xx` target, which was</span>
+<span class="w">        </span><span class="no">[removed](https://github.com/openwrt/openwrt/commit/4e4ee4649553ab536225060a27fc320bf54e458c)</span>
+<span class="w">        </span><span class="no">after OpenWrt 19.07, so it is missing from the current OpenWrt code.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/WNR1000v2-VC-V1.2.2.56NA.img NETGEAR WNR1000v2-VC firmware 1.2.2.56</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/cidermole/wndr3800-uboot/blob/2a3c20a515bdcfad28f75469784973e8921dcbab/include/configs/wnr1000v2.h#L170 NETGEAR U-Boot (GPL code)</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/1da2e82c1182a3fd681da5760be96821213afadd/target/linux/ar71xx/image/legacy.mk#L1004 OpenWrt 19.07, `WNR1000V2_VC`</span>
+<span class="w">    </span><span class="nt">0x31303031</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr1000_v2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;1001&quot; in ASCII. OpenWrt device `netgear_wnr1000-v2`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/tiny-netgear.mk#L35 OpenWrt, `netgear_wnr1000-v2`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/WNR1000V2/WNR1000v2-V1.1.2.54NA.zip NETGEAR WNR1000v2 firmware 1.1.2.54</span>
+<span class="w">    </span><span class="nt">0x31303032</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr1000_v2_vm</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;1002&quot; in ASCII. NETGEAR WNR1000v2-VM. No firmware image with this magic</span>
+<span class="w">        </span><span class="no">was found among the ones surveyed (September 2026), so it may not be</span>
+<span class="w">        </span><span class="no">used in practice.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/cidermole/wndr3800-uboot/blob/2a3c20a515bdcfad28f75469784973e8921dcbab/include/configs/wnr1000v2.h#L172 NETGEAR U-Boot (GPL code)</span>
+<span class="w">    </span><span class="nt">0x31303034</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr1000_v4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;1004&quot; in ASCII. NETGEAR WNR1000v4. No firmware image with this magic</span>
+<span class="w">        </span><span class="no">was found among the ones surveyed (September 2026), so it may not be</span>
+<span class="w">        </span><span class="no">used in practice.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/cidermole/wndr3800-uboot/blob/2a3c20a515bdcfad28f75469784973e8921dcbab/include/configs/wnr1000v4.h#L238 NETGEAR U-Boot (GPL code)</span>
+<span class="w">    </span><span class="nt">0x31313030</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wpn824n</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;1100&quot; in ASCII. NETGEAR WPN824N. OpenWrt used this magic only in its</span>
+<span class="w">        </span><span class="no">`ar71xx` target, which was</span>
+<span class="w">        </span><span class="no">[removed](https://github.com/openwrt/openwrt/commit/4e4ee4649553ab536225060a27fc320bf54e458c)</span>
+<span class="w">        </span><span class="no">after OpenWrt 19.07, so it is missing from the current OpenWrt code.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/WPN824N/Firmware/WPN824N-V1.0.0.28NA.img NETGEAR WPN824N firmware 1.0.0.28</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/1da2e82c1182a3fd681da5760be96821213afadd/target/linux/ar71xx/image/legacy.mk#L1005 OpenWrt 19.07, `WPN824N`</span>
+<span class="w">    </span><span class="nt">0x31504157</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zyxel_uag50</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;1PAW&quot; in ASCII. ZyXEL UAG50.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://download.zyxel.com/UAG50/firmware/UAG50_3.00(AAZP.1)C0.zip ZyXEL UAG50 firmware 3.00(AAZP.1)C0</span>
+<span class="w">    </span><span class="nt">0x32303031</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr2000</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;2001&quot; in ASCII. OpenWrt 19.07 images for the NETGEAR WNR2000 (the stock</span>
+<span class="w">        </span><span class="no">firmware uses the standard magic). OpenWrt used this magic only in its</span>
+<span class="w">        </span><span class="no">`ar71xx` target, which was</span>
+<span class="w">        </span><span class="no">[removed](https://github.com/openwrt/openwrt/commit/4e4ee4649553ab536225060a27fc320bf54e458c)</span>
+<span class="w">        </span><span class="no">after OpenWrt 19.07, so it is missing from the current OpenWrt code.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/1da2e82c1182a3fd681da5760be96821213afadd/target/linux/ar71xx/image/legacy.mk#L1000 OpenWrt 19.07, `WNR2000`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/19.07.10/targets/ar71xx/tiny/openwrt-19.07.10-ar71xx-tiny-wnr2000-squashfs-factory.img OpenWrt 19.07.10, `wnr2000`</span>
+<span class="w">    </span><span class="nt">0x32303033</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr2000_v3</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;2003&quot; in ASCII. OpenWrt device `netgear_wnr2000-v3`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/tiny-netgear.mk#L49 OpenWrt, `netgear_wnr2000-v3`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/WNR2000v3/wnr2000v3-V1.1.2.18.zip NETGEAR WNR2000v3 firmware 1.1.2.18</span>
+<span class="w">    </span><span class="nt">0x32303034</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr2000_v4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;2004&quot; in ASCII. NETGEAR WNR2000v4. OpenWrt used this magic only in its</span>
+<span class="w">        </span><span class="no">`ar71xx` target, which was</span>
+<span class="w">        </span><span class="no">[removed](https://github.com/openwrt/openwrt/commit/4e4ee4649553ab536225060a27fc320bf54e458c)</span>
+<span class="w">        </span><span class="no">after OpenWrt 19.07, so it is missing from the current OpenWrt code.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/WNR2000V4/WNR2000v4-V1.0.0.40.zip NETGEAR WNR2000v4 firmware 1.0.0.40</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/1da2e82c1182a3fd681da5760be96821213afadd/target/linux/ar71xx/image/legacy.mk#L999 OpenWrt 19.07, `WNR2000V4`</span>
+<span class="w">    </span><span class="nt">0x32303631</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr612_v2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;2061&quot; in ASCII. OpenWrt devices `netgear_wnr612-v2`, `on_n150r`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/tiny-netgear.mk#L9 OpenWrt, `netgear_wnr612-v2`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/tiny-netgear.mk#L22 OpenWrt, `on_n150r`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/19.07.10/targets/ath79/tiny/openwrt-19.07.10-ath79-tiny-netgear_wnr612-v2-squashfs-factory.img OpenWrt 19.07.10, `netgear_wnr612-v2`</span>
+<span class="w">    </span><span class="nt">0x32323030</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr2200</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;2200&quot; in ASCII. OpenWrt device `netgear_wnr2200_common`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/generic.mk#L2356 OpenWrt, `netgear_wnr2200_common`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/ath79/generic/openwrt-25.12.5-ath79-generic-netgear_wnr2200-8m-squashfs-factory.img OpenWrt 25.12.5, `netgear_wnr2200-8m`</span>
+<span class="w">    </span><span class="nt">0x33373030</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wndr3700</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;3700&quot; in ASCII. OpenWrt device `netgear_wndr3700`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/generic.mk#L2283 OpenWrt, `netgear_wndr3700`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/WNDR37AVv1/WNDR3700_WNDR37AV%20Firmware%20Version%201.0.16.98NA.zip NETGEAR WNDR3700 firmware 1.0.16.98</span>
+<span class="w">    </span><span class="nt">0x33373031</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wndr3700_v2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;3701&quot; in ASCII. OpenWrt devices `netgear_wndr3700-v2`,</span>
+<span class="w">        </span><span class="no">`netgear_wndr3800`, `netgear_wndr3800ch`, `netgear_wndrmac-v1`,</span>
+<span class="w">        </span><span class="no">`netgear_wndrmac-v2`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/generic.mk#L2297 OpenWrt, `netgear_wndr3700-v2`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/generic.mk#L2308 OpenWrt, `netgear_wndr3800`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/generic.mk#L2319 OpenWrt, `netgear_wndr3800ch`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/generic.mk#L2331 OpenWrt, `netgear_wndrmac-v1`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/generic.mk#L2343 OpenWrt, `netgear_wndrmac-v2`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/WNDR3800-V1.0.0.34.img NETGEAR WNDR3800 firmware 1.0.0.34</span>
+<span class="w">    </span><span class="nt">0x33373033</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wndr3700_v4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;3703&quot; in ASCII. OpenWrt devices `netgear_wndr3700-v4`,</span>
+<span class="w">        </span><span class="no">`netgear_wndr4300`, `netgear_wndr4300sw`, `netgear_wndr4300tn`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/nand.mk#L400 OpenWrt, `netgear_wndr3700-v4`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/nand.mk#L410 OpenWrt, `netgear_wndr4300`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/nand.mk#L420 OpenWrt, `netgear_wndr4300sw`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/nand.mk#L430 OpenWrt, `netgear_wndr4300tn`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/WNDR4300/WNDR4300-V1.0.2.104.zip NETGEAR WNDR4300 firmware 1.0.2.104</span>
+<span class="w">    </span><span class="nt">0x36303030</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_r6100</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;6000&quot; in ASCII. OpenWrt device `netgear_r6100`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/nand.mk#L388 OpenWrt, `netgear_r6100`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/R6100/R6100_V1.0.0.52.zip NETGEAR R6100 firmware 1.0.0.52</span>
+<span class="w">    </span><span class="nt">0x36313232</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_wnr612</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;6122&quot; in ASCII. NETGEAR WNR612. No firmware image with this magic was</span>
+<span class="w">        </span><span class="no">found among the ones surveyed (September 2026), so it may not be used in</span>
+<span class="w">        </span><span class="no">practice.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/cidermole/wndr3800-uboot/blob/2a3c20a515bdcfad28f75469784973e8921dcbab/include/configs/wnr612.h#L169 NETGEAR U-Boot (GPL code)</span>
+<span class="w">    </span><span class="nt">0x434f4d42</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mitrastar_comb</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;COMB&quot; in ASCII. Devices made by MitraStar (MSTC), e.g. ZyXEL NBG6604</span>
+<span class="w">        </span><span class="no">and I-O DATA WN-AX1167GR2, WN-AX2033GR, WN-AX2033GR2, WN-DX1167GR and</span>
+<span class="w">        </span><span class="no">WN-DX2033GR.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://download.zyxel.com/NBG6604/firmware/NBG6604_V1.01(ABIR.2)C0.zip ZyXEL NBG6604 firmware 1.01(ABIR.2)C0</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/w/wnax2033gr_f203.zip I-O DATA WN-AX2033GR firmware 2.03</span>
+<span class="w">    </span><span class="nt">0x434f4d43</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mitrastar_comc</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;COMC&quot; in ASCII. Devices made by MitraStar (MSTC), e.g. I-O DATA</span>
+<span class="w">        </span><span class="no">WN-CS300FR, WN-DX1167R, WN-DX1200GR, WN-DX1300EXP, WN-DX1300GRN,</span>
+<span class="w">        </span><span class="no">WN-PL1167EX01/02/03, WN-SX300FR and WN-SX300GR.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/w/wndx1167r_f105.zip I-O DATA WN-DX1167R firmware 1.05</span>
+<span class="w">    </span><span class="nt">0x4e474335</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_gs308t</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;NGC5&quot; in ASCII. OpenWrt devices `netgear_gs308t-v1`,</span>
+<span class="w">        </span><span class="no">`netgear_gs310tp-v1`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L287 OpenWrt, `netgear_gs308t-v1`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L295 OpenWrt, `netgear_gs310tp-v1`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/GS308T/GS308T_GS310TP_V1.0.5.7.zip NETGEAR GS308T firmware 1.0.5.7</span>
+<span class="w">    </span><span class="nt">0x4e474520</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_nge</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;NGE &quot; in ASCII. OpenWrt device `netgear_nge`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L237 OpenWrt, `netgear_nge`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/GS108Tv3/GS108Tv3_GS110TPv3_GS110TPPv1_V7.1.1.17.zip NETGEAR GS108Tv3 firmware 7.1.1.17</span>
+<span class="w">    </span><span class="nt">0x4e474620</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_ngf</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;NGF &quot; in ASCII. NETGEAR GC108P and GC108PP.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/GC108P/GC108P_GC108PP_V1.0.2.4.zip NETGEAR GC108P firmware 1.0.2.4</span>
+<span class="w">    </span><span class="nt">0x4e474720</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_ngg</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;NGG &quot; in ASCII. OpenWrt device `netgear_ngg`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L256 OpenWrt, `netgear_ngg`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/realtek/rtl838x/openwrt-25.12.5-realtek-rtl838x-netgear_gs110tup-v1-squashfs-sysupgrade.bin OpenWrt 25.12.5, `netgear_gs110tup-v1`</span>
+<span class="w">    </span><span class="nt">0x4e474820</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_ngh</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;NGH &quot; in ASCII. NETGEAR GS724TPv2 and GS724TPP.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/GS724TPv2/GS724TPv2_GS724TPP_V2.0.0.16.zip NETGEAR GS724TPv2 firmware 2.0.0.16</span>
+<span class="w">    </span><span class="nt">0x4e474920</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_ngi</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;NGI &quot; in ASCII. NETGEAR GS716TP and GS716TPP.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/GS716TP/GS716TP_GS716TPP_V1.0.0.15.zip NETGEAR GS716TP firmware 1.0.0.15</span>
+<span class="w">    </span><span class="nt">0x4e475020</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netgear_ngp</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;NGP &quot; in ASCII. NETGEAR MS510TXM and MS510TXUP.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.downloads.netgear.com/files/GDC/MS510TXM/MS510TXM_MS510TXUP_1.0.5.23.zip NETGEAR MS510TXM firmware 1.0.5.23</span>
+<span class="w">    </span><span class="nt">0x4f4b4c49</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openwrt_okli</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;OKLI&quot; in ASCII. The kernel of OpenWrt images for devices whose</span>
+<span class="w">        </span><span class="no">bootloader loads a small OpenWrt loader (`lzma-loader`, `loader-okli`)</span>
+<span class="w">        </span><span class="no">instead, which then boots this kernel.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/ath79/image/common-tp-link.mk#L92 OpenWrt, `tplink-safeloader-okli`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/ath79/generic/openwrt-25.12.5-ath79-generic-aruba_ap-105-squashfs-sysupgrade.bin OpenWrt 25.12.5, `aruba_ap-105`</span>
+<span class="w">    </span><span class="nt">0x68737173</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openwrt_dlink_covr</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;hsqs&quot; in ASCII. The kernel of OpenWrt images for the D-Link COVR-C1200</span>
+<span class="w">        </span><span class="no">and COVR-P2500, loaded by OpenWrt&#39;s `lzma-loader`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/ath79/generic/openwrt-25.12.5-ath79-generic-dlink_covr-c1200-a1-squashfs-sysupgrade.bin OpenWrt 25.12.5, `dlink_covr-c1200-a1`</span>
+<span class="w">    </span><span class="nt">0x73714f4b</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openwrt_senao_okli</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&quot;sqOK&quot; in ASCII. The kernel of OpenWrt images for Senao-based access</span>
+<span class="w">        </span><span class="no">points (e.g. EnGenius EAP and ENS series, ALLNET ALL-WAP02860AC,</span>
+<span class="w">        </span><span class="no">WatchGuard AP100/200/300), loaded by OpenWrt&#39;s `lzma-loader`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/ath79/generic/openwrt-25.12.5-ath79-generic-engenius_eap1200h-squashfs-factory.bin OpenWrt 25.12.5, `engenius_eap1200h`</span>
+<span class="w">    </span><span class="nt">0x80800002</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ecs1112fp</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">EnGenius ECS1112FP (`image/series_vmlinux.bix` in the tar archive that</span>
+<span class="w">        </span><span class="no">follows a 64-byte header in the `.imag` firmware file, i.e. at offset</span>
+<span class="w">        </span><span class="no">0x240).</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ECS1112FP-RTL83xx_fw_1.1.40-2.01.149_20201008-1903.imag EnGenius ECS1112FP firmware</span>
+<span class="w">    </span><span class="nt">0x83011300</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews1200_28tfp_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS1200-28TFP firmware 1.05.45 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews1200-28tfp_fw_1.06.21_c1.8.77_180906-0716.bix EnGenius EWS1200-28TFP firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x83011302</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7926efp_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7926EFP firmware 1.06.23.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7926efp_fw_1.06.23_c1.8.77_181102-0254.bix EnGenius EWS7926EFP firmware 1.06.23</span>
+<span class="w">    </span><span class="nt">0x83012401</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7952p_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7952P firmware 1.05.52 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7952p_fw_1.06.21_c1.8.77_180906-0727.bix EnGenius EWS7952P firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x83800000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">realtek_rtl838x</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Default of the Realtek switch SDK for RTL838x</span>
+<span class="w">        </span><span class="no">(`CONFIG_IH_MAGIC_NUMBER`), used e.g. by ZyXEL GS1900 series, Cisco</span>
+<span class="w">        </span><span class="no">Sx220 series and Ubiquiti UISP-S switches. EnGenius EGS7228P firmware</span>
+<span class="w">        </span><span class="no">1.05.05. OpenWrt devices `zyxel_gs1900`, `inaba_aml2-17gp`,</span>
+<span class="w">        </span><span class="no">`horaco_zx-swtgw2c8f`, `mokerlink_2g080gm`, `mokerlink_10gt080m`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ReFirmLabs/binwalk/commit/f21282bce5b699fe627102a0b647416acd54933b binwalk</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/egs7228p_fw_1.05.05_141210-1806.bix EnGenius EGS7228P firmware 1.05.05</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/common.mk#L93 OpenWrt, `zyxel_gs1900`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L197 OpenWrt, `inaba_aml2-17gp`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L148 OpenWrt, `horaco_zx-swtgw2c8f`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L176 OpenWrt, `mokerlink_2g080gm`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl931x.mk#L33 OpenWrt, `mokerlink_10gt080m`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/danieltwagner/teg-s750/blob/13b8db10b2600382be2e3126195e456081532862/gpl_oss_of_realtek_sdk3/kernel/uClinux/vendors/Realtek/SDK/defConf/83xx/uboot.config#L194 Realtek SDK, RTL83xx default configuration (TRENDnet TEG-S750 GPL code)</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/halmartin/zyxel-gs1900-gpl/blob/9567911410eb74739dc41cd36934c94b88d53a70/gs1900/turnkey/vendor/ZyXEL/GS1900/config.u-boot#L80 ZyXEL GS1900 GPL code</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://dl.ui.com/firmwares/uisps/1.10.2/ESX.1.10.2.bix Ubiquiti UISP-S firmware 1.10.2</span>
+<span class="w">    </span><span class="nt">0x83800001</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iodata_bsh_g08m</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I-O DATA BSH-G08M.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/b/bshg08m_f203.zip I-O DATA BSH-G08M firmware 2.03</span>
+<span class="w">    </span><span class="nt">0x83800002</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iodata_bsh_gp08</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I-O DATA BSH-GP08 and Ubiquiti UISP-S (RTL838x).</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/b/bshgp08_f204.zip I-O DATA BSH-GP08 firmware 2.04</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://dl.ui.com/firmwares/uisps/1.5.0/UISPS.rtl838x.v1.5.0.bix Ubiquiti UISP-S firmware 1.5.0 (RTL838x)</span>
+<span class="w">    </span><span class="nt">0x83800003</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iodata_bsh_g16m</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I-O DATA BSH-G16M.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/b/bshg16m_f203.zip I-O DATA BSH-G16M firmware 2.03</span>
+<span class="w">    </span><span class="nt">0x83800004</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iodata_bsh_g24m</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I-O DATA BSH-G24M.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/b/bshg24m_f203.zip I-O DATA BSH-G24M firmware 2.03</span>
+<span class="w">    </span><span class="nt">0x83800010</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iodata_bsh_g08mb</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I-O DATA BSH-G08MB.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/b/bshg08mb_f101.zip I-O DATA BSH-G08MB firmware 1.01</span>
+<span class="w">    </span><span class="nt">0x83800011</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iodata_bsh_gp08mb</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I-O DATA BSH-GP08MB.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/b/bshgp08mb_f101.zip I-O DATA BSH-GP08MB firmware 1.01</span>
+<span class="w">    </span><span class="nt">0x83800012</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iodata_bsh_g16mb</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I-O DATA BSH-G16MB.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/b/bshg16mb_f101.zip I-O DATA BSH-G16MB firmware 1.01</span>
+<span class="w">    </span><span class="nt">0x83800013</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iodata_bsh_g24mb</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I-O DATA BSH-G24MB. OpenWrt device `iodata_bsh-g24mb`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl838x.mk#L206 OpenWrt, `iodata_bsh-g24mb`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://lib.iodata.jp/lib/soft/b/bshg24mb_f101.zip I-O DATA BSH-G24MB firmware 1.01</span>
+<span class="w">    </span><span class="nt">0x83801a0d</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trendnet_tpe_3012ls</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TRENDnet TPE-3012LS.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.trendnet.com/TPE-3012LS/firmware/FW_TPE-3012LS_v1(1.01.28).zip TRENDnet TPE-3012LS firmware 1.01.28</span>
+<span class="w">    </span><span class="nt">0x83801a0e</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trendnet_tpe_3018ls</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TRENDnet TPE-3018LS.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.trendnet.com/TPE-3018LS/firmware/FW_TPE-3018LS_v1(1.01.28).zip TRENDnet TPE-3018LS firmware 1.01.28</span>
+<span class="w">    </span><span class="nt">0x83802108</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_egs2108p_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EGS2108P firmware 1.05.20.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/egs2108p_fw_1.05.20_150810-1740.bix EnGenius EGS2108P firmware 1.05.20</span>
+<span class="w">    </span><span class="nt">0x83802110</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_egs2110p_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EGS2110P firmware 1.05.20.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/egs2110p_fw_1.05.20_150810-1754.bix EnGenius EGS2110P firmware 1.05.20</span>
+<span class="w">    </span><span class="nt">0x83802910</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews2910p_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS2910P firmware 1.05.38 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews2910p_fw_1.06.21_c1.8.77_180906-0547.bix EnGenius EWS2910P firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x83805110</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_egs5110p_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EGS5110P firmware 1.05.20.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/egs5110p_fw_1.05.20_150810-1808.bix EnGenius EGS5110P firmware 1.05.20</span>
+<span class="w">    </span><span class="nt">0x83805212</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_egs5212fp_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EGS5212FP firmware 1.05.05.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/egs5212fp_fw_1.05.05_141210-1822.bix EnGenius EGS5212FP firmware 1.05.05</span>
+<span class="w">    </span><span class="nt">0x83805912</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews5912fp_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS5912FP firmware 1.05.38 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews5912fp_fw_1.06.21_c1.8.77_180906-0621.bix EnGenius EWS5912FP firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x83807928</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7928p_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7928P firmware 1.05.38 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7928p_fw_1.06.21_c1.8.77_180906-0632.bix EnGenius EWS7928P firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x83872010</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews1200d_10t_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS1200D-10T firmware 1.05.39 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews1200d-10t_fw_1.06.21_c1.8.77_180906-0705.bix EnGenius EWS1200D-10T firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x83872028</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews1200_28t_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS1200-28T firmware 1.05.38 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews1200-28t_fw_1.06.21_c1.8.77_180906-0610.bix EnGenius EWS1200-28T firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x8387228f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_egs7228fp_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EGS7228FP firmware 1.05.05.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/egs7228fp_fw_1.05.05_141210-1751.bix EnGenius EGS7228FP firmware 1.05.05</span>
+<span class="w">    </span><span class="nt">0x8387928f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7928fp_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7928FP firmware 1.05.42 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7928fp_fw_1.06.21_c1.8.77_180906-0558.bix EnGenius EWS7928FP firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x83900000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">realtek_rtl839x</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Default of the Realtek switch SDK for RTL839x</span>
+<span class="w">        </span><span class="no">(`CONFIG_IH_MAGIC_NUMBER`). No firmware image with this magic was found</span>
+<span class="w">        </span><span class="no">among the ones surveyed (September 2026), so it may not be used in</span>
+<span class="w">        </span><span class="no">practice.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/danieltwagner/teg-s750/blob/13b8db10b2600382be2e3126195e456081532862/gpl_oss_of_realtek_sdk3/kernel/uClinux/vendors/Realtek/SDK/defConf/8390/uboot.config#L194 Realtek SDK, RTL8390 default configuration (TRENDnet TEG-S750 GPL code)</span>
+<span class="w">    </span><span class="nt">0x83960000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">realtek_rtl8396</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Default of the Realtek switch SDK for RTL8396</span>
+<span class="w">        </span><span class="no">(`CONFIG_IH_MAGIC_NUMBER`). No firmware image with this magic was found</span>
+<span class="w">        </span><span class="no">among the ones surveyed (September 2026), so it may not be used in</span>
+<span class="w">        </span><span class="no">practice.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/danieltwagner/teg-s750/blob/13b8db10b2600382be2e3126195e456081532862/gpl_oss_of_realtek_sdk3/kernel/uClinux/vendors/Realtek/SDK/defConf/8396msc/uboot.config#L165 Realtek SDK, RTL8396 default configuration (TRENDnet TEG-S750 GPL code)</span>
+<span class="w">    </span><span class="nt">0x83972052</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews1200_52t_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS1200-52T firmware 1.05.38 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews1200-52t_fw_1.06.21_c1.8.77_180906-0654.bix EnGenius EWS1200-52T firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x8397252f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_egs7252fp_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EGS7252FP firmware 1.05.05.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/egs7252fp_fw_1.05.05_141210-1838.bix EnGenius EGS7252FP firmware 1.05.05</span>
+<span class="w">    </span><span class="nt">0x8397952f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">engenius_ews7952fp_old_fw</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnGenius EWS7952FP firmware 1.05.38 to 1.06.21.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ews7952fp_fw_1.06.21_c1.8.77_180906-0643.bix EnGenius EWS7952FP firmware 1.06.21</span>
+<span class="w">    </span><span class="nt">0x93000000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">realtek_rtl930x</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Default of the Realtek switch SDK for RTL930x</span>
+<span class="w">        </span><span class="no">(`CONFIG_IH_MAGIC_NUMBER`), used e.g. by TRENDnet and Ubiquiti UISP-S</span>
+<span class="w">        </span><span class="no">switches. EnGenius ECS1528FP (`image/series_vmlinux.bix` in the tar</span>
+<span class="w">        </span><span class="no">archive that follows a 64-byte header in the `.imag` firmware file, i.e.</span>
+<span class="w">        </span><span class="no">at offset 0x240). OpenWrt devices `sirivision_sr-st3408f`,</span>
+<span class="w">        </span><span class="no">`sirivision_sr-st3808f`, `keeplink_kp-9000-8xm`, `plasmacloud-common`,</span>
+<span class="w">        </span><span class="no">`vimin_vm-s100-0800ms`, `xikestor_sks8300-8t`,</span>
+<span class="w">        </span><span class="no">`xikestor_sks8300-12e2t2x`, `xikestor_sks8310-8x`,</span>
+<span class="w">        </span><span class="no">`sirivision_sr-st31212f`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.engeniustech.com/wp_firmware/ECS1528FP-RTL93xx_fw_1.1.40-3.01.149_20201008-1907.imag EnGenius ECS1528FP firmware</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L27 OpenWrt, `sirivision_sr-st3408f`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L38 OpenWrt, `sirivision_sr-st3808f`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L165 OpenWrt, `keeplink_kp-9000-8xm`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L204 OpenWrt, `plasmacloud-common`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L268 OpenWrt, `vimin_vm-s100-0800ms`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L305 OpenWrt, `xikestor_sks8300-8t`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L339 OpenWrt, `xikestor_sks8300-12e2t2x`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L358 OpenWrt, `xikestor_sks8310-8x`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl931x.mk#L71 OpenWrt, `sirivision_sr-st31212f`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/danieltwagner/teg-s750/blob/13b8db10b2600382be2e3126195e456081532862/gpl_oss_of_realtek_sdk3/kernel/uClinux/vendors/Realtek/SDK/defConf/9300/uboot.config#L196 Realtek SDK, RTL9300 default configuration (TRENDnet TEG-S750 GPL code)</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://dl.ui.com/firmwares/uisps/1.5.0/UISPS.rtl930x.v1.5.0.bix Ubiquiti UISP-S firmware 1.5.0 (RTL930x)</span>
+<span class="w">    </span><span class="nt">0x93001010</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zyxel_xgs1010_12</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenWrt device `zyxel_xgs1010-12`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/common.mk#L106 OpenWrt, `zyxel_xgs1010-12`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/realtek/rtl930x/openwrt-25.12.5-realtek-rtl930x-zyxel_xgs1010-12-a1-squashfs-sysupgrade.bin OpenWrt 25.12.5, `zyxel_xgs1010-12-a1`</span>
+<span class="w">    </span><span class="nt">0x93001210</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zyxel_xgs1210_12</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenWrt device `zyxel_xgs1210-12`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/common.mk#L116 OpenWrt, `zyxel_xgs1210-12`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://download.zyxel.com/XGS1210-12/firmware/XGS1210-12_V2.00(ABTY.0)C0.zip ZyXEL XGS1210-12 firmware 2.00(ABTY.0)C0</span>
+<span class="w">    </span><span class="nt">0x93001250</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zyxel_xgs1250_12</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenWrt device `zyxel_xgs1250-12-common`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L402 OpenWrt, `zyxel_xgs1250-12-common`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://download.zyxel.com/XGS1250-12/firmware/XGS1250-12_2.00(ABWE.0)C0.zip ZyXEL XGS1250-12 firmware 2.00(ABWE.0)C0</span>
+<span class="w">    </span><span class="nt">0x93030000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nicgiga_s100_0800s_m</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenWrt devices `nicgiga_s100-0800s-m`, `tplink_tl-st1008f-v2`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L193 OpenWrt, `nicgiga_s100-0800s-m`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L236 OpenWrt, `tplink_tl-st1008f-v2`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/snapshots/targets/realtek/rtl930x/openwrt-realtek-rtl930x-nicgiga_s100-0800s-m-squashfs-sysupgrade.bin OpenWrt snapshot, `nicgiga_s100-0800s-m`</span>
+<span class="w">    </span><span class="nt">0x93100000</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plasmacloud_psx28</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OpenWrt device `plasmacloud-common`.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl931x.mk#L40 OpenWrt, `plasmacloud-common`</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://downloads.openwrt.org/releases/25.12.5/targets/realtek/rtl931x/openwrt-25.12.5-realtek-rtl931x-plasmacloud_psx28-squashfs-factory.bin OpenWrt 25.12.5, `plasmacloud_psx28`</span>
 </pre></div>
     </div>
 </section>

@@ -19,6 +19,100 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
+our $MAGIC_TYPES_ALLNET_ALL_SG8316M = 5;
+our $MAGIC_TYPES_ALLNET_ALL_SG8208M = 6;
+our $MAGIC_TYPES_ALLNET_ALL_SG8324M = 22;
+our $MAGIC_TYPES_DATTO_L8 = 7353344;
+our $MAGIC_TYPES_ALLNET_ALL_WAPC0450C = 9453568;
+our $MAGIC_TYPES_ENGENIUS_EWS2910P_V3 = 50398464;
+our $MAGIC_TYPES_ENGENIUS_EWS1200_28TFP = 50402048;
+our $MAGIC_TYPES_ENGENIUS_EWS7926EFP = 50402050;
+our $MAGIC_TYPES_ENGENIUS_EWS7952P = 50406401;
+our $MAGIC_TYPES_ENGENIUS_EWS2908P = 50409728;
+our $MAGIC_TYPES_ENGENIUS_EWS7928P_V2 = 51450112;
+our $MAGIC_TYPES_ENGENIUS_EWS1200_28TFP_V2 = 51450624;
+our $MAGIC_TYPES_ENGENIUS_EWS2910P = 58730768;
+our $MAGIC_TYPES_ENGENIUS_EWS5912FP = 58743058;
+our $MAGIC_TYPES_ENGENIUS_EWS7928P = 58751272;
+our $MAGIC_TYPES_ENGENIUS_EWS1200D_10T = 59187216;
+our $MAGIC_TYPES_ENGENIUS_EWS1200_28T = 59187240;
+our $MAGIC_TYPES_ENGENIUS_EWS7928FP = 59216527;
+our $MAGIC_TYPES_ENGENIUS_EWS1200_52T = 60235858;
+our $MAGIC_TYPES_ENGENIUS_EWS7952FP = 60265775;
+our $MAGIC_TYPES_YOUKU_YK_L1 = 304680960;
+our $MAGIC_TYPES_REALTEK_SDK = 305418240;
+our $MAGIC_TYPES_NETGEAR_GS750E = 391006017;
+our $MAGIC_TYPES_NETGEAR_GS728TP_V2 = 391006018;
+our $MAGIC_TYPES_BOLT_BL100 = 638656533;
+our $MAGIC_TYPES_UIMAGE = 654645590;
+our $MAGIC_TYPES_NETGEAR_WNCE4004 = 654645607;
+our $MAGIC_TYPES_NETGEAR_WNR612_V2_EARLY = 808857906;
+our $MAGIC_TYPES_NETGEAR_WNR1000_V2_VC = 825241648;
+our $MAGIC_TYPES_NETGEAR_WNR1000_V2 = 825241649;
+our $MAGIC_TYPES_NETGEAR_WNR1000_V2_VM = 825241650;
+our $MAGIC_TYPES_NETGEAR_WNR1000_V4 = 825241652;
+our $MAGIC_TYPES_NETGEAR_WPN824N = 825307184;
+our $MAGIC_TYPES_ZYXEL_UAG50 = 827343191;
+our $MAGIC_TYPES_NETGEAR_WNR2000 = 842018865;
+our $MAGIC_TYPES_NETGEAR_WNR2000_V3 = 842018867;
+our $MAGIC_TYPES_NETGEAR_WNR2000_V4 = 842018868;
+our $MAGIC_TYPES_NETGEAR_WNR612_V2 = 842020401;
+our $MAGIC_TYPES_NETGEAR_WNR2200 = 842149936;
+our $MAGIC_TYPES_NETGEAR_WNDR3700 = 859254832;
+our $MAGIC_TYPES_NETGEAR_WNDR3700_V2 = 859254833;
+our $MAGIC_TYPES_NETGEAR_WNDR3700_V4 = 859254835;
+our $MAGIC_TYPES_NETGEAR_R6100 = 909127728;
+our $MAGIC_TYPES_NETGEAR_WNR612 = 909193778;
+our $MAGIC_TYPES_MITRASTAR_COMB = 1129270594;
+our $MAGIC_TYPES_MITRASTAR_COMC = 1129270595;
+our $MAGIC_TYPES_NETGEAR_GS308T = 1313293109;
+our $MAGIC_TYPES_NETGEAR_NGE = 1313293600;
+our $MAGIC_TYPES_NETGEAR_NGF = 1313293856;
+our $MAGIC_TYPES_NETGEAR_NGG = 1313294112;
+our $MAGIC_TYPES_NETGEAR_NGH = 1313294368;
+our $MAGIC_TYPES_NETGEAR_NGI = 1313294624;
+our $MAGIC_TYPES_NETGEAR_NGP = 1313296416;
+our $MAGIC_TYPES_OPENWRT_OKLI = 1330334793;
+our $MAGIC_TYPES_OPENWRT_DLINK_COVR = 1752396147;
+our $MAGIC_TYPES_OPENWRT_SENAO_OKLI = 1936805707;
+our $MAGIC_TYPES_ENGENIUS_ECS1112FP = 2155872258;
+our $MAGIC_TYPES_ENGENIUS_EWS1200_28TFP_OLD_FW = 2197885696;
+our $MAGIC_TYPES_ENGENIUS_EWS7926EFP_OLD_FW = 2197885698;
+our $MAGIC_TYPES_ENGENIUS_EWS7952P_OLD_FW = 2197890049;
+our $MAGIC_TYPES_REALTEK_RTL838X = 2206203904;
+our $MAGIC_TYPES_IODATA_BSH_G08M = 2206203905;
+our $MAGIC_TYPES_IODATA_BSH_GP08 = 2206203906;
+our $MAGIC_TYPES_IODATA_BSH_G16M = 2206203907;
+our $MAGIC_TYPES_IODATA_BSH_G24M = 2206203908;
+our $MAGIC_TYPES_IODATA_BSH_G08MB = 2206203920;
+our $MAGIC_TYPES_IODATA_BSH_GP08MB = 2206203921;
+our $MAGIC_TYPES_IODATA_BSH_G16MB = 2206203922;
+our $MAGIC_TYPES_IODATA_BSH_G24MB = 2206203923;
+our $MAGIC_TYPES_TRENDNET_TPE_3012LS = 2206210573;
+our $MAGIC_TYPES_TRENDNET_TPE_3018LS = 2206210574;
+our $MAGIC_TYPES_ENGENIUS_EGS2108P_OLD_FW = 2206212360;
+our $MAGIC_TYPES_ENGENIUS_EGS2110P_OLD_FW = 2206212368;
+our $MAGIC_TYPES_ENGENIUS_EWS2910P_OLD_FW = 2206214416;
+our $MAGIC_TYPES_ENGENIUS_EGS5110P_OLD_FW = 2206224656;
+our $MAGIC_TYPES_ENGENIUS_EGS5212FP_OLD_FW = 2206224914;
+our $MAGIC_TYPES_ENGENIUS_EWS5912FP_OLD_FW = 2206226706;
+our $MAGIC_TYPES_ENGENIUS_EWS7928P_OLD_FW = 2206234920;
+our $MAGIC_TYPES_ENGENIUS_EWS1200D_10T_OLD_FW = 2206670864;
+our $MAGIC_TYPES_ENGENIUS_EWS1200_28T_OLD_FW = 2206670888;
+our $MAGIC_TYPES_ENGENIUS_EGS7228FP_OLD_FW = 2206671503;
+our $MAGIC_TYPES_ENGENIUS_EWS7928FP_OLD_FW = 2206700175;
+our $MAGIC_TYPES_REALTEK_RTL839X = 2207252480;
+our $MAGIC_TYPES_REALTEK_RTL8396 = 2207645696;
+our $MAGIC_TYPES_ENGENIUS_EWS1200_52T_OLD_FW = 2207719506;
+our $MAGIC_TYPES_ENGENIUS_EGS7252FP_OLD_FW = 2207720751;
+our $MAGIC_TYPES_ENGENIUS_EWS7952FP_OLD_FW = 2207749423;
+our $MAGIC_TYPES_REALTEK_RTL930X = 2466250752;
+our $MAGIC_TYPES_ZYXEL_XGS1010_12 = 2466254864;
+our $MAGIC_TYPES_ZYXEL_XGS1210_12 = 2466255376;
+our $MAGIC_TYPES_ZYXEL_XGS1250_12 = 2466255440;
+our $MAGIC_TYPES_NICGIGA_S100_0800S_M = 2466447360;
+our $MAGIC_TYPES_PLASMACLOUD_PSX28 = 2467299328;
+
 our $UIMAGE_ARCH_INVALID = 0;
 our $UIMAGE_ARCH_ALPHA = 1;
 our $UIMAGE_ARCH_ARM = 2;
@@ -54,6 +148,8 @@ our $UIMAGE_COMP_LZMA = 3;
 our $UIMAGE_COMP_LZO = 4;
 our $UIMAGE_COMP_LZ4 = 5;
 our $UIMAGE_COMP_ZSTD = 6;
+our $UIMAGE_COMP_MZ = 9;
+our $UIMAGE_COMP_XIP = 10;
 
 our $UIMAGE_OS_INVALID = 0;
 our $UIMAGE_OS_OPENBSD = 1;
@@ -166,6 +262,137 @@ sub data {
 }
 
 ########################################################################
+package Uimage::AsusFirmwareInformation;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{kernel_version} = Uimage::Version->new($self->{_io}, $self, $self->{_root});
+    $self->{fs_version} = Uimage::Version->new($self->{_io}, $self, $self->{_root});
+    $self->{product_id} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(12), 0, 0));
+    $self->{extra_info} = $self->{_io}->read_bytes(16);
+}
+
+sub kernel_version {
+    my ($self) = @_;
+    return $self->{kernel_version};
+}
+
+sub fs_version {
+    my ($self) = @_;
+    return $self->{fs_version};
+}
+
+sub product_id {
+    my ($self) = @_;
+    return $self->{product_id};
+}
+
+sub extra_info {
+    my ($self) = @_;
+    return $self->{extra_info};
+}
+
+########################################################################
+package Uimage::NameOrAsusInfo;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!($self->has_asus_info())) {
+        $self->{name} = Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 0));
+    }
+    if ($self->has_asus_info()) {
+        $self->{asus_info} = Uimage::AsusFirmwareInformation->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub byte0 {
+    my ($self) = @_;
+    return $self->{byte0} if ($self->{byte0});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(0);
+    $self->{byte0} = $self->{_io}->read_u1();
+    $self->{_io}->seek($_pos);
+    return $self->{byte0};
+}
+
+sub byte4 {
+    my ($self) = @_;
+    return $self->{byte4} if ($self->{byte4});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(4);
+    $self->{byte4} = $self->{_io}->read_u1();
+    $self->{_io}->seek($_pos);
+    return $self->{byte4};
+}
+
+sub has_asus_info {
+    my ($self) = @_;
+    return $self->{has_asus_info} if ($self->{has_asus_info});
+    $self->{has_asus_info} =  (($self->byte0() < 32) && ($self->byte4() >= 32) && ($self->byte4() < 127)) ;
+    return $self->{has_asus_info};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name};
+}
+
+sub asus_info {
+    my ($self) = @_;
+    return $self->{asus_info};
+}
+
+########################################################################
 package Uimage::Uheader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -195,7 +422,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->read_bytes(4);
+    $self->{magic} = $self->{_io}->read_u4be();
     $self->{header_crc} = $self->{_io}->read_u4be();
     $self->{timestamp} = $self->{_io}->read_u4be();
     $self->{len_image} = $self->{_io}->read_u4be();
@@ -206,7 +433,9 @@ sub _read {
     $self->{architecture} = $self->{_io}->read_u1();
     $self->{image_type} = $self->{_io}->read_u1();
     $self->{compression_type} = $self->{_io}->read_u1();
-    $self->{name} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
+    $self->{_raw_name_or_asus_info} = $self->{_io}->read_bytes(32);
+    my $io__raw_name_or_asus_info = IO::KaitaiStruct::Stream->new($self->{_raw_name_or_asus_info});
+    $self->{name_or_asus_info} = Uimage::NameOrAsusInfo->new($io__raw_name_or_asus_info, $self, $self->{_root});
 }
 
 sub magic {
@@ -264,9 +493,58 @@ sub compression_type {
     return $self->{compression_type};
 }
 
-sub name {
+sub name_or_asus_info {
     my ($self) = @_;
-    return $self->{name};
+    return $self->{name_or_asus_info};
+}
+
+sub _raw_name_or_asus_info {
+    my ($self) = @_;
+    return $self->{_raw_name_or_asus_info};
+}
+
+########################################################################
+package Uimage::Version;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{major} = $self->{_io}->read_u1();
+    $self->{minor} = $self->{_io}->read_u1();
+}
+
+sub major {
+    my ($self) = @_;
+    return $self->{major};
+}
+
+sub minor {
+    my ($self) = @_;
+    return $self->{minor};
 }
 
 1;

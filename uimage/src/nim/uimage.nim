@@ -6,6 +6,100 @@ type
     `header`*: Uimage_Uheader
     `data`*: seq[byte]
     `parent`*: KaitaiStruct
+  Uimage_MagicTypes* = enum
+    allnet_all_sg8316m = 5
+    allnet_all_sg8208m = 6
+    allnet_all_sg8324m = 22
+    datto_l8 = 7353344
+    allnet_all_wapc0450c = 9453568
+    engenius_ews2910p_v3 = 50398464
+    engenius_ews1200_28tfp = 50402048
+    engenius_ews7926efp = 50402050
+    engenius_ews7952p = 50406401
+    engenius_ews2908p = 50409728
+    engenius_ews7928p_v2 = 51450112
+    engenius_ews1200_28tfp_v2 = 51450624
+    engenius_ews2910p = 58730768
+    engenius_ews5912fp = 58743058
+    engenius_ews7928p = 58751272
+    engenius_ews1200d_10t = 59187216
+    engenius_ews1200_28t = 59187240
+    engenius_ews7928fp = 59216527
+    engenius_ews1200_52t = 60235858
+    engenius_ews7952fp = 60265775
+    youku_yk_l1 = 304680960
+    realtek_sdk = 305418240
+    netgear_gs750e = 391006017
+    netgear_gs728tp_v2 = 391006018
+    bolt_bl100 = 638656533
+    uimage = 654645590
+    netgear_wnce4004 = 654645607
+    netgear_wnr612_v2_early = 808857906
+    netgear_wnr1000_v2_vc = 825241648
+    netgear_wnr1000_v2 = 825241649
+    netgear_wnr1000_v2_vm = 825241650
+    netgear_wnr1000_v4 = 825241652
+    netgear_wpn824n = 825307184
+    zyxel_uag50 = 827343191
+    netgear_wnr2000 = 842018865
+    netgear_wnr2000_v3 = 842018867
+    netgear_wnr2000_v4 = 842018868
+    netgear_wnr612_v2 = 842020401
+    netgear_wnr2200 = 842149936
+    netgear_wndr3700 = 859254832
+    netgear_wndr3700_v2 = 859254833
+    netgear_wndr3700_v4 = 859254835
+    netgear_r6100 = 909127728
+    netgear_wnr612 = 909193778
+    mitrastar_comb = 1129270594
+    mitrastar_comc = 1129270595
+    netgear_gs308t = 1313293109
+    netgear_nge = 1313293600
+    netgear_ngf = 1313293856
+    netgear_ngg = 1313294112
+    netgear_ngh = 1313294368
+    netgear_ngi = 1313294624
+    netgear_ngp = 1313296416
+    openwrt_okli = 1330334793
+    openwrt_dlink_covr = 1752396147
+    openwrt_senao_okli = 1936805707
+    engenius_ecs1112fp = 2155872258
+    engenius_ews1200_28tfp_old_fw = 2197885696
+    engenius_ews7926efp_old_fw = 2197885698
+    engenius_ews7952p_old_fw = 2197890049
+    realtek_rtl838x = 2206203904
+    iodata_bsh_g08m = 2206203905
+    iodata_bsh_gp08 = 2206203906
+    iodata_bsh_g16m = 2206203907
+    iodata_bsh_g24m = 2206203908
+    iodata_bsh_g08mb = 2206203920
+    iodata_bsh_gp08mb = 2206203921
+    iodata_bsh_g16mb = 2206203922
+    iodata_bsh_g24mb = 2206203923
+    trendnet_tpe_3012ls = 2206210573
+    trendnet_tpe_3018ls = 2206210574
+    engenius_egs2108p_old_fw = 2206212360
+    engenius_egs2110p_old_fw = 2206212368
+    engenius_ews2910p_old_fw = 2206214416
+    engenius_egs5110p_old_fw = 2206224656
+    engenius_egs5212fp_old_fw = 2206224914
+    engenius_ews5912fp_old_fw = 2206226706
+    engenius_ews7928p_old_fw = 2206234920
+    engenius_ews1200d_10t_old_fw = 2206670864
+    engenius_ews1200_28t_old_fw = 2206670888
+    engenius_egs7228fp_old_fw = 2206671503
+    engenius_ews7928fp_old_fw = 2206700175
+    realtek_rtl839x = 2207252480
+    realtek_rtl8396 = 2207645696
+    engenius_ews1200_52t_old_fw = 2207719506
+    engenius_egs7252fp_old_fw = 2207720751
+    engenius_ews7952fp_old_fw = 2207749423
+    realtek_rtl930x = 2466250752
+    zyxel_xgs1010_12 = 2466254864
+    zyxel_xgs1210_12 = 2466255376
+    zyxel_xgs1250_12 = 2466255440
+    nicgiga_s100_0800s_m = 2466447360
+    plasmacloud_psx28 = 2467299328
   Uimage_UimageArch* = enum
     invalid = 0
     alpha = 1
@@ -42,6 +136,8 @@ type
     lzo = 4
     lz4 = 5
     zstd = 6
+    mz = 9
+    xip = 10
   Uimage_UimageOs* = enum
     invalid = 0
     openbsd = 1
@@ -122,8 +218,24 @@ type
     tfa_bl31 = 45
     stm32image_v2 = 46
     amlimage = 47
+  Uimage_AsusFirmwareInformation* = ref object of KaitaiStruct
+    `kernelVersion`*: Uimage_Version
+    `fsVersion`*: Uimage_Version
+    `productId`*: string
+    `extraInfo`*: seq[byte]
+    `parent`*: Uimage_NameOrAsusInfo
+  Uimage_NameOrAsusInfo* = ref object of KaitaiStruct
+    `name`*: string
+    `asusInfo`*: Uimage_AsusFirmwareInformation
+    `parent`*: Uimage_Uheader
+    `byte0Inst`: uint8
+    `byte0InstFlag`: bool
+    `byte4Inst`: uint8
+    `byte4InstFlag`: bool
+    `hasAsusInfoInst`: bool
+    `hasAsusInfoInstFlag`: bool
   Uimage_Uheader* = ref object of KaitaiStruct
-    `magic`*: seq[byte]
+    `magic`*: Uimage_MagicTypes
     `headerCrc`*: uint32
     `timestamp`*: uint32
     `lenImage`*: uint32
@@ -134,18 +246,33 @@ type
     `architecture`*: Uimage_UimageArch
     `imageType`*: Uimage_UimageType
     `compressionType`*: Uimage_UimageComp
-    `name`*: string
+    `nameOrAsusInfo`*: Uimage_NameOrAsusInfo
     `parent`*: Uimage
+    `rawNameOrAsusInfo`*: seq[byte]
+  Uimage_Version* = ref object of KaitaiStruct
+    `major`*: uint8
+    `minor`*: uint8
+    `parent`*: Uimage_AsusFirmwareInformation
 
 proc read*(_: typedesc[Uimage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Uimage
+proc read*(_: typedesc[Uimage_AsusFirmwareInformation], io: KaitaiStream, root: KaitaiStruct, parent: Uimage_NameOrAsusInfo): Uimage_AsusFirmwareInformation
+proc read*(_: typedesc[Uimage_NameOrAsusInfo], io: KaitaiStream, root: KaitaiStruct, parent: Uimage_Uheader): Uimage_NameOrAsusInfo
 proc read*(_: typedesc[Uimage_Uheader], io: KaitaiStream, root: KaitaiStruct, parent: Uimage): Uimage_Uheader
+proc read*(_: typedesc[Uimage_Version], io: KaitaiStream, root: KaitaiStruct, parent: Uimage_AsusFirmwareInformation): Uimage_Version
 
+proc byte0*(this: Uimage_NameOrAsusInfo): uint8
+proc byte4*(this: Uimage_NameOrAsusInfo): uint8
+proc hasAsusInfo*(this: Uimage_NameOrAsusInfo): bool
 
 
 ##[
-The new uImage format allows more flexibility in handling images of various
-types (kernel, ramdisk, etc.), it also enhances integrity protection of images
-with sha1 and md5 checksums.
+The legacy U-Boot image format (uImage), as created by `mkimage`: a 64-byte
+header followed by the image data (e.g. a Linux kernel, a ramdisk or a
+script). The header describes the data (OS, CPU architecture, image type,
+compression, load and entry point addresses, name) and protects both the
+header and the data with CRC-32 checksums.
+
+U-Boot's newer FIT (Flattened Image Tree) format is not covered by this spec.
 
 @see <a href="https://github.com/u-boot/u-boot/blob/ece349ade2973e220f524ce59e59711cc919263f/include/image.h">Git tag "v2026.07"</a>
 ]##
@@ -165,6 +292,200 @@ proc read*(_: typedesc[Uimage], io: KaitaiStream, root: KaitaiStruct, parent: Ka
 proc fromFile*(_: typedesc[Uimage], filename: string): Uimage =
   Uimage.read(newKaitaiFileStream(filename), nil, nil)
 
+
+##[
+ASUS firmware images [overlay the 32-byte image
+name](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L185-L188)
+with a [`TAIL`
+structure](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L151-L171)
+that contains version information and the product ID (model name).
+
+The first 16 bytes have the same structure in all three known variants of
+the `TAIL` structure. The meaning of the last 16 bytes differs across the
+variants - therefore, for simplicity, this Kaitai Struct implementation
+treats them as an opaque byte array named `extra_info`. For an overview of
+the variants, see the documentation for `extra_info`.
+
+]##
+proc read*(_: typedesc[Uimage_AsusFirmwareInformation], io: KaitaiStream, root: KaitaiStruct, parent: Uimage_NameOrAsusInfo): Uimage_AsusFirmwareInformation =
+  template this: untyped = result
+  this = new(Uimage_AsusFirmwareInformation)
+  let root = if root == nil: cast[Uimage](this) else: cast[Uimage](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let kernelVersionExpr = Uimage_Version.read(this.io, this.root, this)
+  this.kernelVersion = kernelVersionExpr
+  let fsVersionExpr = Uimage_Version.read(this.io, this.root, this)
+  this.fsVersion = fsVersionExpr
+
+  ##[
+  In the Ralink SDK variant (see `extra_info`), the product ID field is
+actually 23 bytes long, but no known product ID is longer than 12
+bytes.
+
+  ]##
+  let productIdExpr = encode(this.io.readBytes(int(12)).bytesTerminate(0, false), "UTF-8")
+  this.productId = productIdExpr
+
+  ##[
+  The structure of these bytes varies among the three known variants of
+the `TAIL` structure, and the header doesn't say which one is used:
+
+* Plain: 8 hardware versions (using the `version` type) - see
+  <https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L170>
+
+  Sample file: `RT-AC51U_3.0.0.4_380_8591-ga8dd632.trx` from
+  <https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC51U/FW_RT_AC51U_30043808591.zip>,
+  released on 2020-09-22 and listed on
+  <https://www.asus.com/supportonly/rt-ac51u/helpdesk_bios/>.
+
+  Source code links:
+
+  - [ASUS GPL source, RT-AC55UHP
+    3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)
+    (`asuswrt/release/src/asustools/mkimage.src/` in
+    `GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)
+  - [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial
+    mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src)
+
+* `TRX_NEW` (a macro defined when building `mkimage`): the
+  build number and extended build number (`u2le` each), two key bytes
+  and 5 hardware versions - see
+  <https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/include/image.h#L174-L180>
+
+  `mkimage` [overwrites the first 3 hardware
+  versions](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src/mkimage.c#L546-L569)
+  with values derived from the key bytes.
+
+  Sample file: `RT-AC55UHP_3.0.0.4_382_52236-ga0f880d.trx` (build 382,
+  extended build 52236) from
+  <https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/FW_RT_AC55UHP_300438252236.zip>,
+  released on 2020-06-04 and listed on
+  <https://www.asus.com/supportonly/rt-ac55uhp/helpdesk_bios/>.
+
+  Source code links:
+
+  - [ASUS GPL source, RT-AC55UHP
+    3.0.0.4.382.51915](https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC55UHP/GPL_RT_AC55UHP_300438251915.zip)
+    (`asuswrt/release/src-qca/asustools/mkimage.src/` in
+    `GPL_RT-AC55UHP_3.0.0.4.382.51915-g4086e57.tgz`)
+  - [ASUS GPL source, RT-AC55U 3.0.0.4.382.50702 (unofficial
+    mirror)](https://github.com/drag0njoe/RT-AC55U/tree/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src-qca/asustools/mkimage.src)
+
+* Ralink SDK: the rest of a 23-byte product ID (see `product_id`),
+  a version suffix letter and the kernel part size (called `ih_ksz`) -
+  see <https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h#L164-L165>
+
+  Sample file: `RP-N12_1.0.1.1f.trx` from
+  <https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/FW_RP-N12_1.0.1.1f.zip>,
+  released on 2019-11-12 and listed on
+  <https://www.asus.com/supportonly/rp-n12/helpdesk_bios/>.
+
+  Source code links:
+
+  - [ASUS GPL source, RP-N12
+    1.0.1.1f](https://dlcdnets.asus.com/pub/ASUS/wireless/RP-N12/GPL_RP_N12_1011f.zip)
+    (`GPL_RP-N12_source.1011f/user/mkimage/include/image.h` in
+    `GPL_RP-N12_source.1011f.tar.bz2`)
+  - [rt-n56u custom firmware by Andy
+    Padavan](https://github.com/andy-padavan/rt-n56u/blob/32a93db4026cc2cff585d7008373432d888fc1aa/trunk/tools/mkimage/include/image.h)
+
+In the plain and `TRX_NEW` variants, the last 4 bytes may instead
+contain the offset of the root file system, which is [written by
+`mkimage -r`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/mkimage.c#L527-L542)
+as the magic byte 0xA9
+([`ROOTFS_OFFSET_MAGIC`](https://github.com/drag0njoe/RT-AC55U/blob/cf5874684ab6995ee07e91a52dfdd0562fcc2655/release/src/asustools/mkimage.src/include/image.h#L154-L159))
+followed by the offset as a 24-bit big-endian integer.
+
+  ]##
+  let extraInfoExpr = this.io.readBytes(int(16))
+  this.extraInfo = extraInfoExpr
+
+proc fromFile*(_: typedesc[Uimage_AsusFirmwareInformation], filename: string): Uimage_AsusFirmwareInformation =
+  Uimage_AsusFirmwareInformation.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Uimage_NameOrAsusInfo], io: KaitaiStream, root: KaitaiStruct, parent: Uimage_Uheader): Uimage_NameOrAsusInfo =
+  template this: untyped = result
+  this = new(Uimage_NameOrAsusInfo)
+  let root = if root == nil: cast[Uimage](this) else: cast[Uimage](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  if not(this.hasAsusInfo):
+    let nameExpr = encode(this.io.readBytesTerm(0, false, true, false), "UTF-8")
+    this.name = nameExpr
+  if this.hasAsusInfo:
+    let asusInfoExpr = Uimage_AsusFirmwareInformation.read(this.io, this.root, this)
+    this.asusInfo = asusInfoExpr
+
+proc byte0(this: Uimage_NameOrAsusInfo): uint8 = 
+  if this.byte0InstFlag:
+    return this.byte0Inst
+  let pos = this.io.pos()
+  this.io.seek(int(0))
+  let byte0InstExpr = this.io.readU1()
+  this.byte0Inst = byte0InstExpr
+  this.io.seek(pos)
+  this.byte0InstFlag = true
+  return this.byte0Inst
+
+proc byte4(this: Uimage_NameOrAsusInfo): uint8 = 
+  if this.byte4InstFlag:
+    return this.byte4Inst
+  let pos = this.io.pos()
+  this.io.seek(int(4))
+  let byte4InstExpr = this.io.readU1()
+  this.byte4Inst = byte4InstExpr
+  this.io.seek(pos)
+  this.byte4InstFlag = true
+  return this.byte4Inst
+
+proc hasAsusInfo(this: Uimage_NameOrAsusInfo): bool = 
+
+  ##[
+  Whether this type stores ASUS firmware information (`asus_info`)
+rather than an image name (`name`).
+
+The header doesn't say which one it is, so we infer it using a
+heuristic based on the layout of the `asus_firmware_information` type.
+If ASUS firmware info is present, the first byte (the major kernel
+version number) is a small integer (i.e. not a printable character),
+and byte 4 (first byte of the product ID/model name) is a printable
+character. An empty name is not mistaken for ASUS information, because
+its byte 4 is a null byte.
+
+The highest known major kernel version number is 9 (e.g. in
+`DSL-N55U_9.0.0.4_380_3925-gad8f412_Annex_A.trx` from
+<https://dlcdnets.asus.com/pub/ASUS/wireless/DSL-N55U/FW_DSL_N55U_90043803925.zip>,
+released on 2016-08-04 and listed on
+<https://www.asus.com/supportonly/dsl-n55u/helpdesk_bios/>). ASUS
+seems to use such high major versions (9, sometimes 7) for beta
+releases, whereas regular releases use 3 (or 1 in older firmware).
+
+It can also be 0, in particular due to a bug in the MediaTek MT798X
+build of ASUS's `mkimage` (it reads the `-V` values from fixed `argv`
+positions, even though it parses the options using `getopt()` - see
+<https://github.com/blocktrron/tuf-ax4200-gpl/blob/a4fe37f4d78473f97c6d47cf93d97c3811af90cc/release/src-mtk-MT798X/Uboot-upstream/tools/mkimage.c#L317-L333>).
+For example, this is the case in
+`RT-AX52_3.0.0.4_388_34015-g9488655.trx` from
+<https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AX52/FW_RT-AX52_300438834015.zip>,
+released on 2026-03-20 and listed on
+<https://www.asus.com/supportonly/rt-ax52/helpdesk_bios?model2Name=RT-AX52>.
+
+  ]##
+  if this.hasAsusInfoInstFlag:
+    return this.hasAsusInfoInst
+  let hasAsusInfoInstExpr = bool( ((this.byte0 < 32) and (this.byte4 >= 32) and (this.byte4 < 127)) )
+  this.hasAsusInfoInst = hasAsusInfoInstExpr
+  this.hasAsusInfoInstFlag = true
+  return this.hasAsusInfoInst
+
+proc fromFile*(_: typedesc[Uimage_NameOrAsusInfo], filename: string): Uimage_NameOrAsusInfo =
+  Uimage_NameOrAsusInfo.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[Uimage_Uheader], io: KaitaiStream, root: KaitaiStruct, parent: Uimage): Uimage_Uheader =
   template this: untyped = result
   this = new(Uimage_Uheader)
@@ -173,7 +494,15 @@ proc read*(_: typedesc[Uimage_Uheader], io: KaitaiStream, root: KaitaiStruct, pa
   this.root = root
   this.parent = parent
 
-  let magicExpr = this.io.readBytes(int(4))
+
+  ##[
+  Besides the standard U-Boot magic, some vendors' bootloaders expect
+their own value (often a different one for each device model), with
+the rest of the header unchanged. `magic_types` lists the values
+known so far; images with any other magic are rejected.
+
+  ]##
+  let magicExpr = Uimage_MagicTypes(this.io.readU4be())
   this.magic = magicExpr
   let headerCrcExpr = this.io.readU4be()
   this.headerCrc = headerCrcExpr
@@ -195,9 +524,28 @@ proc read*(_: typedesc[Uimage_Uheader], io: KaitaiStream, root: KaitaiStruct, pa
   this.imageType = imageTypeExpr
   let compressionTypeExpr = Uimage_UimageComp(this.io.readU1())
   this.compressionType = compressionTypeExpr
-  let nameExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "UTF-8")
-  this.name = nameExpr
+  let rawNameOrAsusInfoExpr = this.io.readBytes(int(32))
+  this.rawNameOrAsusInfo = rawNameOrAsusInfoExpr
+  let rawNameOrAsusInfoIo = newKaitaiStream(rawNameOrAsusInfoExpr)
+  let nameOrAsusInfoExpr = Uimage_NameOrAsusInfo.read(rawNameOrAsusInfoIo, this.root, this)
+  this.nameOrAsusInfo = nameOrAsusInfoExpr
 
 proc fromFile*(_: typedesc[Uimage_Uheader], filename: string): Uimage_Uheader =
   Uimage_Uheader.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Uimage_Version], io: KaitaiStream, root: KaitaiStruct, parent: Uimage_AsusFirmwareInformation): Uimage_Version =
+  template this: untyped = result
+  this = new(Uimage_Version)
+  let root = if root == nil: cast[Uimage](this) else: cast[Uimage](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let majorExpr = this.io.readU1()
+  this.major = majorExpr
+  let minorExpr = this.io.readU1()
+  this.minor = minorExpr
+
+proc fromFile*(_: typedesc[Uimage_Version], filename: string): Uimage_Version =
+  Uimage_Version.read(newKaitaiFileStream(filename), nil, nil)
 
