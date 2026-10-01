@@ -60,6 +60,7 @@ const std::set<uimage_t::magic_types_t> uimage_t::_values_magic_types_t{
     uimage_t::MAGIC_TYPES_OPENWRT_DLINK_COVR,
     uimage_t::MAGIC_TYPES_OPENWRT_SENAO_OKLI,
     uimage_t::MAGIC_TYPES_ENGENIUS_ECS1112FP,
+    uimage_t::MAGIC_TYPES_ENGENIUS_FITSWITCH,
     uimage_t::MAGIC_TYPES_ENGENIUS_EWS1200_28TFP_OLD_FW,
     uimage_t::MAGIC_TYPES_ENGENIUS_EWS7926EFP_OLD_FW,
     uimage_t::MAGIC_TYPES_ENGENIUS_EWS7952P_OLD_FW,

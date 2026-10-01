@@ -76,6 +76,7 @@ class Uimage < Kaitai::Struct::Struct
     1752396147 => :magic_types_openwrt_dlink_covr,
     1936805707 => :magic_types_openwrt_senao_okli,
     2155872258 => :magic_types_engenius_ecs1112fp,
+    2155872259 => :magic_types_engenius_fitswitch,
     2197885696 => :magic_types_engenius_ews1200_28tfp_old_fw,
     2197885698 => :magic_types_engenius_ews7926efp_old_fw,
     2197890049 => :magic_types_engenius_ews7952p_old_fw,

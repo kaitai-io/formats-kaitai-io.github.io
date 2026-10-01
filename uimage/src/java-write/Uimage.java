@@ -85,6 +85,7 @@ public class Uimage extends KaitaiStruct.ReadWrite {
         OPENWRT_DLINK_COVR(1752396147),
         OPENWRT_SENAO_OKLI(1936805707),
         ENGENIUS_ECS1112FP(2155872258L),
+        ENGENIUS_FITSWITCH(2155872259L),
         ENGENIUS_EWS1200_28TFP_OLD_FW(2197885696L),
         ENGENIUS_EWS7926EFP_OLD_FW(2197885698L),
         ENGENIUS_EWS7952P_OLD_FW(2197890049L),
@@ -125,7 +126,7 @@ public class Uimage extends KaitaiStruct.ReadWrite {
         private final long id;
         MagicTypes(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, MagicTypes> byId = new HashMap<Long, MagicTypes>(93);
+        private static final Map<Long, MagicTypes> byId = new HashMap<Long, MagicTypes>(94);
         static {
             for (MagicTypes e : MagicTypes.values())
                 byId.put(e.id(), e);

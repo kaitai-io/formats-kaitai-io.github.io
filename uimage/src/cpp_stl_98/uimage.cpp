@@ -61,6 +61,7 @@ std::set<uimage_t::magic_types_t> uimage_t::_build_values_magic_types_t() {
     _t.insert(uimage_t::MAGIC_TYPES_OPENWRT_DLINK_COVR);
     _t.insert(uimage_t::MAGIC_TYPES_OPENWRT_SENAO_OKLI);
     _t.insert(uimage_t::MAGIC_TYPES_ENGENIUS_ECS1112FP);
+    _t.insert(uimage_t::MAGIC_TYPES_ENGENIUS_FITSWITCH);
     _t.insert(uimage_t::MAGIC_TYPES_ENGENIUS_EWS1200_28TFP_OLD_FW);
     _t.insert(uimage_t::MAGIC_TYPES_ENGENIUS_EWS7926EFP_OLD_FW);
     _t.insert(uimage_t::MAGIC_TYPES_ENGENIUS_EWS7952P_OLD_FW);

@@ -77,6 +77,7 @@ Uimage.MagicTypes = enum.Enum {
   openwrt_dlink_covr = 1752396147,
   openwrt_senao_okli = 1936805707,
   engenius_ecs1112fp = 2155872258,
+  engenius_fitswitch = 2155872259,
   engenius_ews1200_28tfp_old_fw = 2197885696,
   engenius_ews7926efp_old_fw = 2197885698,
   engenius_ews7952p_old_fw = 2197890049,

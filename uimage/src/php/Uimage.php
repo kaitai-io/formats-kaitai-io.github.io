@@ -637,11 +637,20 @@ namespace Uimage {
         const OPENWRT_SENAO_OKLI = 1936805707;
 
         /**
-         * EnGenius ECS1112FP (`image/series_vmlinux.bix` in the tar archive that
-         * follows a 64-byte header in the `.imag` firmware file, i.e. at offset
-         * 0x240).
+         * EnGenius ECS1112FP: the uImage is `image/series_vmlinux.bix`, the first
+         * member of the tar archive that follows a 64-byte header in the `.imag`
+         * firmware file, so it starts at offset 0x240 of the file.
          */
         const ENGENIUS_ECS1112FP = 2155872258;
+
+        /**
+         * EnGenius FitSwitch series, i.e. EWS2910P-FIT, EWS2910FP-FIT,
+         * EWS7928P-FIT, EWS7928FP-FIT, EWS7952P-FIT and EWS7952FP-FIT: the uImage
+         * is `image/series_vmlinux.bix`, the first member of the tar archive that
+         * follows a 64-byte header in the `.imag` firmware file, so it starts at
+         * offset 0x240 of the file.
+         */
+        const ENGENIUS_FITSWITCH = 2155872259;
 
         /**
          * EnGenius EWS1200-28TFP firmware 1.05.45 to 1.06.21.
@@ -806,13 +815,13 @@ namespace Uimage {
         /**
          * Default of the Realtek switch SDK for RTL930x
          * (`CONFIG_IH_MAGIC_NUMBER`), used e.g. by TRENDnet and Ubiquiti UISP-S
-         * switches. EnGenius ECS1528FP (`image/series_vmlinux.bix` in the tar
-         * archive that follows a 64-byte header in the `.imag` firmware file, i.e.
-         * at offset 0x240). OpenWrt devices `sirivision_sr-st3408f`,
-         * `sirivision_sr-st3808f`, `keeplink_kp-9000-8xm`, `plasmacloud-common`,
-         * `vimin_vm-s100-0800ms`, `xikestor_sks8300-8t`,
-         * `xikestor_sks8300-12e2t2x`, `xikestor_sks8310-8x`,
-         * `sirivision_sr-st31212f`.
+         * switches. EnGenius ECS1528FP: the uImage is `image/series_vmlinux.bix`,
+         * the first member of the tar archive that follows a 64-byte header in the
+         * `.imag` firmware file, so it starts at offset 0x240 of the file. OpenWrt
+         * devices `sirivision_sr-st3408f`, `sirivision_sr-st3808f`,
+         * `keeplink_kp-9000-8xm`, `plasmacloud-common`, `vimin_vm-s100-0800ms`,
+         * `xikestor_sks8300-8t`, `xikestor_sks8300-12e2t2x`,
+         * `xikestor_sks8310-8x`, `sirivision_sr-st31212f`.
          */
         const REALTEK_RTL930X = 2466250752;
 
@@ -841,7 +850,7 @@ namespace Uimage {
          */
         const PLASMACLOUD_PSX28 = 2467299328;
 
-        private const _VALUES = [5 => true, 6 => true, 22 => true, 7353344 => true, 9453568 => true, 50398464 => true, 50402048 => true, 50402050 => true, 50406401 => true, 50409728 => true, 51450112 => true, 51450624 => true, 58730768 => true, 58743058 => true, 58751272 => true, 59187216 => true, 59187240 => true, 59216527 => true, 60235858 => true, 60265775 => true, 304680960 => true, 305418240 => true, 391006017 => true, 391006018 => true, 638656533 => true, 654645590 => true, 654645607 => true, 808857906 => true, 825241648 => true, 825241649 => true, 825241650 => true, 825241652 => true, 825307184 => true, 827343191 => true, 842018865 => true, 842018867 => true, 842018868 => true, 842020401 => true, 842149936 => true, 859254832 => true, 859254833 => true, 859254835 => true, 909127728 => true, 909193778 => true, 1129270594 => true, 1129270595 => true, 1313293109 => true, 1313293600 => true, 1313293856 => true, 1313294112 => true, 1313294368 => true, 1313294624 => true, 1313296416 => true, 1330334793 => true, 1752396147 => true, 1936805707 => true, 2155872258 => true, 2197885696 => true, 2197885698 => true, 2197890049 => true, 2206203904 => true, 2206203905 => true, 2206203906 => true, 2206203907 => true, 2206203908 => true, 2206203920 => true, 2206203921 => true, 2206203922 => true, 2206203923 => true, 2206210573 => true, 2206210574 => true, 2206212360 => true, 2206212368 => true, 2206214416 => true, 2206224656 => true, 2206224914 => true, 2206226706 => true, 2206234920 => true, 2206670864 => true, 2206670888 => true, 2206671503 => true, 2206700175 => true, 2207252480 => true, 2207645696 => true, 2207719506 => true, 2207720751 => true, 2207749423 => true, 2466250752 => true, 2466254864 => true, 2466255376 => true, 2466255440 => true, 2466447360 => true, 2467299328 => true];
+        private const _VALUES = [5 => true, 6 => true, 22 => true, 7353344 => true, 9453568 => true, 50398464 => true, 50402048 => true, 50402050 => true, 50406401 => true, 50409728 => true, 51450112 => true, 51450624 => true, 58730768 => true, 58743058 => true, 58751272 => true, 59187216 => true, 59187240 => true, 59216527 => true, 60235858 => true, 60265775 => true, 304680960 => true, 305418240 => true, 391006017 => true, 391006018 => true, 638656533 => true, 654645590 => true, 654645607 => true, 808857906 => true, 825241648 => true, 825241649 => true, 825241650 => true, 825241652 => true, 825307184 => true, 827343191 => true, 842018865 => true, 842018867 => true, 842018868 => true, 842020401 => true, 842149936 => true, 859254832 => true, 859254833 => true, 859254835 => true, 909127728 => true, 909193778 => true, 1129270594 => true, 1129270595 => true, 1313293109 => true, 1313293600 => true, 1313293856 => true, 1313294112 => true, 1313294368 => true, 1313294624 => true, 1313296416 => true, 1330334793 => true, 1752396147 => true, 1936805707 => true, 2155872258 => true, 2155872259 => true, 2197885696 => true, 2197885698 => true, 2197890049 => true, 2206203904 => true, 2206203905 => true, 2206203906 => true, 2206203907 => true, 2206203908 => true, 2206203920 => true, 2206203921 => true, 2206203922 => true, 2206203923 => true, 2206210573 => true, 2206210574 => true, 2206212360 => true, 2206212368 => true, 2206214416 => true, 2206224656 => true, 2206224914 => true, 2206226706 => true, 2206234920 => true, 2206670864 => true, 2206670888 => true, 2206671503 => true, 2206700175 => true, 2207252480 => true, 2207645696 => true, 2207719506 => true, 2207720751 => true, 2207749423 => true, 2466250752 => true, 2466254864 => true, 2466255376 => true, 2466255440 => true, 2466447360 => true, 2467299328 => true];
 
         public static function isDefined(int $v): bool {
             return isset(self::_VALUES[$v]);

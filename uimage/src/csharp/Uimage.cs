@@ -84,6 +84,7 @@ namespace Kaitai
             OpenwrtDlinkCovr = 1752396147,
             OpenwrtSenaoOkli = 1936805707,
             EngeniusEcs1112fp = 2155872258,
+            EngeniusFitswitch = 2155872259,
             EngeniusEws120028tfpOldFw = 2197885696,
             EngeniusEws7926efpOldFw = 2197885698,
             EngeniusEws7952pOldFw = 2197890049,

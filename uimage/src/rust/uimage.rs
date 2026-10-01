@@ -487,12 +487,23 @@ pub enum Uimage_MagicTypes {
     OpenwrtSenaoOkli,
 
     /**
-     * EnGenius ECS1112FP (`image/series_vmlinux.bix` in the tar archive that
-     * follows a 64-byte header in the `.imag` firmware file, i.e. at offset
-     * 0x240).
+     * EnGenius ECS1112FP: the uImage is `image/series_vmlinux.bix`, the first
+     * member of the tar archive that follows a 64-byte header in the `.imag`
+     * firmware file, so it starts at offset 0x240 of the file.
      * \sa https://www.engeniustech.com/wp_firmware/ECS1112FP-RTL83xx_fw_1.1.40-2.01.149_20201008-1903.imag EnGenius ECS1112FP firmware
      */
     EngeniusEcs1112fp,
+
+    /**
+     * EnGenius FitSwitch series, i.e. EWS2910P-FIT, EWS2910FP-FIT,
+     * EWS7928P-FIT, EWS7928FP-FIT, EWS7952P-FIT and EWS7952FP-FIT: the uImage
+     * is `image/series_vmlinux.bix`, the first member of the tar archive that
+     * follows a 64-byte header in the `.imag` firmware file, so it starts at
+     * offset 0x240 of the file.
+     * \sa https://www.engeniustech.com/wp_firmware/EWS-RTL83xx-FIT_fw_2.0.03-2.03.007.imag EnGenius FitSwitch firmware 2.0.03.007
+     * \sa https://www.engeniustech.com/eu/download-result?post_id=320868 EnGenius EWS2910FP-FIT downloads (firmware 2.0.15, `EWS-RTL83xx-FIT_fw_2.0.15-2.03.019_20250620-1105.imag`, which the pages of all FitSwitch models offer)
+     */
+    EngeniusFitswitch,
 
     /**
      * EnGenius EWS1200-28TFP firmware 1.05.45 to 1.06.21.
@@ -698,13 +709,13 @@ pub enum Uimage_MagicTypes {
     /**
      * Default of the Realtek switch SDK for RTL930x
      * (`CONFIG_IH_MAGIC_NUMBER`), used e.g. by TRENDnet and Ubiquiti UISP-S
-     * switches. EnGenius ECS1528FP (`image/series_vmlinux.bix` in the tar
-     * archive that follows a 64-byte header in the `.imag` firmware file, i.e.
-     * at offset 0x240). OpenWrt devices `sirivision_sr-st3408f`,
-     * `sirivision_sr-st3808f`, `keeplink_kp-9000-8xm`, `plasmacloud-common`,
-     * `vimin_vm-s100-0800ms`, `xikestor_sks8300-8t`,
-     * `xikestor_sks8300-12e2t2x`, `xikestor_sks8310-8x`,
-     * `sirivision_sr-st31212f`.
+     * switches. EnGenius ECS1528FP: the uImage is `image/series_vmlinux.bix`,
+     * the first member of the tar archive that follows a 64-byte header in the
+     * `.imag` firmware file, so it starts at offset 0x240 of the file. OpenWrt
+     * devices `sirivision_sr-st3408f`, `sirivision_sr-st3808f`,
+     * `keeplink_kp-9000-8xm`, `plasmacloud-common`, `vimin_vm-s100-0800ms`,
+     * `xikestor_sks8300-8t`, `xikestor_sks8300-12e2t2x`,
+     * `xikestor_sks8310-8x`, `sirivision_sr-st31212f`.
      * \sa https://www.engeniustech.com/wp_firmware/ECS1528FP-RTL93xx_fw_1.1.40-3.01.149_20201008-1907.imag EnGenius ECS1528FP firmware
      * \sa https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L27 OpenWrt, `sirivision_sr-st3408f`
      * \sa https://github.com/openwrt/openwrt/blob/138fabb79f8d68d65e40c8b8d0c0494b19053d0f/target/linux/realtek/image/rtl930x.mk#L38 OpenWrt, `sirivision_sr-st3808f`
@@ -819,6 +830,7 @@ impl TryFrom<i64> for Uimage_MagicTypes {
             1752396147 => Ok(Uimage_MagicTypes::OpenwrtDlinkCovr),
             1936805707 => Ok(Uimage_MagicTypes::OpenwrtSenaoOkli),
             2155872258 => Ok(Uimage_MagicTypes::EngeniusEcs1112fp),
+            2155872259 => Ok(Uimage_MagicTypes::EngeniusFitswitch),
             2197885696 => Ok(Uimage_MagicTypes::EngeniusEws120028tfpOldFw),
             2197885698 => Ok(Uimage_MagicTypes::EngeniusEws7926efpOldFw),
             2197890049 => Ok(Uimage_MagicTypes::EngeniusEws7952pOldFw),
@@ -920,6 +932,7 @@ impl From<&Uimage_MagicTypes> for i64 {
             Uimage_MagicTypes::OpenwrtDlinkCovr => 1752396147,
             Uimage_MagicTypes::OpenwrtSenaoOkli => 1936805707,
             Uimage_MagicTypes::EngeniusEcs1112fp => 2155872258,
+            Uimage_MagicTypes::EngeniusFitswitch => 2155872259,
             Uimage_MagicTypes::EngeniusEws120028tfpOldFw => 2197885696,
             Uimage_MagicTypes::EngeniusEws7926efpOldFw => 2197885698,
             Uimage_MagicTypes::EngeniusEws7952pOldFw => 2197890049,
