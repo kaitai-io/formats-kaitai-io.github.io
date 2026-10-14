@@ -1,0 +1,594 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__ubifs {
+		label="Ubifs";
+		graph[style=dotted];
+
+		ubifs__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+		</TABLE>>];
+		ubifs__inst__index [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="index_pos">superblock.node_header.leb_size * master_1.node_header.leb_root</TD><TD PORT="index_size">superblock.node_header.leb_size</TD><TD>Dummy</TD><TD PORT="index_type">index</TD></TR>
+		</TABLE>>];
+		ubifs__inst__index_root [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="index_root_pos">master_1.node_header.ofs_root</TD><TD PORT="index_root_size">...</TD><TD>IndexBlock</TD><TD PORT="index_root_type">index_root</TD></TR>
+			<TR><TD COLSPAN="4" PORT="index_root__valid">must satisfy _.header.len_full_node == master_1.node_header.len_root</TD></TR>
+		</TABLE>>];
+		ubifs__inst__lebs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="lebs_pos">0</TD><TD PORT="lebs_size">superblock.node_header.leb_size</TD><TD></TD><TD PORT="lebs_type">lebs</TD></TR>
+			<TR><TD COLSPAN="4" PORT="lebs__repeat">repeat superblock.node_header.num_lebs times</TD></TR>
+		</TABLE>>];
+		ubifs__inst__len_image [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>len_image</TD><TD>superblock.node_header.leb_size * superblock.node_header.num_lebs</TD></TR>
+		</TABLE>>];
+		ubifs__inst__master_1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="master_1_pos">superblock.node_header.leb_size</TD><TD PORT="master_1_size">superblock.node_header.leb_size</TD><TD>MasterblockNode</TD><TD PORT="master_1_type">master_1</TD></TR>
+		</TABLE>>];
+		ubifs__inst__master_2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="master_2_pos">superblock.node_header.leb_size * 2</TD><TD PORT="master_2_size">superblock.node_header.leb_size</TD><TD>MasterblockNode</TD><TD PORT="master_2_type">master_2</TD></TR>
+		</TABLE>>];
+		ubifs__inst__superblock [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="superblock_pos">0</TD><TD PORT="superblock_size">...</TD><TD>SuperblockNode</TD><TD PORT="superblock_type">superblock</TD></TR>
+		</TABLE>>];
+		subgraph cluster__authentication_header {
+			label="Ubifs::AuthenticationHeader";
+			graph[style=dotted];
+
+			authentication_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="hmac_pos">0</TD><TD PORT="hmac_size">_root.superblock.node_header.len_hash</TD><TD></TD><TD PORT="hmac_type">hmac</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__block {
+			label="Ubifs::Block";
+			graph[style=dotted];
+
+			block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">24</TD><TD>CommonHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="node_header_pos">24</TD><TD PORT="node_header_size">...</TD><TD>switch (header.node_type)</TD><TD PORT="node_header_type">node_header</TD></TR>
+			</TABLE>>];
+block__seq_node_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:node_types_authentication</TD><TD PORT="case0">AuthenticationHeader</TD></TR>
+	<TR><TD>:node_types_commit_start</TD><TD PORT="case1">CommitStartHeader</TD></TR>
+	<TR><TD>:node_types_data</TD><TD PORT="case2">DataHeader</TD></TR>
+	<TR><TD>:node_types_directory</TD><TD PORT="case3">DirectoryHeader</TD></TR>
+	<TR><TD>:node_types_extended_attribute</TD><TD PORT="case4">DirectoryHeader</TD></TR>
+	<TR><TD>:node_types_index</TD><TD PORT="case5">IndexHeader</TD></TR>
+	<TR><TD>:node_types_inode</TD><TD PORT="case6">InodeHeader</TD></TR>
+	<TR><TD>:node_types_master</TD><TD PORT="case7">MasterHeader</TD></TR>
+	<TR><TD>:node_types_orphan</TD><TD PORT="case8">OrphanHeader</TD></TR>
+	<TR><TD>:node_types_padding</TD><TD PORT="case9">PaddingHeader</TD></TR>
+	<TR><TD>:node_types_reference</TD><TD PORT="case10">ReferenceHeader</TD></TR>
+	<TR><TD>:node_types_signature</TD><TD PORT="case11">SignatureHeader</TD></TR>
+	<TR><TD>:node_types_superblock</TD><TD PORT="case12">SuperblockHeader</TD></TR>
+	<TR><TD>:node_types_truncation</TD><TD PORT="case13">TruncationHeader</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__branch {
+			label="Ubifs::Branch";
+			graph[style=dotted];
+
+			branch__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="target_leb_pos">0</TD><TD PORT="target_leb_size">4</TD><TD>u4le</TD><TD PORT="target_leb_type">target_leb</TD></TR>
+				<TR><TD PORT="ofs_target_pos">4</TD><TD PORT="ofs_target_size">4</TD><TD>u4le</TD><TD PORT="ofs_target_type">ofs_target</TD></TR>
+				<TR><TD PORT="len_target_pos">8</TD><TD PORT="len_target_size">4</TD><TD>u4le</TD><TD PORT="len_target_type">len_target</TD></TR>
+				<TR><TD PORT="key_pos">12</TD><TD PORT="key_size">8</TD><TD>Key</TD><TD PORT="key_type">key</TD></TR>
+				<TR><TD PORT="hash_pos">20</TD><TD PORT="hash_size">_root.superblock.node_header.len_hash</TD><TD></TD><TD PORT="hash_type">hash</TD></TR>
+			</TABLE>>];
+			branch__inst__target [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="target_pos">_root.superblock.node_header.leb_size * target_leb + ofs_target</TD><TD PORT="target_size">len_target</TD><TD>Block</TD><TD PORT="target_type">target</TD></TR>
+				<TR><TD COLSPAN="4" PORT="target__valid">must satisfy  ((_.header.len_full_node == len_target) &amp;&amp; ((_parent.level != 0 ? _.header.node_type == :node_types_index : (Ubifs::I__NODE_TYPES[_.header.node_type] || _.header.node_type) == (Ubifs::I__KEY_TYPES[key.type] || key.type)))) </TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__commit_start_header {
+			label="Ubifs::CommitStartHeader";
+			graph[style=dotted];
+
+			commit_start_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="commit_number_pos">0</TD><TD PORT="commit_number_size">8</TD><TD>u8le</TD><TD PORT="commit_number_type">commit_number</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__common_header {
+			label="Ubifs::CommonHeader";
+			graph[style=dotted];
+
+			common_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>u4le</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD COLSPAN="4" PORT="magic__valid">must be equal to 101718065</TD></TR>
+				<TR><TD PORT="crc_pos">4</TD><TD PORT="crc_size">4</TD><TD>u4le</TD><TD PORT="crc_type">crc</TD></TR>
+				<TR><TD PORT="sequence_number_pos">8</TD><TD PORT="sequence_number_size">8</TD><TD>u8le</TD><TD PORT="sequence_number_type">sequence_number</TD></TR>
+				<TR><TD PORT="len_full_node_pos">16</TD><TD PORT="len_full_node_size">4</TD><TD>u4le</TD><TD PORT="len_full_node_type">len_full_node</TD></TR>
+				<TR><TD PORT="node_type_pos">20</TD><TD PORT="node_type_size">1</TD><TD>u1→NodeTypes</TD><TD PORT="node_type_type">node_type</TD></TR>
+				<TR><TD PORT="group_type_pos">21</TD><TD PORT="group_type_size">1</TD><TD>u1→NodeGroupTypes</TD><TD PORT="group_type_type">group_type</TD></TR>
+				<TR><TD PORT="padding_pos">22</TD><TD PORT="padding_size">2</TD><TD>00 00</TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__data_header {
+			label="Ubifs::DataHeader";
+			graph[style=dotted];
+
+			data_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">16</TD><TD>Key</TD><TD PORT="key_type">key</TD></TR>
+				<TR><TD PORT="len_uncompressed_pos">16</TD><TD PORT="len_uncompressed_size">4</TD><TD>u4le</TD><TD PORT="len_uncompressed_type">len_uncompressed</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len_uncompressed__valid">must be between 1 and 4096</TD></TR>
+				<TR><TD PORT="compression_pos">20</TD><TD PORT="compression_size">2</TD><TD>u2le→Compression</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="len_compressed_data_pos">22</TD><TD PORT="len_compressed_data_size">2</TD><TD>u2le</TD><TD PORT="len_compressed_data_type">len_compressed_data</TD></TR>
+				<TR><TD PORT="data_pos">24</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__directory_header {
+			label="Ubifs::DirectoryHeader";
+			graph[style=dotted];
+
+			directory_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">16</TD><TD>Key</TD><TD PORT="key_type">key</TD></TR>
+				<TR><TD COLSPAN="4" PORT="key__valid">must satisfy  ((_.type == :key_types_directory) || (_.type == :key_types_extended_attribute)) </TD></TR>
+				<TR><TD PORT="inode_number_pos">16</TD><TD PORT="inode_number_size">8</TD><TD>u8le</TD><TD PORT="inode_number_type">inode_number</TD></TR>
+				<TR><TD COLSPAN="4" PORT="inode_number__valid">must be at most 4294967295</TD></TR>
+				<TR><TD PORT="padding1_pos">24</TD><TD PORT="padding1_size">1</TD><TD>00</TD><TD PORT="padding1_type">padding1</TD></TR>
+				<TR><TD PORT="inode_type_pos">25</TD><TD PORT="inode_type_size">1</TD><TD>u1→InodeTypes</TD><TD PORT="inode_type_type">inode_type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="inode_type__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="len_name_pos">26</TD><TD PORT="len_name_size">2</TD><TD>u2le</TD><TD PORT="len_name_type">len_name</TD></TR>
+				<TR><TD PORT="cookie_pos">28</TD><TD PORT="cookie_size">4</TD><TD>u4le</TD><TD PORT="cookie_type">cookie</TD></TR>
+				<TR><TD PORT="name_pos">32</TD><TD PORT="name_size">len_name</TD><TD></TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="name_terminator_pos">...</TD><TD PORT="name_terminator_size">1</TD><TD>00</TD><TD PORT="name_terminator_type">name_terminator</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dummy {
+			label="Ubifs::Dummy";
+			graph[style=dotted];
+
+			dummy__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__index_block {
+			label="Ubifs::IndexBlock";
+			graph[style=dotted];
+
+			index_block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">24</TD><TD>CommonHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD COLSPAN="4" PORT="header__valid">must satisfy _.node_type == :node_types_index</TD></TR>
+				<TR><TD PORT="node_header_pos">24</TD><TD PORT="node_header_size">header.len_full_node - 24</TD><TD>IndexHeader</TD><TD PORT="node_header_type">node_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__index_header {
+			label="Ubifs::IndexHeader";
+			graph[style=dotted];
+
+			index_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_branches_pos">0</TD><TD PORT="num_branches_size">2</TD><TD>u2le</TD><TD PORT="num_branches_type">num_branches</TD></TR>
+				<TR><TD PORT="level_pos">2</TD><TD PORT="level_size">2</TD><TD>u2le</TD><TD PORT="level_type">level</TD></TR>
+				<TR><TD PORT="branches_pos">4</TD><TD PORT="branches_size">...</TD><TD>Branch</TD><TD PORT="branches_type">branches</TD></TR>
+				<TR><TD COLSPAN="4" PORT="branches__repeat">repeat num_branches times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__inode_header {
+			label="Ubifs::InodeHeader";
+			graph[style=dotted];
+
+			inode_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">16</TD><TD>Key</TD><TD PORT="key_type">key</TD></TR>
+				<TR><TD PORT="creation_sequence_number_pos">16</TD><TD PORT="creation_sequence_number_size">8</TD><TD>u8le</TD><TD PORT="creation_sequence_number_type">creation_sequence_number</TD></TR>
+				<TR><TD PORT="len_uncompressed_pos">24</TD><TD PORT="len_uncompressed_size">8</TD><TD>u8le</TD><TD PORT="len_uncompressed_type">len_uncompressed</TD></TR>
+				<TR><TD PORT="atime_sec_pos">32</TD><TD PORT="atime_sec_size">8</TD><TD>u8le</TD><TD PORT="atime_sec_type">atime_sec</TD></TR>
+				<TR><TD PORT="ctime_sec_pos">40</TD><TD PORT="ctime_sec_size">8</TD><TD>u8le</TD><TD PORT="ctime_sec_type">ctime_sec</TD></TR>
+				<TR><TD PORT="mtime_sec_pos">48</TD><TD PORT="mtime_sec_size">8</TD><TD>u8le</TD><TD PORT="mtime_sec_type">mtime_sec</TD></TR>
+				<TR><TD PORT="atime_nsec_pos">56</TD><TD PORT="atime_nsec_size">4</TD><TD>u4le</TD><TD PORT="atime_nsec_type">atime_nsec</TD></TR>
+				<TR><TD PORT="ctime_nsec_pos">60</TD><TD PORT="ctime_nsec_size">4</TD><TD>u4le</TD><TD PORT="ctime_nsec_type">ctime_nsec</TD></TR>
+				<TR><TD PORT="mtime_nsec_pos">64</TD><TD PORT="mtime_nsec_size">4</TD><TD>u4le</TD><TD PORT="mtime_nsec_type">mtime_nsec</TD></TR>
+				<TR><TD PORT="num_links_pos">68</TD><TD PORT="num_links_size">4</TD><TD>u4le</TD><TD PORT="num_links_type">num_links</TD></TR>
+				<TR><TD PORT="uid_pos">72</TD><TD PORT="uid_size">4</TD><TD>u4le</TD><TD PORT="uid_type">uid</TD></TR>
+				<TR><TD PORT="gid_pos">76</TD><TD PORT="gid_size">4</TD><TD>u4le</TD><TD PORT="gid_type">gid</TD></TR>
+				<TR><TD PORT="mode_pos">80</TD><TD PORT="mode_size">4</TD><TD>u4le</TD><TD PORT="mode_type">mode</TD></TR>
+				<TR><TD PORT="flags_pos">84</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="len_data_pos">88</TD><TD PORT="len_data_size">4</TD><TD>u4le</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="num_xattrs_pos">92</TD><TD PORT="num_xattrs_size">4</TD><TD>u4le</TD><TD PORT="num_xattrs_type">num_xattrs</TD></TR>
+				<TR><TD PORT="xattr_size_pos">96</TD><TD PORT="xattr_size_size">4</TD><TD>u4le</TD><TD PORT="xattr_size_type">xattr_size</TD></TR>
+				<TR><TD PORT="padding1_pos">100</TD><TD PORT="padding1_size">4</TD><TD>00 00 00 00</TD><TD PORT="padding1_type">padding1</TD></TR>
+				<TR><TD PORT="xattr_names_pos">104</TD><TD PORT="xattr_names_size">4</TD><TD>u4le</TD><TD PORT="xattr_names_type">xattr_names</TD></TR>
+				<TR><TD PORT="compression_pos">108</TD><TD PORT="compression_size">2</TD><TD>u2le→Compression</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="padding2_pos">110</TD><TD PORT="padding2_size">26</TD><TD></TD><TD PORT="padding2_type">padding2</TD></TR>
+				<TR><TD PORT="data_pos">136</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+			inode_header__inst__append [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>append</TD><TD>flags &amp; 8 != 0</TD></TR>
+			</TABLE>>];
+			inode_header__inst__compressed [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>compressed</TD><TD>flags &amp; 1 != 0</TD></TR>
+			</TABLE>>];
+			inode_header__inst__dirsync [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>dirsync</TD><TD>flags &amp; 16 != 0</TD></TR>
+			</TABLE>>];
+			inode_header__inst__encrypted [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>encrypted</TD><TD>flags &amp; 64 != 0</TD></TR>
+			</TABLE>>];
+			inode_header__inst__immutable [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>immutable</TD><TD>flags &amp; 4 != 0</TD></TR>
+			</TABLE>>];
+			inode_header__inst__is_block_device [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_block_device</TD><TD>mode &amp; 61440 == 24576</TD></TR>
+			</TABLE>>];
+			inode_header__inst__is_character_device [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_character_device</TD><TD>mode &amp; 61440 == 8192</TD></TR>
+			</TABLE>>];
+			inode_header__inst__is_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_dir</TD><TD>mode &amp; 61440 == 16384</TD></TR>
+			</TABLE>>];
+			inode_header__inst__is_fifo [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_fifo</TD><TD>mode &amp; 61440 == 4096</TD></TR>
+			</TABLE>>];
+			inode_header__inst__is_link [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_link</TD><TD>mode &amp; 61440 == 40960</TD></TR>
+			</TABLE>>];
+			inode_header__inst__is_regular [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_regular</TD><TD>mode &amp; 61440 == 32768</TD></TR>
+			</TABLE>>];
+			inode_header__inst__is_socket [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_socket</TD><TD>mode &amp; 61440 == 49152</TD></TR>
+			</TABLE>>];
+			inode_header__inst__synchronous [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>synchronous</TD><TD>flags &amp; 2 != 0</TD></TR>
+			</TABLE>>];
+			inode_header__inst__xattr [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>xattr</TD><TD>flags &amp; 32 != 0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__key {
+			label="Ubifs::Key";
+			graph[style=dotted];
+
+			key__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="inode_number_pos">0</TD><TD PORT="inode_number_size">4</TD><TD>u4le</TD><TD PORT="inode_number_type">inode_number</TD></TR>
+				<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">29b</TD><TD>b29le</TD><TD PORT="value_type">value</TD></TR>
+				<TR><TD PORT="type_pos">7:5</TD><TD PORT="type_size">3b</TD><TD>b3le→KeyTypes</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="type__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="unused_pos">8</TD><TD PORT="unused_size">⇲</TD><TD></TD><TD PORT="unused_type">unused</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__master_header {
+			label="Ubifs::MasterHeader";
+			graph[style=dotted];
+
+			master_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="highest_inum_pos">0</TD><TD PORT="highest_inum_size">8</TD><TD>u8le</TD><TD PORT="highest_inum_type">highest_inum</TD></TR>
+				<TR><TD PORT="commit_number_pos">8</TD><TD PORT="commit_number_size">8</TD><TD>u8le</TD><TD PORT="commit_number_type">commit_number</TD></TR>
+				<TR><TD PORT="flags_pos">16</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="leb_log_pos">20</TD><TD PORT="leb_log_size">4</TD><TD>u4le</TD><TD PORT="leb_log_type">leb_log</TD></TR>
+				<TR><TD PORT="leb_root_pos">24</TD><TD PORT="leb_root_size">4</TD><TD>u4le</TD><TD PORT="leb_root_type">leb_root</TD></TR>
+				<TR><TD PORT="ofs_root_pos">28</TD><TD PORT="ofs_root_size">4</TD><TD>u4le</TD><TD PORT="ofs_root_type">ofs_root</TD></TR>
+				<TR><TD PORT="len_root_pos">32</TD><TD PORT="len_root_size">4</TD><TD>u4le</TD><TD PORT="len_root_type">len_root</TD></TR>
+				<TR><TD PORT="leb_garbage_collect_pos">36</TD><TD PORT="leb_garbage_collect_size">4</TD><TD>u4le</TD><TD PORT="leb_garbage_collect_type">leb_garbage_collect</TD></TR>
+				<TR><TD PORT="leb_index_head_pos">40</TD><TD PORT="leb_index_head_size">4</TD><TD>u4le</TD><TD PORT="leb_index_head_type">leb_index_head</TD></TR>
+				<TR><TD PORT="ofs_index_head_pos">44</TD><TD PORT="ofs_index_head_size">4</TD><TD>u4le</TD><TD PORT="ofs_index_head_type">ofs_index_head</TD></TR>
+				<TR><TD PORT="len_index_pos">48</TD><TD PORT="len_index_size">8</TD><TD>u8le</TD><TD PORT="len_index_type">len_index</TD></TR>
+				<TR><TD PORT="total_free_pos">56</TD><TD PORT="total_free_size">8</TD><TD>u8le</TD><TD PORT="total_free_type">total_free</TD></TR>
+				<TR><TD PORT="total_dirty_pos">64</TD><TD PORT="total_dirty_size">8</TD><TD>u8le</TD><TD PORT="total_dirty_type">total_dirty</TD></TR>
+				<TR><TD PORT="total_used_pos">72</TD><TD PORT="total_used_size">8</TD><TD>u8le</TD><TD PORT="total_used_type">total_used</TD></TR>
+				<TR><TD PORT="total_dead_pos">80</TD><TD PORT="total_dead_size">8</TD><TD>u8le</TD><TD PORT="total_dead_type">total_dead</TD></TR>
+				<TR><TD PORT="total_dark_pos">88</TD><TD PORT="total_dark_size">8</TD><TD>u8le</TD><TD PORT="total_dark_type">total_dark</TD></TR>
+				<TR><TD PORT="leb_lpt_pos">96</TD><TD PORT="leb_lpt_size">4</TD><TD>u4le</TD><TD PORT="leb_lpt_type">leb_lpt</TD></TR>
+				<TR><TD PORT="ofs_lpt_pos">100</TD><TD PORT="ofs_lpt_size">4</TD><TD>u4le</TD><TD PORT="ofs_lpt_type">ofs_lpt</TD></TR>
+				<TR><TD PORT="leb_nhead_pos">104</TD><TD PORT="leb_nhead_size">4</TD><TD>u4le</TD><TD PORT="leb_nhead_type">leb_nhead</TD></TR>
+				<TR><TD PORT="ofs_nhead_pos">108</TD><TD PORT="ofs_nhead_size">4</TD><TD>u4le</TD><TD PORT="ofs_nhead_type">ofs_nhead</TD></TR>
+				<TR><TD PORT="leb_lprops_table_pos">112</TD><TD PORT="leb_lprops_table_size">4</TD><TD>u4le</TD><TD PORT="leb_lprops_table_type">leb_lprops_table</TD></TR>
+				<TR><TD PORT="ofs_lprops_table_pos">116</TD><TD PORT="ofs_lprops_table_size">4</TD><TD>u4le</TD><TD PORT="ofs_lprops_table_type">ofs_lprops_table</TD></TR>
+				<TR><TD PORT="leb_save_table_pos">120</TD><TD PORT="leb_save_table_size">4</TD><TD>u4le</TD><TD PORT="leb_save_table_type">leb_save_table</TD></TR>
+				<TR><TD PORT="ofs_save_table_pos">124</TD><TD PORT="ofs_save_table_size">4</TD><TD>u4le</TD><TD PORT="ofs_save_table_type">ofs_save_table</TD></TR>
+				<TR><TD PORT="leb_last_lpt_scan_pos">128</TD><TD PORT="leb_last_lpt_scan_size">4</TD><TD>u4le</TD><TD PORT="leb_last_lpt_scan_type">leb_last_lpt_scan</TD></TR>
+				<TR><TD PORT="num_empty_lebs_pos">132</TD><TD PORT="num_empty_lebs_size">4</TD><TD>u4le</TD><TD PORT="num_empty_lebs_type">num_empty_lebs</TD></TR>
+				<TR><TD PORT="num_index_lebs_pos">136</TD><TD PORT="num_index_lebs_size">4</TD><TD>u4le</TD><TD PORT="num_index_lebs_type">num_index_lebs</TD></TR>
+				<TR><TD PORT="num_lebs_pos">140</TD><TD PORT="num_lebs_size">4</TD><TD>u4le</TD><TD PORT="num_lebs_type">num_lebs</TD></TR>
+				<TR><TD PORT="hash_root_index_pos">144</TD><TD PORT="hash_root_index_size">64</TD><TD></TD><TD PORT="hash_root_index_type">hash_root_index</TD></TR>
+				<TR><TD PORT="hash_lpt_pos">208</TD><TD PORT="hash_lpt_size">64</TD><TD></TD><TD PORT="hash_lpt_type">hash_lpt</TD></TR>
+				<TR><TD PORT="hmac_pos">272</TD><TD PORT="hmac_size">64</TD><TD></TD><TD PORT="hmac_type">hmac</TD></TR>
+				<TR><TD PORT="padding_pos">336</TD><TD PORT="padding_size">152</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+			master_header__inst__dirty [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>dirty</TD><TD>flags &amp; 1 != 0</TD></TR>
+			</TABLE>>];
+			master_header__inst__no_orphans [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>no_orphans</TD><TD>flags &amp; 2 != 0</TD></TR>
+			</TABLE>>];
+			master_header__inst__recovery [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>recovery</TD><TD>flags &amp; 4 != 0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__masterblock_node {
+			label="Ubifs::MasterblockNode";
+			graph[style=dotted];
+
+			masterblock_node__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">24</TD><TD>CommonHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD COLSPAN="4" PORT="header__valid">must satisfy _.node_type == :node_types_master</TD></TR>
+				<TR><TD PORT="node_header_pos">24</TD><TD PORT="node_header_size">header.len_full_node - 24</TD><TD>MasterHeader</TD><TD PORT="node_header_type">node_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__orphan_header {
+			label="Ubifs::OrphanHeader";
+			graph[style=dotted];
+
+			orphan_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="commit_number_pos">0</TD><TD PORT="commit_number_size">8</TD><TD>u8le</TD><TD PORT="commit_number_type">commit_number</TD></TR>
+				<TR><TD PORT="inode_numbers_pos">8</TD><TD PORT="inode_numbers_size">8</TD><TD>u8le</TD><TD PORT="inode_numbers_type">inode_numbers</TD></TR>
+				<TR><TD COLSPAN="4" PORT="inode_numbers__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__padding_header {
+			label="Ubifs::PaddingHeader";
+			graph[style=dotted];
+
+			padding_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_padding_pos">0</TD><TD PORT="len_padding_size">4</TD><TD>u4le</TD><TD PORT="len_padding_type">len_padding</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__reference_header {
+			label="Ubifs::ReferenceHeader";
+			graph[style=dotted];
+
+			reference_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="leb_number_pos">0</TD><TD PORT="leb_number_size">4</TD><TD>u4le</TD><TD PORT="leb_number_type">leb_number</TD></TR>
+				<TR><TD PORT="ofs_leb_pos">4</TD><TD PORT="ofs_leb_size">4</TD><TD>u4le</TD><TD PORT="ofs_leb_type">ofs_leb</TD></TR>
+				<TR><TD PORT="journal_head_number_pos">8</TD><TD PORT="journal_head_number_size">4</TD><TD>u4le</TD><TD PORT="journal_head_number_type">journal_head_number</TD></TR>
+				<TR><TD PORT="padding_pos">12</TD><TD PORT="padding_size">28</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__signature_header {
+			label="Ubifs::SignatureHeader";
+			graph[style=dotted];
+
+			signature_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4le</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="type__valid">must be equal to 1</TD></TR>
+				<TR><TD PORT="len_signature_pos">4</TD><TD PORT="len_signature_size">4</TD><TD>u4le</TD><TD PORT="len_signature_type">len_signature</TD></TR>
+				<TR><TD PORT="padding_pos">8</TD><TD PORT="padding_size">32</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+				<TR><TD PORT="signature_pos">40</TD><TD PORT="signature_size">len_signature</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__superblock_header {
+			label="Ubifs::SuperblockHeader";
+			graph[style=dotted];
+
+			superblock_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="padding0_pos">0</TD><TD PORT="padding0_size">2</TD><TD>00 00</TD><TD PORT="padding0_type">padding0</TD></TR>
+				<TR><TD PORT="key_hash_pos">2</TD><TD PORT="key_hash_size">1</TD><TD>u1→Hashes</TD><TD PORT="key_hash_type">key_hash</TD></TR>
+				<TR><TD COLSPAN="4" PORT="key_hash__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="key_fmt_pos">3</TD><TD PORT="key_fmt_size">1</TD><TD>u1→KeyFormats</TD><TD PORT="key_fmt_type">key_fmt</TD></TR>
+				<TR><TD COLSPAN="4" PORT="key_fmt__valid">must be equal to :key_formats_simple</TD></TR>
+				<TR><TD PORT="flags_pos">4</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="min_io_size_pos">8</TD><TD PORT="min_io_size_size">4</TD><TD>u4le</TD><TD PORT="min_io_size_type">min_io_size</TD></TR>
+				<TR><TD PORT="leb_size_pos">12</TD><TD PORT="leb_size_size">4</TD><TD>u4le</TD><TD PORT="leb_size_type">leb_size</TD></TR>
+				<TR><TD PORT="num_lebs_pos">16</TD><TD PORT="num_lebs_size">4</TD><TD>u4le</TD><TD PORT="num_lebs_type">num_lebs</TD></TR>
+				<TR><TD PORT="max_num_lebs_pos">20</TD><TD PORT="max_num_lebs_size">4</TD><TD>u4le</TD><TD PORT="max_num_lebs_type">max_num_lebs</TD></TR>
+				<TR><TD COLSPAN="4" PORT="max_num_lebs__valid">must be at least num_lebs</TD></TR>
+				<TR><TD PORT="max_bud_bytes_pos">24</TD><TD PORT="max_bud_bytes_size">8</TD><TD>u8le</TD><TD PORT="max_bud_bytes_type">max_bud_bytes</TD></TR>
+				<TR><TD PORT="num_log_lebs_pos">32</TD><TD PORT="num_log_lebs_size">4</TD><TD>u4le</TD><TD PORT="num_log_lebs_type">num_log_lebs</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_log_lebs__valid">must be at least 2</TD></TR>
+				<TR><TD PORT="num_lpt_lebs_pos">36</TD><TD PORT="num_lpt_lebs_size">4</TD><TD>u4le</TD><TD PORT="num_lpt_lebs_type">num_lpt_lebs</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_lpt_lebs__valid">must be at least 2</TD></TR>
+				<TR><TD PORT="num_orphan_lebs_pos">40</TD><TD PORT="num_orphan_lebs_size">4</TD><TD>u4le</TD><TD PORT="num_orphan_lebs_type">num_orphan_lebs</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_orphan_lebs__valid">must be at least 1</TD></TR>
+				<TR><TD PORT="num_journal_heads_pos">44</TD><TD PORT="num_journal_heads_size">4</TD><TD>u4le</TD><TD PORT="num_journal_heads_type">num_journal_heads</TD></TR>
+				<TR><TD PORT="fanout_pos">48</TD><TD PORT="fanout_size">4</TD><TD>u4le</TD><TD PORT="fanout_type">fanout</TD></TR>
+				<TR><TD PORT="num_save_table_entries_pos">52</TD><TD PORT="num_save_table_entries_size">4</TD><TD>u4le</TD><TD PORT="num_save_table_entries_type">num_save_table_entries</TD></TR>
+				<TR><TD PORT="fmt_version_pos">56</TD><TD PORT="fmt_version_size">4</TD><TD>u4le</TD><TD PORT="fmt_version_type">fmt_version</TD></TR>
+				<TR><TD COLSPAN="4" PORT="fmt_version__valid">must be at least 4</TD></TR>
+				<TR><TD PORT="default_compression_pos">60</TD><TD PORT="default_compression_size">2</TD><TD>u2le→Compression</TD><TD PORT="default_compression_type">default_compression</TD></TR>
+				<TR><TD COLSPAN="4" PORT="default_compression__valid">must be defined in the enum</TD></TR>
+				<TR><TD PORT="padding1_pos">62</TD><TD PORT="padding1_size">2</TD><TD>00 00</TD><TD PORT="padding1_type">padding1</TD></TR>
+				<TR><TD PORT="reserve_pool_uid_pos">64</TD><TD PORT="reserve_pool_uid_size">4</TD><TD>u4le</TD><TD PORT="reserve_pool_uid_type">reserve_pool_uid</TD></TR>
+				<TR><TD PORT="reserve_pool_gid_pos">68</TD><TD PORT="reserve_pool_gid_size">4</TD><TD>u4le</TD><TD PORT="reserve_pool_gid_type">reserve_pool_gid</TD></TR>
+				<TR><TD PORT="reserve_pool_size_pos">72</TD><TD PORT="reserve_pool_size_size">8</TD><TD>u8le</TD><TD PORT="reserve_pool_size_type">reserve_pool_size</TD></TR>
+				<TR><TD PORT="time_granularity_pos">80</TD><TD PORT="time_granularity_size">4</TD><TD>u4le</TD><TD PORT="time_granularity_type">time_granularity</TD></TR>
+				<TR><TD COLSPAN="4" PORT="time_granularity__valid">must be between 1 and 1000000000</TD></TR>
+				<TR><TD PORT="uuid_pos">84</TD><TD PORT="uuid_size">16</TD><TD></TD><TD PORT="uuid_type">uuid</TD></TR>
+				<TR><TD PORT="ro_compat_version_pos">100</TD><TD PORT="ro_compat_version_size">4</TD><TD>u4le</TD><TD PORT="ro_compat_version_type">ro_compat_version</TD></TR>
+				<TR><TD PORT="hmac_pos">104</TD><TD PORT="hmac_size">64</TD><TD></TD><TD PORT="hmac_type">hmac</TD></TR>
+				<TR><TD PORT="hmac_wkm_pos">168</TD><TD PORT="hmac_wkm_size">64</TD><TD></TD><TD PORT="hmac_wkm_type">hmac_wkm</TD></TR>
+				<TR><TD PORT="hash_algo_pos">232</TD><TD PORT="hash_algo_size">2</TD><TD>u2le→HashAlgos</TD><TD PORT="hash_algo_type">hash_algo</TD></TR>
+				<TR><TD COLSPAN="4" PORT="hash_algo__valid">must be defined in the enum</TD></TR>
+				<TR><TD COLSPAN="4" PORT="hash_algo__if">if authenticated</TD></TR>
+				<TR><TD PORT="hash_algo_unused_pos">234</TD><TD PORT="hash_algo_unused_size">2</TD><TD>u2le</TD><TD PORT="hash_algo_unused_type">hash_algo_unused</TD></TR>
+				<TR><TD COLSPAN="4" PORT="hash_algo_unused__if">if !(authenticated)</TD></TR>
+				<TR><TD PORT="hash_mst_pos">236</TD><TD PORT="hash_mst_size">64</TD><TD></TD><TD PORT="hash_mst_type">hash_mst</TD></TR>
+				<TR><TD PORT="padding2_pos">300</TD><TD PORT="padding2_size">3774</TD><TD></TD><TD PORT="padding2_type">padding2</TD></TR>
+			</TABLE>>];
+			superblock_header__inst__authenticated [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>authenticated</TD><TD>flags &amp; 32 != 0</TD></TR>
+			</TABLE>>];
+			superblock_header__inst__biglpt [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>biglpt</TD><TD>flags &amp; 2 != 0</TD></TR>
+			</TABLE>>];
+			superblock_header__inst__double_hash [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>double_hash</TD><TD>flags &amp; 8 != 0</TD></TR>
+			</TABLE>>];
+			superblock_header__inst__encrypted [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>encrypted</TD><TD>flags &amp; 16 != 0</TD></TR>
+			</TABLE>>];
+			superblock_header__inst__len_hash [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_hash</TD><TD>(!(authenticated) ? 0 : ( ((hash_algo == :hash_algos_md4) || (hash_algo == :hash_algos_md5) || (hash_algo == :hash_algos_ripe_md_128) || (hash_algo == :hash_algos_tgr_128))  ? 16 : ( ((hash_algo == :hash_algos_sha1) || (hash_algo == :hash_algos_ripe_md_160) || (hash_algo == :hash_algos_tgr_160))  ? 20 : (hash_algo == :hash_algos_tgr_192 ? 24 : (hash_algo == :hash_algos_sha224 ? 28 : ( ((hash_algo == :hash_algos_sha256) || (hash_algo == :hash_algos_ripe_md_256) || (hash_algo == :hash_algos_wp_256) || (hash_algo == :hash_algos_sm3_256) || (hash_algo == :hash_algos_streebog_256) || (hash_algo == :hash_algos_sha3_256))  ? 32 : (hash_algo == :hash_algos_ripe_md_320 ? 40 : ( ((hash_algo == :hash_algos_sha384) || (hash_algo == :hash_algos_wp_384) || (hash_algo == :hash_algos_sha3_384))  ? 48 : ( ((hash_algo == :hash_algos_sha512) || (hash_algo == :hash_algos_wp_512) || (hash_algo == :hash_algos_streebog_512) || (hash_algo == :hash_algos_sha3_512))  ? 64 : -1)))))))))</TD></TR>
+			</TABLE>>];
+			superblock_header__inst__space_fixup [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>space_fixup</TD><TD>flags &amp; 4 != 0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__superblock_node {
+			label="Ubifs::SuperblockNode";
+			graph[style=dotted];
+
+			superblock_node__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">24</TD><TD>CommonHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD COLSPAN="4" PORT="header__valid">must satisfy _.node_type == :node_types_superblock</TD></TR>
+				<TR><TD PORT="node_header_pos">24</TD><TD PORT="node_header_size">header.len_full_node - 24</TD><TD>SuperblockHeader</TD><TD PORT="node_header_type">node_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__truncation_header {
+			label="Ubifs::TruncationHeader";
+			graph[style=dotted];
+
+			truncation_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="inode_number_pos">0</TD><TD PORT="inode_number_size">4</TD><TD>u4le</TD><TD PORT="inode_number_type">inode_number</TD></TR>
+				<TR><TD PORT="padding_pos">4</TD><TD PORT="padding_size">12</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+				<TR><TD PORT="old_size_pos">16</TD><TD PORT="old_size_size">8</TD><TD>u8le</TD><TD PORT="old_size_type">old_size</TD></TR>
+				<TR><TD COLSPAN="4" PORT="old_size__valid">must be at least 1</TD></TR>
+				<TR><TD PORT="new_size_pos">24</TD><TD PORT="new_size_size">8</TD><TD>u8le</TD><TD PORT="new_size_type">new_size</TD></TR>
+				<TR><TD COLSPAN="4" PORT="new_size__valid">must be at most old_size - 1</TD></TR>
+			</TABLE>>];
+		}
+	}
+	superblock_header__seq:leb_size_type -> ubifs__inst__index:index_pos [color="#404040"];
+	master_header__seq:leb_root_type -> ubifs__inst__index:index_pos [color="#404040"];
+	superblock_header__seq:leb_size_type -> ubifs__inst__index:index_size [color="#404040"];
+	ubifs__inst__index:index_type -> dummy__seq [style=bold];
+	master_header__seq:ofs_root_type -> ubifs__inst__index_root:index_root_pos [color="#404040"];
+	ubifs__inst__index_root:index_root_type -> index_block__seq [style=bold];
+	common_header__seq:len_full_node_type -> ubifs__inst__index_root:index_root__valid [color="#404040"];
+	master_header__seq:len_root_type -> ubifs__inst__index_root:index_root__valid [color="#404040"];
+	superblock_header__seq:leb_size_type -> ubifs__inst__lebs:lebs_size [color="#404040"];
+	superblock_header__seq:num_lebs_type -> ubifs__inst__lebs:lebs__repeat [color="#404040"];
+	superblock_header__seq:leb_size_type -> ubifs__inst__len_image [color="#404040"];
+	superblock_header__seq:num_lebs_type -> ubifs__inst__len_image [color="#404040"];
+	superblock_header__seq:leb_size_type -> ubifs__inst__master_1:master_1_pos [color="#404040"];
+	superblock_header__seq:leb_size_type -> ubifs__inst__master_1:master_1_size [color="#404040"];
+	ubifs__inst__master_1:master_1_type -> masterblock_node__seq [style=bold];
+	superblock_header__seq:leb_size_type -> ubifs__inst__master_2:master_2_pos [color="#404040"];
+	superblock_header__seq:leb_size_type -> ubifs__inst__master_2:master_2_size [color="#404040"];
+	ubifs__inst__master_2:master_2_type -> masterblock_node__seq [style=bold];
+	ubifs__inst__superblock:superblock_type -> superblock_node__seq [style=bold];
+	superblock_header__inst__len_hash:len_hash_type -> authentication_header__seq:hmac_size [color="#404040"];
+	block__seq:header_type -> common_header__seq [style=bold];
+	block__seq:node_header_type -> block__seq_node_header_switch [style=bold];
+	block__seq_node_header_switch:case0 -> authentication_header__seq [style=bold];
+	block__seq_node_header_switch:case1 -> commit_start_header__seq [style=bold];
+	block__seq_node_header_switch:case2 -> data_header__seq [style=bold];
+	block__seq_node_header_switch:case3 -> directory_header__seq [style=bold];
+	block__seq_node_header_switch:case4 -> directory_header__seq [style=bold];
+	block__seq_node_header_switch:case5 -> index_header__seq [style=bold];
+	block__seq_node_header_switch:case6 -> inode_header__seq [style=bold];
+	block__seq_node_header_switch:case7 -> master_header__seq [style=bold];
+	block__seq_node_header_switch:case8 -> orphan_header__seq [style=bold];
+	block__seq_node_header_switch:case9 -> padding_header__seq [style=bold];
+	block__seq_node_header_switch:case10 -> reference_header__seq [style=bold];
+	block__seq_node_header_switch:case11 -> signature_header__seq [style=bold];
+	block__seq_node_header_switch:case12 -> superblock_header__seq [style=bold];
+	block__seq_node_header_switch:case13 -> truncation_header__seq [style=bold];
+	common_header__seq:node_type_type -> block__seq:node_header_type [color="#404040"];
+	branch__seq:key_type -> key__seq [style=bold];
+	superblock_header__inst__len_hash:len_hash_type -> branch__seq:hash_size [color="#404040"];
+	superblock_header__seq:leb_size_type -> branch__inst__target:target_pos [color="#404040"];
+	branch__seq:target_leb_type -> branch__inst__target:target_pos [color="#404040"];
+	branch__seq:ofs_target_type -> branch__inst__target:target_pos [color="#404040"];
+	branch__seq:len_target_type -> branch__inst__target:target_size [color="#404040"];
+	branch__inst__target:target_type -> block__seq [style=bold];
+	common_header__seq:len_full_node_type -> branch__inst__target:target__valid [color="#404040"];
+	branch__seq:len_target_type -> branch__inst__target:target__valid [color="#404040"];
+	index_header__seq:level_type -> branch__inst__target:target__valid [color="#404040"];
+	common_header__seq:node_type_type -> branch__inst__target:target__valid [color="#404040"];
+	key__seq:type_type -> branch__inst__target:target__valid [color="#404040"];
+	data_header__seq:key_type -> key__seq [style=bold];
+	directory_header__seq:key_type -> key__seq [style=bold];
+	key__seq:type_type -> directory_header__seq:key__valid [color="#404040"];
+	directory_header__seq:len_name_type -> directory_header__seq:name_size [color="#404040"];
+	index_block__seq:header_type -> common_header__seq [style=bold];
+	common_header__seq:node_type_type -> index_block__seq:header__valid [color="#404040"];
+	common_header__seq:len_full_node_type -> index_block__seq:node_header_size [color="#404040"];
+	index_block__seq:header_size -> index_block__seq:node_header_size [color="#404040"];
+	index_block__seq:node_header_type -> index_header__seq [style=bold];
+	index_header__seq:branches_type -> branch__seq [style=bold];
+	index_header__seq:num_branches_type -> index_header__seq:branches__repeat [color="#404040"];
+	inode_header__seq:key_type -> key__seq [style=bold];
+	inode_header__seq:len_data_type -> inode_header__seq:data_size [color="#404040"];
+	inode_header__seq:flags_type -> inode_header__inst__append [color="#404040"];
+	inode_header__seq:flags_type -> inode_header__inst__compressed [color="#404040"];
+	inode_header__seq:flags_type -> inode_header__inst__dirsync [color="#404040"];
+	inode_header__seq:flags_type -> inode_header__inst__encrypted [color="#404040"];
+	inode_header__seq:flags_type -> inode_header__inst__immutable [color="#404040"];
+	inode_header__seq:mode_type -> inode_header__inst__is_block_device [color="#404040"];
+	inode_header__seq:mode_type -> inode_header__inst__is_character_device [color="#404040"];
+	inode_header__seq:mode_type -> inode_header__inst__is_dir [color="#404040"];
+	inode_header__seq:mode_type -> inode_header__inst__is_fifo [color="#404040"];
+	inode_header__seq:mode_type -> inode_header__inst__is_link [color="#404040"];
+	inode_header__seq:mode_type -> inode_header__inst__is_regular [color="#404040"];
+	inode_header__seq:mode_type -> inode_header__inst__is_socket [color="#404040"];
+	inode_header__seq:flags_type -> inode_header__inst__synchronous [color="#404040"];
+	inode_header__seq:flags_type -> inode_header__inst__xattr [color="#404040"];
+	master_header__seq:flags_type -> master_header__inst__dirty [color="#404040"];
+	master_header__seq:flags_type -> master_header__inst__no_orphans [color="#404040"];
+	master_header__seq:flags_type -> master_header__inst__recovery [color="#404040"];
+	masterblock_node__seq:header_type -> common_header__seq [style=bold];
+	common_header__seq:node_type_type -> masterblock_node__seq:header__valid [color="#404040"];
+	common_header__seq:len_full_node_type -> masterblock_node__seq:node_header_size [color="#404040"];
+	masterblock_node__seq:header_size -> masterblock_node__seq:node_header_size [color="#404040"];
+	masterblock_node__seq:node_header_type -> master_header__seq [style=bold];
+	signature_header__seq:len_signature_type -> signature_header__seq:signature_size [color="#404040"];
+	superblock_header__seq:num_lebs_type -> superblock_header__seq:max_num_lebs__valid [color="#404040"];
+	superblock_header__inst__authenticated:authenticated_type -> superblock_header__seq:hash_algo__if [color="#404040"];
+	superblock_header__inst__authenticated:authenticated_type -> superblock_header__seq:hash_algo_unused__if [color="#404040"];
+	superblock_header__seq:flags_type -> superblock_header__inst__authenticated [color="#404040"];
+	superblock_header__seq:flags_type -> superblock_header__inst__biglpt [color="#404040"];
+	superblock_header__seq:flags_type -> superblock_header__inst__double_hash [color="#404040"];
+	superblock_header__seq:flags_type -> superblock_header__inst__encrypted [color="#404040"];
+	superblock_header__inst__authenticated:authenticated_type -> superblock_header__inst__len_hash [color="#404040"];
+	superblock_header__seq:hash_algo_type -> superblock_header__inst__len_hash [color="#404040"];
+	superblock_header__seq:flags_type -> superblock_header__inst__space_fixup [color="#404040"];
+	superblock_node__seq:header_type -> common_header__seq [style=bold];
+	common_header__seq:node_type_type -> superblock_node__seq:header__valid [color="#404040"];
+	common_header__seq:len_full_node_type -> superblock_node__seq:node_header_size [color="#404040"];
+	superblock_node__seq:header_size -> superblock_node__seq:node_header_size [color="#404040"];
+	superblock_node__seq:node_header_type -> superblock_header__seq [style=bold];
+	truncation_header__seq:old_size_type -> truncation_header__seq:new_size__valid [color="#404040"];
+}
