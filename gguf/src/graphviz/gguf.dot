@@ -1,0 +1,354 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__gguf {
+		label="Gguf";
+		graph[style=dotted];
+
+		gguf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>47 47 55 46</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>GgufBody</TD><TD PORT="body_type">body</TD></TR>
+		</TABLE>>];
+		gguf__inst__is_big_endian [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>is_big_endian</TD><TD>version_le &amp; 65535 == 0</TD></TR>
+		</TABLE>>];
+		gguf__inst__len_file [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>len_file</TD><TD>(body.ofs_tensor_data + (body.num_tensor_infos != 0 ? body.tensor_infos.last.expected_next_offset : 0))</TD></TR>
+		</TABLE>>];
+		gguf__inst__version_le [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="version_le_pos">4</TD><TD PORT="version_le_size">4</TD><TD>u4le</TD><TD PORT="version_le_type">version_le</TD></TR>
+		</TABLE>>];
+		subgraph cluster__gguf_body {
+			label="Gguf::GgufBody";
+			graph[style=dotted];
+
+			gguf_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">4</TD><TD>u4</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD COLSPAN="4" PORT="version__valid">must be between 2 and 3</TD></TR>
+				<TR><TD PORT="num_tensor_infos_pos">4</TD><TD PORT="num_tensor_infos_size">8</TD><TD>u8</TD><TD PORT="num_tensor_infos_type">num_tensor_infos</TD></TR>
+				<TR><TD PORT="num_kv_pairs_pos">12</TD><TD PORT="num_kv_pairs_size">8</TD><TD>u8</TD><TD PORT="num_kv_pairs_type">num_kv_pairs</TD></TR>
+				<TR><TD PORT="kv_pairs_pos">20</TD><TD PORT="kv_pairs_size">...</TD><TD>GgufKv</TD><TD PORT="kv_pairs_type">kv_pairs</TD></TR>
+				<TR><TD COLSPAN="4" PORT="kv_pairs__repeat">repeat num_kv_pairs times</TD></TR>
+				<TR><TD PORT="tensor_infos_pos">...</TD><TD PORT="tensor_infos_size">...</TD><TD>GgufTensorInfo</TD><TD PORT="tensor_infos_type">tensor_infos</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tensor_infos__repeat">repeat num_tensor_infos times</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">(alignment - _io.pos % alignment) % alignment</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+				<TR><TD COLSPAN="4" PORT="padding__if">if num_tensor_infos != 0</TD></TR>
+				<TR><TD PORT="_unnamed6_pos">...</TD><TD PORT="_unnamed6_size">0</TD><TD></TD><TD PORT="_unnamed6_type">_unnamed6</TD></TR>
+				<TR><TD COLSPAN="4" PORT="_unnamed6__if">if ofs_tensor_data &lt; 0</TD></TR>
+			</TABLE>>];
+			gguf_body__inst__alignment [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>alignment</TD><TD>(kv_pairs.length != 0 ? kv_pairs.last.alignment : 32)</TD></TR>
+			</TABLE>>];
+			gguf_body__inst__ofs_tensor_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ofs_tensor_data</TD><TD>_io.pos</TD></TR>
+			</TABLE>>];
+			subgraph cluster__gguf_array {
+				label="Gguf::GgufBody::GgufArray";
+				graph[style=dotted];
+
+				gguf_array__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4→GgufType</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD COLSPAN="4" PORT="type__valid">must be defined in the enum</TD></TR>
+					<TR><TD PORT="num_elems_pos">4</TD><TD PORT="num_elems_size">8</TD><TD>u8</TD><TD PORT="num_elems_type">num_elems</TD></TR>
+					<TR><TD PORT="elems_pos">12</TD><TD PORT="elems_size">...</TD><TD>GgufValue</TD><TD PORT="elems_type">elems</TD></TR>
+					<TR><TD COLSPAN="4" PORT="elems__repeat">repeat num_elems times</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_bool {
+				label="Gguf::GgufBody::GgufBool";
+				graph[style=dotted];
+
+				gguf_bool__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_raw_pos">0</TD><TD PORT="value_raw_size">1</TD><TD>u1</TD><TD PORT="value_raw_type">value_raw</TD></TR>
+					<TR><TD COLSPAN="4" PORT="value_raw__valid">must be at most 1</TD></TR>
+				</TABLE>>];
+				gguf_bool__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>value</TD><TD>value_raw != 0</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_float32 {
+				label="Gguf::GgufBody::GgufFloat32";
+				graph[style=dotted];
+
+				gguf_float32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>f4</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_float64 {
+				label="Gguf::GgufBody::GgufFloat64";
+				graph[style=dotted];
+
+				gguf_float64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">8</TD><TD>f8</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_int16 {
+				label="Gguf::GgufBody::GgufInt16";
+				graph[style=dotted];
+
+				gguf_int16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">2</TD><TD>s2</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_int32 {
+				label="Gguf::GgufBody::GgufInt32";
+				graph[style=dotted];
+
+				gguf_int32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>s4</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_int64 {
+				label="Gguf::GgufBody::GgufInt64";
+				graph[style=dotted];
+
+				gguf_int64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">8</TD><TD>s8</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_int8 {
+				label="Gguf::GgufBody::GgufInt8";
+				graph[style=dotted];
+
+				gguf_int8__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">1</TD><TD>s1</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_kv {
+				label="Gguf::GgufBody::GgufKv";
+				graph[style=dotted];
+
+				gguf_kv__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">...</TD><TD>GgufStr</TD><TD PORT="key_type">key</TD></TR>
+					<TR><TD COLSPAN="4" PORT="key__valid">must satisfy _.len_value != 0</TD></TR>
+					<TR><TD PORT="type_pos">...</TD><TD PORT="type_size">4</TD><TD>u4→GgufType</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD COLSPAN="4" PORT="type__valid">must be defined in the enum</TD></TR>
+					<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">...</TD><TD>GgufValue</TD><TD PORT="value_type">value</TD></TR>
+					<TR><TD COLSPAN="4" PORT="value__valid">must satisfy (key.value == &quot;general.alignment&quot; ?  ((type == :gguf_type_uint32) &amp;&amp; (_.value.value != 0) &amp;&amp; (_.value.value &amp; _.value.value - 1 == 0))  : true)</TD></TR>
+				</TABLE>>];
+				gguf_kv__inst__alignment [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>alignment</TD><TD>(key.value == &quot;general.alignment&quot; ? value.value.value : prev_alignment)</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_str {
+				label="Gguf::GgufBody::GgufStr";
+				graph[style=dotted];
+
+				gguf_str__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="len_value_pos">0</TD><TD PORT="len_value_size">8</TD><TD>u8</TD><TD PORT="len_value_type">len_value</TD></TR>
+					<TR><TD PORT="value_pos">8</TD><TD PORT="value_size">len_value</TD><TD>str(UTF-8)</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_tensor_info {
+				label="Gguf::GgufBody::GgufTensorInfo";
+				graph[style=dotted];
+
+				gguf_tensor_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>GgufStr</TD><TD PORT="name_type">name</TD></TR>
+					<TR><TD COLSPAN="4" PORT="name__valid">must satisfy _.len_value &lt; 64</TD></TR>
+					<TR><TD PORT="num_dims_pos">...</TD><TD PORT="num_dims_size">4</TD><TD>u4</TD><TD PORT="num_dims_type">num_dims</TD></TR>
+					<TR><TD COLSPAN="4" PORT="num_dims__valid">must be at most 4</TD></TR>
+					<TR><TD PORT="dims_pos">...</TD><TD PORT="dims_size">8</TD><TD>s8</TD><TD PORT="dims_type">dims</TD></TR>
+					<TR><TD COLSPAN="4" PORT="dims__valid">must be at least 0</TD></TR>
+					<TR><TD COLSPAN="4" PORT="dims__repeat">repeat num_dims times</TD></TR>
+					<TR><TD PORT="type_pos">...</TD><TD PORT="type_size">4</TD><TD>u4→GgmlType</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD COLSPAN="4" PORT="type__valid">must satisfy  (((Gguf::I__GGML_TYPE[_] || _) &lt; 43) &amp;&amp; (num_elements_per_block != 0) &amp;&amp; ((num_dims &gt; 0 ? dims[0] : 1) % num_elements_per_block == 0)) </TD></TR>
+					<TR><TD PORT="offset_pos">...</TD><TD PORT="offset_size">8</TD><TD>u8</TD><TD PORT="offset_type">offset</TD></TR>
+					<TR><TD COLSPAN="4" PORT="offset__valid">must be equal to expected_offset</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="data_pos">_parent.ofs_tensor_data + offset</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__dump_dims [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>dump_dims</TD><TD>(((num_dims &gt; 0 ? dims[0].to_s : &quot;&quot;) + (num_dims &gt; 1 ? &quot; x &quot; + dims[1].to_s : &quot;&quot;)) + (num_dims &gt; 2 ? &quot; x &quot; + dims[2].to_s : &quot;&quot;)) + (num_dims &gt; 3 ? &quot; x &quot; + dims[3].to_s : &quot;&quot;)</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__expected_next_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>expected_next_offset</TD><TD>((offset + len_data) + len_padding)</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__len_block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_block</TD><TD>[4, 2, 18, 20, 0, 0, 22, 24, 34, 36, 84, 110, 144, 176, 210, 292, 66, 74, 98, 50, 18, 110, 82, 136, 1, 2, 4, 8, 8, 56, 2, 0, 0, 0, 54, 66, 0, 0, 0, 17, 36, 18, 18][(Gguf::I__GGML_TYPE[type] || type)]</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__len_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_data</TD><TD>(len_block * num_blocks)</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__len_padding [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_padding</TD><TD>(_parent.alignment - len_data % _parent.alignment) % _parent.alignment</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__num_blocks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>num_blocks</TD><TD>(num_elements / num_elements_per_block)</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__num_elements [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>num_elements</TD><TD>((((num_dims &gt; 0 ? dims[0] : 1) * (num_dims &gt; 1 ? dims[1] : 1)) * (num_dims &gt; 2 ? dims[2] : 1)) * (num_dims &gt; 3 ? dims[3] : 1))</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__num_elements_per_block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>num_elements_per_block</TD><TD>[1, 1, 32, 32, 0, 0, 32, 32, 32, 32, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 32, 256, 256, 256, 1, 1, 1, 1, 1, 256, 1, 0, 0, 0, 256, 256, 0, 0, 0, 32, 64, 128, 64][(Gguf::I__GGML_TYPE[type] || type)]</TD></TR>
+				</TABLE>>];
+				gguf_tensor_info__inst__padding [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="padding_pos">(_parent.ofs_tensor_data + offset) + len_data</TD><TD PORT="padding_size">len_padding</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_uint16 {
+				label="Gguf::GgufBody::GgufUint16";
+				graph[style=dotted];
+
+				gguf_uint16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">2</TD><TD>u2</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_uint32 {
+				label="Gguf::GgufBody::GgufUint32";
+				graph[style=dotted];
+
+				gguf_uint32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>u4</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_uint64 {
+				label="Gguf::GgufBody::GgufUint64";
+				graph[style=dotted];
+
+				gguf_uint64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">8</TD><TD>u8</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_uint8 {
+				label="Gguf::GgufBody::GgufUint8";
+				graph[style=dotted];
+
+				gguf_uint8__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">1</TD><TD>u1</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__gguf_value {
+				label="Gguf::GgufBody::GgufValue";
+				graph[style=dotted];
+
+				gguf_value__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">...</TD><TD>switch (type)</TD><TD PORT="value_type">value</TD></TR>
+				</TABLE>>];
+gguf_value__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:gguf_type_array</TD><TD PORT="case0">GgufArray</TD></TR>
+	<TR><TD>:gguf_type_bool</TD><TD PORT="case1">GgufBool</TD></TR>
+	<TR><TD>:gguf_type_float32</TD><TD PORT="case2">GgufFloat32</TD></TR>
+	<TR><TD>:gguf_type_float64</TD><TD PORT="case3">GgufFloat64</TD></TR>
+	<TR><TD>:gguf_type_int16</TD><TD PORT="case4">GgufInt16</TD></TR>
+	<TR><TD>:gguf_type_int32</TD><TD PORT="case5">GgufInt32</TD></TR>
+	<TR><TD>:gguf_type_int64</TD><TD PORT="case6">GgufInt64</TD></TR>
+	<TR><TD>:gguf_type_int8</TD><TD PORT="case7">GgufInt8</TD></TR>
+	<TR><TD>:gguf_type_string</TD><TD PORT="case8">GgufStr</TD></TR>
+	<TR><TD>:gguf_type_uint16</TD><TD PORT="case9">GgufUint16</TD></TR>
+	<TR><TD>:gguf_type_uint32</TD><TD PORT="case10">GgufUint32</TD></TR>
+	<TR><TD>:gguf_type_uint64</TD><TD PORT="case11">GgufUint64</TD></TR>
+	<TR><TD>:gguf_type_uint8</TD><TD PORT="case12">GgufUint8</TD></TR>
+</TABLE>>];
+			}
+		}
+	}
+	gguf__seq:body_type -> gguf_body__seq [style=bold];
+	gguf__inst__version_le:version_le_type -> gguf__inst__is_big_endian [color="#404040"];
+	gguf_body__inst__ofs_tensor_data:ofs_tensor_data_type -> gguf__inst__len_file [color="#404040"];
+	gguf_body__seq:num_tensor_infos_type -> gguf__inst__len_file [color="#404040"];
+	gguf_tensor_info__inst__expected_next_offset:expected_next_offset_type -> gguf__inst__len_file [color="#404040"];
+	gguf_body__seq:kv_pairs_type -> gguf_kv__seq [style=bold];
+	gguf_body__seq:num_kv_pairs_type -> gguf_body__seq:kv_pairs__repeat [color="#404040"];
+	gguf_body__seq:tensor_infos_type -> gguf_tensor_info__seq [style=bold];
+	gguf_body__seq:num_tensor_infos_type -> gguf_body__seq:tensor_infos__repeat [color="#404040"];
+	gguf_body__inst__alignment:alignment_type -> gguf_body__seq:padding_size [color="#404040"];
+	gguf_body__seq:num_tensor_infos_type -> gguf_body__seq:padding__if [color="#404040"];
+	gguf_body__inst__ofs_tensor_data:ofs_tensor_data_type -> gguf_body__seq:_unnamed6__if [color="#404040"];
+	gguf_body__seq:kv_pairs_type -> gguf_body__inst__alignment [color="#404040"];
+	gguf_kv__inst__alignment:alignment_type -> gguf_body__inst__alignment [color="#404040"];
+	gguf_array__seq:elems_type -> gguf_value__seq [style=bold];
+	gguf_array__seq:num_elems_type -> gguf_array__seq:elems__repeat [color="#404040"];
+	gguf_bool__seq:value_raw_type -> gguf_bool__inst__value [color="#404040"];
+	gguf_kv__seq:key_type -> gguf_str__seq [style=bold];
+	gguf_str__seq:len_value_type -> gguf_kv__seq:key__valid [color="#404040"];
+	gguf_kv__seq:value_type -> gguf_value__seq [style=bold];
+	gguf_str__seq:value_type -> gguf_kv__seq:value__valid [color="#404040"];
+	gguf_kv__seq:type_type -> gguf_kv__seq:value__valid [color="#404040"];
+	gguf_uint32__seq:value_type -> gguf_kv__seq:value__valid [color="#404040"];
+	gguf_str__seq:value_type -> gguf_kv__inst__alignment [color="#404040"];
+	gguf_uint32__seq:value_type -> gguf_kv__inst__alignment [color="#404040"];
+	gguf_kv__params:prev_alignment_type -> gguf_kv__inst__alignment [color="#404040"];
+	gguf_str__seq:len_value_type -> gguf_str__seq:value_size [color="#404040"];
+	gguf_tensor_info__seq:name_type -> gguf_str__seq [style=bold];
+	gguf_str__seq:len_value_type -> gguf_tensor_info__seq:name__valid [color="#404040"];
+	gguf_tensor_info__seq:num_dims_type -> gguf_tensor_info__seq:dims__repeat [color="#404040"];
+	gguf_tensor_info__inst__num_elements_per_block:num_elements_per_block_type -> gguf_tensor_info__seq:type__valid [color="#404040"];
+	gguf_tensor_info__seq:num_dims_type -> gguf_tensor_info__seq:type__valid [color="#404040"];
+	gguf_tensor_info__seq:dims_type -> gguf_tensor_info__seq:type__valid [color="#404040"];
+	gguf_tensor_info__params:expected_offset_type -> gguf_tensor_info__seq:offset__valid [color="#404040"];
+	gguf_body__inst__ofs_tensor_data:ofs_tensor_data_type -> gguf_tensor_info__inst__data:data_pos [color="#404040"];
+	gguf_tensor_info__seq:offset_type -> gguf_tensor_info__inst__data:data_pos [color="#404040"];
+	gguf_tensor_info__inst__len_data:len_data_type -> gguf_tensor_info__inst__data:data_size [color="#404040"];
+	gguf_tensor_info__seq:num_dims_type -> gguf_tensor_info__inst__dump_dims [color="#404040"];
+	gguf_tensor_info__seq:dims_type -> gguf_tensor_info__inst__dump_dims [color="#404040"];
+	gguf_tensor_info__seq:offset_type -> gguf_tensor_info__inst__expected_next_offset [color="#404040"];
+	gguf_tensor_info__inst__len_data:len_data_type -> gguf_tensor_info__inst__expected_next_offset [color="#404040"];
+	gguf_tensor_info__inst__len_padding:len_padding_type -> gguf_tensor_info__inst__expected_next_offset [color="#404040"];
+	gguf_tensor_info__seq:type_type -> gguf_tensor_info__inst__len_block [color="#404040"];
+	gguf_tensor_info__inst__len_block:len_block_type -> gguf_tensor_info__inst__len_data [color="#404040"];
+	gguf_tensor_info__inst__num_blocks:num_blocks_type -> gguf_tensor_info__inst__len_data [color="#404040"];
+	gguf_body__inst__alignment:alignment_type -> gguf_tensor_info__inst__len_padding [color="#404040"];
+	gguf_tensor_info__inst__len_data:len_data_type -> gguf_tensor_info__inst__len_padding [color="#404040"];
+	gguf_tensor_info__inst__num_elements:num_elements_type -> gguf_tensor_info__inst__num_blocks [color="#404040"];
+	gguf_tensor_info__inst__num_elements_per_block:num_elements_per_block_type -> gguf_tensor_info__inst__num_blocks [color="#404040"];
+	gguf_tensor_info__seq:num_dims_type -> gguf_tensor_info__inst__num_elements [color="#404040"];
+	gguf_tensor_info__seq:dims_type -> gguf_tensor_info__inst__num_elements [color="#404040"];
+	gguf_tensor_info__seq:type_type -> gguf_tensor_info__inst__num_elements_per_block [color="#404040"];
+	gguf_body__inst__ofs_tensor_data:ofs_tensor_data_type -> gguf_tensor_info__inst__padding:padding_pos [color="#404040"];
+	gguf_tensor_info__seq:offset_type -> gguf_tensor_info__inst__padding:padding_pos [color="#404040"];
+	gguf_tensor_info__inst__len_data:len_data_type -> gguf_tensor_info__inst__padding:padding_pos [color="#404040"];
+	gguf_tensor_info__inst__len_padding:len_padding_type -> gguf_tensor_info__inst__padding:padding_size [color="#404040"];
+	gguf_value__seq:value_type -> gguf_value__seq_value_switch [style=bold];
+	gguf_value__seq_value_switch:case0 -> gguf_array__seq [style=bold];
+	gguf_value__seq_value_switch:case1 -> gguf_bool__seq [style=bold];
+	gguf_value__seq_value_switch:case2 -> gguf_float32__seq [style=bold];
+	gguf_value__seq_value_switch:case3 -> gguf_float64__seq [style=bold];
+	gguf_value__seq_value_switch:case4 -> gguf_int16__seq [style=bold];
+	gguf_value__seq_value_switch:case5 -> gguf_int32__seq [style=bold];
+	gguf_value__seq_value_switch:case6 -> gguf_int64__seq [style=bold];
+	gguf_value__seq_value_switch:case7 -> gguf_int8__seq [style=bold];
+	gguf_value__seq_value_switch:case8 -> gguf_str__seq [style=bold];
+	gguf_value__seq_value_switch:case9 -> gguf_uint16__seq [style=bold];
+	gguf_value__seq_value_switch:case10 -> gguf_uint32__seq [style=bold];
+	gguf_value__seq_value_switch:case11 -> gguf_uint64__seq [style=bold];
+	gguf_value__seq_value_switch:case12 -> gguf_uint8__seq [style=bold];
+	gguf_value__params:type_type -> gguf_value__seq:value_type [color="#404040"];
+}

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>GGUF (GGML Universal File) format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Machine Learning</li>
+        <li class="active">GGUF (GGML Universal File)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>GGUF (GGML Universal File):
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>GGUF is the file format of the <a href="https://github.com/ggml-org/ggml">ggml</a>
+tensor library for storing machine learning models, used for example by
+<a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a> for inference. It
+replaced the older GGML, GGMF and GGJT formats.</p>
+<p>A GGUF file consists of a header with metadata as key-value pairs (model
+architecture, hyperparameters, tokenizer, etc.), a description of each
+tensor (name, dimensions, type and offset), and finally the tensor data.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        gguf
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.11
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/2097">PRONOM fmt/2097</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/2098">PRONOM fmt/2098</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q127427530">Wikidata Q127427530</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of GGUF (GGML Universal File)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="GGUF (GGML Universal File) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="GGUF (GGML Universal File) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="GGUF (GGML Universal File) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="GGUF (GGML Universal File) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="GGUF (GGML Universal File) parsing Graphviz library">Graphviz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="GGUF (GGML Universal File) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="GGUF (GGML Universal File) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="GGUF (GGML Universal File) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="GGUF (GGML Universal File) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="GGUF (GGML Universal File) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="GGUF (GGML Universal File) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="GGUF (GGML Universal File) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title="GGUF (GGML Universal File) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="GGUF (GGML Universal File) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="GGUF (GGML Universal File) parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="gguf.svg">
+            <img class="diagram-img" src="gguf.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GGUF (GGML Universal File)</span>
+<span class="w">  </span><span class="nt">file-extension</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf</span>
+<span class="w">  </span><span class="nt">xref</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pronom</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fmt/2097</span><span class="w"> </span><span class="c1"># GGUF v2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fmt/2098</span><span class="w"> </span><span class="c1"># GGUF v3</span>
+<span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q127427530</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0.11&#39;</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">GGUF is the file format of the [ggml](https://github.com/ggml-org/ggml)</span>
+<span class="w">  </span><span class="no">tensor library for storing machine learning models, used for example by</span>
+<span class="w">  </span><span class="no">[llama.cpp](https://github.com/ggml-org/llama.cpp) for inference. It</span>
+<span class="w">  </span><span class="no">replaced the older GGML, GGMF and GGJT formats.</span>
+
+<span class="w">  </span><span class="no">A GGUF file consists of a header with metadata as key-value pairs (model</span>
+<span class="w">  </span><span class="no">architecture, hyperparameters, tokenizer, etc.), a description of each</span>
+<span class="w">  </span><span class="no">tensor (name, dimensions, type and offset), and finally the tensor data.</span>
+<span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/docs/gguf.md Git tag &quot;v0.27.0&quot;</span>
+<span class="nt">seq</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic</span>
+<span class="w">    </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GGUF</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GGUF file magic</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">body</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_body</span>
+<span class="nt">instances</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">version_le</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4le</span>
+<span class="w">  </span><span class="nt">is_big_endian</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L499-L509 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version_le &amp; 0xffff == 0</span>
+<span class="w">  </span><span class="nt">len_file</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">(</span>
+<span class="w">        </span><span class="no">body.ofs_tensor_data + (</span>
+<span class="w">          </span><span class="no">body.num_tensor_infos != 0</span>
+<span class="w">            </span><span class="no">? body.tensor_infos.last.expected_next_offset</span>
+<span class="w">            </span><span class="no">: 0</span>
+<span class="w">        </span><span class="no">)</span>
+<span class="w">      </span><span class="no">).as&lt;u8&gt;</span>
+<span class="w">    </span><span class="nt">-affected-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1333</span><span class="w"> </span><span class="c1"># the cast can be removed once this is resolved</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Length of the file (computed from the header), including the padding after</span>
+<span class="w">      </span><span class="no">the last tensor&#39;s data.</span>
+
+<span class="w">      </span><span class="no">This Kaitai Struct implementation stops parsing where the tensor data</span>
+<span class="w">      </span><span class="no">starts (which is read lazily, i.e. only on demand). Without reading the</span>
+<span class="w">      </span><span class="no">tensor data, you can use this expected file size to check whether the file</span>
+<span class="w">      </span><span class="no">has been truncated, to carve the file out of a larger one, etc.</span>
+<span class="nt">types</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gguf_body</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">endian</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_root.is_big_endian</span>
+<span class="w">        </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">true</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="w">          </span><span class="nt">false</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L494-L519 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">          </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">          </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">File format version. Version 1 used 32-bit counts and lengths, which</span>
+<span class="w">          </span><span class="no">this Kaitai Struct implementation doesn&#39;t support, and neither does</span>
+<span class="w">          </span><span class="no">ggml.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_tensor_infos</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The number of tensors in the file</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_kv_pairs</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The number of key-value pairs in the file header</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kv_pairs</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;gguf_kv(_index</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">kv_pairs[_index</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1].alignment</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">32)&#39;</span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">        </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_kv_pairs</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Key-value pairs. ggml (v0.27.0)</span>
+<span class="w">          </span><span class="no">[rejects](https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L575-L578)</span>
+<span class="w">          </span><span class="no">duplicate keys, but this Kaitai Struct implementation can&#39;t detect</span>
+<span class="w">          </span><span class="no">them. If there are multiple `general.alignment` keys, the last one is</span>
+<span class="w">          </span><span class="no">used for the `alignment` value instance.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tensor_infos</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;gguf_tensor_info(_index</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">tensor_infos[_index</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1].expected_next_offset</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0)&#39;</span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">        </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_tensor_infos</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Tensor metadata. ggml (v0.27.0)</span>
+<span class="w">          </span><span class="no">[rejects](https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L664-L669)</span>
+<span class="w">          </span><span class="no">duplicate tensor names, but this Kaitai Struct implementation can&#39;t</span>
+<span class="w">          </span><span class="no">detect them.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">padding</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(alignment - _io.pos % alignment) % alignment</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_tensor_infos != 0</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L780-L785 Git tag &quot;v0.27.0&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_tensor_data &lt; 0</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ofs_tensor_data</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># `u8` because it&#39;s added to `offset`</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_io.pos.as&lt;u8&gt;</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Offset of the tensor data. Each tensor&#39;s `offset` is relative to this</span>
+<span class="w">          </span><span class="no">position.</span>
+<span class="w">      </span><span class="nt">alignment</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALIGNMENT</span><span class="w"> </span><span class="c1"># used in the `gguf.md` document</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;kv_pairs.size</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">kv_pairs.last.alignment</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">32&#39;</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Global alignment - from the `general.alignment` key, or 32 if there&#39;s no</span>
+<span class="w">          </span><span class="no">such key.</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L622-L630 Git tag &quot;v0.27.0&quot;</span>
+
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">gguf_value</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_metadata_value_t</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/docs/gguf.md?plain=1#L239-L260 Git tag &quot;v0.27.0&quot;</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value}&#39;</span>
+<span class="w">        </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">            </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_type</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">              </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">gguf_type::uint8</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_uint8</span>
+<span class="w">                </span><span class="nt">gguf_type::int8</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_int8</span>
+<span class="w">                </span><span class="nt">gguf_type::uint16</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_uint16</span>
+<span class="w">                </span><span class="nt">gguf_type::int16</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_int16</span>
+<span class="w">                </span><span class="nt">gguf_type::uint32</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_uint32</span>
+<span class="w">                </span><span class="nt">gguf_type::int32</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_int32</span>
+<span class="w">                </span><span class="nt">gguf_type::float32</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_float32</span>
+<span class="w">                </span><span class="nt">gguf_type::bool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_bool</span>
+<span class="w">                </span><span class="nt">gguf_type::string</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_str</span>
+<span class="w">                </span><span class="nt">gguf_type::array</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_array</span>
+<span class="w">                </span><span class="nt">gguf_type::uint64</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_uint64</span>
+<span class="w">                </span><span class="nt">gguf_type::int64</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_int64</span>
+<span class="w">                </span><span class="nt">gguf_type::float64</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_float64</span>
+
+<span class="w">      </span><span class="nt">gguf_kv</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_metadata_kv_t</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/docs/gguf.md?plain=1#L262-L275 Git tag &quot;v0.27.0&quot;</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{key}:</span><span class="nv"> </span><span class="s">{value}&#39;</span>
+<span class="w">        </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prev_alignment</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_str</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">              </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L571-L574 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">              </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_.len_value != 0</span>
+<span class="w">            </span><span class="nt">-affected-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1260</span><span class="w"> </span><span class="c1"># this `valid/expr` doesn&#39;t compile in C++11</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">            </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_type</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">              </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L593-L612 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">              </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_value(type)</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">              </span><span class="c1"># `general.alignment` must be a `uint32` and a power of 2:</span>
+<span class="w">              </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L622-L636 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">              </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">                </span><span class="no">key.value == &quot;general.alignment&quot;</span>
+<span class="w">                  </span><span class="no">? (</span>
+<span class="w">                    </span><span class="no">type == gguf_type::uint32 and</span>
+<span class="w">                    </span><span class="no">_.value.as&lt;gguf_uint32&gt;.value != 0 and</span>
+<span class="w">                    </span><span class="no">_.value.as&lt;gguf_uint32&gt;.value &amp; (_.value.as&lt;gguf_uint32&gt;.value - 1) == 0</span>
+<span class="w">                  </span><span class="no">)</span>
+<span class="w">                  </span><span class="no">: true</span>
+<span class="w">            </span><span class="nt">-affected-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1260</span><span class="w"> </span><span class="c1"># this `valid/expr` doesn&#39;t compile in C++11</span>
+<span class="w">        </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">alignment</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">key.value == &quot;general.alignment&quot;</span>
+<span class="w">                </span><span class="no">? value.value.as&lt;gguf_uint32&gt;.value</span>
+<span class="w">                </span><span class="no">: prev_alignment</span>
+
+<span class="w">      </span><span class="nt">gguf_str</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_string_t</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/docs/gguf.md?plain=1#L232-L237 Git tag &quot;v0.27.0&quot;</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&quot;{value}&quot;&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+
+<span class="w">      </span><span class="nt">gguf_array</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Nested arrays are supported. Although ggml (v0.27.0) doesn&#39;t support them,</span>
+<span class="w">          </span><span class="no">they are explicitly allowed by `gguf.md` - see</span>
+<span class="w">          </span><span class="no">&lt;https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/docs/gguf.md?plain=1#L221&gt;.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{num_elems:dec}</span><span class="nv"> </span><span class="s">elements&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">            </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_type</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">              </span><span class="c1"># Like ggml, except that nested arrays are allowed (see the `doc` above):</span>
+<span class="w">              </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L593-L612 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">              </span><span class="nt">in-enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_elems</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">elems</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_value(type)</span><span class="w"> </span><span class="c1"># Allows for nested arrays</span>
+<span class="w">            </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">            </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_elems</span>
+
+<span class="w">      </span><span class="nt">gguf_bool</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value_raw</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">              </span><span class="c1"># ggml doesn&#39;t check this, but `gguf.md` says that anything other than</span>
+<span class="w">              </span><span class="c1"># 0 or 1 is invalid:</span>
+<span class="w">              </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/docs/gguf.md?plain=1#L213-L216 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">              </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">value</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value_raw != 0</span>
+<span class="w">            </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L321 Git tag &quot;v0.27.0&quot;</span>
+
+<span class="w">      </span><span class="nt">gguf_uint8</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+
+<span class="w">      </span><span class="nt">gguf_int8</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s1</span>
+
+<span class="w">      </span><span class="nt">gguf_uint16</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+
+<span class="w">      </span><span class="nt">gguf_int16</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s2</span>
+
+<span class="w">      </span><span class="nt">gguf_uint32</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+
+<span class="w">      </span><span class="nt">gguf_int32</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+
+<span class="w">      </span><span class="nt">gguf_uint64</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+
+<span class="w">      </span><span class="nt">gguf_int64</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s8</span>
+
+<span class="w">      </span><span class="nt">gguf_float32</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f4</span>
+
+<span class="w">      </span><span class="nt">gguf_float64</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># This type is used as a work-around for languages (like C++)</span>
+<span class="w">        </span><span class="c1"># that do not support variant types.</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f8</span>
+
+<span class="w">      </span><span class="nt">gguf_tensor_info</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_tensor_info_t</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/docs/gguf.md?plain=1#L305-L325 Git tag &quot;v0.27.0&quot;</span>
+<span class="w">        </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{name}:</span><span class="nv"> </span><span class="s">{type}[{dump_dims}]&#39;</span>
+<span class="w">        </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expected_offset</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gguf_str</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">              </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L657-L661 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">              </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_.len_value &lt; 64</span>
+<span class="w">            </span><span class="nt">-affected-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1260</span><span class="w"> </span><span class="c1"># this `valid/expr` doesn&#39;t compile in C++11</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_dims</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">              </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L679-L684 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">              </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dims</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s8</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">              </span><span class="c1"># ggml reads them as `int64_t` too (even though `gguf.md` says</span>
+<span class="w">              </span><span class="c1"># `uint64_t`) and rejects negative ones:</span>
+<span class="w">              </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L691-L697 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">              </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">            </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">            </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_dims</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">            </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ggml_type</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">              </span><span class="c1"># ggml accepts only types it can still read (`num_elements_per_block`</span>
+<span class="w">              </span><span class="c1"># must not be 0), and only rows consisting of whole blocks:</span>
+<span class="w">              </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L729-L746 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">              </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">                </span><span class="no">_.to_i &lt; 43 and</span>
+<span class="w">                </span><span class="no">num_elements_per_block != 0 and</span>
+<span class="w">                </span><span class="no">(num_dims &gt; 0 ? dims[0] : 1) % num_elements_per_block == 0</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">offset</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">            </span><span class="c1"># Each tensor&#39;s data must start right where the previous tensor&#39;s padded</span>
+<span class="w">            </span><span class="c1"># data ends (the first tensor&#39;s data offset must be 0), as in ggml:</span>
+<span class="w">            </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L790-L820 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">            </span><span class="nt">valid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expected_offset</span>
+<span class="w">            </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Offset of the tensor&#39;s data, relative to `_parent.ofs_tensor_data`</span>
+<span class="w">        </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">dump_dims</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">(num_dims &gt; 0 ? dims[0].to_s : &quot;&quot;)</span>
+<span class="w">              </span><span class="no">+ (num_dims &gt; 1 ? &quot; x &quot; + dims[1].to_s : &quot;&quot;)</span>
+<span class="w">              </span><span class="no">+ (num_dims &gt; 2 ? &quot; x &quot; + dims[2].to_s : &quot;&quot;)</span>
+<span class="w">              </span><span class="no">+ (num_dims &gt; 3 ? &quot; x &quot; + dims[3].to_s : &quot;&quot;)</span>
+<span class="w">            </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">`dims` joined with the string `&quot; x &quot;`. This is necessary for</span>
+<span class="w">              </span><span class="no">`-webide-representation`, which cannot format `dims` directly -</span>
+<span class="w">              </span><span class="no">see &lt;https://github.com/kaitai-io/kaitai_struct_webide/issues/160&gt;.</span>
+<span class="w">          </span><span class="nt">num_elements</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">(</span>
+<span class="w">                </span><span class="no">(num_dims &gt; 0 ? dims[0] : 1) *</span>
+<span class="w">                </span><span class="no">(num_dims &gt; 1 ? dims[1] : 1) *</span>
+<span class="w">                </span><span class="no">(num_dims &gt; 2 ? dims[2] : 1) *</span>
+<span class="w">                </span><span class="no">(num_dims &gt; 3 ? dims[3] : 1)</span>
+<span class="w">              </span><span class="no">).as&lt;s8&gt;</span>
+<span class="w">            </span><span class="nt">-affected-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1333</span><span class="w"> </span><span class="c1"># the cast can be removed once this is resolved</span>
+<span class="w">          </span><span class="c1"># `num_elements_per_block` and `len_block` are the `.blck_size` and</span>
+<span class="w">          </span><span class="c1"># `.type_size` fields of `type_traits[type]` in ggml, see</span>
+<span class="w">          </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/ggml.c#L643-L957 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">          </span><span class="c1">#</span>
+<span class="w">          </span><span class="c1"># For removed types, both fields are 0, as in ggml.</span>
+<span class="w">          </span><span class="nt">num_elements_per_block</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blck_size</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">[</span>
+<span class="w">                </span><span class="no">1, 1, 32, 32, 0, 0, 32, 32, 32, 32,</span>
+<span class="w">                </span><span class="no">256, 256, 256, 256, 256, 256, 256, 256, 256, 256,</span>
+<span class="w">                </span><span class="no">32, 256, 256, 256, 1, 1, 1, 1, 1, 256,</span>
+<span class="w">                </span><span class="no">1, 0, 0, 0, 256, 256, 0, 0, 0, 32,</span>
+<span class="w">                </span><span class="no">64, 128, 64</span>
+<span class="w">              </span><span class="no">][type.to_i]</span>
+<span class="w">            </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Number of elements in a block</span>
+<span class="w">          </span><span class="nt">len_block</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type_size</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">[</span>
+<span class="w">                </span><span class="no">4, 2, 18, 20, 0, 0, 22, 24, 34, 36,</span>
+<span class="w">                </span><span class="no">84, 110, 144, 176, 210, 292, 66, 74, 98, 50,</span>
+<span class="w">                </span><span class="no">18, 110, 82, 136, 1, 2, 4, 8, 8, 56,</span>
+<span class="w">                </span><span class="no">2, 0, 0, 0, 54, 66, 0, 0, 0, 17,</span>
+<span class="w">                </span><span class="no">36, 18, 18</span>
+<span class="w">              </span><span class="no">][type.to_i]</span>
+<span class="w">            </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Size of a block in bytes</span>
+<span class="w">          </span><span class="nt">num_blocks</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(num_elements / num_elements_per_block).as&lt;s8&gt;</span>
+<span class="w">            </span><span class="nt">-affected-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1333</span><span class="w"> </span><span class="c1"># the cast can be removed once this is resolved</span>
+<span class="w">          </span><span class="nt">len_data</span><span class="p">:</span>
+<span class="w">            </span><span class="c1"># `u8` (not `s8`) because it&#39;s added to `offset`</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(len_block * num_blocks).as&lt;u8&gt;</span>
+<span class="w">          </span><span class="nt">len_padding</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(_parent.alignment - len_data % _parent.alignment) % _parent.alignment</span>
+<span class="w">            </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Number of padding bytes after the data</span>
+<span class="w">          </span><span class="nt">expected_next_offset</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(offset + len_data + len_padding).as&lt;u8&gt;</span>
+<span class="w">            </span><span class="nt">-affected-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1333</span><span class="w"> </span><span class="c1"># the cast can be removed once this is resolved</span>
+<span class="w">            </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;`offset`</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">next</span><span class="nv"> </span><span class="s">tensor</span><span class="nv"> </span><span class="s">must</span><span class="nv"> </span><span class="s">have&#39;</span>
+<span class="w">          </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_parent.ofs_tensor_data + offset</span>
+<span class="w">            </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_data</span>
+<span class="w">          </span><span class="nt">padding</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_parent.ofs_tensor_data + offset + len_data</span>
+<span class="w">            </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_padding</span>
+<span class="w">            </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">Padding after the data. ggml requires it even after the last tensor</span>
+<span class="w">              </span><span class="no">when reading the tensor data.</span>
+<span class="w">            </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/src/gguf.cpp#L884-L893 Git tag &quot;v0.27.0&quot;</span>
+
+<span class="nt">enums</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/include/gguf.h#L53-L68 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">  </span><span class="nt">gguf_type</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8</span>
+<span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int8</span>
+<span class="w">    </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint16</span>
+<span class="w">    </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int16</span>
+<span class="w">    </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint32</span>
+<span class="w">    </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int32</span>
+<span class="w">    </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float32</span>
+<span class="w">    </span><span class="nt">7</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bool</span>
+<span class="w">    </span><span class="nt">8</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">9</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">    </span><span class="nt">10</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint64</span>
+<span class="w">    </span><span class="nt">11</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int64</span>
+<span class="w">    </span><span class="nt">12</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float64</span>
+
+<span class="w">  </span><span class="c1"># https://github.com/ggml-org/ggml/blob/a05c9922613c6a2230dbb1d0de679519ecafb4f0/include/ggml.h#L389-L434 (Git tag &quot;v0.27.0&quot;)</span>
+<span class="w">  </span><span class="nt">ggml_type</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f32</span>
+<span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f16</span>
+<span class="w">    </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q4_0</span>
+<span class="w">    </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q4_1</span>
+<span class="w">    </span><span class="nt">4</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q4_2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Removed from ggml in May 2023, before GGUF was introduced. ggml</span>
+<span class="w">        </span><span class="no">rejects it.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/llama.cpp/commit/b9fd7eee57df101d4a3e3eabc9fd6c2cb13c9ca1</span>
+<span class="w">    </span><span class="nt">5</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q4_3</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Removed from ggml in April 2023, before GGUF was introduced. ggml</span>
+<span class="w">        </span><span class="no">rejects it.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/llama.cpp/commit/36d19a603b221d1bd7897fcb10e823e2103b052d</span>
+<span class="w">    </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q5_0</span>
+<span class="w">    </span><span class="nt">7</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q5_1</span>
+<span class="w">    </span><span class="nt">8</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q8_0</span>
+<span class="w">    </span><span class="nt">9</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q8_1</span>
+<span class="w">    </span><span class="nt">10</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2_k</span>
+<span class="w">    </span><span class="nt">11</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q3_k</span>
+<span class="w">    </span><span class="nt">12</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q4_k</span>
+<span class="w">    </span><span class="nt">13</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q5_k</span>
+<span class="w">    </span><span class="nt">14</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q6_k</span>
+<span class="w">    </span><span class="nt">15</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q8_k</span>
+<span class="w">    </span><span class="nt">16</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq2_xxs</span>
+<span class="w">    </span><span class="nt">17</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq2_xs</span>
+<span class="w">    </span><span class="nt">18</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq3_xxs</span>
+<span class="w">    </span><span class="nt">19</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq1_s</span>
+<span class="w">    </span><span class="nt">20</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq4_nl</span>
+<span class="w">    </span><span class="nt">21</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq3_s</span>
+<span class="w">    </span><span class="nt">22</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq2_s</span>
+<span class="w">    </span><span class="nt">23</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq4_xs</span>
+<span class="w">    </span><span class="nt">24</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i8</span>
+<span class="w">    </span><span class="nt">25</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i16</span>
+<span class="w">    </span><span class="nt">26</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i32</span>
+<span class="w">    </span><span class="nt">27</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i64</span>
+<span class="w">    </span><span class="nt">28</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f64</span>
+<span class="w">    </span><span class="nt">29</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq1_m</span>
+<span class="w">    </span><span class="nt">30</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bf16</span>
+<span class="w">    </span><span class="nt">31</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q4_0_4_4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Removed from ggml in December 2024 in favor of repacking</span>
+<span class="w">        </span><span class="no">`ggml_type::q4_0` at load time. ggml rejects it, although files with it</span>
+<span class="w">        </span><span class="no">exist, e.g.</span>
+<span class="w">        </span><span class="no">[`Qwen2.5-0.5B-Instruct-Q4_0_4_4.gguf`](https://huggingface.co/bartowski/Qwen2.5-0.5B-Instruct-GGUF/blob/41ba88dbac95fed2528c92514c131d73eb5a174b/Qwen2.5-0.5B-Instruct-Q4_0_4_4.gguf).</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/llama.cpp/commit/19d8762ab61df8286367588a80b9c7db4cb568db</span>
+<span class="w">    </span><span class="nt">32</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q4_0_4_8</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Removed from ggml in December 2024 in favor of repacking</span>
+<span class="w">        </span><span class="no">`ggml_type::q4_0` at load time. ggml rejects it, although files with it</span>
+<span class="w">        </span><span class="no">exist, e.g.</span>
+<span class="w">        </span><span class="no">[`Qwen2.5-0.5B-Instruct-Q4_0_4_8.gguf`](https://huggingface.co/bartowski/Qwen2.5-0.5B-Instruct-GGUF/blob/41ba88dbac95fed2528c92514c131d73eb5a174b/Qwen2.5-0.5B-Instruct-Q4_0_4_8.gguf).</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/llama.cpp/commit/19d8762ab61df8286367588a80b9c7db4cb568db</span>
+<span class="w">    </span><span class="nt">33</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q4_0_8_8</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Removed from ggml in December 2024 in favor of repacking</span>
+<span class="w">        </span><span class="no">`ggml_type::q4_0` at load time. ggml rejects it, although files with it</span>
+<span class="w">        </span><span class="no">exist, e.g.</span>
+<span class="w">        </span><span class="no">[`Qwen2.5-0.5B-Instruct-Q4_0_8_8.gguf`](https://huggingface.co/bartowski/Qwen2.5-0.5B-Instruct-GGUF/blob/41ba88dbac95fed2528c92514c131d73eb5a174b/Qwen2.5-0.5B-Instruct-Q4_0_8_8.gguf).</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/llama.cpp/commit/19d8762ab61df8286367588a80b9c7db4cb568db</span>
+<span class="w">    </span><span class="nt">34</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tq1_0</span>
+<span class="w">    </span><span class="nt">35</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tq2_0</span>
+<span class="w">    </span><span class="nt">36</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq4_nl_4_4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">Supported by ggml only from November to December 2024, and only for</span>
+<span class="w">        </span><span class="no">repacking tensors in memory - it was never written to files. ggml</span>
+<span class="w">        </span><span class="no">rejects it.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/llama.cpp/commit/19d8762ab61df8286367588a80b9c7db4cb568db</span>
+<span class="w">    </span><span class="nt">37</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq4_nl_4_8</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reserved by ggml, but never supported. ggml rejects it.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/llama.cpp/commit/c202cef1686182a78f8f4e253ab8d0c0ffe2fcc8</span>
+<span class="w">    </span><span class="nt">38</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iq4_nl_8_8</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reserved by ggml, but never supported. ggml rejects it.</span>
+<span class="w">      </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/ggml-org/llama.cpp/commit/c202cef1686182a78f8f4e253ab8d0c0ffe2fcc8</span>
+<span class="w">    </span><span class="nt">39</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mxfp4</span>
+<span class="w">    </span><span class="nt">40</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nvfp4</span>
+<span class="w">    </span><span class="nt">41</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q1_0</span>
+<span class="w">    </span><span class="nt">42</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">q2_0</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2026 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>
