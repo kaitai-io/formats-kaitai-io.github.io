@@ -1,0 +1,244 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__tplink_minifs {
+		label="TplinkMinifs";
+		graph[style=dotted];
+
+		tplink_minifs__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">28</TD><TD>MinifsHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="body_pos">28</TD><TD PORT="body_size">...</TD><TD>switch (header.version)</TD><TD PORT="body_type">body</TD></TR>
+		</TABLE>>];
+tplink_minifs__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>1</TD><TD PORT="case0">BodyV1</TD></TR>
+	<TR><TD>2</TD><TD PORT="case1">BodyV2</TD></TR>
+	<TR><TD>3</TD><TD PORT="case2">BodyV3</TD></TR>
+</TABLE>>];
+		subgraph cluster__body_v1 {
+			label="TplinkMinifs::BodyV1";
+			graph[style=dotted];
+
+			body_v1__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="inodes_pos">0</TD><TD PORT="inodes_size">88</TD><TD>InodeV1</TD><TD PORT="inodes_type">inodes</TD></TR>
+				<TR><TD COLSPAN="4" PORT="inodes__repeat">repeat _root.header.num_files times</TD></TR>
+				<TR><TD PORT="blobs_area_pos">...</TD><TD PORT="blobs_area_size">inodes.last.ofs_end</TD><TD>Dummy</TD><TD PORT="blobs_area_type">blobs_area</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__body_v2 {
+			label="TplinkMinifs::BodyV2";
+			graph[style=dotted];
+
+			body_v2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_files_area_pos">0</TD><TD PORT="len_files_area_size">4</TD><TD>u4be</TD><TD PORT="len_files_area_type">len_files_area</TD></TR>
+				<TR><TD PORT="files_area_pos">4</TD><TD PORT="files_area_size">len_files_area</TD><TD>FilesAreaV2</TD><TD PORT="files_area_type">files_area</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__body_v3 {
+			label="TplinkMinifs::BodyV3";
+			graph[style=dotted];
+
+			body_v3__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_name_table_pos">0</TD><TD PORT="len_name_table_size">4</TD><TD>u4be</TD><TD PORT="len_name_table_type">len_name_table</TD></TR>
+				<TR><TD PORT="name_table_pos">4</TD><TD PORT="name_table_size">len_name_table</TD><TD>NameTable</TD><TD PORT="name_table_type">name_table</TD></TR>
+				<TR><TD PORT="inodes_pos">...</TD><TD PORT="inodes_size">20</TD><TD>Inode</TD><TD PORT="inodes_type">inodes</TD></TR>
+				<TR><TD COLSPAN="4" PORT="inodes__repeat">repeat _root.header.num_files times</TD></TR>
+				<TR><TD PORT="_unnamed3_pos">...</TD><TD PORT="_unnamed3_size">0</TD><TD></TD><TD PORT="_unnamed3_type">_unnamed3</TD></TR>
+				<TR><TD COLSPAN="4" PORT="_unnamed3__if">if ofs_lzma_metas &lt; 0</TD></TR>
+				<TR><TD PORT="lzma_metas_pos">...</TD><TD PORT="lzma_metas_size">12</TD><TD>LzmaMeta</TD><TD PORT="lzma_metas_type">lzma_metas</TD></TR>
+				<TR><TD COLSPAN="4" PORT="lzma_metas__repeat">repeat num_lzma_blobs times</TD></TR>
+				<TR><TD PORT="lzma_blobs_area_pos">...</TD><TD PORT="lzma_blobs_area_size">lzma_metas.last.ofs_end</TD><TD>Dummy</TD><TD PORT="lzma_blobs_area_type">lzma_blobs_area</TD></TR>
+			</TABLE>>];
+			body_v3__inst__has_8_byte_lzma_metas [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_8_byte_lzma_metas</TD><TD>len_first_blob_uncompressed_if_8_byte_metas == 18446744073709551615</TD></TR>
+			</TABLE>>];
+			body_v3__inst__len_first_blob_uncompressed_if_8_byte_metas [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_first_blob_uncompressed_if_8_byte_metas_pos">(ofs_lzma_metas + 8 * num_lzma_blobs) + 5</TD><TD PORT="len_first_blob_uncompressed_if_8_byte_metas_size">8</TD><TD>u8le</TD><TD PORT="len_first_blob_uncompressed_if_8_byte_metas_type">len_first_blob_uncompressed_if_8_byte_metas</TD></TR>
+			</TABLE>>];
+			body_v3__inst__len_lzma_meta [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_lzma_meta</TD><TD>(has_8_byte_lzma_metas ? 8 : 12)</TD></TR>
+			</TABLE>>];
+			body_v3__inst__num_lzma_blobs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_lzma_blobs</TD><TD>inodes.last.cur_max_lzma_blob + 1</TD></TR>
+			</TABLE>>];
+			body_v3__inst__ofs_lzma_metas [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ofs_lzma_metas</TD><TD>_io.pos</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dummy {
+			label="TplinkMinifs::Dummy";
+			graph[style=dotted];
+
+			dummy__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__file_v2 {
+			label="TplinkMinifs::FileV2";
+			graph[style=dotted];
+
+			file_v2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="path_md5_pos">0</TD><TD PORT="path_md5_size">16</TD><TD></TD><TD PORT="path_md5_type">path_md5</TD></TR>
+				<TR><TD PORT="len_data_pos">16</TD><TD PORT="len_data_size">4</TD><TD>u4be</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="ofs_data_pos">20</TD><TD PORT="ofs_data_size">4</TD><TD>u4be</TD><TD PORT="ofs_data_type">ofs_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ofs_data__valid">must be equal to _io.pos + 8</TD></TR>
+				<TR><TD PORT="len_data_uncompressed_pos">24</TD><TD PORT="len_data_uncompressed_size">4</TD><TD>u4be</TD><TD PORT="len_data_uncompressed_type">len_data_uncompressed</TD></TR>
+				<TR><TD PORT="compression_pos">28</TD><TD PORT="compression_size">4</TD><TD>u4be→CompressionType</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD PORT="data_pos">32</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__files_area_v2 {
+			label="TplinkMinifs::FilesAreaV2";
+			graph[style=dotted];
+
+			files_area_v2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="files_pos">0</TD><TD PORT="files_size">...</TD><TD>FileV2</TD><TD PORT="files_type">files</TD></TR>
+				<TR><TD COLSPAN="4" PORT="files__repeat">repeat _root.header.num_files times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__inode {
+			label="TplinkMinifs::Inode";
+			graph[style=dotted];
+
+			inode__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ofs_directory_path_pos">0</TD><TD PORT="ofs_directory_path_size">4</TD><TD>u4be</TD><TD PORT="ofs_directory_path_type">ofs_directory_path</TD></TR>
+				<TR><TD PORT="ofs_file_name_pos">4</TD><TD PORT="ofs_file_name_size">4</TD><TD>u4be</TD><TD PORT="ofs_file_name_type">ofs_file_name</TD></TR>
+				<TR><TD PORT="lzma_blob_pos">8</TD><TD PORT="lzma_blob_size">4</TD><TD>u4be</TD><TD PORT="lzma_blob_type">lzma_blob</TD></TR>
+				<TR><TD PORT="ofs_file_pos">12</TD><TD PORT="ofs_file_size">4</TD><TD>u4be</TD><TD PORT="ofs_file_type">ofs_file</TD></TR>
+				<TR><TD PORT="len_file_pos">16</TD><TD PORT="len_file_size">4</TD><TD>u4be</TD><TD PORT="len_file_type">len_file</TD></TR>
+			</TABLE>>];
+			inode__inst__cur_max_lzma_blob [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>cur_max_lzma_blob</TD><TD>(lzma_blob &gt; prev_max_lzma_blob ? lzma_blob : prev_max_lzma_blob)</TD></TR>
+			</TABLE>>];
+			inode__inst__directory_path [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="directory_path_pos">ofs_directory_path</TD><TD PORT="directory_path_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="directory_path_type">directory_path</TD></TR>
+			</TABLE>>];
+			inode__inst__file_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_name_pos">ofs_file_name</TD><TD PORT="file_name_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="file_name_type">file_name</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__inode_v1 {
+			label="TplinkMinifs::InodeV1";
+			graph[style=dotted];
+
+			inode_v1__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="path_pos">0</TD><TD PORT="path_size">80</TD><TD>str(ASCII)</TD><TD PORT="path_type">path</TD></TR>
+				<TR><TD PORT="len_blob_pos">80</TD><TD PORT="len_blob_size">4</TD><TD>u4be</TD><TD PORT="len_blob_type">len_blob</TD></TR>
+				<TR><TD PORT="ofs_blob_pos">84</TD><TD PORT="ofs_blob_size">4</TD><TD>u4be</TD><TD PORT="ofs_blob_type">ofs_blob</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ofs_blob__valid">must be equal to prev_ofs_end</TD></TR>
+			</TABLE>>];
+			inode_v1__inst__blob [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="blob_pos">ofs_blob</TD><TD PORT="blob_size">len_blob</TD><TD></TD><TD PORT="blob_type">blob</TD></TR>
+			</TABLE>>];
+			inode_v1__inst__ofs_end [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ofs_end</TD><TD>ofs_blob + len_blob</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__lzma_meta {
+			label="TplinkMinifs::LzmaMeta";
+			graph[style=dotted];
+
+			lzma_meta__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ofs_blob_pos">0</TD><TD PORT="ofs_blob_size">4</TD><TD>u4be</TD><TD PORT="ofs_blob_type">ofs_blob</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ofs_blob__valid">must be equal to prev_ofs_end</TD></TR>
+				<TR><TD PORT="len_blob_pos">4</TD><TD PORT="len_blob_size">4</TD><TD>u4be</TD><TD PORT="len_blob_type">len_blob</TD></TR>
+				<TR><TD PORT="len_blob_uncompressed_pos">8</TD><TD PORT="len_blob_uncompressed_size">4</TD><TD>u4be</TD><TD PORT="len_blob_uncompressed_type">len_blob_uncompressed</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len_blob_uncompressed__if">if !(_parent.has_8_byte_lzma_metas)</TD></TR>
+			</TABLE>>];
+			lzma_meta__inst__blob [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="blob_pos">ofs_blob</TD><TD PORT="blob_size">len_blob</TD><TD></TD><TD PORT="blob_type">blob</TD></TR>
+			</TABLE>>];
+			lzma_meta__inst__ofs_end [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ofs_end</TD><TD>ofs_blob + len_blob</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__minifs_header {
+			label="TplinkMinifs::MinifsHeader";
+			graph[style=dotted];
+
+			minifs_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">16</TD><TD>4D 49 4E 49 46 53 00 00 00 00 00 00 00 00 00 00</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_pos">16</TD><TD PORT="version_size">4</TD><TD>u4be</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD COLSPAN="4" PORT="version__valid">must be any of 1, 2, 3</TD></TR>
+				<TR><TD PORT="num_files_pos">20</TD><TD PORT="num_files_size">4</TD><TD>u4be</TD><TD PORT="num_files_type">num_files</TD></TR>
+				<TR><TD PORT="len_largest_file_pos">24</TD><TD PORT="len_largest_file_size">4</TD><TD>u4be</TD><TD PORT="len_largest_file_type">len_largest_file</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__name_table {
+			label="TplinkMinifs::NameTable";
+			graph[style=dotted];
+
+			name_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="names_pos">0</TD><TD PORT="names_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="names_type">names</TD></TR>
+				<TR><TD COLSPAN="4" PORT="names__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+	}
+	tplink_minifs__seq:header_type -> minifs_header__seq [style=bold];
+	tplink_minifs__seq:body_type -> tplink_minifs__seq_body_switch [style=bold];
+	tplink_minifs__seq_body_switch:case0 -> body_v1__seq [style=bold];
+	tplink_minifs__seq_body_switch:case1 -> body_v2__seq [style=bold];
+	tplink_minifs__seq_body_switch:case2 -> body_v3__seq [style=bold];
+	minifs_header__seq:version_type -> tplink_minifs__seq:body_type [color="#404040"];
+	body_v1__seq:inodes_type -> inode_v1__seq [style=bold];
+	minifs_header__seq:num_files_type -> body_v1__seq:inodes__repeat [color="#404040"];
+	inode_v1__inst__ofs_end:ofs_end_type -> body_v1__seq:blobs_area_size [color="#404040"];
+	body_v1__seq:blobs_area_type -> dummy__seq [style=bold];
+	body_v2__seq:len_files_area_type -> body_v2__seq:files_area_size [color="#404040"];
+	body_v2__seq:files_area_type -> files_area_v2__seq [style=bold];
+	body_v3__seq:len_name_table_type -> body_v3__seq:name_table_size [color="#404040"];
+	body_v3__seq:name_table_type -> name_table__seq [style=bold];
+	body_v3__seq:inodes_type -> inode__seq [style=bold];
+	minifs_header__seq:num_files_type -> body_v3__seq:inodes__repeat [color="#404040"];
+	body_v3__inst__ofs_lzma_metas:ofs_lzma_metas_type -> body_v3__seq:_unnamed3__if [color="#404040"];
+	body_v3__seq:lzma_metas_type -> lzma_meta__seq [style=bold];
+	body_v3__inst__num_lzma_blobs:num_lzma_blobs_type -> body_v3__seq:lzma_metas__repeat [color="#404040"];
+	lzma_meta__inst__ofs_end:ofs_end_type -> body_v3__seq:lzma_blobs_area_size [color="#404040"];
+	body_v3__seq:lzma_blobs_area_type -> dummy__seq [style=bold];
+	body_v3__inst__len_first_blob_uncompressed_if_8_byte_metas:len_first_blob_uncompressed_if_8_byte_metas_type -> body_v3__inst__has_8_byte_lzma_metas [color="#404040"];
+	body_v3__inst__ofs_lzma_metas:ofs_lzma_metas_type -> body_v3__inst__len_first_blob_uncompressed_if_8_byte_metas:len_first_blob_uncompressed_if_8_byte_metas_pos [color="#404040"];
+	body_v3__inst__num_lzma_blobs:num_lzma_blobs_type -> body_v3__inst__len_first_blob_uncompressed_if_8_byte_metas:len_first_blob_uncompressed_if_8_byte_metas_pos [color="#404040"];
+	body_v3__inst__has_8_byte_lzma_metas:has_8_byte_lzma_metas_type -> body_v3__inst__len_lzma_meta [color="#404040"];
+	inode__inst__cur_max_lzma_blob:cur_max_lzma_blob_type -> body_v3__inst__num_lzma_blobs [color="#404040"];
+	file_v2__seq:len_data_type -> file_v2__seq:data_size [color="#404040"];
+	files_area_v2__seq:files_type -> file_v2__seq [style=bold];
+	minifs_header__seq:num_files_type -> files_area_v2__seq:files__repeat [color="#404040"];
+	inode__seq:lzma_blob_type -> inode__inst__cur_max_lzma_blob [color="#404040"];
+	inode__params:prev_max_lzma_blob_type -> inode__inst__cur_max_lzma_blob [color="#404040"];
+	inode__seq:ofs_directory_path_type -> inode__inst__directory_path:directory_path_pos [color="#404040"];
+	inode__seq:ofs_file_name_type -> inode__inst__file_name:file_name_pos [color="#404040"];
+	inode_v1__params:prev_ofs_end_type -> inode_v1__seq:ofs_blob__valid [color="#404040"];
+	inode_v1__seq:ofs_blob_type -> inode_v1__inst__blob:blob_pos [color="#404040"];
+	inode_v1__seq:len_blob_type -> inode_v1__inst__blob:blob_size [color="#404040"];
+	inode_v1__seq:ofs_blob_type -> inode_v1__inst__ofs_end [color="#404040"];
+	inode_v1__seq:len_blob_type -> inode_v1__inst__ofs_end [color="#404040"];
+	lzma_meta__params:prev_ofs_end_type -> lzma_meta__seq:ofs_blob__valid [color="#404040"];
+	body_v3__inst__has_8_byte_lzma_metas:has_8_byte_lzma_metas_type -> lzma_meta__seq:len_blob_uncompressed__if [color="#404040"];
+	lzma_meta__seq:ofs_blob_type -> lzma_meta__inst__blob:blob_pos [color="#404040"];
+	lzma_meta__seq:len_blob_type -> lzma_meta__inst__blob:blob_size [color="#404040"];
+	lzma_meta__seq:ofs_blob_type -> lzma_meta__inst__ofs_end [color="#404040"];
+	lzma_meta__seq:len_blob_type -> lzma_meta__inst__ofs_end [color="#404040"];
+}
